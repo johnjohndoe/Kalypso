@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -59,7 +59,7 @@ public class RemoveRepositoryAction extends AbstractRepositoryExplorerAction imp
     super( explorer, "Repository entfernen", ImageProvider.IMAGE_ZML_REPOSITORY_REMOVE, "Entfernt ein Repository..." );
 
     explorer.addSelectionChangedListener( this );
-    
+
     setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
   }
 
@@ -77,8 +77,8 @@ public class RemoveRepositoryAction extends AbstractRepositoryExplorerAction imp
     if( rep == null )
       return;
 
-    if( !MessageDialog.openConfirm( getShell(), "Repository entfernen", "Repository '"
-        + rep.toString() + "' wirklich entfernen?" ) )
+    if( !MessageDialog.openConfirm( getShell(), "Repository entfernen", "Repository '" + rep.toString()
+        + "' wirklich entfernen?" ) )
       return;
 
     getExplorer().getRepositoryContainer().removeRepository( rep );

@@ -1,13 +1,11 @@
 /*
  * OpenGIS® Grid Coverage Implementation Specification
  * 
- * This Java profile is derived from OpenGIS's specification available on their
- * public web site:
+ * This Java profile is derived from OpenGIS's specification available on their public web site:
  * 
  * http://www.opengis.org/techno/implementation.htm
  * 
- * You can redistribute it, but should not modify it unless for greater OpenGIS
- * compliance.
+ * You can redistribute it, but should not modify it unless for greater OpenGIS compliance.
  */
 package org.opengis.gc;
 
@@ -17,9 +15,8 @@ import java.rmi.RemoteException;
 import org.opengis.cv.CV_Coverage;
 
 /**
- * Represent the basic implementation which provides access to grid coverage
- * data. A <code>GC_GridCoverage</code> implementation may provide the ability
- * to update grid values. A basic read-only implementation would be fairly easy
+ * Represent the basic implementation which provides access to grid coverage data. A <code>GC_GridCoverage</code>
+ * implementation may provide the ability to update grid values. A basic read-only implementation would be fairly easy
  * to implement.
  * 
  * @version 1.00
@@ -46,8 +43,8 @@ public interface GC_GridCoverage extends CV_Coverage
   GC_GridPacking getGridPacking() throws RemoteException;
 
   /**
-   * Information for the grid coverage geometry. Grid geometry includes the
-   * valid range of grid coordinates and the georeferencing.
+   * Information for the grid coverage geometry. Grid geometry includes the valid range of grid coordinates and the
+   * georeferencing.
    * 
    * @return the information for the grid coverage geometry.
    * @throws RemoteException
@@ -65,16 +62,12 @@ public interface GC_GridCoverage extends CV_Coverage
   int getNumOverviews() throws RemoteException;
 
   /**
-   * Optimal size to use for each dimension when accessing grid values. These
-   * values together give the optimal block size to use when retrieving grid
-   * coverage values. For example, a client application can achieve better
-   * performance for a 2-D grid coverage by reading blocks of 128 by 128 if the
-   * grid is tiled into blocks of this size. The sequence is ordered by
-   * dimension. If the implementation does not have optimal sizes the sequence
-   * will be empty.
+   * Optimal size to use for each dimension when accessing grid values. These values together give the optimal block
+   * size to use when retrieving grid coverage values. For example, a client application can achieve better performance
+   * for a 2-D grid coverage by reading blocks of 128 by 128 if the grid is tiled into blocks of this size. The sequence
+   * is ordered by dimension. If the implementation does not have optimal sizes the sequence will be empty.
    * 
-   * @return the optimal size to use for each dimension when accessing grid
-   *         values.
+   * @return the optimal size to use for each dimension when accessing grid values.
    * @throws RemoteException
    *           if a remote method call failed.
    */
@@ -84,8 +77,7 @@ public interface GC_GridCoverage extends CV_Coverage
    * Return the grid geometry for an overview.
    * 
    * @param overviewIndex
-   *          Overview index for which to retrieve grid geometry. Indices start
-   *          at 0.
+   *          Overview index for which to retrieve grid geometry. Indices start at 0.
    * @return the grid geometry for an overview.
    * @throws RemoteException
    *           if a remote method call failed.
@@ -93,13 +85,11 @@ public interface GC_GridCoverage extends CV_Coverage
   GC_GridGeometry getOverviewGridGeometry( int overviewIndex ) throws RemoteException;
 
   /**
-   * Returns a pre-calculated overview for a grid coverage. The overview indices
-   * are numbered from 0 to <code>numberOverviews-1</code>. The overviews are
-   * ordered from highest (index 0) to lowest (numberOverviews -1) resolution.
-   * Overview grid coverages will have overviews which are the overviews for the
-   * grid coverage with lower resolution than the overview. For example, a 1
-   * meter grid coverage with 3, 9, and 27 meter overviews will be ordered as
-   * follows:
+   * Returns a pre-calculated overview for a grid coverage. The overview indices are numbered from 0 to
+   * <code>numberOverviews-1</code>. The overviews are ordered from highest (index 0) to lowest (numberOverviews -1)
+   * resolution. Overview grid coverages will have overviews which are the overviews for the grid coverage with lower
+   * resolution than the overview. For example, a 1 meter grid coverage with 3, 9, and 27 meter overviews will be
+   * ordered as follows:
    * 
    * <table border=0 align="center">
    * <tr>
@@ -121,8 +111,7 @@ public interface GC_GridCoverage extends CV_Coverage
    * </table> <br>
    * <br>
    * 
-   * The 3 meter overview will have 2 overviews as follows: <table border=0
-   * align="center">
+   * The 3 meter overview will have 2 overviews as follows: <table border=0 align="center">
    * <tr>
    * <td align="center">Index</td>
    * <td align="center">resolution</td>
@@ -146,8 +135,7 @@ public interface GC_GridCoverage extends CV_Coverage
   GC_GridCoverage getOverview( int overviewIndex ) throws RemoteException;
 
   /**
-   * Return a sequence of boolean values for a block. A value for each sample
-   * dimension will be returned.
+   * Return a sequence of boolean values for a block. A value for each sample dimension will be returned.
    * 
    * @param gridRange
    *          Grid range for block of data to be accessed.
@@ -157,8 +145,7 @@ public interface GC_GridCoverage extends CV_Coverage
   boolean[] getDataBlockAsBoolean( GC_GridRange gridRange ) throws RemoteException;
 
   /**
-   * Return a sequence of byte values for a block. A value for each sample
-   * dimension will be returned.
+   * Return a sequence of byte values for a block. A value for each sample dimension will be returned.
    * 
    * @param gridRange
    *          Grid range for block of data to be accessed.
@@ -168,8 +155,7 @@ public interface GC_GridCoverage extends CV_Coverage
   byte[] getDataBlockAsByte( GC_GridRange gridRange ) throws RemoteException;
 
   /**
-   * Return a sequence of int values for a block. A value for each sample
-   * dimension will be returned.
+   * Return a sequence of int values for a block. A value for each sample dimension will be returned.
    * 
    * @param gridRange
    *          Grid range for block of data to be accessed.
@@ -179,8 +165,7 @@ public interface GC_GridCoverage extends CV_Coverage
   int[] getDataBlockAsInteger( GC_GridRange gridRange ) throws RemoteException;
 
   /**
-   * Return a sequence of double values for a block. A value for each sample
-   * dimension will be returned.
+   * Return a sequence of double values for a block. A value for each sample dimension will be returned.
    * 
    * @param gridRange
    *          Grid range for block of data to be accessed.
@@ -190,14 +175,11 @@ public interface GC_GridCoverage extends CV_Coverage
   double[] getValueBlockAsDouble( GC_GridRange gridRange ) throws RemoteException;
 
   /**
-   * Return a block of grid coverage data for all sample dimensions. A value for
-   * each sample dimension will be returned. This operation provides efficient
-   * access of the grid values. The sequencing order of the values in the
-   * sequence will follow the rules given by valueInBytePacking and bandPacking
-   * defined in GC_GridPacking.
+   * Return a block of grid coverage data for all sample dimensions. A value for each sample dimension will be returned.
+   * This operation provides efficient access of the grid values. The sequencing order of the values in the sequence
+   * will follow the rules given by valueInBytePacking and bandPacking defined in GC_GridPacking.
    * 
-   * The requested grid range must satisfy the following rules for each
-   * dimension of the grid coverage:
+   * The requested grid range must satisfy the following rules for each dimension of the grid coverage:
    * 
    * <blockquote>
    * 
@@ -207,25 +189,21 @@ public interface GC_GridCoverage extends CV_Coverage
    * 
    * </blockquote>
    * 
-   * The sequence of bytes returned will match the data type of the dimension.
-   * For example, a grid with one 16 bit unsigned (CV_16BIT_U) sample dimension
-   * will return 2 bytes for every cell in the block. <br>
+   * The sequence of bytes returned will match the data type of the dimension. For example, a grid with one 16 bit
+   * unsigned (CV_16BIT_U) sample dimension will return 2 bytes for every cell in the block. <br>
    * <br>
-   * <strong>Byte padding Rules for grid values of less than 8 bits </strong>
-   * <br>
-   * For 2 D grid coverages, padding is to the nearest byte for the following
-   * cases:
+   * <strong>Byte padding Rules for grid values of less than 8 bits </strong> <br>
+   * For 2 D grid coverages, padding is to the nearest byte for the following cases:
    * 
    * <table border=0>
    * <tr>
    * <td>For PixelInterleaved</td>
-   * <td>For grids with multiple sample dimensions, padding occurs between
-   * pixels for each change in dimension type.</td>
+   * <td>For grids with multiple sample dimensions, padding occurs between pixels for each change in dimension type.
+   * </td>
    * </tr>
    * <tr>
    * <td>For LineInterleaved</td>
-   * <td>Padding occurs at the end of each row or column (depending on the
-   * valueSequence of the grid).</td>
+   * <td>Padding occurs at the end of each row or column (depending on the valueSequence of the grid).</td>
    * </tr>
    * <tr>
    * <td>For BandSequencial</td>
@@ -233,11 +211,9 @@ public interface GC_GridCoverage extends CV_Coverage
    * </tr>
    * </table>
    * 
-   * For grid values smaller than 8 bits, their order within each byte is given
-   * by the value defined in
-   * {@link GC_GridPacking#getValueInBytePacking valueInBytePacking}. For grid
-   * values bigger than 8 bits, the order of their bytes is given by the value
-   * defined in {@link GC_GridPacking#getByteInValuePacking byteInValuePacking}.
+   * For grid values smaller than 8 bits, their order within each byte is given by the value defined in
+   * {@link GC_GridPacking#getValueInBytePacking valueInBytePacking}. For grid values bigger than 8 bits, the order of
+   * their bytes is given by the value defined in {@link GC_GridPacking#getByteInValuePacking byteInValuePacking}.
    * 
    * @param gridRange
    *          Grid range for block of data to be accessed.
@@ -248,9 +224,8 @@ public interface GC_GridCoverage extends CV_Coverage
   byte[] getPackedDataBlock( GC_GridRange gridRange ) throws RemoteException;
 
   /**
-   * Set a block of boolean values for all sample dimensions. The requested grid
-   * range must satisfy the following rules for each dimension of the grid
-   * coverage:
+   * Set a block of boolean values for all sample dimensions. The requested grid range must satisfy the following rules
+   * for each dimension of the grid coverage:
    * 
    * <blockquote>
    * 
@@ -324,11 +299,10 @@ public interface GC_GridCoverage extends CV_Coverage
   void setDataBlockAsDouble( GC_GridRange gridRange, double[] values ) throws RemoteException;
 
   /**
-   * Set a block of grid coverage data for all sample dimensions. See
-   * <code>getDataBlock</code> for details on how to pack the values.
+   * Set a block of grid coverage data for all sample dimensions. See <code>getDataBlock</code> for details on how to
+   * pack the values.
    * 
-   * The requested grid range must satisfy the following rules for each
-   * dimension of the grid coverage:
+   * The requested grid range must satisfy the following rules for each dimension of the grid coverage:
    * 
    * <blockquote>
    * 

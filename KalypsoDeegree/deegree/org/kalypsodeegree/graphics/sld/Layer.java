@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 /**
@@ -73,9 +73,8 @@ public interface Layer
 {
 
   /**
-   * The Name element identifies the well-known name of the layer being
-   * referenced, and is required. All possible well-known names are usually
-   * identified in the capabilities document for a server.
+   * The Name element identifies the well-known name of the layer being referenced, and is required. All possible
+   * well-known names are usually identified in the capabilities document for a server.
    * 
    * @return the name of the layer
    */
@@ -90,11 +89,9 @@ public interface Layer
   void setName( String name );
 
   /**
-   * The LayerFeatureConstraints element is optional in a NamedLayer and allows
-   * the user to specify constraints on what features of what feature types are
-   * to be selected by the named-layer reference. It is essentially a filter
-   * that allows the selection of fewer features than are present in the named
-   * layer.
+   * The LayerFeatureConstraints element is optional in a NamedLayer and allows the user to specify constraints on what
+   * features of what feature types are to be selected by the named-layer reference. It is essentially a filter that
+   * allows the selection of fewer features than are present in the named layer.
    * 
    * @return the LayerFeatureConstraints
    */
@@ -109,13 +106,11 @@ public interface Layer
   void setLayerFeatureConstraints( LayerFeatureConstraints layerFeatureConstraints );
 
   /**
-   * Returns the styles associated to the Layer. This may be UserStyles or
-   * NamedStyles
+   * Returns the styles associated to the Layer. This may be UserStyles or NamedStyles
    * <p>
    * </p>
-   * A UserStyle is at the same semantic level as a NamedStyle used in the
-   * context of a WMS. In a sense, a named style can be thought of as a
-   * reference to a hidden UserStyle that is stored inside of a map server.
+   * A UserStyle is at the same semantic level as a NamedStyle used in the context of a WMS. In a sense, a named style
+   * can be thought of as a reference to a hidden UserStyle that is stored inside of a map server.
    * 
    * @return the styles of the layer als ArrayList
    */

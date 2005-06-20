@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -92,39 +92,33 @@ public interface Directory
   GM_Envelope getBoundingBox();
 
   /**
-   * returns the width of the tiles contained within the diirectory in
-   * measurement of its CRS
+   * returns the width of the tiles contained within the diirectory in measurement of its CRS
    */
   double getWidthCRS();
 
   /**
-   * returns the height of the tiles contained within the diirectory in
-   * measurement of its CRS
+   * returns the height of the tiles contained within the diirectory in measurement of its CRS
    */
   double getHeightCRS();
 
   /**
-   * returns the embeded <tt>Level</tt> if one exists. otherwise <tt>null</tt>
-   * will be returned.
+   * returns the embeded <tt>Level</tt> if one exists. otherwise <tt>null</tt> will be returned.
    */
   Level getLevel();
 
   /**
-   * if the tiles are ordered at a quad tree or something like this an instance
-   * of <tt>Directory</tt> will contain one or more <tt>Directory</tt>
-   * instances with a smaller bounding box.
+   * if the tiles are ordered at a quad tree or something like this an instance of <tt>Directory</tt> will contain one
+   * or more <tt>Directory</tt> instances with a smaller bounding box.
    */
   Directory[] getDirectories();
 
   /**
-   * returns all <tt>Tiles</tt> containted within the directory that fits the
-   * submitted bounding box
+   * returns all <tt>Tiles</tt> containted within the directory that fits the submitted bounding box
    */
   Tile[] getTiles( GM_Envelope bbox ) throws CoverageCreationException;
 
   /**
-   * returns all <tt>Tiles</tt> containted within the directory that fits the
-   * submitted bounding box
+   * returns all <tt>Tiles</tt> containted within the directory that fits the submitted bounding box
    */
   Tile[] getTiles() throws CoverageCreationException;
 

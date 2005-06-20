@@ -12,8 +12,7 @@ public class RangeSet
 {
 
   /**
-   * Vector, which stores the rangeSet data; the data of each row is stored in a
-   * Vector
+   * Vector, which stores the rangeSet data; the data of each row is stored in a Vector
    */
   private Vector rangeSetData = null;
 
@@ -26,7 +25,8 @@ public class RangeSet
    * constructs a RangeSet with the given rangeSetData
    * 
    * @param rangeSetData
-   * @param rangeSetDataFileName name of rangeSetData-file ("xy.dat")
+   * @param rangeSetDataFileName
+   *          name of rangeSetData-file ("xy.dat")
    */
   public RangeSet( Vector rangeSetData, String rangeSetDataFileName )
   {
@@ -43,7 +43,8 @@ public class RangeSet
   }
 
   /**
-   * @param rangeSetData The rangeSetData to set.
+   * @param rangeSetData
+   *          The rangeSetData to set.
    */
   public void setRangeSetData( Vector rangeSetData )
   {
@@ -59,7 +60,8 @@ public class RangeSet
   }
 
   /**
-   * @param rangeSetDataFileName The rangeSetDataFileName to set.
+   * @param rangeSetDataFileName
+   *          The rangeSetDataFileName to set.
    */
   public void setRangeSetDataFile( String rangeSetDataFileName )
   {

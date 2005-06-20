@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view;
 
 import org.kalypso.ogc.sensor.IObservation;
@@ -55,7 +55,7 @@ public class ObservationCache
 {
   private static ObservationCache m_instance = null;
 
-  public static ObservationCache getInstance( )
+  public static ObservationCache getInstance()
   {
     if( m_instance == null )
     {
@@ -65,14 +65,13 @@ public class ObservationCache
 
     return m_instance;
   }
-  
+
   public static void clearCache()
   {
     if( m_instance != null )
       m_instance.clear();
   }
 
-  
   /** our cache */
   private final Cache m_cache;
 
@@ -86,11 +85,11 @@ public class ObservationCache
   {
     synchronized( m_cache )
     {
-      IObservation obs = (IObservation) m_cache.getObject( adapt );
+      IObservation obs = (IObservation)m_cache.getObject( adapt );
 
       if( obs == null )
       {
-        obs = (IObservation) adapt.getAdapter( IObservation.class );
+        obs = (IObservation)adapt.getAdapter( IObservation.class );
 
         // still null, then this item is not adaptable
         if( obs == null )
@@ -107,7 +106,7 @@ public class ObservationCache
   {
     synchronized( m_cache )
     {
-      return (ITuppleModel) m_cache.getObject( obs );
+      return (ITuppleModel)m_cache.getObject( obs );
     }
   }
 
@@ -119,7 +118,7 @@ public class ObservationCache
     }
   }
 
-  private void clear( )
+  private void clear()
   {
     synchronized( m_cache )
     {

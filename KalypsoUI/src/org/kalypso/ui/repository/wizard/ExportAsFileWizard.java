@@ -84,8 +84,7 @@ public class ExportAsFileWizard extends Wizard
   {
     m_obs = obs;
 
-    final IDialogSettings settings = KalypsoGisPlugin.getDefault()
-        .getDialogSettings();
+    final IDialogSettings settings = KalypsoGisPlugin.getDefault().getDialogSettings();
 
     IDialogSettings section = settings.getSection( "ExportAsFileWizard" ); //$NON-NLS-1$
     if( section == null )
@@ -107,14 +106,16 @@ public class ExportAsFileWizard extends Wizard
     if( projects.length > 0 )
     {
       m_project = projects[0];
-      fileName = ResourceUtilities.makeFileFromPath( m_project.getFullPath() )
-          .getAbsolutePath();
+      fileName = ResourceUtilities.makeFileFromPath( m_project.getFullPath() ).getAbsolutePath();
     }
     else
       fileName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "datei.zml";
 
     m_page1 = new DateRangeInputWizardPage();
-    m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[] { "*.zml", "*.xml" } );
+    m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[]
+    {
+        "*.zml",
+        "*.xml" } );
 
     addPage( m_page1 );
     addPage( m_page2 );
@@ -151,9 +152,9 @@ public class ExportAsFileWizard extends Wizard
     catch( final Exception e )
     {
       e.printStackTrace();
-      
+
       MessageDialog.openError( getShell(), "Datei kann nicht erzeugt werden", e.getLocalizedMessage() );
-      
+
       return false;
     }
     finally
@@ -163,8 +164,7 @@ public class ExportAsFileWizard extends Wizard
 
     if( m_project != null )
     {
-      final Job refreshJob = new Job( "Projekt " + m_project.getName()
-          + " aktualisieren" )
+      final Job refreshJob = new Job( "Projekt " + m_project.getName() + " aktualisieren" )
       {
         protected IStatus run( IProgressMonitor monitor )
         {

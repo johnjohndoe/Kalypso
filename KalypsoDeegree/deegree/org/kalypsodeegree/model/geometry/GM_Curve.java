@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,14 +57,13 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.model.geometry;
 
 /**
  * 
- * The interface defines the access to curve geometries. Curves are made of one
- * or more curve segments.
+ * The interface defines the access to curve geometries. Curves are made of one or more curve segments.
  * 
  * <p>
  * -----------------------------------------------------
@@ -93,14 +92,13 @@ public interface GM_Curve extends GM_OrientableCurve, GM_GenericCurve
   GM_CurveSegment getCurveSegmentAt( int index ) throws GM_Exception;
 
   /**
-   * writes a segment to the curve at submitted position. the old point will be
-   * deleted
+   * writes a segment to the curve at submitted position. the old point will be deleted
    */
   void setCurveSegmentAt( GM_CurveSegment segment, int index ) throws GM_Exception;
 
   /**
-   * inserts a segment in the curve at the submitted position. all points with a
-   * position that equals index or is higher will be shifted
+   * inserts a segment in the curve at the submitted position. all points with a position that equals index or is higher
+   * will be shifted
    */
   void insertCurveSegmentAt( GM_CurveSegment segment, int index ) throws GM_Exception;
 

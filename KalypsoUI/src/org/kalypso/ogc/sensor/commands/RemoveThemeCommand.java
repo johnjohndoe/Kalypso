@@ -52,10 +52,10 @@ import org.kalypso.util.command.ICommand;
 public class RemoveThemeCommand implements ICommand
 {
   private final ObsView m_template;
+
   private final ObsViewItem m_item;
 
-  public RemoveThemeCommand( ObsView template,
-      ObsViewItem item )
+  public RemoveThemeCommand( ObsView template, ObsViewItem item )
   {
     m_template = template;
     m_item = item;

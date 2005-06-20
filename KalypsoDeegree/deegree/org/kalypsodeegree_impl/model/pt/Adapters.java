@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.pt;
 
 // OpenGIS dependencies
@@ -66,9 +66,8 @@ import org.opengis.pt.PT_Envelope;
 import org.opengis.pt.PT_Matrix;
 
 /**
- * <FONT COLOR="#FF6633">Provide methods for interoperability with
- * <code>org.opengis.pt</code> package. </FONT> All methods accept null
- * argument.
+ * <FONT COLOR="#FF6633">Provide methods for interoperability with <code>org.opengis.pt</code> package. </FONT> All
+ * methods accept null argument.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -99,8 +98,8 @@ public class Adapters
   }
 
   /**
-   * Returns an OpenGIS structure for a coordinate point. Changes to the
-   * returned structure will not affect the original point.
+   * Returns an OpenGIS structure for a coordinate point. Changes to the returned structure will not affect the original
+   * point.
    */
   public PT_CoordinatePoint export( final CoordinatePoint point )
   {
@@ -112,8 +111,8 @@ public class Adapters
   }
 
   /**
-   * Returns an OpenGIS structure for an envelope. Changes to the returned
-   * structure will not affect the original envelope.
+   * Returns an OpenGIS structure for an envelope. Changes to the returned structure will not affect the original
+   * envelope.
    */
   public PT_Envelope export( final Envelope envelope )
   {
@@ -134,8 +133,7 @@ public class Adapters
   }
 
   /**
-   * Returns an OpenGIS structure for a matrix. Changes to the returned
-   * structure will not affect the original matrix.
+   * Returns an OpenGIS structure for a matrix. Changes to the returned structure will not affect the original matrix.
    */
   public PT_Matrix export( final Matrix matrix )
   {
@@ -145,8 +143,8 @@ public class Adapters
   }
 
   /**
-   * Returns a coordinate point from an OpenGIS's structure. Changes to the
-   * returned point will not affect the original structure.
+   * Returns a coordinate point from an OpenGIS's structure. Changes to the returned point will not affect the original
+   * structure.
    */
   public CoordinatePoint wrap( final PT_CoordinatePoint point )
   {
@@ -154,8 +152,8 @@ public class Adapters
   }
 
   /**
-   * Returns an envelope from an OpenGIS's structure. Changes to the returned
-   * envelope will not affect the original structure.
+   * Returns an envelope from an OpenGIS's structure. Changes to the returned envelope will not affect the original
+   * structure.
    */
   public Envelope wrap( final PT_Envelope envelope )
   {
@@ -163,8 +161,8 @@ public class Adapters
   }
 
   /**
-   * Returns a matrix from an OpenGIS's structure. Changes to the returned
-   * matrix will not affect the original structure.
+   * Returns a matrix from an OpenGIS's structure. Changes to the returned matrix will not affect the original
+   * structure.
    */
   public Matrix wrap( final PT_Matrix matrix )
   {

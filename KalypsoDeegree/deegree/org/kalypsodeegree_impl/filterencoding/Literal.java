@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.Expression;
@@ -67,8 +67,7 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a <Literal>element as defined in the
- * FeatureId DTD.
+ * Encapsulates the information of a <Literal>element as defined in the FeatureId DTD.
  * 
  * @author Markus Schneider
  * @version 07.08.2002
@@ -87,9 +86,8 @@ public class Literal extends Expression_Impl
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object is built. This
-   * method recursively calls other buildFromDOM () - methods to validate the
-   * structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
@@ -129,14 +127,12 @@ public class Literal extends Expression_Impl
   }
 
   /**
-   * Returns the <tt>Literal</tt>'s value (to be used in the evaluation of a
-   * complexer <tt>Expression</tt>). If the value appears to be numerical, a
-   * <tt>Double</tt> is returned, else a <tt>String</tt>. TODO: Improve
+   * Returns the <tt>Literal</tt>'s value (to be used in the evaluation of a complexer <tt>Expression</tt>). If
+   * the value appears to be numerical, a <tt>Double</tt> is returned, else a <tt>String</tt>. TODO: Improve
    * datatype handling.
    * 
    * @param feature
-   *          that determines the values of <tt>PropertyNames</tt> in the
-   *          expression (no use here)
+   *          that determines the values of <tt>PropertyNames</tt> in the expression (no use here)
    * @return the resulting value
    */
   public Object evaluate( Feature feature )
@@ -147,7 +143,7 @@ public class Literal extends Expression_Impl
     }
     catch( NumberFormatException e )
     {
-    //  
+      //  
     }
     return value;
   }

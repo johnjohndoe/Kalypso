@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.BasicStroke;
@@ -92,8 +92,8 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl implements
-    PolygonDisplayElement, Serializable
+public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl implements PolygonDisplayElement,
+    Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2980154437699081214L;
@@ -119,8 +119,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param geometry
    * @param symbolizer
    */
-  protected PolygonDisplayElement_Impl( Feature feature, GM_Surface geometry,
-      PolygonSymbolizer symbolizer )
+  protected PolygonDisplayElement_Impl( Feature feature, GM_Surface geometry, PolygonSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -146,8 +145,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param geometry
    * @param symbolizer
    */
-  protected PolygonDisplayElement_Impl( Feature feature, GM_MultiSurface geometry,
-      PolygonSymbolizer symbolizer )
+  protected PolygonDisplayElement_Impl( Feature feature, GM_MultiSurface geometry, PolygonSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -193,11 +191,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   }
 
   /**
-   * calculates the Area (image or screen coordinates) where to draw the
-   * surface.
+   * calculates the Area (image or screen coordinates) where to draw the surface.
    */
-  private Area calcTargetCoordinates( GeoTransform projection, GM_Surface surface )
-      throws Exception
+  private Area calcTargetCoordinates( GeoTransform projection, GM_Surface surface ) throws Exception
   {
     Area areaouter = null;
 
@@ -291,8 +287,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   }
 
   /**
-   * renders one surface to the submitted graphic context considering the also
-   * submitted projection
+   * renders one surface to the submitted graphic context considering the also submitted projection
    */
   private void drawPolygon( Graphics g, Area area ) throws FilterEvaluationException
   {
@@ -327,8 +322,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
           BufferedImage texture = gFill.getGraphic().getAsImage( feature );
           if( texture != null )
           {
-            Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture
-                .getHeight( null ) );
+            Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
             g2.setPaint( new TexturePaint( texture, anchor ) );
           }
         }
@@ -339,7 +333,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         }
         catch( Exception e )
         {
-        //  
+          //  
         }
       }
     }
@@ -371,8 +365,8 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         }
         else
         {
-          bs2 = new BasicStroke( w, stroke.getLineCap( feature ), stroke.getLineJoin( feature ),
-              10.0f, dash, stroke.getDashOffset( feature ) );
+          bs2 = new BasicStroke( w, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash, stroke
+              .getDashOffset( feature ) );
         }
 
         g2.setStroke( bs2 );
@@ -382,7 +376,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
         }
         catch( Exception e )
         {
-        //  
+          //  
         }
       }
     }

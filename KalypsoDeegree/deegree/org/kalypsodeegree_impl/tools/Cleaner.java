@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,16 +57,15 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Simple class which performs an action in continuing intervals. per default
- * the garbage collector will be called. But extending classes can change this
- * behavior by overwriting the run() method.
+ * Simple class which performs an action in continuing intervals. per default the garbage collector will be called. But
+ * extending classes can change this behavior by overwriting the run() method.
  * 
  * 
  * @version $Revision$
@@ -88,10 +87,9 @@ public class Cleaner extends TimerTask
   }
 
   /**
-   * the run mehtod will called after the interval (milli seconds) passed to the
-   * constructor. An extending class can overwrite this method to perform
-   * something else then the default action. Per default the garbage collector
-   * will be called --> System.gc();
+   * the run mehtod will called after the interval (milli seconds) passed to the constructor. An extending class can
+   * overwrite this method to perform something else then the default action. Per default the garbage collector will be
+   * called --> System.gc();
    */
   public void run()
   {

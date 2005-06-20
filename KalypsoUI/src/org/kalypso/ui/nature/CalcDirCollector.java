@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.nature;
 
 import java.io.File;
@@ -69,7 +69,7 @@ public class CalcDirCollector implements FileVisitor
         return false;
       }
     }
-    
+
     return true;
   }
 

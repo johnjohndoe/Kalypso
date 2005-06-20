@@ -80,9 +80,8 @@ public class ArrayChooserPage extends WizardPage
     this( chooseables, null, null, pageName, title, titleImage );
   }
 
-  public ArrayChooserPage( final Object chooseables, final Object[] selected,
-      final Object[] checked, final String pageName, final String title,
-      final ImageDescriptor titleImage )
+  public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked,
+      final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -120,8 +119,7 @@ public class ArrayChooserPage extends WizardPage
 
     final Composite buttonpanel = new Composite( panel, SWT.RIGHT );
     buttonpanel.setLayout( new GridLayout( 2, true ) );
-    final GridData buttonpaneldata = new GridData( GridData.HORIZONTAL_ALIGN_END
-        | GridData.GRAB_HORIZONTAL );
+    final GridData buttonpaneldata = new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL );
     buttonpaneldata.grabExcessHorizontalSpace = true;
     buttonpanel.setData( buttonpaneldata );
 
@@ -136,8 +134,7 @@ public class ArrayChooserPage extends WizardPage
     return m_viewer.getCheckedElements();
   }
 
-  private static void createSelectButton( final Composite parent, final CheckboxTableViewer viewer,
-      final boolean select )
+  private static void createSelectButton( final Composite parent, final CheckboxTableViewer viewer, final boolean select )
   {
     final Button button = new Button( parent, SWT.PUSH );
 

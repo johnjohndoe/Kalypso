@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics;
 
 import org.kalypsodeegree.model.feature.Feature;
@@ -75,8 +75,7 @@ public interface Highlighter
 {
 
   /**
-   * adds a Theme to the Highlighter that shall be notified if something
-   * happens.
+   * adds a Theme to the Highlighter that shall be notified if something happens.
    */
   void addTheme( Theme theme );
 
@@ -86,20 +85,19 @@ public interface Highlighter
   void removeTheme( Theme theme );
 
   /**
-   * highlight the feature with the submitted id. If the feature is already
-   * highlighted it will be marked as not highlighted.
+   * highlight the feature with the submitted id. If the feature is already highlighted it will be marked as not
+   * highlighted.
    */
   void highlight( int id );
 
   /**
-   * highlight the submitted feature. If the feature is already highlighted it
-   * will be marked as not highlighted.
+   * highlight the submitted feature. If the feature is already highlighted it will be marked as not highlighted.
    */
   void highlight( Feature feature );
 
   /**
-   * highlight the features specified by the current selector of the Theme. If a
-   * feature is already highlighted it will be marked as not highlighted.
+   * highlight the features specified by the current selector of the Theme. If a feature is already highlighted it will
+   * be marked as not highlighted.
    */
   void highlight();
 

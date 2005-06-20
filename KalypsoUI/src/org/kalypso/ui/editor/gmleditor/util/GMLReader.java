@@ -41,7 +41,6 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
 
   private final EventListenerList listenerList = new EventListenerList();
 
-
   private JobExclusiveCommandTarget m_commandTarget;
 
   private boolean m_loaded = false;
@@ -58,7 +57,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
     catch( final Exception e )
     {
       e.printStackTrace();
-      
+
       pool.removePoolListener( this );
     }
   }
@@ -90,8 +89,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
       {
         if( ftp[i] instanceof FeatureAssociationTypeProperty )
         {
-          final PropertyElement propertyElement = new PropertyElement( parent,
-              (FeatureAssociationTypeProperty)ftp[i] );
+          final PropertyElement propertyElement = new PropertyElement( parent, (FeatureAssociationTypeProperty)ftp[i] );
           try
           {
             final Object value = ft.getProperties()[i];
@@ -133,8 +131,8 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
   {
@@ -155,8 +153,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
@@ -168,7 +165,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   {
     listenerList.add( IGMLDocumentListener.class, l );
   }
-  
+
   public void removeGMLDocuentListener( final IGMLDocumentListener l )
   {
     listenerList.remove( IGMLDocumentListener.class, l );
@@ -181,8 +178,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
     {
       if( listeners[i] == IGMLDocumentListener.class )
       {
-        GMLDocumentEvent event = new GMLDocumentEvent( getGMLDocument( getGMLWorkspace() ),
-            getGMLWorkspace() );
+        GMLDocumentEvent event = new GMLDocumentEvent( getGMLDocument( getGMLWorkspace() ), getGMLWorkspace() );
         ( (IGMLDocumentListener)listeners[i + 1] ).onChange( event );
       }
     }
@@ -194,8 +190,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( ICommand command, Runnable runnable )
   {

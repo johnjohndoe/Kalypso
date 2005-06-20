@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.tools.shape;
 
@@ -66,25 +66,22 @@ import javax.swing.JFrame;
 
 /**
  * <p>
- * IndexShapeFile is an application that can be used to index an ESRI
- * ShapeFiles(tm). It indexes both the geometry and the alphanumeric attributes
+ * IndexShapeFile is an application that can be used to index an ESRI ShapeFiles(tm). It indexes both the geometry and
+ * the alphanumeric attributes
  * </p>
  * 
  * <p>
- * The application shows a file chooser with which the user can select a file.
- * When a file is choosen the application opens it and shows the attributes. The
- * user can now select the attributes that has to be indexed. Already indexed
- * attributes are already selected and can be deselected. For alphanumeric
- * attributes the user can indicate if the attribute is unique or not.
+ * The application shows a file chooser with which the user can select a file. When a file is choosen the application
+ * opens it and shows the attributes. The user can now select the attributes that has to be indexed. Already indexed
+ * attributes are already selected and can be deselected. For alphanumeric attributes the user can indicate if the
+ * attribute is unique or not.
  * </p>
  * 
  * <p>
- * After selecting the attributes the application creates the needed indexes and
- * loops over all the features in the shape file. For every feature the
- * application inserts the attributes in the right index. After looping over the
- * features the application closes the shapefile and the created indexes and
- * removes the indexes that are no longer needed (eg. the index for the
- * attributes that are deselected).
+ * After selecting the attributes the application creates the needed indexes and loops over all the features in the
+ * shape file. For every feature the application inserts the attributes in the right index. After looping over the
+ * features the application closes the shapefile and the created indexes and removes the indexes that are no longer
+ * needed (eg. the index for the attributes that are deselected).
  * </p>
  * 
  * <p>

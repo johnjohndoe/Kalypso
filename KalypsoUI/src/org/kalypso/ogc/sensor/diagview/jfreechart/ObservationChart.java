@@ -59,11 +59,9 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 /**
  * @author schlienger
  */
-public class ObservationChart extends JFreeChart implements
-    IObsViewEventListener
+public class ObservationChart extends JFreeChart implements IObsViewEventListener
 {
-  protected static final Logger LOGGER = Logger
-      .getLogger( ObservationChart.class.getName() );
+  protected static final Logger LOGGER = Logger.getLogger( ObservationChart.class.getName() );
 
   private final DiagView m_view;
 
@@ -75,8 +73,8 @@ public class ObservationChart extends JFreeChart implements
    */
   public ObservationChart( final DiagView template ) throws SensorException
   {
-    super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory
-        .createObservationPlot( template ), template.isShowLegend() );
+    super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory.createObservationPlot( template ), template
+        .isShowLegend() );
 
     m_view = template;
 
@@ -95,7 +93,7 @@ public class ObservationChart extends JFreeChart implements
   /**
    * Disposes the chart.
    */
-  public void dispose( )
+  public void dispose()
   {
     m_view.removeObsViewListener( this );
 
@@ -105,7 +103,7 @@ public class ObservationChart extends JFreeChart implements
   /**
    * Clears the curves in the chart
    */
-  protected void clearChart( )
+  protected void clearChart()
   {
     getObservationPlot().clearCurves();
   }
@@ -113,9 +111,9 @@ public class ObservationChart extends JFreeChart implements
   /**
    * @return plot casted as obs plot
    */
-  public ObservationPlot getObservationPlot( )
+  public ObservationPlot getObservationPlot()
   {
-    return (ObservationPlot) getPlot();
+    return (ObservationPlot)getPlot();
   }
 
   /**
@@ -125,7 +123,7 @@ public class ObservationChart extends JFreeChart implements
   {
     final CatchRunnable runnable = new CatchRunnable()
     {
-      protected void runIntern( ) throws Throwable
+      protected void runIntern() throws Throwable
       {
         final ObservationPlot obsPlot = getObservationPlot();
 
@@ -133,18 +131,17 @@ public class ObservationChart extends JFreeChart implements
 
         DiagView view = null;
         if( evt.getObject() instanceof DiagView )
-          view = (DiagView) evt.getObject();
+          view = (DiagView)evt.getObject();
         else if( evt.getObject() instanceof DiagViewCurve )
-          view = (DiagView) ((DiagViewCurve) evt.getObject()).getView();
+          view = (DiagView)( (DiagViewCurve)evt.getObject() ).getView();
 
-        if( evt.getType() == ObsViewEvent.TYPE_ADD
-            || evt.getType() == ObsViewEvent.TYPE_REFRESH 
+        if( evt.getType() == ObsViewEvent.TYPE_ADD || evt.getType() == ObsViewEvent.TYPE_REFRESH
             || evt.getType() == ObsViewEvent.TYPE_REMOVE )
         {
           final ObsViewItem[] items = view.getItems();
           for( int i = 0; i < items.length; i++ )
           {
-            final DiagViewCurve curve = (DiagViewCurve) items[i];
+            final DiagViewCurve curve = (DiagViewCurve)items[i];
             obsPlot.addCurve( curve );
           }
         }
@@ -165,9 +162,8 @@ public class ObservationChart extends JFreeChart implements
     {
       // TODO: hier kann ne Nullpointer exception geben (es gibt nicht immer ein
       // activeWokbenchWindow)
-      MessageDialog.openError( Workbench.getInstance()
-          .getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler", e
-          .toString() );
+      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler",
+          e.toString() );
     }
   }
 }

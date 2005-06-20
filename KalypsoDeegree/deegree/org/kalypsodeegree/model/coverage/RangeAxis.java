@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 /**
- * The RangeAxis interface is for compound observations. It describes and lists
- * the values at which the range component reports properties, or the “bins” by
- * which the range componet reports counts or other aggregate values
+ * The RangeAxis interface is for compound observations. It describes and lists the values at which the range component
+ * reports properties, or the “bins” by which the range componet reports counts or other aggregate values
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -77,8 +76,7 @@ public interface RangeAxis extends Observable
 {
 
   /**
-   * returns the list the actual parameter values for which measurements are
-   * available
+   * returns the list the actual parameter values for which measurements are available
    */
   RangeExtent getRangeExtent();
 }

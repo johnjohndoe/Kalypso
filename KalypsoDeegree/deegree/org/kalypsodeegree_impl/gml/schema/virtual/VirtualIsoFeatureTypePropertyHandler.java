@@ -61,8 +61,7 @@ public class VirtualIsoFeatureTypePropertyHandler implements VirtualFeatureTypeP
    */
   public boolean isDekoratorOf( FeatureType ft )
   {
-    return "http://elbe.wb.tu-harburg.de/2dModel".equals( ft.getNamespace() )
-            && "femMesh".equals( ft.getName() );
+    return "http://elbe.wb.tu-harburg.de/2dModel".equals( ft.getNamespace() ) && "femMesh".equals( ft.getName() );
   }
 
   /**

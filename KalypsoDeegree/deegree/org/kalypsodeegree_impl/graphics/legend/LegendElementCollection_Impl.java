@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.legend;
 
 import java.awt.Graphics;
@@ -70,16 +70,14 @@ import org.kalypsodeegree.graphics.legend.LegendException;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * <tt>LegendElementCollection</tt> is a collection of <tt>LegendElement</tt>
- * s and is a <tt>LegendElement</tt> too. It can be used to group elements or
- * to create more complex elements.
+ * <tt>LegendElementCollection</tt> is a collection of <tt>LegendElement</tt> s and is a <tt>LegendElement</tt>
+ * too. It can be used to group elements or to create more complex elements.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public class LegendElementCollection_Impl extends LegendElement_Impl implements
-    LegendElementCollection
+public class LegendElementCollection_Impl extends LegendElement_Impl implements LegendElementCollection
 {
 
   ArrayList collection = null;
@@ -124,8 +122,8 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
   }
 
   /**
-   * sets the title of the <tt>LegendElement</tt>. The title will be
-   * displayed on top of the <tt>LegendElementCollection</tt>
+   * sets the title of the <tt>LegendElement</tt>. The title will be displayed on top of the
+   * <tt>LegendElementCollection</tt>
    * 
    * @param title
    *          title of the <tt>LegendElement</tt>
@@ -207,8 +205,8 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
 
     for( int j = 0; j < imagearray.length; j++ )
     {
-      g.drawImage( imagearray[j], 0, ( imagearray[j].getHeight() + buffer ) * j + titleheight
-          + buffer, imagearray[j].getWidth(), imagearray[j].getHeight(), null );
+      g.drawImage( imagearray[j], 0, ( imagearray[j].getHeight() + buffer ) * j + titleheight + buffer, imagearray[j]
+          .getWidth(), imagearray[j].getHeight(), null );
     }
 
     // bi = le[0].exportAsImage();
@@ -217,14 +215,15 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements
   }
 }
 
-/*******************************************************************************
- * ****************************************************************************
- * Changes to this class. What the people have been up to: $Log:
- * LegendElementCollection_Impl.java,v $ Revision 1.7 2004/06/01 15:55:05 poth
- * no message
+/***********************************************************************************************************************
+ * **************************************************************************** Changes to this class. What the people
+ * have been up to: $Log$
+ * have been up to: Revision 1.7  2005/06/20 14:07:49  belger
+ * have been up to: Formatierung
+ * have been up to: Revision 1.7 2004/06/01 15:55:05 poth no message
  * 
  * Revision 1.6 2004/04/07 10:58:46 axel_schaefer bugfix
  * 
  * 
  *  
- ******************************************************************************/
+ **********************************************************************************************************************/

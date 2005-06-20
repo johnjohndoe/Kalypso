@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // OpenGIS dependencies (SEAGIS)
@@ -90,10 +90,9 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * A set of static methods working on OpenGIS objects. Some of those methods are
- * useful, but not really rigorous. This is why they do not appear in the
- * "official" package, but instead in this private one. <strong>Do not rely on
- * this API! </strong> It may change in incompatible way in any future version.
+ * A set of static methods working on OpenGIS objects. Some of those methods are useful, but not really rigorous. This
+ * is why they do not appear in the "official" package, but instead in this private one. <strong>Do not rely on this
+ * API! </strong> It may change in incompatible way in any future version.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -108,8 +107,7 @@ public final class OpenGIS
 
   /**
    * Returns the dimension of the first axis of a particular type. For example,
-   * <code>getDimensionOf(cs,&nbsp;AxisInfo.TIME)</code> would returns the
-   * dimension number of time axis.
+   * <code>getDimensionOf(cs,&nbsp;AxisInfo.TIME)</code> would returns the dimension number of time axis.
    */
   public static int getDimensionOf( final CoordinateSystem cs, final AxisInfo axis )
   {
@@ -122,21 +120,17 @@ public final class OpenGIS
   }
 
   /**
-   * Returns a two-dimensional coordinate system representing the two first
-   * dimensions of the specified coordinate system. If <code>cs</code> is
-   * already a two-dimensional coordinate system, then it is returned unchanged.
-   * Otherwise, if it is a {@link CompoundCoordinateSystem}, then the head
-   * coordinate system is examined.
+   * Returns a two-dimensional coordinate system representing the two first dimensions of the specified coordinate
+   * system. If <code>cs</code> is already a two-dimensional coordinate system, then it is returned unchanged.
+   * Otherwise, if it is a {@link CompoundCoordinateSystem}, then the head coordinate system is examined.
    * 
    * @param cs
    *          The coordinate system.
-   * @return A two-dimensional coordinate system that represents the two first
-   *         dimensions of <code>cs</code>.
+   * @return A two-dimensional coordinate system that represents the two first dimensions of <code>cs</code>.
    * @throws IllegalArgumentException
    *           if <code>cs</code> can't be reduced to a two-coordinate system.
    */
-  public static CoordinateSystem getCoordinateSystem2D( CoordinateSystem cs )
-      throws IllegalArgumentException
+  public static CoordinateSystem getCoordinateSystem2D( CoordinateSystem cs ) throws IllegalArgumentException
   {
     if( cs != null )
     {
@@ -144,8 +138,8 @@ public final class OpenGIS
       {
         if( !( cs instanceof CompoundCoordinateSystem ) )
         {
-          throw new IllegalArgumentException( Resources.format(
-              ResourceKeys.ERROR_CANT_REDUCE_TO_TWO_DIMENSIONS_$1, cs.getName( null ) ) );
+          throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_CANT_REDUCE_TO_TWO_DIMENSIONS_$1, cs
+              .getName( null ) ) );
         }
         cs = ( (CompoundCoordinateSystem)cs ).getHeadCS();
       }
@@ -154,10 +148,9 @@ public final class OpenGIS
   }
 
   /**
-   * Returns the first horizontal datum found in a coordinate system, or
-   * <code>null</code> if there is none. Note: in a future version, we may
-   * implement this method directly into {@link CoordinateSystem}(not sure yet
-   * if it would be a good idea).
+   * Returns the first horizontal datum found in a coordinate system, or <code>null</code> if there is none. Note: in
+   * a future version, we may implement this method directly into {@link CoordinateSystem}(not sure yet if it would be
+   * a good idea).
    */
   public static HorizontalDatum getHorizontalDatum( final CoordinateSystem cs )
   {
@@ -178,10 +171,9 @@ public final class OpenGIS
   }
 
   /**
-   * Returns the first vertical datum found in a coordinate system, or
-   * <code>null</code> if there is none. Note: if a future version, we may
-   * implement this method directly into {@link CoordinateSystem}(not sure yet
-   * if it would be a good idea).
+   * Returns the first vertical datum found in a coordinate system, or <code>null</code> if there is none. Note: if a
+   * future version, we may implement this method directly into {@link CoordinateSystem}(not sure yet if it would be a
+   * good idea).
    */
   public static VerticalDatum getVerticalDatum( final CoordinateSystem cs )
   {
@@ -202,10 +194,9 @@ public final class OpenGIS
   }
 
   /**
-   * Returns the first temporal datum found in a coordinate system, or
-   * <code>null</code> if there is none. Note: if a future version, we may
-   * implement this method directly into {@link CoordinateSystem}(not sure yet
-   * if it would be a good idea).
+   * Returns the first temporal datum found in a coordinate system, or <code>null</code> if there is none. Note: if a
+   * future version, we may implement this method directly into {@link CoordinateSystem}(not sure yet if it would be a
+   * good idea).
    */
   public static TemporalDatum getTemporalDatum( final CoordinateSystem cs )
   {
@@ -232,13 +223,11 @@ public final class OpenGIS
    *          The transform to use.
    * @param envelope
    *          Envelope to transform. This envelope will not be modified.
-   * @return The transformed envelope. It may not have the same number of
-   *         dimensions than the original envelope.
+   * @return The transformed envelope. It may not have the same number of dimensions than the original envelope.
    * @throws TransformException
    *           if a transform failed.
    */
-  public static Envelope transform( final MathTransform transform, final Envelope envelope )
-      throws TransformException
+  public static Envelope transform( final MathTransform transform, final Envelope envelope ) throws TransformException
   {
     final int sourceDim = transform.getDimSource();
     final int targetDim = transform.getDimTarget();
@@ -295,8 +284,8 @@ public final class OpenGIS
   }
 
   /**
-   * Transform an envelope. The transformation is only approximative. Invoking
-   * this method is equivalent to invoking the following: <br>
+   * Transform an envelope. The transformation is only approximative. Invoking this method is equivalent to invoking the
+   * following: <br>
    * 
    * <pre>transform(transform, new Envelope(source)).toRectangle2D()</pre>
    * 
@@ -305,16 +294,15 @@ public final class OpenGIS
    * @param source
    *          The rectangle to transform (may be <code>null</code>).
    * @param dest
-   *          The destination rectangle (may be <code>source</code>). If
-   *          <code>null</code>, a new rectangle will be created and
-   *          returned.
-   * @return <code>dest</code>, or a new rectangle if <code>dest</code> was
-   *         non-null and <code>source</code> was null.
+   *          The destination rectangle (may be <code>source</code>). If <code>null</code>, a new rectangle will
+   *          be created and returned.
+   * @return <code>dest</code>, or a new rectangle if <code>dest</code> was non-null and <code>source</code> was
+   *         null.
    * @throws TransformException
    *           if a transform failed.
    */
-  public static Rectangle2D transform( final MathTransform2D transform, final Rectangle2D source,
-      final Rectangle2D dest ) throws TransformException
+  public static Rectangle2D transform( final MathTransform2D transform, final Rectangle2D source, final Rectangle2D dest )
+      throws TransformException
   {
     if( source == null )
     {
@@ -362,11 +350,10 @@ public final class OpenGIS
   }
 
   /**
-   * Retourne une chaîne de caractères représentant la région géographique
-   * spécifiée. La chaîne retournée sera de la forme "45°00.00'N-50°00.00'N
-   * 30°00.00'E-40°00.00'E". Si une projection cartographique est nécessaire
-   * pour obtenir cette représentation, elle sera faite automatiquement. Cette
-   * chaîne sert surtout à des fins de déboguage et sa forme peut varier.
+   * Retourne une chaîne de caractères représentant la région géographique spécifiée. La chaîne retournée sera de la
+   * forme "45°00.00'N-50°00.00'N 30°00.00'E-40°00.00'E". Si une projection cartographique est nécessaire pour obtenir
+   * cette représentation, elle sera faite automatiquement. Cette chaîne sert surtout à des fins de déboguage et sa
+   * forme peut varier.
    */
   public static String toWGS84String( final CoordinateSystem cs, Rectangle2D bounds )
   {
@@ -375,8 +362,8 @@ public final class OpenGIS
     {
       if( !GeographicCoordinateSystem.WGS84.equivalents( cs ) )
       {
-        final CoordinateTransformation tr = CoordinateTransformationFactory.getDefault()
-            .createFromCoordinateSystems( cs, GeographicCoordinateSystem.WGS84 );
+        final CoordinateTransformation tr = CoordinateTransformationFactory.getDefault().createFromCoordinateSystems(
+            cs, GeographicCoordinateSystem.WGS84 );
         bounds = transform( (MathTransform2D)tr.getMathTransform(), bounds, null );
       }
       final AngleFormat fmt = new AngleFormat( "DD°MM.m'" );

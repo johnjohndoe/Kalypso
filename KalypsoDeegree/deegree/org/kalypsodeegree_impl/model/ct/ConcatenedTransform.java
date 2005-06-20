@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies (SEAGIS)
@@ -70,8 +70,8 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Base class for concatened transform. Concatened transforms are serializable
- * if all their step transforms are serializables.
+ * Base class for concatened transform. Concatened transforms are serializable if all their step transforms are
+ * serializables.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -84,8 +84,8 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
   private static final long serialVersionUID = 5772066656987558634L;
 
   /**
-   * The math transform factory that created this concatened transform. Will be
-   * used for creating the inverse transform when needed.
+   * The math transform factory that created this concatened transform. Will be used for creating the inverse transform
+   * when needed.
    */
   private MathTransformFactory provider;
 
@@ -115,8 +115,8 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
     this.transform2 = transform2;
     if( !isValid() )
     {
-      throw new IllegalArgumentException( Resources.format(
-          ResourceKeys.ERROR_CANT_CONCATENATE_CS_$2, getName( transform1 ), getName( transform2 ) ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_CANT_CONCATENATE_CS_$2,
+          getName( transform1 ), getName( transform2 ) ) );
     }
   }
 
@@ -135,8 +135,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Check if transforms are compatibles. The default implementation check if
-   * transfert dimension match.
+   * Check if transforms are compatibles. The default implementation check if transfert dimension match.
    */
   protected boolean isValid()
   {
@@ -160,11 +159,9 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>.
    */
-  public CoordinatePoint transform( final CoordinatePoint ptSrc, CoordinatePoint ptDst )
-      throws TransformException
+  public CoordinatePoint transform( final CoordinatePoint ptSrc, CoordinatePoint ptDst ) throws TransformException
   {
     //  Note: If we know that the transfert dimension is the same than source
     //        and target dimension, then we don't need to use an intermediate
@@ -175,8 +172,8 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  public void transform( final double[] srcPts, final int srcOff, final double[] dstPts,
-      final int dstOff, final int numPts ) throws TransformException
+  public void transform( final double[] srcPts, final int srcOff, final double[] dstPts, final int dstOff,
+      final int numPts ) throws TransformException
   {
     //  Note: If we know that the transfert dimension is the same than source
     //        and target dimension, then we don't need to use an intermediate
@@ -189,8 +186,8 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  public void transform( final float[] srcPts, final int srcOff, final float[] dstPts,
-      final int dstOff, final int numPts ) throws TransformException
+  public void transform( final float[] srcPts, final int srcOff, final float[] dstPts, final int dstOff,
+      final int numPts ) throws TransformException
   {
     //  Note: If we know that the transfert dimension is the same than source
     //        and target dimension, then we don't need to use an intermediate
@@ -252,11 +249,9 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
   }
 
   /**
-   * Tests whether this transform does not move any points. Default
-   * implementation check if the two transforms are identity. This a way too
-   * conservative aproach, but it it doesn't hurt since ConcatenedTransform
-   * should not have been created if it were to result in an identity transform
-   * (this case should have been detected earlier).
+   * Tests whether this transform does not move any points. Default implementation check if the two transforms are
+   * identity. This a way too conservative aproach, but it it doesn't hurt since ConcatenedTransform should not have
+   * been created if it were to result in an identity transform (this case should have been detected earlier).
    */
   public final boolean isIdentity()
   {
@@ -301,8 +296,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
   /**
    * Append to a string buffer the WKT for the specified math transform.
    */
-  private static void addWKT( final StringBuffer buffer, final MathTransform transform,
-      final boolean first )
+  private static void addWKT( final StringBuffer buffer, final MathTransform transform, final boolean first )
   {
     if( transform instanceof ConcatenedTransform )
     {

@@ -45,6 +45,7 @@
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -186,8 +187,7 @@ public class LabelPointPlacementPanel
         catch( NumberFormatException nfe )
         {
           StyleEditorErrorDialog error = new StyleEditorErrorDialog( getComposite().getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
-              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           error.showError();
           getXInput().setText( "" + getXValue() );
           getYInput().setText( "" + getYValue() );

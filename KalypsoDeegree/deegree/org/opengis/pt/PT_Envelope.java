@@ -1,13 +1,10 @@
 /*
- * OpenGIS® Coordinate Transformation Services Implementation Specification
- * Copyright (2001) OpenGIS consortium
+ * OpenGIS® Coordinate Transformation Services Implementation Specification Copyright (2001) OpenGIS consortium
  * 
- * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official
- * OpenGIS's interface files doesn't contain a copyright notice yet. This file
- * is a slightly modified version of official OpenGIS's interface. Changes have
- * been done in order to fix RMI problems and are documented on the SEAGIS web
- * site (seagis.sourceforge.net). THIS FILE WILL LIKELY BE REPLACED BY NEXT
- * VERSION OF OPENGIS SPECIFICATIONS.
+ * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official OpenGIS's interface files doesn't contain a
+ * copyright notice yet. This file is a slightly modified version of official OpenGIS's interface. Changes have been
+ * done in order to fix RMI problems and are documented on the SEAGIS web site (seagis.sourceforge.net). THIS FILE WILL
+ * LIKELY BE REPLACED BY NEXT VERSION OF OPENGIS SPECIFICATIONS.
  */
 package org.opengis.pt;
 
@@ -15,13 +12,10 @@ package org.opengis.pt;
 import java.io.Serializable;
 
 /**
- * A box defined by two positions. The two positions must have the same
- * dimension. Each of the ordinate values in the minimum point must be less than
- * or equal to the corresponding ordinate value in the maximum point. Please
- * note that these two points may be outside the valid domain of their
- * coordinate system. (Of course the points and envelope do not explicitly
- * reference a coordinate system, but their implicit coordinate system is
- * defined by their context.)
+ * A box defined by two positions. The two positions must have the same dimension. Each of the ordinate values in the
+ * minimum point must be less than or equal to the corresponding ordinate value in the maximum point. Please note that
+ * these two points may be outside the valid domain of their coordinate system. (Of course the points and envelope do
+ * not explicitly reference a coordinate system, but their implicit coordinate system is defined by their context.)
  * 
  * @version 1.01
  * @since 1.00
@@ -31,8 +25,7 @@ import java.io.Serializable;
 public class PT_Envelope implements Cloneable, Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with CSS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with CSS 1.00.
    */
   private static final long serialVersionUID = -1819256261961411213L;
 
@@ -47,15 +40,14 @@ public class PT_Envelope implements Cloneable, Serializable
   public PT_CoordinatePoint maxCP;
 
   /**
-   * Construct an empty envelope. Caller must initialize {@link #minCP}and
-   * {@link #maxCP}.
+   * Construct an empty envelope. Caller must initialize {@link #minCP}and {@link #maxCP}.
    */
   public PT_Envelope()
   {}
 
   /**
-   * Returns a hash value for this envelope. This value need not remain
-   * consistent between different implementations of the same class.
+   * Returns a hash value for this envelope. This value need not remain consistent between different implementations of
+   * the same class.
    */
   public int hashCode()
   {
@@ -103,9 +95,8 @@ public class PT_Envelope implements Cloneable, Serializable
   }
 
   /**
-   * Returns a string representation of this envelope. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string representation of this envelope. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

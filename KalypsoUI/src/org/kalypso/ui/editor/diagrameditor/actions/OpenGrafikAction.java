@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.diagrameditor.actions;
 
 import org.eclipse.jface.action.IAction;
@@ -55,9 +55,9 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
    */
   public void run( IAction action )
   {
-//    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
-//    final LinkedDiagramTemplate template = editor.getTemplate();
+  //    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
+  //    final LinkedDiagramTemplate template = editor.getTemplate();
 
-    // TODO
+  // TODO
   }
 }

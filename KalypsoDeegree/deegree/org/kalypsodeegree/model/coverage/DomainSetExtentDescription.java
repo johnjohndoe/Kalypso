@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 /**
@@ -85,31 +85,27 @@ public interface DomainSetExtentDescription
   int getDimension();
 
   /**
-   * First, a required SpatialExtent element lists the bounds along each of the
-   * spatial dimensions within which coverages may be requested from a overage
-   * layer.
+   * First, a required SpatialExtent element lists the bounds along each of the spatial dimensions within which
+   * coverages may be requested from a overage layer.
    */
   SpatialExtent getSpatialExtent();
 
   /**
-   * An optional TemporalExtent element, depicted in Figure 6 below, lists the
-   * times for which coverages may be requested from a coverage layer. These may
-   * consist of one or more intervals or points in time.
+   * An optional TemporalExtent element, depicted in Figure 6 below, lists the times for which coverages may be
+   * requested from a coverage layer. These may consist of one or more intervals or points in time.
    * <p>
-   * TemporalExtent has an optional attribute uom indicating the units of
-   * measure in which it expresses time intervals or instances.
+   * TemporalExtent has an optional attribute uom indicating the units of measure in which it expresses time intervals
+   * or instances.
    */
   TemporalExtent getTemporalExtent();
 
   /**
-   * Lastly, an optional ElevationExtent element, lists the elevation intervals
-   * or points at which coverages may be requested from a coverage layer.
+   * Lastly, an optional ElevationExtent element, lists the elevation intervals or points at which coverages may be
+   * requested from a coverage layer.
    * <p>
-   * ElevationExtent has an optional attribute uom indicating the units of
-   * measure in which it expresses elevations.
+   * ElevationExtent has an optional attribute uom indicating the units of measure in which it expresses elevations.
    * <p>
-   * ElevationExtent is intended to supplement a 2-dimensional spatial extent
-   * with elevation information.
+   * ElevationExtent is intended to supplement a 2-dimensional spatial extent with elevation information.
    */
   ElevationExtent getElevationExtent();
 

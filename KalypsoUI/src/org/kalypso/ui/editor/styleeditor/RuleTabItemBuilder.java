@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.07.2004
  *  
@@ -46,8 +46,6 @@ package org.kalypso.ui.editor.styleeditor;
 
 import java.util.ArrayList;
 
-import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -58,6 +56,8 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * @author F.Lindemann
@@ -83,8 +83,7 @@ public class RuleTabItemBuilder
   private ArrayList numericFeatureTypePropertylist = null;
 
   public RuleTabItemBuilder( Composite composite, RuleFilterCollection m_rulePatternCollection,
-      KalypsoUserStyle m_userStyle, final IKalypsoFeatureTheme theme,
-      ArrayList m_numericFeatureTypePropertylist )
+      KalypsoUserStyle m_userStyle, final IKalypsoFeatureTheme theme, ArrayList m_numericFeatureTypePropertylist )
   {
     this.userStyle = m_userStyle;
     if( theme != null )

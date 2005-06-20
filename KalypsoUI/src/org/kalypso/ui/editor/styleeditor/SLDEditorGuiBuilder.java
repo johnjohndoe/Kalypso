@@ -48,18 +48,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
-import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
-import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
-import org.kalypsodeegree_impl.filterencoding.PropertyName;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
@@ -78,6 +66,18 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
+import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
@@ -108,8 +108,7 @@ public class SLDEditorGuiBuilder
     buildSWTGui( userStyle, theme, -1 );
   }
 
-  public void buildSWTGui( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme,
-      final int index )
+  public void buildSWTGui( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme, final int index )
   {
     if( index != -1 )
       focusedRuleItem = index;
@@ -173,12 +172,11 @@ public class SLDEditorGuiBuilder
       else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
         numericFeatureTypePropertylist.add( ftp[i] );
     }
-    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite,
-        MessageBundle.STYLE_EDITOR_RULE, rulePatternCollection.size(),
-        numericFeatureTypePropertylist.size() );
+    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE,
+        rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
 
-    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite,
-        rulePatternCollection, userStyle, theme, numericFeatureTypePropertylist );
+    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite, rulePatternCollection,
+        userStyle, theme, numericFeatureTypePropertylist );
 
     controlRulePanel.addPanelListener( new PanelListener()
     {
@@ -230,11 +228,9 @@ public class SLDEditorGuiBuilder
             for( int i = 0; i < getRulePatternCollection().size(); i++ )
             {
               if( i == index3 )
-                newOrdered
-                    .add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
               else if( i == ( index3 - 1 ) )
-                newOrdered
-                    .add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
               else
                 newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i ) );
             }
@@ -258,11 +254,9 @@ public class SLDEditorGuiBuilder
             for( int i = 0; i < getRulePatternCollection().size(); i++ )
             {
               if( i == index4 )
-                newOrdered
-                    .add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
               else if( i == ( index4 + 1 ) )
-                newOrdered
-                    .add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
               else
                 newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i ) );
             }
@@ -286,25 +280,25 @@ public class SLDEditorGuiBuilder
             PropertyName propertyName = new PropertyName( prop.getName() );
             PropertyIsBetweenOperation operation = null;
 
-            List geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getProperties(),null );
-            //              geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getVirtuelFeatureTypeProperty(),geometryObjects );
+            List geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames( getFeatureType().getProperties(),
+                null );
+            //              geometryObjects = AddSymbolizerPanel.queryGeometriesPropertyNames(
+            // getFeatureType().getVirtuelFeatureTypeProperty(),geometryObjects );
 
             if( geometryObjects.size() > 0 )
             {
-              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( (String)geometryObjects.get(0), "Point",
+              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( (String)geometryObjects.get( 0 ), "Point",
                   getFeatureType() );
               String patternName = "-name-" + new Date().getTime();
               lowerBoundary = new BoundaryExpression( "0" );
               upperBoundary = new BoundaryExpression( "1" );
-              operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary,
-                  upperBoundary );
+              operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
 
-              ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null,
-                  new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo
+              ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter(
+                  operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
+              userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null, patternName, "", "abstract",
+                  null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo
                       .getMaxScaleDenominator() ) );
-              userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null,
-                  patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo
-                      .getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
             }
             setFocusedRuleItem( getRulePatternCollection().size() );
             userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );

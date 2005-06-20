@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -74,9 +74,8 @@ import org.opengis.cs.CS_CoordinateSystem;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Default implementation of the GM_Object interface from package deegree.model.
- * The implementation is abstract because only the management of the spatial
- * reference system is unique for all geometries.
+ * Default implementation of the GM_Object interface from package deegree.model. The implementation is abstract because
+ * only the management of the spatial reference system is unique for all geometries.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -135,8 +134,8 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * returns a shallow copy of the geometry. this isn't realized at this level
-   * so a CloneNotSupportedException will be thrown.
+   * returns a shallow copy of the geometry. this isn't realized at this level so a CloneNotSupportedException will be
+   * thrown.
    */
   public Object clone() throws CloneNotSupportedException
   {
@@ -180,19 +179,15 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The operation "distance" shall return the distance between this GM_Object
-   * and another GM_Object. This distance is defined to be the greatest lower
-   * bound of the set of distances between all pairs of points that include one
-   * each from each of the two GM_Objects. A "distance" value shall be a
-   * positive number associated to distance units such as meters or standard
-   * foot. If necessary, the second geometric object shall be transformed into
-   * the same coordinate reference system as the first before the distance is
-   * calculated.
+   * The operation "distance" shall return the distance between this GM_Object and another GM_Object. This distance is
+   * defined to be the greatest lower bound of the set of distances between all pairs of points that include one each
+   * from each of the two GM_Objects. A "distance" value shall be a positive number associated to distance units such as
+   * meters or standard foot. If necessary, the second geometric object shall be transformed into the same coordinate
+   * reference system as the first before the distance is calculated.
    * <p>
    * </p>
-   * If the geometric objects overlap, or touch, then their distance apart shall
-   * be zero. Some current implementations use a "negative" distance for such
-   * cases, but the approach is neither consistent between implementations, nor
+   * If the geometric objects overlap, or touch, then their distance apart shall be zero. Some current implementations
+   * use a "negative" distance for such cases, but the approach is neither consistent between implementations, nor
    * theoretically viable.
    * <p>
    * </p>
@@ -201,29 +196,27 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   public double distance( GM_Object gmo )
   {
     // ziemlicher hack, um die distance zu ermitteln, vermutlich sehr teuer (=langsam)
-    
+
     try
     {
       final Geometry otherGmo = JTSAdapter.export( gmo );
       final Geometry thisGmo = JTSAdapter.export( this );
-      
+
       return otherGmo.distance( thisGmo );
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
-    
+
     return -9999;
   }
 
   /**
-   * The operation "centroid" shall return the mathematical centroid for this
-   * GM_Object. The result is not guaranteed to be on the object. For
-   * heterogeneous collections of primitives, the centroid only takes into
-   * account those of the largest dimension. For example, when calculating the
-   * centroid of surfaces, an average is taken weighted by area. Since curves
-   * have no area they do not contribute to the average.
+   * The operation "centroid" shall return the mathematical centroid for this GM_Object. The result is not guaranteed to
+   * be on the object. For heterogeneous collections of primitives, the centroid only takes into account those of the
+   * largest dimension. For example, when calculating the centroid of surfaces, an average is taken weighted by area.
+   * Since curves have no area they do not contribute to the average.
    * <p>
    * </p>
    */
@@ -249,8 +242,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The operation "convexHull" shall return a GM_Object that represents the
-   * convex hull of this GM_Object.
+   * The operation "convexHull" shall return a GM_Object that represents the convex hull of this GM_Object.
    * <p>
    * </p>
    * dummy implementation
@@ -265,13 +257,11 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The operation "buffer" shall return a GM_Object containing all points whose
-   * distance from this GM_Object is less than or equal to the "distance" passed
-   * as a parameter. The GM_Object returned is in the same reference system as
-   * this original GM_Object. The dimension of the returned GM_Object is
-   * normally the same as the coordinate dimension - a collection of GM_Surfaces
-   * in 2D space and a collection of GM_Solids in 3D space, but this may be
-   * application defined.
+   * The operation "buffer" shall return a GM_Object containing all points whose distance from this GM_Object is less
+   * than or equal to the "distance" passed as a parameter. The GM_Object returned is in the same reference system as
+   * this original GM_Object. The dimension of the returned GM_Object is normally the same as the coordinate dimension -
+   * a collection of GM_Surfaces in 2D space and a collection of GM_Solids in 3D space, but this may be application
+   * defined.
    * <p>
    * </p>
    * dummy implementation
@@ -282,8 +272,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains another GM_Object.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    * <p>
    * 
    * @param that
@@ -308,8 +297,8 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains a single point given by a coordinate.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains a single point given by a
+   * coordinate.
    * <p>
    * 
    * @param position
@@ -322,11 +311,9 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The Boolean valued operation "intersects" shall return TRUE if this
-   * GM_Object intersects another GM_Object. Within a GM_Complex, the
-   * GM_Primitives do not intersect one another. In general, topologically
-   * structured data uses shared geometric objects to capture intersection
-   * information.
+   * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
+   * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
+   * geometric objects to capture intersection information.
    * <p>
    * 
    * @param that
@@ -351,8 +338,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The "union" operation shall return the set theoretic union of this
-   * GM_Object and the passed GM_Object.
+   * The "union" operation shall return the set theoretic union of this GM_Object and the passed GM_Object.
    * <p>
    * 
    * @param that
@@ -384,8 +370,8 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The "intersection" operation shall return the set theoretic intersection of
-   * this <tt>GM_Object</tt> and the passed <tt>GM_Object</tt>.
+   * The "intersection" operation shall return the set theoretic intersection of this <tt>GM_Object</tt> and the
+   * passed <tt>GM_Object</tt>.
    * <p>
    * 
    * @param that
@@ -418,8 +404,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * The "difference" operation shall return the set theoretic difference of
-   * this GM_Object and the passed GM_Object.
+   * The "difference" operation shall return the set theoretic difference of this GM_Object and the passed GM_Object.
    * <p>
    * 
    * @param that
@@ -495,8 +480,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /*
-   * provide optimized proximity queries within for a distance . calvin added on
-   * 10/21/2003
+   * provide optimized proximity queries within for a distance . calvin added on 10/21/2003
    */
   public boolean isWithinDistance( GM_Object that, double distance )
   {
@@ -526,8 +510,7 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
   }
 
   /**
-   * returns true if the calculated parameters of the GM_Object are valid and
-   * false if they must be recalculated
+   * returns true if the calculated parameters of the GM_Object are valid and false if they must be recalculated
    */
   protected boolean isValid()
   {

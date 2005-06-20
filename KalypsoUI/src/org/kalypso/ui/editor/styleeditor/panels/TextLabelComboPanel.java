@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -46,9 +46,9 @@ package org.kalypso.ui.editor.styleeditor.panels;
 
 import java.util.ArrayList;
 
+import org.eclipse.swt.widgets.Composite;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author F.Lindemann

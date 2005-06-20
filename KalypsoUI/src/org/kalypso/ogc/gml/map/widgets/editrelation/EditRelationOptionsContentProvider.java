@@ -110,16 +110,15 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
       final HeavyRelationType relation = (HeavyRelationType)parentElement;
       final FeatureType destFT = relation.getLink2().getAssociationFeatureType();
       final FeatureType destFT2 = relation.getDestFT(); // where is the
-                                                        // difference ?
-      final FeatureType[] associationFeatureTypes = relation.getLink2()
-          .getAssociationFeatureTypes();
+      // difference ?
+      final FeatureType[] associationFeatureTypes = relation.getLink2().getAssociationFeatureTypes();
       if( destFT == destFT2 )
         for( int i = 0; i < associationFeatureTypes.length; i++ )
         {
           FeatureType ft = associationFeatureTypes[i];
           if( !ft.equals( destFT ) )
-            result.add( new HeavyRelationType( relation.getSrcFT(), relation.getLink1(), relation
-                .getBodyFT(), relation.getLink2(), ft ) );
+            result.add( new HeavyRelationType( relation.getSrcFT(), relation.getLink1(), relation.getBodyFT(), relation
+                .getLink2(), ft ) );
         }
     }
     else if( parentElement instanceof RelationType )
@@ -235,8 +234,8 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-   *      java.lang.Object, java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {

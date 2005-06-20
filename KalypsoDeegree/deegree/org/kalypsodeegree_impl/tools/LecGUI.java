@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.tools;
 
@@ -91,9 +91,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
 /**
- * @version @author This GUI is for creating Legend Element, which are small
- *          thumbnails with textlabel and title showing the defined styles from
- *          a SLD.
+ * @version
+ * @author This GUI is for creating Legend Element, which are small thumbnails with textlabel and title showing the
+ *         defined styles from a SLD.
  */
 public class LecGUI extends JPanel
 {
@@ -111,11 +111,29 @@ public class LecGUI extends JPanel
   private static int DEFAULTHEIGHT = 40;
 
   private static String[] POSSIBLE_OUTPUT_FORMAT =
-  { "bmp", "gif", "jpg", "png", "tif" };
+  {
+      "bmp",
+      "gif",
+      "jpg",
+      "png",
+      "tif" };
 
   private static String[] POSSIBLE_OUTPUT_COLORS =
-  { "transp.", "black", "blue", "cyan", "dark_gray", "gray", "green", "light_gray", "magenta",
-      "orange", "pink", "red", "white", "yellow" };
+  {
+      "transp.",
+      "black",
+      "blue",
+      "cyan",
+      "dark_gray",
+      "gray",
+      "green",
+      "light_gray",
+      "magenta",
+      "orange",
+      "pink",
+      "red",
+      "white",
+      "yellow" };
 
   // GUI Variables declaration //
   private JPanel m_filePanel;
@@ -190,8 +208,7 @@ public class LecGUI extends JPanel
   }
 
   /**
-   * initializes the GUI. Calls several methods, which inits the several
-   * gui-elements.
+   * initializes the GUI. Calls several methods, which inits the several gui-elements.
    */
   private void initComponents()
   {
@@ -600,8 +617,8 @@ public class LecGUI extends JPanel
   }
 
   /**
-   * the funcionality of the program. parses the input from the gui-elements and
-   * passes them to the LegendElementCreator class.
+   * the funcionality of the program. parses the input from the gui-elements and passes them to the LegendElementCreator
+   * class.
    */
   protected void doStart()
   {
@@ -612,8 +629,8 @@ public class LecGUI extends JPanel
     }
     else if( getDestDirTextfieldContent() == null || getDestDirTextfieldContent().length() == 0 )
     {
-      JOptionPane.showMessageDialog( this, "No target-directory specified.",
-          "no target, no thumbnail", JOptionPane.ERROR_MESSAGE );
+      JOptionPane.showMessageDialog( this, "No target-directory specified.", "no target, no thumbnail",
+          JOptionPane.ERROR_MESSAGE );
     }
     else
     {
@@ -626,8 +643,8 @@ public class LecGUI extends JPanel
       String title = getSelectedTitle();
       try
       {
-        LegendElementCreator lec = new LegendElementCreator( sldfile, directory, format, color,
-            width, height, title, this );
+        LegendElementCreator lec = new LegendElementCreator( sldfile, directory, format, color, width, height, title,
+            this );
         if( lec.getVerboseOutput() != null && lec.getVerboseOutput().length() > 0 )
         {
           addDebugInformation( "Finished!" + "\n" + lec.getVerboseOutput() );
@@ -747,9 +764,9 @@ public class LecGUI extends JPanel
    */
   protected void showInfo()
   {
-    String text = "This application is part of deegree.\n" + "http://deegree.sourceforge.net\n\n"
-        + "lat/lon" + "Fitzke/Fretter/Poth GbR\n" + "Meckenheimer Allee 176\n" + "53115 Bonn\n"
-        + "Tel 0228 - 73 28 38\n" + "Fax 0228 - 73 21 53\n" + "e-mail: info@lat-lon.de";
+    String text = "This application is part of deegree.\n" + "http://deegree.sourceforge.net\n\n" + "lat/lon"
+        + "Fitzke/Fretter/Poth GbR\n" + "Meckenheimer Allee 176\n" + "53115 Bonn\n" + "Tel 0228 - 73 28 38\n"
+        + "Fax 0228 - 73 21 53\n" + "e-mail: info@lat-lon.de";
     JOptionPane.showMessageDialog( this, text, "Information", JOptionPane.INFORMATION_MESSAGE );
   }
 
@@ -863,31 +880,28 @@ class LecGUIMenuHandler implements ActionListener
   }
 }
 
-/*******************************************************************************
- * ****************************************************************************
- * Changes to this class. What the people have been up to: $Log$
- * Changes to this class. What the people have been up to: Revision 1.6  2005/03/31 18:25:09  belger
- * Changes to this class. What the people have been up to: *** empty log message ***
- * Changes to this class. What the people have been up to:
- * Changes to this class. What the people have been up to: Revision 1.5  2005/03/08 11:01:10  doemming
- * Changes to this class. What the people have been up to: *** empty log message ***
- * Changes to this class. What the people have been up to:
- * Changes to this class. What the people have been up to: Revision 1.4  2005/01/18 12:50:41  doemming
- * Changes to this class. What the people have been up to: *** empty log message ***
- * Changes to this class. What the people have been up to:
- * Changes to this class. What the people have been up to: Revision 1.3  2004/10/07 14:08:59  doemming
- * Changes to this class. What the people have been up to: *** empty log message ***
- * Changes to this class. What the people have been up to:
- * Changes to this class. What the people have been up to: Revision 1.1  2004/09/02 23:57:03  doemming
- * Changes to this class. What the people have been up to: *** empty log message ***
- * Changes to this class. What the people have been up to:
- * Changes to this class. What the people have been up to: Revision 1.3
- * 2004/08/31 12:46:56 doemming Changes to this class. What the people have been
- * up to: *** empty log message *** Changes to this class. What the people have
- * been up to: Revision 1.8 2004/04/27 15:40:39 poth no message
+/***********************************************************************************************************************
+ * **************************************************************************** Changes to this class. What the people
+ * have been up to: $Log$
+ * have been up to: Revision 1.7  2005/06/20 14:07:45  belger
+ * have been up to: Formatierung
+ * have been up to: Changes to this class. What the people have been up to: Revision 1.6
+ * 2005/03/31 18:25:09 belger Changes to this class. What the people have been up to: *** empty log message *** Changes
+ * to this class. What the people have been up to: Changes to this class. What the people have been up to: Revision 1.5
+ * 2005/03/08 11:01:10 doemming Changes to this class. What the people have been up to: *** empty log message ***
+ * Changes to this class. What the people have been up to: Changes to this class. What the people have been up to:
+ * Revision 1.4 2005/01/18 12:50:41 doemming Changes to this class. What the people have been up to: *** empty log
+ * message *** Changes to this class. What the people have been up to: Changes to this class. What the people have been
+ * up to: Revision 1.3 2004/10/07 14:08:59 doemming Changes to this class. What the people have been up to: *** empty
+ * log message *** Changes to this class. What the people have been up to: Changes to this class. What the people have
+ * been up to: Revision 1.1 2004/09/02 23:57:03 doemming Changes to this class. What the people have been up to: ***
+ * empty log message *** Changes to this class. What the people have been up to: Changes to this class. What the people
+ * have been up to: Revision 1.3 2004/08/31 12:46:56 doemming Changes to this class. What the people have been up to:
+ * *** empty log message *** Changes to this class. What the people have been up to: Revision 1.8 2004/04/27 15:40:39
+ * poth no message
  * 
  * Revision 1.7 2004/04/07 10:58:29 axel_schaefer bugfix
  * 
  * 
  *  
- ******************************************************************************/
+ **********************************************************************************************************************/

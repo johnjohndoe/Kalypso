@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,14 +57,13 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.filterencoding;
 
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Abstract superclass representing expr-entities (as defined in the Expression
- * DTD).
+ * Abstract superclass representing expr-entities (as defined in the Expression DTD).
  * 
  * @author Markus Schneider
  * @version 06.08.2002
@@ -81,13 +80,11 @@ public interface Expression
   int getExpressionId();
 
   /**
-   * Calculates the <tt>Expression</tt>'s value based on the certain property
-   * values of the given feature.
+   * Calculates the <tt>Expression</tt>'s value based on the certain property values of the given feature.
    * <p>
    * 
    * @param feature
-   *          that determines the values of <tt>PropertyNames</tt> in the
-   *          expression
+   *          that determines the values of <tt>PropertyNames</tt> in the expression
    * @return the resulting Object
    * @throws FilterEvaluationException
    *           if the evaluation fails

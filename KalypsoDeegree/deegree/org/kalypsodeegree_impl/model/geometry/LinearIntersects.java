@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -96,8 +96,7 @@ class LinearIntersects
   }
 
   /**
-   * the operations returns true if the submitted point intersects the passed
-   * curve segment
+   * the operations returns true if the submitted point intersects the passed curve segment
    */
   public static boolean intersects( GM_Position point, GM_CurveSegment curve ) throws Exception
   {
@@ -108,18 +107,17 @@ class LinearIntersects
 
     for( int i = 0; i < ( points.length - 1 ); i++ )
     {
-      if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1]
-          .getY(), point.getX() - mute, point.getY() - mute, point.getX() + mute, point.getY()
-          - mute )
-          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(),
-              points[i + 1].getY(), point.getX() + mute, point.getY() - mute, point.getX() + mute,
-              point.getY() + mute )
-          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(),
-              points[i + 1].getY(), point.getX() + mute, point.getY() + mute, point.getX() - mute,
-              point.getY() + mute )
-          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(),
-              points[i + 1].getY(), point.getX() - mute, point.getY() + mute, point.getX() - mute,
-              point.getY() - mute ) )
+      if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point.getX()
+          - mute, point.getY() - mute, point.getX() + mute, point.getY() - mute )
+          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point
+              .getX()
+              + mute, point.getY() - mute, point.getX() + mute, point.getY() + mute )
+          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point
+              .getX()
+              + mute, point.getY() + mute, point.getX() - mute, point.getY() + mute )
+          || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point
+              .getX()
+              - mute, point.getY() + mute, point.getX() - mute, point.getY() - mute ) )
       {
         inter = true;
         break;
@@ -130,8 +128,7 @@ class LinearIntersects
   }
 
   /**
-   * the operation returns true if the submitted point intersects the submitted
-   * surface patch
+   * the operation returns true if the submitted point intersects the submitted surface patch
    */
   public static boolean intersects( GM_Position point, GM_SurfacePatch surface )
   {
@@ -151,8 +148,8 @@ class LinearIntersects
     {
       for( int j = 0; j < ( other.length - 1 ); j++ )
       {
-        if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1]
-            .getY(), other[j].getX(), other[j].getY(), other[j + 1].getX(), other[j + 1].getY() ) )
+        if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), other[j]
+            .getX(), other[j].getY(), other[j + 1].getX(), other[j + 1].getY() ) )
         {
           inter = true;
           break;
@@ -164,11 +161,9 @@ class LinearIntersects
   }
 
   /**
-   * the operation returns true if the submitted curve segment intersects the
-   * submitted surface patch
+   * the operation returns true if the submitted curve segment intersects the submitted surface patch
    */
-  public static boolean intersects( GM_CurveSegment curve, GM_SurfacePatch surface )
-      throws Exception
+  public static boolean intersects( GM_CurveSegment curve, GM_SurfacePatch surface ) throws Exception
   {
     boolean inter = false;
     // is the curve completly embedded within the surface patch
@@ -213,15 +208,13 @@ class LinearIntersects
   /**
    * the operation returns true if the two submitted surface patches intersects
    */
-  public static boolean intersects( GM_SurfacePatch surface1, GM_SurfacePatch surface2 )
-      throws Exception
+  public static boolean intersects( GM_SurfacePatch surface1, GM_SurfacePatch surface2 ) throws Exception
   {
     boolean inter = false;
     CS_CoordinateSystem crs1 = surface1.getCoordinateSystem();
     CS_CoordinateSystem crs2 = surface2.getCoordinateSystem();
 
-    if( LinearContains.contains( surface1, surface2 )
-        || LinearContains.contains( surface2, surface1 ) )
+    if( LinearContains.contains( surface1, surface2 ) || LinearContains.contains( surface2, surface1 ) )
     {
       inter = true;
     }
@@ -296,8 +289,7 @@ class LinearIntersects
   }
 
   /**
-   * the operations returns true if the submitted point intersects the submitted
-   * curve
+   * the operations returns true if the submitted point intersects the submitted curve
    */
   public static boolean intersects( GM_Point point, GM_Curve curve ) throws Exception
   {
@@ -318,8 +310,7 @@ class LinearIntersects
   }
 
   /**
-   * the operation returns true if the submitted point intersects the submitted
-   * surface
+   * the operation returns true if the submitted point intersects the submitted surface
    */
   public static boolean intersects( GM_Point point, GM_Surface surface ) throws Exception
   {
@@ -364,8 +355,7 @@ class LinearIntersects
   }
 
   /**
-   * the operation returns true if the submitted curve intersects the submitted
-   * surface
+   * the operation returns true if the submitted curve intersects the submitted surface
    */
   public static boolean intersects( GM_Curve curve, GM_Surface surface ) throws Exception
   {
@@ -465,15 +455,14 @@ class LinearIntersects
   }
 
   /**
-   * Tests if the line segment from (x1,&nbsp;y1) to (x2,&nbsp;y2) intersects
-   * the line segment from (x3,&nbsp;y3) to (x4,&nbsp;y4).
+   * Tests if the line segment from (x1,&nbsp;y1) to (x2,&nbsp;y2) intersects the line segment from (x3,&nbsp;y3) to
+   * (x4,&nbsp;y4).
    * 
-   * @return <code>true</code> if the first specified line segment and the
-   *         second specified line segment intersect each other;
-   *         <code>false</code> otherwise.
+   * @return <code>true</code> if the first specified line segment and the second specified line segment intersect
+   *         each other; <code>false</code> otherwise.
    */
-  protected static boolean linesIntersect( double x1, double y1, double x2, double y2, double x3,
-      double y3, double x4, double y4 )
+  protected static boolean linesIntersect( double x1, double y1, double x2, double y2, double x3, double y3, double x4,
+      double y4 )
   {
     return ( ( relativeCCW( x1, y1, x2, y2, x3, y3 ) * relativeCCW( x1, y1, x2, y2, x4, y4 ) <= 0 ) && ( relativeCCW(
         x3, y3, x4, y4, x1, y1 )

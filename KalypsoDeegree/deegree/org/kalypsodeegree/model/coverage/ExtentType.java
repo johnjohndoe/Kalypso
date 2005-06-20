@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 /**
@@ -90,14 +90,13 @@ public interface ExtentType
   double getResolution();
 
   /**
-   * returns the value of the extent if its a single value extent. in this case
-   * getMin(), getMax() and getResolution() will return -9E99
+   * returns the value of the extent if its a single value extent. in this case getMin(), getMax() and getResolution()
+   * will return -9E99
    */
   double getValue();
 
   /**
-   * return the units of measure in which it expresses time intervals or
-   * instances
+   * return the units of measure in which it expresses time intervals or instances
    */
   String getUOM();
 

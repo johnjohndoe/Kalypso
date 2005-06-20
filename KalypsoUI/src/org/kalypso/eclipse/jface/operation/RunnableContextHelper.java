@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.jface.operation;
 
 import java.lang.reflect.InvocationTargetException;
@@ -63,8 +63,9 @@ public abstract class RunnableContextHelper implements IRunnableWithProgress
   {
     m_context = context;
   }
-  
-  public void runAndHandleOperation( final Shell shell, final boolean fork, final boolean cancelable, final String title, final String message )
+
+  public void runAndHandleOperation( final Shell shell, final boolean fork, final boolean cancelable,
+      final String title, final String message )
   {
     try
     {
@@ -82,7 +83,7 @@ public abstract class RunnableContextHelper implements IRunnableWithProgress
       else
       {
         final String locmsg = targetException.getLocalizedMessage();
-        final String msg = locmsg == null ? "" : locmsg; 
+        final String msg = locmsg == null ? "" : locmsg;
         status = KalypsoGisPlugin.createErrorStatus( msg, targetException );
       }
 

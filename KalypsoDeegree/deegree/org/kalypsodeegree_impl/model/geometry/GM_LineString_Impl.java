@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -119,8 +119,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   }
 
   /**
-   * returns the length of the curve in units of the related spatial reference
-   * system
+   * returns the length of the curve in units of the related spatial reference system
    */
   public double getLength()
   {
@@ -136,11 +135,9 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   }
 
   /**
-   * The Boolean valued operation "intersects" shall return TRUE if this
-   * GM_Object intersects another GM_Object. Within a GM_Complex, the
-   * GM_Primitives do not intersect one another. In general, topologically
-   * structured data uses shared geometric objects to capture intersection
-   * information.
+   * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
+   * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
+   * geometric objects to capture intersection information.
    */
   public boolean intersects( GM_Object gmo )
   {
@@ -178,8 +175,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   }
 
   /**
-   * the operations returns true if the submitted multi primitive intersects
-   * with the curve segment
+   * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
   private boolean intersectsMultiPrimitive( GM_MultiPrimitive mprim ) throws Exception
   {
@@ -200,8 +196,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains another GM_Object.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    */
   public boolean contains( GM_Object gmo )
   {

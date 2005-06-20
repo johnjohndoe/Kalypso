@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.tools;
 
@@ -85,9 +85,8 @@ import org.kalypsodeegree_impl.graphics.legend.LegendFactory;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
 /**
- * This executable class is an application, which reads out an sld-document,
- * creates the corresponding legend-elements and saves them as an image. The
- * class can be executed from the console. Details of use can be requested with
+ * This executable class is an application, which reads out an sld-document, creates the corresponding legend-elements
+ * and saves them as an image. The class can be executed from the console. Details of use can be requested with
  * <tt>java LegendElementCreator --help</tt>
  * <pre>
  usage: java LegendConsole [-f sld-file -d directory
@@ -118,7 +117,8 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
  * 
  * <hr>
  * 
- * @version @author <a href="schaefer@lat-lon.de">Axel Schaefer </a>
+ * @version
+ * @author <a href="schaefer@lat-lon.de">Axel Schaefer </a>
  */
 public class LegendElementCreator
 {
@@ -130,8 +130,8 @@ public class LegendElementCreator
   /**
    *  
    */
-  public LegendElementCreator( String sldfile, String directory, String format, Color color,
-      int width, int height, String title, LecGUI lec ) throws LegendException
+  public LegendElementCreator( String sldfile, String directory, String format, Color color, int width, int height,
+      String title, LecGUI lec ) throws LegendException
   {
 
     this.lecgui = lec;
@@ -146,14 +146,12 @@ public class LegendElementCreator
     }
     catch( IOException ioe )
     {
-      throw new LegendException( "An error (IOException) occured in processing the SLD-File:\n"
-          + sldfile + "\n" + ioe );
+      throw new LegendException( "An error (IOException) occured in processing the SLD-File:\n" + sldfile + "\n" + ioe );
     }
     catch( XMLParsingException xmlpe )
     {
-      throw new LegendException(
-          "An error (XMLParsingException) occured in parsing the SLD-File:\n" + sldfile + "\n"
-              + xmlpe.getMessage() );
+      throw new LegendException( "An error (XMLParsingException) occured in parsing the SLD-File:\n" + sldfile + "\n"
+          + xmlpe.getMessage() );
     }
 
     // output
@@ -181,8 +179,8 @@ public class LegendElementCreator
       }
       catch( LegendException lex )
       {
-        throw new LegendException( "An error (LegendException) occured during the creating\n"
-            + "of the LegendElement " + filename + ":\n" + lex );
+        throw new LegendException( "An error (LegendException) occured during the creating\n" + "of the LegendElement "
+            + filename + ":\n" + lex );
       }
       catch( IOException ioex )
       {
@@ -191,9 +189,8 @@ public class LegendElementCreator
       }
       catch( Exception ex )
       {
-        throw new LegendException(
-            "A general error (Exception) occured during the creating/saving\n"
-                + "of the output-image " + filename + ":\n" + ex );
+        throw new LegendException( "A general error (Exception) occured during the creating/saving\n"
+            + "of the output-image " + filename + ":\n" + ex );
       }
 
     }
@@ -218,8 +215,7 @@ public class LegendElementCreator
   }
 
   /**
-   * loads the sld-document, parses it an returns a HashMap containing the
-   * different styles.
+   * loads the sld-document, parses it an returns a HashMap containing the different styles.
    * 
    * @param sldFile
    *          the file containing the StyledLayerDescriptor
@@ -270,8 +266,7 @@ public class LegendElementCreator
   }
 
   /**
-   * saves the resulting buffered Image from org.kalypsodeegree.graphics.legend as an
-   * image.
+   * saves the resulting buffered Image from org.kalypsodeegree.graphics.legend as an image.
    * 
    * @param bi
    *          the BufferedImage from org.kalypsodeegree.graphics.legend.*
@@ -286,8 +281,8 @@ public class LegendElementCreator
    * @throws Exception
    *           if the graphic-encoder can't be found.
    */
-  private void saveImage( BufferedImage bi, String outdir, String filename, String graphicsformat,
-      Color color ) throws LegendException, IOException, Exception
+  private void saveImage( BufferedImage bi, String outdir, String filename, String graphicsformat, Color color )
+      throws LegendException, IOException, Exception
   {
 
     File file = new File( outdir, filename + "." + graphicsformat );
@@ -297,8 +292,7 @@ public class LegendElementCreator
     if( graphicsformat.equalsIgnoreCase( "PNG" ) )
     {
 
-      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(),
-          BufferedImage.TYPE_INT_ARGB );
+      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_ARGB );
       Graphics g = outbi.getGraphics();
       g.drawImage( bi, 0, 0, color, null );
       Encoders.encodePng( fos, outbi );
@@ -306,8 +300,7 @@ public class LegendElementCreator
     }
     else if( graphicsformat.equalsIgnoreCase( "BMP" ) )
     {
-      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(),
-          BufferedImage.TYPE_3BYTE_BGR );
+      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_3BYTE_BGR );
 
       Graphics g = outbi.getGraphics();
       // transparency
@@ -324,8 +317,7 @@ public class LegendElementCreator
     }
     else if( graphicsformat.equalsIgnoreCase( "GIF" ) )
     {
-      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(),
-          BufferedImage.TYPE_INT_ARGB );
+      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_ARGB );
       Graphics g = outbi.getGraphics();
       g.drawImage( bi, 0, 0, color, null );
       Encoders.encodeGif( fos, outbi );
@@ -333,8 +325,7 @@ public class LegendElementCreator
     }
     else if( graphicsformat.equalsIgnoreCase( "JPEG" ) || graphicsformat.equalsIgnoreCase( "JPG" ) )
     {
-      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(),
-          BufferedImage.TYPE_INT_RGB );
+      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB );
       Graphics g = outbi.getGraphics();
 
       // transparency
@@ -352,16 +343,15 @@ public class LegendElementCreator
     }
     else if( graphicsformat.equalsIgnoreCase( "TIFF" ) || graphicsformat.equalsIgnoreCase( "TIF" ) )
     {
-      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(),
-          BufferedImage.TYPE_BYTE_BINARY );
+      BufferedImage outbi = new BufferedImage( bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_BYTE_BINARY );
       Graphics g = outbi.getGraphics();
       g.drawImage( bi, 0, 0, color, null );
       Encoders.encodeTiff( fos, outbi );
     }
     else
     {
-      throw new Exception( "Can't save output image because no graphic-encoder found for:\n"
-          + "filetype: '" + graphicsformat + "' for file: '" + file + "'" );
+      throw new Exception( "Can't save output image because no graphic-encoder found for:\n" + "filetype: '"
+          + graphicsformat + "' for file: '" + file + "'" );
     }
     System.out.println( "-- " + file + " saved." );
   }
@@ -395,12 +385,13 @@ public class LegendElementCreator
 
 }
 
-/*******************************************************************************
- * ****************************************************************************
- * Changes to this class. What the people have been up to: $Log:
- * LegendElementCreator.java,v $ Revision 1.10 2004/04/07 10:58:29 axel_schaefer
- * bugfix
+/***********************************************************************************************************************
+ * **************************************************************************** Changes to this class. What the people
+ * have been up to: $Log$
+ * have been up to: Revision 1.6  2005/06/20 14:07:45  belger
+ * have been up to: Formatierung
+ * have been up to: Revision 1.10 2004/04/07 10:58:29 axel_schaefer bugfix
  * 
  * 
  *  
- ******************************************************************************/
+ **********************************************************************************************************************/

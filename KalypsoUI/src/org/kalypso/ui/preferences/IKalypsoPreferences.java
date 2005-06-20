@@ -36,10 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.preferences;
-
 
 /**
  * Constants.
@@ -53,17 +52,21 @@ public interface IKalypsoPreferences
 
   /** width of the Observation chart when exporting as image */
   public static final String CHART_EXPORT_WIDTH = "kalypso.chart.export.width";
-  
+
   /** height of the Observation chart when exporting as image */
   public static final String CHART_EXPORT_HEIGHT = "kalypso.chart.export.height";
-  
+
   public static final String HTTP_PROXY_USE = "kalypso.http.proxy.use";
+
   public static final String HTTP_PROXY_HOST = "kalypso.http.proxy.host";
+
   public static final String HTTP_PROXY_PORT = "kalypso.http.proxy.port";
+
   public static final String HTTP_PROXY_USER = "kalypso.http.proxy.user";
+
   public static final String HTTP_PROXY_PASS = "kalypso.http.proxy.pass";
-  
+
   public static final String GLOBAL_CRS = "kalypso.global.crs";
-  
-  public static final String LANGUAGE = "kalypso.language";  
+
+  public static final String LANGUAGE = "kalypso.language";
 }

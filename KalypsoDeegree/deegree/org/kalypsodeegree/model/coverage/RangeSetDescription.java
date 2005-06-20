@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,17 +57,15 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 /**
- * This interface defines the properties (categories, measures, or values)
- * assigned to each location in the domain. A location may have several
- * unrelated properties attached to it (such as current land use, mean daily
- * temperature, etc.): each of these is described in a separate Range Set. Any
- * such property may be a scalar (numeric or text) value, such as population
- * density, or a compound (vector or tensor) value, such as incomes by race, or
- * radiances by wavelength
+ * This interface defines the properties (categories, measures, or values) assigned to each location in the domain. A
+ * location may have several unrelated properties attached to it (such as current land use, mean daily temperature,
+ * etc.): each of these is described in a separate Range Set. Any such property may be a scalar (numeric or text) value,
+ * such as population density, or a compound (vector or tensor) value, such as incomes by race, or radiances by
+ * wavelength
  * 
  * <p>
  * -----------------------------------------------------------------------

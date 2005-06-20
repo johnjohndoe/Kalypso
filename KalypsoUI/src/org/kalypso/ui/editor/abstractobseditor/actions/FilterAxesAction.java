@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.abstractobseditor.actions;
 
 import org.kalypso.eclipse.jface.action.FullAction;
@@ -50,49 +50,48 @@ import org.kalypso.ui.ImageProvider;
  */
 public class FilterAxesAction extends FullAction
 {
-//  private static final String TITLE = "Achsentyp ignorieren";
-//
-//  private final static String MSG = "Wählen Sie der Achsentyp welche nicht dargestellt werden soll";
-//
-//  private ObservationEditorOutlinePage m_page;
-//
-  public FilterAxesAction( /* ObservationEditorOutlinePage page */ )
+  //  private static final String TITLE = "Achsentyp ignorieren";
+  //
+  //  private final static String MSG = "Wählen Sie der Achsentyp welche nicht dargestellt werden soll";
+  //
+  //  private ObservationEditorOutlinePage m_page;
+  //
+  public FilterAxesAction( /* ObservationEditorOutlinePage page */)
   {
-    super( "Achsen filtern", ImageProvider.IMAGE_UTIL_FILTER,
-        "Erlaubt die Deaktivierung einer Achsentyp" );
+    super( "Achsen filtern", ImageProvider.IMAGE_UTIL_FILTER, "Erlaubt die Deaktivierung einer Achsentyp" );
 
-//    m_page = page;
+    //    m_page = page;
   }
 
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run( )
+  public void run()
   {
-    // TODO: refactor this code with the axis from the observation
+  // TODO: refactor this code with the axis from the observation
 
-//    final ObsThemeList tpl = m_page.getTemplate();
-//    final Vector elts = new Vector( tpl.getDiagramAxes() );
-//    elts.add( 0, "(Keiner)" );
-//
-//    final ListDialog dlg = new ListDialog( m_page.getSite().getShell() );
-//
-//    dlg.setInput( elts.toArray() );
-//    dlg.setContentProvider( new ArrayContentProvider() );
-//    dlg.setLabelProvider( new LabelProvider() );
-//    dlg.setMessage( MSG );
-//    dlg.setTitle( TITLE );
-//
-//    if( dlg.open() == Window.OK )
-//    {
-//      final Object[] res = dlg.getResult();
-//
-//      if( res.length == 1 && res[0] instanceof DiagramAxis )
-//        tpl.setIgnoreType( ((DiagramAxis) res[0]).getLabel() );
-//      else
-//        tpl.setIgnoreType( null );
-//      
-//      tpl.fireTemplateChanged( new ObsViewEvent( tpl.getThemes(), ObsViewEvent.TYPE_REFRESH ) );
-//    }
+  //    final ObsThemeList tpl = m_page.getTemplate();
+  //    final Vector elts = new Vector( tpl.getDiagramAxes() );
+  //    elts.add( 0, "(Keiner)" );
+  //
+  //    final ListDialog dlg = new ListDialog( m_page.getSite().getShell() );
+  //
+  //    dlg.setInput( elts.toArray() );
+  //    dlg.setContentProvider( new ArrayContentProvider() );
+  //    dlg.setLabelProvider( new LabelProvider() );
+  //    dlg.setMessage( MSG );
+  //    dlg.setTitle( TITLE );
+  //
+  //    if( dlg.open() == Window.OK )
+  //    {
+  //      final Object[] res = dlg.getResult();
+  //
+  //      if( res.length == 1 && res[0] instanceof DiagramAxis )
+  //        tpl.setIgnoreType( ((DiagramAxis) res[0]).getLabel() );
+  //      else
+  //        tpl.setIgnoreType( null );
+  //      
+  //      tpl.fireTemplateChanged( new ObsViewEvent( tpl.getThemes(), ObsViewEvent.TYPE_REFRESH ) );
+  //    }
   }
 }

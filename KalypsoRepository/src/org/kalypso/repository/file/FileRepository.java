@@ -75,8 +75,8 @@ public class FileRepository extends AbstractRepository
    * @param filter
    *          [optional] if null an <code>AcceptAllFileFilter</code> is used.
    */
-  public FileRepository( String factory, String conf, String location,
-      String identifier, boolean readOnly, FileFilter filter )
+  public FileRepository( String factory, String conf, String location, String identifier, boolean readOnly,
+      FileFilter filter )
   {
     super( identifier, factory, conf, readOnly );
 
@@ -89,8 +89,7 @@ public class FileRepository extends AbstractRepository
 
     m_root = new File( location );
     if( !m_root.exists() )
-      throw new IllegalArgumentException(
-          "Location existiert nicht! (Location: " + location + ")" );
+      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
 
   }
 
@@ -101,11 +100,9 @@ public class FileRepository extends AbstractRepository
    * @param identifier
    * @param readOnly
    * 
-   * @see FileRepository#FileRepository(String, String, String, String, boolean,
-   *      FileFilter)
+   * @see FileRepository#FileRepository(String, String, String, String, boolean, FileFilter)
    */
-  public FileRepository( String factory, String conf, String location,
-      String identifier, boolean readOnly )
+  public FileRepository( String factory, String conf, String location, String identifier, boolean readOnly )
   {
     this( factory, conf, location, identifier, readOnly, null );
   }
@@ -113,15 +110,15 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
     return m_root.toString();
   }
-  
+
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( )
+  public IRepositoryItem[] getChildren()
   {
     return createItem( m_root ).getChildren();
   }
@@ -129,19 +126,18 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( )
+  public boolean hasChildren()
   {
     return m_root.isDirectory();
   }
 
-  public FileFilter getFilter( )
+  public FileFilter getFilter()
   {
     return m_filter;
   }
 
   /**
-   * Factory method that can be overriden by subclasses to create adequate
-   * items.
+   * Factory method that can be overriden by subclasses to create adequate items.
    * 
    * @param file
    * @return IRepositoryItem instance
@@ -156,7 +152,7 @@ public class FileRepository extends AbstractRepository
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_identifier;
   }
@@ -164,9 +160,9 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload( )
+  public void reload()
   {
-    // nothing to do
+  // nothing to do
   }
 
   /**

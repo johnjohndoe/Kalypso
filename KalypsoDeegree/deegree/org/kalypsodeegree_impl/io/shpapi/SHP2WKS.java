@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.shpapi;
 
 import java.util.ArrayList;
@@ -113,8 +113,7 @@ public class SHP2WKS
     GM_Point[] gm_points = new GM_Point[shpmultipoint.numPoints];
 
     for( int i = 0; i < shpmultipoint.numPoints; i++ )
-      gm_points[i] = GeometryFactory.createGM_Point( shpmultipoint.points[i].x,
-          shpmultipoint.points[i].y, srs );
+      gm_points[i] = GeometryFactory.createGM_Point( shpmultipoint.points[i].x, shpmultipoint.points[i].y, srs );
 
     return gm_points;
   }
@@ -137,8 +136,7 @@ public class SHP2WKS
 
         for( int i = 0; i < shppolyline.points[j].length; i++ )
         {
-          gm_points[i] = GeometryFactory.createGM_Position( shppolyline.points[j][i].x,
-              shppolyline.points[j][i].y );
+          gm_points[i] = GeometryFactory.createGM_Position( shppolyline.points[j][i].x, shppolyline.points[j][i].y );
         }
 
         GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
@@ -219,8 +217,8 @@ public class SHP2WKS
         }
 
         //if point.x between previous and next x then crossing
-        if( ring[z].getX() < point.getX() && point.getX() < ring[zz].getX()
-            || ring[z].getX() > point.getX() && point.getX() > ring[zz].getX() )
+        if( ring[z].getX() < point.getX() && point.getX() < ring[zz].getX() || ring[z].getX() > point.getX()
+            && point.getX() > ring[zz].getX() )
         {
           crossings++;
         }
@@ -346,8 +344,7 @@ public class SHP2WKS
 
       for( int k = 0; k < shppolygon.rings.points[i].length; k++ )
       {
-        ring[k] = GeometryFactory.createGM_Position( shppolygon.rings.points[i][k].x,
-            shppolygon.rings.points[i][k].y );
+        ring[k] = GeometryFactory.createGM_Position( shppolygon.rings.points[i][k].x, shppolygon.rings.points[i][k].y );
       }
       all_rings.add( ring );
     }
@@ -409,8 +406,7 @@ public class SHP2WKS
 
       try
       {
-        GM_Surface sur = GeometryFactory.createGM_Surface( out_ring, inrings,
-            new GM_SurfaceInterpolation_Impl(), crs );
+        GM_Surface sur = GeometryFactory.createGM_Surface( out_ring, inrings, new GM_SurfaceInterpolation_Impl(), crs );
         wkslp.add( sur );
       }
       catch( Exception e )

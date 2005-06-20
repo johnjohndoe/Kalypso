@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,22 +57,19 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * Features are, according to the Abstract Specification, digital
- * representations of real world entities. Feature Identity thus refers to
- * mechanisms to identify such representations: not to identify the real world
- * entities that are the subject of a representation. Thus two different
- * representations of a real world entity (say the Mississippi River) will be
- * two different features with distinct identities. Real world identification
- * systems, such as title numbers, while possibly forming a sound basis for an
- * implementation of a feature identity mechanism, are not of themselves such a
- * mechanism.
+ * Features are, according to the Abstract Specification, digital representations of real world entities. Feature
+ * Identity thus refers to mechanisms to identify such representations: not to identify the real world entities that are
+ * the subject of a representation. Thus two different representations of a real world entity (say the Mississippi
+ * River) will be two different features with distinct identities. Real world identification systems, such as title
+ * numbers, while possibly forming a sound basis for an implementation of a feature identity mechanism, are not of
+ * themselves such a mechanism.
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -86,9 +83,8 @@ public interface DeegreeFeature
 {
 
   /**
-   * returns the id of the Feature. the id has to be a name space that must be
-   * unique for each feature. use the adress of the datasource in addition to a
-   * number for example .
+   * returns the id of the Feature. the id has to be a name space that must be unique for each feature. use the adress
+   * of the datasource in addition to a number for example .
    */
   String getId();
 
@@ -113,8 +109,8 @@ public interface DeegreeFeature
   Object getProperty( int index );
 
   /**
-   * returns all geometry properties of the feature. If no geometry could be
-   * found an <tt>GM_Object[]</tt> with zero length will be returned.
+   * returns all geometry properties of the feature. If no geometry could be found an <tt>GM_Object[]</tt> with zero
+   * length will be returned.
    */
   GM_Object[] getGeometryProperties();
 
@@ -126,8 +122,7 @@ public interface DeegreeFeature
   GM_Object getDefaultGeometryProperty();
 
   /**
-   * sets the value for the submitted property. if no property with the
-   * submitted exists the property will be added
+   * sets the value for the submitted property. if no property with the submitted exists the property will be added
    */
   void setProperty( FeatureProperty property );
 

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,15 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * this is a collection of some methods that extends the functionallity of the
- * sun-java string class.
+ * this is a collection of some methods that extends the functionallity of the sun-java string class.
  */
 public class StringExtend
 {
@@ -79,8 +78,8 @@ public class StringExtend
    * @param to
    *          is the string which will used to replace
    * @param all
-   *          if it's true all occurences of the string to be replaced will be
-   *          replaced. else only the first occurence will be replaced.
+   *          if it's true all occurences of the string to be replaced will be replaced. else only the first occurence
+   *          will be replaced.
    */
   public static String replace( String target, String from, String to, boolean all )
   {
@@ -141,9 +140,8 @@ public class StringExtend
    * @param delimiter
    *          delimiter that marks the end of a token
    * @param deleteDoubles
-   *          if it's true all string that are already within the resulting
-   *          array will be deleted, so that there will only be one copy of
-   *          them.
+   *          if it's true all string that are already within the resulting array will be deleted, so that there will
+   *          only be one copy of them.
    */
   public static String[] toArray( String s, String delimiter, boolean deleteDoubles )
   {
@@ -188,8 +186,7 @@ public class StringExtend
   }
 
   /**
-   * transforms a string array to one string. the array fields are seperated by
-   * the submitted delimiter:
+   * transforms a string array to one string. the array fields are seperated by the submitted delimiter:
    * 
    * @param s
    *          stringarray to transform
@@ -213,8 +210,7 @@ public class StringExtend
   }
 
   /**
-   * transforms a double array to one string. the array fields are seperated by
-   * the submitted delimiter:
+   * transforms a double array to one string. the array fields are seperated by the submitted delimiter:
    * 
    * @param s
    *          stringarray to transform
@@ -238,8 +234,7 @@ public class StringExtend
   }
 
   /**
-   * transforms a int array to one string. the array fields are seperated by the
-   * submitted delimiter:
+   * transforms a int array to one string. the array fields are seperated by the submitted delimiter:
    * 
    * @param s
    *          stringarray to transform
@@ -397,8 +392,7 @@ public class StringExtend
   }
 
   /**
-   * Extract all the string that begin with "start" and end with "end" and store
-   * it into an array of String
+   * Extract all the string that begin with "start" and end with "end" and store it into an array of String
    * 
    * @param target
    * @param startString
@@ -428,8 +422,8 @@ public class StringExtend
   }
 
   /**
-   * extract a string contained between startDel and endDel, you can remove t he
-   * delimiters if set true the parameters delStart and delEnd
+   * extract a string contained between startDel and endDel, you can remove t he delimiters if set true the parameters
+   * delStart and delEnd
    * 
    * @param target
    * @param startDel
@@ -439,8 +433,7 @@ public class StringExtend
    * 
    * @return
    */
-  public static String extractArray( String target, String startDel, String endDel,
-      boolean delStart, boolean delEnd )
+  public static String extractArray( String target, String startDel, String endDel, boolean delStart, boolean delEnd )
   {
     int start = target.indexOf( startDel );
 
@@ -473,8 +466,7 @@ public class StringExtend
   }
 
   /**
-   * convert the array of string like [(x1,y1),(x2,y2)...] into an array of
-   * double [x1,y1,x2,y2...]
+   * convert the array of string like [(x1,y1),(x2,y2)...] into an array of double [x1,y1,x2,y2...]
    * 
    * @param s
    * @param delimiter
@@ -535,8 +527,7 @@ public class StringExtend
   }
 
   /**
-   * gets the stacktrace array from the passed Excption and transforms it into a
-   * String
+   * gets the stacktrace array from the passed Excption and transforms it into a String
    */
   public static String stackTraceToString( Exception e )
   {

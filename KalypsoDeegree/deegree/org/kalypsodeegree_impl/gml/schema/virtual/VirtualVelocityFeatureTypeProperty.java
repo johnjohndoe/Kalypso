@@ -64,14 +64,13 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
 
   private final static String PROP_YVELOCITY = DECORATED_NS + ":yVelocity";
 
-
   /*
    * 
    * @author doemming
    */
   public VirtualVelocityFeatureTypeProperty( FeatureType ft )
   {
-    super("arrow_velocity","virtual",new HashMap()) ;
+    super( "arrow_velocity", "virtual", new HashMap() );
   }
 
   /**
@@ -87,13 +86,12 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
       return null;
     double factor = 10;
 
-    final GM_Point targetP = GeometryFactory.createGM_Point(
-        srcP.getX() + factor * xv.floatValue(), srcP.getY() + factor * yv.floatValue(), srcP
-            .getCoordinateSystem() );
+    final GM_Point targetP = GeometryFactory.createGM_Point( srcP.getX() + factor * xv.floatValue(), srcP.getY()
+        + factor * yv.floatValue(), srcP.getCoordinateSystem() );
     try
     {
-      return GeometryUtilities.createArrowLineString( srcP, targetP);
-//      return GeometryUtilities.createArrowLineString( srcP, targetP, 0.6, 0.1 );
+      return GeometryUtilities.createArrowLineString( srcP, targetP );
+      //      return GeometryUtilities.createArrowLineString( srcP, targetP, 0.6, 0.1 );
     }
     catch( GM_Exception e )
     {

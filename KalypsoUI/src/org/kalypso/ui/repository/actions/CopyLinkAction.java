@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.actions;
 
 import org.eclipse.swt.dnd.Clipboard;
@@ -54,7 +54,8 @@ public class CopyLinkAction extends AbstractRepositoryExplorerAction
 {
   public CopyLinkAction( final ObservationChooser explorer )
   {
-    super( explorer, "Link kopieren", ImageProvider.IMAGE_OBSERVATION_LINK, "Kopiert den Link in der Zwischenablage für die ausgewählte Zeitreihe" );
+    super( explorer, "Link kopieren", ImageProvider.IMAGE_OBSERVATION_LINK,
+        "Kopiert den Link in der Zwischenablage für die ausgewählte Zeitreihe" );
   }
 
   /**
@@ -67,7 +68,9 @@ public class CopyLinkAction extends AbstractRepositoryExplorerAction
       return;
 
     final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-    clipboard.setContents(new Object[]{ obs.getIdentifier() }, new Transfer[]{TextTransfer.getInstance() });
+    clipboard.setContents( new Object[]
+    { obs.getIdentifier() }, new Transfer[]
+    { TextTransfer.getInstance() } );
     clipboard.dispose();
   }
 }

@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
 /**
- * Ein Listener auf ein Repository. Wenn sich die Struktur des Repository ändert,
- * dann wird die Methode onRepositoryStructureChanged aufgerufen.
+ * Ein Listener auf ein Repository. Wenn sich die Struktur des Repository ändert, dann wird die Methode
+ * onRepositoryStructureChanged aufgerufen.
  * 
  * @author schlienger
  */

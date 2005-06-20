@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
@@ -84,8 +84,8 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * <p>
    * 
    * @param components
-   *          <tt>String</tt>s/<tt>Expression</tt> s that make up the
-   *          contents of the <tt>ParameterValueType_Impl</tt>
+   *          <tt>String</tt>s/<tt>Expression</tt> s that make up the contents of the
+   *          <tt>ParameterValueType_Impl</tt>
    */
   public ParameterValueType_Impl( Object[] components )
   {
@@ -93,8 +93,8 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
   }
 
   /**
-   * Returns the contents (mix of <tt>String</tt>/<tt>Expression</tt>
-   * -objects) of this <tt>ParameterValueType</tt>.
+   * Returns the contents (mix of <tt>String</tt>/<tt>Expression</tt> -objects) of this
+   * <tt>ParameterValueType</tt>.
    * <p>
    * 
    * @return mix of <tt>String</tt>/<tt>Expression</tt> -objects
@@ -105,8 +105,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
   }
 
   /**
-   * Sets the contents (mix of <tt>String</tt>/<tt>Expression</tt>
-   * -objects) of this <tt>ParameterValueType</tt>.
+   * Sets the contents (mix of <tt>String</tt>/<tt>Expression</tt> -objects) of this <tt>ParameterValueType</tt>.
    * <p>
    * 
    * @param components
@@ -126,8 +125,8 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
   }
 
   /**
-   * Concatenates a component (a<tt>String</tt> or an <tt>Expression</tt>
-   * -object) to this <tt>ParameterValueType</tt>.
+   * Concatenates a component (a<tt>String</tt> or an <tt>Expression</tt> -object) to this
+   * <tt>ParameterValueType</tt>.
    * <p>
    * 
    * @param component
@@ -139,8 +138,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
   }
 
   /**
-   * Removes a component (a<tt>String</tt> or an <tt>Expression</tt>
-   * -object) from this <tt>ParameterValueType</tt>.
+   * Removes a component (a<tt>String</tt> or an <tt>Expression</tt> -object) from this <tt>ParameterValueType</tt>.
    * <p>
    * 
    * @param component
@@ -152,13 +150,12 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
   }
 
   /**
-   * Returns the actual <tt>String</tt> value of this object. Expressions are
-   * evaluated according to the given <tt>Feature</tt> -instance.
+   * Returns the actual <tt>String</tt> value of this object. Expressions are evaluated according to the given
+   * <tt>Feature</tt> -instance.
    * <p>
    * 
    * @param feature
-   *          used for the evaluation of the underlying
-   *          'wfs:Expression'-elements
+   *          used for the evaluation of the underlying 'wfs:Expression'-elements
    * @return the (evaluated) String value
    * @throws FilterEvaluationException
    *           if the evaluation fails

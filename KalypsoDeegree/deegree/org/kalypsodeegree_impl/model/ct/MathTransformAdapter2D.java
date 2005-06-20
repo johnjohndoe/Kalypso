@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
@@ -97,19 +97,19 @@ final class MathTransformAdapter2D extends MathTransformAdapter implements MathT
   }
 
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>.
    */
   public Point2D transform( final Point2D ptSrc, final Point2D ptDst ) throws TransformException
   {
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ----- // assert getDimSource()==2 &&
-     * getDimTarget()==2;
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ----- // assert getDimSource()==2 && getDimTarget()==2;
      *///----- END OF JDK 1.4 DEPENDENCIES ----
     try
     {
       double[] array = transform.transformList( new double[]
-      { ptSrc.getX(), ptSrc.getY() } );
+      {
+          ptSrc.getX(),
+          ptSrc.getY() } );
       if( ptDst != null )
       {
         ptDst.setLocation( array[0], array[1] );
@@ -142,8 +142,8 @@ final class MathTransformAdapter2D extends MathTransformAdapter implements MathT
   {
     try
     {
-      final PT_CoordinatePoint ogPoint = ( point != null ) ? new PT_CoordinatePoint( point.getX(),
-          point.getY() ) : null;
+      final PT_CoordinatePoint ogPoint = ( point != null ) ? new PT_CoordinatePoint( point.getX(), point.getY() )
+          : null;
       return new Matrix( transform.derivative( ogPoint ).elt );
     }
     catch( RemoteException exception )

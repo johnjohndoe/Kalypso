@@ -49,20 +49,19 @@ import org.kalypso.repository.factory.AbstractRepositoryFactory;
 /**
  * @author schlienger
  */
-public class ObservationServiceRepositoryFactory extends
-    AbstractRepositoryFactory
+public class ObservationServiceRepositoryFactory extends AbstractRepositoryFactory
 {
   public ObservationServiceRepositoryFactory()
   {
     setRepositoryName( "Zeitreihen Dienst" );
   }
-  
+
   /**
    * Does nothing
    * 
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( )
+  public boolean configureRepository()
   {
     return true;
   }
@@ -70,12 +69,11 @@ public class ObservationServiceRepositoryFactory extends
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository( ) throws RepositoryException
+  public IRepository createRepository() throws RepositoryException
   {
     try
     {
-      return new ObservationServiceRepository( getRepositoryName(), getClass()
-          .getName(), isReadOnly() );
+      return new ObservationServiceRepository( getRepositoryName(), getClass().getName(), isReadOnly() );
     }
     catch( ServiceException e )
     {

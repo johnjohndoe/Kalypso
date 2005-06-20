@@ -41,8 +41,8 @@ import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
  * 
  * @author schlienger
  */
-public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
-    IObsViewEventListener, ICheckStateListener
+public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements IObsViewEventListener,
+    ICheckStateListener
 {
   protected ObsView m_view;
 
@@ -65,16 +65,16 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
 
     // drop support for files
-    Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
-    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers,
-        new DropAdapter( tv, m_editor ) );
+    Transfer[] transfers = new Transfer[]
+    { FileTransfer.getInstance() };
+    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers, new DropAdapter( tv, m_editor ) );
 
     tv.setLabelProvider( new ObsTemplateLabelProvider() );
     tv.setContentProvider( new ObsTemplateContentProvider() );
     setView( m_view );
 
     tv.addCheckStateListener( this );
-    
+
     m_removeThemeAction = new RemoveThemeAction( this );
   }
 
@@ -83,8 +83,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
    */
   protected TreeViewer createTreeViewer( final Composite parent )
   {
-    return new ContainerCheckedTreeViewer( parent, SWT.MULTI | SWT.H_SCROLL
-        | SWT.V_SCROLL );
+    return new ContainerCheckedTreeViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
   }
 
   /**
@@ -248,8 +247,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
           try
           {
-            final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace()
-                .getRoot();
+            final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace().getRoot();
 
             for( int i = 0; i < files.length; i++ )
             {
@@ -264,8 +262,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
           }
           catch( Exception e )
           {
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "",
-                e );
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "", e );
           }
           finally
           {
@@ -280,11 +277,10 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     }
 
     /**
-     * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object,
-     *      int, org.eclipse.swt.dnd.TransferData)
+     * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int,
+     *      org.eclipse.swt.dnd.TransferData)
      */
-    public boolean validateDrop( Object target, int operation,
-        TransferData transferType )
+    public boolean validateDrop( Object target, int operation, TransferData transferType )
     {
       if( !FileTransfer.getInstance().isSupportedType( transferType ) )
         return false;

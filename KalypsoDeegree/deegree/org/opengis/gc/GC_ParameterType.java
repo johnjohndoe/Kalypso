@@ -1,13 +1,11 @@
 /*
  * OpenGIS® Grid Coverage Implementation Specification
  * 
- * This Java profile is derived from OpenGIS's specification available on their
- * public web site:
+ * This Java profile is derived from OpenGIS's specification available on their public web site:
  * 
  * http://www.opengis.org/techno/implementation.htm
  * 
- * You can redistribute it, but should not modify it unless for greater OpenGIS
- * compliance.
+ * You can redistribute it, but should not modify it unless for greater OpenGIS compliance.
  */
 package org.opengis.gc;
 
@@ -15,11 +13,9 @@ package org.opengis.gc;
 import java.io.Serializable;
 
 /**
- * Specifies the type of a parameter value. A sequence of parameters is used to
- * pass a variable number of arguments to an operation and each of these
- * parameters can have a different parameter type. An operation requiring a
- * string and grid coverage would use two parameters for type
- * {@link #GC_StringType}and {@link #GC_GridCoverageType}.
+ * Specifies the type of a parameter value. A sequence of parameters is used to pass a variable number of arguments to
+ * an operation and each of these parameters can have a different parameter type. An operation requiring a string and
+ * grid coverage would use two parameters for type {@link #GC_StringType}and {@link #GC_GridCoverageType}.
  * 
  * @version 1.00
  * @since 1.00
@@ -27,8 +23,7 @@ import java.io.Serializable;
 public final class GC_ParameterType implements Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with GCS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with GCS 1.00.
    */
   private static final long serialVersionUID = 5157019842440644024L;
 
@@ -117,9 +112,8 @@ public final class GC_ParameterType implements Serializable
   }
 
   /**
-   * Returns a string representation of this enum. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string representation of this enum. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

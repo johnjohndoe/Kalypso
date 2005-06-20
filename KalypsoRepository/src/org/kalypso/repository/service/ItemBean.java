@@ -50,6 +50,7 @@ import java.io.Serializable;
 public class ItemBean implements Serializable
 {
   private String m_id;
+
   private String m_name;
 
   public ItemBean()
@@ -58,8 +59,10 @@ public class ItemBean implements Serializable
   }
 
   /**
-   * @param id identifier of this item
-   * @param name name of this item
+   * @param id
+   *          identifier of this item
+   * @param name
+   *          name of this item
    */
   public ItemBean( final String id, final String name )
   {

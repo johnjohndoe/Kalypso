@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
@@ -108,8 +108,7 @@ final class PlateCarreeProjection extends CylindricalProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
   protected Point2D transform( double x, double y, final Point2D ptDst ) throws TransformException
   {
@@ -130,11 +129,9 @@ final class PlateCarreeProjection extends CylindricalProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
-  protected Point2D inverseTransform( double x, double y, final Point2D ptDst )
-      throws TransformException
+  protected Point2D inverseTransform( double x, double y, final Point2D ptDst ) throws TransformException
   {
     x = long0 + ( x / r * Math.cos( lat0 ) );
     y = y / r;
@@ -159,8 +156,7 @@ final class PlateCarreeProjection extends CylindricalProjection
   }
 
   /**
-   * Implémentation de la partie entre crochets de la chaîne retournée par
-   * {@link #toString()}.
+   * Implémentation de la partie entre crochets de la chaîne retournée par {@link #toString()}.
    */
   void toString( final StringBuffer buffer )
   {
@@ -177,8 +173,8 @@ final class PlateCarreeProjection extends CylindricalProjection
   {
 
     /**
-     * Construct a new provider. The type (polar, oblique or equatorial) will be
-     * choosen automatically according the latitude or origin.
+     * Construct a new provider. The type (polar, oblique or equatorial) will be choosen automatically according the
+     * latitude or origin.
      */
     public Provider()
     {

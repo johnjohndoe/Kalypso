@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.Expression;
@@ -69,8 +69,7 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a <Add>/ <Sub>/ <Mul>or <DIV>element as
- * defined in the Expression DTD.
+ * Encapsulates the information of a <Add>/ <Sub>/ <Mul>or <DIV>element as defined in the Expression DTD.
  * 
  * @author Markus Schneider
  * @version 07.08.2002
@@ -92,9 +91,8 @@ public class ArithmeticExpression extends Expression_Impl
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object is built. This
-   * method recursively calls other buildFromDOM () - methods to validate the
-   * structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
@@ -115,8 +113,7 @@ public class ArithmeticExpression extends Expression_Impl
     }
     default:
     {
-      throw new FilterConstructionException(
-          "Element's name does not match 'Add' / 'Sub' / 'Mul' or 'Div'!" );
+      throw new FilterConstructionException( "Element's name does not match 'Add' / 'Sub' / 'Mul' or 'Div'!" );
     }
     }
 
@@ -159,8 +156,7 @@ public class ArithmeticExpression extends Expression_Impl
 
     if( !( o1 instanceof Number && o2 instanceof Number ) )
     {
-      throw new FilterEvaluationException(
-          "ADD/SUB/DIV/MUL may only be applied to numerical expressions." );
+      throw new FilterEvaluationException( "ADD/SUB/DIV/MUL may only be applied to numerical expressions." );
     }
     double d1 = ( (Number)o1 ).doubleValue();
     double d2 = ( (Number)o2 ).doubleValue();
@@ -176,8 +172,7 @@ public class ArithmeticExpression extends Expression_Impl
       return new Double( d1 / d2 );
     default:
     {
-      throw new FilterEvaluationException( "Unknown ArithmeticExpression: '" + getExpressionName()
-          + "'!" );
+      throw new FilterEvaluationException( "Unknown ArithmeticExpression: '" + getExpressionName() + "'!" );
     }
     }
   }

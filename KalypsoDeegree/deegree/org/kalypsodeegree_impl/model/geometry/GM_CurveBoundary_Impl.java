@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -73,8 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementation of the GM_CurveBoundary interface from package
- * jago.model.
+ * default implementation of the GM_CurveBoundary interface from package jago.model.
  * 
  * <p>
  * ------------------------------------------------------------
@@ -83,8 +82,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @version 10.6.2001
  * @author Andreas Poth
  */
-class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_CurveBoundary,
-    Serializable
+class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_CurveBoundary, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4226497939552424434L;
@@ -94,11 +92,9 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   private GM_Position sp = null;
 
   /**
-   * constructor of curve_boundary with CS_CoordinateSystem and startpoint and
-   * endpoint
+   * constructor of curve_boundary with CS_CoordinateSystem and startpoint and endpoint
    */
-  public GM_CurveBoundary_Impl( CS_CoordinateSystem crs, GM_Position sp, GM_Position ep )
-      throws GM_Exception
+  public GM_CurveBoundary_Impl( CS_CoordinateSystem crs, GM_Position sp, GM_Position ep ) throws GM_Exception
   {
     super( crs );
 
@@ -109,11 +105,10 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   }
 
   /**
-   * The operation "dimension" shall return the inherent dimension of this
-   * GM_Object, which shall be less than or equal to the coordinate dimension.
-   * The dimension of a collection of geometric objects shall be the largest
-   * dimension of any of its pieces. Points are 0-dimensional, curves are
-   * 1-dimensional, surfaces are 2-dimensional, and solids are 3-dimensional.
+   * The operation "dimension" shall return the inherent dimension of this GM_Object, which shall be less than or equal
+   * to the coordinate dimension. The dimension of a collection of geometric objects shall be the largest dimension of
+   * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
+   * 3-dimensional.
    */
   public int getDimension()
   {
@@ -121,9 +116,8 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   }
 
   /**
-   * The operation "coordinateDimension" shall return the dimension of the
-   * coordinates that define this GM_Object, which must be the same as the
-   * coordinate dimension of the coordinate reference system for this GM_Object.
+   * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
+   * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   public int getCoordinateDimension()
   {
@@ -188,11 +182,9 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   }
 
   /**
-   * The Boolean valued operation "intersects" shall return TRUE if this
-   * GM_Object intersects another GM_Object. Within a GM_Complex, the
-   * GM_Primitives do not intersect one another. In general, topologically
-   * structured data uses shared geometric objects to capture intersection
-   * information.
+   * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
+   * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
+   * geometric objects to capture intersection information.
    */
   public boolean intersects( GM_Object gmo )
   {
@@ -241,8 +233,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   }
 
   /**
-   * the operations returns true if the submitted multi primitive intersects
-   * with the curve segment
+   * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
   private boolean intersectsMultiPrimitive( GM_MultiPrimitive mprim ) throws Exception
   {

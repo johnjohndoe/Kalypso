@@ -70,8 +70,7 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
  * 
  * @author schlienger
  */
-public class DiagramViewPart extends ViewPart implements
-    ISelectionChangedListener, IPartListener
+public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
   protected final DiagView m_diagView = new DiagView( true );
 
@@ -98,13 +97,11 @@ public class DiagramViewPart extends ViewPart implements
     m_chart.addSubtitle( m_subTitle );
 
     // chart panel without any popup menu
-    final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false,
-        false, false );
+    final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
     chartPanel.setMouseZoomable( true, false );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
-        | SWT.EMBEDDED ) );
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 
     vFrame.setVisible( true );
     chartPanel.setVisible( true );
@@ -116,7 +113,7 @@ public class DiagramViewPart extends ViewPart implements
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     getSite().getPage().removePartListener( this );
 
@@ -131,9 +128,9 @@ public class DiagramViewPart extends ViewPart implements
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  public void setFocus( )
+  public void setFocus()
   {
-    // noch nix
+  // noch nix
   }
 
   /**
@@ -144,25 +141,21 @@ public class DiagramViewPart extends ViewPart implements
     // always remove items first (we don't know which selection we get)
     m_diagView.removeAllItems();
 
-    final StructuredSelection selection = (StructuredSelection) event
-        .getSelection();
+    final StructuredSelection selection = (StructuredSelection)event.getSelection();
 
-    if( !(selection.getFirstElement() instanceof IRepositoryItem) )
+    if( !( selection.getFirstElement() instanceof IRepositoryItem ) )
       return;
 
-    final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
+    final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
 
-    final IObservation obs = ObservationCache.getInstance().getObservationFor(
-        item );
+    final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
 
     if( obs != null )
     {
       final DateRangeArgument dra = ObservationViewHelper.makeDateRange( item );
 
-      m_diagView
-          .addObservation( new PlainObsProvider( obs, dra ),
-              NameUtils.DEFAULT_ITEM_NAME, null, new ObsView.ItemData( false,
-                  null ) );
+      m_diagView.addObservation( new PlainObsProvider( obs, dra ), NameUtils.DEFAULT_ITEM_NAME, null,
+          new ObsView.ItemData( false, null ) );
 
       // sub title of diagram contains date-range info
       m_subTitle.setText( "" );
@@ -177,7 +170,7 @@ public class DiagramViewPart extends ViewPart implements
   public void partActivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).addSelectionChangedListener( this );
   }
 
   /**
@@ -185,7 +178,7 @@ public class DiagramViewPart extends ViewPart implements
    */
   public void partBroughtToTop( IWorkbenchPart part )
   {
-    // nada
+  // nada
   }
 
   /**
@@ -194,7 +187,7 @@ public class DiagramViewPart extends ViewPart implements
   public void partClosed( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
   }
 
   /**
@@ -203,7 +196,7 @@ public class DiagramViewPart extends ViewPart implements
   public void partDeactivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
   }
 
   /**
@@ -211,6 +204,6 @@ public class DiagramViewPart extends ViewPart implements
    */
   public void partOpened( IWorkbenchPart part )
   {
-    // Siehe partActivated...
+  // Siehe partActivated...
   }
 }

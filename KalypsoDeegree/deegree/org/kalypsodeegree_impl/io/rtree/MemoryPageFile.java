@@ -26,8 +26,8 @@ package org.kalypsodeegree_impl.io.rtree;
 import java.util.Hashtable;
 
 /**
- * Implementierung eine PageFile im Speicher. Die PageFile ist als Hashtable
- * realisiert, wobei die Schlüssel die PageFileNummern darstellen.
+ * Implementierung eine PageFile im Speicher. Die PageFile ist als Hashtable realisiert, wobei die Schlüssel die
+ * PageFileNummern darstellen.
  * 
  * @version 1.0
  * @author Wolfgang Bär

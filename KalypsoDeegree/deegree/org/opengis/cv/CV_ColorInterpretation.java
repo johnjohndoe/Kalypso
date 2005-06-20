@@ -1,13 +1,11 @@
 /*
  * OpenGIS® Grid Coverage Implementation Specification
  * 
- * This Java profile is derived from OpenGIS's specification available on their
- * public web site:
+ * This Java profile is derived from OpenGIS's specification available on their public web site:
  * 
  * http://www.opengis.org/techno/implementation.htm
  * 
- * You can redistribute it, but should not modify it unless for greater OpenGIS
- * compliance.
+ * You can redistribute it, but should not modify it unless for greater OpenGIS compliance.
  */
 package org.opengis.cv;
 
@@ -23,8 +21,7 @@ import java.io.Serializable;
 public final class CV_ColorInterpretation implements Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with GCS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with GCS 1.00.
    */
   private static final long serialVersionUID = 2398590129889463235L;
 
@@ -64,8 +61,7 @@ public final class CV_ColorInterpretation implements Serializable
   public static final int CV_BlueBand = 5;
 
   /**
-   * Alpha Band for the RGB color model components. AlphaBand may or may not be
-   * present.
+   * Alpha Band for the RGB color model components. AlphaBand may or may not be present.
    */
   public static final int CV_AlphaBand = 6;
 
@@ -134,9 +130,8 @@ public final class CV_ColorInterpretation implements Serializable
   }
 
   /**
-   * Returns a string representation of this enum. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string representation of this enum. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

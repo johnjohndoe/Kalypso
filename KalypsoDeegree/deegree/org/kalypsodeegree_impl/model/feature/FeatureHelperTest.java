@@ -25,13 +25,11 @@ public final class FeatureHelperTest extends TestCase
 
     final FeatureTypeProperty[] sourceProps = new FeatureTypeProperty[]
     {
-        FeatureFactory
-            .createFeatureTypeProperty( SOURCE_STRING_PROP, String.class.getName(), false ),
-        FeatureFactory
-            .createFeatureTypeProperty( SOURCE_DOUBLE_PROP, String.class.getName(), false ),
+        FeatureFactory.createFeatureTypeProperty( SOURCE_STRING_PROP, String.class.getName(), false ),
+        FeatureFactory.createFeatureTypeProperty( SOURCE_DOUBLE_PROP, String.class.getName(), false ),
         FeatureFactory.createFeatureTypeProperty( SOURCE_INT_PROP, String.class.getName(), false ) };
-    final FeatureType sourceFTP = FeatureFactory.createFeatureType( "sourceFT", null, sourceProps,
-        null, null, null, null );
+    final FeatureType sourceFTP = FeatureFactory.createFeatureType( "sourceFT", null, sourceProps, null, null, null,
+        null );
 
     // zwei features erzeugen
     final Feature sourcefeature = FeatureFactory.createFeature( "source", sourceFTP, new Object[]
@@ -52,8 +50,7 @@ public final class FeatureHelperTest extends TestCase
     compareByMapping( sourcefeature, targetfeature, mapping );
   }
 
-  private void compareByMapping( final Feature sourcefeature, final Feature targetfeature,
-      final Properties mapping )
+  private void compareByMapping( final Feature sourcefeature, final Feature targetfeature, final Properties mapping )
   {
     for( final Iterator pIt = mapping.entrySet().iterator(); pIt.hasNext(); )
     {
@@ -62,11 +59,11 @@ public final class FeatureHelperTest extends TestCase
       final String targetProp = (String)entry.getValue();
 
       // TODO: was ist mit deep-copy?
-      
+
       final Object sproperty = sourcefeature.getProperty( sourceProp );
       final Object tproperty = targetfeature.getProperty( targetProp );
       // immutable object können ruhig gleich bleiben
-      if( !( sproperty instanceof String ) && !(sproperty instanceof Number) )
+      if( !( sproperty instanceof String ) && !( sproperty instanceof Number ) )
         assertNotSame( sproperty, tproperty );
       assertEquals( sproperty, tproperty );
     }

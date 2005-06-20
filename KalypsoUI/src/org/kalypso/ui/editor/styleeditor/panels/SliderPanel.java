@@ -89,8 +89,7 @@ public class SliderPanel
 
   private double selection = 0.0;
 
-  public SliderPanel( Composite parent, String m_label, int minimum, int maximum, int inc,
-      int m_format, double value )
+  public SliderPanel( Composite parent, String m_label, int minimum, int maximum, int inc, int m_format, double value )
   {
     composite = new Composite( parent, SWT.NULL );
     FormLayout compositeLayout = new FormLayout();

@@ -63,8 +63,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
-  public RasterSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,
-      KalypsoUserStyle m_userStyle )
+  public RasterSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
   {
     super( m_composite, m_symbolizer, m_userStyle );
   }
@@ -88,8 +87,8 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 
     // ***** ComboBox Mode Panel
 
-    ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, "Mode:",
-        rasterSymbolizer.getMode() );
+    ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, "Mode:", rasterSymbolizer
+        .getMode() );
     modeComboPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( PanelEvent event )

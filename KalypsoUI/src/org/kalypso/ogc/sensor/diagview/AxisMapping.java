@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
 import org.kalypso.ogc.sensor.IAxis;
@@ -46,11 +46,12 @@ import org.kalypso.ogc.sensor.IAxis;
  * Default implementation of <code>IAxisMapping</code>.
  * 
  * @author schlienger
- *
+ *  
  */
 public class AxisMapping
 {
   private final IAxis m_oAxis;
+
   private final DiagramAxis m_dAxis;
 
   public AxisMapping( final IAxis oAxis, final DiagramAxis dAxis )
@@ -68,11 +69,11 @@ public class AxisMapping
   {
     return m_dAxis;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return m_oAxis + " - " + m_dAxis;
   }

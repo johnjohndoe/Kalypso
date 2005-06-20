@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.model.feature;
 
@@ -67,8 +67,7 @@ import org.kalypsodeegree.model.feature.FeatureProperty;
 
 /**
  * 
- * the interface describes a property entry of a feature. It is made of a name
- * and a value associated to it.
+ * the interface describes a property entry of a feature. It is made of a name and a value associated to it.
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -145,20 +144,17 @@ class FeatureProperty_Impl implements FeatureProperty, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/03/08 11:01:10  doemming
- * *** empty log message ***
- *
- * Revision 1.5  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2004/10/11 14:44:28  doemming
- * *** empty log message ***
- * Revision 1.3 2004/10/07 14:09:16 doemming
- * *** empty log message ***
+ * Revision 1.7  2005/06/20 14:07:45  belger
+ * Formatierung
+ * Revision 1.6 2005/03/08 11:01:10 doemming *** empty log message ***
  * 
- * Revision 1.1 2004/09/02 23:57:07 doemming *** empty log message *** Revision
- * 1.3 2004/08/31 14:09:26 doemming *** empty log message *** Revision 1.2
- * 2004/02/09 07:59:57 poth no message
+ * Revision 1.5 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2004/10/11 14:44:28 doemming *** empty log message *** Revision 1.3 2004/10/07 14:09:16 doemming ***
+ * empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:57:07 doemming *** empty log message *** Revision 1.3 2004/08/31 14:09:26 doemming ***
+ * empty log message *** Revision 1.2 2004/02/09 07:59:57 poth no message
  * 
  * Revision 1.1.1.1 2002/09/25 16:00:38 poth no message
  * 

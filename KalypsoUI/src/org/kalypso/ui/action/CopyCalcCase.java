@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import org.eclipse.core.resources.IFile;
@@ -65,7 +65,7 @@ public class CopyCalcCase implements IWorkbenchWindowActionDelegate
    */
   public void dispose()
   {
-    // nichts tun
+  // nichts tun
   }
 
   /**
@@ -81,8 +81,7 @@ public class CopyCalcCase implements IWorkbenchWindowActionDelegate
    */
   public void run( final IAction action )
   {
-    final ISelection selection = m_window.getSelectionService().getSelection(
-        IPageLayout.ID_RES_NAV );
+    final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     IResource resource = null;
     if( selection instanceof IStructuredSelection )
@@ -91,32 +90,34 @@ public class CopyCalcCase implements IWorkbenchWindowActionDelegate
       if( struct.size() == 1 )
         resource = (IResource)struct.getFirstElement();
     }
-    
+
     if( resource == null || !( resource instanceof IFolder ) )
     {
       MessageDialog.openInformation( m_window.getShell(), "Rechenvariante anlegen",
-      "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
+          "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
       return;
     }
-    
+
     final IFolder folder = (IFolder)resource;
     final IFile file = folder.getFile( ModelNature.CONTROL_NAME );
     if( !file.exists() )
     {
       MessageDialog.openInformation( m_window.getShell(), "Rechenvariante anlegen",
-      "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
+          "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
       return;
     }
-    
+
     final CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation( m_window.getShell() );
-    operation.copyResources( new IResource[] { resource }, resource.getParent() );    
+    operation.copyResources( new IResource[]
+    { resource }, resource.getParent() );
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    // ignore
+  // ignore
   }
 }

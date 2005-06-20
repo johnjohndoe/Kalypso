@@ -40,16 +40,15 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.colorMapEntryTable;
 
-import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
- * This class implements an ICellModifier. An ICellModifier is called when the
- * user modifes a cell in the tableViewer
+ * This class implements an ICellModifier. An ICellModifier is called when the user modifes a cell in the tableViewer
  */
 
 public class ColorMapEntryCellModifier implements ICellModifier
@@ -63,8 +62,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
    */
   public boolean canModify( Object element, String property )
   {
@@ -72,8 +70,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
    */
   public Object getValue( Object element, String property )
   {
@@ -90,14 +87,14 @@ public class ColorMapEntryCellModifier implements ICellModifier
       result = colorMapEntry.getLabel();
       break;
     case 1: // Quantity
-      result = Double.toString(colorMapEntry.getQuantity());
+      result = Double.toString( colorMapEntry.getQuantity() );
       //result = "test_"+colorMapEntry.getQuantity();
       //result = new Double(colorMapEntry.getQuantity());
       break;
     case 2: // COLOR
       java.awt.Color color = colorMapEntry.getColor();
-      result = ( new Color( ColorMapEntryTable.table.getDisplay(), color.getRed(),
-          color.getGreen(), color.getBlue() ) ).getRGB();
+      result = ( new Color( ColorMapEntryTable.table.getDisplay(), color.getRed(), color.getGreen(), color.getBlue() ) )
+          .getRGB();
       break;
     case 3: // OPACITY
       result = colorMapEntry.getOpacity() + "";
@@ -109,8 +106,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object,
-   *      java.lang.String, java.lang.Object)
+   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
    */
   public void modify( Object element, String property, Object value )
   {
@@ -135,8 +131,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
       colorMapEntry.setQuantity( Double.parseDouble( valueString ) );
       break;
     case 2: // COLOR
-      colorMapEntry.setColor( ( new java.awt.Color( ( (RGB)value ).red, ( (RGB)value ).green,
-          ( (RGB)value ).blue ) ) );
+      colorMapEntry.setColor( ( new java.awt.Color( ( (RGB)value ).red, ( (RGB)value ).green, ( (RGB)value ).blue ) ) );
       break;
     case 3: // OPACITY
       valueString = ( (String)value ).trim();
@@ -145,14 +140,12 @@ public class ColorMapEntryCellModifier implements ICellModifier
       double opacity = Double.parseDouble( valueString );
       if( opacity <= 1 && opacity >= 0 )
       {
-        item.setBackground( 3, ColorMapEntryTable.table.getDisplay().getSystemColor(
-            SWT.COLOR_WHITE ) );
+        item.setBackground( 3, ColorMapEntryTable.table.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
         colorMapEntry.setOpacity( Double.parseDouble( valueString ) );
       }
       else
       {
-        item
-            .setBackground( 3, ColorMapEntryTable.table.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        item.setBackground( 3, ColorMapEntryTable.table.getDisplay().getSystemColor( SWT.COLOR_RED ) );
         colorMapEntry.setOpacity( Double.parseDouble( valueString ) );
       }
       break;

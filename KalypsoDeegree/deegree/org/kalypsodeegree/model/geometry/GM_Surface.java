@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,17 +57,15 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.model.geometry;
 
 /**
  * 
- * Defining the surface geometry of the iso geometry model. a surface is made of
- * 1..n surface patches. for convention it is defined that GM_Surface is a
- * closed geometry. that means each surface patch a surface is made of must
- * touch at least one other surface patch if a surface is made of more then one
- * surface patch
+ * Defining the surface geometry of the iso geometry model. a surface is made of 1..n surface patches. for convention it
+ * is defined that GM_Surface is a closed geometry. that means each surface patch a surface is made of must touch at
+ * least one other surface patch if a surface is made of more then one surface patch
  * 
  * <p>
  * -----------------------------------------------------
@@ -97,14 +95,13 @@ public interface GM_Surface extends GM_OrientableSurface, GM_GenericSurface
   GM_SurfacePatch getSurfacePatchAt( int index ) throws GM_Exception;
 
   /**
-   * writes a surface patch to the surface at submitted position. the old patch
-   * will be deleted
+   * writes a surface patch to the surface at submitted position. the old patch will be deleted
    */
   void setSurfacePatchAt( GM_SurfacePatch segment, int index ) throws GM_Exception;
 
   /**
-   * inserts a surface patch in the curve at the submitted position. all points
-   * with a position that equals index or is higher will be shifted
+   * inserts a surface patch in the curve at the submitted position. all points with a position that equals index or is
+   * higher will be shifted
    */
   void insertSurfacePatchAt( GM_SurfacePatch segment, int index ) throws GM_Exception;
 

@@ -85,11 +85,9 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   private MaskedNumberTableCellRenderer m_nbRenderer;
 
   /**
-   * when true, swing waits until model is updated, else swing
-   * continues normal processing
+   * when true, swing waits until model is updated, else swing continues normal processing
    * 
-   * TODO: find out why this is usefull, I don't remember exactly, I believe
-   * it was due to an thread/update problem
+   * TODO: find out why this is usefull, I don't remember exactly, I believe it was due to an thread/update problem
    */
   private final boolean m_waitForSwing;
 
@@ -108,8 +106,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   /**
    * Constructs a table based on the given template
    */
-  public ObservationTable( final TableView template,
-      final boolean waitForSwing, final boolean useContextMenu )
+  public ObservationTable( final TableView template, final boolean waitForSwing, final boolean useContextMenu )
   {
     super( new ObservationTableModel() );
 
@@ -131,8 +128,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
-    setDefaultEditor( Double.class, new SelectAllCellEditor(
-        new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
+    setDefaultEditor( Double.class, new SelectAllCellEditor( new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
 
     setCellSelectionEnabled( true );
 
@@ -140,12 +136,12 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
     if( useContextMenu )
     {
-	    m_popup = new PopupMenu( this );
-	    m_excelCp = new ExcelClipboardAdapter( this, nf );
-	
-	    m_popup.add( new JPopupMenu.Separator() );
-	    m_popup.add( m_excelCp.getCopyAction() );
-	    m_popup.add( m_excelCp.getPasteAction() );
+      m_popup = new PopupMenu( this );
+      m_excelCp = new ExcelClipboardAdapter( this, nf );
+
+      m_popup.add( new JPopupMenu.Separator() );
+      m_popup.add( m_excelCp.getCopyAction() );
+      m_popup.add( m_excelCp.getPasteAction() );
     }
     else
     {
@@ -192,8 +188,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       protected void runIntern() throws Throwable
       {
         // REFRESH ONE COLUMN
-        if( evt.getType() == ObsViewEvent.TYPE_REFRESH
-            && evt.getObject() instanceof TableViewColumn )
+        if( evt.getType() == ObsViewEvent.TYPE_REFRESH && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.refreshColumn( column );
@@ -202,8 +197,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         }
 
         // ADD COLUMN
-        if( evt.getType() == ObsViewEvent.TYPE_ADD
-            && evt.getObject() instanceof TableViewColumn )
+        if( evt.getType() == ObsViewEvent.TYPE_ADD && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           if( column.isShown() )
@@ -213,8 +207,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         }
 
         // REMOVE COLUMN
-        if( evt.getType() == ObsViewEvent.TYPE_REMOVE
-            && evt.getObject() instanceof TableViewColumn )
+        if( evt.getType() == ObsViewEvent.TYPE_REMOVE && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.removeColumn( column );
@@ -248,15 +241,12 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     }
     catch( Throwable e )
     {
-      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance()
-          .getActiveWorkbenchWindow();
-      final Shell shell = activeWorkbenchWindow == null ? null
-          : activeWorkbenchWindow.getShell();
+      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
+      final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
       if( shell != null )
         MessageDialog.openError( shell, "Aktualisierungsfehler", e.toString() );
       else
-        JOptionPane.showMessageDialog( null, e.toString(),
-            "Aktualisierungsfehler", JOptionPane.ERROR_MESSAGE );
+        JOptionPane.showMessageDialog( null, e.toString(), "Aktualisierungsfehler", JOptionPane.ERROR_MESSAGE );
     }
   }
 
@@ -270,8 +260,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   }
 
   /**
-   * Helper method that adds a marker to the date renderer for observations that
-   * are forecasts
+   * Helper method that adds a marker to the date renderer for observations that are forecasts
    * 
    * @param adding
    */

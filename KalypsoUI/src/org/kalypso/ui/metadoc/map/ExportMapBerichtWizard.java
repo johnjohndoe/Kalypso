@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc.map;
 
 import org.kalypso.metadoc.Document;
@@ -51,25 +51,24 @@ public class ExportMapBerichtWizard extends ExportBerichtWizard
 {
   private final ExportMapOptionsPage m_optionPage;
 
-  public ExportMapBerichtWizard(
-      final ExportMapOptionsPage page, final Document doc )
+  public ExportMapBerichtWizard( final ExportMapOptionsPage page, final Document doc )
   {
     super( page, doc );
 
     m_optionPage = page;
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
-  public void addPages( )
+  public void addPages()
   {
     super.addPages();
 
     addPage( m_optionPage );
   }
 
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     m_optionPage.saveWidgetValues();
 

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import java.util.Iterator;
@@ -70,9 +70,9 @@ public class CalcCaseHelper
   }
 
   /**
-   * Lässt den Benutzer aus einer Liste von Rechenfällen auswählen Es werden
-   * alle Rechenfälle angezeigt, welche sich in oder unterhalb der angegebenen
-   * Selection von Resourcen befinden.
+   * Lässt den Benutzer aus einer Liste von Rechenfällen auswählen Es werden alle Rechenfälle angezeigt, welche sich in
+   * oder unterhalb der angegebenen Selection von Resourcen befinden.
+   * 
    * @param shell
    * @param selection
    * @param title
@@ -80,8 +80,8 @@ public class CalcCaseHelper
    * @param message
    * @return null bei Abbruch
    */
-  public static IFolder[] chooseCalcCases( final Shell shell, final ISelection selection,
-      final String title, final String message )
+  public static IFolder[] chooseCalcCases( final Shell shell, final ISelection selection, final String title,
+      final String message )
   {
     // rausfinden, ob selection ok ist
     if( !( selection instanceof IStructuredSelection ) )
@@ -101,21 +101,19 @@ public class CalcCaseHelper
     catch( CoreException e )
     {
       e.printStackTrace();
-      
-      ErrorDialog.openError( shell, title,
-          "Fehler beim Ermitteln der Rechenfälle", e.getStatus() );
+
+      ErrorDialog.openError( shell, title, "Fehler beim Ermitteln der Rechenfälle", e.getStatus() );
     }
 
     final IFolder[] calcCases = visitor.getCalcCases();
     if( calcCases.length == 0 )
     {
-      MessageDialog.openInformation( shell, title,
-          "Es sind keine Rechenvarianten im Navigator selektiert." );
+      MessageDialog.openInformation( shell, title, "Es sind keine Rechenvarianten im Navigator selektiert." );
       return null;
     }
 
-    final ListSelectionDialog dlg = new ListSelectionDialog( shell, calcCases,
-        new ArrayContentProvider(), new WorkbenchLabelProvider(), message );
+    final ListSelectionDialog dlg = new ListSelectionDialog( shell, calcCases, new ArrayContentProvider(),
+        new WorkbenchLabelProvider(), message );
     dlg.setInitialSelections( calcCases );
     if( dlg.open() == Window.CANCEL )
       return null;

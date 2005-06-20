@@ -78,7 +78,8 @@ public class RemoveHeavyRelationCommand implements ICommand
 
   private boolean m_isComposition2;
 
-  public RemoveHeavyRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkName1, Feature bodyFE, String linkName2, Feature destFE )
+  public RemoveHeavyRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkName1, Feature bodyFE,
+      String linkName2, Feature destFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;
@@ -152,8 +153,8 @@ public class RemoveHeavyRelationCommand implements ICommand
     //    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
     // m_workspace, m_bodyFE,
     //        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    m_workspace
-        .fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**

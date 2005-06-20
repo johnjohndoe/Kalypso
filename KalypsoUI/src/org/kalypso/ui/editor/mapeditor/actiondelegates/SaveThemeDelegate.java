@@ -36,13 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
@@ -58,6 +57,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
@@ -115,10 +115,10 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
       }
     }
 
-    refreshAction(null);
+    refreshAction( null );
   }
 
-  protected void refreshAction(IAction action )
+  protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;
 

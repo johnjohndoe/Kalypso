@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.shpapi;
 
 import org.kalypsodeegree.model.geometry.ByteUtils;
@@ -102,8 +102,7 @@ public class SHP2WKB
   /**
    * method: byte[] transformMultiPoint(CS_CoordinateSystem srs, <BR>
    * SHPMultiPoint shpmultipoint)) <BR>
-   * transforms a SHPMultiPoint into a byte array using sf-WKB specifications
-   * <BR>
+   * transforms a SHPMultiPoint into a byte array using sf-WKB specifications <BR>
    * gets a multipoint that should be transformed to a WKBGeometry <BR>
    */
   public byte[] transformMultiPoint( SHPMultiPoint shpmultipoint_ )
@@ -158,43 +157,35 @@ public class SHP2WKB
     /*
      * // it's a single LineString if (points.length == 1) {
      * 
-     * wkbLineString = new byte[points[0].length*21 + 9]; // big endian coding
-     * wkbLineString[0] = 0; // write wkbtype
+     * wkbLineString = new byte[points[0].length*21 + 9]; // big endian coding wkbLineString[0] = 0; // write wkbtype
      * ByteUtils.writeBEInt(wkbLineString,1,2); // write number of points
      * ByteUtils.writeBEInt(wkbLineString,5,points[0].length);
      * 
      * offset = 9;
      * 
-     * for (int i = 0; i < points[0].length; i++) { // big endian coding
-     * wkbLineString[offset] = 0; offset++; // write wkbtype
-     * ByteUtils.writeBEInt(wkbLineString,offset + 1,1); offset += 4; // write
-     * point coordinates ByteUtils.writeBEDouble(wkbLineString,offset + 5
-     * ,points[0][i].getX()); offset += 8;
-     * ByteUtils.writeBEDouble(wkbLineString,offset + 13,points[0][i].getY());
-     * offset += 8; } } // it's a multi LineString else { // get size to be
-     * allocated form wkbstructure int size = 9;
+     * for (int i = 0; i < points[0].length; i++) { // big endian coding wkbLineString[offset] = 0; offset++; // write
+     * wkbtype ByteUtils.writeBEInt(wkbLineString,offset + 1,1); offset += 4; // write point coordinates
+     * ByteUtils.writeBEDouble(wkbLineString,offset + 5 ,points[0][i].getX()); offset += 8;
+     * ByteUtils.writeBEDouble(wkbLineString,offset + 13,points[0][i].getY()); offset += 8; } } // it's a multi
+     * LineString else { // get size to be allocated form wkbstructure int size = 9;
      * 
      * for (int j = 0; j < points.length; j++) size += points[j].length*21 + 9;
      * 
-     * wkbLineString = new byte[size]; // big endian coding wkbLineString[0] =
-     * 0; // write wkbtype ByteUtils.writeBEInt(wkbLineString,1,5); // write
-     * number of linestrings
+     * wkbLineString = new byte[size]; // big endian coding wkbLineString[0] = 0; // write wkbtype
+     * ByteUtils.writeBEInt(wkbLineString,1,5); // write number of linestrings
      * ByteUtils.writeBEInt(wkbLineString,5,points.length);
      * 
-     * offset = 9; // for every linestring for (int j = 0; j < points.length;
-     * j++) { // big endian coding wkbLineString[offset] = 0; // write wkbtype
-     * ByteUtils.writeBEInt(wkbLineString,offset + 1,2); // write number of
+     * offset = 9; // for every linestring for (int j = 0; j < points.length; j++) { // big endian coding
+     * wkbLineString[offset] = 0; // write wkbtype ByteUtils.writeBEInt(wkbLineString,offset + 1,2); // write number of
      * points ByteUtils.writeBEInt(wkbLineString,offset + 5,points[j].length);
      * 
      * offset += 9;
      * 
-     * for (int i = 0; i < points[j].length; i++) { // big endian coding
-     * wkbLineString[offset] = 0; // write wkbtype
-     * ByteUtils.writeBEInt(wkbLineString,offset + 1,1); // write point
-     * coordinates ByteUtils.writeBEDouble(wkbLineString,offset + 5
-     * ,points[j][i].getX()); ByteUtils.writeBEDouble(wkbLineString,offset +
-     * 13,points[j][i].getY()); // increment offset with the size of a WKBPoint
-     * offset += 21; } } }
+     * for (int i = 0; i < points[j].length; i++) { // big endian coding wkbLineString[offset] = 0; // write wkbtype
+     * ByteUtils.writeBEInt(wkbLineString,offset + 1,1); // write point coordinates
+     * ByteUtils.writeBEDouble(wkbLineString,offset + 5 ,points[j][i].getX());
+     * ByteUtils.writeBEDouble(wkbLineString,offset + 13,points[j][i].getY()); // increment offset with the size of a
+     * WKBPoint offset += 21; } } }
      */
     return wkbLineString;
   }
@@ -202,8 +193,7 @@ public class SHP2WKB
   /**
    * method: byte[] transformPolygon(CS_CoordinateSystem srs, <BR>
    * SHPPolygon shppolygon)) <BR>
-   * transforms the SHPPolygon into a byte array using sf-WKB specifications
-   * <BR>
+   * transforms the SHPPolygon into a byte array using sf-WKB specifications <BR>
    * gets the polygon that should be transformed to a WKSGeometry <BR>
    */
   public byte[] transformPolygon( SHPPolygon shppolygon_ ) throws Exception
@@ -336,8 +326,7 @@ public class SHP2WKB
         offset += 4;
 
         // write number of points of the external boundary to buffer
-        ByteUtils.writeBEInt( buffer, offset,
-            wkslp[i].getSurfacePatchAt( 0 ).getExteriorRing().length );
+        ByteUtils.writeBEInt( buffer, offset, wkslp[i].getSurfacePatchAt( 0 ).getExteriorRing().length );
         offset += 4;
 
         GM_Position[] ls = wkslp[i].getSurfacePatchAt( 0 ).getExteriorRing();

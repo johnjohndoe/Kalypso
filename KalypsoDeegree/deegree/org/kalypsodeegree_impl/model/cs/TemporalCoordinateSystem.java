@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // Time
@@ -104,8 +104,7 @@ public class TemporalCoordinateSystem extends CoordinateSystem
   private final long epoch;
 
   /**
-   * Creates a temporal coordinate system. Datum is UTC, units are days and
-   * values are increasing toward future.
+   * Creates a temporal coordinate system. Datum is UTC, units are days and values are increasing toward future.
    * 
    * @param name
    *          Name to give new object.
@@ -131,8 +130,8 @@ public class TemporalCoordinateSystem extends CoordinateSystem
    * @param axis
    *          Axis to use for new coordinate system.
    */
-  public TemporalCoordinateSystem( final String name, final TemporalDatum datum, final Unit unit,
-      final Date epoch, final AxisInfo axis )
+  public TemporalCoordinateSystem( final String name, final TemporalDatum datum, final Unit unit, final Date epoch,
+      final AxisInfo axis )
   {
     super( name );
     ensureNonNull( "datum", datum );
@@ -161,8 +160,8 @@ public class TemporalCoordinateSystem extends CoordinateSystem
    * @param axis
    *          Axis to use for new coordinate system.
    */
-  TemporalCoordinateSystem( final Map properties, final TemporalDatum datum, final Unit unit,
-      final Date epoch, final AxisInfo axis )
+  TemporalCoordinateSystem( final Map properties, final TemporalDatum datum, final Unit unit, final Date epoch,
+      final AxisInfo axis )
   {
     super( properties );
     this.datum = datum;
@@ -197,8 +196,7 @@ public class TemporalCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns the epoch. The epoch is the origin of the time axis, i.e. the date
-   * for value zero.
+   * Returns the epoch. The epoch is the origin of the time axis, i.e. the date for value zero.
    */
   public Date getEpoch()
   {
@@ -206,8 +204,8 @@ public class TemporalCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Gets axis details for temporal dimension within coordinate system. A
-   * temporal coordinate system have only one axis, always at index 0.
+   * Gets axis details for temporal dimension within coordinate system. A temporal coordinate system have only one axis,
+   * always at index 0.
    * 
    * @param dimension
    *          Zero based index of axis.
@@ -217,13 +215,13 @@ public class TemporalCoordinateSystem extends CoordinateSystem
     final int maxDim = getDimension();
     if( dimension >= 0 && dimension < maxDim )
       return axis;
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
-   * Gets units for dimension within coordinate system. A temporal coordinate
-   * system have only one unit, always at index 0.
+   * Gets units for dimension within coordinate system. A temporal coordinate system have only one unit, always at index
+   * 0.
    * 
    * @param dimension
    *          Must be 0.
@@ -233,18 +231,16 @@ public class TemporalCoordinateSystem extends CoordinateSystem
     final int maxDim = getDimension();
     if( dimension >= 0 && dimension < maxDim )
       return unit;
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
-   * The default implementation compare datum, units and axis, but ignore name,
-   * alias and other meta-data informations.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform. The default implementation compare datum, units and axis, but ignore name, alias
+   * and other meta-data informations.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLCoord;
@@ -96,8 +96,8 @@ public class GMLCoord_Impl implements GMLCoord
   }
 
   /**
-   * factory method to create an empty GMLCoord. The coord contains a x-tag to
-   * be a valid gml:coord. the value is set to -9E99.
+   * factory method to create an empty GMLCoord. The coord contains a x-tag to be a valid gml:coord. the value is set to
+   * -9E99.
    */
   public static GMLCoord createGMLCoord( Document doc )
   {
@@ -136,8 +136,7 @@ public class GMLCoord_Impl implements GMLCoord
   }
 
   /**
-   * returns the y-value of the coordinate. if no y-value is defined -9E99 will
-   * be returned
+   * returns the y-value of the coordinate. if no y-value is defined -9E99 will be returned
    */
   public double getY()
   {
@@ -157,8 +156,7 @@ public class GMLCoord_Impl implements GMLCoord
   }
 
   /**
-   * returns the z-value of the coordinate. if no z-value is defined -9E99 will
-   * be returned
+   * returns the z-value of the coordinate. if no z-value is defined -9E99 will be returned
    */
   public double getZ()
   {
@@ -204,8 +202,7 @@ public class GMLCoord_Impl implements GMLCoord
   }
 
   /**
-   * sets the coordinate value(s) using a double array. the min length of the
-   * equals 1 the max length 3
+   * sets the coordinate value(s) using a double array. the min length of the equals 1 the max length 3
    */
   public void setCoord( double[] coord ) throws GMLException
   {
@@ -353,21 +350,17 @@ public class GMLCoord_Impl implements GMLCoord
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/04/15 19:46:42  belger
- * *** empty log message ***
- *
- * Revision 1.5  2005/03/08 11:01:04  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:30 doemming ***
+ * Revision 1.7  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.6 2005/04/15 19:46:42 belger *** empty log message ***
+ * 
+ * Revision 1.5 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:03:30 doemming ***
  * empty log message *** Revision 1.4 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.3 2003/05/15 09:37:40 poth no message

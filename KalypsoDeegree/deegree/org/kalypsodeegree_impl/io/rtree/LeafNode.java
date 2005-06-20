@@ -24,8 +24,7 @@
 package org.kalypsodeegree_impl.io.rtree;
 
 /**
- * Implementierung eines Blatt-Knotens. Erbt Methoden von AbstractNode.
- * Implementiert abstrakte Methoden.
+ * Implementierung eines Blatt-Knotens. Erbt Methoden von AbstractNode. Implementiert abstrakte Methoden.
  * 
  * @version 1.0
  * @author Wolfgang Bär
@@ -51,8 +50,7 @@ public class LeafNode extends Node
   }
 
   /**
-   * Konstruktor Leaf-AbstractNode. PageNumber wird beim ersten Abspeichern
-   * zugewiesen.
+   * Konstruktor Leaf-AbstractNode. PageNumber wird beim ersten Abspeichern zugewiesen.
    * 
    * @param file
    *          PageFile des Knotens
@@ -121,8 +119,7 @@ public class LeafNode extends Node
   }
 
   /**
-   * Erstellt eine Kopie des LeafNodes. Tiefe Kopie bis auf Referenz auf
-   * PageFile.
+   * Erstellt eine Kopie des LeafNodes. Tiefe Kopie bis auf Referenz auf PageFile.
    * 
    * @return Object LeafNode-Kopie
    */

@@ -65,8 +65,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.InputSource;
 
 /**
- * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und
- * umgekehrt
+ * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
  * 
  * @author Belger
  */
@@ -74,25 +73,22 @@ public class GisTemplateHelper
 {
   private GisTemplateHelper()
   {
-    // never instantiate this class
+  // never instantiate this class
   }
 
-  public static final Featuretemplate loadGisFeatureTemplate( final IFile file,
-      final Properties replaceProps ) throws CoreException, IOException, JAXBException
+  public static final Featuretemplate loadGisFeatureTemplate( final IFile file, final Properties replaceProps )
+      throws CoreException, IOException, JAXBException
   {
     // TODO: replace with 'ReplaceToken'
-    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file
-        .getCharset() );
+    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
     final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
 
     return loadGisFeatureTemplate( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static final Featuretemplate loadGisFeatureTemplate( final InputSource is )
-      throws JAXBException
+  public static final Featuretemplate loadGisFeatureTemplate( final InputSource is ) throws JAXBException
   {
-    Unmarshaller unmarshaller = new org.kalypso.template.featureview.ObjectFactory()
-        .createUnmarshaller();
+    Unmarshaller unmarshaller = new org.kalypso.template.featureview.ObjectFactory().createUnmarshaller();
     return (Featuretemplate)unmarshaller.unmarshal( is );
   }
 
@@ -100,15 +96,13 @@ public class GisTemplateHelper
       throws CoreException, IOException, JAXBException
   {
     // TODO: replace with 'ReplaceToken'
-    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file
-        .getCharset() );
+    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
     final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
 
     return loadGisMapView( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static final Gismapview loadGisMapView( final IFile file ) throws JAXBException,
-      CoreException
+  public static final Gismapview loadGisMapView( final IFile file ) throws JAXBException, CoreException
   {
     final InputSource is = new InputSource( file.getContents() );
     is.setEncoding( file.getCharset() );
@@ -125,9 +119,8 @@ public class GisTemplateHelper
   }
 
   /**
-   * Führt ein Pattern-Ersetzen durch, bevor die Gistableview geparst wird Jeder
-   * key der Properties wird durch seinen value ersetzt. Funktioniert nur
-   * zeilenweise, d.h.
+   * Führt ein Pattern-Ersetzen durch, bevor die Gistableview geparst wird Jeder key der Properties wird durch seinen
+   * value ersetzt. Funktioniert nur zeilenweise, d.h.
    * 
    * @param file
    * @param replaceProps
@@ -138,18 +131,16 @@ public class GisTemplateHelper
    * @throws IOException
    * @throws JAXBException
    */
-  public static Gistableview loadGisTableview( final IFile file, final Properties replaceProps )
-      throws CoreException, IOException, JAXBException
+  public static Gistableview loadGisTableview( final IFile file, final Properties replaceProps ) throws CoreException,
+      IOException, JAXBException
   {
-    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file
-        .getCharset() );
+    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
     final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
 
     return loadGisTableview( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static Gistableview loadGisTableview( final IFile file ) throws CoreException,
-      JAXBException
+  public static Gistableview loadGisTableview( final IFile file ) throws CoreException, JAXBException
   {
     final InputSource is = new InputSource( file.getContents() );
     is.setEncoding( file.getCharset() );
@@ -159,8 +150,7 @@ public class GisTemplateHelper
 
   public static Gistableview loadGisTableview( final InputSource is ) throws JAXBException
   {
-    Unmarshaller unmarshaller = new org.kalypso.template.gistableview.ObjectFactory()
-        .createUnmarshaller();
+    Unmarshaller unmarshaller = new org.kalypso.template.gistableview.ObjectFactory().createUnmarshaller();
 
     return (Gistableview)unmarshaller.unmarshal( is );
   }
@@ -177,12 +167,10 @@ public class GisTemplateHelper
   public static GM_Envelope getBoundingBox( Gismapview gisview )
   {
     final ExtentType extent = gisview.getExtent();
-    return GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent
-        .getRight(), extent.getTop() );
+    return GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
   }
 
-  public static void fillLayerType( Layer layer, String id, String name, boolean visible,
-      KalypsoWMSTheme wmsTheme )
+  public static void fillLayerType( Layer layer, String id, String name, boolean visible, KalypsoWMSTheme wmsTheme )
   {
     layer.setName( name );
     layer.setFeaturePath( "" );
@@ -197,10 +185,10 @@ public class GisTemplateHelper
 
   /**
    * This method creates a new Map with a bounding box
+   * 
    * @param bbox
    *          bounding box of new map
-   * @return gismapview 
-   *          new empty map with a layer list
+   * @return gismapview new empty map with a layer list
    *  
    */
   public static Gismapview emptyGisView( final GM_Envelope bbox ) throws JAXBException
@@ -211,7 +199,7 @@ public class GisTemplateHelper
     final org.kalypso.template.types.ObjectFactory extentedFactory = new org.kalypso.template.types.ObjectFactory();
     final Gismapview gismapview = maptemplateFactory.createGismapview();
     final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
-    layersType.setActive(null);
+    layersType.setActive( null );
 
     if( bbox != null )
     {

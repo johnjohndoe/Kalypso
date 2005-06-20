@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // Geometry
@@ -66,6 +66,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.media.jai.ParameterList;
+import javax.media.jai.PerspectiveTransform;
 import javax.media.jai.util.Range;
 import javax.vecmath.GMatrix;
 import javax.vecmath.SingularMatrixException;
@@ -119,17 +120,15 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
   }
 
   /**
-   * Transforms an array of floating point coordinates by this matrix. Point
-   * coordinates must have a dimension equals to
-   * <code>{@link Matrix#getNumCol}-1</code>. For example, for square matrix
-   * of size 4&times;4, coordinate points are three-dimensional and stored in
-   * the arrays starting at the specified offset (<code>srcOff</code>) in
-   * the order <code>[x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>,
+   * Transforms an array of floating point coordinates by this matrix. Point coordinates must have a dimension equals to
+   * <code>{@link Matrix#getNumCol}-1</code>. For example, for square matrix of size 4&times;4, coordinate points
+   * are three-dimensional and stored in the arrays starting at the specified offset (<code>srcOff</code>) in the
+   * order <code>[x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>,
    *        x<sub>1</sub>, y<sub>1</sub>, z<sub>1</sub>...,
    *        x<sub>n</sub>, y<sub>n</sub>, z<sub>n</sub>]</code>.
    * 
-   * The transformed points <code>(x',y',z')</code> are computed as below
-   * (note that this computation is similar to {@link PerspectiveTransform}):
+   * The transformed points <code>(x',y',z')</code> are computed as below (note that this computation is similar to
+   * {@link PerspectiveTransform}):
    * 
    * <blockquote>
    * 
@@ -149,15 +148,12 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
    * @param srcPts
    *          The array containing the source point coordinates.
    * @param srcOff
-   *          The offset to the first point to be transformed in the source
-   *          array.
+   *          The offset to the first point to be transformed in the source array.
    * @param dstPts
-   *          The array into which the transformed point coordinates are
-   *          returned.
+   *          The array into which the transformed point coordinates are returned.
    * @param dstOff
-   *          The offset to the location of the first transformed point that is
-   *          stored in the destination array. The source and destination array
-   *          sections can be overlaps.
+   *          The offset to the location of the first transformed point that is stored in the destination array. The
+   *          source and destination array sections can be overlaps.
    * @param numPts
    *          The number of points to be transformed
    */
@@ -174,8 +170,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
       final int upperSrc = srcOff + numPts * inputDimension;
       if( upperSrc > dstOff )
       {
-        if( inputDimension >= outputDimension ? dstOff > srcOff
-            : dstOff + numPts * outputDimension > upperSrc )
+        if( inputDimension >= outputDimension ? dstOff > srcOff : dstOff + numPts * outputDimension > upperSrc )
         {
           // If source overlaps destination, then the easiest workaround is
           // to copy source data. This is not the most efficient however...
@@ -209,17 +204,15 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
   }
 
   /**
-   * Transforms an array of floating point coordinates by this matrix. Point
-   * coordinates must have a dimension equals to
-   * <code>{@link Matrix#getNumCol}-1</code>. For example, for square matrix
-   * of size 4&times;4, coordinate points are three-dimensional and stored in
-   * the arrays starting at the specified offset (<code>srcOff</code>) in
-   * the order <code>[x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>,
+   * Transforms an array of floating point coordinates by this matrix. Point coordinates must have a dimension equals to
+   * <code>{@link Matrix#getNumCol}-1</code>. For example, for square matrix of size 4&times;4, coordinate points
+   * are three-dimensional and stored in the arrays starting at the specified offset (<code>srcOff</code>) in the
+   * order <code>[x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>,
    *        x<sub>1</sub>, y<sub>1</sub>, z<sub>1</sub>...,
    *        x<sub>n</sub>, y<sub>n</sub>, z<sub>n</sub>]</code>.
    * 
-   * The transformed points <code>(x',y',z')</code> are computed as below
-   * (note that this computation is similar to {@link PerspectiveTransform}):
+   * The transformed points <code>(x',y',z')</code> are computed as below (note that this computation is similar to
+   * {@link PerspectiveTransform}):
    * 
    * <blockquote>
    * 
@@ -239,15 +232,12 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
    * @param srcPts
    *          The array containing the source point coordinates.
    * @param srcOff
-   *          The offset to the first point to be transformed in the source
-   *          array.
+   *          The offset to the first point to be transformed in the source array.
    * @param dstPts
-   *          The array into which the transformed point coordinates are
-   *          returned.
+   *          The array into which the transformed point coordinates are returned.
    * @param dstOff
-   *          The offset to the location of the first transformed point that is
-   *          stored in the destination array. The source and destination array
-   *          sections can be overlaps.
+   *          The offset to the location of the first transformed point that is stored in the destination array. The
+   *          source and destination array sections can be overlaps.
    * @param numPts
    *          The number of points to be transformed
    */
@@ -264,8 +254,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
       final int upperSrc = srcOff + numPts * inputDimension;
       if( upperSrc > dstOff )
       {
-        if( inputDimension >= outputDimension ? dstOff > srcOff
-            : dstOff + numPts * outputDimension > upperSrc )
+        if( inputDimension >= outputDimension ? dstOff > srcOff : dstOff + numPts * outputDimension > upperSrc )
         {
           // If source overlaps destination, then the easiest workaround is
           // to copy source data. This is not the most efficient however...
@@ -299,8 +288,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
   }
 
   /**
-   * Gets the derivative of this transform at a point. For a matrix transform,
-   * the derivative is the same everywhere.
+   * Gets the derivative of this transform at a point. For a matrix transform, the derivative is the same everywhere.
    */
   public Matrix derivative( final Point2D point )
   {
@@ -308,8 +296,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
   }
 
   /**
-   * Gets the derivative of this transform at a point. For a matrix transform,
-   * the derivative is the same everywhere.
+   * Gets the derivative of this transform at a point. For a matrix transform, the derivative is the same everywhere.
    */
   public Matrix derivative( final CoordinatePoint point )
   {
@@ -383,8 +370,8 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
   }
 
   /**
-   * Returns a hash value for this transform. This value need not remain
-   * consistent between different implementations of the same class.
+   * Returns a hash value for this transform. This value need not remain consistent between different implementations of
+   * the same class.
    */
   public int hashCode()
   {
@@ -406,8 +393,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
     if( super.equals( object ) )
     {
       final MatrixTransform that = (MatrixTransform)object;
-      return this.numRow == that.numRow && this.numCol == that.numCol
-          && Arrays.equals( this.elt, that.elt );
+      return this.numRow == that.numRow && this.numCol == that.numCol && Arrays.equals( this.elt, that.elt );
     }
     return false;
   }
@@ -461,12 +447,11 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
     /**
      * Range of positives values. Range goes from 1 to the maximum value.
      */
-    private static final Range POSITIVE_RANGE = new Range( Integer.class, new Integer( 1 ),
-        new Integer( Integer.MAX_VALUE ) );
+    private static final Range POSITIVE_RANGE = new Range( Integer.class, new Integer( 1 ), new Integer(
+        Integer.MAX_VALUE ) );
 
     /**
-     * Create a provider for affine transforms of the specified dimension.
-     * Created affine transforms will have a size of
+     * Create a provider for affine transforms of the specified dimension. Created affine transforms will have a size of
      * <code>numRow&nbsp;&times;&nbsp;numCol</code>.
      * 
      * @param numRow
@@ -508,8 +493,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
     }
 
     /**
-     * Static version of {@link #create}, for use by
-     * {@link MathTransformFactory#createParameterizedTransform}.
+     * Static version of {@link #create}, for use by {@link MathTransformFactory#createParameterizedTransform}.
      */
     public static MathTransform staticCreate( final ParameterList parameters )
     {

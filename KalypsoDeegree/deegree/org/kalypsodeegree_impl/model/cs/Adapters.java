@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -70,6 +70,8 @@ import javax.media.jai.ParameterListDescriptorImpl;
 import javax.media.jai.ParameterListImpl;
 import javax.units.Unit;
 
+import org.kalypsodeegree_impl.model.cs.Info.AngularUnit;
+import org.kalypsodeegree_impl.model.cs.Info.LinearUnit;
 import org.kalypsodeegree_impl.model.resources.XArray;
 import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
@@ -100,9 +102,8 @@ import org.opengis.cs.CS_VerticalDatum;
 import org.opengis.cs.CS_WGS84ConversionInfo;
 
 /**
- * <FONT COLOR="#FF6633">Provide methods for interoperability with
- * <code>org.opengis.cs</code> package. </FONT> All methods accept null
- * argument. All OpenGIS objects are suitable for RMI use.
+ * <FONT COLOR="#FF6633">Provide methods for interoperability with <code>org.opengis.cs</code> package. </FONT> All
+ * methods accept null argument. All OpenGIS objects are suitable for RMI use.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -115,8 +116,7 @@ public class Adapters
   private static Adapters DEFAULT;
 
   /**
-   * The underlying adapters for the <code>org.kalypsodeegree_impl.model.pt</code>
-   * package.
+   * The underlying adapters for the <code>org.kalypsodeegree_impl.model.pt</code> package.
    */
   public org.kalypsodeegree_impl.model.pt.Adapters PT = null;
 
@@ -124,8 +124,7 @@ public class Adapters
    * Default constructor.
    * 
    * @param PT
-   *          The underlying adapters for <code>org.kalypsodeegree_impl.model.pt</code>
-   *          package.
+   *          The underlying adapters for <code>org.kalypsodeegree_impl.model.pt</code> package.
    */
   protected Adapters( final org.kalypsodeegree_impl.model.pt.Adapters PT )
   {
@@ -153,11 +152,10 @@ public class Adapters
   }
 
   /**
-   * Returns an OpenGIS interface for an info. If the argument is an
-   * <code>Info</code> subclass, the returned object will implements the
-   * corresponding interface. For example a call with an argument of type
-   * {@link GeographicCoordinateSystem}will returns an object implementing the
-   * {@link CS_GeographicCoordinateSystem}interface.
+   * Returns an OpenGIS interface for an info. If the argument is an <code>Info</code> subclass, the returned object
+   * will implements the corresponding interface. For example a call with an argument of type
+   * {@link GeographicCoordinateSystem}will returns an object implementing the {@link CS_GeographicCoordinateSystem}
+   * interface.
    */
   public CS_Info export( final Info info )
   {
@@ -165,9 +163,8 @@ public class Adapters
   }
 
   /**
-   * Returns an OpenGIS interface for a coordinate system. If the argument is a
-   * <code>CoordinateSystem</code> subclass, the returned object will
-   * implements the corresponding interface.
+   * Returns an OpenGIS interface for a coordinate system. If the argument is a <code>CoordinateSystem</code>
+   * subclass, the returned object will implements the corresponding interface.
    */
   public CS_CoordinateSystem export( final CoordinateSystem cs )
   {
@@ -246,8 +243,7 @@ public class Adapters
     if( parameters == null )
       return null;
     final String[] names = parameters.getParameterListDescriptor().getParamNames();
-    final CS_ProjectionParameter[] param = new CS_ProjectionParameter[names != null ? names.length
-        : 0];
+    final CS_ProjectionParameter[] param = new CS_ProjectionParameter[names != null ? names.length : 0];
     int count = 0;
     for( int i = 0; i < param.length; i++ )
     {
@@ -362,9 +358,8 @@ public class Adapters
   }
 
   /**
-   * Returns an OpenGIS interface for an unit. The returned interface may
-   * extends {@link CS_LinearUnit}or {@link CS_AngularUnit}according the
-   * specified unit.
+   * Returns an OpenGIS interface for an unit. The returned interface may extends {@link CS_LinearUnit}or
+   * {@link CS_AngularUnit}according the specified unit.
    */
   public CS_Unit export( final Unit unit )
   {
@@ -376,33 +371,29 @@ public class Adapters
     }
     if( unit.canConvert( Unit.DEGREE ) )
     {
-      return new Info( unit.toString() ).new AngularUnit( this, Math.toRadians( unit.convert( 1,
-          Unit.DEGREE ) ) );
+      return new Info( unit.toString() ).new AngularUnit( this, Math.toRadians( unit.convert( 1, Unit.DEGREE ) ) );
     }
-    throw new UnsupportedOperationException(
-        "Only linear and angular units are currently implemented" );
+    throw new UnsupportedOperationException( "Only linear and angular units are currently implemented" );
   }
 
   /**
-   * Check if the specified coordinate system has the expected number of
-   * dimensions.
+   * Check if the specified coordinate system has the expected number of dimensions.
    * 
    * @param cs
    *          The coordinate system to check.
    * @param expected
    *          The expected number of dimensions.
    * @throws IllegalArgumentException
-   *           if the coordinate system doesn't have the expected number of
-   *           dimensions.
+   *           if the coordinate system doesn't have the expected number of dimensions.
    */
-  private static void checkDimension( final CS_CoordinateSystem cs, final int expected )
-      throws RemoteException, IllegalArgumentException
+  private static void checkDimension( final CS_CoordinateSystem cs, final int expected ) throws RemoteException,
+      IllegalArgumentException
   {
     final int dimension = cs.getDimension();
     if( dimension != expected )
     {
-      throw new IllegalArgumentException( Resources.format(
-          ResourceKeys.ERROR_ILLEGAL_CS_DIMENSION_$1, new Integer( dimension ) ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ILLEGAL_CS_DIMENSION_$1, new Integer(
+          dimension ) ) );
     }
   }
 
@@ -462,8 +453,7 @@ public class Adapters
    * @throws RemoteException
    *           if a remote call failed.
    */
-  public CompoundCoordinateSystem wrap( final CS_CompoundCoordinateSystem cs )
-      throws RemoteException
+  public CompoundCoordinateSystem wrap( final CS_CompoundCoordinateSystem cs ) throws RemoteException
   {
     if( cs == null )
       return null;
@@ -506,8 +496,7 @@ public class Adapters
    * @throws RemoteException
    *           if a remote call failed.
    */
-  public GeocentricCoordinateSystem wrap( final CS_GeocentricCoordinateSystem cs )
-      throws RemoteException
+  public GeocentricCoordinateSystem wrap( final CS_GeocentricCoordinateSystem cs ) throws RemoteException
   {
     if( cs == null )
       return null;
@@ -534,8 +523,7 @@ public class Adapters
    * @throws RemoteException
    *           if a remote call failed.
    */
-  public VerticalCoordinateSystem wrap( final CS_VerticalCoordinateSystem cs )
-      throws RemoteException
+  public VerticalCoordinateSystem wrap( final CS_VerticalCoordinateSystem cs ) throws RemoteException
   {
     if( cs == null )
       return null;
@@ -556,8 +544,7 @@ public class Adapters
    * @throws RemoteException
    *           if a remote call failed.
    */
-  public HorizontalCoordinateSystem wrap( final CS_HorizontalCoordinateSystem cs )
-      throws RemoteException
+  public HorizontalCoordinateSystem wrap( final CS_HorizontalCoordinateSystem cs ) throws RemoteException
   {
     if( cs == null )
       return null;
@@ -580,8 +567,7 @@ public class Adapters
    * @throws RemoteException
    *           if a remote call failed.
    */
-  public GeographicCoordinateSystem wrap( final CS_GeographicCoordinateSystem cs )
-      throws RemoteException
+  public GeographicCoordinateSystem wrap( final CS_GeographicCoordinateSystem cs ) throws RemoteException
   {
     if( cs == null )
       return null;
@@ -604,8 +590,7 @@ public class Adapters
    * @throws RemoteException
    *           if a remote call failed.
    */
-  public ProjectedCoordinateSystem wrap( final CS_ProjectedCoordinateSystem cs )
-      throws RemoteException
+  public ProjectedCoordinateSystem wrap( final CS_ProjectedCoordinateSystem cs ) throws RemoteException
   {
     if( cs == null )
       return null;
@@ -636,8 +621,7 @@ public class Adapters
     {
       return (Projection)( (Info.Export)projection ).unwrap();
     }
-    final CS_ProjectionParameter[] parameters = new CS_ProjectionParameter[projection
-        .getNumParameters()];
+    final CS_ProjectionParameter[] parameters = new CS_ProjectionParameter[projection.getNumParameters()];
     for( int i = 0; i < parameters.length; i++ )
     {
       parameters[i] = projection.getParameter( i );
@@ -659,8 +643,7 @@ public class Adapters
     {
       return (PrimeMeridian)( (Info.Export)meridian ).unwrap();
     }
-    return new PrimeMeridian( map( meridian ), wrap( meridian.getAngularUnit() ), meridian
-        .getLongitude() );
+    return new PrimeMeridian( map( meridian ), wrap( meridian.getAngularUnit() ), meridian.getLongitude() );
   }
 
   /**
@@ -678,9 +661,8 @@ public class Adapters
       return (Ellipsoid)( (Info.Export)ellipsoid ).unwrap();
     }
     final double ivf = ellipsoid.getInverseFlattening();
-    return new Ellipsoid( map( ellipsoid ), ellipsoid.getSemiMajorAxis(), ellipsoid
-        .getSemiMinorAxis(), ivf != 0 ? ivf : Double.POSITIVE_INFINITY,
-        ellipsoid.isIvfDefinitive(), wrap( ellipsoid.getAxisUnit() ) );
+    return new Ellipsoid( map( ellipsoid ), ellipsoid.getSemiMajorAxis(), ellipsoid.getSemiMinorAxis(), ivf != 0 ? ivf
+        : Double.POSITIVE_INFINITY, ellipsoid.isIvfDefinitive(), wrap( ellipsoid.getAxisUnit() ) );
   }
 
   /**
@@ -745,8 +727,8 @@ public class Adapters
     {
       return (HorizontalDatum)( (Datum.Export)datum ).unwrap();
     }
-    return new HorizontalDatum( map( datum ), wrap( datum.getDatumType() ), wrap( datum
-        .getEllipsoid() ), wrap( datum.getWGS84Parameters() ) );
+    return new HorizontalDatum( map( datum ), wrap( datum.getDatumType() ), wrap( datum.getEllipsoid() ), wrap( datum
+        .getWGS84Parameters() ) );
   }
 
   /**
@@ -817,8 +799,8 @@ public class Adapters
     }
     paramNames = (String[])XArray.resize( paramNames, count );
     paramClasses = (Class[])XArray.resize( paramClasses, count );
-    final ParameterList list = new ParameterListImpl( new ParameterListDescriptorImpl( null,
-        paramNames, paramClasses, null, null ) );
+    final ParameterList list = new ParameterListImpl( new ParameterListDescriptorImpl( null, paramNames, paramClasses,
+        null, null ) );
     for( int i = 0; i < paramNames.length; i++ )
     {
       list.setParameter( paramNames[i], parameters[i].value );
@@ -847,7 +829,7 @@ public class Adapters
 
   /**
    * Returns an unit for an OpenGIS structure.
-   * 
+   *  
    */
   public Unit wrap( final CS_Unit unit )
   {
@@ -855,13 +837,13 @@ public class Adapters
       return null;
     if( unit instanceof CS_LinearUnit )
     {
-//      final double metersPerUnit = ( (CS_LinearUnit)unit ).getMetersPerUnit();
+      //      final double metersPerUnit = ( (CS_LinearUnit)unit ).getMetersPerUnit();
       //return Unit.METRE.scale(metersPerUnit);
       return null;
     }
     if( unit instanceof CS_AngularUnit )
     {
-//      final double radiansPerUnit = ( (CS_AngularUnit)unit ).getRadiansPerUnit();
+      //      final double radiansPerUnit = ( (CS_AngularUnit)unit ).getRadiansPerUnit();
       //return Unit.RADIAN.scale(radiansPerUnit);
       return null;
     }
@@ -869,9 +851,8 @@ public class Adapters
   }
 
   /**
-   * Returns a map for the specified OpenGIS structure. Note: current
-   * implementation search all info immediatly. Future implementation may differ
-   * fetching until needed.
+   * Returns a map for the specified OpenGIS structure. Note: current implementation search all info immediatly. Future
+   * implementation may differ fetching until needed.
    * 
    * @param info
    *          The OpenGIS structure.

@@ -85,8 +85,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer,
-    Marshallable
+public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer, Marshallable
 {
 
   private TreeMap m_colorMap = null;
@@ -148,11 +147,10 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     {
       ColorMapEntry colorMapEntry_i = (ColorMapEntry)m_colorMap.get( colorMapKeys[i] );
       ColorMapEntry colorMapEntry_i1 = (ColorMapEntry)m_colorMap.get( colorMapKeys[i + 1] );
-      Interval interval = new Interval_Impl( colorMapEntry_i.getQuantity(), colorMapEntry_i1
-          .getQuantity() );
+      Interval interval = new Interval_Impl( colorMapEntry_i.getQuantity(), colorMapEntry_i1.getQuantity() );
       Color color = colorMapEntry_i.getColor();
-      Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(),
-          (int)Math.round( colorMapEntry_i.getOpacity() * 255 ) );
+      Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(), (int)Math
+          .round( colorMapEntry_i.getOpacity() * 255 ) );
       intervalMap.put( interval, colorWithOpacity );
     }
     return intervalMap;
@@ -183,7 +181,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
       marshaller.marshal( rasterSymbolizerElement, writer );
       writer.close();
       //System.out.println( writer.toString() );
-      return (( writer.toString() ).replaceFirst( "<?.*?>", "" )).trim();
+      return ( ( writer.toString() ).replaceFirst( "<?.*?>", "" ) ).trim();
     }
     catch( Exception e )
     {

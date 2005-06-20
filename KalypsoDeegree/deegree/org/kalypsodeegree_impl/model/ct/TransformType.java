@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
@@ -92,21 +92,19 @@ public final class TransformType extends EnumeratedParameter
    * 
    * @see org.opengis.ct.CT_TransformType#CT_TT_Other
    */
-  public static final TransformType OTHER = new TransformType( "OTHER",
-      CT_TransformType.CT_TT_Other, ResourceKeys.OTHER );
+  public static final TransformType OTHER = new TransformType( "OTHER", CT_TransformType.CT_TT_Other,
+      ResourceKeys.OTHER );
 
   /**
-   * Transform depends only on defined parameters. For example, a cartographic
-   * projection.
+   * Transform depends only on defined parameters. For example, a cartographic projection.
    * 
    * @see org.opengis.ct.CT_TransformType#CT_TT_Conversion
    */
-  public static final TransformType CONVERSION = new TransformType( "CONVERSION",
-      CT_TransformType.CT_TT_Conversion, ResourceKeys.CONVERSION );
+  public static final TransformType CONVERSION = new TransformType( "CONVERSION", CT_TransformType.CT_TT_Conversion,
+      ResourceKeys.CONVERSION );
 
   /**
-   * Transform depends only on empirically derived parameters. For example a
-   * datum transformation.
+   * Transform depends only on empirically derived parameters. For example a datum transformation.
    * 
    * @see org.opengis.ct.CT_TransformType#CT_TT_Transformation
    */
@@ -118,15 +116,18 @@ public final class TransformType extends EnumeratedParameter
    * 
    * @see org.opengis.ct.CT_TransformType#CT_TT_ConversionAndTransformation
    */
-  public static final TransformType CONVERSION_AND_TRANSFORMATION = new TransformType(
-      "CONVERSION_AND_TRANSFORMATION", CT_TransformType.CT_TT_ConversionAndTransformation,
-      ResourceKeys.CONVERSION_AND_TRANSFORMATION );
+  public static final TransformType CONVERSION_AND_TRANSFORMATION = new TransformType( "CONVERSION_AND_TRANSFORMATION",
+      CT_TransformType.CT_TT_ConversionAndTransformation, ResourceKeys.CONVERSION_AND_TRANSFORMATION );
 
   /**
    * Transform types by value. Used to canonicalize after deserialization.
    */
   private static final TransformType[] ENUMS =
-  { OTHER, CONVERSION, TRANSFORMATION, CONVERSION_AND_TRANSFORMATION };
+  {
+      OTHER,
+      CONVERSION,
+      TRANSFORMATION,
+      CONVERSION_AND_TRANSFORMATION };
   static
   {
     for( int i = 0; i < ENUMS.length; i++ )
@@ -134,20 +135,17 @@ public final class TransformType extends EnumeratedParameter
       if( ENUMS[i].getValue() != i )
       {
         /*
-         * //----- BEGIN JDK 1.4 DEPENDENCIES ---- throw new //
-         * assertionError(ENUMS[i]); /*----- END OF JDK 1.4 DEPENDENCIES ---
-         * throw new Error(String.valueOf(ENUMS[i])); ------- END OF JDK 1.3
-         * FALLBACK -------
+         * //----- BEGIN JDK 1.4 DEPENDENCIES ---- throw new // assertionError(ENUMS[i]); /*----- END OF JDK 1.4
+         * DEPENDENCIES --- throw new Error(String.valueOf(ENUMS[i])); ------- END OF JDK 1.3 FALLBACK -------
          */
       }
     }
   }
 
   /**
-   * Resource key, used for building localized name. This key doesn't need to be
-   * serialized, since {@link #readResolve}canonicalize enums according their
-   * {@link #value}. Furthermore, its value is implementation-dependent (which
-   * is an other raison why it should not be serialized).
+   * Resource key, used for building localized name. This key doesn't need to be serialized, since {@link #readResolve}
+   * canonicalize enums according their {@link #value}. Furthermore, its value is implementation-dependent (which is an
+   * other raison why it should not be serialized).
    */
   private transient final int key;
 
@@ -161,8 +159,8 @@ public final class TransformType extends EnumeratedParameter
   }
 
   /**
-   * Return the enum for the specified value. This method is provided for
-   * compatibility with {@link org.opengis.ct.CT_TransformType}.
+   * Return the enum for the specified value. This method is provided for compatibility with
+   * {@link org.opengis.ct.CT_TransformType}.
    * 
    * @param value
    *          The enum value.
@@ -178,8 +176,8 @@ public final class TransformType extends EnumeratedParameter
   }
 
   /**
-   * Returns this enum's name in the specified locale. If no name is available
-   * for the specified locale, a default one will be used.
+   * Returns this enum's name in the specified locale. If no name is available for the specified locale, a default one
+   * will be used.
    * 
    * @param locale
    *          The locale, or <code>null</code> for the current default locale.
@@ -191,10 +189,8 @@ public final class TransformType extends EnumeratedParameter
   }
 
   /**
-   * Concatenate this transform type with the specified transform type. If at
-   * least one transform type is {@link #OTHER}, then {@link #OTHER}is
-   * returned. Otherwise, transform type values are combined as with the logical
-   * "OR" operand.
+   * Concatenate this transform type with the specified transform type. If at least one transform type is {@link #OTHER},
+   * then {@link #OTHER}is returned. Otherwise, transform type values are combined as with the logical "OR" operand.
    */
   public TransformType concatenate( final TransformType type )
   {
@@ -208,9 +204,8 @@ public final class TransformType extends EnumeratedParameter
   }
 
   /**
-   * Use a single instance of {@link TransformType}after deserialization. It
-   * allow client code to test <code>enum1==enum2</code> instead of
-   * <code>enum1.equals(enum2)</code>.
+   * Use a single instance of {@link TransformType}after deserialization. It allow client code to test
+   * <code>enum1==enum2</code> instead of <code>enum1.equals(enum2)</code>.
    * 
    * @return A single instance of this enum.
    * @throws ObjectStreamException

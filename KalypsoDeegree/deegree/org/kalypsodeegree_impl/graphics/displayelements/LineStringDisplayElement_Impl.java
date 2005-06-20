@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.BasicStroke;
@@ -84,9 +84,8 @@ import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * DisplayElement that encapsulates a linestring (<tt>GM_Curve</tt>) or
- * multi-linestring geometry (<tt>GM_MultiCurve</tt>) and a
- * <tt>LineStringSymbolizer</tt>.
+ * DisplayElement that encapsulates a linestring (<tt>GM_Curve</tt>) or multi-linestring geometry (
+ * <tt>GM_MultiCurve</tt>) and a <tt>LineStringSymbolizer</tt>.
  * <p>
  * It can be rendered using a solid stroke or a graphics stroke.
  * <p>
@@ -95,8 +94,8 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implements
-    LineStringDisplayElement, Serializable
+class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implements LineStringDisplayElement,
+    Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -4657962592230618248L;
@@ -122,8 +121,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * @param geometry
    * @param symbolizer
    */
-  protected LineStringDisplayElement_Impl( Feature feature, GM_Curve geometry,
-      LineSymbolizer symbolizer )
+  protected LineStringDisplayElement_Impl( Feature feature, GM_Curve geometry, LineSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -149,8 +147,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
    * @param geometry
    * @param symbolizer
    */
-  protected LineStringDisplayElement_Impl( Feature feature, GM_MultiCurve geometry,
-      LineSymbolizer symbolizer )
+  protected LineStringDisplayElement_Impl( Feature feature, GM_MultiCurve geometry, LineSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }

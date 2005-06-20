@@ -131,9 +131,8 @@ public class DenominatorInputPanel
           setDenominator( Double.parseDouble( getText().getText() ) );
           if( getDenominator() < 0 )
           {
-            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
-                MessageBundle.STYLE_EDITOR_ERROR_POSITIVE );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_POSITIVE );
             errorDialog.showError();
           }
           else
@@ -141,9 +140,8 @@ public class DenominatorInputPanel
         }
         catch( NumberFormatException nfe )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-              .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
-              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
           getText().setText( "" + getDenominator() );
         }

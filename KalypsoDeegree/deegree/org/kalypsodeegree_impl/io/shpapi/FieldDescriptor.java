@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
@@ -85,17 +85,14 @@ public class FieldDescriptor
   private byte[] data = null;
 
   /**
-   * constructor recieves name and type of the field, the length of the field in
-   * bytes and the decimalcount. the decimalcount is only considered if type id
-   * "N" or "F", it's maxvalue if fieldlength - 2!
+   * constructor recieves name and type of the field, the length of the field in bytes and the decimalcount. the
+   * decimalcount is only considered if type id "N" or "F", it's maxvalue if fieldlength - 2!
    */
-  public FieldDescriptor( String name, String type, byte fieldlength, byte decimalcount )
-      throws DBaseException
+  public FieldDescriptor( String name, String type, byte fieldlength, byte decimalcount ) throws DBaseException
   {
 
-    if( ( !type.equalsIgnoreCase( "C" ) ) && ( !type.equalsIgnoreCase( "D" ) )
-        && ( !type.equalsIgnoreCase( "F" ) ) && ( !type.equalsIgnoreCase( "N" ) )
-        && ( !type.equalsIgnoreCase( "M" ) ) && ( !type.equalsIgnoreCase( "L" ) ) )
+    if( ( !type.equalsIgnoreCase( "C" ) ) && ( !type.equalsIgnoreCase( "D" ) ) && ( !type.equalsIgnoreCase( "F" ) )
+        && ( !type.equalsIgnoreCase( "N" ) ) && ( !type.equalsIgnoreCase( "M" ) ) && ( !type.equalsIgnoreCase( "L" ) ) )
       throw new DBaseException( "data type is not supported" );
 
     data = new byte[32];
@@ -145,8 +142,7 @@ public class FieldDescriptor
   }
 
   /**
-   * method: public byte[] getFieldDescriptor() returns the field descriptor as
-   * byte array
+   * method: public byte[] getFieldDescriptor() returns the field descriptor as byte array
    */
   public byte[] getFieldDescriptor()
   {

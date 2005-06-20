@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics;
 
 import java.awt.Color;
@@ -104,19 +104,16 @@ public interface ScaleBar
   void setBottomLabel( int labelType );
 
   /**
-   * sets the scale as defined in the OGC WMS 1.1.1 specification. Scale is
-   * defined as the diagonal size of a pixel in the center of a map measured in
-   * meter. The setting of the scale will affect the value of the scale
-   * denominator
+   * sets the scale as defined in the OGC WMS 1.1.1 specification. Scale is defined as the diagonal size of a pixel in
+   * the center of a map measured in meter. The setting of the scale will affect the value of the scale denominator
    * 
    * @parameter scale map scale
    */
   void setScale( double scale );
 
   /**
-   * sets the scale denominator for the scale bar. The scale denominator is the
-   * scale expression as we know it for printed maps (e.g. 1:10000 1:5000). The
-   * passed value is expressed in meters. The setting of the scale denominator
+   * sets the scale denominator for the scale bar. The scale denominator is the scale expression as we know it for
+   * printed maps (e.g. 1:10000 1:5000). The passed value is expressed in meters. The setting of the scale denominator
    * will affect the value of the scale
    * 
    * @param scaleDen
@@ -125,9 +122,8 @@ public interface ScaleBar
   void setScaleDenominator( int scaleDen );
 
   /**
-   * sets the units the scale and the scale denominater will be expressed at.
-   * Settings other than meter will cause that the passed values for scale and
-   * scale denominater will be recalculated for painting. it depends on the
+   * sets the units the scale and the scale denominater will be expressed at. Settings other than meter will cause that
+   * the passed values for scale and scale denominater will be recalculated for painting. it depends on the
    * implementation what units are supported.
    * 
    * @param units
@@ -151,8 +147,7 @@ public interface ScaleBar
   void setBackgroundColor( Color color );
 
   /**
-   * sets the style of the scale bar. default style is |--------| the list of
-   * known styles depends on the implementation
+   * sets the style of the scale bar. default style is |--------| the list of known styles depends on the implementation
    * 
    * @param style
    *          style name

@@ -1,13 +1,11 @@
 /*
  * OpenGIS® Grid Coverage Implementation Specification
  * 
- * This Java profile is derived from OpenGIS's specification available on their
- * public web site:
+ * This Java profile is derived from OpenGIS's specification available on their public web site:
  * 
  * http://www.opengis.org/techno/implementation.htm
  * 
- * You can redistribute it, but should not modify it unless for greater OpenGIS
- * compliance.
+ * You can redistribute it, but should not modify it unless for greater OpenGIS compliance.
  */
 package org.opengis.gc;
 
@@ -23,8 +21,7 @@ import java.io.Serializable;
 public final class GC_ByteInValuePacking implements Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with GCS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with GCS 1.00.
    */
   private static final long serialVersionUID = -2382925740471469782L;
 
@@ -73,9 +70,8 @@ public final class GC_ByteInValuePacking implements Serializable
   }
 
   /**
-   * Returns a string représentation of this enum. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string représentation of this enum. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

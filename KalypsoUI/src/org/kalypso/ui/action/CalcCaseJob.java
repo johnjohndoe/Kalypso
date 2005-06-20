@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
-import org.bce.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ui.nature.ModelNature;
 
@@ -59,9 +57,9 @@ public class CalcCaseJob extends Job
   public CalcCaseJob( final IFolder calcCaseFolder )
   {
     super( "Berechne: " + calcCaseFolder.getName() );
-    
+
     m_calcCaseFolder = calcCaseFolder;
-    
+
     setUser( true );
   }
 

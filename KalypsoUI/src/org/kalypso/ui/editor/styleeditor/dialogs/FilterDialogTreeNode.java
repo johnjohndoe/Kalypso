@@ -152,8 +152,7 @@ public class FilterDialogTreeNode
 
   public static boolean isBinaryComparisonType( int type )
   {
-    if( type >= OperationDefines.PROPERTYISEQUALTO
-        && type <= OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
+    if( type >= OperationDefines.PROPERTYISEQUALTO && type <= OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
       return true;
     return false;
   }
@@ -244,4 +243,3 @@ public class FilterDialogTreeNode
     this.data = m_data;
   }
 }
-

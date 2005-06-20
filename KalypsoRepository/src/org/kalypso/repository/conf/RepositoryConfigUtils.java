@@ -57,27 +57,25 @@ import org.kalypso.repository.RepositoryException;
  */
 public class RepositoryConfigUtils
 {
-  private RepositoryConfigUtils( )
+  private RepositoryConfigUtils()
   {
-    // not to be instanciated
+  // not to be instanciated
   }
 
   /**
-   * Loads the config from an <code>InputStream</code> and closes the stream
-   * once finished.
+   * Loads the config from an <code>InputStream</code> and closes the stream once finished.
    * 
    * @param ins
    * @throws RepositoryException
    */
-  public static List loadConfig( final InputStream ins )
-      throws RepositoryException
+  public static List loadConfig( final InputStream ins ) throws RepositoryException
   {
     try
     {
       final ObjectFactory factory = new ObjectFactory();
       final Unmarshaller unmarshaller = factory.createUnmarshaller();
 
-      final RepconfType repconf = (RepconfType) unmarshaller.unmarshal( ins );
+      final RepconfType repconf = (RepconfType)unmarshaller.unmarshal( ins );
       ins.close();
 
       final List list = repconf.getRepository();
@@ -86,11 +84,10 @@ public class RepositoryConfigUtils
 
       for( final Iterator it = list.iterator(); it.hasNext(); )
       {
-        final RepconfType.RepositoryType elt = (RepconfType.RepositoryType) it
-            .next();
+        final RepconfType.RepositoryType elt = (RepconfType.RepositoryType)it.next();
 
-        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt
-            .getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly() );
+        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt
+            .getConf(), elt.isReadOnly() );
         fConfs.add( item );
       }
 

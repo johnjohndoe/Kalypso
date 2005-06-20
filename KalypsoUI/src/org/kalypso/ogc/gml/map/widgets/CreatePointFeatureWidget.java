@@ -58,8 +58,8 @@ public class CreatePointFeatureWidget extends AbstractWidget
 
   //  private final IKalypsoFeatureTheme m_theme;
 
-  public CreatePointFeatureWidget( String name, String tooltip, CreateGeometryFeatureWidget parentWidget, final IKalypsoFeatureTheme theme,
-      FeatureTypeProperty ftp )
+  public CreatePointFeatureWidget( String name, String tooltip, CreateGeometryFeatureWidget parentWidget,
+      final IKalypsoFeatureTheme theme, FeatureTypeProperty ftp )
   {
     super( name, tooltip );
     myParentWidget = parentWidget;
@@ -81,20 +81,20 @@ public class CreatePointFeatureWidget extends AbstractWidget
    */
   public void perform()
   {
-    //    if( myPoint != null )
-    //    {
-    //      final Feature feature = FeatureFactory.createFeature( "x",
-    // m_theme.getFeatureType() );
-    //      final GM_Position position = myParentWidget.getPosition( myPoint );
-    //      final CS_CoordinateSystem coordinatesSystem =
-    // myLayer.getCoordinatesSystem();
-    //      final GM_Object geometry = GeometryFactory.createGM_Point( position,
-    // coordinatesSystem );
-    //      final FeatureProperty fp = FeatureFactory.createFeatureProperty(
-    // myFtp.getName(), geometry );
-    //      feature.setProperty( fp );
-    //      return new CreateFeatureCommand( myLayer, new Feature[]
-    //      { feature } );
-    //    }
+  //    if( myPoint != null )
+  //    {
+  //      final Feature feature = FeatureFactory.createFeature( "x",
+  // m_theme.getFeatureType() );
+  //      final GM_Position position = myParentWidget.getPosition( myPoint );
+  //      final CS_CoordinateSystem coordinatesSystem =
+  // myLayer.getCoordinatesSystem();
+  //      final GM_Object geometry = GeometryFactory.createGM_Point( position,
+  // coordinatesSystem );
+  //      final FeatureProperty fp = FeatureFactory.createFeatureProperty(
+  // myFtp.getName(), geometry );
+  //      feature.setProperty( fp );
+  //      return new CreateFeatureCommand( myLayer, new Feature[]
+  //      { feature } );
+  //    }
   }
 }

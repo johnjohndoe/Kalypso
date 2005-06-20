@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLBox;
@@ -95,8 +95,8 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
   }
 
   /**
-   * factory method to create an initial box tag. the upper left corner is set
-   * to [0,0] and the lower right corner to [1,1].
+   * factory method to create an initial box tag. the upper left corner is set to [0,0] and the lower right corner to
+   * [1,1].
    */
   public static GMLBox createGMLBox( Document doc )
   {
@@ -121,8 +121,8 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
   }
 
   /**
-   * returns the coord with the minx and miny coordinate The method assumes that
-   * there exists a two dimensional coordinate system
+   * returns the coord with the minx and miny coordinate The method assumes that there exists a two dimensional
+   * coordinate system
    */
   public GMLCoord getMin()
   {
@@ -160,8 +160,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
           y_2 = dum;
         }
 
-        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
-            "gml:coord" );
+        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coord" );
 
         coord = new GMLCoord_Impl( elem );
         coord.setCoord( x_1, y_1 );
@@ -184,8 +183,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
           ymin = pos1[1].getY();
         }
 
-        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
-            "gml:coord" );
+        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coord" );
 
         coord = new GMLCoord_Impl( elem );
         coord.setCoord( xmin, ymin );
@@ -271,8 +269,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
           y_2 = dum;
         }
 
-        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
-            "gml:coord" );
+        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coord" );
 
         coord = new GMLCoord_Impl( elem );
         coord.setCoord( x_2, y_2 );
@@ -295,8 +292,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
           ymax = pos1[1].getY();
         }
 
-        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
-            "gml:coord" );
+        Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coord" );
 
         coord = new GMLCoord_Impl( elem );
         coord.setCoord( xmax, ymax );
@@ -377,8 +373,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
 
     NodeList nl = element.getElementsByTagNameNS( CommonNamespaces.GMLNS, "coordinates" );
 
-    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
-        "gml:coordinates" );
+    Element elem = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:coordinates" );
 
     XMLTools.copyNode( ( (GMLCoordinates_Impl)coordinates ).getAsElement(), elem );
 
@@ -410,18 +405,15 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.5  2005/03/08 11:01:04  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:02:26 doemming ***
+ * Revision 1.6  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.5 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:02:26 doemming ***
  * empty log message *** Revision 1.10 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.9 2004/03/01 07:45:47 poth no message
@@ -438,8 +430,7 @@ public class GMLBox_Impl extends GMLGeometry_Impl implements GMLBox
  * 
  * Revision 1.3 2003/04/23 15:43:37 poth no message
  * 
- * Revision 1.2 2003/04/17 10:55:33 axel_schaefer the element is called
- * "gml:Box" with a uppercase 'B'.
+ * Revision 1.2 2003/04/17 10:55:33 axel_schaefer the element is called "gml:Box" with a uppercase 'B'.
  * 
  * Revision 1.1.1.1 2002/09/25 16:01:03 poth no message
  * 

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.gml;
 
@@ -74,10 +74,10 @@ package org.kalypsodeegree.gml;
  */
 public interface GMLLineString extends GMLGeometry
 {
-  /*****************************************************************************
+  /*********************************************************************************************************************
    * @link aggregationByValue
    * @clientCardinality 0..
-   ****************************************************************************/
+   ********************************************************************************************************************/
   /* #GMLCoord lnkGMLCoord; */
 
   /**
@@ -87,8 +87,7 @@ public interface GMLLineString extends GMLGeometry
   /* #GMLCoordinates lnkGMLCoordinates; */
 
   /**
-   * returns the coordinates (location) of the LineString as as array of
-   * GMLCoord
+   * returns the coordinates (location) of the LineString as as array of GMLCoord
    */
   public GMLCoord[] getCoords();
 
@@ -116,18 +115,15 @@ public interface GMLLineString extends GMLGeometry
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.5  2005/03/08 11:01:10  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:41  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:01  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:51  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 12:45:01 doemming ***
+ * Revision 1.6  2005/06/20 14:07:44  belger
+ * Formatierung
+ * Revision 1.5 2005/03/08 11:01:10 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:41 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:01 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31 12:45:01 doemming ***
  * empty log message *** Revision 1.2 2004/04/27 15:40:15 poth no message
  * 
  * Revision 1.1.1.1 2002/09/25 16:01:46 poth no message

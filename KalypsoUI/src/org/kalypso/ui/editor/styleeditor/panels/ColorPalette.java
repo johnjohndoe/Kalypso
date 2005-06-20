@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -46,7 +46,6 @@ package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
 
-import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -55,6 +54,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ui.editor.styleeditor.dialogs.filterpatterndialog.FilterPatternDialog;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
+import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 
 /**
  * @author F.Lindemann
@@ -76,13 +76,14 @@ public class ColorPalette
   private Color[] colors = null;
 
   private ColorBox[] colorBoxes = null;
-  
+
   private RuleCollection ruleCollection = null;
 
-  public ColorPalette( Composite parent, Color[] m_colors, int m_colorSize, int m_borderWidth, RuleCollection m_ruleCollection)
+  public ColorPalette( Composite parent, Color[] m_colors, int m_colorSize, int m_borderWidth,
+      RuleCollection m_ruleCollection )
   {
     this.colors = m_colors;
-    setRuleCollection(m_ruleCollection);
+    setRuleCollection( m_ruleCollection );
     composite = new Composite( parent, SWT.NULL );
     GridLayout compositeLayout = new GridLayout( MAX_WIDTH, true );
     GridData compositeData = new GridData();
@@ -112,17 +113,18 @@ public class ColorPalette
     {
       final ColorBox box = new ColorBox( composite, colors[i], colorSize, borderWidth );
       colorBoxes[i] = box;
-       
-      final FilterPatternDialog  filterPatternDialog = new FilterPatternDialog( composite.getShell(), ((ComplexFilter)getRuleCollection().get(i).getFilter()).getOperation());
+
+      final FilterPatternDialog filterPatternDialog = new FilterPatternDialog( composite.getShell(),
+          ( (ComplexFilter)getRuleCollection().get( i ).getFilter() ).getOperation() );
       box.addPanelListener( new PanelListener()
       {
         public void valueChanged( PanelEvent event )
-        {          
-          filterPatternDialog.setColor(((ColorBox)event.getSource()).getColor());
+        {
+          filterPatternDialog.setColor( ( (ColorBox)event.getSource() ).getColor() );
           filterPatternDialog.open();
-          if(filterPatternDialog.getReturnCode()  ==  Window.OK)
+          if( filterPatternDialog.getReturnCode() == Window.OK )
           {
-            ((ColorBox)event.getSource()).setColor(filterPatternDialog.getColor());            
+            ( (ColorBox)event.getSource() ).setColor( filterPatternDialog.getColor() );
           }
           for( int j = 0; j < getColorBoxes().length; j++ )
           {
@@ -175,10 +177,12 @@ public class ColorPalette
   {
     this.colorBoxes = m_colorBoxes;
   }
+
   public RuleCollection getRuleCollection()
   {
     return ruleCollection;
   }
+
   public void setRuleCollection( RuleCollection m_ruleCollection )
   {
     this.ruleCollection = m_ruleCollection;

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.xml;
 
@@ -85,8 +85,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * XML Tools based on JAXP 1.1 for parsing documents and retrieving node
- * values/node attributes.
+ * XML Tools based on JAXP 1.1 for parsing documents and retrieving node values/node attributes.
  * <p>
  * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
@@ -97,11 +96,9 @@ public class XMLTools
 {
 
   /**
-   * Checks if a given CDATA-value has to be escaped if it is used as a text
-   * value in an XML element. If the submitted string contains a character that
-   * have to be escaped or if the string is made of more than 1500 characters it
-   * is encapsulated into a CDATA-section. Returns a version that is safe to be
-   * used.
+   * Checks if a given CDATA-value has to be escaped if it is used as a text value in an XML element. If the submitted
+   * string contains a character that have to be escaped or if the string is made of more than 1500 characters it is
+   * encapsulated into a CDATA-section. Returns a version that is safe to be used.
    * <p>
    * The method is just proofed for a UTF-8 character encoding.
    * <p>
@@ -131,8 +128,8 @@ public class XMLTools
   }
 
   /**
-   * Returns the specified child element of the given elemen. If there are more
-   * than one with the same name, the first one is returned.
+   * Returns the specified child element of the given elemen. If there are more than one with the same name, the first
+   * one is returned.
    * <p>
    * 
    * @param name
@@ -147,8 +144,7 @@ public class XMLTools
    * @throws XMLParsingException
    *           specified child element is missing and required is true
    */
-  public static Element getRequiredChildByName( String name, String namespace, Node node )
-      throws XMLParsingException
+  public static Element getRequiredChildByName( String name, String namespace, Node node ) throws XMLParsingException
   {
     NodeList nl = node.getChildNodes();
     Element element = null;
@@ -176,16 +172,16 @@ public class XMLTools
 
     if( return_ == null )
     {
-      throw new XMLParsingException( "Required child-element '" + name + "' of element '"
-          + node.getNodeName() + "' is missing!" );
+      throw new XMLParsingException( "Required child-element '" + name + "' of element '" + node.getNodeName()
+          + "' is missing!" );
     }
 
     return return_;
   }
 
   /**
-   * Returns the specified child element of the given elemen. If there are more
-   * than one with the same name, the first one is returned.
+   * Returns the specified child element of the given elemen. If there are more than one with the same name, the first
+   * one is returned.
    * <p>
    * 
    * @param name
@@ -273,8 +269,8 @@ public class XMLTools
   }
 
   /**
-   * Returns the text contained in the specified element. The returned value is
-   * trimmed by calling the trim() method of java.lang.String
+   * Returns the text contained in the specified element. The returned value is trimmed by calling the trim() method of
+   * java.lang.String
    * <p>
    * 
    * @param node
@@ -300,8 +296,7 @@ public class XMLTools
   }
 
   /**
-   * Returns the text contained in the specified child element of the given
-   * element.
+   * Returns the text contained in the specified child element of the given element.
    * <p>
    * 
    * @param name
@@ -313,8 +308,7 @@ public class XMLTools
    * @param defaultValue
    *          default value if element is missing
    * 
-   * @return the textual contents of the element or the given default value, if
-   *         missing
+   * @return the textual contents of the element or the given default value, if missing
    */
   public static String getStringValue( String name, String namespace, Node node, String defaultValue )
   {
@@ -335,8 +329,7 @@ public class XMLTools
   }
 
   /**
-   * Returns the text contained in the specified child element of the given
-   * element.
+   * Returns the text contained in the specified child element of the given element.
    * <p>
    * 
    * @param name
@@ -348,16 +341,15 @@ public class XMLTools
    * 
    * @return the textual contents of the element or null, if it is missing
    */
-  public static String getRequiredStringValue( String name, String namespace, Node node )
-      throws XMLParsingException
+  public static String getRequiredStringValue( String name, String namespace, Node node ) throws XMLParsingException
   {
     Element element = getRequiredChildByName( name, namespace, node );
     return getValue( element );
   }
 
   /**
-   * Returns the numerical value of the text contained in the specified child
-   * element of the given element as a double (if it denotes a double).
+   * Returns the numerical value of the text contained in the specified child element of the given element as a double
+   * (if it denotes a double).
    * <p>
    * 
    * @param name
@@ -367,8 +359,7 @@ public class XMLTools
    * @param node
    *          current element
    * @param defaultValue
-   *          value to be used if the specified element is missing or it's value
-   *          is not numerical
+   *          value to be used if the specified element is missing or it's value is not numerical
    * 
    * @return the textual contents of the element as a double-value
    */
@@ -385,7 +376,7 @@ public class XMLTools
       }
       catch( NumberFormatException e )
       {
-      e.printStackTrace();  
+        e.printStackTrace();
       }
     }
 
@@ -393,8 +384,8 @@ public class XMLTools
   }
 
   /**
-   * Returns the numerical value of the text contained in the specified child
-   * element of the given element as a double (if it denotes a double).
+   * Returns the numerical value of the text contained in the specified child element of the given element as a double
+   * (if it denotes a double).
    * <p>
    * 
    * @param name
@@ -406,11 +397,9 @@ public class XMLTools
    * @return the textual contents of the element as a double-value
    * 
    * @throws XMLParsingException
-   *           specified child element is missing or the contained text does not
-   *           denote a double value
+   *           specified child element is missing or the contained text does not denote a double value
    */
-  public static double getRequiredDoubleValue( String name, String namespace, Node node )
-      throws XMLParsingException
+  public static double getRequiredDoubleValue( String name, String namespace, Node node ) throws XMLParsingException
   {
     double value;
     String textValue = getRequiredStringValue( name, namespace, node );
@@ -483,16 +472,15 @@ public class XMLTools
     }
     if( value == null )
     {
-      throw new XMLParsingException( "Required attribute '" + name + "' of element '"
-          + node.getNodeName() + "' is missing." );
+      throw new XMLParsingException( "Required attribute '" + name + "' of element '" + node.getNodeName()
+          + "' is missing." );
     }
     return value;
   }
 
   /**
-   * Returns the value of the specified node attribute. // * FIXME: Due to
-   * apparent bugs in getNamedItemNS (name, namespace), // * when used to find
-   * attribute nodes, the current implementation // * uses a workaround.
+   * Returns the value of the specified node attribute. // * FIXME: Due to apparent bugs in getNamedItemNS (name,
+   * namespace), // * when used to find attribute nodes, the current implementation // * uses a workaround.
    * <p>
    * 
    * @param name
@@ -506,8 +494,7 @@ public class XMLTools
    * @throws XMLParsingException
    *           if specified attribute is missing
    */
-  public static String getRequiredAttrValue( String name, String namespace, Node node )
-      throws XMLParsingException
+  public static String getRequiredAttrValue( String name, String namespace, Node node ) throws XMLParsingException
   {
     String value = null;
 
@@ -537,8 +524,8 @@ public class XMLTools
 
     if( value == null )
     {
-      throw new XMLParsingException( "Required attribute '" + namespace + ":" + name
-          + "' of element '" + node.getNodeName() + "' is missing." );
+      throw new XMLParsingException( "Required attribute '" + namespace + ":" + name + "' of element '"
+          + node.getNodeName() + "' is missing." );
     }
     return value;
   }
@@ -735,8 +722,7 @@ public class XMLTools
       {
         for( int i = 0; i < attr.getLength(); i++ )
         {
-          ( (Element)dest ).setAttribute( attr.item( i ).getNodeName(), attr.item( i )
-              .getNodeValue() );
+          ( (Element)dest ).setAttribute( attr.item( i ).getNodeName(), attr.item( i ).getNodeValue() );
         }
       }
 
@@ -759,8 +745,7 @@ public class XMLTools
         }
         else if( ( list.item( i ) instanceof CDATASection ) )
         {
-          CDATASection cd = dest.getOwnerDocument().createCDATASection(
-              list.item( i ).getNodeValue() );
+          CDATASection cd = dest.getOwnerDocument().createCDATASection( list.item( i ).getNodeValue() );
           dest.appendChild( cd );
         }
         else
@@ -834,8 +819,7 @@ public class XMLTools
   }
 
   /**
-   * removes all direct child nodes of the submitted node with the also
-   * submitted name
+   * removes all direct child nodes of the submitted node with the also submitted name
    */
   public static Node removeNamedChildNodes( Node node, String nodeName )
   {
@@ -889,8 +873,7 @@ public class XMLTools
   }
 
   /**
-   * Returns the first child element of the submitted node that matches the
-   * given namespace and name.
+   * Returns the first child element of the submitted node that matches the given namespace and name.
    */
   public static Element getNamedChild( Node node, String namespace, String name )
   {
@@ -927,11 +910,9 @@ public class XMLTools
   }
 
   /**
-   * the method merges two or more XML-schema definitions into one
-   * 'meta'-schema. for this it is nessecary that all into schemas uses the same
-   * prefix for namespace: http://www.w3.org/2001/XMLSchema. the result schema
-   * won't have a target namespace because the input schemas may use different
-   * target namespace (it's very probably that they will).
+   * the method merges two or more XML-schema definitions into one 'meta'-schema. for this it is nessecary that all into
+   * schemas uses the same prefix for namespace: http://www.w3.org/2001/XMLSchema. the result schema won't have a target
+   * namespace because the input schemas may use different target namespace (it's very probably that they will).
    */
   public static Document mergeSchemas( Document[] schemas ) throws Exception
   {
@@ -1066,8 +1047,7 @@ public class XMLTools
   }
 
   /**
-   * Appends a node and it's children to the given StringBuffer. Indentation is
-   * added on recursion.
+   * Appends a node and it's children to the given StringBuffer. Indentation is added on recursion.
    */
   public static void appendNode( Node node, String indent, StringBuffer sb )
   {

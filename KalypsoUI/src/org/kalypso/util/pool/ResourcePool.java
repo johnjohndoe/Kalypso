@@ -76,8 +76,7 @@ public class ResourcePool
   private final Map m_keyInfos = new TreeMap( KeyComparator.getInstance() );
 
   /**
-   * Rule für die KeyInfos. Das Laden der eigentlichen Objekte soll nacheinander
-   * stattfinden.
+   * Rule für die KeyInfos. Das Laden der eigentlichen Objekte soll nacheinander stattfinden.
    */
   private final ISchedulingRule m_mutex = new MutexSchedulingRule();
 
@@ -103,8 +102,8 @@ public class ResourcePool
   }
 
   /**
-   * Fügt einen neuen Listener zum Pool für eine bestimmten Key hinzu Ist das
-   * Objekt für den key vorhanden, wird der Listener sofort informiert
+   * Fügt einen neuen Listener zum Pool für eine bestimmten Key hinzu Ist das Objekt für den key vorhanden, wird der
+   * Listener sofort informiert
    * 
    * @param l
    * @param key
@@ -124,8 +123,7 @@ public class ResourcePool
         }
         catch( final Exception e )
         {
-          final RuntimeException iae = new IllegalArgumentException( "No Loader for type: "
-              + key.getType() );
+          final RuntimeException iae = new IllegalArgumentException( "No Loader for type: " + key.getType() );
           m_logger.throwing( getClass().getName(), "addPoolListener", iae );
           throw iae;
         }
@@ -167,8 +165,7 @@ public class ResourcePool
     return loader;
   }
 
-  public void saveObject( final Object object, final IProgressMonitor monitor )
-      throws LoaderException
+  public void saveObject( final Object object, final IProgressMonitor monitor ) throws LoaderException
   {
     synchronized( m_keyInfos )
     {
@@ -199,7 +196,7 @@ public class ResourcePool
       {
         // wait for info
         info.join();
-        
+
         final IStatus result = info.getResult();
         if( result.isOK() )
           return info.getObject();
@@ -209,11 +206,11 @@ public class ResourcePool
       catch( final InterruptedException e )
       {
         e.printStackTrace();
-        
+
         throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Ladevorgang unterbrochen", e ) );
       }
     }
-    
+
     // falls object nicht bereits da,
     // einfach einen key nur fürs laden erzeugen, und gleich wieder disposen
     KeyInfo info2 = null;

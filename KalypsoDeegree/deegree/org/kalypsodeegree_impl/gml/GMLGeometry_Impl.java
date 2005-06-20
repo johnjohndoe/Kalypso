@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLGeometry;
@@ -93,7 +93,7 @@ public class GMLGeometry_Impl implements GMLGeometry
   }
 
   /**
-   * 
+   *  
    */
   public Element getAsElement()
   {
@@ -101,10 +101,8 @@ public class GMLGeometry_Impl implements GMLGeometry
   }
 
   /**
-   * returns the name of the Geometry. As default a geometry is named using the
-   * types specified within the geometry.xsd schema file. But the user is
-   * allowed to extend this types to create his own geometries with its own
-   * names
+   * returns the name of the Geometry. As default a geometry is named using the types specified within the geometry.xsd
+   * schema file. But the user is allowed to extend this types to create his own geometries with its own names
    */
   public String getName()
   {
@@ -142,8 +140,7 @@ public class GMLGeometry_Impl implements GMLGeometry
   }
 
   /**
-   * returns the spatial reference system of the geometry The format is like
-   * <tt>EPSG:4326</tt>.
+   * returns the spatial reference system of the geometry The format is like <tt>EPSG:4326</tt>.
    */
   public String getSrs()
   {
@@ -212,21 +209,17 @@ public class GMLGeometry_Impl implements GMLGeometry
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/03/08 11:01:03  doemming
- * *** empty log message ***
- *
- * Revision 1.5  2005/02/28 13:34:14  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:02:55 doemming ***
+ * Revision 1.7  2005/06/20 14:07:45  belger
+ * Formatierung
+ * Revision 1.6 2005/03/08 11:01:03 doemming *** empty log message ***
+ * 
+ * Revision 1.5 2005/02/28 13:34:14 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:02:55 doemming ***
  * empty log message *** Revision 1.10 2004/06/01 15:54:23 poth no message
  * 
  * Revision 1.9 2004/04/27 06:40:43 poth no message

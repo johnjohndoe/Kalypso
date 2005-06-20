@@ -52,7 +52,7 @@ public class SetCheckedTreeVisitor implements ITreeVisitor
    * 
    * @author doemming
    */
-  public SetCheckedTreeVisitor(  boolean checked )
+  public SetCheckedTreeVisitor( boolean checked )
   {
     m_checked = checked;
     // nothing

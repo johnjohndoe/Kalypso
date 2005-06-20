@@ -64,10 +64,9 @@ package org.kalypsodeegree.model.feature;
 import java.util.Map;
 
 /**
- * The FeatureType interface is intended to provide details of the type of a
- * Feature that are described as Feature Schema in the Abstract Specification's
- * Essential Model, specifically the names and types of the properties
- * associated with each instance of a Feature of the given FeatureType.
+ * The FeatureType interface is intended to provide details of the type of a Feature that are described as Feature
+ * Schema in the Abstract Specification's Essential Model, specifically the names and types of the properties associated
+ * with each instance of a Feature of the given FeatureType.
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -97,14 +96,12 @@ public interface FeatureType
   public String getNamespace();
 
   /**
-   * method has default modifier, other classes should use name-methodes not
-   * positions
+   * method has default modifier, other classes should use name-methodes not positions
    */
   int getMinOccurs( int pos );
 
   /**
-   * method has default modifier, other classes should use name-methodes not
-   * positions
+   * method has default modifier, other classes should use name-methodes not positions
    */
   int getMaxOccurs( int pos );
 
@@ -124,17 +121,14 @@ public interface FeatureType
   public int getMinOccurs( String propName );
 
   /**
-   * TODO: warum überhaupt im FeatureType?? sollte das nicht besser die
-   * FeatureTypeProperty selbst wissen
+   * TODO: warum überhaupt im FeatureType?? sollte das nicht besser die FeatureTypeProperty selbst wissen
    * 
-   * method has default modifier, other classes should use name-methodes not
-   * positions
+   * method has default modifier, other classes should use name-methodes not positions
    */
   int getPropertyPosition( String name );
 
   /**
-   * method has default modifier, other classes should use name-methodes not
-   * positions
+   * method has default modifier, other classes should use name-methodes not positions
    */
   int getDefaultGeometryPropertyPosition();
 

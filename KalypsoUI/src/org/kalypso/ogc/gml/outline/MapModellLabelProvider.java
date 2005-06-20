@@ -36,11 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
@@ -48,6 +47,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 
 /**
  * @author bce
@@ -55,17 +55,18 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 public class MapModellLabelProvider implements ILabelProvider
 {
   private IMapModell m_mapModell = null;
-  
+
   public void setMapModell( IMapModell mapModell )
   {
     m_mapModell = mapModell;
   }
+
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
   public Image getImage( Object element )
-  { 	
-  	return null;
+  {
+    return null;
   }
 
   /**
@@ -78,7 +79,7 @@ public class MapModellLabelProvider implements ILabelProvider
       final IKalypsoTheme kalypsoTheme = (IKalypsoTheme)element;
 
       final StringBuffer sb = new StringBuffer( kalypsoTheme.getType() + kalypsoTheme.getName() );
-      
+
       // falls aktiviert
       if( m_mapModell != null && m_mapModell.getActiveTheme() == kalypsoTheme )
         sb.append( " - aktiv" );
@@ -86,23 +87,23 @@ public class MapModellLabelProvider implements ILabelProvider
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)kalypsoTheme;
-        
+
         final CommandableWorkspace workspace = kft.getWorkspace();
         if( workspace == null )
           sb.append( " - loading..." );
         else if( workspace.isDirty() )
           sb.append( '*' );
       }
-      
+
       return sb.toString();
     }
-    
+
     if( element instanceof ThemeStyleTreeObject )
-        return element.toString();
-    
+      return element.toString();
+
     if( element instanceof UserStyle )
-      return ((UserStyle)element).getName();
-    
+      return ( (UserStyle)element ).getName();
+
     return element.toString();
   }
 
@@ -111,7 +112,7 @@ public class MapModellLabelProvider implements ILabelProvider
    */
   public void addListener( ILabelProviderListener listener )
   {
-  // unsused  
+  // unsused
   }
 
   /**
@@ -119,7 +120,7 @@ public class MapModellLabelProvider implements ILabelProvider
    */
   public void dispose()
   {
-  // unused  
+  // unused
   }
 
   /**
@@ -135,6 +136,6 @@ public class MapModellLabelProvider implements ILabelProvider
    */
   public void removeListener( ILabelProviderListener listener )
   {
-  // unused  
+  // unused
   }
 }

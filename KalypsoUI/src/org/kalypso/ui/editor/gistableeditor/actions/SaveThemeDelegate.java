@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -104,10 +104,10 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
         e.printStackTrace();
       }
     }
-    refreshAction(null);
+    refreshAction( null );
   }
 
-  protected void refreshAction(IAction action)
+  protected void refreshAction( IAction action )
   {
     boolean enabled = false;
     final GisTableEditor editor = (GisTableEditor)getEditor();

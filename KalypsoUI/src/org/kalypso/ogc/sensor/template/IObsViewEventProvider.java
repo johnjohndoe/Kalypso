@@ -36,10 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
-
 
 /**
  * @author schlienger
@@ -47,5 +46,6 @@ package org.kalypso.ogc.sensor.template;
 public interface IObsViewEventProvider
 {
   public void addObsViewEventListener( IObsViewEventListener l );
+
   public void removeObsViewListener( IObsViewEventListener l );
 }

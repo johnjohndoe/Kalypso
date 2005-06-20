@@ -52,28 +52,23 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * Copies Observations describes in gml documents. Is used by the
- * 'CopyObservationTask'.
+ * Copies Observations describes in gml documents. Is used by the 'CopyObservationTask'.
  * 
  * @author belger
  */
 public final class CopyObservationHandler
 {
-  public static void copyObserations( final IUrlResolver urlResolver,
-      final URL gmlURL, final String featurePath,
-      final String targetobservation, final URL context,
-      final Source[] sources, final Date forecastFrom, final Date forecastTo,
-      final PrintWriter logWriter ) throws Exception
+  public static void copyObserations( final IUrlResolver urlResolver, final URL gmlURL, final String featurePath,
+      final String targetobservation, final URL context, final Source[] sources, final Date forecastFrom,
+      final Date forecastTo, final PrintWriter logWriter ) throws Exception
   {
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
     final FeatureType ft = workspace.getFeatureTypeFromPath( featurePath );
     if( ft == null )
-      throw new TransformationException( "FeaturePath unbekannt: "
-          + featurePath );
+      throw new TransformationException( "FeaturePath unbekannt: " + featurePath );
 
-    final FeatureVisitor visitor = new CopyObservationFeatureVisitor( context,
-        urlResolver, targetobservation, sources, forecastFrom, forecastTo,
-        logWriter );
+    final FeatureVisitor visitor = new CopyObservationFeatureVisitor( context, urlResolver, targetobservation, sources,
+        forecastFrom, forecastTo, logWriter );
     workspace.accept( visitor, featurePath, FeatureVisitor.DEPTH_INFINITE );
   }
 

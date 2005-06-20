@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -103,8 +103,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * constructor for initializing a point within a two-dimensional coordinate
-   * system
+   * constructor for initializing a point within a two-dimensional coordinate system
    * 
    * @param x
    *          x-value of the point
@@ -122,8 +121,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * constructor for initializing a point within a three-dimensional coordinate
-   * system
+   * constructor for initializing a point within a three-dimensional coordinate system
    * 
    * @param x
    *          x-value of the point
@@ -192,11 +190,10 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * The operation "dimension" shall return the inherent dimension of this
-   * GM_Object, which shall be less than or equal to the coordinate dimension.
-   * The dimension of a collection of geometric objects shall be the largest
-   * dimension of any of its pieces. Points are 0-dimensional, curves are
-   * 1-dimensional, surfaces are 2-dimensional, and solids are 3-dimensional.
+   * The operation "dimension" shall return the inherent dimension of this GM_Object, which shall be less than or equal
+   * to the coordinate dimension. The dimension of a collection of geometric objects shall be the largest dimension of
+   * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
+   * 3-dimensional.
    */
   public int getDimension()
   {
@@ -204,9 +201,8 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * The operation "coordinateDimension" shall return the dimension of the
-   * coordinates that define this GM_Object, which must be the same as the
-   * coordinate dimension of the coordinate reference system for this GM_Object.
+   * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
+   * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   public int getCoordinateDimension()
   {
@@ -246,8 +242,8 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * returns the x- and y-value of the point as a two dimensional array the
-   * first field contains the x- the second field the y-value.
+   * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
+   * the y-value.
    */
   public double[] getAsArray()
   {
@@ -255,8 +251,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * translate the point by the submitted values. the <code>dz</code>- value
-   * will be ignored.
+   * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
   public void translate( double[] d )
   {
@@ -275,11 +270,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * The Boolean valued operation "intersects" shall return TRUE if this
-   * GM_Object intersects another GM_Object. Within a GM_Complex, the
-   * GM_Primitives do not intersect one another. In general, topologically
-   * structured data uses shared geometric objects to capture intersection
-   * information.
+   * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
+   * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
+   * geometric objects to capture intersection information.
    * <p>
    * </p>
    * dummy implementation
@@ -314,8 +307,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * the operations returns true if the submitted multi primitive intersects
-   * with the curve segment
+   * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
   private boolean intersectsAggregate( GM_Aggregate mprim ) throws Exception
   {
@@ -336,15 +328,13 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains another GM_Object.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    * <p>
    * </p>
    */
   public boolean contains( GM_Object gmo )
   {
-    throw new NoSuchMethodError( "the contains operation for points "
-        + "isn't supported at the moment." );
+    throw new NoSuchMethodError( "the contains operation for points " + "isn't supported at the moment." );
   }
 
   /**

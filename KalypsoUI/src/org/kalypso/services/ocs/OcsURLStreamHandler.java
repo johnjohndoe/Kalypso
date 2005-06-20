@@ -61,9 +61,8 @@ import org.osgi.service.url.AbstractURLStreamHandlerService;
 /**
  * Observation Collection Service URL Stream Handler.
  * <p>
- * It extends the <code>AbstractURLStreamHandlerService</code> of the
- * OSGI-Platform in order to be registered as a URLStreamHandler since Eclipse
- * manages the handlers this way.
+ * It extends the <code>AbstractURLStreamHandlerService</code> of the OSGI-Platform in order to be registered as a
+ * URLStreamHandler since Eclipse manages the handlers this way.
  * 
  * @author schlienger
  */
@@ -81,16 +80,14 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       return u.openConnection();
 
     // create a local temp file for storing the zml
-    final File file = KalypsoGisPlugin.getDefault().createTempFile(
-        "zml-proxy", "zml", "zml" );
+    final File file = KalypsoGisPlugin.getDefault().createTempFile( "zml-proxy", "zml", "zml" );
     file.deleteOnExit();
 
     InputStream ins = null;
 
     try
     {
-      final IObservationService srv = KalypsoGisPlugin.getDefault()
-          .getObservationServiceProxy();
+      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
 
       final DataBean data = srv.readData( href );
 
@@ -126,8 +123,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
         e = se;
       }
 
-      throw new IOException( "URL could not be resolved: "
-          + e.getLocalizedMessage() );
+      throw new IOException( "URL could not be resolved: " + e.getLocalizedMessage() );
     }
     finally
     {

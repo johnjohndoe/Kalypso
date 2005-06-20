@@ -46,8 +46,8 @@ package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
 import java.util.ArrayList;
 
-import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 
 /**
  * @author F.Lindemann
@@ -155,8 +155,7 @@ public class FilterDialogTreeNode
 
   public static boolean isBinaryComparisonType( int type )
   {
-    if( type >= OperationDefines.PROPERTYISEQUALTO
-        && type <= OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
+    if( type >= OperationDefines.PROPERTYISEQUALTO && type <= OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
       return true;
     return false;
   }
@@ -174,14 +173,12 @@ public class FilterDialogTreeNode
       {
         if( children != null && children.size() == 1 )
           return true;
-        throw new FilterDialogException( new FilterDialogError( this,
-            MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILD ) );
+        throw new FilterDialogException( new FilterDialogError( this, MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILD ) );
       }
 
       if( children != null && children.size() > 1 )
         return true;
-      throw new FilterDialogException( new FilterDialogError( this,
-          MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILDREN ) );
+      throw new FilterDialogException( new FilterDialogError( this, MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILDREN ) );
 
     }
 
@@ -198,8 +195,7 @@ public class FilterDialogTreeNode
       }
     }
 
-    throw new FilterDialogException( new FilterDialogError( this,
-        MessageBundle.STYLE_EDITOR_FILTER_ERROR_DATA_NULL ) );
+    throw new FilterDialogException( new FilterDialogError( this, MessageBundle.STYLE_EDITOR_FILTER_ERROR_DATA_NULL ) );
 
   }
 
@@ -264,4 +260,3 @@ public class FilterDialogTreeNode
     this.data = m_data;
   }
 }
-

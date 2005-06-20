@@ -10,12 +10,11 @@ import org.kalypso.java.net.IUrlCatalog;
 
 /**
  * <p>
- * Singleton über dem {@link org.kalypsodeegree_impl.gml.schema.GMLSchemaCache}
- * welches sich darüberhinaus noch um den XML-Katalog kümmert.
+ * Singleton über dem {@link org.kalypsodeegree_impl.gml.schema.GMLSchemaCache}welches sich darüberhinaus noch um den
+ * XML-Katalog kümmert.
  * </p>
  * <p>
- * Muss vor der ersten Benutzung durch {@link #init(IUrlCatalog, File)}
- * initialisiert werden.
+ * Muss vor der ersten Benutzung durch {@link #init(IUrlCatalog, File)}initialisiert werden.
  * </p>
  * 
  * @author schlienger
@@ -55,20 +54,18 @@ public final class GMLSchemaCatalog
   }
 
   /**
-   * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird
-   * dieser Name benutzt.
+   * Lädt ein (eventuell gecachetes Schema über den Katalog. Als CacheId wird dieser Name benutzt.
    */
   public synchronized static GMLSchema getSchema( final String namespace )
   {
     final URL schemaURL = THE_CATALOG.getURL( namespace );
-    // auch versuchen aus dem Cache zu laden, wenn die url null ist; 
+    // auch versuchen aus dem Cache zu laden, wenn die url null ist;
     // vielleicht ist der namespace ja noch im file-cache
     return getSchema( namespace, schemaURL );
   }
-  
+
   /**
-   * Lädt ein Schema aus dieser URL (nicht aus dem Cache!) und fügt es dann dem cache
-   * hinzu (mit namespace als key).
+   * Lädt ein Schema aus dieser URL (nicht aus dem Cache!) und fügt es dann dem cache hinzu (mit namespace als key).
    * 
    * @return null, wenn schema nicht geladen werden konnte
    */
@@ -82,13 +79,13 @@ public final class GMLSchemaCatalog
       final GMLSchema schema = new GMLSchema( schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
       THE_CACHE.addSchema( schema.getTargetNS(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
-      
+
       return schema;
     }
     catch( final Exception e )
     {
       LOGGER.log( Level.SEVERE, "Fehler beim laden eines Schema über die SchemaLocation: " + schemaLocation, e );
-      
+
       return null;
     }
   }

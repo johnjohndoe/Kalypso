@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
@@ -106,14 +106,12 @@ import org.opengis.ct.CT_CoordinateTransformationFactory;
 public class CoordinateTransformationFactory
 {
   /**
-   * The default coordinate transformation factory. Will be constructed only
-   * when first needed.
+   * The default coordinate transformation factory. Will be constructed only when first needed.
    */
   private static CoordinateTransformationFactory DEFAULT;
 
   /**
-   * Number for temporary created objects. This number is incremented each time
-   * {@link #getTemporaryName}is invoked.
+   * Number for temporary created objects. This number is incremented each time {@link #getTemporaryName}is invoked.
    */
   private static volatile int temporaryID;
 
@@ -146,9 +144,8 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Returns the underlying math transform factory. This factory is used for
-   * constructing {@link MathTransform}objects for all
-   * {@link CoordinateTransformation}.
+   * Returns the underlying math transform factory. This factory is used for constructing {@link MathTransform}objects
+   * for all {@link CoordinateTransformation}.
    */
   public final MathTransformFactory getMathTransformFactory()
   {
@@ -156,17 +153,15 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Creates a transformation between two coordinate systems. This method will
-   * examine the coordinate systems in order to construct a transformation
-   * between them. This method may fail if no path between the coordinate
-   * systems is found.
+   * Creates a transformation between two coordinate systems. This method will examine the coordinate systems in order
+   * to construct a transformation between them. This method may fail if no path between the coordinate systems is
+   * found.
    * 
    * @param sourceCS
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    *  
@@ -234,8 +229,7 @@ public class CoordinateTransformationFactory
       }
       catch( TransformException exception )
       {
-        final CannotCreateTransformException e = new CannotCreateTransformException( sourceCS,
-            targetCS );
+        final CannotCreateTransformException e = new CannotCreateTransformException( sourceCS, targetCS );
         e.initCause( exception );
         throw e;
       }
@@ -283,18 +277,15 @@ public class CoordinateTransformationFactory
         return createTransformationStep( source, (GeocentricCoordinateSystem)targetCS );
       }
       /*
-       * Try a loosely transformation. For example, the source CS may be a
-       * geographic + vertical coordinate systems, will the target CS may be
-       * only the geographic part. The code below will try to discart one or
-       * more dimension.
+       * Try a loosely transformation. For example, the source CS may be a geographic + vertical coordinate systems,
+       * will the target CS may be only the geographic part. The code below will try to discart one or more dimension.
        */
       final CoordinateSystem headSourceCS = source.getHeadCS();
       final CoordinateSystem tailSourceCS = source.getTailCS();
       final int dimHeadCS = headSourceCS.getDimension();
       final int dimSource = source.getDimension();
       /*
-       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert (dimHeadCS <
-       * dimSource);
+       * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert (dimHeadCS < dimSource);
        *///----- END OF JDK 1.4 DEPENDENCIES ---
       CoordinateTransformation step2;
       int lower, upper;
@@ -307,9 +298,8 @@ public class CoordinateTransformationFactory
       catch( CannotCreateTransformException exception )
       {
         /*
-         * If we can't construct a transformation from the head CS, then try a
-         * transformation from the tail CS. If this step fails also, then the
-         * head CS will be taken as the raison for the failure.
+         * If we can't construct a transformation from the head CS, then try a transformation from the tail CS. If this
+         * step fails also, then the head CS will be taken as the raison for the failure.
          */
         try
         {
@@ -325,39 +315,33 @@ public class CoordinateTransformationFactory
         }
       }
       /*
-       * A coordinate transformation from the head or tail part of 'sourceCS'
-       * has been succesfully contructed. Now, build a matrix transform that
-       * will select only the corresponding ordinates from input arrays, and
-       * pass them to the transform.
+       * A coordinate transformation from the head or tail part of 'sourceCS' has been succesfully contructed. Now,
+       * build a matrix transform that will select only the corresponding ordinates from input arrays, and pass them to
+       * the transform.
        */
       final MathTransform step1 = factory.createSubMathTransform( lower, upper, factory
           .createIdentityTransform( dimSource ) );
-      final MathTransform transform = factory.createConcatenatedTransform( step1, step2
-          .getMathTransform() );
+      final MathTransform transform = factory.createConcatenatedTransform( step1, step2.getMathTransform() );
       return createFromMathTransform( sourceCS, targetCS, step2.getTransformType(), transform );
     }
     throw new CannotCreateTransformException( sourceCS, targetCS );
   }
 
   /**
-   * Creates a transformation between two temporal coordinate systems. This
-   * method is automatically invoked by {@link #createFromCoordinateSystems
-   * createFromCoordinateSystems(...)}. The default implementation checks if
-   * both coordinate systems use the same datum, and then adjusts for axis
-   * orientation, units and epoch.
+   * Creates a transformation between two temporal coordinate systems. This method is automatically invoked by
+   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation checks if both
+   * coordinate systems use the same datum, and then adjusts for axis orientation, units and epoch.
    * 
    * @param sourceCS
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final TemporalCoordinateSystem sourceCS, final TemporalCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final TemporalCoordinateSystem sourceCS,
+      final TemporalCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     if( Utilities.equals( sourceCS.getTemporalDatum(), targetCS.getTemporalDatum() ) )
     {
@@ -381,24 +365,20 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Creates a transformation between two vertical coordinate systems. This
-   * method is automatically invoked by {@link #createFromCoordinateSystems
-   * createFromCoordinateSystems(...)}. The default implementation checks if
-   * both coordinate systems use the same datum, and then adjusts for axis
-   * orientation and units.
+   * Creates a transformation between two vertical coordinate systems. This method is automatically invoked by
+   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation checks if both
+   * coordinate systems use the same datum, and then adjusts for axis orientation and units.
    * 
    * @param sourceCS
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final VerticalCoordinateSystem sourceCS, final VerticalCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final VerticalCoordinateSystem sourceCS,
+      final VerticalCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     if( Utilities.equals( sourceCS.getVerticalDatum(), targetCS.getVerticalDatum() ) )
     {
@@ -410,25 +390,21 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Creates a transformation between two geographic coordinate systems. This
-   * method is automatically invoked by {@link #createFromCoordinateSystems
-   * createFromCoordinateSystems(...)}. The default implementation can adjust
-   * axis order and orientation (e.g. transforming from
-   * <code>(NORTH,WEST)</code> to <code>(EAST,NORTH)</code>), performs
-   * units conversion and apply Bursa Wolf transformation if needed.
+   * Creates a transformation between two geographic coordinate systems. This method is automatically invoked by
+   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation can adjust axis
+   * order and orientation (e.g. transforming from <code>(NORTH,WEST)</code> to <code>(EAST,NORTH)</code>),
+   * performs units conversion and apply Bursa Wolf transformation if needed.
    * 
    * @param sourceCS
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final GeographicCoordinateSystem sourceCS, final GeographicCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final GeographicCoordinateSystem sourceCS,
+      final GeographicCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     final HorizontalDatum sourceDatum = sourceCS.getHorizontalDatum();
     final HorizontalDatum targetDatum = targetCS.getHorizontalDatum();
@@ -438,9 +414,8 @@ public class CoordinateTransformationFactory
       try
       {
         /*
-         * If the two geographic coordinate systems use differents ellipsoid,
-         * convert from the source to target ellipsoid through the geocentric
-         * coordinate system.
+         * If the two geographic coordinate systems use differents ellipsoid, convert from the source to target
+         * ellipsoid through the geocentric coordinate system.
          */
         final String name = getTemporaryName( sourceCS );
         final GeocentricCoordinateSystem gcs1 = new GeocentricCoordinateSystem( name, sourceDatum );
@@ -459,8 +434,7 @@ public class CoordinateTransformationFactory
         throw e;
       }
     /*
-     * Swap axis order, and rotate the longitude coordinate if prime meridians
-     * are different.
+     * Swap axis order, and rotate the longitude coordinate if prime meridians are different.
      */
     final Matrix matrix = swapAndScaleGeoAxis( sourceCS, targetCS );
     // TODO: We should ensure that longitude is in range [-180..+180°].
@@ -469,16 +443,14 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Creates a transformation between two projected coordinate systems. This
-   * method is automatically invoked by {@link #createFromCoordinateSystems
-   * createFromCoordinateSystems(...)}. The default implementation can adjust
-   * axis order and orientation. It also performs units conversion if it is the
-   * only extra change needed. Otherwise, it performs three steps:
+   * Creates a transformation between two projected coordinate systems. This method is automatically invoked by
+   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation can adjust axis
+   * order and orientation. It also performs units conversion if it is the only extra change needed. Otherwise, it
+   * performs three steps:
    * 
    * <ol>
    * <li>Unproject <code>sourceCS</code>.</li>
-   * <li>Transform from <code>sourceCS.geographicCS</code> to
-   * <code>targetCS.geographicCS</code>.</li>
+   * <li>Transform from <code>sourceCS.geographicCS</code> to <code>targetCS.geographicCS</code>.</li>
    * <li>Project <code>targetCS</code>.</li>
    * </ol>
    * 
@@ -486,14 +458,12 @@ public class CoordinateTransformationFactory
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final ProjectedCoordinateSystem sourceCS, final ProjectedCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final ProjectedCoordinateSystem sourceCS,
+      final ProjectedCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     if( Utilities.equals( sourceCS.getProjection(), targetCS.getProjection() )
         && Utilities.equals( sourceCS.getHorizontalDatum(), targetCS.getHorizontalDatum() ) )
@@ -517,59 +487,51 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Creates a transformation between a geographic and a projected coordinate
-   * systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}.
+   * Creates a transformation between a geographic and a projected coordinate systems. This method is automatically
+   * invoked by {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}.
    * 
    * @param sourceCS
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final GeographicCoordinateSystem sourceCS, final ProjectedCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final GeographicCoordinateSystem sourceCS,
+      final ProjectedCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     final ProjectedCoordinateSystem stepProjCS = normalize( targetCS );
     final GeographicCoordinateSystem stepGeoCS = stepProjCS.getGeographicCoordinateSystem();
     final Projection projection = stepProjCS.getProjection();
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert normalize(stepProjCS) ==
-     * stepProjCS; // assert normalize(stepGeoCS, projection) == stepGeoCS; //
-     * assert projection.equals(targetCS.getProjection());
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert normalize(stepProjCS) == stepProjCS; // assert
+     * normalize(stepGeoCS, projection) == stepGeoCS; // assert projection.equals(targetCS.getProjection());
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     final MathTransform mapProjection = factory.createParameterizedTransform( projection );
     final CoordinateTransformation step1 = createTransformationStep( sourceCS, stepGeoCS );
-    final CoordinateTransformation step2 = createFromMathTransform( stepGeoCS, stepProjCS,
-        TransformType.CONVERSION, mapProjection );
+    final CoordinateTransformation step2 = createFromMathTransform( stepGeoCS, stepProjCS, TransformType.CONVERSION,
+        mapProjection );
     final CoordinateTransformation step3 = createTransformationStep( stepProjCS, targetCS );
     return concatenate( step1, step2, step3 );
   }
 
   /**
-   * Creates a transformation between a projected and a geographic coordinate
-   * systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The
-   * default implementation returns
-   * <code>{@link #createTransformationStep(GeographicCoordinateSystem, ProjectedCoordinateSystem)
+   * Creates a transformation between a projected and a geographic coordinate systems. This method is automatically
+   * invoked by {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation
+   * returns <code>{@link #createTransformationStep(GeographicCoordinateSystem, ProjectedCoordinateSystem)
    * createTransformationStep}(targetCS, sourceCS).{@link MathTransform#inverse() inverse()}</code>.
    * 
    * @param sourceCS
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final ProjectedCoordinateSystem sourceCS, final GeographicCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final ProjectedCoordinateSystem sourceCS,
+      final GeographicCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     try
     {
@@ -577,8 +539,7 @@ public class CoordinateTransformationFactory
     }
     catch( NoninvertibleTransformException exception )
     {
-      final CannotCreateTransformException e = new CannotCreateTransformException( sourceCS,
-          targetCS );
+      final CannotCreateTransformException e = new CannotCreateTransformException( sourceCS, targetCS );
       /*
        * //----- BEGIN JDK 1.4 DEPENDENCIES ---- e.initCause(exception);
        *///----- END OF JDK 1.4 DEPENDENCIES ---
@@ -587,24 +548,21 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Creates a transformation between two geocentric coordinate systems. This
-   * method is automatically invoked by {@link #createFromCoordinateSystems
-   * createFromCoordinateSystems(...)}. The default implementation can adjust
-   * for axis order and orientation, adjust for prime meridian, performs units
-   * conversion and apply Bursa Wolf transformation if needed.
+   * Creates a transformation between two geocentric coordinate systems. This method is automatically invoked by
+   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation can adjust for
+   * axis order and orientation, adjust for prime meridian, performs units conversion and apply Bursa Wolf
+   * transformation if needed.
    * 
    * @param sourceCS
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final GeocentricCoordinateSystem sourceCS, final GeocentricCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final GeocentricCoordinateSystem sourceCS,
+      final GeocentricCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     final HorizontalDatum sourceHD = sourceCS.getHorizontalDatum();
     final HorizontalDatum targetHD = targetCS.getHorizontalDatum();
@@ -646,36 +604,30 @@ public class CoordinateTransformationFactory
       }
       catch( SingularMatrixException exception )
       {
-        final CannotCreateTransformException e = new CannotCreateTransformException( sourceCS,
-            targetCS );
+        final CannotCreateTransformException e = new CannotCreateTransformException( sourceCS, targetCS );
         /*
          * //----- BEGIN JDK 1.4 DEPENDENCIES ---- e.initCause(exception);
          *///----- END OF JDK 1.4 DEPENDENCIES ---
         throw e;
       }
-    throw new CannotCreateTransformException( Resources
-        .format( ResourceKeys.BURSA_WOLF_PARAMETERS_REQUIRED ) );
+    throw new CannotCreateTransformException( Resources.format( ResourceKeys.BURSA_WOLF_PARAMETERS_REQUIRED ) );
   }
 
   /**
-   * Creates a transformation between a geographic and a geocentric coordinate
-   * systems. Since the source coordinate systems doesn't have a vertical axis,
-   * height above the ellipsoid is assumed equals to zero everywhere. This
-   * method is automatically invoked by
-   * {@link #createFromCoordinateSystems createFromCoordinateSystems(...)}.
+   * Creates a transformation between a geographic and a geocentric coordinate systems. Since the source coordinate
+   * systems doesn't have a vertical axis, height above the ellipsoid is assumed equals to zero everywhere. This method
+   * is automatically invoked by {@link #createFromCoordinateSystems createFromCoordinateSystems(...)}.
    * 
    * @param sourceCS
    *          Input geographic coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final GeographicCoordinateSystem sourceCS, final GeocentricCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final GeographicCoordinateSystem sourceCS,
+      final GeocentricCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     if( !PrimeMeridian.GREENWICH.equals( targetCS.getPrimeMeridian() ) )
     {
@@ -683,31 +635,27 @@ public class CoordinateTransformationFactory
     }
     final MathTransform step1 = factory.createAffineTransform( swapAndScaleGeoAxis( sourceCS,
         GeographicCoordinateSystem.WGS84 ) );
-    final MathTransform step2 = getGeocentricTransform( "Ellipsoid_To_Geocentric", 2, sourceCS
-        .getHorizontalDatum().getEllipsoid() );
-    return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, factory
-        .createConcatenatedTransform( step1, step2 ) );
+    final MathTransform step2 = getGeocentricTransform( "Ellipsoid_To_Geocentric", 2, sourceCS.getHorizontalDatum()
+        .getEllipsoid() );
+    return createFromMathTransform( sourceCS, targetCS, TransformType.CONVERSION, factory.createConcatenatedTransform(
+        step1, step2 ) );
   }
 
   /**
-   * Creates a transformation between a projected and a geocentric coordinate
-   * systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. This
-   * method doesn't need to be public since its decomposition in two step should
-   * be general enough.
+   * Creates a transformation between a projected and a geocentric coordinate systems. This method is automatically
+   * invoked by {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. This method doesn't need to be
+   * public since its decomposition in two step should be general enough.
    * 
    * @param sourceCS
    *          Input projected coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  private CoordinateTransformation createTransformationStep(
-      final ProjectedCoordinateSystem sourceCS, final GeocentricCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  private CoordinateTransformation createTransformationStep( final ProjectedCoordinateSystem sourceCS,
+      final GeocentricCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     final GeographicCoordinateSystem sourceGCS = sourceCS.getGeographicCoordinateSystem();
     final CoordinateTransformation step1 = createTransformationStep( sourceCS, sourceGCS );
@@ -716,79 +664,64 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Creates a transformation between a compound and a geocentric coordinate
-   * systems. The compound coordinate system <strong>must </strong> be an
-   * aggregate of the two following coordinate systems:
+   * Creates a transformation between a compound and a geocentric coordinate systems. The compound coordinate system
+   * <strong>must </strong> be an aggregate of the two following coordinate systems:
    * 
    * <ul>
-   * <li>The head must be an instance of {@link HorizontalCoordinateSystem}
-   * </li>
+   * <li>The head must be an instance of {@link HorizontalCoordinateSystem}</li>
    * <li>The tail must be an instance of {@link VerticalCoordinateSystem}</li>
    * </ul>
    * 
-   * This method is automatically invoked by {@link #createFromCoordinateSystems
-   * createFromCoordinateSystems(...)}.
+   * This method is automatically invoked by {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}.
    * 
    * @param sourceCS
    *          Input compound coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final CompoundCoordinateSystem sourceCS, final GeocentricCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final CompoundCoordinateSystem sourceCS,
+      final GeocentricCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     /*
-     * Construct a temporary transformation from 'sourceCS' to a standard
-     * coordinate system which is an agregate of a geographic and a vertical
-     * coordinate system. The horizontal datum is preserved, but other
-     * properties (vertical datum, axis order, units, prime meridian...) are
-     * "standardized".
+     * Construct a temporary transformation from 'sourceCS' to a standard coordinate system which is an agregate of a
+     * geographic and a vertical coordinate system. The horizontal datum is preserved, but other properties (vertical
+     * datum, axis order, units, prime meridian...) are "standardized".
      */
     final String name = getTemporaryName( sourceCS );
     final HorizontalDatum datum = OpenGIS.getHorizontalDatum( sourceCS );
-    final CompoundCoordinateSystem stdCS = new CompoundCoordinateSystem( name,
-        new GeographicCoordinateSystem( name, datum ), new VerticalCoordinateSystem( name,
-            VerticalDatum.ELLIPSOIDAL ) );
+    final CompoundCoordinateSystem stdCS = new CompoundCoordinateSystem( name, new GeographicCoordinateSystem( name,
+        datum ), new VerticalCoordinateSystem( name, VerticalDatum.ELLIPSOIDAL ) );
     final CoordinateTransformation step1 = createTransformationStep( sourceCS, stdCS );
     /*
-     * Construct the next steps: conversion to the geocentric coordinate system,
-     * and then conversion to the requested coordinate system. In summary, the 3
-     * conversions steps are:
+     * Construct the next steps: conversion to the geocentric coordinate system, and then conversion to the requested
+     * coordinate system. In summary, the 3 conversions steps are:
      * 
-     * sourceCS --> standardized geographic CS --> standardized geocentric CS
-     * --> targetCS
+     * sourceCS --> standardized geographic CS --> standardized geocentric CS --> targetCS
      */
-    final MathTransform transform = getGeocentricTransform( "Ellipsoid_To_Geocentric", 3, datum
-        .getEllipsoid() );
-    final CoordinateTransformation step2 = createFromMathTransform( stdCS,
-        GeocentricCoordinateSystem.DEFAULT, TransformType.CONVERSION, transform );
-    final CoordinateTransformation step3 = createTransformationStep(
-        GeocentricCoordinateSystem.DEFAULT, targetCS );
+    final MathTransform transform = getGeocentricTransform( "Ellipsoid_To_Geocentric", 3, datum.getEllipsoid() );
+    final CoordinateTransformation step2 = createFromMathTransform( stdCS, GeocentricCoordinateSystem.DEFAULT,
+        TransformType.CONVERSION, transform );
+    final CoordinateTransformation step3 = createTransformationStep( GeocentricCoordinateSystem.DEFAULT, targetCS );
     return concatenate( step1, step2, step3 );
   }
 
   /**
-   * Creates a transformation between two compound coordinate systems. This
-   * method is automatically invoked by {@link #createFromCoordinateSystems
-   * createFromCoordinateSystems(...)}.
+   * Creates a transformation between two compound coordinate systems. This method is automatically invoked by
+   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}.
    * 
    * @param sourceCS
    *          Input coordinate system.
    * @param targetCS
    *          Output coordinate system.
-   * @return A coordinate transformation from <code>sourceCS</code> to
-   *         <code>targetCS</code>.
+   * @return A coordinate transformation from <code>sourceCS</code> to <code>targetCS</code>.
    * @throws CannotCreateTransformException
    *           if no transformation path has been found.
    */
-  protected CoordinateTransformation createTransformationStep(
-      final CompoundCoordinateSystem sourceCS, final CompoundCoordinateSystem targetCS )
-      throws CannotCreateTransformException
+  protected CoordinateTransformation createTransformationStep( final CompoundCoordinateSystem sourceCS,
+      final CompoundCoordinateSystem targetCS ) throws CannotCreateTransformException
   {
     final CoordinateSystem headSourceCS = sourceCS.getHeadCS();
     final CoordinateSystem tailSourceCS = sourceCS.getTailCS();
@@ -797,15 +730,15 @@ public class CoordinateTransformationFactory
     if( tailSourceCS.equivalents( tailTargetCS ) )
     {
       final CoordinateTransformation tr = createFromCoordinateSystems( headSourceCS, headTargetCS );
-      final MathTransform transform = factory.createPassThroughTransform( 0, tr.getMathTransform(),
-          tailSourceCS.getDimension() );
+      final MathTransform transform = factory.createPassThroughTransform( 0, tr.getMathTransform(), tailSourceCS
+          .getDimension() );
       return createFromMathTransform( sourceCS, targetCS, tr.getTransformType(), transform );
     }
     if( headSourceCS.equivalents( headTargetCS ) )
     {
       final CoordinateTransformation tr = createFromCoordinateSystems( tailSourceCS, tailTargetCS );
-      final MathTransform transform = factory.createPassThroughTransform( headSourceCS
-          .getDimension(), tr.getMathTransform(), 0 );
+      final MathTransform transform = factory.createPassThroughTransform( headSourceCS.getDimension(), tr
+          .getMathTransform(), 0 );
       return createFromMathTransform( sourceCS, targetCS, tr.getTransformType(), transform );
     }
     // TODO: implement others CompoundCoordinateSystem cases.
@@ -824,8 +757,7 @@ public class CoordinateTransformationFactory
   ////////////////////////////////////////////////////////////////////////
 
   /**
-   * Returns the WGS84 parameters as an affine transform, or <code>null</code>
-   * if not available.
+   * Returns the WGS84 parameters as an affine transform, or <code>null</code> if not available.
    */
   private static Matrix getWGS84Parameters( final HorizontalDatum datum )
   {
@@ -842,8 +774,7 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Returns a transform between a geocentric coordinate system and an
-   * ellipsoid.
+   * Returns a transform between a geocentric coordinate system and an ellipsoid.
    * 
    * @param classification
    *          either "Ellipsoid_To_Geocentric" or "Geocentric_To_Ellipsoid".
@@ -858,10 +789,8 @@ public class CoordinateTransformationFactory
   {
     final Unit unit = ellipsoid.getAxisUnit();
     ParameterList param = factory.getMathTransformProvider( classification ).getParameterList();
-    param = param.setParameter( "semi_major", Unit.METRE.convert( ellipsoid.getSemiMajorAxis(),
-        unit ) );
-    param = param.setParameter( "semi_minor", Unit.METRE.convert( ellipsoid.getSemiMinorAxis(),
-        unit ) );
+    param = param.setParameter( "semi_major", Unit.METRE.convert( ellipsoid.getSemiMajorAxis(), unit ) );
+    param = param.setParameter( "semi_minor", Unit.METRE.convert( ellipsoid.getSemiMinorAxis(), unit ) );
     try
     {
       param = param.setParameter( "dim_geoCS", dimGeoCS );
@@ -886,10 +815,8 @@ public class CoordinateTransformationFactory
    * @param step1
    *          The first step, or <code>null</code> for the identity transform.
    * @param step2
-   *          The second step, or <code>null</code> for the identity
-   *          transform.
-   * @return A concatenated transform, or <code>null</code> if all arguments
-   *         was nul.
+   *          The second step, or <code>null</code> for the identity transform.
+   * @return A concatenated transform, or <code>null</code> if all arguments was nul.
    */
   private CoordinateTransformation concatenate( final CoordinateTransformation step1,
       final CoordinateTransformation step2 )
@@ -903,8 +830,7 @@ public class CoordinateTransformationFactory
       // Current message is for debugging purpose only.
       throw new IllegalArgumentException( String.valueOf( step1 ) );
     }
-    final MathTransform step = factory.createConcatenatedTransform( step1.getMathTransform(), step2
-        .getMathTransform() );
+    final MathTransform step = factory.createConcatenatedTransform( step1.getMathTransform(), step2.getMathTransform() );
     final TransformType type = step1.getTransformType().concatenate( step2.getTransformType() );
     return createFromMathTransform( step1.getSourceCS(), step2.getTargetCS(), type, step );
   }
@@ -915,12 +841,10 @@ public class CoordinateTransformationFactory
    * @param step1
    *          The first step, or <code>null</code> for the identity transform.
    * @param step2
-   *          The second step, or <code>null</code> for the identity
-   *          transform.
+   *          The second step, or <code>null</code> for the identity transform.
    * @param step3
    *          The third step, or <code>null</code> for the identity transform.
-   * @return A concatenated transform, or <code>null</code> if all arguments
-   *         was nul.
+   * @return A concatenated transform, or <code>null</code> if all arguments was nul.
    */
   private CoordinateTransformation concatenate( final CoordinateTransformation step1,
       final CoordinateTransformation step2, final CoordinateTransformation step3 )
@@ -941,17 +865,16 @@ public class CoordinateTransformationFactory
       // Current message is for debugging purpose only.
       throw new IllegalArgumentException( String.valueOf( step3 ) );
     }
-    final MathTransform step = factory.createConcatenatedTransform( step1.getMathTransform(),
-        factory.createConcatenatedTransform( step2.getMathTransform(), step3.getMathTransform() ) );
+    final MathTransform step = factory.createConcatenatedTransform( step1.getMathTransform(), factory
+        .createConcatenatedTransform( step2.getMathTransform(), step3.getMathTransform() ) );
     final TransformType type = step1.getTransformType().concatenate(
         step2.getTransformType().concatenate( step3.getTransformType() ) );
     return createFromMathTransform( step1.getSourceCS(), step3.getTargetCS(), type, step );
   }
 
   /**
-   * Create a coordinate transform from a math transform. If the specified math
-   * transform is already a coordinate transform, and if source and target
-   * coordinate systems match, then <code>transform</code> is returned with no
+   * Create a coordinate transform from a math transform. If the specified math transform is already a coordinate
+   * transform, and if source and target coordinate systems match, then <code>transform</code> is returned with no
    * change. Otherwise, a new coordinate transform is created.
    * 
    * @param sourceCS
@@ -970,28 +893,24 @@ public class CoordinateTransformationFactory
     if( transform instanceof CoordinateTransformation )
     {
       final CoordinateTransformation ct = (CoordinateTransformation)transform;
-      if( Utilities.equals( ct.getSourceCS(), sourceCS )
-          && Utilities.equals( ct.getTargetCS(), targetCS ) )
+      if( Utilities.equals( ct.getSourceCS(), sourceCS ) && Utilities.equals( ct.getTargetCS(), targetCS ) )
       {
         return ct;
       }
     }
-    return (CoordinateTransformation)MathTransformFactory.pool
-        .intern( new CoordinateTransformation( null, sourceCS, targetCS, type, transform ) );
+    return (CoordinateTransformation)MathTransformFactory.pool.intern( new CoordinateTransformation( null, sourceCS,
+        targetCS, type, transform ) );
   }
 
   /**
-   * Returns an affine transform between two coordinate systems. Only units and
-   * axis order (e.g. transforming from (NORTH,WEST) to (EAST,NORTH)) are taken
-   * in account. Other attributes (especially the datum) must be checked before
+   * Returns an affine transform between two coordinate systems. Only units and axis order (e.g. transforming from
+   * (NORTH,WEST) to (EAST,NORTH)) are taken in account. Other attributes (especially the datum) must be checked before
    * invoking this method.
    * 
    * @param sourceCS
-   *          The source coordinate system. If <code>null</code>, then
-   *          (x,y,z,t) axis order is assumed.
+   *          The source coordinate system. If <code>null</code>, then (x,y,z,t) axis order is assumed.
    * @param targetCS
-   *          The target coordinate system. If <code>null</code>, then
-   *          (x,y,z,t) axis order is assumed.
+   *          The target coordinate system. If <code>null</code>, then (x,y,z,t) axis order is assumed.
    */
   private Matrix swapAndScaleAxis( final CoordinateSystem sourceCS, final CoordinateSystem targetCS )
       throws CannotCreateTransformException
@@ -1005,23 +924,20 @@ public class CoordinateTransformationFactory
     }
     catch( RuntimeException exception )
     {
-      final CannotCreateTransformException e = new CannotCreateTransformException( sourceCS,
-          targetCS );
+      final CannotCreateTransformException e = new CannotCreateTransformException( sourceCS, targetCS );
       /*
        * //----- BEGIN JDK 1.4 DEPENDENCIES ---- e.initCause(exception);
        *///----- END OF JDK 1.4 DEPENDENCIES ---
       throw e;
     }
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert
-     * !Arrays.equals(sourceAxis, targetAxis) || matrix.isIdentity();
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert !Arrays.equals(sourceAxis, targetAxis) || matrix.isIdentity();
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     // Convert units (Optimized case where the conversion
     // can be applied right into the AffineTransform).
     final int dimension = matrix.getNumRow() - 1;
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert dimension ==
-     * matrix.getNumCol()-1;
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert dimension == matrix.getNumCol()-1;
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     for( int i = 0; i < dimension; i++ )
     {
@@ -1037,10 +953,9 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Returns an affine transform between two geographic coordinate systems. Only
-   * units, axis order (e.g. transforming from (NORTH,WEST) to (EAST,NORTH)) and
-   * prime meridian are taken in account. Other attributes (especially the
-   * datum) must be checked before invoking this method.
+   * Returns an affine transform between two geographic coordinate systems. Only units, axis order (e.g. transforming
+   * from (NORTH,WEST) to (EAST,NORTH)) and prime meridian are taken in account. Other attributes (especially the datum)
+   * must be checked before invoking this method.
    * 
    * @param sourceCS
    *          The source coordinate system.
@@ -1072,13 +987,11 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Returns the axis orientation for the specified coordinate system. If
-   * <code>cs</code> is <code>null</code>, then an array of length
-   * <code>dim.getDimension()</code> is created and filled with
-   * <code>(x,y,z,t)</code> axis orientations.
+   * Returns the axis orientation for the specified coordinate system. If <code>cs</code> is <code>null</code>,
+   * then an array of length <code>dim.getDimension()</code> is created and filled with <code>(x,y,z,t)</code> axis
+   * orientations.
    */
-  private static AxisOrientation[] getAxisOrientations( final CoordinateSystem cs,
-      final Dimensioned dim )
+  private static AxisOrientation[] getAxisOrientations( final CoordinateSystem cs, final Dimensioned dim )
   {
     final AxisOrientation[] axis;
     if( cs != null )
@@ -1111,15 +1024,12 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Makes sure that the specified {@link GeographicCoordinateSystem}use
-   * standard axis (longitude and latitude in degrees), Greenwich prime meridian
-   * and an ellipsoid matching projection's parameters. If <code>cs</code>
-   * already meets all those conditions, then it is returned unchanged.
-   * Otherwise, a new normalized geographic coordinate system is created and
-   * returned.
+   * Makes sure that the specified {@link GeographicCoordinateSystem}use standard axis (longitude and latitude in
+   * degrees), Greenwich prime meridian and an ellipsoid matching projection's parameters. If <code>cs</code> already
+   * meets all those conditions, then it is returned unchanged. Otherwise, a new normalized geographic coordinate system
+   * is created and returned.
    */
-  private static GeographicCoordinateSystem normalize( GeographicCoordinateSystem cs,
-      final Projection projection )
+  private static GeographicCoordinateSystem normalize( GeographicCoordinateSystem cs, final Projection projection )
   {
     HorizontalDatum datum = cs.getHorizontalDatum();
     Ellipsoid ellipsoid = datum.getEllipsoid();
@@ -1128,8 +1038,7 @@ public class CoordinateTransformationFactory
     final double semiMinorEll = ellipsoid.getSemiMinorAxis();
     final double semiMajorPrj = projection.getValue( "semi_major", semiMajorEll );
     final double semiMinorPrj = projection.getValue( "semi_minor", semiMinorEll );
-    if( !hasStandardAxis( cs, Unit.DEGREE )
-        || cs.getPrimeMeridian().getLongitude( Unit.DEGREE ) != 0 )
+    if( !hasStandardAxis( cs, Unit.DEGREE ) || cs.getPrimeMeridian().getLongitude( Unit.DEGREE ) != 0 )
     {
       cs = null; // Signal that it needs to be reconstructed.
     }
@@ -1149,11 +1058,9 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Makes sure that a {@link ProjectedCoordinateSystem}use standard axis (x
-   * and y in metres) and a normalized {@link GeographicCoordinateSystem}. If
-   * <code>cs</code> already meets all those conditions, then it is returned
-   * unchanged. Otherwise, a new normalized projected coordinate system is
-   * created and returned.
+   * Makes sure that a {@link ProjectedCoordinateSystem}use standard axis (x and y in metres) and a normalized
+   * {@link GeographicCoordinateSystem}. If <code>cs</code> already meets all those conditions, then it is returned
+   * unchanged. Otherwise, a new normalized projected coordinate system is created and returned.
    */
   private static ProjectedCoordinateSystem normalize( final ProjectedCoordinateSystem cs )
   {
@@ -1161,8 +1068,7 @@ public class CoordinateTransformationFactory
     final GeographicCoordinateSystem geoCS = cs.getGeographicCoordinateSystem();
     final GeographicCoordinateSystem normalizedGeoCS = normalize( geoCS, projection );
     /*
-     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert
-     * normalize(normalizedGeoCS, projection) == normalizedGeoCS;
+     * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert normalize(normalizedGeoCS, projection) == normalizedGeoCS;
      *///----- END OF JDK 1.4 DEPENDENCIES ---
     if( hasStandardAxis( cs, Unit.METRE ) && normalizedGeoCS == geoCS )
     {
@@ -1172,8 +1078,7 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Returns <code>true</code> if the specified coordinate system use standard
-   * axis and standard units.
+   * Returns <code>true</code> if the specified coordinate system use standard axis and standard units.
    * 
    * @param cs
    *          The coordinate system to test.
@@ -1182,18 +1087,16 @@ public class CoordinateTransformationFactory
   private static boolean hasStandardAxis( final HorizontalCoordinateSystem cs, final Unit unit )
   {
     return cs.getDimension() == 2 /* Just a paranoiac check */&& unit.equals( cs.getUnits( 0 ) )
-        && unit.equals( cs.getUnits( 1 ) )
-        && AxisOrientation.EAST.equals( cs.getAxis( 0 ).orientation )
+        && unit.equals( cs.getUnits( 1 ) ) && AxisOrientation.EAST.equals( cs.getAxis( 0 ).orientation )
         && AxisOrientation.NORTH.equals( cs.getAxis( 1 ).orientation );
   }
 
   /**
-   * Returns a temporary name for generated objects. The first object has a name
-   * like "Temporary-1", the second is "Temporary-2", etc.
+   * Returns a temporary name for generated objects. The first object has a name like "Temporary-1", the second is
+   * "Temporary-2", etc.
    * 
    * @param source
-   *          The coordinate system to base name on, or <code>null</code> if
-   *          none.
+   *          The coordinate system to base name on, or <code>null</code> if none.
    */
   private static String getTemporaryName( final CoordinateSystem source )
   {
@@ -1201,11 +1104,9 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Returns an OpenGIS interface for this transform factory. The returned
-   * object is suitable for RMI use.
+   * Returns an OpenGIS interface for this transform factory. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -1213,8 +1114,7 @@ public class CoordinateTransformationFactory
   }
 
   /**
-   * Wrap a {@link CoordinateTransformationFactory}for use with OpenGIS. This
-   * class is suitable for RMI use.
+   * Wrap a {@link CoordinateTransformationFactory}for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
@@ -1242,17 +1142,15 @@ public class CoordinateTransformationFactory
      * @param targetCS
      *          Output coordinate system.
      * @throws RemoteException
-     *           if the transform can't be created, or if a remote method call
-     *           failed.
+     *           if the transform can't be created, or if a remote method call failed.
      */
-    public CT_CoordinateTransformation createFromCoordinateSystems(
-        final CS_CoordinateSystem sourceCS, final CS_CoordinateSystem targetCS )
-        throws RemoteException
+    public CT_CoordinateTransformation createFromCoordinateSystems( final CS_CoordinateSystem sourceCS,
+        final CS_CoordinateSystem targetCS ) throws RemoteException
     {
       try
       {
-        return adapters.export( CoordinateTransformationFactory.this.createFromCoordinateSystems(
-            adapters.CS.wrap( sourceCS ), adapters.CS.wrap( targetCS ) ) );
+        return adapters.export( CoordinateTransformationFactory.this.createFromCoordinateSystems( adapters.CS
+            .wrap( sourceCS ), adapters.CS.wrap( targetCS ) ) );
       }
       catch( CannotCreateTransformException exception )
       {

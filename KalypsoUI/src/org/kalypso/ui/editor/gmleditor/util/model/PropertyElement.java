@@ -17,12 +17,12 @@ public class PropertyElement extends Model
     m_property = fatp;
   }
 
-//  public void addFeature( FeatureElement ft )
-//  {
-//    elements.add( ft );
-//    ft.parent = this;
-//  }
-//
+  //  public void addFeature( FeatureElement ft )
+  //  {
+  //    elements.add( ft );
+  //    ft.parent = this;
+  //  }
+  //
   public FeatureAssociationTypeProperty getProperty()
   {
     return m_property;

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -71,10 +71,9 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 import org.opengis.cs.CS_DatumType;
 
 /**
- * Type of the datum expressed as an enumerated value. The enumeration is split
- * into ranges which indicate the datum's type. The value should be one of the
- * predefined values, or within the range for local types. This will allow
- * OpenGIS Consortium to coordinate the addition of new interoperable codes.
+ * Type of the datum expressed as an enumerated value. The enumeration is split into ranges which indicate the datum's
+ * type. The value should be one of the predefined values, or within the range for local types. This will allow OpenGIS
+ * Consortium to coordinate the addition of new interoperable codes.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -95,54 +94,47 @@ public abstract class DatumType extends EnumeratedParameter
   private static WeakHashSet pool;
 
   /**
-   * These datums, such as ED50, NAD27 and NAD83, have been designed to support
-   * horizontal positions on the ellipsoid as opposed to positions in 3-D space.
-   * These datums were designed mainly to support a horizontal component of a
-   * position in a domain of limited extent, such as a country, a region or a
-   * continent.
+   * These datums, such as ED50, NAD27 and NAD83, have been designed to support horizontal positions on the ellipsoid as
+   * opposed to positions in 3-D space. These datums were designed mainly to support a horizontal component of a
+   * position in a domain of limited extent, such as a country, a region or a continent.
    * 
    * @see org.opengis.cs.CS_DatumType#CS_HD_Classic
    */
-  public static final Horizontal CLASSIC = new Horizontal( "CLASSIC", CS_DatumType.CS_HD_Classic,
-      ResourceKeys.CLASSIC );
+  public static final Horizontal CLASSIC = new Horizontal( "CLASSIC", CS_DatumType.CS_HD_Classic, ResourceKeys.CLASSIC );
 
   /**
-   * A geocentric datum is a "satellite age" modern geodetic datum mainly of
-   * global extent, such as WGS84 (used in GPS), PZ90 (used in GLONASS) and
-   * ITRF. These datums were designed to support both a horizontal component of
-   * position and a vertical component of position (through ellipsoidal
-   * heights). The regional realizations of ITRF, such as ETRF, are also
-   * included in this category.
+   * A geocentric datum is a "satellite age" modern geodetic datum mainly of global extent, such as WGS84 (used in GPS),
+   * PZ90 (used in GLONASS) and ITRF. These datums were designed to support both a horizontal component of position and
+   * a vertical component of position (through ellipsoidal heights). The regional realizations of ITRF, such as ETRF,
+   * are also included in this category.
    * 
    * @see org.opengis.cs.CS_DatumType#CS_HD_Geocentric
    */
-  public static final Horizontal GEOCENTRIC = new Horizontal( "GEOCENTRIC",
-      CS_DatumType.CS_HD_Geocentric, ResourceKeys.GEOCENTRIC );
+  public static final Horizontal GEOCENTRIC = new Horizontal( "GEOCENTRIC", CS_DatumType.CS_HD_Geocentric,
+      ResourceKeys.GEOCENTRIC );
 
   /**
-   * A vertical datum for orthometric heights that are measured along the plumb
-   * line.
+   * A vertical datum for orthometric heights that are measured along the plumb line.
    * 
    * @see org.opengis.cs.CS_DatumType#CS_VD_Orthometric
    */
-  public static final Vertical ORTHOMETRIC = new Vertical( "ORTHOMETRIC",
-      CS_DatumType.CS_VD_Orthometric, ResourceKeys.ORTHOMETRIC );
+  public static final Vertical ORTHOMETRIC = new Vertical( "ORTHOMETRIC", CS_DatumType.CS_VD_Orthometric,
+      ResourceKeys.ORTHOMETRIC );
 
   /**
-   * A vertical datum for ellipsoidal heights that are measured along the normal
-   * to the ellipsoid used in the definition of horizontal datum.
+   * A vertical datum for ellipsoidal heights that are measured along the normal to the ellipsoid used in the definition
+   * of horizontal datum.
    * 
    * @see org.opengis.cs.CS_DatumType#CS_VD_Ellipsoidal
    */
-  public static final Vertical ELLIPSOIDAL = new Vertical( "ELLIPSOIDAL",
-      CS_DatumType.CS_VD_Ellipsoidal, ResourceKeys.ELLIPSOIDAL );
+  public static final Vertical ELLIPSOIDAL = new Vertical( "ELLIPSOIDAL", CS_DatumType.CS_VD_Ellipsoidal,
+      ResourceKeys.ELLIPSOIDAL );
 
   /**
-   * The vertical datum of altitudes or heights in the atmosphere. These are
-   * approximations of orthometric heights obtained with the help of a barometer
-   * or a barometric altimeter. These values are usually expressed in one of the
-   * following units: meters, feet, millibars (used to measure pressure levels),
-   * or theta value (units used to measure geopotential height).
+   * The vertical datum of altitudes or heights in the atmosphere. These are approximations of orthometric heights
+   * obtained with the help of a barometer or a barometric altimeter. These values are usually expressed in one of the
+   * following units: meters, feet, millibars (used to measure pressure levels), or theta value (units used to measure
+   * geopotential height).
    * 
    * @see org.opengis.cs.CS_DatumType#CS_VD_AltitudeBarometric
    */
@@ -154,15 +146,13 @@ public abstract class DatumType extends EnumeratedParameter
    * 
    * @see org.opengis.cs.CS_DatumType#CS_VD_Normal
    */
-  public static final Vertical NORMAL = new Vertical( "NORMAL", CS_DatumType.CS_VD_Normal,
-      ResourceKeys.NORMAL );
+  public static final Vertical NORMAL = new Vertical( "NORMAL", CS_DatumType.CS_VD_Normal, ResourceKeys.NORMAL );
 
   /**
-   * A vertical datum of geoid model derived heights, also called GPS-derived
-   * heights. These heights are approximations of orthometric heights ( <var>H
-   * </var>), constructed from the ellipsoidal heights ( <var>h </var>) by the
-   * use of the given geoid undulation model ( <var>N </var>) through the
-   * equation: <var>H </var>= <var>h </var>- <var>N </var>.
+   * A vertical datum of geoid model derived heights, also called GPS-derived heights. These heights are approximations
+   * of orthometric heights ( <var>H </var>), constructed from the ellipsoidal heights ( <var>h </var>) by the use of
+   * the given geoid undulation model ( <var>N </var>) through the equation: <var>H </var>= <var>h </var>- <var>N
+   * </var>.
    * 
    * @see org.opengis.cs.CS_DatumType#CS_VD_GeoidModelDerived
    */
@@ -170,33 +160,30 @@ public abstract class DatumType extends EnumeratedParameter
       CS_DatumType.CS_VD_GeoidModelDerived, ResourceKeys.GEOID_MODEL_DERIVED );
 
   /**
-   * This attribute is used to support the set of datums generated for
-   * hydrographic engineering projects where depth measurements below sea level
-   * are needed. It is often called a hydrographic or a marine datum. Depths are
-   * measured in the direction perpendicular (approximately) to the actual
-   * equipotential surfaces of the earth's gravity field, using such procedures
-   * as echo-sounding.
+   * This attribute is used to support the set of datums generated for hydrographic engineering projects where depth
+   * measurements below sea level are needed. It is often called a hydrographic or a marine datum. Depths are measured
+   * in the direction perpendicular (approximately) to the actual equipotential surfaces of the earth's gravity field,
+   * using such procedures as echo-sounding.
    * 
    * @see org.opengis.cs.CS_DatumType#CS_VD_Depth
    */
-  public static final Vertical DEPTH = new Vertical( "DEPTH", CS_DatumType.CS_VD_Depth,
-      ResourceKeys.DEPTH );
+  public static final Vertical DEPTH = new Vertical( "DEPTH", CS_DatumType.CS_VD_Depth, ResourceKeys.DEPTH );
 
   /**
-   * A temporal datum for Universal Time (UTC). UTC is based on an atomic clock,
-   * while GMT is based on astronomical observations. <br>
+   * A temporal datum for Universal Time (UTC). UTC is based on an atomic clock, while GMT is based on astronomical
+   * observations. <br>
    * <br>
-   * <strong>Note: This enum is not part of OpenGIS specification. It may change
-   * in incompatible way if OpenGIS define an equivalent enum. </strong>
+   * <strong>Note: This enum is not part of OpenGIS specification. It may change in incompatible way if OpenGIS define
+   * an equivalent enum. </strong>
    */
   public static final Temporal UTC = new Temporal( "UTC", 3001, ResourceKeys.UTC );
 
   /**
-   * A temporal datum for Greenwich Mean Time (GMT). GMT is based on
-   * astronomical observations, while UTC is based on an atomic clock. <br>
+   * A temporal datum for Greenwich Mean Time (GMT). GMT is based on astronomical observations, while UTC is based on an
+   * atomic clock. <br>
    * <br>
-   * <strong>Note: This enum is not part of OpenGIS specification. It may change
-   * in incompatible way if OpenGIS define an equivalent enum. </strong>
+   * <strong>Note: This enum is not part of OpenGIS specification. It may change in incompatible way if OpenGIS define
+   * an equivalent enum. </strong>
    */
   public static final Temporal GMT = new Temporal( "GMT", 3002, ResourceKeys.GMT );
 
@@ -204,14 +191,24 @@ public abstract class DatumType extends EnumeratedParameter
    * List of predefined enum types.
    */
   private static final DatumType[] ENUMS =
-  { Horizontal.OTHER, CLASSIC, GEOCENTRIC, Vertical.OTHER, ORTHOMETRIC, ELLIPSOIDAL,
-      ALTITUDE_BAROMETRIC, NORMAL, GEOID_MODEL_DERIVED, DEPTH, UTC, GMT };
+  {
+      Horizontal.OTHER,
+      CLASSIC,
+      GEOCENTRIC,
+      Vertical.OTHER,
+      ORTHOMETRIC,
+      ELLIPSOIDAL,
+      ALTITUDE_BAROMETRIC,
+      NORMAL,
+      GEOID_MODEL_DERIVED,
+      DEPTH,
+      UTC,
+      GMT };
 
   /**
-   * Resource key, used for building localized name. This key doesn't need to be
-   * serialized, since {@link #readResolve}canonicalize enums according their
-   * {@link EnumeratedParameter#getValue()}. Furthermore, its value is implementation-dependent (which
-   * is an other raison why it should not be serialized).
+   * Resource key, used for building localized name. This key doesn't need to be serialized, since {@link #readResolve}
+   * canonicalize enums according their {@link EnumeratedParameter#getValue()}. Furthermore, its value is
+   * implementation-dependent (which is an other raison why it should not be serialized).
    */
   private transient int key = 0;
 
@@ -271,9 +268,8 @@ public abstract class DatumType extends EnumeratedParameter
   }
 
   /**
-   * Returns <code>true</code> if the specified orientation is compatible with
-   * this datum type. For example, a vertical datum is compatible only with
-   * orientations UP and DOWN.
+   * Returns <code>true</code> if the specified orientation is compatible with this datum type. For example, a
+   * vertical datum is compatible only with orientations UP and DOWN.
    */
   abstract boolean isCompatibleOrientation( final AxisOrientation orientation );
 
@@ -293,8 +289,7 @@ public abstract class DatumType extends EnumeratedParameter
   abstract int getTypeKey();
 
   /**
-   * Return the type name in the specified locale. Type may be "Horizontal",
-   * "Vertical", "Temporal" or "Local".
+   * Return the type name in the specified locale. Type may be "Horizontal", "Vertical", "Temporal" or "Local".
    */
   public String getType( final Locale locale )
   {
@@ -302,8 +297,8 @@ public abstract class DatumType extends EnumeratedParameter
   }
 
   /**
-   * Returns this enum's name in the specified locale. If no name is available
-   * for the specified locale, a default one will be used.
+   * Returns this enum's name in the specified locale. If no name is available for the specified locale, a default one
+   * will be used.
    * 
    * @param locale
    *          The locale, or <code>null</code> for the default locale.
@@ -315,9 +310,8 @@ public abstract class DatumType extends EnumeratedParameter
   }
 
   /**
-   * Use a single instance of {@link DatumType}after deserialization. It allow
-   * client code to test <code>enum1==enum2</code> instead of
-   * <code>enum1.equals(enum2)</code>.
+   * Use a single instance of {@link DatumType}after deserialization. It allow client code to test
+   * <code>enum1==enum2</code> instead of <code>enum1.equals(enum2)</code>.
    * 
    * @return A single instance of this enum.
    */
@@ -356,13 +350,12 @@ public abstract class DatumType extends EnumeratedParameter
     public static final int MAXIMUM = CS_DatumType.CS_HD_Max;
 
     /**
-     * Unspecified horizontal datum type. Horizontal datums with this type
-     * should never supply a conversion to WGS84 using Bursa Wolf parameters.
+     * Unspecified horizontal datum type. Horizontal datums with this type should never supply a conversion to WGS84
+     * using Bursa Wolf parameters.
      * 
      * @see org.opengis.cs.CS_DatumType#CS_HD_Other
      */
-    public static final Horizontal OTHER = new Horizontal( "OTHER", CS_DatumType.CS_HD_Other,
-        ResourceKeys.OTHER );
+    public static final Horizontal OTHER = new Horizontal( "OTHER", CS_DatumType.CS_HD_Other, ResourceKeys.OTHER );
 
     /**
      * Construct a new enum with the specified value.
@@ -373,16 +366,13 @@ public abstract class DatumType extends EnumeratedParameter
     }
 
     /**
-     * Returns <code>true</code> if the specified orientation is compatible
-     * with this datum type. Compatible orientations are NORTH, SOUTH, EAST and
-     * WEST.
+     * Returns <code>true</code> if the specified orientation is compatible with this datum type. Compatible
+     * orientations are NORTH, SOUTH, EAST and WEST.
      */
     boolean isCompatibleOrientation( final AxisOrientation orientation )
     {
-      return AxisOrientation.NORTH.equals( orientation )
-          || AxisOrientation.SOUTH.equals( orientation )
-          || AxisOrientation.EAST.equals( orientation )
-          || AxisOrientation.WEST.equals( orientation );
+      return AxisOrientation.NORTH.equals( orientation ) || AxisOrientation.SOUTH.equals( orientation )
+          || AxisOrientation.EAST.equals( orientation ) || AxisOrientation.WEST.equals( orientation );
     }
 
     /** Get the minimum value. */
@@ -438,8 +428,7 @@ public abstract class DatumType extends EnumeratedParameter
      * 
      * @see org.opengis.cs.CS_DatumType#CS_VD_Other
      */
-    public static final Vertical OTHER = new Vertical( "OTHER", CS_DatumType.CS_VD_Other,
-        ResourceKeys.OTHER );
+    public static final Vertical OTHER = new Vertical( "OTHER", CS_DatumType.CS_VD_Other, ResourceKeys.OTHER );
 
     /**
      * Construct a new enum with the specified value.
@@ -450,8 +439,8 @@ public abstract class DatumType extends EnumeratedParameter
     }
 
     /**
-     * Returns <code>true</code> if the specified orientation is compatible
-     * with this datum type. Compatible orientations are UP and DOWN.
+     * Returns <code>true</code> if the specified orientation is compatible with this datum type. Compatible
+     * orientations are UP and DOWN.
      */
     boolean isCompatibleOrientation( final AxisOrientation orientation )
     {
@@ -493,20 +482,18 @@ public abstract class DatumType extends EnumeratedParameter
     /**
      * Lowest possible value for temporal datum types. <br>
      * <br>
-     * <strong>Note: Temporal enums are not part of OpenGIS specification. The
-     * <code>MINIMUM</code> "constant" may change in the future if OpenGIS
-     * defines an equivalent datum type. If this value change, developpers will
-     * have to recompile their code. </strong>
+     * <strong>Note: Temporal enums are not part of OpenGIS specification. The <code>MINIMUM</code> "constant" may
+     * change in the future if OpenGIS defines an equivalent datum type. If this value change, developpers will have to
+     * recompile their code. </strong>
      */
     public static final int MINIMUM = 3000;
 
     /**
      * Highest possible value for temporal datum types. <br>
      * <br>
-     * <strong>Note: Temporal enums are not part of OpenGIS specification. The
-     * <code>MAXIMUM</code> "constant" may change in the future if OpenGIS
-     * defines an equivalent datum type. If this value change, developpers will
-     * have to recompile their code. </strong>
+     * <strong>Note: Temporal enums are not part of OpenGIS specification. The <code>MAXIMUM</code> "constant" may
+     * change in the future if OpenGIS defines an equivalent datum type. If this value change, developpers will have to
+     * recompile their code. </strong>
      */
     public static final int MAXIMUM = 3999;
 
@@ -519,13 +506,12 @@ public abstract class DatumType extends EnumeratedParameter
     }
 
     /**
-     * Returns <code>true</code> if the specified orientation is compatible
-     * with this datum type. Compatible orientations are FUTURE and PAST.
+     * Returns <code>true</code> if the specified orientation is compatible with this datum type. Compatible
+     * orientations are FUTURE and PAST.
      */
     boolean isCompatibleOrientation( final AxisOrientation orientation )
     {
-      return AxisOrientation.FUTURE.equals( orientation )
-          || AxisOrientation.PAST.equals( orientation );
+      return AxisOrientation.FUTURE.equals( orientation ) || AxisOrientation.PAST.equals( orientation );
     }
 
     /** Get the minimum value. */
@@ -585,8 +571,8 @@ public abstract class DatumType extends EnumeratedParameter
     }
 
     /**
-     * Returns <code>true</code> if the specified orientation is compatible
-     * with this datum type. Local datum accept all orientations.
+     * Returns <code>true</code> if the specified orientation is compatible with this datum type. Local datum accept
+     * all orientations.
      */
     boolean isCompatibleOrientation( final AxisOrientation orientation )
     {

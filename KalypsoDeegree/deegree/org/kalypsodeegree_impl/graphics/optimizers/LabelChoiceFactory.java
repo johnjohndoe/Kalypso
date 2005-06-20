@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.optimizers;
 
 import java.awt.Graphics2D;
@@ -96,13 +96,11 @@ public class LabelChoiceFactory
 {
 
   /**
-   * Determines <tt>LabelChoice</tt> s for the given
-   * <tt>LabelDisplayElement</tt>.
+   * Determines <tt>LabelChoice</tt> s for the given <tt>LabelDisplayElement</tt>.
    * <p>
-   * 
+   *  
    */
-  static ArrayList createLabelChoices( LabelDisplayElement element, Graphics2D g,
-      GeoTransform projection )
+  static ArrayList createLabelChoices( LabelDisplayElement element, Graphics2D g, GeoTransform projection )
   {
 
     ArrayList choices = new ArrayList();
@@ -123,8 +121,7 @@ public class LabelChoiceFactory
 
       // gather font information
       org.kalypsodeegree.graphics.sld.Font sldFont = symbolizer.getFont();
-      java.awt.Font font = new java.awt.Font( sldFont.getFamily( feature ), sldFont
-          .getStyle( feature )
+      java.awt.Font font = new java.awt.Font( sldFont.getFamily( feature ), sldFont.getStyle( feature )
           | sldFont.getWeight( feature ), sldFont.getSize( feature ) );
       g.setFont( font );
       FontRenderContext frc = g.getFontRenderContext();
@@ -152,42 +149,82 @@ public class LabelChoiceFactory
         double rotation = pPlacement.getRotation( feature );
 
         Label[] labels = new Label[8];
-        labels[0] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics,
-            feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-            { 0.0, 0.0 }, new double[]
-            { displacement[0], displacement[1] } );
-        labels[1] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics,
-            feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-            { 0.0, 1.0 }, new double[]
-            { displacement[0], -displacement[1] } );
-        labels[2] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics,
-            feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-            { 1.0, 1.0 }, new double[]
-            { -displacement[0], -displacement[1] } );
-        labels[3] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics,
-            feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-            { 1.0, 0.0 }, new double[]
-            { -displacement[0], displacement[1] } );
-        labels[4] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics,
-            feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-            { 0.0, 0.5 }, new double[]
-            { displacement[0], 0 } );
-        labels[5] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics,
-            feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-            { 0.5, 1.0 }, new double[]
-            { 0, -displacement[1] } );
-        labels[6] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics,
-            feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-            { 1.0, 0.5 }, new double[]
-            { -displacement[0], 0 } );
-        labels[7] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics,
-            feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-            { 0.5, 0.0 }, new double[]
-            { 0, displacement[1] } );
+        labels[0] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer
+            .getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+        {
+            0.0,
+            0.0 }, new double[]
+        {
+            displacement[0],
+            displacement[1] } );
+        labels[1] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer
+            .getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+        {
+            0.0,
+            1.0 }, new double[]
+        {
+            displacement[0],
+            -displacement[1] } );
+        labels[2] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer
+            .getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+        {
+            1.0,
+            1.0 }, new double[]
+        {
+            -displacement[0],
+            -displacement[1] } );
+        labels[3] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer
+            .getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+        {
+            1.0,
+            0.0 }, new double[]
+        {
+            -displacement[0],
+            displacement[1] } );
+        labels[4] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer
+            .getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+        {
+            0.0,
+            0.5 }, new double[]
+        {
+            displacement[0],
+            0 } );
+        labels[5] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer
+            .getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+        {
+            0.5,
+            1.0 }, new double[]
+        {
+            0,
+            -displacement[1] } );
+        labels[6] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer
+            .getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+        {
+            1.0,
+            0.5 }, new double[]
+        {
+            -displacement[0],
+            0 } );
+        labels[7] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer
+            .getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+        {
+            0.5,
+            0.0 }, new double[]
+        {
+            0,
+            displacement[1] } );
         float[] qualities = new float[]
-        { 0.0f, 0.5f, 0.33f, 0.27f, 0.15f, 1.0f, 0.1f, 0.7f };
-        choices.add( new LabelChoice( element, labels, qualities, 0, labels[1].getMaxX(), labels[1]
-            .getMaxY(), labels[3].getMinX(), labels[3].getMinY() ) );
+        {
+            0.0f,
+            0.5f,
+            0.33f,
+            0.27f,
+            0.15f,
+            1.0f,
+            0.1f,
+            0.7f };
+        choices.add( new LabelChoice( element, labels, qualities, 0, labels[1].getMaxX(), labels[1].getMaxY(),
+            labels[3].getMinX(), labels[3].getMinY() ) );
 
         // element is associated to a polygon geometry
       }
@@ -207,8 +244,7 @@ public class LabelChoiceFactory
 
         // center label within the intersection of the screen surface and the
         // polygon geometry
-        GM_Surface screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(),
-            null );
+        GM_Surface screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
         GM_Object intersection = screenSurface.intersection( geometry );
 
         if( intersection != null )
@@ -217,23 +253,38 @@ public class LabelChoiceFactory
           x = (int)( projection.getDestX( source.getX() ) + 0.5 );
           y = (int)( projection.getDestY( source.getY() ) + 0.5 );
           Label[] labels = new Label[3];
-          labels[0] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-              { 0.5, 0.5 }, new double[]
-              { 0, 0 } );
-          labels[1] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-              { 0.5, 0.0 }, new double[]
-              { 0, 0 } );
-          labels[2] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
-              { 0.5, 1.0 }, new double[]
-              { 0, 0 } );
+          labels[0] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+              {
+                  0.5,
+                  0.5 }, new double[]
+              {
+                  0,
+                  0 } );
+          labels[1] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+              {
+                  0.5,
+                  0.0 }, new double[]
+              {
+                  0,
+                  0 } );
+          labels[2] = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, new double[]
+              {
+                  0.5,
+                  1.0 }, new double[]
+              {
+                  0,
+                  0 } );
 
           float[] qualities = new float[]
-          { 0.0f, 0.25f, 0.5f };
-          choices.add( new LabelChoice( element, labels, qualities, 0, labels[0].getMaxX(),
-              labels[2].getMaxY(), labels[0].getMinX(), labels[1].getMinY() ) );
+          {
+              0.0f,
+              0.25f,
+              0.5f };
+          choices.add( new LabelChoice( element, labels, qualities, 0, labels[0].getMaxX(), labels[2].getMaxY(),
+              labels[0].getMinX(), labels[1].getMinY() ) );
         }
 
         // element is associated to a line geometry
@@ -241,8 +292,7 @@ public class LabelChoiceFactory
       else if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
       {
 
-        GM_Surface screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(),
-            null );
+        GM_Surface screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
         GM_Object intersection = screenSurface.intersection( geometry );
 
         if( intersection != null )
@@ -273,10 +323,8 @@ public class LabelChoiceFactory
   }
 
   /**
-   * Determines <tt>LabelChoice</tt> s for the given <tt>GM_MultiCurve</tt>
-   * where a <tt>Label</tt> could be drawn. For each <tt>LabelChoice</tt>,
-   * three candidates are generated: one on the line, one above it and one
-   * below.
+   * Determines <tt>LabelChoice</tt> s for the given <tt>GM_MultiCurve</tt> where a <tt>Label</tt> could be drawn.
+   * For each <tt>LabelChoice</tt>, three candidates are generated: one on the line, one above it and one below.
    * <p>
    * 
    * @param element
@@ -285,8 +333,8 @@ public class LabelChoiceFactory
    * @return ArrayList containing <tt>LabelChoice</tt> -objects
    * @throws FilterEvaluationException
    */
-  static ArrayList createLabelChoices( GM_MultiCurve multiCurve, LabelDisplayElement element,
-      Graphics2D g, GeoTransform projection ) throws FilterEvaluationException
+  static ArrayList createLabelChoices( GM_MultiCurve multiCurve, LabelDisplayElement element, Graphics2D g,
+      GeoTransform projection ) throws FilterEvaluationException
   {
 
     ArrayList choices = new ArrayList( 1000 );
@@ -299,9 +347,8 @@ public class LabelChoiceFactory
   }
 
   /**
-   * Determines <tt>LabelChoice</tt> s for the given <tt>GM_Curve</tt> where
-   * a <tt>Label</tt> could be drawn. For each <tt>LabelChoice</tt>, three
-   * candidates are generated: one on the line, one above it and one below.
+   * Determines <tt>LabelChoice</tt> s for the given <tt>GM_Curve</tt> where a <tt>Label</tt> could be drawn. For
+   * each <tt>LabelChoice</tt>, three candidates are generated: one on the line, one above it and one below.
    * <p>
    * 
    * @param curve
@@ -338,8 +385,8 @@ public class LabelChoiceFactory
     // get width & height of the caption
     String caption = element.getLabel().evaluate( element.getFeature() );
     org.kalypsodeegree.graphics.sld.Font sldFont = symbolizer.getFont();
-    java.awt.Font font = new java.awt.Font( sldFont.getFamily( element.getFeature() ), sldFont
-        .getStyle( element.getFeature() )
+    java.awt.Font font = new java.awt.Font( sldFont.getFamily( element.getFeature() ), sldFont.getStyle( element
+        .getFeature() )
         | sldFont.getWeight( element.getFeature() ), sldFont.getSize( element.getFeature() ) );
     g.setFont( font );
     FontRenderContext frc = g.getFontRenderContext();
@@ -377,11 +424,17 @@ public class LabelChoiceFactory
       {
 
         int[] p0 = new int[]
-        { boxStartX, boxStartY };
+        {
+            boxStartX,
+            boxStartY };
         int[] p1 = new int[]
-        { lastX, lastY };
+        {
+            lastX,
+            lastY };
         int[] p2 = new int[]
-        { x, y };
+        {
+            x,
+            y };
 
         int[] p = LabelFactory.findPointWithDistance( p0, p1, p2, w );
         x = p[0];
@@ -405,18 +458,25 @@ public class LabelChoiceFactory
 
         double rotation = LabelFactory.getRotation( boxStartX, boxStartY, x, y );
         double[] deviation = LabelFactory.calcDeviation( new int[]
-        { boxStartX, boxStartY }, new int[]
-        { boxEndX, boxEndY }, eCandidates );
+        {
+            boxStartX,
+            boxStartY }, new int[]
+        {
+            boxEndX,
+            boxEndY }, eCandidates );
 
         switch( placementType )
         {
         case LinePlacement.TYPE_ABSOLUTE:
         {
-          Label label = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int)width,
-              (int)height, rotation, new double[]
-              { 0.0, 0.5 }, new double[]
-              { ( w - width ) / 2, perpendicularOffset } );
+          Label label = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), boxStartX, boxStartY, (int)width, (int)height, rotation, new double[]
+              {
+                  0.0,
+                  0.5 }, new double[]
+              {
+                  ( w - width ) / 2,
+                  perpendicularOffset } );
           choices.add( new LabelChoice( element, new Label[]
           { label }, new float[]
           { 0.0f }, 0, label.getMaxX(), label.getMaxY(), label.getMinX(), label.getMinY() ) );
@@ -424,64 +484,84 @@ public class LabelChoiceFactory
         }
         case LinePlacement.TYPE_ABOVE:
         {
-          Label upperLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int)width,
-              (int)height, rotation, new double[]
-              { 0.0, 0.5 }, new double[]
-              { ( w - width ) / 2, delta + deviation[0] } );
+          Label upperLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), boxStartX, boxStartY, (int)width, (int)height, rotation, new double[]
+              {
+                  0.0,
+                  0.5 }, new double[]
+              {
+                  ( w - width ) / 2,
+                  delta + deviation[0] } );
           choices.add( new LabelChoice( element, new Label[]
           { upperLabel }, new float[]
-          { 0.0f }, 0, upperLabel.getMaxX(), upperLabel.getMaxY(), upperLabel.getMinX(), upperLabel
-              .getMinY() ) );
+          { 0.0f }, 0, upperLabel.getMaxX(), upperLabel.getMaxY(), upperLabel.getMinX(), upperLabel.getMinY() ) );
           break;
         }
         case LinePlacement.TYPE_BELOW:
         {
-          Label lowerLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int)width,
-              (int)height, rotation, new double[]
-              { 0.0, 0.5 }, new double[]
-              { ( w - width ) / 2, -delta - deviation[1] } );
+          Label lowerLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), boxStartX, boxStartY, (int)width, (int)height, rotation, new double[]
+              {
+                  0.0,
+                  0.5 }, new double[]
+              {
+                  ( w - width ) / 2,
+                  -delta - deviation[1] } );
           choices.add( new LabelChoice( element, new Label[]
           { lowerLabel }, new float[]
-          { 0.0f }, 0, lowerLabel.getMaxX(), lowerLabel.getMaxY(), lowerLabel.getMinX(), lowerLabel
-              .getMinY() ) );
+          { 0.0f }, 0, lowerLabel.getMaxX(), lowerLabel.getMaxY(), lowerLabel.getMinX(), lowerLabel.getMinY() ) );
           break;
         }
         case LinePlacement.TYPE_CENTER:
         {
-          Label centerLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int)width,
-              (int)height, rotation, new double[]
-              { 0.0, 0.5 }, new double[]
-              { ( w - width ) / 2, 0.0 } );
+          Label centerLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), boxStartX, boxStartY, (int)width, (int)height, rotation, new double[]
+              {
+                  0.0,
+                  0.5 }, new double[]
+              {
+                  ( w - width ) / 2,
+                  0.0 } );
           choices.add( new LabelChoice( element, new Label[]
           { centerLabel }, new float[]
-          { 0.0f }, 0, centerLabel.getMaxX(), centerLabel.getMaxY(), centerLabel.getMinX(),
-              centerLabel.getMinY() ) );
+          { 0.0f }, 0, centerLabel.getMaxX(), centerLabel.getMaxY(), centerLabel.getMinX(), centerLabel.getMinY() ) );
           break;
         }
         case LinePlacement.TYPE_AUTO:
         {
-          Label upperLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int)width,
-              (int)height, rotation, new double[]
-              { 0.0, 0.5 }, new double[]
-              { ( w - width ) / 2, delta + deviation[0] } );
-          Label lowerLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int)width,
-              (int)height, rotation, new double[]
-              { 0.0, 0.5 }, new double[]
-              { ( w - width ) / 2, -delta - deviation[1] } );
-          Label centerLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ),
-              metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int)width,
-              (int)height, rotation, new double[]
-              { 0.0, 0.5 }, new double[]
-              { ( w - width ) / 2, 0.0 } );
+          Label upperLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), boxStartX, boxStartY, (int)width, (int)height, rotation, new double[]
+              {
+                  0.0,
+                  0.5 }, new double[]
+              {
+                  ( w - width ) / 2,
+                  delta + deviation[0] } );
+          Label lowerLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), boxStartX, boxStartY, (int)width, (int)height, rotation, new double[]
+              {
+                  0.0,
+                  0.5 }, new double[]
+              {
+                  ( w - width ) / 2,
+                  -delta - deviation[1] } );
+          Label centerLabel = LabelFactory.createLabel( caption, font, sldFont.getColor( feature ), metrics, feature,
+              symbolizer.getHalo(), boxStartX, boxStartY, (int)width, (int)height, rotation, new double[]
+              {
+                  0.0,
+                  0.5 }, new double[]
+              {
+                  ( w - width ) / 2,
+                  0.0 } );
           choices.add( new LabelChoice( element, new Label[]
-          { lowerLabel, upperLabel, centerLabel }, new float[]
-          { 0.0f, 0.25f, 1.0f }, 0, centerLabel.getMaxX(), lowerLabel.getMaxY(), centerLabel
-              .getMinX(), upperLabel.getMinY() ) );
+          {
+              lowerLabel,
+              upperLabel,
+              centerLabel }, new float[]
+          {
+              0.0f,
+              0.25f,
+              1.0f }, 0, centerLabel.getMaxX(), lowerLabel.getMaxY(), centerLabel.getMinX(), upperLabel.getMinY() ) );
           break;
         }
         default:
@@ -494,7 +574,9 @@ public class LabelChoiceFactory
       else
       {
         eCandidates.add( new int[]
-        { x, y } );
+        {
+            x,
+            y } );
         lastX = x;
         lastY = y;
         i++;

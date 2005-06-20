@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.propertySource;
 
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -51,8 +51,7 @@ import org.kalypso.util.adapter.IAdaptable;
  * 
  * @author schlienger
  */
-public class ObservationPropertySourceProvider implements
-    IPropertySourceProvider
+public class ObservationPropertySourceProvider implements IPropertySourceProvider
 {
   /**
    * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
@@ -61,8 +60,7 @@ public class ObservationPropertySourceProvider implements
   {
     if( object instanceof IAdaptable )
     {
-      final IObservation obs = ObservationCache.getInstance()
-          .getObservationFor( (IAdaptable) object );
+      final IObservation obs = ObservationCache.getInstance().getObservationFor( (IAdaptable)object );
       if( obs == null )
         return null;
 

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // Resources
@@ -65,9 +65,8 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Thrown when a parameter was missing. For example, this exception may be
- * thrown when a map projection was requested but the "semi_major" parameter was
- * not specified.
+ * Thrown when a parameter was missing. For example, this exception may be thrown when a map projection was requested
+ * but the "semi_major" parameter was not specified.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -88,15 +87,14 @@ public class MissingParameterException extends RuntimeException
    * Constructs an exception with the specified detail message.
    * 
    * @param msg
-   *          the detail message, or <code>null</code> to construct a default
-   *          message from the missing parameter name.
+   *          the detail message, or <code>null</code> to construct a default message from the missing parameter name.
    * @param parameter
    *          The missing parameter name.
    */
   public MissingParameterException( final String msg, final String parameter )
   {
-    super( ( msg != null || parameter == null ) ? msg : Resources.format(
-        ResourceKeys.ERROR_MISSING_PARAMETER_$1, parameter ) );
+    super( ( msg != null || parameter == null ) ? msg : Resources.format( ResourceKeys.ERROR_MISSING_PARAMETER_$1,
+        parameter ) );
     this.parameter = parameter;
   }
 

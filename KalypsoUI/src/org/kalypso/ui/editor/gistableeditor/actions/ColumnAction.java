@@ -36,15 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
-import org.kalypsodeegree.model.feature.Annotation;
 import org.eclipse.jface.action.Action;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;
 import org.kalypso.util.command.ICommandTarget;
+import org.kalypsodeegree.model.feature.Annotation;
 
 public final class ColumnAction extends Action
 {
@@ -58,16 +58,16 @@ public final class ColumnAction extends Action
 
   private final String m_format;
 
-  public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer,
-      final String propertyName, final Annotation annotation )
+  public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer, final String propertyName,
+      final Annotation annotation )
   {
     super( propertyName );
-    
+
     final int columnID = viewer.getColumnID( propertyName );
-    
+
     m_alignment = viewer.getColumnAlignment( columnID );
     m_format = viewer.getColumnFormat( columnID );
-    
+
     if( annotation != null )
       setText( annotation.getLabel() + " (" + propertyName + ")" );
 
@@ -82,8 +82,8 @@ public final class ColumnAction extends Action
    */
   public void run()
   {
-    final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer,
-        m_propertyName, m_alignment, m_format, isChecked() );
+    final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer, m_propertyName,
+        m_alignment, m_format, isChecked() );
 
     m_commandTarget.postCommand( setColumnVisibleCommand, null );
   }

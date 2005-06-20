@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.test;
 
 import java.util.Properties;
@@ -64,7 +64,7 @@ public class ProxyFactoryTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    
+
     m_conf = new Properties();
     m_conf.setProperty( "Kalypso_ObservationService" + "_URL", "http://LFUG-KV-01:8080" );
     m_conf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE, "org.kalypso.services.proxy" );
@@ -73,13 +73,13 @@ public class ProxyFactoryTest extends TestCase
   public void testGetProxy() throws ServiceException
   {
     ProxyFactory pf = new ProxyFactory( m_conf );
-    
+
     final Stub proxy = pf.getAnyProxy( "Kalypso_ObservationService", "IObservationService" );
     assertTrue( proxy instanceof IObservationService );
-    
+
     final IObservationService port = new Kalypso_ObservationService_Impl().getIObservationServicePort();
     assertNotNull( port );
-    
+
     //pf.getProxy( "", "" );
   }
 }

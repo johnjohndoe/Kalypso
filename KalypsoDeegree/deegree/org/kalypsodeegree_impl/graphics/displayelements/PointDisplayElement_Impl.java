@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Color;
@@ -80,16 +80,14 @@ import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * DisplayElement that encapsulates a point geometry (<tt>GM_Point</tt>) and
- * a <tt>PointSymbolizer</tt>.
+ * DisplayElement that encapsulates a point geometry (<tt>GM_Point</tt>) and a <tt>PointSymbolizer</tt>.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements PointDisplayElement,
-    Serializable
+class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements PointDisplayElement, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2979559276151855757L;
@@ -192,8 +190,7 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
   }
 
   /**
-   * renders one point to the submitted graphic context considering the also
-   * submitted projection
+   * renders one point to the submitted graphic context considering the also submitted projection
    */
   private void drawPoint( Graphics2D g, GM_Point point, GeoTransform projection, Image image )
   {

@@ -50,13 +50,6 @@ import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
-import org.kalypsodeegree.graphics.sld.Graphic;
-import org.kalypsodeegree.graphics.sld.Mark;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -73,6 +66,13 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
+import org.kalypsodeegree.graphics.sld.Graphic;
+import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
@@ -116,8 +116,7 @@ public class AddSymbolizerPanel
     init();
   }
 
-  public AddSymbolizerPanel( Composite parent, String label, FeatureType featureType,
-      boolean isSimpleRule )
+  public AddSymbolizerPanel( Composite parent, String label, FeatureType featureType, boolean isSimpleRule )
   {
     m_label = label;
     m_featureType = featureType;
@@ -173,12 +172,10 @@ public class AddSymbolizerPanel
     } );
 
     List geometryItems = queryGeometriesPropertyNames( m_featureType.getProperties(), null );
-    geometryItems = queryGeometriesPropertyNames( m_featureType.getVirtuelFeatureTypeProperty(),
-        geometryItems );
+    geometryItems = queryGeometriesPropertyNames( m_featureType.getVirtuelFeatureTypeProperty(), geometryItems );
     if( geometryItems != null && geometryItems.size() > 0 )
     {
-      m_geometryCombo
-          .setItems( (String[])geometryItems.toArray( new String[geometryItems.size()] ) );
+      m_geometryCombo.setItems( (String[])geometryItems.toArray( new String[geometryItems.size()] ) );
       m_geometryCombo.select( 0 );
     }
 
@@ -247,11 +244,9 @@ public class AddSymbolizerPanel
     return getSymbolizer( geometryPropertyName, symbolizerString, m_featureType );
   }
 
-  public static Symbolizer getSymbolizer( String geometryPropertyName, String symbolizerString,
-      FeatureType featureType )
+  public static Symbolizer getSymbolizer( String geometryPropertyName, String symbolizerString, FeatureType featureType )
   {
-    final FeatureTypeProperty ftp = StyleEditorHelper.getFeatureTypeProperty( featureType,
-        geometryPropertyName );
+    final FeatureTypeProperty ftp = StyleEditorHelper.getFeatureTypeProperty( featureType, geometryPropertyName );
 
     if( symbolizerString.equals( "Point" ) )
     {
@@ -265,8 +260,7 @@ public class AddSymbolizerPanel
     }
     else if( symbolizerString.equals( "Text" ) )
     {
-      TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName,
-          null, null );
+      TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName, null, null );
       textSymbolizer.setFill( null );
       textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
       textSymbolizer.setLabel( null );
@@ -281,8 +275,8 @@ public class AddSymbolizerPanel
       return textSymbolizer;
     }
     else if( symbolizerString.equals( "Polygon" ) )
-      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory
-          .createFill(), geometryPropertyName );
+      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill(),
+          geometryPropertyName );
     return null;
   }
 
@@ -315,10 +309,9 @@ public class AddSymbolizerPanel
 
   private String[] getSymbolizerTypesByFeatureProperty( String propName )
   {
-  
-    final FeatureTypeProperty ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureType,
-        propName );
-    
+
+    final FeatureTypeProperty ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureType, propName );
+
     String items[] = null;
     // in case of Pattern-Rule it does not make sense to have a pattern for
     // textsymbolizer

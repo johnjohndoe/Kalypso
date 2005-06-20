@@ -36,11 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -56,6 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author Belger
@@ -72,14 +72,13 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   public final static String PROP_RIGHTSASH = "rightSash";
 
   /**
-   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
-   * geben-Property geben: eine für jede Kurventyp.
+   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine für jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
   public KalypsoNAWizardPage()
   {
-    super( "<MapAndTableWizardPage>",SELECT_FROM_TABLEVIEW );
+    super( "<MapAndTableWizardPage>", SELECT_FROM_TABLEVIEW );
   }
 
   public void dispose()
@@ -156,17 +155,17 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
     final GridData ignoreData = new GridData( GridData.FILL_HORIZONTAL );
     ignoreData.horizontalAlignment = GridData.BEGINNING;
     createIgnoreButtonPanel( panel ).setLayoutData( ignoreData );
-    
+
     final Button button = new Button( panel, SWT.NONE | SWT.PUSH );
     button.setText( "Berechnung durchführen" );
 
     button.addSelectionListener( new SelectionAdapter()
-        {
-          public void widgetSelected( SelectionEvent e )
-          {
-            runCalculation();
-          }
-        } );
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        runCalculation();
+      }
+    } );
   }
 
   private void createDiagramPanel( final Composite parent )
@@ -197,7 +196,7 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
   {
     return getObservations( onlySelected );
   }
-  
+
   /**
    * @see org.kalypso.ui.calcwizard.modelpages.AbstractCalcWizardPage#postCreateControl()
    */
@@ -207,26 +206,26 @@ public class KalypsoNAWizardPage extends AbstractCalcWizardPage implements Model
     {
       public void run()
       {
-//        // erstes feature des aktiven themas selektieren
-//        final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-//        if( activeTheme instanceof IKalypsoFeatureTheme )
-//        {
-//          final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
-//          final GMLWorkspace workspace = kft.getWorkspace();
-//
-//          final FeatureList featureList = kft.getFeatureList();
-//          if( featureList != null && featureList.size() != 0 )
-//          {
-//            featureList.accept( new UnselectFeatureVisitor( getSelectionID() ) );
-//
-//            final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
-//
-//            final Feature feature = fid == null ? (Feature)featureList.get( 0 ) : workspace.getFeature(fid); 
-//            if( feature != null )
-//              feature.select( getSelectionID() );
-//          }
-//        }
-        
+        //        // erstes feature des aktiven themas selektieren
+        //        final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+        //        if( activeTheme instanceof IKalypsoFeatureTheme )
+        //        {
+        //          final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
+        //          final GMLWorkspace workspace = kft.getWorkspace();
+        //
+        //          final FeatureList featureList = kft.getFeatureList();
+        //          if( featureList != null && featureList.size() != 0 )
+        //          {
+        //            featureList.accept( new UnselectFeatureVisitor( getSelectionID() ) );
+        //
+        //            final String fid = getArguments().getProperty( PROP_FEATURE_TO_SELECT_ID, null );
+        //
+        //            final Feature feature = fid == null ? (Feature)featureList.get( 0 ) : workspace.getFeature(fid);
+        //            if( feature != null )
+        //              feature.select( getSelectionID() );
+        //          }
+        //        }
+
         // TODO: das eine Feature in der Tabelle selektieren und im diagramm anzeigen!
 
         refreshDiagram();

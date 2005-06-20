@@ -54,7 +54,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 public class EditRelationsWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
 
-  private IWidget m_widget=null;
+  private IWidget m_widget = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -66,11 +66,9 @@ public class EditRelationsWidgetDelegate extends AbstractGisMapEditorActionDeleg
     try
     {
       // we want the options view to be visible
-      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance()
-          .getActiveWorkbenchWindow();
+      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
       final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-      activeWorkbenchWindow.getActivePage().showView(
-          "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView", null,
+      activeWorkbenchWindow.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView", null,
           IWorkbenchPage.VIEW_VISIBLE );
       activeWorkbenchWindow.setActivePage( activePage );
     }

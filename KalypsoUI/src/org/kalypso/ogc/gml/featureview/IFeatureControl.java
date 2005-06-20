@@ -42,11 +42,11 @@ package org.kalypso.ogc.gml.featureview;
 
 import java.util.Collection;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -58,7 +58,7 @@ public interface IFeatureControl
   public void dispose();
 
   public GMLWorkspace getWorkspace();
-  
+
   public Feature getFeature();
 
   public void setFeature( final GMLWorkspace workspace, final Feature feature );
@@ -74,8 +74,7 @@ public interface IFeatureControl
   public void updateControl();
 
   /**
-   * Adds {@link FeatureChange}objects to a collection, representing changes to
-   * features
+   * Adds {@link FeatureChange}objects to a collection, representing changes to features
    * 
    * @param c
    */

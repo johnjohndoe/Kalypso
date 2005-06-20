@@ -20,9 +20,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author doemming
  * 
- * implementation of ogc feature that supports different cardinalities of
- * properties, but not "unbound" cardinalities (use FeatureCollections for
- * unbound cardinalities)
+ * implementation of ogc feature that supports different cardinalities of properties, but not "unbound" cardinalities
+ * (use FeatureCollections for unbound cardinalities)
  */
 public class Feature_Impl implements Feature
 {
@@ -31,9 +30,8 @@ public class Feature_Impl implements Feature
   private GM_Envelope m_envelope = INVALID_ENV;
 
   /**
-   * all property-values are stored here in sequencial order (as defined in
-   * applicationschema) properties with maxOccurency = 1 are stored direct
-   * properties with maxOccurency > 1 are stored in a list properties with
+   * all property-values are stored here in sequencial order (as defined in applicationschema) properties with
+   * maxOccurency = 1 are stored direct properties with maxOccurency > 1 are stored in a list properties with
    * maxOccurency = "unbounded" should use FeatureCollections
    */
   private final Object[] m_properties;
@@ -46,8 +44,7 @@ public class Feature_Impl implements Feature
   private int mySelection = 0;
 
   /**
-   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit
-   * Standardwerten
+   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten
    */
   protected Feature_Impl( final FeatureType ft, final String id )
   {
@@ -63,7 +60,7 @@ public class Feature_Impl implements Feature
       if( m_featureType.getMaxOccurs( i ) != 1 )
       {
         if( ftp[i] instanceof FeatureAssociationTypeProperty )
-          m_properties[i] = FeatureFactory.createFeatureList(this,ftp[i]);
+          m_properties[i] = FeatureFactory.createFeatureList( this, ftp[i] );
         else
           m_properties[i] = new ArrayList();
       }
@@ -104,8 +101,8 @@ public class Feature_Impl implements Feature
   }
 
   /**
-   * @return array of properties, properties with maxoccurency>0 (as defined in
-   *         applicationschema) will be embedded in java.util.List-objects
+   * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
+   *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperties()
    */
   public Object[] getProperties()
@@ -116,8 +113,8 @@ public class Feature_Impl implements Feature
   /**
    * format of name if "namespace:name" or just "name" - both will work
    * 
-   * @return array of properties, properties with maxoccurency>0 (as defined in
-   *         applicationschema) will be embedded in java.util.List-objects
+   * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
+   *         java.util.List-objects
    * 
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
@@ -133,8 +130,8 @@ public class Feature_Impl implements Feature
   /**
    * 
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(int)
-   * @return array of properties, properties with maxoccurency>0 (as defined in
-   *         applicationschema) will be embedded in java.util.List-objects
+   * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
+   *         java.util.List-objects
    */
   public Object getProperty( int index )
   {

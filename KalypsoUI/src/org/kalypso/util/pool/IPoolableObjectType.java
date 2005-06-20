@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
 import java.net.URL;
@@ -52,21 +52,21 @@ public interface IPoolableObjectType
   /**
    * @return the type of the source
    */
-  public String getType( );
+  public String getType();
 
   /**
    * @return the location information of the source
    */
-  public String getLocation( );
+  public String getLocation();
 
   /**
    * @return the context from which the source is accessed
    */
-  public URL getContext( );
+  public URL getContext();
 
   /**
-   * @return ignore exceptions flag. When true, exceptions are ignored during
-   *         pooling process and object won't be pooled.
+   * @return ignore exceptions flag. When true, exceptions are ignored during pooling process and object won't be
+   *         pooled.
    */
-  public boolean isIgnoreExceptions( );
+  public boolean isIgnoreExceptions();
 }

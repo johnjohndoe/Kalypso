@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.actions;
 
 import org.kalypso.ui.ImageProvider;
@@ -50,15 +50,13 @@ public class CollapseAllAction extends AbstractRepositoryExplorerAction
 {
   public CollapseAllAction( final ObservationChooser explorer )
   {
-    super( explorer, "Alles reduzieren",
-        ImageProvider.IMAGE_ZML_REPOSITORY_COLLAPSE,
-        "Reduziert alle Zweige des Baums" );
+    super( explorer, "Alles reduzieren", ImageProvider.IMAGE_ZML_REPOSITORY_COLLAPSE, "Reduziert alle Zweige des Baums" );
   }
 
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run( )
+  public void run()
   {
     getViewer().collapseAll();
   }

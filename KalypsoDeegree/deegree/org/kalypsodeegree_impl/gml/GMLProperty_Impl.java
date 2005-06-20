@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLComplexProperty;
@@ -129,18 +129,16 @@ public class GMLProperty_Impl implements GMLProperty
   }
 
   /**
-   * returns true if the submitted element contains just excatly one
-   * childelement that have to be a geometry
+   * returns true if the submitted element contains just excatly one childelement that have to be a geometry
    */
   private boolean isGeometryProperty()
   {
     boolean flag = false;
     String name = XMLTools.toLocalName( element.getNodeName() );
 
-    if( name.equals( "pointProperty" ) || name.equals( "lineStringProperty" )
-        || name.equals( "polygonProperty" ) || name.equals( "multiPointProperty" )
-        || name.equals( "multiLineStringProperty" ) || name.equals( "multiPolygonProperty" )
-        || name.equals( "boundedBy" ) )
+    if( name.equals( "pointProperty" ) || name.equals( "lineStringProperty" ) || name.equals( "polygonProperty" )
+        || name.equals( "multiPointProperty" ) || name.equals( "multiLineStringProperty" )
+        || name.equals( "multiPolygonProperty" ) || name.equals( "boundedBy" ) )
     {
       flag = true;
     }
@@ -159,9 +157,8 @@ public class GMLProperty_Impl implements GMLProperty
             name = XMLTools.toLocalName( el.getNodeName() );
 
             if( name.equals( "Point" ) || name.equals( "LineString" ) || name.equals( "Polygon" )
-                || name.equals( "MultiPoint" ) || name.equals( "MultiLineString" )
-                || name.equals( "MultiPolygon" ) || name.equals( "Box" )
-                || name.equals( "MultiGeometry" ) )
+                || name.equals( "MultiPoint" ) || name.equals( "MultiLineString" ) || name.equals( "MultiPolygon" )
+                || name.equals( "Box" ) || name.equals( "MultiGeometry" ) )
             {
               flag = true;
             }
@@ -182,13 +179,12 @@ public class GMLProperty_Impl implements GMLProperty
   /**
    * returns the type of a property.
    * <p>
-   * this method may be removed in future definitions of this interface because
-   * this can be determined by validiating the property name against the
-   * describing schema.
+   * this method may be removed in future definitions of this interface because this can be determined by validiating
+   * the property name against the describing schema.
    * </p>
    * <p>
-   * At the moment only String-type and geometry types are supported. Complex
-   * types like feature or feature collections aren't supported yet.
+   * At the moment only String-type and geometry types are supported. Complex types like feature or feature collections
+   * aren't supported yet.
    * </p>
    */
   public int getPropertyType()
@@ -228,8 +224,7 @@ public class GMLProperty_Impl implements GMLProperty
   }
 
   /**
-   * performs the mapping of the gml geoType (String) to its int representation
-   * for more simple handling.
+   * performs the mapping of the gml geoType (String) to its int representation for more simple handling.
    */
   private int getGeoType()
   {
@@ -391,14 +386,12 @@ public class GMLProperty_Impl implements GMLProperty
   /**
    * @see org.kalypsodeegree_impl.gml.GMLProperty_Impl#getPropertyValue()
    *      <p>
-   *      This set-method only supports text propetries. More complex property
-   *      types must be inherited from this interface and define additional
-   *      set-methods.
+   *      This set-method only supports text propetries. More complex property types must be inherited from this
+   *      interface and define additional set-methods.
    *      </p>
    *      <p>
-   *      Notice: if the old value has been removed this may change the
-   *      properties type. At a future release a validation against the schema
-   *      of the document has to be performed.
+   *      Notice: if the old value has been removed this may change the properties type. At a future release a
+   *      validation against the schema of the document has to be performed.
    *      </p>
    */
   public void setPropertyValue( String value )
@@ -459,8 +452,7 @@ public class GMLProperty_Impl implements GMLProperty
   }
 
   /**
-   * @see org.kalypsodeegree.gml.GMLProperty#getAttributeValue(java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypsodeegree.gml.GMLProperty#getAttributeValue(java.lang.String, java.lang.String)
    */
   public Object getAttributeValue( String nameSpace, String attributeValue )
   {
@@ -492,33 +484,27 @@ public class GMLProperty_Impl implements GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.12  2005/03/08 11:01:04  doemming
- * *** empty log message ***
- *
- * Revision 1.11  2005/02/08 18:43:59  belger
- * *** empty log message ***
- *
- * Revision 1.10  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.9  2005/01/12 10:40:53  doemming
- * *** empty log message ***
- * Revision 1.8 2004/11/23 10:37:57 doemming ***
- * empty log message *** Revision 1.7 2004/11/22 01:29:50 doemming *** empty log
- * message ***
+ * Revision 1.13  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.12 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.11 2005/02/08 18:43:59 belger *** empty log message ***
+ * 
+ * Revision 1.10 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.9 2005/01/12 10:40:53 doemming *** empty log message *** Revision 1.8 2004/11/23 10:37:57 doemming ***
+ * empty log message *** Revision 1.7 2004/11/22 01:29:50 doemming *** empty log message ***
  * 
  * Revision 1.6 2004/11/16 10:44:16 doemming *** empty log message ***
  * 
  * Revision 1.5 2004/10/07 14:09:13 doemming *** empty log message ***
  * 
- * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision
- * 1.4 2004/08/31 14:35:15 doemming *** empty log message *** Revision 1.3
- * 2004/08/18 20:27:32 belger *** empty log message ***
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.4 2004/08/31 14:35:15 doemming ***
+ * empty log message *** Revision 1.3 2004/08/18 20:27:32 belger *** empty log message ***
  * 
  * Revision 1.2 2004/08/11 11:20:16 doemming *** empty log message ***
  * 
- * Revision 1.1.1.1 2004/05/11 16:43:24 doemming backup of local modified
- * deegree sources
+ * Revision 1.1.1.1 2004/05/11 16:43:24 doemming backup of local modified deegree sources
  * 
  * Revision 1.6 2004/03/02 07:38:14 poth no message
  * 

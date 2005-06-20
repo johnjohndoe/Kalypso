@@ -85,8 +85,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * </p>
  * 
  * <p>
- * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen k?nnen
- * potentiell editiert werden
+ * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen k?nnen potentiell editiert werden
  * </p>
  * 
  * @author belger

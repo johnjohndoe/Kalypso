@@ -97,8 +97,7 @@ public class IdStruct
         final URL url = ResourceUtilities.createURL( file );
         final IObservation obs = ZmlFactory.parseXML( url, url.toString() );
 
-        final String id = obs.getMetadataList().getProperty(
-            ZmlURLConstants.MD_OCS_ID, "<kein KZ>" );
+        final String id = obs.getMetadataList().getProperty( ZmlURLConstants.MD_OCS_ID, "<kein KZ>" );
 
         return new IdStruct( file, id );
       }

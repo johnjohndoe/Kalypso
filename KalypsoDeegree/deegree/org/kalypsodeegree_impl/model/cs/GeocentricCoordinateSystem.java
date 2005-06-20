@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -76,12 +76,10 @@ import org.opengis.cs.CS_LinearUnit;
 import org.opengis.cs.CS_PrimeMeridian;
 
 /**
- * A 3D coordinate system, with its origin at the center of the Earth. The
- * <var>X </var> axis points towards the prime meridian. The <var>Y </var> axis
- * points East or West. The <var>Z </var> axis points North or South. By default
- * the <var>Z </var> axis will point North, and the <var>Y </var> axis will
- * point East (e.g. a right handed system), but you should check the axes for
- * non-default values.
+ * A 3D coordinate system, with its origin at the center of the Earth. The <var>X </var> axis points towards the prime
+ * meridian. The <var>Y </var> axis points East or West. The <var>Z </var> axis points North or South. By default the
+ * <var>Z </var> axis will point North, and the <var>Y </var> axis will point East (e.g. a right handed system), but you
+ * should check the axes for non-default values.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -97,23 +95,23 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   private static final long serialVersionUID = -6577810243397267703L;
 
   /**
-   * The set of default axis orientation. The <var>X </var> axis points towards
-   * the prime meridian. The <var>Y </var> axis points East. The <var>Z </var>
-   * axis points North.
+   * The set of default axis orientation. The <var>X </var> axis points towards the prime meridian. The <var>Y </var>
+   * axis points East. The <var>Z </var> axis points North.
    */
   private static final AxisInfo[] DEFAULT_AXIS = new AxisInfo[]
-  { new AxisInfo( "x", AxisOrientation.OTHER ), new AxisInfo( "y", AxisOrientation.EAST ),
+  {
+      new AxisInfo( "x", AxisOrientation.OTHER ),
+      new AxisInfo( "y", AxisOrientation.EAST ),
       new AxisInfo( "z", AxisOrientation.NORTH ) };
 
   /**
-   * The default geocentric coordinate system. Prime meridian is Greenwich,
-   * horizontal datum in WGS84 and linear units are metre. The <var>X </var>
-   * axis points towards the prime meridian. The <var>Y </var> axis points East.
-   * The <var>Z </var> axis points North.
+   * The default geocentric coordinate system. Prime meridian is Greenwich, horizontal datum in WGS84 and linear units
+   * are metre. The <var>X </var> axis points towards the prime meridian. The <var>Y </var> axis points East. The <var>Z
+   * </var> axis points North.
    */
   public static final GeocentricCoordinateSystem DEFAULT = (GeocentricCoordinateSystem)pool
-      .intern( new GeocentricCoordinateSystem( "WGS84", Unit.METRE, HorizontalDatum.WGS84,
-          PrimeMeridian.GREENWICH, DEFAULT_AXIS ) );
+      .intern( new GeocentricCoordinateSystem( "WGS84", Unit.METRE, HorizontalDatum.WGS84, PrimeMeridian.GREENWICH,
+          DEFAULT_AXIS ) );
 
   /**
    * The linear unit.
@@ -136,8 +134,7 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   private final AxisInfo[] axis;
 
   /**
-   * Construct a geocentric coordinate system with default axis. Unit are metres
-   * and prime meridian is greenwich.
+   * Construct a geocentric coordinate system with default axis. Unit are metres and prime meridian is greenwich.
    * 
    * @param name
    *          The coordinate system name.
@@ -150,9 +147,8 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Construct a geocentric coordinate system with default axis. The <var>X
-   * </var> axis points towards the prime meridian. The <var>Y </var> axis
-   * points East. The <var>Z </var> axis points North.
+   * Construct a geocentric coordinate system with default axis. The <var>X </var> axis points towards the prime
+   * meridian. The <var>Y </var> axis points East. The <var>Z </var> axis points North.
    * 
    * @param name
    *          The coordinate system name.
@@ -163,8 +159,8 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    * @param meridian
    *          The prime meridian.
    */
-  public GeocentricCoordinateSystem( final String name, final Unit unit,
-      final HorizontalDatum datum, final PrimeMeridian meridian )
+  public GeocentricCoordinateSystem( final String name, final Unit unit, final HorizontalDatum datum,
+      final PrimeMeridian meridian )
   {
     this( name, unit, datum, meridian, DEFAULT_AXIS );
   }
@@ -183,8 +179,8 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
    * @param axis
    *          The axis info. This is usually an array of lenght 3.
    */
-  public GeocentricCoordinateSystem( final String name, final Unit unit,
-      final HorizontalDatum datum, final PrimeMeridian meridian, final AxisInfo[] axis )
+  public GeocentricCoordinateSystem( final String name, final Unit unit, final HorizontalDatum datum,
+      final PrimeMeridian meridian, final AxisInfo[] axis )
   {
     super( name );
     this.unit = unit;
@@ -249,9 +245,8 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns the horizontal datum. The horizontal datum is used to determine
-   * where the center of the Earth is considered to be. All coordinate points
-   * will be measured from the center of the Earth, and not the surface.
+   * Returns the horizontal datum. The horizontal datum is used to determine where the center of the Earth is considered
+   * to be. All coordinate points will be measured from the center of the Earth, and not the surface.
    * 
    * @see org.opengis.cs.CS_GeocentricCoordinateSystem#getHorizontalDatum()
    */
@@ -261,9 +256,8 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Gets units for dimension within coordinate system. For a
-   * <code>GeocentricCoordinateSystem</code>, the units is the same for all
-   * axis.
+   * Gets units for dimension within coordinate system. For a <code>GeocentricCoordinateSystem</code>, the units is
+   * the same for all axis.
    * 
    * @param dimension
    *          Zero based index of axis.
@@ -274,13 +268,13 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   {
     if( dimension >= 0 && dimension < getDimension() )
       return unit;
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
-   * Gets axis details for dimension within coordinate system. Each dimension in
-   * the coordinate system has a corresponding axis.
+   * Gets axis details for dimension within coordinate system. Each dimension in the coordinate system has a
+   * corresponding axis.
    * 
    * @param dimension
    *          Zero based index of axis.
@@ -303,13 +297,11 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
-   * The default implementation compare datum, units and axis, but ignore name,
-   * alias and other meta-data informations.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform. The default implementation compare datum, units and axis, but ignore name, alias
+   * and other meta-data informations.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).
@@ -348,11 +340,9 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns an OpenGIS interface for this local coordinate system. The returned
-   * object is suitable for RMI use.
+   * Returns an OpenGIS interface for this local coordinate system. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -366,14 +356,12 @@ public class GeocentricCoordinateSystem extends CoordinateSystem
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link LocalCoordinateSystem}object for use with OpenGIS. This
-   * class is suitable for RMI use.
+   * Wrap a {@link LocalCoordinateSystem}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
    */
-  private final class Export extends CoordinateSystem.Export implements
-      CS_GeocentricCoordinateSystem
+  private final class Export extends CoordinateSystem.Export implements CS_GeocentricCoordinateSystem
   {
     /**
      * Construct a remote object.

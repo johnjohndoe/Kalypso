@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // Miscellaneous
@@ -85,47 +85,44 @@ public class AxisInfo implements Serializable
   private static final long serialVersionUID = 6799874182734710227L;
 
   /**
-   * Default axis info for <var>x </var> values. Increasing ordinates values go
-   * East. This is usually used with projected coordinate systems.
+   * Default axis info for <var>x </var> values. Increasing ordinates values go East. This is usually used with
+   * projected coordinate systems.
    */
   public static final AxisInfo X = new AxisInfo( "x", AxisOrientation.EAST );
 
   /**
-   * Default axis info for <var>y </var> values. Increasing ordinates values go
-   * North. This is usually used with projected coordinate systems.
+   * Default axis info for <var>y </var> values. Increasing ordinates values go North. This is usually used with
+   * projected coordinate systems.
    */
   public static final AxisInfo Y = new AxisInfo( "y", AxisOrientation.NORTH );
 
   /**
-   * Default axis info for longitudes. Increasing ordinates values go East. This
-   * is usually used with geographic coordinate systems.
+   * Default axis info for longitudes. Increasing ordinates values go East. This is usually used with geographic
+   * coordinate systems.
    */
-  public static final AxisInfo LONGITUDE = new AxisInfo.Localized( "Longitude",
-      ResourceKeys.LONGITUDE, AxisOrientation.EAST );
+  public static final AxisInfo LONGITUDE = new AxisInfo.Localized( "Longitude", ResourceKeys.LONGITUDE,
+      AxisOrientation.EAST );
 
   /**
-   * Default axis info for latitudes. Increasing ordinates values go North. This
-   * is usually used with geographic coordinate systems.
+   * Default axis info for latitudes. Increasing ordinates values go North. This is usually used with geographic
+   * coordinate systems.
    */
-  public static final AxisInfo LATITUDE = new AxisInfo.Localized( "Latitude",
-      ResourceKeys.LATITUDE, AxisOrientation.NORTH );
+  public static final AxisInfo LATITUDE = new AxisInfo.Localized( "Latitude", ResourceKeys.LATITUDE,
+      AxisOrientation.NORTH );
 
   /**
    * The default axis for altitude values. Increasing ordinates values go up.
    */
-  public static final AxisInfo ALTITUDE = new AxisInfo.Localized( "Altitude",
-      ResourceKeys.ALTITUDE, AxisOrientation.UP );
+  public static final AxisInfo ALTITUDE = new AxisInfo.Localized( "Altitude", ResourceKeys.ALTITUDE, AxisOrientation.UP );
 
   /**
    * A default axis for time values. Increasing time go toward future.
    */
-  public static final AxisInfo TIME = new AxisInfo.Localized( "Time", ResourceKeys.TIME,
-      AxisOrientation.FUTURE );
+  public static final AxisInfo TIME = new AxisInfo.Localized( "Time", ResourceKeys.TIME, AxisOrientation.FUTURE );
 
   /**
-   * Human readable name for axis. Possible values are <code>X</code>,
-   * <code>Y</code>,<code>Long</code>,<code>Lat</code> or any other
-   * short string.
+   * Human readable name for axis. Possible values are <code>X</code>,<code>Y</code>,<code>Long</code>,
+   * <code>Lat</code> or any other short string.
    * 
    * @see org.opengis.cs.CS_AxisInfo#name
    */
@@ -142,9 +139,8 @@ public class AxisInfo implements Serializable
    * Construct an AxisInfo.
    * 
    * @param name
-   *          The axis name. Possible values are <code>X</code>,
-   *          <code>Y</code>,<code>Long</code>,<code>Lat</code> or any
-   *          other short string.
+   *          The axis name. Possible values are <code>X</code>,<code>Y</code>,<code>Long</code>,
+   *          <code>Lat</code> or any other short string.
    * @param orientation
    *          The axis orientation.
    */
@@ -157,8 +153,7 @@ public class AxisInfo implements Serializable
   }
 
   /**
-   * Returns the localized name of this axis. The default implementation returns
-   * {@link #name}.
+   * Returns the localized name of this axis. The default implementation returns {@link #name}.
    * 
    * @param locale
    *          The locale, or <code>null</code> for the default locale.
@@ -191,16 +186,15 @@ public class AxisInfo implements Serializable
     if( object != null && object.getClass().equals( getClass() ) )
     {
       final AxisInfo that = (AxisInfo)object;
-      return Utilities.equals( this.orientation, that.orientation )
-          && Utilities.equals( this.name, that.name );
+      return Utilities.equals( this.orientation, that.orientation ) && Utilities.equals( this.name, that.name );
     }
 
     return false;
   }
 
   /**
-   * Returns the Well Know Text (WKT) for this axis. The WKT is part of
-   * OpenGIS's specification and looks like <code>AXIS["name",NORTH]</code>.
+   * Returns the Well Know Text (WKT) for this axis. The WKT is part of OpenGIS's specification and looks like
+   * <code>AXIS["name",NORTH]</code>.
    */
   public String toString()
   {

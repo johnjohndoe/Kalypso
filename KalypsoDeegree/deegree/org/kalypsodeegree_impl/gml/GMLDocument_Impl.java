@@ -206,8 +206,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
 
     try
     {
-      final String schemaLocation = m_document.getDocumentElement().getAttributeNS( XSI_NS,
-          "schemaLocation" );
+      final String schemaLocation = m_document.getDocumentElement().getAttributeNS( XSI_NS, "schemaLocation" );
       if( schemaLocation == null )
         return null;
 
@@ -259,8 +258,8 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
       Element root = m_document.getDocumentElement();
       if( nameSpace.getSubSpaceName() != null )
       {
-        root.setAttribute( nameSpace.getNameSpaceName() + ":" + nameSpace.getSubSpaceName(),
-            nameSpace.getNameSpaceValue() );
+        root.setAttribute( nameSpace.getNameSpaceName() + ":" + nameSpace.getSubSpaceName(), nameSpace
+            .getNameSpaceValue() );
       }
       else
       {
@@ -405,8 +404,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return m_document.createEntityReference( arg0 );
   }
 
-  public ProcessingInstruction createProcessingInstruction( String arg0, String arg1 )
-      throws DOMException
+  public ProcessingInstruction createProcessingInstruction( String arg0, String arg1 ) throws DOMException
   {
     return m_document.createProcessingInstruction( arg0, arg1 );
   }
@@ -669,8 +667,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-   * creates a GMLFeatureCollection that doesn't contain a property and that
-   * hasn't an id.
+   * creates a GMLFeatureCollection that doesn't contain a property and that hasn't an id.
    */
   public GMLFeatureCollection createGMLFeatureCollection( final String collectionName )
   {
@@ -690,8 +687,8 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
    * @see org.kalypsodeegree.gml.GMLDocument#createGMLFeature(org.kalypsodeegree.model.feature.FeatureType,
    *      java.lang.String, org.kalypsodeegree.gml.GMLProperty[])
    */
-  public GMLFeature createGMLFeature( final FeatureType featureType, final String id,
-      GMLProperty[] properties ) throws GMLException
+  public GMLFeature createGMLFeature( final FeatureType featureType, final String id, GMLProperty[] properties )
+      throws GMLException
   {
     Debug.debugMethodBegin( "", "createGMLFeature(Document, String, String, GMLProperty[])" );
 
@@ -704,8 +701,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
   }
 
   /**
-   * factory method to create a GMLProperty. the property that will be return
-   * doesn't contain a value.
+   * factory method to create a GMLProperty. the property that will be return doesn't contain a value.
    */
   public GMLProperty createGMLProperty( final FeatureTypeProperty ftp )
   {
@@ -729,18 +725,17 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
     return gmlProp;
   }
 
-  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Object customObject )
-      throws GMLException
+  public GMLProperty createGMLProperty( final FeatureTypeProperty ftp, final Object customObject ) throws GMLException
   {
     try
     {
       final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
 
       // marshalling
-      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry()
-          .getTypeHandlerForClassName( ftp.getType() );
-// TODO give context not null
-      typeHandler.marshall( customObject, element ,null);
+      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName(
+          ftp.getType() );
+      // TODO give context not null
+      typeHandler.marshall( customObject, element, null );
       GMLCustomProperty_Impl gmlProp = new GMLCustomProperty_Impl( ftp, element );
 
       Debug.debugMethodEnd();

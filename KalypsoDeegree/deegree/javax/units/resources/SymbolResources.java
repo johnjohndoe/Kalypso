@@ -1,25 +1,21 @@
 /*
- * Map and oceanographical data visualisation Copyright (C) 1999 Pêches et
- * Océans Canada 2000 Institut de Recherche pour le Développement
+ * Map and oceanographical data visualisation Copyright (C) 1999 Pêches et Océans Canada 2000 Institut de Recherche pour
+ * le Développement
  * 
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Library General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option) any
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General
+ * Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any
  * later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
  * details (http://www.gnu.org/).
  * 
  * 
- * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite
- * Institut de Recherche pour le Développement / US-Espace
- * mailto:seasnet@teledetection.fr
+ * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite Institut de Recherche pour le Développement /
+ * US-Espace mailto:seasnet@teledetection.fr
  * 
- * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne
- * mailto:osl@osl.gc.ca
+ * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne mailto:osl@osl.gc.ca
  */
 package javax.units.resources;
 
@@ -28,9 +24,8 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 /**
- * Liste de ressources s'adaptant à la langue de l'utilisateur. Cette classe
- * s'apparente à la classe {@link java.util.ListResourceBundle}standard du
- * Java, excepté qu'elle est légèrement plus économe en mémoire.
+ * Liste de ressources s'adaptant à la langue de l'utilisateur. Cette classe s'apparente à la classe
+ * {@link java.util.ListResourceBundle}standard du Java, excepté qu'elle est légèrement plus économe en mémoire.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -46,11 +41,9 @@ public class SymbolResources extends java.util.ResourceBundle
    * Construit la table des ressources.
    * 
    * @param contents
-   *          Liste des clés et des valeurs qui y sont associées. Cette liste
-   *          consiste en un tableau d'objets. Les objets se trouvant aux index
-   *          pairs (0, 2, 4...) sont les clés, et les objets se trouvant aux
-   *          index impairs sont les valeurs (voyez la description de cette
-   *          classe pour des exemples).
+   *          Liste des clés et des valeurs qui y sont associées. Cette liste consiste en un tableau d'objets. Les
+   *          objets se trouvant aux index pairs (0, 2, 4...) sont les clés, et les objets se trouvant aux index impairs
+   *          sont les valeurs (voyez la description de cette classe pour des exemples).
    * 
    * @throws IllegalArgumentException
    *           Si une clé a été répétée deux fois.
@@ -70,8 +63,7 @@ public class SymbolResources extends java.util.ResourceBundle
   }
 
   /**
-   * Renvoie un énumérateur qui balayera toutes les clés que possède cette liste
-   * de ressources.
+   * Renvoie un énumérateur qui balayera toutes les clés que possède cette liste de ressources.
    */
   public final Enumeration getKeys()
   {
@@ -99,15 +91,12 @@ public class SymbolResources extends java.util.ResourceBundle
   }
 
   /**
-   * Renvoie la ressource associée à une clé donnée. Cette méthode est définie
-   * pour répondre aux exigences de la classe {@link java.util.ResourceBundle}
-   * et n'a généralement pas besoin d'être appellée directement.
+   * Renvoie la ressource associée à une clé donnée. Cette méthode est définie pour répondre aux exigences de la classe
+   * {@link java.util.ResourceBundle}et n'a généralement pas besoin d'être appellée directement.
    * 
    * @param key
-   *          Clé désignant la ressouce désirée (ne doit pas être
-   *          <code>null</code>).
-   * @return La ressource demandée, ou <code>null</code> si aucune ressource
-   *         n'est définie pour cette clé.
+   *          Clé désignant la ressouce désirée (ne doit pas être <code>null</code>).
+   * @return La ressource demandée, ou <code>null</code> si aucune ressource n'est définie pour cette clé.
    */
   protected final Object handleGetObject( final String key )
   {

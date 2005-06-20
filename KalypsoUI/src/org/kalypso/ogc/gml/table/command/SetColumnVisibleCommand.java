@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -62,8 +62,8 @@ public class SetColumnVisibleCommand implements ICommand
 
   private final String m_format;
 
-  public SetColumnVisibleCommand( final LayerTableViewer viewer, final String propertyName, final String alignment, final String format,
-      final boolean bVisible )
+  public SetColumnVisibleCommand( final LayerTableViewer viewer, final String propertyName, final String alignment,
+      final String format, final boolean bVisible )
   {
     m_viewer = viewer;
     m_propertyName = propertyName;
@@ -113,8 +113,9 @@ public class SetColumnVisibleCommand implements ICommand
   {
     return "Spalte '" + m_propertyName + "' " + ( m_bVisible ? "anzeigen" : "verstecken" );
   }
-  
-  private void doIt( final LayerTableViewer viewer, final String propertyName, final boolean bVisible, final int width, final String alignment, final String format, final boolean editable )
+
+  private void doIt( final LayerTableViewer viewer, final String propertyName, final boolean bVisible, final int width,
+      final String alignment, final String format, final boolean editable )
   {
     m_viewer.getControl().getDisplay().syncExec( new Runnable()
     {

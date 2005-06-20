@@ -137,8 +137,7 @@ public class FeatureEditor extends EditorPart
   }
 
   /**
-   * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite,
-   *      org.eclipse.ui.IEditorInput)
+   * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
@@ -177,8 +176,7 @@ public class FeatureEditor extends EditorPart
       e.printStackTrace();
 
       final IStatus status = KalypsoGisPlugin.createErrorStatus( "", e );
-      ErrorDialog.openError( getSite().getShell(), "Speichern", "Fehler beim Speichern der Daten",
-          status );
+      ErrorDialog.openError( getSite().getShell(), "Speichern", "Fehler beim Speichern der Daten", status );
     }
   }
 
@@ -212,7 +210,7 @@ public class FeatureEditor extends EditorPart
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
     actionBars.updateActionBars();
-    
+
   }
 
   protected final void load( final IStorageEditorInput input )
@@ -246,8 +244,7 @@ public class FeatureEditor extends EditorPart
         status = KalypsoGisPlugin.createErrorStatus( msg, targetException );
       }
 
-      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht",
-          status );
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht", status );
     }
     catch( final InterruptedException e )
     {
@@ -279,8 +276,7 @@ public class FeatureEditor extends EditorPart
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Parsen der Context-URL", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Parsen der Context-URL", e ) );
     }
     catch( final UnsupportedEncodingException e )
     {

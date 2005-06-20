@@ -36,16 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
  * @author F.Lindemann

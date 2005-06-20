@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -66,10 +66,9 @@ import java.util.Map;
 import org.opengis.cs.CS_LocalDatum;
 
 /**
- * Local datum. If two local datum objects have the same datum type and name,
- * then they can be considered equal. This means that coordinates can be
- * transformed between two different local coordinate systems, as long as they
- * are based on the same local datum.
+ * Local datum. If two local datum objects have the same datum type and name, then they can be considered equal. This
+ * means that coordinates can be transformed between two different local coordinate systems, as long as they are based
+ * on the same local datum.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -114,8 +113,8 @@ public class LocalDatum extends Datum
   /**
    * Gets the type of the datum as an enumerated code.
    * 
-   * Note: return type will be changed to {@link DatumType.Local}when we will
-   * be able to use generic types (with JDK 1.5).
+   * Note: return type will be changed to {@link DatumType.Local}when we will be able to use generic types (with JDK
+   * 1.5).
    * 
    * @see org.opengis.cs.CS_LocalDatum#getDatumType()
    */
@@ -134,11 +133,9 @@ public class LocalDatum extends Datum
   }
 
   /**
-   * Returns an OpenGIS interface for this datum. The returned object is
-   * suitable for RMI use.
+   * Returns an OpenGIS interface for this datum. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -152,8 +149,7 @@ public class LocalDatum extends Datum
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link LocalDatum}object for use with OpenGIS. This class is
-   * suitable for RMI use.
+   * Wrap a {@link LocalDatum}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

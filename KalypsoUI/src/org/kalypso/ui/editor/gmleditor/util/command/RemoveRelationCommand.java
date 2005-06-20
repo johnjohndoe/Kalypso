@@ -70,8 +70,7 @@ public class RemoveRelationCommand implements ICommand
 
   private final int m_pos;
 
-  public RemoveRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkPropName,
-      Feature destFE )
+  public RemoveRelationCommand( final GMLWorkspace workspace, Feature srcFE, String linkPropName, Feature destFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;

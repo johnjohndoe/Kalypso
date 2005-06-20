@@ -25,14 +25,14 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
 
   private FeatureType m_associatedFT; // without substituion
 
-  public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type,
-      boolean nullable, FeatureType associationFeatureType, Map annotation )
+  public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type, boolean nullable,
+      FeatureType associationFeatureType, Map annotation )
   {
     this( name, namespace, type, nullable, null, associationFeatureType, annotation );
   }
 
-  public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type,
-      boolean nullable, GMLSchema schema, FeatureType associationFeatureType, Map annotation )
+  public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type, boolean nullable,
+      GMLSchema schema, FeatureType associationFeatureType, Map annotation )
   {
     super( name, namespace, type, nullable, annotation );
     m_associatedFT = associationFeatureType;
@@ -42,8 +42,8 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
     m_associatedNode = null;
   }
 
-  public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type,
-      boolean nullable, GMLSchema schema, Node node, Map annotation )
+  public FeatureAssociationTypeProperty_Impl( String name, String namespace, String type, boolean nullable,
+      GMLSchema schema, Node node, Map annotation )
   {
     super( name, namespace, type, nullable, annotation );
     m_associatedFT = null;
@@ -57,8 +57,7 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
   public FeatureType[] getAssociationFeatureTypes()
   {
     checkAssociationBuildingStatus();
-    return (FeatureType[])m_associationFeatureTypes
-        .toArray( new FeatureType[m_associationFeatureTypes.size()] );
+    return (FeatureType[])m_associationFeatureTypes.toArray( new FeatureType[m_associationFeatureTypes.size()] );
   }
 
   private void checkAssociationBuildingStatus()

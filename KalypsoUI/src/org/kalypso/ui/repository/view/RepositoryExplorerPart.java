@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
 import java.io.IOException;
@@ -77,7 +77,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
   // persistence flags for memento
   private static final String TAG_REPOSITORY = "repository"; //$NON-NLS-1$
-  
+
   private static final String TAG_REPOSITORY_PROPS = "repositoryProperties"; //$NON-NLS-1$
 
   private static final String TAG_EXPANDED = "expanded"; //$NON-NLS-1$
@@ -103,7 +103,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
         // dispose it when not null (not sure if this is ok)
         if( m_propsPage != null )
           m_propsPage.dispose();
-        
+
         // PropertySheetPage erzeugen. Sie wird in das standard PropertySheet
         // von Eclipse dargestellt
         m_propsPage = new PropertySheetPage();
@@ -152,10 +152,10 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    
+
     m_memento = memento;
   }
-  
+
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
@@ -180,7 +180,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   {
     if( m_chooser == null )
       return;
-    
+
     final TreeViewer viewer = m_chooser.getViewer();
     if( viewer == null )
     {
@@ -198,7 +198,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
       final IMemento child = repsMem.createChild( TAG_REPOSITORY );
       child.putTextData( new RepositoryFactoryConfig( rep ).saveState() );
-      
+
       // save properties for that repository
       final IMemento propsMem = child.createChild( TAG_REPOSITORY_PROPS );
       try
@@ -221,8 +221,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
         if( expandedElements[i] instanceof IRepositoryItem )
         {
           final IMemento elementMem = expandedMem.createChild( TAG_ELEMENT );
-          final String id = ( (IRepositoryItem)expandedElements[i] )
-          .getIdentifier();
+          final String id = ( (IRepositoryItem)expandedElements[i] ).getIdentifier();
           elementMem.putString( TAG_IDENFITIER, id );
         }
       }
@@ -230,8 +229,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   }
 
   /**
-   * Restores the state of the receiver to the state described in the specified
-   * memento.
+   * Restores the state of the receiver to the state described in the specified memento.
    * 
    * @param memento
    *          the memento
@@ -240,7 +238,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   {
     if( m_chooser == null )
       return;
-    
+
     final TreeViewer viewer = m_chooser.getViewer();
 
     final IMemento repsMem = memento.getChild( TAG_REPOSITORIES );
@@ -251,19 +249,19 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       {
         if( repMem[i] == null )
           continue;
-          
+
         try
         {
           final RepositoryFactoryConfig item = RepositoryFactoryConfig.restore( repMem[i].getTextData() );
           if( item != null )
           {
-	          final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
-	          
-	          final IMemento propsMem = repMem[i].getChild( TAG_REPOSITORY_PROPS );
-	          if( propsMem != null )
-	            MementoUtils.loadProperties( propsMem, rep.getProperties() );
-	          
-	          m_chooser.getRepositoryContainer().addRepository( rep );
+            final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
+
+            final IMemento propsMem = repMem[i].getChild( TAG_REPOSITORY_PROPS );
+            if( propsMem != null )
+              MementoUtils.loadProperties( propsMem, rep.getProperties() );
+
+            m_chooser.getRepositoryContainer().addRepository( rep );
           }
         }
         catch( Exception e ) // generic exception caught for simplicity
@@ -290,20 +288,21 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
           // (in fact a ServiceRepositoryItem) using the constructor
           // but we are not able to set all arguments in findItem
           // TODO: try to find a better solution
-//          final String id = elementMem[i].getString( TAG_IDENFITIER );
-//          final Object element = m_repContainer.findItem( id );
-//          
-//          if( element != null )
-//            elements.add( element );
-//          else
-//            Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could not find item " + id );
+          //          final String id = elementMem[i].getString( TAG_IDENFITIER );
+          //          final Object element = m_repContainer.findItem( id );
+          //          
+          //          if( element != null )
+          //            elements.add( element );
+          //          else
+          //            Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could
+          // not find item " + id );
         }
         catch( NoSuchElementException e )
         {
           // ignored
         }
       }
-      
+
       viewer.setExpandedElements( elements.toArray() );
     }
   }

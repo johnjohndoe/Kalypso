@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.IAction;
@@ -74,13 +74,12 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     final CommandableWorkspace workspace = theme.getWorkspace();
 
     if( ( m_undo && workspace.canUndo() ) || ( !m_undo && workspace.canRedo() ) )
-      new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO
-          : CommandJob.REDO );
+      new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
 
-    refreshAction(null);
+    refreshAction( null );
   }
 
-  protected void refreshAction(IAction action)
+  protected void refreshAction( IAction action )
   {
     boolean bEnabled = false;
 

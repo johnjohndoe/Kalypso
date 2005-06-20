@@ -102,8 +102,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author N. Peiler
  *  
  */
-public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl implements
-    RasterDisplayElement, Serializable
+public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl implements RasterDisplayElement,
+    Serializable
 {
 
   private TiledImage m_surrogateTiledImage;
@@ -121,8 +121,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    * @param geometry
    * @param symbolizer
    */
-  protected RasterDisplayElement_Impl( Feature feature, GM_Object geometry,
-      RasterSymbolizer symbolizer )
+  protected RasterDisplayElement_Impl( Feature feature, GM_Object geometry, RasterSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
   }
@@ -133,8 +132,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     {
       RasterSymbolizer rasterSym = (RasterSymbolizer)symbolizer;
 
-      RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature
-          .getProperty( "rectifiedGridDomain" );
+      RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature.getProperty( "rectifiedGridDomain" );
       RangeSet rangeSet = (RangeSet)feature.getProperty( "rangeSet" );
 
       Raster surrogateRaster = getSurrogateRaster( rgDomain, rangeSet, rasterSym );
@@ -156,7 +154,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     // create the target Coordinate system
     GM_Object geom = (GM_Object)feature.getVirtuelProperty( "RasterBoundary_rectifiedGridDomain", null );
     CS_CoordinateSystem cs = geom.getCoordinateSystem();
-    
+
     TiledImage rasterImage = getImage();
 
     try
@@ -170,54 +168,38 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     /*
      * Graphics2D g2 = (Graphics2D)g; try {
      * 
-     * PlanarImage image = getImage(); RectifiedGridDomain rgDomain =
-     * (RectifiedGridDomain)feature .getProperty( "rectifiedGridDomain" );
-     * String targetSrs = "EPSG:31469"; ConvenienceCSFactoryFull csFac = new
+     * PlanarImage image = getImage(); RectifiedGridDomain rgDomain = (RectifiedGridDomain)feature .getProperty(
+     * "rectifiedGridDomain" ); String targetSrs = "EPSG:31469"; ConvenienceCSFactoryFull csFac = new
      * ConvenienceCSFactoryFull(); CS_CoordinateSystem cs =
-     * org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
-     * csFac.getCSByName( targetSrs ) );
+     * org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( targetSrs ) );
      * 
-     * GM_Surface destSurface = rgDomain.getGM_Surface( cs ); GM_Ring
-     * destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
-     * GM_Position llCorner = destExtRing.getPositions()[0]; GM_Position
-     * lrCorner = destExtRing.getPositions()[1]; GM_Position urCorner =
-     * destExtRing.getPositions()[2]; GM_Position ulCorner =
-     * destExtRing.getPositions()[3]; GM_Position pixel_llCorner =
-     * projection.getDestPoint( llCorner ); GM_Position pixel_lrCorner =
-     * projection.getDestPoint( lrCorner ); GM_Position pixel_urCorner =
-     * projection.getDestPoint( urCorner ); GM_Position pixel_ulCorner =
-     * projection.getDestPoint( ulCorner ); double destImageHeight =
-     * pixel_llCorner.getY() - pixel_ulCorner.getY(); double destImageWidth =
-     * pixel_lrCorner.getX() - pixel_llCorner.getX(); double scaleX =
-     * destImageWidth / image.getWidth(); double scaleY = destImageHeight /
-     * image.getHeight(); double shearX = pixel_llCorner.getX() -
-     * pixel_ulCorner.getX(); double shearY = pixel_lrCorner.getY() -
-     * pixel_llCorner.getY(); AffineTransform trafo = new AffineTransform();
-     * trafo.scale( scaleX, scaleY ); trafo.translate( Math.abs( shearX ) /
-     * Math.abs( scaleX ), Math.abs( shearY ) / Math.abs( scaleY ) );
+     * GM_Surface destSurface = rgDomain.getGM_Surface( cs ); GM_Ring destExtRing =
+     * destSurface.getSurfaceBoundary().getExteriorRing(); GM_Position llCorner = destExtRing.getPositions()[0];
+     * GM_Position lrCorner = destExtRing.getPositions()[1]; GM_Position urCorner = destExtRing.getPositions()[2];
+     * GM_Position ulCorner = destExtRing.getPositions()[3]; GM_Position pixel_llCorner = projection.getDestPoint(
+     * llCorner ); GM_Position pixel_lrCorner = projection.getDestPoint( lrCorner ); GM_Position pixel_urCorner =
+     * projection.getDestPoint( urCorner ); GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner ); double
+     * destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY(); double destImageWidth = pixel_lrCorner.getX() -
+     * pixel_llCorner.getX(); double scaleX = destImageWidth / image.getWidth(); double scaleY = destImageHeight /
+     * image.getHeight(); double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX(); double shearY =
+     * pixel_lrCorner.getY() - pixel_llCorner.getY(); AffineTransform trafo = new AffineTransform(); trafo.scale(
+     * scaleX, scaleY ); trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY ) / Math.abs( scaleY ) );
      * trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
      * 
-     * GM_Position scaledImage_min = pixel_ulCorner; GM_Position scaledImage_max =
-     * GeometryFactory.createGM_Position( pixel_urCorner.getX(),
-     * pixel_llCorner.getY() );
+     * GM_Position scaledImage_min = pixel_ulCorner; GM_Position scaledImage_max = GeometryFactory.createGM_Position(
+     * pixel_urCorner.getX(), pixel_llCorner.getY() );
      * 
-     * GM_Position buffImage_min = GeometryFactory.createGM_Position(
-     * scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY() -
-     * Math.abs( shearY ) ); GM_Position buffImage_max =
-     * GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs(
-     * shearX ), scaledImage_max.getY() + Math.abs( shearY ) ); GM_Envelope
-     * buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min,
-     * buffImage_max );
+     * GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ),
+     * scaledImage_min.getY() - Math.abs( shearY ) ); GM_Position buffImage_max = GeometryFactory.createGM_Position(
+     * scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) ); GM_Envelope
+     * buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
      * 
-     * BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(),
-     * (int)buffImageEnv .getHeight(), BufferedImage.TYPE_INT_ARGB ); Graphics2D
-     * bufferGraphics = (Graphics2D)buffer.getGraphics();
-     * //bufferGraphics.setColor(Color.GREEN); bufferGraphics.setColor( new
-     * Color( 255, 255, 255, 0 ) ); bufferGraphics.fillRect( 0, 0,
-     * (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
-     * bufferGraphics.drawRenderedImage( image, trafo ); g2.drawImage( buffer,
-     * (int)buffImageEnv.getMin().getX(), (int)buffImageEnv.getMin().getY(),
-     * null ); } catch( Exception e ) { // TODO Auto-generated catch block
+     * BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv .getHeight(),
+     * BufferedImage.TYPE_INT_ARGB ); Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
+     * //bufferGraphics.setColor(Color.GREEN); bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
+     * bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
+     * bufferGraphics.drawRenderedImage( image, trafo ); g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(),
+     * (int)buffImageEnv.getMin().getY(), null ); } catch( Exception e ) { // TODO Auto-generated catch block
      * e.printStackTrace(); }
      */
   }
@@ -233,8 +215,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     GM_Surface destScreenSurface = null;
     if( !( targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) ) )
     {
-      GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null )
-          .getCoordinateSystem() );
+      GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
       destScreenSurface = (GM_Surface)geoTrans1.transform( sourceScreenSurface );
     }
     else
@@ -242,8 +223,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       destScreenSurface = sourceScreenSurface;
     }
     // get the gridExtent for the envelope of the surface
-    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain
-        .getOrigin( null ).getCoordinateSystem() );
+    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain.getOrigin( null )
+        .getCoordinateSystem() );
     int lowX = gridExtent[0];
     int lowY = gridExtent[1];
     int highX = gridExtent[2];
@@ -285,29 +266,27 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     AffineTransform trafo = new AffineTransform();
     // translate the image, so that the subImage is at the right position
-    trafo.translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(), pixel_orgULCorner.getY()
-        - pixel_ulCorner.getY() );
+    trafo
+        .translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(), pixel_orgULCorner.getY() - pixel_ulCorner.getY() );
     // scale the image
     trafo.scale( scaleX, scaleY );
     // translate the image to compensate the shearing
-    trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY )
-        / Math.abs( scaleY ) );
+    trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY ) / Math.abs( scaleY ) );
     // shear the image
     trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
 
     // calculate the required extent of the bufferedImage
     GM_Position scaledImage_min = pixel_ulCorner;
-    GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(),
-        pixel_llCorner.getY() );
+    GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
 
-    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX()
-        - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
-    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX()
-        + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
+    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ),
+        scaledImage_min.getY() - Math.abs( shearY ) );
+    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ),
+        scaledImage_max.getY() + Math.abs( shearY ) );
     GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
 
-    BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv
-        .getHeight(), BufferedImage.TYPE_INT_ARGB );
+    BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight(),
+        BufferedImage.TYPE_INT_ARGB );
     Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
     //bufferGraphics.setColor(Color.GREEN);
     // draw a transparent backround on the bufferedImage
@@ -316,13 +295,11 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     // draw the image with the given transformation
     bufferGraphics.drawRenderedImage( image, trafo );
     // draw bufferedImage on the screen
-    g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(), (int)buffImageEnv.getMin().getY(),
-        null );
+    g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(), (int)buffImageEnv.getMin().getY(), null );
   }
 
   /**
-   * get a surrogate image for displaying with byte values of the given raster
-   * with int values
+   * get a surrogate image for displaying with byte values of the given raster with int values
    * 
    * @param surrogateRaster
    * @return surrogate image
@@ -347,21 +324,19 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   private PlanarImage getPlanarImage( Raster raster )
   {
     ColorModel colorModel = PlanarImage.createColorModel( raster.getSampleModel() );
-    TiledImage tiledImage = new TiledImage( 0, 0, raster.getWidth(), raster.getHeight(), 0, 0,
-        raster.getSampleModel(), colorModel );
+    TiledImage tiledImage = new TiledImage( 0, 0, raster.getWidth(), raster.getHeight(), 0, 0, raster.getSampleModel(),
+        colorModel );
     tiledImage.setData( raster );
     return tiledImage;
   }
 
   /**
-   * creates a surrogate raster of the given rectifiedGridDomain and rangeSet
-   * with the given colorTable
+   * creates a surrogate raster of the given rectifiedGridDomain and rangeSet with the given colorTable
    * 
    * @param gridDomain
    * @return surrogate raster
    */
-  private Raster getSurrogateRaster( RectifiedGridDomain gridDomain, RangeSet rangeSet,
-      RasterSymbolizer rasterSym )
+  private Raster getSurrogateRaster( RectifiedGridDomain gridDomain, RangeSet rangeSet, RasterSymbolizer rasterSym )
   {
     int mode = rasterSym.getMode();
     TreeMap intervalMap = null;
@@ -372,8 +347,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     int nCols = gridDomain.getNumColumns();
     int nRows = gridDomain.getNumRows();
-    SampleModel sampleModel = RasterFactory.createBandedSampleModel( DataBuffer.TYPE_INT, nCols,
-        nRows, 4 );
+    SampleModel sampleModel = RasterFactory.createBandedSampleModel( DataBuffer.TYPE_INT, nCols, nRows, 4 );
     DataBuffer dataBuffer = sampleModel.createDataBuffer();
     Vector rangeSetData = rangeSet.getRangeSetData();
     for( int i = 0; i < rangeSetData.size(); i++ )

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
@@ -76,11 +76,11 @@ import org.kalypsodeegree_impl.model.resources.XArray;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Base class for {@link MathTransform}providers. Instance of this class allow
- * the creation of transform objects from a classification name. <br>
+ * Base class for {@link MathTransform}providers. Instance of this class allow the creation of transform objects from a
+ * classification name. <br>
  * <br>
- * <strong>Note: this class is not part of OpenGIS specification and may change
- * in a future version. Do not rely strongly on it. </strong>
+ * <strong>Note: this class is not part of OpenGIS specification and may change in a future version. Do not rely
+ * strongly on it. </strong>
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -93,22 +93,21 @@ public abstract class MathTransformProvider
   private static final Double ZERO = new Double( 0 );
 
   /**
-   * Range of positives values. Range goes from 0 exclusive to positive
-   * infinity.
+   * Range of positives values. Range goes from 0 exclusive to positive infinity.
    */
   protected static final Range POSITIVE_RANGE = new Range( Double.class, ZERO, false, null, false );
 
   /**
    * Range of longitude values. Range goes from -180° to +180° inclusives.
    */
-  protected static final Range LONGITUDE_RANGE = new Range( Double.class, new Double(
-      Longitude.MIN_VALUE ), true, new Double( Longitude.MAX_VALUE ), true );
+  protected static final Range LONGITUDE_RANGE = new Range( Double.class, new Double( Longitude.MIN_VALUE ), true,
+      new Double( Longitude.MAX_VALUE ), true );
 
   /**
    * Range of latitude values. Range goes from -90° to +90° inclusives.
    */
-  protected static final Range LATITUDE_RANGE = new Range( Double.class, new Double(
-      Latitude.MIN_VALUE ), true, new Double( Latitude.MAX_VALUE ), true );
+  protected static final Range LATITUDE_RANGE = new Range( Double.class, new Double( Latitude.MIN_VALUE ), true,
+      new Double( Latitude.MAX_VALUE ), true );
 
   /**
    * Number of colunms in table {@link #properties}below.
@@ -116,40 +115,59 @@ public abstract class MathTransformProvider
   private static final int RECORD_LENGTH = 4;
 
   /**
-   * A default parameter list descriptor for map projections. This descriptor
-   * declare <code>"semi_major"</code>,<code>"semi_minor"</code>,
-   * <code>"central_meridian"</code>,<code>"latitude_of_origin"</code>,
-   * <code>"false_easting"</code> and <code>"false_northing"</code>
-   * parameters.
+   * A default parameter list descriptor for map projections. This descriptor declare <code>"semi_major"</code>,
+   * <code>"semi_minor"</code>,<code>"central_meridian"</code>,<code>"latitude_of_origin"</code>,
+   * <code>"false_easting"</code> and <code>"false_northing"</code> parameters.
    */
   public static final ParameterListDescriptor DEFAULT_PROJECTION_DESCRIPTOR = getDescriptor( new Object[]
-  { "semi_major", Double.class, ParameterListDescriptor.NO_PARAMETER_DEFAULT, POSITIVE_RANGE,
-      "semi_minor", Double.class, ParameterListDescriptor.NO_PARAMETER_DEFAULT, POSITIVE_RANGE,
-      "central_meridian", Double.class, ZERO, LONGITUDE_RANGE, "latitude_of_origin", Double.class,
-      ZERO, LATITUDE_RANGE, "false_easting", Double.class, ZERO, null, "false_northing",
-      Double.class, ZERO, null, "scale_factor", Double.class, ZERO, null } );
+  {
+      "semi_major",
+      Double.class,
+      ParameterListDescriptor.NO_PARAMETER_DEFAULT,
+      POSITIVE_RANGE,
+      "semi_minor",
+      Double.class,
+      ParameterListDescriptor.NO_PARAMETER_DEFAULT,
+      POSITIVE_RANGE,
+      "central_meridian",
+      Double.class,
+      ZERO,
+      LONGITUDE_RANGE,
+      "latitude_of_origin",
+      Double.class,
+      ZERO,
+      LATITUDE_RANGE,
+      "false_easting",
+      Double.class,
+      ZERO,
+      null,
+      "false_northing",
+      Double.class,
+      ZERO,
+      null,
+      "scale_factor",
+      Double.class,
+      ZERO,
+      null } );
 
   /**
-   * The set parameters to use for {@link ParameterListDescriptor}construction,
-   * or <code>null</code> if the descriptor is already constructed.
+   * The set parameters to use for {@link ParameterListDescriptor}construction, or <code>null</code> if the
+   * descriptor is already constructed.
    */
   private Object[] properties;
 
   /**
-   * The parameter list descriptor. This object will be constructed only the
-   * first time it is needed.
+   * The parameter list descriptor. This object will be constructed only the first time it is needed.
    */
   private ParameterListDescriptor descriptor;
 
   /**
-   * The classification name. This name do not contains leading or trailing
-   * blanks.
+   * The classification name. This name do not contains leading or trailing blanks.
    */
   private final String classification;
 
   /**
-   * Resources key for a human readable name. This is used for {@link #getName}
-   * implementation.
+   * Resources key for a human readable name. This is used for {@link #getName}implementation.
    */
   private final int nameKey;
 
@@ -159,16 +177,13 @@ public abstract class MathTransformProvider
    * @param classification
    *          The classification name.
    * @param inherit
-   *          The parameter list descriptor to inherit from, or
-   *          <code>null</code> if there is none. All parameter descriptions
-   *          from <code>inherit</code> will be copied into this newly created
-   *          <code>MathTransformProvider</code>. For map projections, this
-   *          argument may be {@link #DEFAULT_PROJECTION_DESCRIPTOR}.
-   *          Subclasses may add or change parameters in their constructor by
+   *          The parameter list descriptor to inherit from, or <code>null</code> if there is none. All parameter
+   *          descriptions from <code>inherit</code> will be copied into this newly created
+   *          <code>MathTransformProvider</code>. For map projections, this argument may be
+   *          {@link #DEFAULT_PROJECTION_DESCRIPTOR}. Subclasses may add or change parameters in their constructor by
    *          invoking {@link #put}.
    */
-  protected MathTransformProvider( final String classification,
-      final ParameterListDescriptor inherit )
+  protected MathTransformProvider( final String classification, final ParameterListDescriptor inherit )
   {
     this( classification, -1, inherit );
   }
@@ -179,19 +194,15 @@ public abstract class MathTransformProvider
    * @param classification
    *          The classification name.
    * @param nameKey
-   *          Resources key for a human readable name. This is used for
-   *          {@link #getName}implementation.
+   *          Resources key for a human readable name. This is used for {@link #getName}implementation.
    * @param inherit
-   *          The parameter list descriptor to inherit from, or
-   *          <code>null</code> if there is none. All parameter descriptions
-   *          from <code>inherit</code> will be copied into this newly created
-   *          <code>MathTransformProvider</code>. For map projections, this
-   *          argument may be {@link #DEFAULT_PROJECTION_DESCRIPTOR}.
-   *          Subclasses may add or change parameters in their constructor by
+   *          The parameter list descriptor to inherit from, or <code>null</code> if there is none. All parameter
+   *          descriptions from <code>inherit</code> will be copied into this newly created
+   *          <code>MathTransformProvider</code>. For map projections, this argument may be
+   *          {@link #DEFAULT_PROJECTION_DESCRIPTOR}. Subclasses may add or change parameters in their constructor by
    *          invoking {@link #put}.
    */
-  MathTransformProvider( final String classification, final int nameKey,
-      final ParameterListDescriptor inherit )
+  MathTransformProvider( final String classification, final int nameKey, final ParameterListDescriptor inherit )
   {
     this.classification = classification.trim();
     this.nameKey = nameKey;
@@ -215,26 +226,21 @@ public abstract class MathTransformProvider
   }
 
   /**
-   * Adds or changes a parameter to this math transform provider. If this
-   * <code>MathTransformProvider</code> has been constructed with
-   * {@link #DEFAULT_PROJECTION_DESCRIPTOR}as argument, then default values are
-   * already provided for "semi_major", "semi_minor", "central_meridian" and
-   * "latitude_of_origin". Subclasses may call this method in their constructor
-   * for adding or changing parameters.
+   * Adds or changes a parameter to this math transform provider. If this <code>MathTransformProvider</code> has been
+   * constructed with {@link #DEFAULT_PROJECTION_DESCRIPTOR}as argument, then default values are already provided for
+   * "semi_major", "semi_minor", "central_meridian" and "latitude_of_origin". Subclasses may call this method in their
+   * constructor for adding or changing parameters.
    * 
    * @param parameter
    *          The parameter name.
    * @param defaultValue
-   *          The default value for this parameter, or {@link Double#NaN}if
-   *          there is none.
+   *          The default value for this parameter, or {@link Double#NaN}if there is none.
    * @param range
-   *          The range of legal values. May be one of the predefined constants (
-   *          {@link #POSITIVE_RANGE},{@link #LONGITUDE_RANGE},
-   *          {@link #LATITUDE_RANGE}) or any other {@link Range}object. May
-   *          be <code>null</code> if all values are valid for this parameter.
+   *          The range of legal values. May be one of the predefined constants ({@link #POSITIVE_RANGE},
+   *          {@link #LONGITUDE_RANGE},{@link #LATITUDE_RANGE}) or any other {@link Range}object. May be
+   *          <code>null</code> if all values are valid for this parameter.
    * @throws IllegalStateException
-   *           If {@link #getParameterList}has already been invoked prior to
-   *           this call.
+   *           If {@link #getParameterList}has already been invoked prior to this call.
    */
   protected final void put( final String parameter, final double defaultValue, final Range range )
       throws IllegalStateException
@@ -243,28 +249,23 @@ public abstract class MathTransformProvider
   }
 
   /**
-   * Adds or changes an integer parameter to this math transform provider.
-   * Support of integer values help to make the API clearer, but the true
-   * OpenGIS's parameter class support only <code>double</code> values. This
-   * is why this method is not yet public. Current SEAGIS version use integer
-   * parameters only for matrix dimension and for a custom parameter in
-   * geocentric transform. We hope the user will barely notice it...
+   * Adds or changes an integer parameter to this math transform provider. Support of integer values help to make the
+   * API clearer, but the true OpenGIS's parameter class support only <code>double</code> values. This is why this
+   * method is not yet public. Current SEAGIS version use integer parameters only for matrix dimension and for a custom
+   * parameter in geocentric transform. We hope the user will barely notice it...
    * 
    * @param parameter
    *          The parameter name.
    * @param defaultValue
    *          The default value for this parameter.
    * @param range
-   *          The range of legal values. This is up to the caller to build is
-   *          own range with integer values (predefined ranges like
-   *          {@link #POSITIVE_RANGE}will not work).
+   *          The range of legal values. This is up to the caller to build is own range with integer values (predefined
+   *          ranges like {@link #POSITIVE_RANGE}will not work).
    * 
    * @throws IllegalStateException
-   *           If {@link #getParameterList}has already been invoked prior to
-   *           this call.
+   *           If {@link #getParameterList}has already been invoked prior to this call.
    */
-  final void putInt( final String parameter, final int defaultValue, final Range range )
-      throws IllegalStateException
+  final void putInt( final String parameter, final int defaultValue, final Range range ) throws IllegalStateException
   {
     put( parameter, Integer.class, new Integer( defaultValue ), range );
   }
@@ -282,11 +283,10 @@ public abstract class MathTransformProvider
    *          The range of legal values.
    * 
    * @throws IllegalStateException
-   *           If {@link #getParameterList}has already been invoked prior to
-   *           this call.
+   *           If {@link #getParameterList}has already been invoked prior to this call.
    */
-  private synchronized void put( String parameter, final Class type, Object defaultValue,
-      final Range range ) throws IllegalStateException
+  private synchronized void put( String parameter, final Class type, Object defaultValue, final Range range )
+      throws IllegalStateException
   {
     if( properties == null )
     {
@@ -371,14 +371,12 @@ public abstract class MathTransformProvider
   }
 
   /**
-   * Returns a human readable name localized for the specified locale. If no
-   * name is available for the specified locale, this method may returns a name
-   * in an arbitrary locale.
+   * Returns a human readable name localized for the specified locale. If no name is available for the specified locale,
+   * this method may returns a name in an arbitrary locale.
    */
   public String getName( final Locale locale )
   {
-    return ( nameKey >= 0 ) ? Resources.getResources( locale ).getString( nameKey )
-        : getClassName();
+    return ( nameKey >= 0 ) ? Resources.getResources( locale ).getString( nameKey ) : getClassName();
   }
 
   /**
@@ -395,9 +393,8 @@ public abstract class MathTransformProvider
   }
 
   /**
-   * Returns a newly created parameter list. The set of parameter depend of the
-   * transform this provider is for. Parameters may have default values and a
-   * range of validity.
+   * Returns a newly created parameter list. The set of parameter depend of the transform this provider is for.
+   * Parameters may have default values and a range of validity.
    */
   public ParameterList getParameterList()
   {

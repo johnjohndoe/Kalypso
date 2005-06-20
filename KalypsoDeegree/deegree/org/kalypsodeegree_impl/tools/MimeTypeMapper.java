@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 /**
@@ -96,8 +96,7 @@ public class MimeTypeMapper
   }
 
   /**
-   * returns true if the submitted image content type is known by the deegree
-   * implementations
+   * returns true if the submitted image content type is known by the deegree implementations
    * 
    * @param contentType
    * 
@@ -105,20 +104,15 @@ public class MimeTypeMapper
    */
   public static boolean isKnownImageType( String contentType )
   {
-    return contentType.equalsIgnoreCase( "image/jpeg" )
-        || contentType.equalsIgnoreCase( "image/jpg" )
-        || contentType.equalsIgnoreCase( "image/gif" )
-        || contentType.equalsIgnoreCase( "image/tif" )
-        || contentType.equalsIgnoreCase( "image/tiff" )
-        || contentType.equalsIgnoreCase( "image/bmp" )
-        || contentType.equalsIgnoreCase( "image/svg+xml" )
-        || contentType.equalsIgnoreCase( "image/svg xml" )
+    return contentType.equalsIgnoreCase( "image/jpeg" ) || contentType.equalsIgnoreCase( "image/jpg" )
+        || contentType.equalsIgnoreCase( "image/gif" ) || contentType.equalsIgnoreCase( "image/tif" )
+        || contentType.equalsIgnoreCase( "image/tiff" ) || contentType.equalsIgnoreCase( "image/bmp" )
+        || contentType.equalsIgnoreCase( "image/svg+xml" ) || contentType.equalsIgnoreCase( "image/svg xml" )
         || contentType.equalsIgnoreCase( "image/png" );
   }
 
   /**
-   * returns true if the submitted content type is known by the deegree OWS
-   * implementations
+   * returns true if the submitted content type is known by the deegree OWS implementations
    * 
    * @param contentType
    * 
@@ -126,29 +120,23 @@ public class MimeTypeMapper
    */
   public static boolean isKnownMimeType( String contentType )
   {
-    return contentType.equalsIgnoreCase( "image/jpeg" )
-        || contentType.equalsIgnoreCase( "image/jpg" )
-        || contentType.equalsIgnoreCase( "image/gif" )
-        || contentType.equalsIgnoreCase( "image/tif" )
-        || contentType.equalsIgnoreCase( "image/tiff" )
-        || contentType.equalsIgnoreCase( "image/png" )
-        || contentType.equalsIgnoreCase( "text/html" )
-        || contentType.equalsIgnoreCase( "text/text" )
-        || contentType.equalsIgnoreCase( "text/plain" )
-        || contentType.equalsIgnoreCase( "text/xml" ) || contentType.equalsIgnoreCase( "image/bmp" )
-        || contentType.equalsIgnoreCase( "application/xml" )
+    return contentType.equalsIgnoreCase( "image/jpeg" ) || contentType.equalsIgnoreCase( "image/jpg" )
+        || contentType.equalsIgnoreCase( "image/gif" ) || contentType.equalsIgnoreCase( "image/tif" )
+        || contentType.equalsIgnoreCase( "image/tiff" ) || contentType.equalsIgnoreCase( "image/png" )
+        || contentType.equalsIgnoreCase( "text/html" ) || contentType.equalsIgnoreCase( "text/text" )
+        || contentType.equalsIgnoreCase( "text/plain" ) || contentType.equalsIgnoreCase( "text/xml" )
+        || contentType.equalsIgnoreCase( "image/bmp" ) || contentType.equalsIgnoreCase( "application/xml" )
         || contentType.equalsIgnoreCase( "application/vnd.ogc.se_xml" )
         || contentType.equalsIgnoreCase( "application/vnd.ogc.se_inimage" )
         || contentType.equalsIgnoreCase( "application/vnd.ogc.se_blank" )
         || contentType.equalsIgnoreCase( "application/vnd.ogc.wms_xml" )
-        || contentType.equalsIgnoreCase( "application/vnd.ogc.gml" )
-        || contentType.equalsIgnoreCase( "image/svg+xml" )
+        || contentType.equalsIgnoreCase( "application/vnd.ogc.gml" ) || contentType.equalsIgnoreCase( "image/svg+xml" )
         || contentType.equalsIgnoreCase( "image/svg xml" );
   }
 
   /**
-   * maps a 'simple' format name like gif, jpg or text to the corresponding mime
-   * type --> e.g. image/gif, image/jpeg or text/plain
+   * maps a 'simple' format name like gif, jpg or text to the corresponding mime type --> e.g. image/gif, image/jpeg or
+   * text/plain
    * 
    * @param contentType
    * 

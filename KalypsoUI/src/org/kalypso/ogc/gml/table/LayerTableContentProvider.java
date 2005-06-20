@@ -103,17 +103,16 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public void dispose()
   {
-    //  
+  //  
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-   *      java.lang.Object, java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
-  public void inputChanged( final Viewer viewer, Object oldInput,
-      Object newInput )
+  public void inputChanged( final Viewer viewer, Object oldInput, Object newInput )
   {
-    //
+  //
   }
 
 }

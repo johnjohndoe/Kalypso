@@ -47,10 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -72,6 +68,10 @@ import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.java.util.PropertiesHelper;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Belger
@@ -88,13 +88,12 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
   private final static String PROP_FEATURETEMPLATE = "featureTemplate";
 
   /**
-   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
-   * geben-Property geben: eine für jede Kurventyp.
+   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine für jede Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
-  protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer(
-      new JobExclusiveCommandTarget( null, null ) );
+  protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget(
+      null, null ) );
 
   public MapAndFeatureWizardPage()
   {
@@ -103,7 +102,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
 
   public void dispose()
   {
-    if(m_templateviewer!=null)
+    if( m_templateviewer != null )
       m_templateviewer.dispose();
     super.dispose();
   }
@@ -209,8 +208,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
   private void createFeaturePanel( final Composite parent )
   {
     final String featureTemplateArgument = getArguments().getProperty( PROP_FEATURETEMPLATE, null );
-    final Properties featureTemplateProps = PropertiesHelper.parseFromString(
-        featureTemplateArgument, '#' );
+    final Properties featureTemplateProps = PropertiesHelper.parseFromString( featureTemplateArgument, '#' );
     final String errorMsg = "Fehler beim Laden des FeatureTemplate: " + featureTemplateArgument;
     final String templateFileName = featureTemplateArgument.replaceAll( "#.*", "" );
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
@@ -222,8 +220,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
           final IFile templateFile = (IFile)getProject().findMember( templateFileName );
           if( templateFile != null && templateFile.exists() )
           {
-            final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile
-                .getCharset() );
+            final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
             m_templateviewer.loadInput( reader, getContext(), monitor, featureTemplateProps );
 
             m_templateviewer.createControls( parent, SWT.BORDER );
@@ -320,7 +317,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage implements M
    */
   protected FeatureList getFeatures()
   {
-    FeatureList result = FeatureFactory.createFeatureList(null,null);
+    FeatureList result = FeatureFactory.createFeatureList( null, null );
     Feature feature = m_templateviewer.getFeature();
     if( feature != null )
       result.add( feature );

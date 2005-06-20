@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -77,8 +77,7 @@ import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a spatial_ops entity (as defined in the
- * Filter DTD).
+ * Encapsulates the information of a spatial_ops entity (as defined in the Filter DTD).
  * <p>
  * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
@@ -115,8 +114,7 @@ public class SpatialOperation extends AbstractOperation
    * @see OperationDefines Calvin added on 10/21/2003
    *  
    */
-  public SpatialOperation( int operatorId, PropertyName propertyName, GMLGeometry gmlGeometry,
-      double d )
+  public SpatialOperation( int operatorId, PropertyName propertyName, GMLGeometry gmlGeometry, double d )
   {
     super( operatorId );
     this.propertyName = propertyName;
@@ -135,9 +133,8 @@ public class SpatialOperation extends AbstractOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This
-   * method recursively calls other buildFromDOM () - methods to validate the
-   * structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
@@ -163,8 +160,8 @@ public class SpatialOperation extends AbstractOperation
 
     if( !child1.getLocalName().toLowerCase().equals( "propertyname" ) )
     {
-      throw new FilterConstructionException( "First element of every '" + name
-          + "'-operation must be a " + "'PropertyName'-element!" );
+      throw new FilterConstructionException( "First element of every '" + name + "'-operation must be a "
+          + "'PropertyName'-element!" );
     }
 
     PropertyName propertyName = (PropertyName)PropertyName.buildFromDOM( child1 );
@@ -172,8 +169,7 @@ public class SpatialOperation extends AbstractOperation
 
     if( gmlGeometry == null )
     {
-      throw new FilterConstructionException( "Unable to parse GMLGeometry definition in '" + name
-          + "'-operation!" );
+      throw new FilterConstructionException( "Unable to parse GMLGeometry definition in '" + name + "'-operation!" );
     }
 
     //calvin added on 10/21/2003
@@ -199,14 +195,12 @@ public class SpatialOperation extends AbstractOperation
 
         if( dist < 0 )
         {
-          throw new FilterConstructionException( "value of  Distance can't be negative:"
-              + XMLTools.getValue( element ) );
+          throw new FilterConstructionException( "value of  Distance can't be negative:" + XMLTools.getValue( element ) );
         }
       }
       catch( Exception e )
       {
-        throw new FilterConstructionException( "value of  Distance is error:"
-            + XMLTools.getValue( element ) );
+        throw new FilterConstructionException( "value of  Distance is error:" + XMLTools.getValue( element ) );
       }
     }
 
@@ -230,8 +224,7 @@ public class SpatialOperation extends AbstractOperation
     {
       if( !( gmlGeometry instanceof GMLBox ) )
       {
-        throw new FilterConstructionException( "'" + name
-            + "' can only be used with a 'Box'-geometry!" );
+        throw new FilterConstructionException( "'" + name + "' can only be used with a 'Box'-geometry!" );
       }
 
       break;
@@ -244,8 +237,7 @@ public class SpatialOperation extends AbstractOperation
   }
 
   /**
-   * Returns the geometry property used in the operation and one concrete
-   * feature.
+   * Returns the geometry property used in the operation and one concrete feature.
    * <p>
    * 
    * @param feature
@@ -284,8 +276,8 @@ public class SpatialOperation extends AbstractOperation
       }
       catch( GM_Exception e )
       {
-        throw new FilterEvaluationException( "Construction of GM_Object from "
-            + "SpatialOperation literal failed: '" + e.getMessage() + "'!" );
+        throw new FilterEvaluationException( "Construction of GM_Object from " + "SpatialOperation literal failed: '"
+            + e.getMessage() + "'!" );
       }
     }
 
@@ -315,8 +307,7 @@ public class SpatialOperation extends AbstractOperation
   }
 
   /**
-   * returns the name of the (spatial) property that shall be use for geo
-   * spatial comparsions
+   * returns the name of the (spatial) property that shall be use for geo spatial comparsions
    */
   public PropertyName getPropertyName()
   {
@@ -339,16 +330,15 @@ public class SpatialOperation extends AbstractOperation
   }
 
   /**
-   * Calculates the <tt>SpatialOperation</tt>'s logical value based on the
-   * property values of the given <tt>Feature</tt>.
+   * Calculates the <tt>SpatialOperation</tt>'s logical value based on the property values of the given
+   * <tt>Feature</tt>.
    * <p>
    * TODO: Implement operations: CROSSES, BEYOND, OVERLAPS AND TOUCHES.
    * <p>
    * 
    * @param feature
    *          that determines the property values
-   * @return true, if the <tt>SpatialOperation</tt> evaluates to true, else
-   *         false
+   * @return true, if the <tt>SpatialOperation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */

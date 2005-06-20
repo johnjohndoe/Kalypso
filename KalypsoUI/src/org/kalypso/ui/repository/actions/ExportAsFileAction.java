@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.actions;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -48,7 +48,6 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.repository.view.ObservationChooser;
 import org.kalypso.ui.repository.wizard.ExportAsFileWizard;
 
-
 /**
  * @author schlienger
  */
@@ -56,8 +55,9 @@ public class ExportAsFileAction extends AbstractRepositoryExplorerAction impleme
 {
   public ExportAsFileAction( final ObservationChooser explorer )
   {
-    super( explorer, "Datei herunterladen", ImageProvider.IMAGE_ZML_DOWNLOAD, "Lädt die selektierte Zeitreihe als lokale Datei herunter");
-    
+    super( explorer, "Datei herunterladen", ImageProvider.IMAGE_ZML_DOWNLOAD,
+        "Lädt die selektierte Zeitreihe als lokale Datei herunter" );
+
     explorer.addSelectionChangedListener( this );
     setEnabled( explorer.isObservationSelected( explorer.getSelection() ) != null );
   }
@@ -66,7 +66,7 @@ public class ExportAsFileAction extends AbstractRepositoryExplorerAction impleme
   {
     getExplorer().removeSelectionChangedListener( this );
   }
-  
+
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
@@ -75,16 +75,16 @@ public class ExportAsFileAction extends AbstractRepositoryExplorerAction impleme
     final IObservation obs = getExplorer().isObservationSelected( getExplorer().getSelection() );
     if( obs == null )
       return;
-    
+
     final WizardDialog dialog = new WizardDialog( getShell(), new ExportAsFileWizard( obs ) );
     dialog.open();
-  }    
+  }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
   public void selectionChanged( SelectionChangedEvent event )
   {
-    setEnabled( getExplorer().isObservationSelected( event.getSelection() ) != null );    
+    setEnabled( getExplorer().isObservationSelected( event.getSelection() ) != null );
   }
 }

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics;
 
 import java.awt.Graphics;
@@ -68,9 +68,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * This interface describes the data modell of the map it self. It is build from
- * themes containing DisplayElements to be rendered. Themes can be added and
- * removed. Existing themes can be re-arragned by changing their order.
+ * This interface describes the data modell of the map it self. It is build from themes containing DisplayElements to be
+ * rendered. Themes can be added and removed. Existing themes can be re-arragned by changing their order.
  * 
  * <p>
  * ------------------------------------------------------------------------
@@ -109,8 +108,7 @@ public interface MapView
   Theme getTheme( int index );
 
   /**
-   * returns the Themes in correct order. The first Theme (index == 0) shall be
-   * rendered at first (bottom most).
+   * returns the Themes in correct order. The first Theme (index == 0) shall be rendered at first (bottom most).
    */
   Theme[] getAllThemes();
 
@@ -165,9 +163,8 @@ public interface MapView
   void moveDown( Theme theme );
 
   /**
-   * enables or disables a theme that is part of the MapView. A theme that has
-   * been disabled won't be rendered and usually doesn't react to events
-   * targeted to the MapView, but still is part of the MapView.
+   * enables or disables a theme that is part of the MapView. A theme that has been disabled won't be rendered and
+   * usually doesn't react to events targeted to the MapView, but still is part of the MapView.
    */
   void enableTheme( Theme theme, boolean enable );
 
@@ -177,9 +174,8 @@ public interface MapView
   boolean isThemeEnabled( Theme theme );
 
   /**
-   * activates a theme. Usually the activated theme is perferred to react to
-   * events (this doesn't mean that other themes are not allowed to react to
-   * events).
+   * activates a theme. Usually the activated theme is perferred to react to events (this doesn't mean that other themes
+   * are not allowed to react to events).
    */
   void activateTheme( Theme theme );
 
@@ -194,9 +190,8 @@ public interface MapView
   int getSize();
 
   /**
-   * adds an eventcontroller to the MapView that's reponsible for handling
-   * events that targets the map. E.g.: zooming, panning, selecting a feature
-   * etc.
+   * adds an eventcontroller to the MapView that's reponsible for handling events that targets the map. E.g.: zooming,
+   * panning, selecting a feature etc.
    */
   void addEventController( MapEventController obj );
 
@@ -206,10 +201,9 @@ public interface MapView
   void removeEventController( MapEventController obj );
 
   /**
-   * A selector is a class that offers methods for selecting and deselecting
-   * single DisplayElements or groups of DisplayElements. A selector may offers
-   * methods like 'select all DisplayElements within a specified bounding box'
-   * or 'select all DisplayElements thats area is larger than 120 km²' etc.
+   * A selector is a class that offers methods for selecting and deselecting single DisplayElements or groups of
+   * DisplayElements. A selector may offers methods like 'select all DisplayElements within a specified bounding box' or
+   * 'select all DisplayElements thats area is larger than 120 km²' etc.
    */
   void addSelector( Selector obj );
 
@@ -219,9 +213,8 @@ public interface MapView
   void removeSelector( Selector obj );
 
   /**
-   * returns the BoundingBox (Envelope) of the MapView. This isn't nessecary the
-   * BoundingBox of the data that will be rendered. It's the boundingBox of the
-   * the visible area of the map measured in its coordinate reference system.
+   * returns the BoundingBox (Envelope) of the MapView. This isn't nessecary the BoundingBox of the data that will be
+   * rendered. It's the boundingBox of the the visible area of the map measured in its coordinate reference system.
    */
   GM_Envelope getBoundingBox();
 
@@ -246,20 +239,17 @@ public interface MapView
   void paint( Graphics g ) throws RenderException;
 
   /**
-   * renders the features marked as selected of all themes contained within the
-   * MapView
+   * renders the features marked as selected of all themes contained within the MapView
    */
   void paintSelected( Graphics g ) throws RenderException;
 
   /**
-   * renders the features marked as highlighted of all themes contained within
-   * the MapView
+   * renders the features marked as highlighted of all themes contained within the MapView
    */
   void paintHighlighted( Graphics g ) throws RenderException;
 
   /**
-   * A Highlighter is a class that is responsible for managing the highlight
-   * capabilities for one or more Themes.
+   * A Highlighter is a class that is responsible for managing the highlight capabilities for one or more Themes.
    */
   void addHighlighter( Highlighter highlighter );
 

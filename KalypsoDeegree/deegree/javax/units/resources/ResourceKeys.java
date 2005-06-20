@@ -1,18 +1,15 @@
 /*
- * SEAGIS - An OpenSource implementation of OpenGIS specification (C) 2001,
- * Institut de Recherche pour le Développement
+ * SEAGIS - An OpenSource implementation of OpenGIS specification (C) 2001, Institut de Recherche pour le Développement
  * 
- * THIS IS AN AUTOMATICALLY GENERATED FILE. DO NOT EDIT! Generated with:
- * net.seagis.resources.ResourceCompiler
+ * THIS IS AN AUTOMATICALLY GENERATED FILE. DO NOT EDIT! Generated with: net.seagis.resources.ResourceCompiler
  */
 package javax.units.resources;
 
 /**
- * Resource keys. This interface is used when compiling sources, but no
- * dependencies to <code>ResourceKeys</code> should appear in any resulting
- * class files. Since Java compiler inline final integers values, using long
- * identifiers will not bloat constant pools of classes compiled against the
- * interface, providing that no class implements this interface.
+ * Resource keys. This interface is used when compiling sources, but no dependencies to <code>ResourceKeys</code>
+ * should appear in any resulting class files. Since Java compiler inline final integers values, using long identifiers
+ * will not bloat constant pools of classes compiled against the interface, providing that no class implements this
+ * interface.
  * 
  * @see ResourceKeys
  */

@@ -77,8 +77,7 @@ public class OcsExportWizard extends Wizard implements IExportWizard
 
   public OcsExportWizard()
   {
-    final IDialogSettings settings = KalypsoGisPlugin.getDefault()
-        .getDialogSettings();
+    final IDialogSettings settings = KalypsoGisPlugin.getDefault().getDialogSettings();
 
     IDialogSettings section = settings.getSection( "OcsExportWizard" ); //$NON-NLS-1$
     if( section == null )
@@ -101,32 +100,28 @@ public class OcsExportWizard extends Wizard implements IExportWizard
     catch( final ServiceException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( getShell(),
-          "Kalypso Server steht nicht zur Verfügung", e.getLocalizedMessage() );
+      MessageDialog.openError( getShell(), "Kalypso Server steht nicht zur Verfügung", e.getLocalizedMessage() );
       return false;
     }
 
-    final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin
-        .getId(), 0, "Fehler sind während der Export aufgetreten" );
+    final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+        "Fehler sind während der Export aufgetreten" );
 
     for( int i = 0; i < structs.length; i++ )
     {
       try
       {
-        ServiceRepositoryObservation.setValuesFor( structs[i].getFile(),
-            structs[i].getId(), srv );
+        ServiceRepositoryObservation.setValuesFor( structs[i].getFile(), structs[i].getId(), srv );
       }
       catch( final SensorException e )
       {
-        ms.addMessage( "Export von " + structs[i].getFile().getName()
-            + " fehlerhaft: " + e.getLocalizedMessage(), e );
+        ms.addMessage( "Export von " + structs[i].getFile().getName() + " fehlerhaft: " + e.getLocalizedMessage(), e );
       }
     }
 
     if( !ms.isOK() )
     {
-      ErrorDialog.openError( getShell(),
-          "Fehler sind während der Export aufgetreten", "Siehe Details", ms );
+      ErrorDialog.openError( getShell(), "Fehler sind während der Export aufgetreten", "Siehe Details", ms );
       return false;
     }
 

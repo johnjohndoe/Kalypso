@@ -12,13 +12,13 @@ public class FeatureElement extends Model
 
   public static FeatureElement createRootFeature()
   {
-    return new FeatureElement( null, null ); 
+    return new FeatureElement( null, null );
   }
-  
-  public FeatureElement( final IModel parent, final  Feature ft )
+
+  public FeatureElement( final IModel parent, final Feature ft )
   {
     super( parent, ft == null ? null : ft.getId().trim() );
-    
+
     m_feature = ft;
   }
 

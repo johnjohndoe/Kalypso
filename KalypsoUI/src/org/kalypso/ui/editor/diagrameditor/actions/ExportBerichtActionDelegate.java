@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.diagrameditor.actions;
 
 import org.eclipse.core.runtime.Preferences;
@@ -59,14 +59,15 @@ public class ExportBerichtActionDelegate extends AbstractExportActionDelegate
    */
   public void run( IAction action )
   {
-    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
-    
+    final ObservationDiagramEditor editor = (ObservationDiagramEditor)getEditor();
+
     final Preferences prefs = KalypsoGisPlugin.getDefault().getPluginPreferences();
     final int width = prefs.getInt( IKalypsoPreferences.CHART_EXPORT_WIDTH );
     final int height = prefs.getInt( IKalypsoPreferences.CHART_EXPORT_HEIGHT );
-    
-    final ExportableChart exportableChart = new ExportableChart( editor.getChart(), ExportableChart.EXT_JPEG, width, height );
-    
+
+    final ExportableChart exportableChart = new ExportableChart( editor.getChart(), ExportableChart.EXT_JPEG, width,
+        height );
+
     runExportAction( ExportBerichtWizard.class, exportableChart, editor.getSite().getShell() );
   }
 }

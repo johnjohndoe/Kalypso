@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -78,23 +78,19 @@ import org.opengis.cs.CS_Info;
 import org.opengis.cs.CS_LinearUnit;
 
 /**
- * A base class for metadata applicable to coordinate system objects. The
- * metadata items "Abbreviation", "Alias", "Authority", "AuthorityCode", "Name"
- * and "Remarks" were specified in the Simple Features interfaces, so they have
+ * A base class for metadata applicable to coordinate system objects. The metadata items "Abbreviation", "Alias",
+ * "Authority", "AuthorityCode", "Name" and "Remarks" were specified in the Simple Features interfaces, so they have
  * been kept here.
  * 
- * This specification does not dictate what the contents of these items should
- * be. However, the following guidelines are suggested:
+ * This specification does not dictate what the contents of these items should be. However, the following guidelines are
+ * suggested:
  * <ul>
- * <li>When {@link org.kalypsodeegree_impl.model.cs.CoordinateSystemAuthorityFactory}
- * is used to create an object, the "Authority" and "AuthorityCode" values
- * should be set to the authority name of the factory object, and the authority
- * code supplied by the client, respectively. The other values may or may not be
- * set. (If the authority is EPSG, the implementer may consider using the
- * corresponding metadata values in the EPSG tables.)</li>
- * <li>When {@link org.kalypsodeegree_impl.model.cs.CoordinateSystemFactory}creates
- * an object, the "Name" should be set to the value supplied by the client. All
- * of the other metadata items should be left empty.</li>
+ * <li>When {@link org.kalypsodeegree_impl.model.cs.CoordinateSystemAuthorityFactory}is used to create an object, the
+ * "Authority" and "AuthorityCode" values should be set to the authority name of the factory object, and the authority
+ * code supplied by the client, respectively. The other values may or may not be set. (If the authority is EPSG, the
+ * implementer may consider using the corresponding metadata values in the EPSG tables.)</li>
+ * <li>When {@link org.kalypsodeegree_impl.model.cs.CoordinateSystemFactory}creates an object, the "Name" should be
+ * set to the value supplied by the client. All of the other metadata items should be left empty.</li>
  * </ul>
  * 
  * @version 1.00
@@ -111,8 +107,8 @@ public class Info implements Serializable
   private static final long serialVersionUID = -771181600202966524L;
 
   /**
-   * Set of weak references to existing coordinate systems. This set is used in
-   * order to return pre-existing object instead of creating new one.
+   * Set of weak references to existing coordinate systems. This set is used in order to return pre-existing object
+   * instead of creating new one.
    */
   static final WeakHashSet pool = new WeakHashSet();
 
@@ -122,16 +118,13 @@ public class Info implements Serializable
   private final String name;
 
   /**
-   * Properties for all methods except {@link #getName}. For example the method
-   * {@link #getAuthorityCode}returns the value of property
-   * <code>"authorityCode"</code>. May be null if there is no properties for
-   * this object.
+   * Properties for all methods except {@link #getName}. For example the method {@link #getAuthorityCode}returns the
+   * value of property <code>"authorityCode"</code>. May be null if there is no properties for this object.
    */
   private final Map properties;
 
   /**
-   * OpenGIS object returned by {@link #cachedOpenGIS}. It may be a hard or a
-   * weak reference.
+   * OpenGIS object returned by {@link #cachedOpenGIS}. It may be a hard or a weak reference.
    */
   private transient Object proxy;
 
@@ -149,8 +142,7 @@ public class Info implements Serializable
   }
 
   /**
-   * Create an object with the specified properties. Property keys are any of
-   * the following strings:
+   * Create an object with the specified properties. Property keys are any of the following strings:
    * <ul>
    * <li>"name" (mandatory)</li>
    * <li>"authority"</li>
@@ -159,8 +151,8 @@ public class Info implements Serializable
    * <li>"abbreviation"</li>
    * <li>"remarks"</li>
    * </ul>
-   * Values are usually {@link String}, or may be <code>null</code> if a
-   * particular property is not defined. The "name" property is mandatory.
+   * Values are usually {@link String}, or may be <code>null</code> if a particular property is not defined. The
+   * "name" property is mandatory.
    * 
    * @param properties
    *          The set of properties.
@@ -174,13 +166,11 @@ public class Info implements Serializable
   }
 
   /**
-   * Gets the name of this object. The default implementation returns the
-   * non-localized name given at construction time.
+   * Gets the name of this object. The default implementation returns the non-localized name given at construction time.
    * 
    * @param locale
-   *          The desired locale, or <code>null</code> for a default locale.
-   *          If no string is available for the specified locale, an arbitrary
-   *          locale is used.
+   *          The desired locale, or <code>null</code> for a default locale. If no string is available for the
+   *          specified locale, an arbitrary locale is used.
    * 
    * @see org.opengis.cs.CS_Info#getName()
    */
@@ -190,17 +180,14 @@ public class Info implements Serializable
   }
 
   /**
-   * Gets the authority name, or <code>null</code> if unspecified. An
-   * Authority is an organization that maintains definitions of Authority Codes.
-   * For example the European Petroleum Survey Group (EPSG) maintains a database
-   * of coordinate systems, and other spatial referencing objects, where each
-   * object has a code number ID. For example, the EPSG code for a WGS84 Lat/Lon
-   * coordinate system is '4326'.
+   * Gets the authority name, or <code>null</code> if unspecified. An Authority is an organization that maintains
+   * definitions of Authority Codes. For example the European Petroleum Survey Group (EPSG) maintains a database of
+   * coordinate systems, and other spatial referencing objects, where each object has a code number ID. For example, the
+   * EPSG code for a WGS84 Lat/Lon coordinate system is '4326'.
    * 
    * @param locale
-   *          The desired locale, or <code>null</code> for the default locale.
-   *          If no string is available for the specified locale, an arbitrary
-   *          locale is used.
+   *          The desired locale, or <code>null</code> for the default locale. If no string is available for the
+   *          specified locale, an arbitrary locale is used.
    * 
    * @see org.opengis.cs.CS_Info#getAuthority()
    */
@@ -210,17 +197,14 @@ public class Info implements Serializable
   }
 
   /**
-   * Gets the authority-specific identification code, or <code>null</code> if
-   * unspecified. The AuthorityCode is a compact string defined by an Authority
-   * to reference a particular spatial reference object. For example, the
-   * European Survey Group (EPSG) authority uses 32 bit integers to reference
-   * coordinate systems, so all their code strings will consist of a few digits.
-   * The EPSG code for WGS84 Lat/Lon is '4326'.
+   * Gets the authority-specific identification code, or <code>null</code> if unspecified. The AuthorityCode is a
+   * compact string defined by an Authority to reference a particular spatial reference object. For example, the
+   * European Survey Group (EPSG) authority uses 32 bit integers to reference coordinate systems, so all their code
+   * strings will consist of a few digits. The EPSG code for WGS84 Lat/Lon is '4326'.
    * 
    * @param locale
-   *          The desired locale, or <code>null</code> for the default locale.
-   *          If no string is available for the specified locale, an arbitrary
-   *          locale is used.
+   *          The desired locale, or <code>null</code> for the default locale. If no string is available for the
+   *          specified locale, an arbitrary locale is used.
    * 
    * @see org.opengis.cs.CS_Info#getAuthorityCode()
    */
@@ -233,9 +217,8 @@ public class Info implements Serializable
    * Gets the alias, or <code>null</code> if there is none.
    * 
    * @param locale
-   *          The desired locale, or <code>null</code> for the default locale.
-   *          If no string is available for the specified locale, an arbitrary
-   *          locale is used.
+   *          The desired locale, or <code>null</code> for the default locale. If no string is available for the
+   *          specified locale, an arbitrary locale is used.
    * 
    * @see org.opengis.cs.CS_Info#getAlias()
    */
@@ -248,9 +231,8 @@ public class Info implements Serializable
    * Gets the abbreviation, or <code>null</code> if there is none.
    * 
    * @param locale
-   *          The desired locale, or <code>null</code> for the default locale.
-   *          If no string is available for the specified locale, an arbitrary
-   *          locale is used.
+   *          The desired locale, or <code>null</code> for the default locale. If no string is available for the
+   *          specified locale, an arbitrary locale is used.
    * 
    * @see org.opengis.cs.CS_Info#getAbbreviation()
    */
@@ -260,13 +242,11 @@ public class Info implements Serializable
   }
 
   /**
-   * Gets the provider-supplied remarks, or <code>null</code> if there is
-   * none.
+   * Gets the provider-supplied remarks, or <code>null</code> if there is none.
    * 
    * @param locale
-   *          The desired locale, or <code>null</code> for the default locale.
-   *          If no string is available for the specified locale, an arbitrary
-   *          locale is used.
+   *          The desired locale, or <code>null</code> for the default locale. If no string is available for the
+   *          specified locale, an arbitrary locale is used.
    * 
    * @see org.opengis.cs.CS_Info#getRemarks()
    */
@@ -292,15 +272,13 @@ public class Info implements Serializable
     if( object != null && getClass().equals( object.getClass() ) )
     {
       final Info that = (Info)object;
-      return Utilities.equals( this.name, that.name )
-          && Utilities.equals( this.properties, that.properties );
+      return Utilities.equals( this.name, that.name ) && Utilities.equals( this.properties, that.properties );
     }
     return false;
   }
 
   /**
-   * Returns a <em>Well Know Text</em> (WKT) for this info. "Well know text"
-   * are part of OpenGIS's specification.
+   * Returns a <em>Well Know Text</em> (WKT) for this info. "Well know text" are part of OpenGIS's specification.
    */
   public String toString()
   {
@@ -325,9 +303,8 @@ public class Info implements Serializable
   }
 
   /**
-   * Add more information inside the "[...]" part of {@link #toString}. The
-   * default implementation add nothing. Subclasses will override this method in
-   * order to complete string representation.
+   * Add more information inside the "[...]" part of {@link #toString}. The default implementation add nothing.
+   * Subclasses will override this method in order to complete string representation.
    * 
    * @param buffer
    *          The buffer to add string to.
@@ -367,8 +344,7 @@ public class Info implements Serializable
   }
 
   /**
-   * Make sure an argument is non-null. This is a convenience method for
-   * subclasses constructors.
+   * Make sure an argument is non-null. This is a convenience method for subclasses constructors.
    * 
    * @param name
    *          Argument name.
@@ -377,12 +353,10 @@ public class Info implements Serializable
    * @throws IllegalArgumentException
    *           if <code>object</code> is null.
    */
-  protected static void ensureNonNull( final String name, final Object object )
-      throws IllegalArgumentException
+  protected static void ensureNonNull( final String name, final Object object ) throws IllegalArgumentException
   {
     if( object == null )
-      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NULL_ARGUMENT_$1,
-          name ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NULL_ARGUMENT_$1, name ) );
   }
 
   /**
@@ -397,12 +371,11 @@ public class Info implements Serializable
    * @throws IllegalArgumentException
    *           if <code>array[i]</code> is null.
    */
-  static void ensureNonNull( final String name, final Object[] array, final int index )
-      throws IllegalArgumentException
+  static void ensureNonNull( final String name, final Object[] array, final int index ) throws IllegalArgumentException
   {
     if( array[index] == null )
-      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NULL_ARGUMENT_$1,
-          name + '[' + index + ']' ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NULL_ARGUMENT_$1, name + '[' + index
+          + ']' ) );
   }
 
   /**
@@ -416,8 +389,7 @@ public class Info implements Serializable
   static void ensureTimeUnit( final Unit unit ) throws IllegalArgumentException
   {
     if( !Unit.SECOND.canConvert( unit ) )
-      throw new IllegalArgumentException( Resources.format(
-          ResourceKeys.ERROR_NON_TEMPORAL_UNIT_$1, unit ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NON_TEMPORAL_UNIT_$1, unit ) );
   }
 
   /**
@@ -431,8 +403,7 @@ public class Info implements Serializable
   static void ensureLinearUnit( final Unit unit ) throws IllegalArgumentException
   {
     if( !Unit.METRE.canConvert( unit ) )
-      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NON_LINEAR_UNIT_$1,
-          unit ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NON_LINEAR_UNIT_$1, unit ) );
   }
 
   /**
@@ -446,19 +417,16 @@ public class Info implements Serializable
   static void ensureAngularUnit( final Unit unit ) throws IllegalArgumentException
   {
     if( !Unit.DEGREE.canConvert( unit ) )
-      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NON_ANGULAR_UNIT_$1,
-          unit ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_NON_ANGULAR_UNIT_$1, unit ) );
   }
 
   /**
-   * Returns a reference to an unique instance of this <code>Info</code>.
-   * This method is automatically invoked during deserialization.
+   * Returns a reference to an unique instance of this <code>Info</code>. This method is automatically invoked during
+   * deserialization.
    * 
-   * NOTE ABOUT ACCESS-MODIFIER: This method can't be private, because it would
-   * prevent it from being invoked from subclasses in this package (e.g.
-   * {@link CoordinateSystem}). This method <em>will not</em> be invoked for
-   * classes outside this package, unless we give it <code>protected</code>
-   * access. TODO: Would it be a good idea?
+   * NOTE ABOUT ACCESS-MODIFIER: This method can't be private, because it would prevent it from being invoked from
+   * subclasses in this package (e.g. {@link CoordinateSystem}). This method <em>will not</em> be invoked for classes
+   * outside this package, unless we give it <code>protected</code> access. TODO: Would it be a good idea?
    */
   Object readResolve()
   {
@@ -466,11 +434,9 @@ public class Info implements Serializable
   }
 
   /**
-   * Returns an OpenGIS interface for this info. The returned object is suitable
-   * for RMI use.
+   * Returns an OpenGIS interface for this info. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   Object toOpenGIS( final Object adapters )
   {
@@ -478,9 +444,8 @@ public class Info implements Serializable
   }
 
   /**
-   * Returns an OpenGIS interface for this info. This method first look in the
-   * cache. If no interface was previously cached, then this method create a new
-   * adapter and cache the result.
+   * Returns an OpenGIS interface for this info. This method first look in the cache. If no interface was previously
+   * cached, then this method create a new adapter and cache the result.
    * 
    * @param adapters
    *          The originating {@link Adapters}.
@@ -510,10 +475,9 @@ public class Info implements Serializable
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link Info}object for use with OpenGIS. This wrapper is a good
-   * place to check for non-implemented OpenGIS methods (just check for methods
-   * throwing {@link UnsupportedOperationException}). This class is suitable
-   * for RMI use.
+   * Wrap a {@link Info}object for use with OpenGIS. This wrapper is a good place to check for non-implemented OpenGIS
+   * methods (just check for methods throwing {@link UnsupportedOperationException}). This class is suitable for RMI
+   * use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

@@ -19,16 +19,13 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   private IStatus m_result = Status.OK_STATUS;
 
   /**
-   * TRICKY: inherited classes may NOT use own fields, because calling this
-   * constructor via super() may immediately call
+   * TRICKY: inherited classes may NOT use own fields, because calling this constructor via super() may immediately call
    * {@link #objectLoaded(IPoolableObjectType, Object)}
    * 
    * @param synchron
-   *          Falls true, wird die Obersvation sofort geladen und im gleichen
-   *          thread objectLoaded ausgeführt
+   *          Falls true, wird die Obersvation sofort geladen und im gleichen thread objectLoaded ausgeführt
    */
-  public PoolableObjectWaiter( final PoolableObjectType key, final Object[] data,
-      final boolean synchron )
+  public PoolableObjectWaiter( final PoolableObjectType key, final Object[] data, final boolean synchron )
   {
     m_data = data;
 
@@ -54,11 +51,10 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
-  public final void objectLoaded( final IPoolableObjectType key, final Object newValue,
-      final IStatus status )
+  public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( newValue != null && status.isOK() )
       objectLoaded( key, newValue );
@@ -71,15 +67,13 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   }
 
   /**
-   * This method may be called in the class constructor, so dont use own
-   * member-fields. See
+   * This method may be called in the class constructor, so dont use own member-fields. See
    * {@link #PoolableObjectWaiter(PoolableObjectType, Object[], boolean)}
    */
   protected abstract void objectLoaded( final IPoolableObjectType key, final Object newValue );
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
   public final void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
@@ -90,7 +84,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   {
     m_pool.removePoolListener( this );
   }
-  
+
   public IStatus getResult()
   {
     return m_result;

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,17 +57,15 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 import org.kalypsodeegree.gml.GMLGeometry;
 
 /**
- * The Geometry element is optional and if it is absent then the default
- * geometry property of the feature type that is used in the containing
- * FeatureStyleType is used. The precise meaning of default geometry property is
- * system-dependent. Most frequently, feature types will have only a single
- * geometry property.
+ * The Geometry element is optional and if it is absent then the default geometry property of the feature type that is
+ * used in the containing FeatureStyleType is used. The precise meaning of default geometry property is
+ * system-dependent. Most frequently, feature types will have only a single geometry property.
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -94,10 +92,9 @@ public interface Geometry
   void setPropertyName( String propertyName );
 
   /**
-   * In principle, a fixed geometry could be defined using GML or operators
-   * could be defined for computing a geometry from references or literals. This
-   * enbales the calling client to submitt the geometry to be rendered by the
-   * WMS directly. (This is not part of the SLD XML-schema)
+   * In principle, a fixed geometry could be defined using GML or operators could be defined for computing a geometry
+   * from references or literals. This enbales the calling client to submitt the geometry to be rendered by the WMS
+   * directly. (This is not part of the SLD XML-schema)
    * 
    * @return the GMLGeometry
    */

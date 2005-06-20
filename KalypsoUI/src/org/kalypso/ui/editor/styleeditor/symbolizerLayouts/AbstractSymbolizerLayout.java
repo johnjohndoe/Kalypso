@@ -36,14 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
  * @author F.Lindemann
@@ -58,8 +58,7 @@ public abstract class AbstractSymbolizerLayout
 
   protected KalypsoUserStyle userStyle = null;
 
-  protected AbstractSymbolizerLayout( Composite m_parent, Symbolizer m_symbolizer,
-      KalypsoUserStyle m_userStyle )
+  protected AbstractSymbolizerLayout( Composite m_parent, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
   {
     this.composite = m_parent;
     this.symbolizer = m_symbolizer;

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,13 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.ogcbasic;
 
 /**
- * identification of, and means of communication with a person and/or
- * organization associated with the service/resource. based on ISO 19115
+ * identification of, and means of communication with a person and/or organization associated with the service/resource.
+ * based on ISO 19115
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -75,8 +75,7 @@ public interface ContactInformation
 {
 
   /**
-   * returns a datastructure that contains the name of the contact person and
-   * the organization he works for.
+   * returns a datastructure that contains the name of the contact person and the organization he works for.
    */
   ContactPersonPrimary getContactPersonPrimary();
 

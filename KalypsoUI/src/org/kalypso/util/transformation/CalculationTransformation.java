@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.transformation;
 
 import java.io.BufferedWriter;
@@ -70,12 +70,10 @@ public class CalculationTransformation extends AbstractTransformation
 
   /**
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
-   *      java.io.BufferedWriter, java.io.BufferedWriter,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void transformIntern( final Properties properties,
-      final BufferedWriter msgWriter, final BufferedWriter logWriter,
-      final IProgressMonitor monitor ) throws TransformationException
+  public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
+      final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
     try
     {
@@ -85,7 +83,7 @@ public class CalculationTransformation extends AbstractTransformation
 
       final CatchThread ct = new CatchThread()
       {
-        protected void runIntern( ) throws Throwable
+        protected void runIntern() throws Throwable
         {
           targetProperties.store( pos, "Steuerparameter der Berechnung" );
           pos.close();
@@ -93,8 +91,8 @@ public class CalculationTransformation extends AbstractTransformation
       };
       ct.start();
 
-      final IFile outputFile = ResourcesPlugin.getWorkspace().getRoot()
-          .getFile( new Path( properties.getProperty( PROP_OUTPUT ) ) );
+      final IFile outputFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+          new Path( properties.getProperty( PROP_OUTPUT ) ) );
       outputFile.create( pis, false, monitor );
     }
     catch( final CoreException e )
@@ -119,20 +117,18 @@ public class CalculationTransformation extends AbstractTransformation
 
     for( final Iterator pIt = properties.entrySet().iterator(); pIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry) pIt.next();
+      final Map.Entry entry = (Entry)pIt.next();
 
       final String key = entry.getKey().toString();
 
       if( key.startsWith( PROP_ENTRY ) )
       {
         final String value = entry.getValue().toString();
-        final Properties entryProp = PropertiesHelper.parseFromString( value,
-            '#' );
+        final Properties entryProp = PropertiesHelper.parseFromString( value, '#' );
 
-        for( final Iterator eIt = entryProp.entrySet().iterator(); eIt
-            .hasNext(); )
+        for( final Iterator eIt = entryProp.entrySet().iterator(); eIt.hasNext(); )
         {
-          final Map.Entry entryEntry = (Entry) eIt.next();
+          final Map.Entry entryEntry = (Entry)eIt.next();
 
           final String entryKey = entryEntry.getKey().toString();
           final String entryValue = entryEntry.getValue().toString();

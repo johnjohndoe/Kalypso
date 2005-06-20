@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.jface;
 
 import java.awt.Frame;
@@ -77,20 +77,20 @@ import org.kalypso.zml.obslink.TimeseriesLink;
  */
 public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListener
 {
-//  private IPoolableObjectType m_key;
+  //  private IPoolableObjectType m_key;
   private final ResourcePool m_pool;
 
   private final TimeseriesLink m_timeserie;
 
   private final DiagView m_diagTemplate = new DiagView();
+
   private final TableView m_tableTemplate = new TableView();
 
   private ObservationChart m_chart;
+
   private ObservationTable m_table;
 
-
-  public ObservationLinkDialog( final Shell parentShell, final TimeseriesLink obslink,
-      final URL context )
+  public ObservationLinkDialog( final Shell parentShell, final TimeseriesLink obslink, final URL context )
   {
     super( parentShell );
 
@@ -111,7 +111,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   {
     m_pool.removePoolListener( this );
     m_diagTemplate.removeObsViewListener( m_chart );
-    
+
     m_table.dispose();
   }
 
@@ -198,7 +198,8 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
   {
@@ -207,14 +208,14 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
       try
       {
         // das kann doch ein PoolableWaiter machen! -> gibts da nicht schon ne utility?
-        
-//        final IObservation obs = (IObservation) newValue;
-//        
-//        //m_diagTemplate.removeAllCurves();
-//        m_diagTemplate.setObservation( obs, null );
-//
-//        //m_tableTemplate.removeAllColumns();
-//        m_tableTemplate.setObservation( obs, null );
+
+        //        final IObservation obs = (IObservation) newValue;
+        //        
+        //        //m_diagTemplate.removeAllCurves();
+        //        m_diagTemplate.setObservation( obs, null );
+        //
+        //        //m_tableTemplate.removeAllColumns();
+        //        m_tableTemplate.setObservation( obs, null );
       }
       catch( Exception e )
       {
@@ -228,6 +229,6 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
    */
   public void objectInvalid( IPoolableObjectType key, Object oldValue )
   {
-    //
+  //
   }
 }

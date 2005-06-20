@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Parameters
@@ -75,8 +75,8 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
  * Methods for binding names to {@link ParameterListDescriptor}s. For example,
- * {@link org.kalypsodeegree_impl.model.cs.Projection}using this class for binding
- * classification name to parameter list descriptors.
+ * {@link org.kalypsodeegree_impl.model.cs.Projection}using this class for binding classification name to parameter
+ * list descriptors.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -84,23 +84,20 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 public final class Naming
 {
   /**
-   * The naming to use for mapping projection's classification name to parameter
-   * descriptor.
+   * The naming to use for mapping projection's classification name to parameter descriptor.
    */
-  public static final Naming PROJECTIONS = new Naming(
-      "org.kalypsodeegree_impl.model.ct.MathTransformFactory", "org.kalypsodeegree_impl.model.resources.css" );
+  public static final Naming PROJECTIONS = new Naming( "org.kalypsodeegree_impl.model.ct.MathTransformFactory",
+      "org.kalypsodeegree_impl.model.resources.css" );
 
   /**
-   * Map classification name to {@link ParameterListDescriptor}objects. Keys
-   * are {@link CaselessStringKey}object, while values are
-   * {@link ParameterListDescriptor}objects.
+   * Map classification name to {@link ParameterListDescriptor}objects. Keys are {@link CaselessStringKey}object,
+   * while values are {@link ParameterListDescriptor}objects.
    */
   private Map descriptors;
 
   /**
-   * The fully qualified name of the class to load for initializing binding, or
-   * <code>null</code> if none. If non-null, then the static initializer of
-   * this class should invokes {@link #bind}for binding a default set of
+   * The fully qualified name of the class to load for initializing binding, or <code>null</code> if none. If
+   * non-null, then the static initializer of this class should invokes {@link #bind}for binding a default set of
    * descriptors.
    */
   private final String initializer;
@@ -114,8 +111,7 @@ public final class Naming
    * Construct a <code>Naming</code> object.
    * 
    * @param initializer
-   *          The fully qualified name of the class to load for initializing
-   *          binding.
+   *          The fully qualified name of the class to load for initializing binding.
    * @param logger
    *          The logger to use if initialization failed.
    */
@@ -126,10 +122,9 @@ public final class Naming
   }
 
   /**
-   * Try to bind a set of default projections. Those default projections are
-   * binded during the static initialization of
-   * {org.kalypsodeegree_impl.model.ct.MathTransformFactory} class. If the operation
-   * fail, a warning is logged but the process continue.
+   * Try to bind a set of default projections. Those default projections are binded during the static initialization of
+   * {org.kalypsodeegree_impl.model.ct.MathTransformFactory} class. If the operation fail, a warning is logged but the
+   * process continue.
    */
   private void bindDefaults( final String method )
   {
@@ -151,11 +146,10 @@ public final class Naming
    * @param descriptor
    *          the parameter list descriptor.
    * @throws IllegalArgumentException
-   *           if a descriptor is already bounds for the specified
-   *           classification name.
+   *           if a descriptor is already bounds for the specified classification name.
    */
-  public synchronized void bind( final String classification,
-      final ParameterListDescriptor descriptor ) throws IllegalArgumentException
+  public synchronized void bind( final String classification, final ParameterListDescriptor descriptor )
+      throws IllegalArgumentException
   {
     if( descriptors == null )
     {
@@ -165,20 +159,18 @@ public final class Naming
     final CaselessStringKey key = new CaselessStringKey( classification );
     if( descriptors.containsKey( key ) )
     {
-      throw new IllegalArgumentException( Resources.format(
-          ResourceKeys.PROJECTION_ALREADY_BOUNDS_$1, classification ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.PROJECTION_ALREADY_BOUNDS_$1, classification ) );
     }
     descriptors.put( key, descriptor );
   }
 
   /**
-   * Returns a default parameter descriptor for the specified classification
-   * name, or <code>null</code> if none is found.
+   * Returns a default parameter descriptor for the specified classification name, or <code>null</code> if none is
+   * found.
    * 
    * @param classification
    *          The classification to look for.
-   * @return The descriptor for the specified classification, or
-   *         <code>null</code> if none.
+   * @return The descriptor for the specified classification, or <code>null</code> if none.
    */
   public synchronized ParameterListDescriptor lookup( final String classification )
   {
@@ -191,19 +183,17 @@ public final class Naming
   }
 
   /**
-   * Returns a parameter list for the specified classification. If there is no
-   * explicit parameter descriptor for the specified classification, then a
-   * default descriptor is used.
+   * Returns a parameter list for the specified classification. If there is no explicit parameter descriptor for the
+   * specified classification, then a default descriptor is used.
    * 
    * @param classification
    *          The classification to look for.
    * @param fallback
-   *          The default parameter list descriptor to use if no descriptor has
-   *          been found for the specified classification.
+   *          The default parameter list descriptor to use if no descriptor has been found for the specified
+   *          classification.
    * @return A parameter list to use for the specified classification
    */
-  public ParameterList getParameterList( final String classification,
-      final ParameterListDescriptor fallback )
+  public ParameterList getParameterList( final String classification, final ParameterListDescriptor fallback )
   {
     ParameterListDescriptor descriptor = lookup( classification );
     if( descriptor == null )

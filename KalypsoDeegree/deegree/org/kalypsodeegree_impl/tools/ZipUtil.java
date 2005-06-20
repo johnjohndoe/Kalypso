@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 import java.io.File;
@@ -81,8 +81,7 @@ public class ZipUtil
   private StringBuffer details = null;
 
   /**
-   * packs the passed files into a zip-archive, deletes the files if desired and
-   * returns the name of the archive
+   * packs the passed files into a zip-archive, deletes the files if desired and returns the name of the archive
    * 
    * @param dirName
    *          name of the directory where to store the archive
@@ -91,8 +90,8 @@ public class ZipUtil
    * @param fileNames
    *          names of the files to be packed into the zip archive
    */
-  public String doZip( String dirName, String archiveName, String[] fileNames )
-      throws FileNotFoundException, IOException
+  public String doZip( String dirName, String archiveName, String[] fileNames ) throws FileNotFoundException,
+      IOException
   {
     Debug.debugMethodBegin();
 
@@ -142,8 +141,7 @@ public class ZipUtil
   }
 
   /**
-   * returns some information about the zip process of the current
-   * <code>ZipEntry</code>.
+   * returns some information about the zip process of the current <code>ZipEntry</code>.
    */
   private StringBuffer createZipDetails( ZipEntry e )
   {

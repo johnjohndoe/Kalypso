@@ -76,11 +76,11 @@ public class SldLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
-   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( final String source, final URL context,
-      final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
+      throws LoaderException
   {
     try
     {
@@ -89,8 +89,7 @@ public class SldLoader extends AbstractLoader
       final URL url = m_urlResolver.resolveURL( context, source );
 
       final Reader reader = new InputStreamReader( url.openStream() );
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory
-          .createSLD( reader );
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
       reader.close();
 
       final IResource resource = ResourceUtilities.findFileFromURL( url );
@@ -105,9 +104,8 @@ public class SldLoader extends AbstractLoader
     }
   }
 
-  public void save(final String source, final URL context, final IProgressMonitor monitor,
-      final Object data )
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
   {
-    System.out.print("SLD-Loader Save method");
+    System.out.print( "SLD-Loader Save method" );
   }
 }

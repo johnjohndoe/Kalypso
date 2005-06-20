@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,15 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics;
 
 import org.opengis.gc.GC_GridCoverage;
 
 /**
- * A <tt>RasterLayer</tt> represent a layer which data are contained within
- * one single <tt>Image</tt>. The image/raster is geo-referenced by a
- * <tt>GM_Envelope</tt> that is linked to it.
+ * A <tt>RasterLayer</tt> represent a layer which data are contained within one single <tt>Image</tt>. The
+ * image/raster is geo-referenced by a <tt>GM_Envelope</tt> that is linked to it.
  * 
  * <p>
  * ------------------------------------------------------------------------

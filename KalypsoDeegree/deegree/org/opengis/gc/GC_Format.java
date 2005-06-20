@@ -1,13 +1,11 @@
 /*
  * OpenGIS® Grid Coverage Implementation Specification
  * 
- * This Java profile is derived from OpenGIS's specification available on their
- * public web site:
+ * This Java profile is derived from OpenGIS's specification available on their public web site:
  * 
  * http://www.opengis.org/techno/implementation.htm
  * 
- * You can redistribute it, but should not modify it unless for greater OpenGIS
- * compliance.
+ * You can redistribute it, but should not modify it unless for greater OpenGIS compliance.
  */
 package org.opengis.gc;
 
@@ -16,10 +14,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * This interface is a discovery mechanism to determine the formats supported by
- * a {@link GC_GridCoverageExchange}implementation. A
- * <code>GC_GridCoverageExchange</code> implementation can support a number of
- * file format or resources.
+ * This interface is a discovery mechanism to determine the formats supported by a {@link GC_GridCoverageExchange}
+ * implementation. A <code>GC_GridCoverageExchange</code> implementation can support a number of file format or
+ * resources.
  * 
  * @version 1.00
  * @since 1.00
@@ -37,8 +34,7 @@ public interface GC_Format extends Remote
   String getName() throws RemoteException;
 
   /**
-   * Description of the file format. If no description, the value will be a null
-   * or empty string.
+   * Description of the file format. If no description, the value will be a null or empty string.
    * 
    * @return the description of the file format.
    * @throws RemoteException
@@ -74,8 +70,7 @@ public interface GC_Format extends Remote
   String getVersion() throws RemoteException;
 
   /**
-   * Number of optional parameters for the
-   * {@link GC_GridCoverageExchange#exportTo exportTo}operation.
+   * Number of optional parameters for the {@link GC_GridCoverageExchange#exportTo exportTo}operation.
    * 
    * @return the number of optional parameters for the exportTo operation.
    * @throws RemoteException

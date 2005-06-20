@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import org.kalypsodeegree.graphics.sld.Graphic;
@@ -66,16 +66,13 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * The GraphicStroke element both indicates that a repeated-linear-graphic
- * stroke type will be used.
+ * The GraphicStroke element both indicates that a repeated-linear-graphic stroke type will be used.
  * <p>
  * </p>
- * The Graphic sub-element specifies the linear graphic. Proper stroking with a
- * linear graphic requires two hot-spot points within the space of the graphic
- * to indicate where the rendering line starts and stops. In the case of raster
- * images with no special mark-up, this line will be assumed to be middle pixel
- * row of the image, starting from the first pixel column and ending at the last
- * pixel column.
+ * The Graphic sub-element specifies the linear graphic. Proper stroking with a linear graphic requires two hot-spot
+ * points within the space of the graphic to indicate where the rendering line starts and stops. In the case of raster
+ * images with no special mark-up, this line will be assumed to be middle pixel row of the image, starting from the
+ * first pixel column and ending at the last pixel column.
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -96,11 +93,9 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
   }
 
   /**
-   * A Graphic is a graphic symbol with an inherent shape, color(s), and
-   * possibly size. A graphic can be very informally defined as a little picture
-   * and can be of either a raster or vector-graphic source type. The term
-   * graphic is used since the term symbol is similar to symbolizer which is
-   * used in a different context in SLD.
+   * A Graphic is a graphic symbol with an inherent shape, color(s), and possibly size. A graphic can be very informally
+   * defined as a little picture and can be of either a raster or vector-graphic source type. The term graphic is used
+   * since the term symbol is similar to symbolizer which is used in a different context in SLD.
    * 
    * @return graphic
    */

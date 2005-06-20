@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io;
 
@@ -90,8 +90,7 @@ public class DBPool extends ObjectPool
   private Properties properties = new Properties();
 
   // private constructor to protect initializing
-  public DBPool( final String driver, final String database, final String user,
-      final String password )
+  public DBPool( final String driver, final String database, final String user, final String password )
   {
 
     this.driver = driver;
@@ -183,7 +182,7 @@ public class DBPool extends ObjectPool
     }
     catch( SQLException e )
     {
-        // shouldnt we print stack trace?
+      // shouldnt we print stack trace?
     }
   }
 

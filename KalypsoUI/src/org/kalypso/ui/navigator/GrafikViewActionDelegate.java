@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.navigator;
 
 import java.lang.reflect.InvocationTargetException;
@@ -61,8 +61,7 @@ import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 
 /**
- * Opens the Grafik tool. Can operate on observation template and grafik
- * template files.
+ * Opens the Grafik tool. Can operate on observation template and grafik template files.
  * 
  * @author schlienger
  */
@@ -72,9 +71,9 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
 
   private IViewPart m_view;
 
-  public GrafikViewActionDelegate( )
+  public GrafikViewActionDelegate()
   {
-    // empty
+  // empty
   }
 
   /**
@@ -94,16 +93,14 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
     if( currentFile == null )
       return;
 
-    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation(
-        null )
+    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
       protected void execute( IProgressMonitor monitor ) throws InvocationTargetException
       {
         monitor.beginTask( "Grafik öffnen", IProgressMonitor.UNKNOWN );
         try
         {
-          if( currentFile.getFileExtension().equalsIgnoreCase(
-              DiagViewUtils.ODT_FILE_EXTENSION ) )
+          if( currentFile.getFileExtension().equalsIgnoreCase( DiagViewUtils.ODT_FILE_EXTENSION ) )
           {
             final IContainer parent = currentFile.getParent();
 
@@ -111,8 +108,7 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
 
             GrafikLauncher.startGrafikODT( currentFile, folder, monitor );
           }
-          else if( currentFile.getFileExtension().equalsIgnoreCase(
-              GrafikLauncher.TPL_FILE_EXTENSION ) )
+          else if( currentFile.getFileExtension().equalsIgnoreCase( GrafikLauncher.TPL_FILE_EXTENSION ) )
           {
             GrafikLauncher.startGrafikTPL( currentFile, new Vector() );
           }
@@ -134,13 +130,12 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
 
     try
     {
-      PlatformUI.getWorkbench().getProgressService()
-          .busyCursorWhile( operation );
+      PlatformUI.getWorkbench().getProgressService().busyCursorWhile( operation );
     }
     catch( Exception e )
     {
-      MessageDialog.openError( m_view.getSite().getShell(),
-          "Grafik konnte nicht gestartet werden", e.getLocalizedMessage() );
+      MessageDialog.openError( m_view.getSite().getShell(), "Grafik konnte nicht gestartet werden", e
+          .getLocalizedMessage() );
     }
   }
 
@@ -150,10 +145,10 @@ public class GrafikViewActionDelegate implements IViewActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    final IStructuredSelection sel = (IStructuredSelection) selection;
+    final IStructuredSelection sel = (IStructuredSelection)selection;
 
     if( sel.getFirstElement() instanceof IFile )
-      m_currentFile = (IFile) sel.getFirstElement();
+      m_currentFile = (IFile)sel.getFirstElement();
     else
       m_currentFile = null;
   }

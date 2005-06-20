@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -59,7 +59,7 @@ public class RepositoryLabelProvider extends LabelProvider
       ISharedImages.IMG_OBJ_FOLDER );
 
   private final Image IMG_ITEM = ImageProvider.IMAGE_ZML_REPOSITORY_ITEM.createImage();
-  
+
   private final Image IMG_REPOSITORY = ImageProvider.IMAGE_ZML_REPOSITORY.createImage();
 
   /**
@@ -69,13 +69,13 @@ public class RepositoryLabelProvider extends LabelProvider
   {
     if( element instanceof IRepositoryItem )
     {
-      final IRepositoryItem item = (IRepositoryItem) element;
-      
+      final IRepositoryItem item = (IRepositoryItem)element;
+
       try
       {
         if( item.getParent() == null )
           return IMG_REPOSITORY;
-          
+
         if( item.hasChildren() )
           return IMG_FOLDER;
       }
@@ -83,10 +83,10 @@ public class RepositoryLabelProvider extends LabelProvider
       {
         e.printStackTrace();
       }
-      
+
       return IMG_ITEM;
     }
-      
+
     return null;
   }
 }

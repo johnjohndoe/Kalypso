@@ -53,24 +53,24 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 public class DiagViewCurve extends ObsViewItem
 {
   private final Color m_color;
+
   private final AxisMapping[] m_mappings;
 
   public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color,
-      final AxisMapping[] mappings
-       )
+      final AxisMapping[] mappings )
   {
     super( view, obsProvider, name );
 
     m_color = color;
     m_mappings = mappings;
   }
-  
-  public AxisMapping[] getMappings( )
+
+  public AxisMapping[] getMappings()
   {
     return m_mappings;
   }
 
-  public Color getColor( )
+  public Color getColor()
   {
     return m_color;
   }

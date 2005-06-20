@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies (SEAGIS)
@@ -69,11 +69,10 @@ import org.kalypsodeegree_impl.model.pt.MismatchedDimensionException;
 import org.kalypsodeegree_impl.model.resources.Utilities;
 
 /**
- * Transform which passes through a subset of ordinates to another transform.
- * This allows transforms to operate on a subset of ordinates. For example, if
- * you have ( <var>latitude </var>, <var>longitude </var>, <var>height </var>)
- * coordinates, then you may wish to convert the height values from feet to
- * meters without affecting the latitude and longitude values.
+ * Transform which passes through a subset of ordinates to another transform. This allows transforms to operate on a
+ * subset of ordinates. For example, if you have ( <var>latitude </var>, <var>longitude </var>, <var>height </var>)
+ * coordinates, then you may wish to convert the height values from feet to meters without affecting the latitude and
+ * longitude values.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -92,8 +91,7 @@ final class PassThroughTransform extends AbstractMathTransform implements Serial
   protected final int firstAffectedOrdinate;
 
   /**
-   * Number of unaffected ordinates after the affected ones. Always 0 when used
-   * through the strict OpenGIS API.
+   * Number of unaffected ordinates after the affected ones. Always 0 when used through the strict OpenGIS API.
    */
   protected final int numTrailingOrdinates;
 
@@ -115,9 +113,8 @@ final class PassThroughTransform extends AbstractMathTransform implements Serial
    * @param transform
    *          The sub transform.
    * @param numTrailingOrdinates
-   *          Number of trailing ordinates to pass through. Affected ordinates
-   *          will range from <code>firstAffectedOrdinate</code> inclusive to
-   *          <code>dimTarget-numTrailingOrdinates</code> exclusive.
+   *          Number of trailing ordinates to pass through. Affected ordinates will range from
+   *          <code>firstAffectedOrdinate</code> inclusive to <code>dimTarget-numTrailingOrdinates</code> exclusive.
    */
   public PassThroughTransform( final int firstAffectedOrdinate, final MathTransform transform,
       final int numTrailingOrdinates )
@@ -164,8 +161,8 @@ final class PassThroughTransform extends AbstractMathTransform implements Serial
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  public void transform( final float[] srcPts, int srcOff, final float[] dstPts, int dstOff,
-      int numPts ) throws TransformException
+  public void transform( final float[] srcPts, int srcOff, final float[] dstPts, int dstOff, int numPts )
+      throws TransformException
   {
     final int subDimSource = transform.getDimSource();
     final int subDimTarget = transform.getDimTarget();
@@ -183,10 +180,8 @@ final class PassThroughTransform extends AbstractMathTransform implements Serial
     while( --numPts >= 0 )
     {
       System.arraycopy( srcPts, srcOff, dstPts, dstOff, firstAffectedOrdinate );
-      transform.transform( srcPts, srcOff += firstAffectedOrdinate, dstPts,
-          dstOff += firstAffectedOrdinate, 1 );
-      System.arraycopy( srcPts, srcOff += subDimSource, dstPts, dstOff += subDimTarget,
-          numTrailingOrdinates );
+      transform.transform( srcPts, srcOff += firstAffectedOrdinate, dstPts, dstOff += firstAffectedOrdinate, 1 );
+      System.arraycopy( srcPts, srcOff += subDimSource, dstPts, dstOff += subDimTarget, numTrailingOrdinates );
       srcOff += srcStep;
       dstOff += dstStep;
     }
@@ -195,8 +190,8 @@ final class PassThroughTransform extends AbstractMathTransform implements Serial
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  public void transform( final double[] srcPts, int srcOff, final double[] dstPts, int dstOff,
-      int numPts ) throws TransformException
+  public void transform( final double[] srcPts, int srcOff, final double[] dstPts, int dstOff, int numPts )
+      throws TransformException
   {
     final int subDimSource = transform.getDimSource();
     final int subDimTarget = transform.getDimTarget();
@@ -214,10 +209,8 @@ final class PassThroughTransform extends AbstractMathTransform implements Serial
     while( --numPts >= 0 )
     {
       System.arraycopy( srcPts, srcOff, dstPts, dstOff, firstAffectedOrdinate );
-      transform.transform( srcPts, srcOff += firstAffectedOrdinate, dstPts,
-          dstOff += firstAffectedOrdinate, 1 );
-      System.arraycopy( srcPts, srcOff += subDimSource, dstPts, dstOff += subDimTarget,
-          numTrailingOrdinates );
+      transform.transform( srcPts, srcOff += firstAffectedOrdinate, dstPts, dstOff += firstAffectedOrdinate, 1 );
+      System.arraycopy( srcPts, srcOff += subDimSource, dstPts, dstOff += subDimTarget, numTrailingOrdinates );
       srcOff += srcStep;
       dstOff += dstStep;
     }
@@ -256,8 +249,7 @@ final class PassThroughTransform extends AbstractMathTransform implements Serial
     //                      [ 0 0 ? ? ? 0 ]
     //                      [ 0 0 ? ? ? 0 ]
     //                      [ ]
-    subMatrix.copySubMatrix( 0, 0, numRow, numCol, firstAffectedOrdinate, firstAffectedOrdinate,
-        matrix );
+    subMatrix.copySubMatrix( 0, 0, numRow, numCol, firstAffectedOrdinate, firstAffectedOrdinate, matrix );
 
     //  Set LR part to 1: [ 1 0 0 0 0 0 ]
     //                      [ 0 1 0 0 0 0 ]
@@ -278,8 +270,7 @@ final class PassThroughTransform extends AbstractMathTransform implements Serial
   {
     if( inverse == null )
     {
-      inverse = new PassThroughTransform( firstAffectedOrdinate, transform.inverse(),
-          numTrailingOrdinates );
+      inverse = new PassThroughTransform( firstAffectedOrdinate, transform.inverse(), numTrailingOrdinates );
       inverse.inverse = this;
     }
     return inverse;

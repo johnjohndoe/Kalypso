@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 import java.awt.geom.Point2D;
@@ -70,17 +70,13 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Projections de Mercator tranverses Universelle et Modifiée. Il s'agit de la
- * projection Mercator cylindrique, mais dans lequel le cylindre a subit une
- * rotation de 90°. Au lieu d'être tangeant à l'équateur (ou à une autre
- * latitude standard), le cylindre de la projection tranverse est tangeant à un
- * méridien central. Les déformation deviennent de plus en plus importantes à
- * mesure que l'on s'éloigne du méridien central. Cette projection est
- * appropriée pour les régions qui s'étendent d'avantage dans le sens nord-sud
- * que dans le sens est-ouest.
+ * Projections de Mercator tranverses Universelle et Modifiée. Il s'agit de la projection Mercator cylindrique, mais
+ * dans lequel le cylindre a subit une rotation de 90°. Au lieu d'être tangeant à l'équateur (ou à une autre latitude
+ * standard), le cylindre de la projection tranverse est tangeant à un méridien central. Les déformation deviennent de
+ * plus en plus importantes à mesure que l'on s'éloigne du méridien central. Cette projection est appropriée pour les
+ * régions qui s'étendent d'avantage dans le sens nord-sud que dans le sens est-ouest.
  * 
- * Référence: John P. Snyder (Map Projections - A Working Manual, U.S.
- * Geological Survey Professional Paper 1395, 1987)
+ * Référence: John P. Snyder (Map Projections - A Working Manual, U.S. Geological Survey Professional Paper 1395, 1987)
  * 
  * @version 1.0
  * @author André Gosselin
@@ -89,17 +85,14 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
 final class TransverseMercatorProjection extends CylindricalProjection
 {
   /*
-   * Constants used to calculate {@link #en0},{@link #en1},{@link #en2},
-   * {@link #en3},{@link #en4}.
+   * Constants used to calculate {@link #en0},{@link #en1},{@link #en2},{@link #en3},{@link #en4}.
    */
-  private static final double C00 = 1.0, C02 = 0.25, C04 = 0.046875, C06 = 0.01953125,
-      C08 = 0.01068115234375, C22 = 0.75, C44 = 0.46875, C46 = 0.01302083333333333333,
-      C48 = 0.00712076822916666666, C66 = 0.36458333333333333333, C68 = 0.00569661458333333333,
-      C88 = 0.3076171875;
+  private static final double C00 = 1.0, C02 = 0.25, C04 = 0.046875, C06 = 0.01953125, C08 = 0.01068115234375,
+      C22 = 0.75, C44 = 0.46875, C46 = 0.01302083333333333333, C48 = 0.00712076822916666666,
+      C66 = 0.36458333333333333333, C68 = 0.00569661458333333333, C88 = 0.3076171875;
 
   /*
-   * Contants used for the forward and inverse transform for the eliptical case
-   * of the Transverse Mercator.
+   * Contants used for the forward and inverse transform for the eliptical case of the Transverse Mercator.
    */
   private static final double FC1 = 1.00000000000000000000000, // 1/1
       FC2 = 0.50000000000000000000000, // 1/2
@@ -126,8 +119,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
   private double scale_factor = 1.0;
 
   /**
-   * Global scale factor. Value <code>ak0</code> is equals to
-   * <code>{@link #a}*k0</code>.
+   * Global scale factor. Value <code>ak0</code> is equals to <code>{@link #a}*k0</code>.
    */
   private final double ak0;
 
@@ -138,28 +130,25 @@ final class TransverseMercatorProjection extends CylindricalProjection
   private final double en0, en1, en2, en3, en4;
 
   /**
-   * Variante de l'eccentricité, calculée par
-   * <code>e'² = (a²-b²)/b² = es/(1-es)</code>.
+   * Variante de l'eccentricité, calculée par <code>e'² = (a²-b²)/b² = es/(1-es)</code>.
    */
   private final double esp;
 
   /**
-   * indicates if the projection should be performed for the north hemisphere
-   * (1) or the south hemisphere (-1)
+   * indicates if the projection should be performed for the north hemisphere (1) or the south hemisphere (-1)
    */
   private int hemisphere = 1;
 
   /**
-   * Construct a new map projection from the suplied parameters. Projection will
-   * default to Universal Transverse Mercator (UTM).
+   * Construct a new map projection from the suplied parameters. Projection will default to Universal Transverse
+   * Mercator (UTM).
    * 
    * @param parameters
    *          The parameter values in standard units.
    * @throws MissingParameterException
    *           if a mandatory parameter is missing.
    */
-  protected TransverseMercatorProjection( final Projection parameters )
-      throws MissingParameterException
+  protected TransverseMercatorProjection( final Projection parameters ) throws MissingParameterException
   {
     this( parameters, false );
   } // Default to UTM.
@@ -217,8 +206,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
   } //Resources.getResources(locale).getString(key);
 
   /**
-   * Calcule la distance méridionale sur un ellipsoïde à la latitude
-   * <code>phi</code>.
+   * Calcule la distance méridionale sur un ellipsoïde à la latitude <code>phi</code>.
    */
   private final double mlfn( final double phi, double sphi, double cphi )
   {
@@ -228,16 +216,15 @@ final class TransverseMercatorProjection extends CylindricalProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
   protected Point2D transform( double x, double y, final Point2D ptDst ) throws TransformException
   {
 
     if( Math.abs( y ) > ( Math.PI / 2.0 - EPS ) )
     {
-      throw new TransformException( Resources.format( ResourceKeys.ERROR_POLE_PROJECTION_$1,
-          new Latitude( Math.toDegrees( y ) ) ) );
+      throw new TransformException( Resources.format( ResourceKeys.ERROR_POLE_PROJECTION_$1, new Latitude( Math
+          .toDegrees( y ) ) ) );
     }
 
     x -= centralMeridian;
@@ -254,8 +241,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
 
       if( Math.abs( Math.abs( b ) - 1.0 ) <= EPS10 )
       {
-        throw new TransformException( Resources
-            .format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
+        throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
       }
 
       double yy = ( cosphi * Math.cos( x ) ) / Math.sqrt( 1.0 - ( b * b ) );
@@ -265,8 +251,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
       {
         if( ( b - 1.0 ) > EPS10 )
         {
-          throw new TransformException( Resources
-              .format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
+          throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
         }
         else
         {
@@ -332,11 +317,9 @@ final class TransverseMercatorProjection extends CylindricalProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
-  protected Point2D inverseTransform( double x, double y, final Point2D ptDst )
-      throws TransformException
+  protected Point2D inverseTransform( double x, double y, final Point2D ptDst ) throws TransformException
   {
     x -= false_easting;
     y -= false_northing;
@@ -402,9 +385,8 @@ final class TransverseMercatorProjection extends CylindricalProjection
                 * FC4
                 * ( 5.0 + ( t * ( 3.0 - 9.0 * n ) ) + ( n * ( 1.0 - 4 * n ) ) - ds
                     * FC6
-                    * ( 61.0 + ( t * ( 90.0 - ( 252.0 * n ) + 45.0 * t ) ) + ( 46.0 * n ) - ds
-                        * FC8 * ( 1385.0 + t * ( 3633.0 + t * ( 4095.0 + 1574.0 * t ) ) ) ) ) ) )
-            + centralLatitude;
+                    * ( 61.0 + ( t * ( 90.0 - ( 252.0 * n ) + 45.0 * t ) ) + ( 46.0 * n ) - ds * FC8
+                        * ( 1385.0 + t * ( 3633.0 + t * ( 4095.0 + 1574.0 * t ) ) ) ) ) ) ) + centralLatitude;
 
         x = ( ( d * ( FC1 - ds
             * FC3
@@ -449,8 +431,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
     if( super.equals( object ) )
     {
       final TransverseMercatorProjection that = (TransverseMercatorProjection)object;
-      return ( Double.doubleToLongBits( this.false_easting ) == Double
-          .doubleToLongBits( that.false_easting ) )
+      return ( Double.doubleToLongBits( this.false_easting ) == Double.doubleToLongBits( that.false_easting ) )
           && ( Double.doubleToLongBits( this.ak0 ) == Double.doubleToLongBits( that.ak0 ) );
     }
 
@@ -458,8 +439,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
   }
 
   /**
-   * Implémentation de la partie entre crochets de la chaîne retournée par
-   * {@link #toString()}.
+   * Implémentation de la partie entre crochets de la chaîne retournée par {@link #toString()}.
    */
   void toString( final StringBuffer buffer )
   {
@@ -475,8 +455,8 @@ final class TransverseMercatorProjection extends CylindricalProjection
   static final class Provider extends MapProjection.Provider
   {
     /**
-     * <code>true</code> for Modified Mercator Projection (MTM), or
-     * <code>false</code> for Universal Mercator Projection (UTM).
+     * <code>true</code> for Modified Mercator Projection (MTM), or <code>false</code> for Universal Mercator
+     * Projection (UTM).
      */
     private final boolean modified;
 
@@ -484,13 +464,13 @@ final class TransverseMercatorProjection extends CylindricalProjection
      * Construct a new registration.
      * 
      * @param modified
-     *          <code>true</code> for Modified Mercator Projection (MTM), or
-     *          <code>false</code> for Universal Mercator Projection (UTM).
+     *          <code>true</code> for Modified Mercator Projection (MTM), or <code>false</code> for Universal
+     *          Mercator Projection (UTM).
      */
     public Provider( final boolean modified )
     {
-      super( modified ? "Modified_Transverse_Mercator" : "Transverse_Mercator",
-          modified ? ResourceKeys.MTM_PROJECTION : ResourceKeys.UTM_PROJECTION );
+      super( modified ? "Modified_Transverse_Mercator" : "Transverse_Mercator", modified ? ResourceKeys.MTM_PROJECTION
+          : ResourceKeys.UTM_PROJECTION );
       this.modified = modified;
     }
 

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,15 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 import org.kalypsodeegree_impl.model.pt.CoordinatePoint;
 
 /**
- * Concatened transform where the transfert dimension is the same than source
- * and target dimension. This fact allows some optimizations, the most important
- * one being the possibility to avoid the use of an intermediate buffer.
+ * Concatened transform where the transfert dimension is the same than source and target dimension. This fact allows
+ * some optimizations, the most important one being the possibility to avoid the use of an intermediate buffer.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -80,8 +79,8 @@ class ConcatenedTransformDirect extends ConcatenedTransform
   /**
    * Construct a concatenated transform.
    */
-  public ConcatenedTransformDirect( final MathTransformFactory provider,
-      final MathTransform transform1, final MathTransform transform2 )
+  public ConcatenedTransformDirect( final MathTransformFactory provider, final MathTransform transform1,
+      final MathTransform transform2 )
   {
     super( provider, transform1, transform2 );
   }
@@ -96,11 +95,9 @@ class ConcatenedTransformDirect extends ConcatenedTransform
   }
 
   /**
-   * Transforms the specified <code>ptSrc</code> and stores the result in
-   * <code>ptDst</code>.
+   * Transforms the specified <code>ptSrc</code> and stores the result in <code>ptDst</code>.
    */
-  public CoordinatePoint transform( final CoordinatePoint ptSrc, CoordinatePoint ptDst )
-      throws TransformException
+  public CoordinatePoint transform( final CoordinatePoint ptSrc, CoordinatePoint ptDst ) throws TransformException
   {
     ptDst = transform1.transform( ptSrc, ptDst );
     return transform2.transform( ptDst, ptDst );
@@ -109,8 +106,8 @@ class ConcatenedTransformDirect extends ConcatenedTransform
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  public void transform( final double[] srcPts, final int srcOff, final double[] dstPts,
-      final int dstOff, final int numPts ) throws TransformException
+  public void transform( final double[] srcPts, final int srcOff, final double[] dstPts, final int dstOff,
+      final int numPts ) throws TransformException
   {
 
     transform1.transform( srcPts, srcOff, dstPts, dstOff, numPts );
@@ -120,8 +117,8 @@ class ConcatenedTransformDirect extends ConcatenedTransform
   /**
    * Transforms a list of coordinate point ordinal values.
    */
-  public void transform( final float[] srcPts, final int srcOff, final float[] dstPts,
-      final int dstOff, final int numPts ) throws TransformException
+  public void transform( final float[] srcPts, final int srcOff, final float[] dstPts, final int dstOff,
+      final int numPts ) throws TransformException
   {
 
     transform1.transform( srcPts, srcOff, dstPts, dstOff, numPts );

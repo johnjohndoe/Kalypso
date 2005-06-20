@@ -58,9 +58,8 @@ import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 import org.w3c.dom.Document;
 
 /**
- * Cached GMLSchemata zweistufig. Zuerst wird das eigentliche Schema (aus einer
- * URL) lokal in einem File-Cache gespeichert und dann zusätzlich noch im
- * Speicher gehalten.
+ * Cached GMLSchemata zweistufig. Zuerst wird das eigentliche Schema (aus einer URL) lokal in einem File-Cache
+ * gespeichert und dann zusätzlich noch im Speicher gehalten.
  * 
  * @author schlienger
  */
@@ -92,13 +91,12 @@ public class GMLSchemaCache
     m_memCache.addObject( namespace, schemaWrapper );
     m_fileCache.addObject( new StringValidityKey( namespace, schemaWrapper.getValidity() ), schemaWrapper.getSchema() );
   }
-  
+
   /**
    * Lädt das Schmea aus dieser URL und nimmt diese id für den cache
    * 
    * @param namespace
-   *          ID für den Cache, wenn null, wird die id anhand des geladenen
-   *          schemas ermittelt
+   *          ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt
    */
   public GMLSchema getSchema( final String namespace, final URL schemaURL )
   {
@@ -175,8 +173,7 @@ public class GMLSchemaCache
       }
     }
 
-    public void write( final Object object, final OutputStream os )
-        throws InvocationTargetException
+    public void write( final Object object, final OutputStream os ) throws InvocationTargetException
     {
       try
       {

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.actions;
 
 import org.eclipse.jface.action.Action;
@@ -46,26 +46,27 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommand;
 import org.kalypso.util.command.ICommandTarget;
 
-
 /**
  * @author belger
  */
-public abstract class AbstractCommandAction extends Action 
+public abstract class AbstractCommandAction extends Action
 {
   private final MapPanel m_mapPanel;
+
   private final ICommandTarget m_commandTarget;
 
-  public AbstractCommandAction( final ICommandTarget commandTarget, final MapPanel mapPanel, final String text, final ImageDescriptor imageDescriptor, final String tooltiptext )
+  public AbstractCommandAction( final ICommandTarget commandTarget, final MapPanel mapPanel, final String text,
+      final ImageDescriptor imageDescriptor, final String tooltiptext )
   {
     super( text, AS_PUSH_BUTTON );
-   
+
     setToolTipText( tooltiptext );
     setImageDescriptor( imageDescriptor );
-    
+
     m_mapPanel = mapPanel;
     m_commandTarget = commandTarget;
   }
-  
+
   protected abstract ICommand runInternal();
 
   /**
@@ -76,14 +77,13 @@ public abstract class AbstractCommandAction extends Action
     postCommand( runInternal(), null );
   }
 
-  
   protected final MapPanel getMapPanel()
   {
     return m_mapPanel;
   }
-  
+
   protected final void postCommand( final ICommand command, final Runnable runAfter )
   {
-    m_commandTarget.postCommand(command, runAfter);
+    m_commandTarget.postCommand( command, runAfter );
   }
 }

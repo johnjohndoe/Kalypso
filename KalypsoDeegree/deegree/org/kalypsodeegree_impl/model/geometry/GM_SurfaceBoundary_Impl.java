@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -79,8 +79,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
  * @version 11.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  */
-class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_SurfaceBoundary,
-    Serializable
+class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_SurfaceBoundary, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1399131144729310956L;
@@ -164,11 +163,10 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   }
 
   /**
-   * The operation "dimension" shall return the inherent dimension of this
-   * GM_Object, which shall be less than or equal to the coordinate dimension.
-   * The dimension of a collection of geometric objects shall be the largest
-   * dimension of any of its pieces. Points are 0-dimensional, curves are
-   * 1-dimensional, surfaces are 2-dimensional, and solids are 3-dimensional.
+   * The operation "dimension" shall return the inherent dimension of this GM_Object, which shall be less than or equal
+   * to the coordinate dimension. The dimension of a collection of geometric objects shall be the largest dimension of
+   * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
+   * 3-dimensional.
    */
   public int getDimension()
   {
@@ -176,9 +174,8 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   }
 
   /**
-   * The operation "coordinateDimension" shall return the dimension of the
-   * coordinates that define this GM_Object, which must be the same as the
-   * coordinate dimension of the coordinate reference system for this GM_Object.
+   * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
+   * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   public int getCoordinateDimension()
   {
@@ -213,11 +210,9 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   }
 
   /**
-   * The Boolean valued operation "intersects" shall return TRUE if this
-   * GM_Object intersects another GM_Object. Within a GM_Complex, the
-   * GM_Primitives do not intersect one another. In general, topologically
-   * structured data uses shared geometric objects to capture intersection
-   * information.
+   * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
+   * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
+   * geometric objects to capture intersection information.
    */
   public boolean intersects( GM_Object gmo )
   {
@@ -242,8 +237,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains another GM_Object.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    * <p>
    * </p>
    * At the moment the operation just works with point geometries
@@ -273,8 +267,8 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains a single point given by a coordinate.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains a single point given by a
+   * coordinate.
    * <p>
    * </p>
    * dummy implementation

@@ -80,11 +80,10 @@ public class ProxyFactory
    * <p>
    * It needs following information:
    * <p>
-   * KALYPSO_PROXY_BASE = the base classpath (package name or namespace) where
-   * the proxy classes are created.
+   * KALYPSO_PROXY_BASE = the base classpath (package name or namespace) where the proxy classes are created.
    * <p>
-   * <service_name>_URL = for each service that this factory should create. It
-   * contains the location of the servers that can deliver the desired service.
+   * <service_name>_URL = for each service that this factory should create. It contains the location of the servers that
+   * can deliver the desired service.
    */
   private Properties m_conf;
 
@@ -100,8 +99,7 @@ public class ProxyFactory
   }
 
   /**
-   * Returns the first available proxy of the Kalypso WebService that fullfills
-   * the desired interface
+   * Returns the first available proxy of the Kalypso WebService that fullfills the desired interface
    * 
    * @param serviceName
    *          Name of the Service residing on the server
@@ -112,8 +110,7 @@ public class ProxyFactory
    * @throws ServiceException
    *           if stub or server unavailable
    */
-  public Stub getAnyProxy( final String serviceName, final String intfName )
-      throws ServiceException
+  public Stub getAnyProxy( final String serviceName, final String intfName ) throws ServiceException
   {
     for( final Iterator itServer = getServers( serviceName ).iterator(); itServer.hasNext(); )
     {
@@ -123,14 +120,12 @@ public class ProxyFactory
         return proxy;
     }
 
-    throw new ServiceException( "No Service available. Could not find any servicing server: "
-        + serviceName + " - " + intfName, null );
+    throw new ServiceException( "No Service available. Could not find any servicing server: " + serviceName + " - "
+        + intfName, null );
   }
 
-    
   /**
-   * Returns the all available proxies of the Kalypso WebService that fullfill
-   * the desired interface.
+   * Returns the all available proxies of the Kalypso WebService that fullfill the desired interface.
    * 
    * @param serviceName
    *          Name of the Service residing on the server
@@ -141,13 +136,12 @@ public class ProxyFactory
    * @throws ServiceException
    *           if stub or server unavailable
    */
-  public Stub[] getAllProxies( final String serviceName, final String intfName )
-      throws ServiceException
+  public Stub[] getAllProxies( final String serviceName, final String intfName ) throws ServiceException
   {
     final Collection stubs = getAllProxiesAsMap( serviceName, intfName ).values();
     return (Stub[])stubs.toArray( new Stub[stubs.size()] );
   }
-      
+
   /** Create a map key -> proxy-stub. The key is unique per proxy, but cannot be assumed to be anythin g meaningfull */
   public Map getAllProxiesAsMap( final String serviceName, final String intfName ) throws ServiceException
   {
@@ -180,15 +174,13 @@ public class ProxyFactory
   private List getServers( final String serviceName ) throws ServiceException
   {
     /**
-     * contains the list of Kalypso-Servers that are configured. When asking for
-     * a proxy, this method will go through the list until it finds one
-     * available server that can deliver the corresponding service.
+     * contains the list of Kalypso-Servers that are configured. When asking for a proxy, this method will go through
+     * the list until it finds one available server that can deliver the corresponding service.
      */
     final String strServers = m_conf.getProperty( serviceName + "_URL" );
     if( strServers == null )
-      throw new ServiceException(
-          "Keine Serverkonfiguration gefunden. Stellen Sie sicher dass die Einstellungen\n"
-              + " richtig sind, und dass mindestens ein Server zur Verfügung steht." );
+      throw new ServiceException( "Keine Serverkonfiguration gefunden. Stellen Sie sicher dass die Einstellungen\n"
+          + " richtig sind, und dass mindestens ein Server zur Verfügung steht." );
 
     final List servers = Arrays.asList( strServers.split( "," ) );
     if( servers.size() == 0 )
@@ -201,8 +193,7 @@ public class ProxyFactory
    * 
    * @return null, if proxy is not available
    */
-  private Stub getCheckedProxy( final String serverUrl, final String serviceName,
-      final String intfName )
+  private Stub getCheckedProxy( final String serverUrl, final String serviceName, final String intfName )
   {
     try
     {
@@ -237,13 +228,11 @@ public class ProxyFactory
     // getClass().getClassLoader() )
     Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
 
-    final String strProxyClass = m_conf.getProperty( KALYPSO_PROXY_BASE ) + "." + serviceName
-        + "_Impl";
+    final String strProxyClass = m_conf.getProperty( KALYPSO_PROXY_BASE ) + "." + serviceName + "_Impl";
 
     try
     {
-      final Object proxyImpl = ClassUtilities.newInstance( strProxyClass, Object.class, getClass()
-          .getClassLoader() );
+      final Object proxyImpl = ClassUtilities.newInstance( strProxyClass, Object.class, getClass().getClassLoader() );
 
       final Method method = proxyImpl.getClass().getMethod( "get" + intfName + "Port", NO_TYPES );
 
@@ -256,8 +245,7 @@ public class ProxyFactory
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
-      throw new ServiceException( "Service " + strEndPoint
-          + " not available. Could not create stub.", e );
+      throw new ServiceException( "Service " + strEndPoint + " not available. Could not create stub.", e );
     }
   }
 }

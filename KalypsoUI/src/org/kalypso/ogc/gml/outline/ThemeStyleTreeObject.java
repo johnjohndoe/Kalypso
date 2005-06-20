@@ -36,20 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 22.07.2004
  * 
- * TODO To change the template for this generated file go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * TODO To change the template for this generated file go to Window - Preferences - Java - Code Style - Code Templates
  */
 package org.kalypso.ogc.gml.outline;
 
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 
 public class ThemeStyleTreeObject
 {
@@ -87,7 +86,7 @@ public class ThemeStyleTreeObject
   {
     if( myStyle == null )
       return "<no styles set>";
-    
+
     if( myStyle.getName() != null )
       return myStyle.getName();
     return myStyle.toString();

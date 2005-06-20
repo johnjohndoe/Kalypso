@@ -70,7 +70,7 @@ public class CommitModelDelegate implements IWorkbenchWindowActionDelegate
    */
   public void dispose()
   {
-    // nichts tun
+  // nichts tun
   }
 
   /**
@@ -96,13 +96,10 @@ public class CommitModelDelegate implements IWorkbenchWindowActionDelegate
 
       // nur Administratoren dürfen Projekte überschreiben
       if( serverProject.exists()
-          && !KalypsoGisPlugin.getDefault().getUser().hasRight(
-              UserServiceConstants.RIGHT_ADMIN ) )
+          && !KalypsoGisPlugin.getDefault().getUser().hasRight( UserServiceConstants.RIGHT_ADMIN ) )
       {
         MessageDialog
-            .openWarning(
-                m_window.getShell(),
-                "Modell zurückspeichern",
+            .openWarning( m_window.getShell(), "Modell zurückspeichern",
                 "Das Modell existiert bereits auf dem Server.\nNur Administratoren dürfen bereits vorhandene Modelle überschreiben." );
         return;
       }
@@ -116,8 +113,7 @@ public class CommitModelDelegate implements IWorkbenchWindowActionDelegate
                   + "' wird zurück auf den Server gespeichert.\nSind Sie sicher? Serverseitige Änderungen gehen eventuell verloren." ) )
         return;
 
-      final ModelSynchronizer synchronizer = new ModelSynchronizer( project,
-          serverProject );
+      final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
 
       final Job job = new Job( "Modell zurückspeichern" )
       {
@@ -152,7 +148,7 @@ public class CommitModelDelegate implements IWorkbenchWindowActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    // wurscht
+  // wurscht
   }
 
 }

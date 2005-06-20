@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.core.resources;
 
 import java.io.BufferedReader;
@@ -59,24 +59,24 @@ import org.kalypso.eclipse.util.SetContentHelper;
  */
 public class FileUtilities
 {
-  private FileUtilities( )
+  private FileUtilities()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
   /**
    * Sets the contents of the dest file using the source file.
    */
-  public static void copyFile( final String sourceCharset, final File source,
-      final IFile dest, final IProgressMonitor monitor ) throws CoreException
+  public static void copyFile( final String sourceCharset, final File source, final IFile dest,
+      final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper helper = new SetContentHelper()
     {
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
         final PrintWriter pwr = new PrintWriter( writer );
-        final BufferedReader reader = new BufferedReader(
-            new InputStreamReader( new FileInputStream( source ), sourceCharset ) );
+        final BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( source ),
+            sourceCharset ) );
 
         try
         {

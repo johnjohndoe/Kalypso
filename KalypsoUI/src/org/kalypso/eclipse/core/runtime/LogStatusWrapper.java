@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.core.runtime;
 
 import java.io.IOException;
@@ -57,17 +57,17 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * Convenient class to be used with the ErrorDialog. This class
- * can create an IStatus object which can be displayed in the ErrorDialog. The trick
- * is to use the LogStatus which gets its children from the log file.
+ * Convenient class to be used with the ErrorDialog. This class can create an IStatus object which can be displayed in
+ * the ErrorDialog. The trick is to use the LogStatus which gets its children from the log file.
  * 
  * @author schlienger
  */
 public class LogStatusWrapper
 {
   public final static LogStatusWrapper OK_RESULT = new LogStatusWrapper( "", null );
-  
+
   private final String m_summary;
+
   private final IFile m_logFile;
 
   public LogStatusWrapper( final String logFile )
@@ -79,7 +79,7 @@ public class LogStatusWrapper
 
       final StringWriter sw = new StringWriter();
       final PrintWriter pw = new PrintWriter( sw );
-      
+
       LineNumberReader reader = null;
       try
       {
@@ -89,11 +89,11 @@ public class LogStatusWrapper
           final String line = reader.readLine();
           if( line == null )
             break;
-          
+
           if( line.startsWith( "***" ) && line.length() > 3 )
             pw.println( line.substring( 3 ) );
         }
-        
+
         pw.close();
       }
       catch( IOException e )
@@ -108,7 +108,7 @@ public class LogStatusWrapper
       {
         IOUtils.closeQuietly( reader );
       }
-      
+
       pw.close();
       m_summary = sw.toString();
     }
@@ -117,9 +117,9 @@ public class LogStatusWrapper
       m_summary = "";
       m_logFile = null;
     }
-    
+
   }
-  
+
   public LogStatusWrapper( final String summary, final IFile logFile )
   {
     m_summary = summary;
@@ -133,15 +133,15 @@ public class LogStatusWrapper
   {
     return m_summary.length() > 0;
   }
-  
+
   /**
    * @return Returns the logFile.
    */
-  public IFile getLogFile( )
+  public IFile getLogFile()
   {
     return m_logFile;
   }
-  
+
   /**
    * @return an IStatus representation of this result.
    */
@@ -149,15 +149,16 @@ public class LogStatusWrapper
   {
     if( !hasMessages() )
       return Status.OK_STATUS;
-    
+
     // the ErrorDialog cannot show a message which is too long: the dialog's
     // height would be bigger than the user's monitor. That's why we truncate
     // the summary string here. If the user wants to see more, he can have
     // a look at the log file using the 'details' button in the ErrorDialog
     final String truncatedSummary = StringUtils.left( m_summary, 512 );
     // '\r' verschwinden lassen, da sonst der Status-Dialog zuviele Umbrüche generiert
-    final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + "Siehe Details oder Logdatei: " + m_logFile.getFullPath().toOSString();
-    
+    final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + "Siehe Details oder Logdatei: "
+        + m_logFile.getFullPath().toOSString();
+
     return new LogStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, msg, null, m_logFile );
   }
 }

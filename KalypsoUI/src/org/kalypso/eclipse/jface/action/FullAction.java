@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.jface.action;
 
 import org.eclipse.jface.action.Action;
@@ -53,7 +53,7 @@ public class FullAction extends Action
   public FullAction( String text, ImageDescriptor image, String tooltipText )
   {
     super( text, image );
-    
+
     setToolTipText( tooltipText );
   }
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.container;
 
 import java.util.List;
@@ -61,10 +61,11 @@ public interface IRepositoryContainer
    * @param id
    * @return item if found
    * 
-   * @throws NoSuchElementException when item could not be found. 
+   * @throws NoSuchElementException
+   *           when item could not be found.
    */
   public IRepositoryItem findItem( final String id ) throws NoSuchElementException;
-  
+
   public void addRepository( final IRepository rep );
 
   public void removeRepository( final IRepository rep );

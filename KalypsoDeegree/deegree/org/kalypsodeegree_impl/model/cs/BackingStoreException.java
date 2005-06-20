@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 /**
- * Thrown to indicate that a factory operation could not complete because of a
- * failure in the backing store, or a failure to contact the backing store. The
- * most common raison is a failure to find the authority code, which is
+ * Thrown to indicate that a factory operation could not complete because of a failure in the backing store, or a
+ * failure to contact the backing store. The most common raison is a failure to find the authority code, which is
  * indicated by {@link NoSuchAuthorityCodeException}.
  * 
  * @version 1.0

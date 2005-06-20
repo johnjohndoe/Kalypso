@@ -1,13 +1,10 @@
 /*
- * OpenGIS® Coordinate Transformation Services Implementation Specification
- * Copyright (2001) OpenGIS consortium
+ * OpenGIS® Coordinate Transformation Services Implementation Specification Copyright (2001) OpenGIS consortium
  * 
- * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official
- * OpenGIS's interface files doesn't contain a copyright notice yet. This file
- * is a slightly modified version of official OpenGIS's interface. Changes have
- * been done in order to fix RMI problems and are documented on the SEAGIS web
- * site (seagis.sourceforge.net). THIS FILE WILL LIKELY BE REPLACED BY NEXT
- * VERSION OF OPENGIS SPECIFICATIONS.
+ * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official OpenGIS's interface files doesn't contain a
+ * copyright notice yet. This file is a slightly modified version of official OpenGIS's interface. Changes have been
+ * done in order to fix RMI problems and are documented on the SEAGIS web site (seagis.sourceforge.net). THIS FILE WILL
+ * LIKELY BE REPLACED BY NEXT VERSION OF OPENGIS SPECIFICATIONS.
  */
 package org.opengis.ct;
 
@@ -15,11 +12,9 @@ package org.opengis.ct;
 import java.io.Serializable;
 
 /**
- * Flags indicating parts of domain covered by a convex hull. These flags can be
- * combined. For example, the value 3 corresponds to a combination of
- * {@link #CT_DF_Inside}and {@link #CT_DF_Outside}, which means that some
- * parts of the convex hull are inside the domain, and some parts of the convex
- * hull are outside the domain.
+ * Flags indicating parts of domain covered by a convex hull. These flags can be combined. For example, the value 3
+ * corresponds to a combination of {@link #CT_DF_Inside}and {@link #CT_DF_Outside}, which means that some parts of the
+ * convex hull are inside the domain, and some parts of the convex hull are outside the domain.
  * 
  * @version 1.01
  * @since 1.00
@@ -29,8 +24,7 @@ import java.io.Serializable;
 public class CT_DomainFlags implements Serializable
 {
   /**
-   * Use <code>serialVersionUID</code> from first draft for interoperability
-   * with CSS 1.00.
+   * Use <code>serialVersionUID</code> from first draft for interoperability with CSS 1.00.
    */
   private static final long serialVersionUID = 5618714041608095806L;
 
@@ -45,12 +39,10 @@ public class CT_DomainFlags implements Serializable
   public static final int CT_DF_Outside = 2;
 
   /**
-   * At least one point in a convex hull is not transformed continuously. As an
-   * example, consider a "Longitude_Rotation" transform which adjusts longitude
-   * coordinates to take account of a change in Prime Meridian. If the rotation
-   * is 5 degrees east, then the point (Lat=0,Lon=175) is not transformed
-   * continuously, since it is on the meridian line which will be split at
-   * +180/-180 degrees.
+   * At least one point in a convex hull is not transformed continuously. As an example, consider a "Longitude_Rotation"
+   * transform which adjusts longitude coordinates to take account of a change in Prime Meridian. If the rotation is 5
+   * degrees east, then the point (Lat=0,Lon=175) is not transformed continuously, since it is on the meridian line
+   * which will be split at +180/-180 degrees.
    */
   public static final int CT_DF_Discontinuous = 4;
 
@@ -95,9 +87,8 @@ public class CT_DomainFlags implements Serializable
   }
 
   /**
-   * Returns a string représentation of this enum. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes
-   * only.
+   * Returns a string représentation of this enum. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes only.
    */
   public String toString()
   {

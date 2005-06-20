@@ -74,14 +74,12 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * </p>
  * 
  * <p>
- * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen k?nnen
- * potentiell editiert werden
+ * Zeigt das ganze als Kartendarstellug, die einzelnen Datenquellen k?nnen potentiell editiert werden
  * </p>
  * 
  * <p>
- * Implementiert {@link org.kalypso.util.command.ICommandManager}f?r die Undo
- * und Redo Action. Gibt alles an den DefaultCommandManager weiter, es wird
- * zus?tzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
+ * Implementiert {@link org.kalypso.util.command.ICommandManager}f?r die Undo und Redo Action. Gibt alles an den
+ * DefaultCommandManager weiter, es wird zus?tzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
  * </p>
  * 
  * @author belger
@@ -97,8 +95,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public GisMapEditor()
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    myMapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), plugin
-        .getDefaultMapSelectionID() );
+    myMapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), plugin.getDefaultMapSelectionID() );
   }
 
   /**
@@ -118,8 +115,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     return super.getAdapter( adapter );
   }
 
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
-      throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     if( m_mapModell == null )
       return;
@@ -130,8 +126,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
       getMapPanel().getBoundingBox();
 
-      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( getMapPanel()
-          .getBoundingBox() );
+      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( getMapPanel().getBoundingBox() );
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -156,8 +151,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       System.out.println( e.getLocalizedMessage() );
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "XML-Vorlagendatei konnte nicht erstellt werden.", e ) );
+      throw new CoreException( KalypsoGisPlugin
+          .createErrorStatus( "XML-Vorlagendatei konnte nicht erstellt werden.", e ) );
     }
     finally
     {
@@ -203,16 +198,15 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     monitor.beginTask( "Kartenvorlage laden", 2000 );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( ( (IFileEditorInput)input )
-        .getFile() );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( ( (IFileEditorInput)input ).getFile() );
 
     monitor.worked( 1000 );
 
     final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
     final URL context = ResourceUtilities.createURL( inputFile );
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context,
-        KalypsoGisPlugin.getDefault().getCoordinatesSystem() , inputFile.getProject());
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault()
+        .getCoordinatesSystem(), inputFile.getProject() );
     setMapModell( mapModell );
 
     GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
@@ -232,8 +226,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   public void showProperties( final LayerType layer )
   {
-    MessageDialog.openInformation( getEditorSite().getShell(), "Themeneigenschaften",
-        "Leider noch nicht implementiert" );
+    MessageDialog
+        .openInformation( getEditorSite().getShell(), "Themeneigenschaften", "Leider noch nicht implementiert" );
 
     layer.getClass();
   }
@@ -246,8 +240,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     return myMapPanel;
   }
 
-  public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor )
-      throws CoreException
+  public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
   {
     m_mapModell.saveTheme( theme, monitor );
   }

@@ -85,8 +85,8 @@ import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 /**
  * @author doemming
  */
-public class ImportObservationSelectionWizardPage extends WizardPage implements
-    FocusListener, ISelectionProvider, ISelectionChangedListener
+public class ImportObservationSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider,
+    ISelectionChangedListener
 {
   private static final String DEFAUL_FILE_LABEL = "";
 
@@ -117,8 +117,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
     this( pageName, null, null );
   }
 
-  public ImportObservationSelectionWizardPage( String pageName, String title,
-      ImageDescriptor titleImage )
+  public ImportObservationSelectionWizardPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -129,14 +128,13 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
     m_adapter = createNativeAdapters();
   }
 
-  private List createNativeAdapters( )
+  private List createNativeAdapters()
   {
     final List adapters = new ArrayList();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    final IExtensionPoint extensionPoint = registry
-        .getExtensionPoint( "org.kalypso.core.nativeObsAdapter" );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.nativeObsAdapter" );
 
     if( extensionPoint == null )
       return adapters;
@@ -145,8 +143,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
     for( int i = 0; i < extensions.length; i++ )
     {
       final IExtension extension = extensions[i];
-      final IConfigurationElement[] elements = extension
-          .getConfigurationElements();
+      final IConfigurationElement[] elements = extension.getConfigurationElements();
 
       for( int j = 0; j < elements.length; j++ )
       {
@@ -154,7 +151,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
 
         try
         {
-          final INativeObservationAdapter adapter = (INativeObservationAdapter) element
+          final INativeObservationAdapter adapter = (INativeObservationAdapter)element
               .createExecutableExtension( "class" );
           adapters.add( adapter );
         }
@@ -256,12 +253,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
 
       public void addListener( ILabelProviderListener listener )
       {
-        // nothing as labelprovider will not change
+      // nothing as labelprovider will not change
       }
 
-      public void dispose( )
+      public void dispose()
       {
-        // nothing as labelprovider will not change
+      // nothing as labelprovider will not change
       }
 
       public boolean isLabelProperty( Object element, String property )
@@ -271,7 +268,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
 
       public void removeListener( ILabelProviderListener listener )
       {
-        //nothing
+      //nothing
       }
     } );
 
@@ -364,7 +361,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
   /**
    * validates the page
    */
-  void validate( )
+  void validate()
   {
     setErrorMessage( null );
     setMessage( null );
@@ -406,7 +403,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
    * 
    * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
    */
-  public boolean canFlipToNextPage( )
+  public boolean canFlipToNextPage()
   {
     return isPageComplete();
   }
@@ -415,7 +412,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
    * 
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
     if( m_topLevel != null && !m_topLevel.isDisposed() )
@@ -430,7 +427,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
    */
   public void focusGained( FocusEvent e )
   {
-    // nothing
+  // nothing
   }
 
   /**
@@ -438,27 +435,22 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
    */
   public void focusLost( FocusEvent e )
   {
-    if( m_sourceFile != null
-        && !m_sourceFile.getName().equals( m_textFileSource.getText() ) )
+    if( m_sourceFile != null && !m_sourceFile.getName().equals( m_textFileSource.getText() ) )
     {
-      m_sourceFile = new File( m_sourceFile.getParentFile(), m_textFileSource
-          .getText() );
+      m_sourceFile = new File( m_sourceFile.getParentFile(), m_textFileSource.getText() );
     }
-    if( m_targetFile != null
-        && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
+    if( m_targetFile != null && !m_targetFile.getName().equals( m_textFileTarget.getText() ) )
     {
-      m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget
-          .getText() );
+      m_targetFile = new File( m_targetFile.getParentFile(), m_textFileTarget.getText() );
     }
     validate();
   }
 
-  private void fireSelectionChanged( )
+  private void fireSelectionChanged()
   {
     for( Iterator iter = m_selectionListener.iterator(); iter.hasNext(); )
     {
-      ((ISelectionChangedListener) iter.next())
-          .selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
+      ( (ISelectionChangedListener)iter.next() ).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
     }
   }
 
@@ -473,21 +465,19 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection( )
+  public ISelection getSelection()
   {
-    final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo
-        .getSelection();
+    final IStructuredSelection formatSelection = (IStructuredSelection)m_formatCombo.getSelection();
     if( !m_controlFinished )
       return new ISelection()
       {
-        public boolean isEmpty( )
+        public boolean isEmpty()
         {
           return true;
         }
       };
-    return new ObservationImportSelection( m_sourceFile, m_targetFile,
-        (INativeObservationAdapter) formatSelection.getFirstElement(),
-        m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
+    return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter)formatSelection
+        .getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
   }
 
   /**
@@ -505,10 +495,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
   {
     if( selection instanceof ObservationImportSelection )
     {
-      ObservationImportSelection s = ((ObservationImportSelection) selection);
+      ObservationImportSelection s = ( (ObservationImportSelection)selection );
       if( m_formatCombo != null )
-        m_formatCombo.setSelection( new StructuredSelection( s
-            .getNativeAdapter() ) );
+        m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
       m_sourceFile = s.getFileSource();
       m_targetFile = s.getFileTarget();
       if( m_buttonAppend != null )
@@ -518,11 +507,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements
     }
     else if( selection instanceof IStructuredSelection )
     {
-      Object firstElement = ((StructuredSelection) selection).getFirstElement();
+      Object firstElement = ( (StructuredSelection)selection ).getFirstElement();
       if( firstElement instanceof IFile )
       {
-        m_targetFile = ResourceUtilities
-            .makeFileFromPath( ((IFile) firstElement).getFullPath() );
+        m_targetFile = ResourceUtilities.makeFileFromPath( ( (IFile)firstElement ).getFullPath() );
       }
     }
     // nothing

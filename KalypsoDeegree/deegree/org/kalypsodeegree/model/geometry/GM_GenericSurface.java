@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.model.geometry;
 
@@ -77,17 +77,14 @@ public interface GM_GenericSurface
 {
 
   /**
-   * returns the length of all boundaries of the surface in a reference system
-   * appropriate for measuring distances.
+   * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
   double getPerimeter();
 
   /**
-   * The operation "area" shall return the area of this GM_GenericSurface. The
-   * area of a 2 dimensional geometric object shall be a numeric measure of its
-   * surface area Since area is an accumulation (integral) of the product of two
-   * distances, its return value shall be in a unit of measure appropriate for
-   * measuring distances squared.
+   * The operation "area" shall return the area of this GM_GenericSurface. The area of a 2 dimensional geometric object
+   * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
+   * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
   double getArea();
 

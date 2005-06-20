@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -72,16 +72,12 @@ import org.opengis.cs.CS_LocalCoordinateSystem;
 import org.opengis.cs.CS_LocalDatum;
 
 /**
- * A local coordinate system, with uncertain relationship to the world. In
- * general, a local coordinate system cannot be related to other coordinate
- * systems. However, if two objects supporting this interface have the same
- * dimension, axes, units and datum then client code is permitted to assume that
- * the two coordinate systems are identical. This allows several datasets from a
- * common source (e.g. a CAD system) to be overlaid. In addition, some
- * implementations of the Coordinate Transformation (CT) package may have a
- * mechanism for correlating local datums. (E.g. from a database of
- * transformations, which is created and maintained from real-world
- * measurements.)
+ * A local coordinate system, with uncertain relationship to the world. In general, a local coordinate system cannot be
+ * related to other coordinate systems. However, if two objects supporting this interface have the same dimension, axes,
+ * units and datum then client code is permitted to assume that the two coordinate systems are identical. This allows
+ * several datasets from a common source (e.g. a CAD system) to be overlaid. In addition, some implementations of the
+ * Coordinate Transformation (CT) package may have a mechanism for correlating local datums. (E.g. from a database of
+ * transformations, which is created and maintained from real-world measurements.)
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -112,11 +108,9 @@ public class LocalCoordinateSystem extends CoordinateSystem
   private final AxisInfo[] axes;
 
   /**
-   * Creates a local coordinate system. The dimension of the local coordinate
-   * system is determined by the size of the axis array. All the axes will have
-   * the same units. If you want to make a coordinate system with mixed units,
-   * then you can make a compound coordinate system from different local
-   * coordinate systems.
+   * Creates a local coordinate system. The dimension of the local coordinate system is determined by the size of the
+   * axis array. All the axes will have the same units. If you want to make a coordinate system with mixed units, then
+   * you can make a compound coordinate system from different local coordinate systems.
    * 
    * @param name
    *          Name to give new object.
@@ -128,8 +122,7 @@ public class LocalCoordinateSystem extends CoordinateSystem
    *          Axes to use in created coordinate system.
    *  
    */
-  public LocalCoordinateSystem( final String name, final LocalDatum datum, final Unit unit,
-      final AxisInfo[] axes )
+  public LocalCoordinateSystem( final String name, final LocalDatum datum, final Unit unit, final AxisInfo[] axes )
   {
     super( name );
     ensureNonNull( "datum", datum );
@@ -158,8 +151,7 @@ public class LocalCoordinateSystem extends CoordinateSystem
    * @param axes
    *          Axes to use in created coordinate system.
    */
-  LocalCoordinateSystem( final Map properties, final LocalDatum datum, final Unit[] units,
-      final AxisInfo[] axes )
+  LocalCoordinateSystem( final Map properties, final LocalDatum datum, final Unit[] units, final AxisInfo[] axes )
   {
     super( properties );
     this.datum = datum;
@@ -223,13 +215,11 @@ public class LocalCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
-   * The default implementation compare datum, units and axis, but ignore name,
-   * alias and other meta-data informations.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform. The default implementation compare datum, units and axis, but ignore name, alias
+   * and other meta-data informations.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).
@@ -266,11 +256,9 @@ public class LocalCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns an OpenGIS interface for this local coordinate system. The returned
-   * object is suitable for RMI use.
+   * Returns an OpenGIS interface for this local coordinate system. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -284,8 +272,7 @@ public class LocalCoordinateSystem extends CoordinateSystem
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link LocalCoordinateSystem}object for use with OpenGIS. This
-   * class is suitable for RMI use.
+   * Wrap a {@link LocalCoordinateSystem}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

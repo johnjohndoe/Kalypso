@@ -36,20 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureControl;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author belger
@@ -59,7 +59,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   private Feature m_feature;
 
   private final FeatureTypeProperty m_ftp;
-  
+
   private Collection m_changelisteners = new ArrayList();
 
   private GMLWorkspace m_workspace;
@@ -75,7 +75,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_feature = feature;
     m_ftp = ftp;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
@@ -84,12 +84,11 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_changelisteners.clear();
   }
 
-  
   public GMLWorkspace getWorkspace()
   {
     return m_workspace;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
    */
@@ -97,18 +96,18 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   {
     return m_feature;
   }
-  
+
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
     m_workspace = workspace;
     m_feature = feature;
   }
-  
+
   public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
@@ -124,13 +123,13 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   {
     m_changelisteners.remove( l );
   }
-  
+
   protected void fireChange( final FeatureChange change )
   {
     if( change == null )
       return;
-    
+
     for( Iterator iter = m_changelisteners.iterator(); iter.hasNext(); )
-      ((IFeatureChangeListener)iter.next()).featureChanged( change );
+      ( (IFeatureChangeListener)iter.next() ).featureChanged( change );
   }
 }

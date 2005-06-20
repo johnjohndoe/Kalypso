@@ -33,21 +33,15 @@ import java.io.RandomAccessFile;
 import java.util.Stack;
 
 /**
- * Persistente Implementierung einer PageFile. Implementiert als
- * RandomAccesFile.
+ * Persistente Implementierung einer PageFile. Implementiert als RandomAccesFile.
  * 
- * Aufbau der Datei -- Header -- int pageFileVersion int dimension int capacity =
- * maximum + 1 for overflow int minimum -- Body -- aufeinanderfolgende Pages mit
- * int typ - 1 LeafNode 2 NoneLeafNode int place - Platz, wo Knoten im
- * Vaterknoten steht int counter - Derzeit benutzer Platz im Knoten int
- * parentNode - Nummer der PageFile des Vaterknotens int pageNumber - eigene
- * PageFile-Nummer - for(i = 0; i < capacity; i++) int data Eintrag i -
- * pageNumber Kindknoten oder Objekt-ID der Dateneinträge - jeweils Abhängigkeit
- * von dimension = x double pMin x.Dimension - pMin der gemeinsamen
- * HyperBoundingBox double pMax x.Dimension - pMax der gemeinsamen
- * HyperBoundingBox - for(i = 0; i < capacity; i++) double pMin x.Dimension -
- * pMin HyperBB für Eintrag i double pMax x.Dimension - pMax HyperBB für Eintrag
- * i
+ * Aufbau der Datei -- Header -- int pageFileVersion int dimension int capacity = maximum + 1 for overflow int minimum --
+ * Body -- aufeinanderfolgende Pages mit int typ - 1 LeafNode 2 NoneLeafNode int place - Platz, wo Knoten im Vaterknoten
+ * steht int counter - Derzeit benutzer Platz im Knoten int parentNode - Nummer der PageFile des Vaterknotens int
+ * pageNumber - eigene PageFile-Nummer - for(i = 0; i < capacity; i++) int data Eintrag i - pageNumber Kindknoten oder
+ * Objekt-ID der Dateneinträge - jeweils Abhängigkeit von dimension = x double pMin x.Dimension - pMin der gemeinsamen
+ * HyperBoundingBox double pMax x.Dimension - pMax der gemeinsamen HyperBoundingBox - for(i = 0; i < capacity; i++)
+ * double pMin x.Dimension - pMin HyperBB für Eintrag i double pMax x.Dimension - pMax HyperBB für Eintrag i
  * 
  * int entspr. 4 Bytes - double entspr. 8 Bytes
  * 
@@ -246,8 +240,8 @@ public class PersistentPageFile extends PageFile
    * 
    * @param ds
    * 
-   * @return @throws
-   *         IOException
+   * @return
+   * @throws IOException
    */
   public HyperBoundingBox readNextHyperBoundingBox( DataInputStream ds ) throws IOException
   {

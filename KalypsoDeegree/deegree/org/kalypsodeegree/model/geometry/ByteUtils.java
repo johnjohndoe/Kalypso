@@ -1,15 +1,14 @@
-/*******************************************************************************
+/***********************************************************************************************************************
  * 
  * BBN Corporation 10 Moulton St. Cambridge, MA 02138 (617) 873-2000
  * 
- * Copyright (C) 1998 This software is subject to copyright protection under the
- * laws of the United States and other countries.
+ * Copyright (C) 1998 This software is subject to copyright protection under the laws of the United States and other
+ * countries.
  * 
  * **********************************************************************
  * 
  * $Source$
- * $RCSfile$ $Revision$ $Date$
- * $Author$
+ * $RCSfile$ $Revision$ $Date$ $Author$
  * 
  * **********************************************************************
  */
@@ -55,11 +54,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -73,7 +72,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.model.geometry;
 
@@ -159,8 +158,7 @@ public class ByteUtils
   public static int readBEInt( byte[] b, int off )
   {
 
-    return ( ( ( b[off + 0] & 0xff ) << 24 ) | ( ( b[off + 1] & 0xff ) << 16 )
-        | ( ( b[off + 2] & 0xff ) << 8 ) | ( ( b[off + 3] & 0xff ) ) );
+    return ( ( ( b[off + 0] & 0xff ) << 24 ) | ( ( b[off + 1] & 0xff ) << 16 ) | ( ( b[off + 2] & 0xff ) << 8 ) | ( ( b[off + 3] & 0xff ) ) );
 
   }
 
@@ -176,8 +174,7 @@ public class ByteUtils
   public static int readLEInt( byte[] b, int off )
   {
 
-    return ( ( ( b[off + 3] & 0xff ) << 24 ) | ( ( b[off + 2] & 0xff ) << 16 )
-        | ( ( b[off + 1] & 0xff ) << 8 ) | ( ( b[off + 0] & 0xff ) ) );
+    return ( ( ( b[off + 3] & 0xff ) << 24 ) | ( ( b[off + 2] & 0xff ) << 16 ) | ( ( b[off + 1] & 0xff ) << 8 ) | ( ( b[off + 0] & 0xff ) ) );
 
   }
 
@@ -194,9 +191,8 @@ public class ByteUtils
   public static long readLELong( byte[] b, int off )
   {
 
-    return ( ( ( b[off + 0] & 0xffL ) ) | ( ( b[off + 1] & 0xffL ) << 8 )
-        | ( ( b[off + 2] & 0xffL ) << 16 ) | ( ( b[off + 3] & 0xffL ) << 24 )
-        | ( ( b[off + 4] & 0xffL ) << 32 ) | ( ( b[off + 5] & 0xffL ) << 40 )
+    return ( ( ( b[off + 0] & 0xffL ) ) | ( ( b[off + 1] & 0xffL ) << 8 ) | ( ( b[off + 2] & 0xffL ) << 16 )
+        | ( ( b[off + 3] & 0xffL ) << 24 ) | ( ( b[off + 4] & 0xffL ) << 32 ) | ( ( b[off + 5] & 0xffL ) << 40 )
         | ( ( b[off + 6] & 0xffL ) << 48 ) | ( ( b[off + 7] & 0xffL ) << 56 ) );
 
   }
@@ -214,9 +210,8 @@ public class ByteUtils
   public static long readBELong( byte[] b, int off )
   {
 
-    return ( ( ( b[off + 7] & 0xffL ) ) | ( ( b[off + 6] & 0xffL ) << 8 )
-        | ( ( b[off + 5] & 0xffL ) << 16 ) | ( ( b[off + 4] & 0xffL ) << 24 )
-        | ( ( b[off + 3] & 0xffL ) << 32 ) | ( ( b[off + 2] & 0xffL ) << 40 )
+    return ( ( ( b[off + 7] & 0xffL ) ) | ( ( b[off + 6] & 0xffL ) << 8 ) | ( ( b[off + 5] & 0xffL ) << 16 )
+        | ( ( b[off + 4] & 0xffL ) << 24 ) | ( ( b[off + 3] & 0xffL ) << 32 ) | ( ( b[off + 2] & 0xffL ) << 40 )
         | ( ( b[off + 1] & 0xffL ) << 48 ) | ( ( b[off + 0] & 0xffL ) << 56 ) );
 
   }
@@ -297,8 +292,7 @@ public class ByteUtils
 
   /**
    * method: writeBEShort(byte[] b, int off, int val) <BR>
-   * Writes the given short to the given buffer at the given location in big
-   * endian format.
+   * Writes the given short to the given buffer at the given location in big endian format.
    * 
    * @param b
    *          the data buffer
@@ -322,8 +316,7 @@ public class ByteUtils
 
   /**
    * method: writeLEShort(byte[] b, int off, int val) <BR>
-   * Writes the given short to the given buffer at the given location in big
-   * endian format.
+   * Writes the given short to the given buffer at the given location in big endian format.
    * 
    * @param b
    *          the data buffer
@@ -347,8 +340,7 @@ public class ByteUtils
 
   /**
    * method: writeBEInt(byte[] b, int off, int val) <BR>
-   * Writes the given integer to the given buffer at the given location in big
-   * endian format.
+   * Writes the given integer to the given buffer at the given location in big endian format.
    * 
    * @param b
    *          the data buffer
@@ -372,8 +364,7 @@ public class ByteUtils
 
   /**
    * method: writeLEInt(byte[] b, int off, int val) <BR>
-   * Writes the given integer to the given buffer at the given location in
-   * little endian format.
+   * Writes the given integer to the given buffer at the given location in little endian format.
    * 
    * @param b
    *          the data buffer
@@ -397,8 +388,7 @@ public class ByteUtils
 
   /**
    * method: writeLELong(byte[] b, int off, long val) <BR>
-   * Writes the given long to the given buffer at the given location in little
-   * endian format.
+   * Writes the given long to the given buffer at the given location in little endian format.
    * 
    * @param b
    *          the data buffer
@@ -426,8 +416,7 @@ public class ByteUtils
 
   /**
    * method: writeBELong(byte[] b, int off, long val) <BR>
-   * Writes the given long to the given buffer at the given location in big
-   * endian format.
+   * Writes the given long to the given buffer at the given location in big endian format.
    * 
    * @param b
    *          the data buffer
@@ -455,8 +444,7 @@ public class ByteUtils
 
   /**
    * method: writeLEDouble(byte[] b, int off, double val) <BR>
-   * Writes the given double to the given buffer at the given location in little
-   * endian format.
+   * Writes the given double to the given buffer at the given location in little endian format.
    * 
    * @param b
    *          the data buffer
@@ -475,8 +463,7 @@ public class ByteUtils
 
   /**
    * method: writeBEDouble(byte[] b, int off, double val) <BR>
-   * Writes the given double to the given buffer at the given location in big
-   * endian format.
+   * Writes the given double to the given buffer at the given location in big endian format.
    * 
    * @param b
    *          the data buffer

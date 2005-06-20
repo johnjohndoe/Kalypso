@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
 import java.io.OutputStream;
@@ -55,20 +55,22 @@ public interface IBerichtExporter
 {
   /**
    * Initialize this exporter with the given arguments
+   * 
    * @param context
    * @param arguments
    */
   public void init( final URL context, final Arguments arguments );
-  
+
   public String toString();
-  
+
   /**
    * Export feature to Stream
+   * 
    * @param os
    * 
    * @throws CoreException
    */
   public IStatus export( final Feature feature, final OutputStream os ) throws CoreException;
 
-  public String getExtension( );
+  public String getExtension();
 }

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.util.ArrayList;
@@ -79,8 +79,7 @@ import org.kalypsodeegree_impl.tools.StringExtend;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Adapter class for exporting deegree geometries to WKT and to wrap WKT code
- * geometries to deegree geometries.
+ * Adapter class for exporting deegree geometries to WKT and to wrap WKT code geometries to deegree geometries.
  * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -216,8 +215,8 @@ public class WKTAdapter
    * @param cur
    *          curve geometry
    * 
-   * @return @throws
-   *         GM_Exception
+   * @return
+   * @throws GM_Exception
    */
   private static StringBuffer export( GM_Curve cur ) throws GM_Exception
   {
@@ -355,8 +354,8 @@ public class WKTAdapter
    * 
    * @param mc
    * 
-   * @return @throws
-   *         GM_Exception
+   * @return
+   * @throws GM_Exception
    */
   private static StringBuffer export( GM_MultiCurve mc ) throws GM_Exception
   {
@@ -385,8 +384,8 @@ public class WKTAdapter
    * 
    * @param ms
    * 
-   * @return @throws
-   *         GM_Exception
+   * @return
+   * @throws GM_Exception
    */
   private static StringBuffer export( GM_MultiSurface ms ) throws GM_Exception
   {
@@ -513,8 +512,7 @@ public class WKTAdapter
     {
       inner = (GM_Position[][])inn.toArray( new GM_Position[inn.size()][] );
     }
-    GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner,
-        new GM_SurfaceInterpolation_Impl(), crs );
+    GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner, new GM_SurfaceInterpolation_Impl(), crs );
 
     Debug.debugMethodEnd();
     return sur;
@@ -526,8 +524,7 @@ public class WKTAdapter
    * @param wkt
    *          multipoint WKT
    */
-  public static GM_MultiPoint wrapMultiPoint( String wkt, CS_CoordinateSystem crs )
-      throws GM_Exception
+  public static GM_MultiPoint wrapMultiPoint( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiPoint" );
 
@@ -558,8 +555,7 @@ public class WKTAdapter
    * @param wkt
    *          a WKT
    */
-  public static GM_MultiCurve wrapMultiCurve( String wkt, CS_CoordinateSystem crs )
-      throws GM_Exception
+  public static GM_MultiCurve wrapMultiCurve( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiCurve" );
 
@@ -612,8 +608,7 @@ public class WKTAdapter
    * @param wkt
    *          a WKT
    */
-  public static GM_MultiSurface wrapMultiSurface( String wkt, CS_CoordinateSystem crs )
-      throws GM_Exception
+  public static GM_MultiSurface wrapMultiSurface( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiSurface" );
 
@@ -668,8 +663,7 @@ public class WKTAdapter
       {
         inner = (GM_Position[][])inn.toArray( new GM_Position[inn.size()][] );
       }
-      GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner,
-          new GM_SurfaceInterpolation_Impl(), crs );
+      GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner, new GM_SurfaceInterpolation_Impl(), crs );
       srfcs.add( sur );
       wkt = wkt.substring( pos1 + 3 );
     }

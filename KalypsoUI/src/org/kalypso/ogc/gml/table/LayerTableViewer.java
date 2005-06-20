@@ -116,7 +116,8 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  * 
  * @author Belger
  */
-public class LayerTableViewer extends TableViewer implements ModellEventListener, ICommandTarget, ModellEventProvider, ICellModifier
+public class LayerTableViewer extends TableViewer implements ModellEventListener, ICommandTarget, ModellEventProvider,
+    ICellModifier
 {
   protected Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
 
@@ -147,20 +148,17 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   protected boolean m_isApplyTemplate = false;
 
   /**
-   * This class handles selections of the column headers. Selection of the
-   * column header will cause resorting of the shown tasks using that column's
-   * sorter. Repeated selection of the header will toggle sorting order
-   * (ascending versus descending).
+   * This class handles selections of the column headers. Selection of the column header will cause resorting of the
+   * shown tasks using that column's sorter. Repeated selection of the header will toggle sorting order (ascending
+   * versus descending).
    */
   private final SelectionListener m_headerListener = new SelectionAdapter()
   {
     /**
      * Handles the case of user selecting the header area.
      * <p>
-     * If the column has not been selected previously, it will set the sorter of
-     * that column to be the current tasklist sorter. Repeated presses on the
-     * same column header will toggle sorting order
-     * (ascending/descending/original).
+     * If the column has not been selected previously, it will set the sorter of that column to be the current tasklist
+     * sorter. Repeated presses on the same column header will toggle sorting order (ascending/descending/original).
      */
     public void widgetSelected( final SelectionEvent e )
     {
@@ -210,8 +208,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
    * @param templateTarget
    * @param featureControlFactory
    * @param selectionID
-   * @param bCursorSelects falls true, wird immer die unter dem Cursor liegende
-   *          Zeile selektiert
+   * @param bCursorSelects
+   *          falls true, wird immer die unter dem Cursor liegende Zeile selektiert
    */
   public LayerTableViewer( final Composite parent, final int style, final ICommandTarget templateTarget,
       final IFeatureModifierFactory featureControlFactory, final int selectionID, final boolean bCursorSelects )
@@ -222,7 +220,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_templateTarget = templateTarget;
     m_selectionID = selectionID;
 
-    setContentProvider( new LayerTableContentProvider(this) );
+    setContentProvider( new LayerTableContentProvider( this ) );
     setLabelProvider( new LayerTableLabelProvider( this ) );
     setCellModifier( this );
     setSorter( m_sorter );
@@ -362,8 +360,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       columns[i].dispose();
   }
 
-  public void addColumn( final String propertyName, final boolean isEditable, final int width, final String alignment, String format,
-      final boolean bRefreshColumns )
+  public void addColumn( final String propertyName, final boolean isEditable, final int width, final String alignment,
+      String format, final boolean bRefreshColumns )
   {
     final Table table = getTable();
 
@@ -551,10 +549,12 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     if( getTheme() == null )
       return;
-    if( ( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent ).getGMLWorkspace() == getTheme().getWorkspace() )
+    if( ( modellEvent instanceof IGMLWorkspaceModellEvent && ( (IGMLWorkspaceModellEvent)modellEvent )
+        .getGMLWorkspace() == getTheme().getWorkspace() )
         ||
 
-        ( modellEvent != null && modellEvent.getEventSource() == getTheme() && modellEvent.isType( ModellEvent.THEME_ADDED ) ) )
+        ( modellEvent != null && modellEvent.getEventSource() == getTheme() && modellEvent
+            .isType( ModellEvent.THEME_ADDED ) ) )
     {
       if( !isDisposed() )
         getControl().getDisplay().asyncExec( new Runnable()
@@ -621,8 +621,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -807,18 +806,16 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
    */
   public boolean canModify( final Object element, final String property )
   {
-    // TODO ask modifier also, as for some types editor may not be implemented 
+    // TODO ask modifier also, as for some types editor may not be implemented
     return isEditable( property );
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
    */
   public Object getValue( final Object element, final String property )
   {
@@ -831,8 +828,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object,
-   *      java.lang.String, java.lang.Object)
+   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
    */
   public void modify( final Object element, final String property, final Object value )
   {
@@ -849,7 +845,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         return;
 
       final Object object = modifier.parseInput( feature, value );
-			// dialogs may return FeatureChange objects (doemming)
+      // dialogs may return FeatureChange objects (doemming)
       final FeatureChange fc;
       final IKalypsoFeatureTheme theme = getTheme();
       if( object instanceof FeatureChange )

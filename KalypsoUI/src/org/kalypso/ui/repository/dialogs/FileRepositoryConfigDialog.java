@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.dialogs;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -82,8 +82,8 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   private DirectoryFieldEditor m_fLocation;
 
   /**
-   * Constructor. If plugin is specified, it uses the values provided by its
-   * DialogSettings as default values for this dialog.
+   * Constructor. If plugin is specified, it uses the values provided by its DialogSettings as default values for this
+   * dialog.
    * 
    * @param parentShell
    * @param location
@@ -92,8 +92,8 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
    * @param plugin
    *          [optional] if not null, default values are used
    */
-  public FileRepositoryConfigDialog( final Shell parentShell, String location,
-      String identifier, String filters, final AbstractUIPlugin plugin )
+  public FileRepositoryConfigDialog( final Shell parentShell, String location, String identifier, String filters,
+      final AbstractUIPlugin plugin )
   {
     super( parentShell );
 
@@ -117,7 +117,7 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     m_store.setDefault( FILTER, filters );
   }
 
-  public void dispose( )
+  public void dispose()
   {
     m_fFilters.dispose();
     m_fIdentifier.dispose();
@@ -132,7 +132,7 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     setTitle( "ZML-Repository Konfiguration" );
     setMessage( msg );
 
-    final Composite c = (Composite) super.createDialogArea( parent );
+    final Composite c = (Composite)super.createDialogArea( parent );
 
     final Composite sub = new Composite( c, SWT.FILL );
 
@@ -164,7 +164,7 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.Dialog#okPressed()
    */
-  protected void okPressed( )
+  protected void okPressed()
   {
     if( !m_fLocation.isValid() )
     {
@@ -175,15 +175,13 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
 
     if( !m_fIdentifier.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), "Kennzeichen",
-          "Bitte geben Sie einen gültigen Kennzeichen ein" );
+      MessageDialog.openInformation( getParentShell(), "Kennzeichen", "Bitte geben Sie einen gültigen Kennzeichen ein" );
       return;
     }
 
     if( !m_fFilters.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), "Dateiendung",
-          m_fFilters.getErrorMessage() );
+      MessageDialog.openInformation( getParentShell(), "Dateiendung", m_fFilters.getErrorMessage() );
       return;
     }
 
@@ -201,17 +199,17 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     super.okPressed();
   }
 
-  public String getLocation( )
+  public String getLocation()
   {
     return m_store.getString( BASEDIR );
   }
 
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_store.getString( IDENTIFIER );
   }
 
-  public String getFilters( )
+  public String getFilters()
   {
     return m_store.getString( FILTER );
   }

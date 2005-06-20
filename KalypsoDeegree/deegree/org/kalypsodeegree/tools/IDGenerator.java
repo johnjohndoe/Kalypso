@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,21 +57,19 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.tools;
 
 import java.sql.SQLException;
 
 /**
- * This interface defines a generator for unique values for the primary key in a
- * database table.
+ * This interface defines a generator for unique values for the primary key in a database table.
  * <p>
- * NOTE: At the moment, every application has to take care of locking the table
- * to prevent problems in multithreaded or multihosted applications.
+ * NOTE: At the moment, every application has to take care of locking the table to prevent problems in multithreaded or
+ * multihosted applications.
  * <p>
  * 
- * @author Markus Schneider <a href="mailto:mschneider@lat-lon.de">Markus
- *         Schneider </a>
+ * @author Markus Schneider <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
 public interface IDGenerator
@@ -81,8 +79,7 @@ public interface IDGenerator
    * Generates a new Id, suitable as a primary key for the next dataset.
    * <p>
    * 
-   * @return Id, the object type depends on the database field used as primary
-   *         key
+   * @return Id, the object type depends on the database field used as primary key
    */
   public Object generateUniqueId() throws SQLException;
 }

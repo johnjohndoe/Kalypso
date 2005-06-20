@@ -75,11 +75,11 @@ public class GmlLoader extends AbstractLoader
   private final IUrlResolver m_urlResolver = new UrlResolver();
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
-   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  protected Object loadIntern( final String source, final URL context,
-      final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
+      throws LoaderException
   {
     try
     {
@@ -87,14 +87,12 @@ public class GmlLoader extends AbstractLoader
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer
-          .createGMLWorkspace( gmlURL, m_urlResolver ) );
+      final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL,
+          m_urlResolver ) );
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
-          FeatureVisitor.DEPTH_INFINITE );
-      workspace.accept( new ResortVisitor(), workspace.getRootFeature(),
-          FeatureVisitor.DEPTH_INFINITE );
+      workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
       if( gmlFile != null )
@@ -129,11 +127,11 @@ public class GmlLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL,
-   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
+   *      java.lang.Object)
    */
-  public void save( final String source, final URL context, final IProgressMonitor monitor,
-      final Object data ) throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
+      throws LoaderException
   {
     try
     {
@@ -170,8 +168,7 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
 
-      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n"
-          + e.getLocalizedMessage(), e );
+      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n" + e.getLocalizedMessage(), e );
     }
     catch( final Throwable e )
     {

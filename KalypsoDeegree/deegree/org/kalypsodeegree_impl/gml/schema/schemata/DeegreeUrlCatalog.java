@@ -45,9 +45,8 @@ import java.util.Map;
 import org.kalypso.java.net.AbstractUrlCatalog;
 
 /**
- * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die
- * gleichen Schemata (zumindest obslink) werden auch fürs binding benutzt ist
- * sind dadurch endlich wirklich nur noch einmal vorhanden.
+ * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die gleichen Schemata (zumindest obslink) werden
+ * auch fürs binding benutzt ist sind dadurch endlich wirklich nur noch einmal vorhanden.
  * 
  * @author gernot
  */
@@ -55,8 +54,7 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
 
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
-   *      java.util.Map)
+   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.util;
 
 import java.io.IOException;
@@ -54,8 +54,8 @@ import org.kalypso.java.lang.CatchRunnable;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * Helper-Klasse für {@link org.eclipse.core.resources.IFile}. This is an
- * abstract class, you must implement the <code>write</code> method.
+ * Helper-Klasse für {@link org.eclipse.core.resources.IFile}. This is an abstract class, you must implement the
+ * <code>write</code> method.
  * 
  * @author belger
  */
@@ -70,9 +70,8 @@ public abstract class SetContentHelper
    * @param monitor
    * @throws CoreException
    */
-  public void setFileContents( final IFile file, 
-      final boolean force, final boolean keepHistory,
-      final IProgressMonitor monitor ) throws CoreException 
+  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
+      final IProgressMonitor monitor ) throws CoreException
   {
     setFileContents( file, force, keepHistory, monitor, null );
   }
@@ -85,9 +84,8 @@ public abstract class SetContentHelper
    * @param charset
    * @throws CoreException
    */
-  public void setFileContents( final IFile file, final boolean force,
-      final boolean keepHistory, final IProgressMonitor monitor, final String charset )
-      throws CoreException
+  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
+      final IProgressMonitor monitor, final String charset ) throws CoreException
   {
     if( charset == null )
     {
@@ -103,7 +101,7 @@ public abstract class SetContentHelper
     try
     {
       monitor.beginTask( "Schreibe Datei", 2000 );
-      
+
       final PipedOutputStream m_pos = new PipedOutputStream();
       m_pis = new PipedInputStream( m_pos );
 
@@ -112,7 +110,7 @@ public abstract class SetContentHelper
         /**
          * @see org.kalypso.java.lang.CatchRunnable#runIntern()
          */
-        protected void runIntern( ) throws Throwable
+        protected void runIntern() throws Throwable
         {
           OutputStreamWriter outputStreamWriter = null;
           try
@@ -137,8 +135,7 @@ public abstract class SetContentHelper
 
       final Throwable thrown = innerRunnable.getThrown();
       if( thrown != null )
-        throw new CoreException( KalypsoGisPlugin
-            .createErrorStatus( "", thrown ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "", thrown ) );
     }
     catch( IOException e )
     {
@@ -157,8 +154,7 @@ public abstract class SetContentHelper
   }
 
   /**
-   * Override this method to provide your business. The writer is closed once
-   * write returns.
+   * Override this method to provide your business. The writer is closed once write returns.
    * 
    * @param writer
    * @throws Throwable
@@ -168,7 +164,7 @@ public abstract class SetContentHelper
   /**
    * @return the charset used for encoding the file
    */
-  protected String getCharset( )
+  protected String getCharset()
   {
     return m_newCharset;
   }

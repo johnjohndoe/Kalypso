@@ -45,8 +45,7 @@ import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
- * A column for an observation table view. It is based on a key axis and a value
- * axis.
+ * A column for an observation table view. It is based on a key axis and a value axis.
  * 
  * @author schlienger
  */
@@ -65,8 +64,8 @@ public class TableViewColumn extends ObsViewItem
 
   private boolean m_shown = true;
 
-  public TableViewColumn( final TableView view, final IObsProvider provider, final String name, final boolean isEditable,
-      final int width, final IAxis keyAxis, final IAxis valueAxis )
+  public TableViewColumn( final TableView view, final IObsProvider provider, final String name,
+      final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis )
   {
     super( view, provider, name );
 
@@ -76,17 +75,17 @@ public class TableViewColumn extends ObsViewItem
     m_valueAxis = valueAxis;
   }
 
-  public boolean isEditable( )
+  public boolean isEditable()
   {
     return m_isEditable;
   }
 
-  public int getWidth( )
+  public int getWidth()
   {
     return m_width;
   }
 
-  public boolean isDirty( )
+  public boolean isDirty()
   {
     return m_dirty;
   }
@@ -95,23 +94,23 @@ public class TableViewColumn extends ObsViewItem
   {
     m_dirty = dirty;
   }
-  
-  public Class getColumnClass( )
+
+  public Class getColumnClass()
   {
     return m_valueAxis.getDataClass();
   }
 
-  public IAxis getAxis( )
+  public IAxis getAxis()
   {
     return m_valueAxis;
   }
 
-  public IAxis getKeyAxis( )
+  public IAxis getKeyAxis()
   {
     return m_keyAxis;
   }
 
-  public boolean isShown( )
+  public boolean isShown()
   {
     return m_shown;
   }

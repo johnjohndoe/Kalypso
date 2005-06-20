@@ -46,9 +46,8 @@ import java.awt.Point;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 
 /**
- * This class performs a zoomin event. It will be performed by setting the map
- * boundaries to the rectangle selected by the client or centering the map onto
- * the point the user had mouse-clicked to.
+ * This class performs a zoomin event. It will be performed by setting the map boundaries to the rectangle selected by
+ * the client or centering the map onto the point the user had mouse-clicked to.
  * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  */
@@ -93,8 +92,7 @@ public class ZoomInByRectWidget extends AbstractWidget
   }
 
   /*
-   * paints the dragged rectangle defined by the start and end point of the drag
-   * box
+   * paints the dragged rectangle defined by the start and end point of the drag box
    */
   public void paint( Graphics g )
   {
@@ -122,7 +120,7 @@ public class ZoomInByRectWidget extends AbstractWidget
       if( Math.abs( x1 - x2 ) > MIN_PIXEL_ZOOM_BOX && Math.abs( y1 - y2 ) > MIN_PIXEL_ZOOM_BOX )
       {
         ChangeExtentCommand command = new ChangeExtentCommand( getMapPanel(), getBox( x1, y1, x2, y2 ) );
-        postViewCommand(command, null);
+        postViewCommand( command, null );
       }
     }
   }

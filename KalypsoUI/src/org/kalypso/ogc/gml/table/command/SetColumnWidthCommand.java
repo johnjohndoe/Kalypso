@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
 import org.eclipse.swt.widgets.TableColumn;
@@ -45,8 +45,8 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.util.command.ICommand;
 
 /**
- * Kommando zum ändern der Spaltenbreite. Es wird davon ausgegangen, dass die
- * Breite der Spalte (d.h. des Widgets) bereits gesetzt wurde.
+ * Kommando zum ändern der Spaltenbreite. Es wird davon ausgegangen, dass die Breite der Spalte (d.h. des Widgets)
+ * bereits gesetzt wurde.
  * 
  * @author Belger
  */

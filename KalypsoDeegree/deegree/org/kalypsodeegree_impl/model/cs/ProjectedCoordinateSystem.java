@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -77,15 +77,12 @@ import org.opengis.cs.CS_ProjectedCoordinateSystem;
 import org.opengis.cs.CS_Projection;
 
 /**
- * A 2D cartographic coordinate system. Projected coordinates are the
- * two-dimensional cartesian coordinates typically found on maps and computer
- * displays. The cartesian axes are often called "paper coordinates" or "display
- * coordinates." The conversions from a three-dimensional curvilinear coordinate
- * system (whether ellipsoidal or spherical) to projected coordinates may be
- * assumed to be well known. Examples of projected coordinate systems are:
- * Lambert, Mercator, and transverse Mercator. Conversions to, and conversions
- * between, projected spatial coordinate systems often do not preserve
- * distances, areas and angles.
+ * A 2D cartographic coordinate system. Projected coordinates are the two-dimensional cartesian coordinates typically
+ * found on maps and computer displays. The cartesian axes are often called "paper coordinates" or "display
+ * coordinates." The conversions from a three-dimensional curvilinear coordinate system (whether ellipsoidal or
+ * spherical) to projected coordinates may be assumed to be well known. Examples of projected coordinate systems are:
+ * Lambert, Mercator, and transverse Mercator. Conversions to, and conversions between, projected spatial coordinate
+ * systems often do not preserve distances, areas and angles.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -116,9 +113,8 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
   private final Projection projection;
 
   /**
-   * Creates a projected coordinate system using the specified geographic
-   * system. Projected coordinates will be in meters, <var>x </var> values
-   * increasing east and <var>y </var> values increasing north.
+   * Creates a projected coordinate system using the specified geographic system. Projected coordinates will be in
+   * meters, <var>x </var> values increasing east and <var>y </var> values increasing north.
    * 
    * @param name
    *          Name to give new object.
@@ -127,8 +123,7 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
    * @param projection
    *          Projection from geographic to projected coordinate system.
    */
-  public ProjectedCoordinateSystem( final String name, final GeographicCoordinateSystem gcs,
-      final Projection projection )
+  public ProjectedCoordinateSystem( final String name, final GeographicCoordinateSystem gcs, final Projection projection )
   {
     this( name, gcs, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
   }
@@ -150,8 +145,8 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
    *          Details of 1st ordinates in created PCS coordinates.
    *  
    */
-  public ProjectedCoordinateSystem( final String name, final GeographicCoordinateSystem gcs,
-      Projection projection, final Unit unit, final AxisInfo axis0, final AxisInfo axis1 )
+  public ProjectedCoordinateSystem( final String name, final GeographicCoordinateSystem gcs, Projection projection,
+      final Unit unit, final AxisInfo axis0, final AxisInfo axis1 )
   {
     super( name, gcs.getHorizontalDatum(), axis0, axis1 );
     ensureNonNull( "gcs", gcs );
@@ -186,17 +181,15 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
     }
     if( invalidParameter != null )
     {
-      throw new IllegalArgumentException( Resources
-          .format( ResourceKeys.ERROR_INCOMPATIBLE_ELLIPSOID_$2, invalidParameter, ellipsoid
-              .getName( null ) ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_INCOMPATIBLE_ELLIPSOID_$2,
+          invalidParameter, ellipsoid.getName( null ) ) );
     }
     if( resetAxisLength )
     {
       final ParameterList parameters = projection.getParameters();
       parameters.setParameter( "semi_major", semiMajor );
       parameters.setParameter( "semi_minor", semiMinor );
-      projection = new Projection( projection.getName( null ), projection.getClassName(),
-          parameters );
+      projection = new Projection( projection.getName( null ), projection.getClassName(), parameters );
     }
     this.gcs = gcs;
     this.projection = projection;
@@ -219,8 +212,8 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
    * @param axis1
    *          Details of 1st ordinates in created PCS coordinates.
    */
-  ProjectedCoordinateSystem( final Map properties, final GeographicCoordinateSystem gcs,
-      final Projection projection, final Unit unit, final AxisInfo axis0, final AxisInfo axis1 )
+  ProjectedCoordinateSystem( final Map properties, final GeographicCoordinateSystem gcs, final Projection projection,
+      final Unit unit, final AxisInfo axis0, final AxisInfo axis1 )
   {
     super( properties, gcs.getHorizontalDatum(), axis0, axis1 );
     this.gcs = gcs;
@@ -250,8 +243,7 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
   }
 
   /**
-   * Gets units for dimension within coordinate system. This linear unit is the
-   * same for all axis.
+   * Gets units for dimension within coordinate system. This linear unit is the same for all axis.
    * 
    * @param dimension
    *          Zero based index of axis.
@@ -263,18 +255,16 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
   {
     if( dimension >= 0 && dimension < getDimension() )
       return unit;
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
-   * The default implementation compare datum, units and axis, but ignore name,
-   * alias and other meta-data informations.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform. The default implementation compare datum, units and axis, but ignore name, alias
+   * and other meta-data informations.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).
@@ -287,8 +277,7 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
     if( super.equivalents( cs ) )
     {
       final ProjectedCoordinateSystem that = (ProjectedCoordinateSystem)cs;
-      return Utilities.equals( this.gcs, that.gcs )
-          && Utilities.equals( this.projection, that.projection )
+      return Utilities.equals( this.gcs, that.gcs ) && Utilities.equals( this.projection, that.projection )
           && Utilities.equals( this.unit, that.unit );
     }
     return false;
@@ -313,11 +302,9 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
   }
 
   /**
-   * Returns an OpenGIS interface for this projected coordinate system. The
-   * returned object is suitable for RMI use.
+   * Returns an OpenGIS interface for this projected coordinate system. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -331,14 +318,12 @@ public class ProjectedCoordinateSystem extends HorizontalCoordinateSystem
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link ProjectedCoordinateSystem}object for use with OpenGIS. This
-   * class is suitable for RMI use.
+   * Wrap a {@link ProjectedCoordinateSystem}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux
    */
-  private final class Export extends HorizontalCoordinateSystem.Export implements
-      CS_ProjectedCoordinateSystem
+  private final class Export extends HorizontalCoordinateSystem.Export implements CS_ProjectedCoordinateSystem
   {
     /**
      * Construct a remote object.

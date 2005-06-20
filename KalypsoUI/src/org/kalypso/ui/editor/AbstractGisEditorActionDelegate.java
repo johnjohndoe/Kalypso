@@ -53,8 +53,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * @author belger
  */
-public abstract class AbstractGisEditorActionDelegate implements IEditorActionDelegate,
-    ModellEventListener
+public abstract class AbstractGisEditorActionDelegate implements IEditorActionDelegate, ModellEventListener
 {
   private IEditorPart m_editor;
 
@@ -79,7 +78,7 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
       }
       if( m_editor instanceof GMLEditor )
       {
-        ((GMLEditor) m_editor).getTreeView().removeModellListener(this);
+        ( (GMLEditor)m_editor ).getTreeView().removeModellListener( this );
       }
     }
     // remember new editor
@@ -95,11 +94,11 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
       }
       if( m_editor instanceof GMLEditor )
       {
-        ((GMLEditor) m_editor).getTreeView().addModellListener(this);
+        ( (GMLEditor)m_editor ).getTreeView().addModellListener( this );
       }
     }
     // update action state
-    refreshAction(null);
+    refreshAction( null );
   }
 
   /**
@@ -116,9 +115,10 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    * implement here: <br>
    * 1. validate action constraints <br>
    * 2. update action status
-   * @param action 
+   * 
+   * @param action
    */
-  protected abstract void refreshAction(IAction action);
+  protected abstract void refreshAction( IAction action );
 
   /**
    * make cast to special editor in calling method
@@ -140,6 +140,6 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    refreshAction(m_action);
+    refreshAction( m_action );
   }
 }

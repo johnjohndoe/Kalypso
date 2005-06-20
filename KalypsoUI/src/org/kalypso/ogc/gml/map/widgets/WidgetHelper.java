@@ -49,45 +49,46 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 public class WidgetHelper
 {
 
-  private final static HashMap m_widget=new HashMap();
+  private final static HashMap m_widget = new HashMap();
 
   /*
    * 
-   *  @author doemming
+   * @author doemming
    */
   public WidgetHelper()
   {
-    // not to instantiate
+  // not to instantiate
   }
 
-  public static IWidget getWidget(String widgetID)
+  public static IWidget getWidget( String widgetID )
   {
-    if(!m_widget.containsKey(widgetID))
-    {    IWidget newWidget=createWidget(widgetID);
-      if(newWidget!=null)
-        m_widget.put(widgetID, newWidget);
+    if( !m_widget.containsKey( widgetID ) )
+    {
+      IWidget newWidget = createWidget( widgetID );
+      if( newWidget != null )
+        m_widget.put( widgetID, newWidget );
     }
-    return (IWidget)m_widget.get(widgetID);
+    return (IWidget)m_widget.get( widgetID );
   }
-  
+
   private static IWidget createWidget( String widgetID )
   {
-    if(MapPanel.WIDGET_ZOOM_IN.equals(widgetID))
-      return( new ZoomInWidget("zoom in","") );
-    if(MapPanel.WIDGET_ZOOM_IN_RECT.equals(widgetID))
-      return(  new ZoomInByRectWidget("zoom in","") );
-    if(MapPanel.WIDGET_PAN.equals(widgetID))
-      return(  new PanToWidget("pan to","") );
-    if(MapPanel.WIDGET_CREATE_FEATURE.equals(widgetID))
-      return(  new CreateGeometryFeatureWidget("create feature","") );
-    if(MapPanel.WIDGET_SELECT.equals(widgetID))
-      return(  new SelectWidget("select","") );
-    if(MapPanel.WIDGET_UNSELECT.equals(widgetID))
-      return(  new UnSelectWidget("unselect","") );
-    if(MapPanel.WIDGET_TOGGLE_SELECT.equals(widgetID))
-      return(  new ToggleSelectWidget("toggle selection","") );
-    if(MapPanel.WIDGET_SINGLE_SELECT.equals(widgetID))
-      return(  new SingleElementSelectWidget("single select","") );
+    if( MapPanel.WIDGET_ZOOM_IN.equals( widgetID ) )
+      return ( new ZoomInWidget( "zoom in", "" ) );
+    if( MapPanel.WIDGET_ZOOM_IN_RECT.equals( widgetID ) )
+      return ( new ZoomInByRectWidget( "zoom in", "" ) );
+    if( MapPanel.WIDGET_PAN.equals( widgetID ) )
+      return ( new PanToWidget( "pan to", "" ) );
+    if( MapPanel.WIDGET_CREATE_FEATURE.equals( widgetID ) )
+      return ( new CreateGeometryFeatureWidget( "create feature", "" ) );
+    if( MapPanel.WIDGET_SELECT.equals( widgetID ) )
+      return ( new SelectWidget( "select", "" ) );
+    if( MapPanel.WIDGET_UNSELECT.equals( widgetID ) )
+      return ( new UnSelectWidget( "unselect", "" ) );
+    if( MapPanel.WIDGET_TOGGLE_SELECT.equals( widgetID ) )
+      return ( new ToggleSelectWidget( "toggle selection", "" ) );
+    if( MapPanel.WIDGET_SINGLE_SELECT.equals( widgetID ) )
+      return ( new SingleElementSelectWidget( "single select", "" ) );
     return null;
   }
 }

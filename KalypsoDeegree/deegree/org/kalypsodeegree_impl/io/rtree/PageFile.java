@@ -24,8 +24,7 @@
 package org.kalypsodeegree_impl.io.rtree;
 
 /**
- * Abstrakte Klasse für eine PageFile Definiert Methode, die jede PageFile
- * besitzen muß.
+ * Abstrakte Klasse für eine PageFile Definiert Methode, die jede PageFile besitzen muß.
  * 
  * @version 1.0
  * @author Wolfgang Bär
@@ -62,8 +61,7 @@ public abstract class PageFile
   }
 
   /**
-   * Kapazität der Knoten in der PageFile. Kapazität ist der Maximale
-   * Dateninhalt plus 1 für OverFlow.
+   * Kapazität der Knoten in der PageFile. Kapazität ist der Maximale Dateninhalt plus 1 für OverFlow.
    * 
    * @return int - Kapazität
    */
@@ -83,8 +81,8 @@ public abstract class PageFile
   public abstract Node readNode( int pageNumber ) throws PageFileException;
 
   /**
-   * Schreibt einen Knoten in PageFile. Methode muß prüfen, ob Knoten eine
-   * PageNumber besitzt, ansonsten wird eine neu zugewiesen und zurückgegeben.
+   * Schreibt einen Knoten in PageFile. Methode muß prüfen, ob Knoten eine PageNumber besitzt, ansonsten wird eine neu
+   * zugewiesen und zurückgegeben.
    * 
    * @param node
    *          zu schreibender Knoten

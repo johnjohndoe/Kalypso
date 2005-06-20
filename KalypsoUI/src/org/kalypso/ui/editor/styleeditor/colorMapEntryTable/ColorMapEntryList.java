@@ -50,7 +50,7 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 public class ColorMapEntryList
 {
   private Set changeListeners = new HashSet();
-  
+
   private Vector m_colorMapEntryList = null;
 
   public ColorMapEntryList()
@@ -58,14 +58,15 @@ public class ColorMapEntryList
     super();
     m_colorMapEntryList = new Vector();
   }
-  
-  public Vector getColorMapEntries(){
+
+  public Vector getColorMapEntries()
+  {
     return m_colorMapEntryList;
   }
 
   public void addColorMapEntry( ColorMapEntry colorMapEntry )
   {
-    m_colorMapEntryList.add(m_colorMapEntryList.size(), colorMapEntry );
+    m_colorMapEntryList.add( m_colorMapEntryList.size(), colorMapEntry );
     Iterator iterator = changeListeners.iterator();
     while( iterator.hasNext() )
       ( (IColorMapEntryViewer)iterator.next() ).addColorMapEntry( colorMapEntry );

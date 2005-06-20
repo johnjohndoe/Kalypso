@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.core.resources;
 
 import java.io.ByteArrayInputStream;
@@ -55,10 +55,11 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class StringStorage implements IEncodedStorage
 {
   private final String m_name;
+
   private final String m_data;
+
   private final IPath m_path;
 
-  
   /**
    * Constructor
    * 
@@ -69,13 +70,16 @@ public class StringStorage implements IEncodedStorage
   {
     this( "<name>", data, path );
   }
-  
+
   /**
    * Constructor
    * 
-   * @param name name of the storage
-   * @param data contents
-   * @param path path
+   * @param name
+   *          name of the storage
+   * @param data
+   *          contents
+   * @param path
+   *          path
    */
   public StringStorage( final String name, final String data, final IPath path )
   {
@@ -98,7 +102,7 @@ public class StringStorage implements IEncodedStorage
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
-      
+
       throw new CoreException( KalypsoGisPlugin.createErrorStatus( "", e ) );
     }
   }
@@ -140,7 +144,7 @@ public class StringStorage implements IEncodedStorage
    */
   public String getCharset()
   {
-    // allways Unicode, because wie 
+    // allways Unicode, because wie
     return "UTF-8";
   }
 }

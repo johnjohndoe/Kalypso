@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.wizard;
 
 import java.io.OutputStream;
@@ -83,7 +83,7 @@ public class ExportableLayerTable implements IExportableTableDocument
 
       }
     };
-    
+
     layerTable.getTable().getDisplay().syncExec( runnable );
   }
 

@@ -19,7 +19,7 @@ public class Arguments implements Map
     final Object object = get( key );
     if( object == null )
       return null;
-    
+
     return object.toString();
   }
 
@@ -28,73 +28,87 @@ public class Arguments implements Map
     final Object object = get( key );
     if( object == null )
       return defaultValue;
-    
+
     return object.toString();
   }
-  
-  public void clear( )
+
+  public void clear()
   {
     m_map.clear();
   }
+
   public boolean containsKey( Object key )
   {
     return m_map.containsKey( key );
   }
+
   public boolean containsValue( Object value )
   {
     return m_map.containsValue( value );
   }
-  public Set entrySet( )
+
+  public Set entrySet()
   {
     return m_map.entrySet();
   }
+
   public boolean equals( Object obj )
   {
     return m_map.equals( obj );
   }
+
   public Object get( Object key )
   {
     return m_map.get( key );
   }
-  public int hashCode( )
+
+  public int hashCode()
   {
     return m_map.hashCode();
   }
-  public boolean isEmpty( )
+
+  public boolean isEmpty()
   {
     return m_map.isEmpty();
   }
-  public Set keySet( )
+
+  public Set keySet()
   {
     return m_map.keySet();
   }
+
   public Object put( Object key, Object value )
   {
     return m_map.put( key, value );
   }
+
   public void putAll( Map t )
   {
     m_map.putAll( t );
   }
+
   public Object remove( Object key )
   {
     return m_map.remove( key );
   }
-  public int size( )
+
+  public int size()
   {
     return m_map.size();
   }
-  public String toString( )
+
+  public String toString()
   {
     return m_map.toString();
   }
-  public Collection values( )
+
+  public Collection values()
   {
     return m_map.values();
   }
 
   public Arguments getArguments( final String key )
   {
-    return (Arguments) get( key );
+    return (Arguments)get( key );
   }
 }

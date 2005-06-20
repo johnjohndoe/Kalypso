@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
@@ -78,9 +78,8 @@ import org.opengis.ct.CT_Parameter;
 import org.opengis.ct.CT_TransformType;
 
 /**
- * <FONT COLOR="#FF6633">Provide methods for interoperability with
- * <code>org.opengis.ct</code> package. </FONT> All methods accept null
- * argument. All OpenGIS objects are suitable for RMI use.
+ * <FONT COLOR="#FF6633">Provide methods for interoperability with <code>org.opengis.ct</code> package. </FONT> All
+ * methods accept null argument. All OpenGIS objects are suitable for RMI use.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -93,14 +92,12 @@ public class Adapters
   private static Adapters DEFAULT;
 
   /**
-   * The underlying adapters from the <code>org.kalypsodeegree_impl.model.cs</code>
-   * package.
+   * The underlying adapters from the <code>org.kalypsodeegree_impl.model.cs</code> package.
    */
   public final org.kalypsodeegree_impl.model.cs.Adapters CS;
 
   /**
-   * The underlying adapters from the <code>org.kalypsodeegree_impl.model.pt</code>
-   * package.
+   * The underlying adapters from the <code>org.kalypsodeegree_impl.model.pt</code> package.
    */
   public final org.kalypsodeegree_impl.model.pt.Adapters PT;
 
@@ -116,8 +113,7 @@ public class Adapters
 
     protected boolean equals( final Object object1, final Object object2 )
     {
-      return super.equals( MathTransformExport.unwrap( object1 ), MathTransformExport
-          .unwrap( object2 ) );
+      return super.equals( MathTransformExport.unwrap( object1 ), MathTransformExport.unwrap( object2 ) );
     }
   };
 
@@ -125,8 +121,7 @@ public class Adapters
    * Default constructor.
    * 
    * @param CS
-   *          The underlying adapters from the
-   *          <code>org.kalypsodeegree_impl.model.cs</code> package.
+   *          The underlying adapters from the <code>org.kalypsodeegree_impl.model.cs</code> package.
    */
   protected Adapters( final org.kalypsodeegree_impl.model.cs.Adapters CS )
   {
@@ -170,8 +165,7 @@ public class Adapters
    */
   public CT_CoordinateTransformation export( final CoordinateTransformation transform )
   {
-    return ( transform != null ) ? (CT_CoordinateTransformation)transform.cachedOpenGIS( this )
-        : null;
+    return ( transform != null ) ? (CT_CoordinateTransformation)transform.cachedOpenGIS( this ) : null;
   }
 
   /**
@@ -187,8 +181,7 @@ public class Adapters
    */
   public CT_CoordinateTransformationFactory export( final CoordinateTransformationFactory factory )
   {
-    return ( factory != null ) ? (CT_CoordinateTransformationFactory)factory.toOpenGIS( this )
-        : null;
+    return ( factory != null ) ? (CT_CoordinateTransformationFactory)factory.toOpenGIS( this ) : null;
   }
 
   /**
@@ -266,8 +259,7 @@ public class Adapters
    * @throws RemoteException
    *           if a remote call failed.
    */
-  public CoordinateTransformation wrap( final CT_CoordinateTransformation transform )
-      throws RemoteException
+  public CoordinateTransformation wrap( final CT_CoordinateTransformation transform ) throws RemoteException
   {
     if( transform == null )
       return null;
@@ -275,9 +267,8 @@ public class Adapters
     {
       return ( (CoordinateTransformation.Export)transform ).unwrap();
     }
-    return new CoordinateTransformation( null, CS.wrap( transform.getSourceCS() ), CS
-        .wrap( transform.getTargetCS() ), wrap( transform.getTransformType() ), wrap( transform
-        .getMathTransform() ) );
+    return new CoordinateTransformation( null, CS.wrap( transform.getSourceCS() ), CS.wrap( transform.getTargetCS() ),
+        wrap( transform.getTransformType() ), wrap( transform.getMathTransform() ) );
   }
 
   /**
@@ -302,8 +293,8 @@ public class Adapters
     }
     paramNames = (String[])XArray.resize( paramNames, count );
     paramClasses = (Class[])XArray.resize( paramClasses, count );
-    final ParameterList list = new ParameterListImpl( new ParameterListDescriptorImpl( null,
-        paramNames, paramClasses, null, null ) );
+    final ParameterList list = new ParameterListImpl( new ParameterListDescriptorImpl( null, paramNames, paramClasses,
+        null, null ) );
     for( int i = 0; i < paramNames.length; i++ )
     {
       list.setParameter( paramNames[i], parameters[i].value );

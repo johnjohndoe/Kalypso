@@ -78,9 +78,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * default implementation of the GM_Surface interface from package jago.model.
  * <p>
  * </p>
- * for simplicity of the implementation it is assumed that a surface is build
- * from just one surface patch. this isn't completly confrom to the ISO 19107
- * and the OGC GAIA specification but sufficient for most applications.
+ * for simplicity of the implementation it is assumed that a surface is build from just one surface patch. this isn't
+ * completly confrom to the ISO 19107 and the OGC GAIA specification but sufficient for most applications.
  * <p>
  * </p>
  * It will be extended to fullfill the complete specs as soon as possible.
@@ -102,10 +101,10 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   private double area = 0;
 
   /**
-   * initializes the surface with default orientation submitting one surface
-   * patch.
+   * initializes the surface with default orientation submitting one surface patch.
    * 
-   * @param surfacePatch patches of the surface.
+   * @param surfacePatch
+   *          patches of the surface.
    */
   public GM_Surface_Impl( GM_SurfacePatch surfacePatch ) throws GM_Exception
   {
@@ -115,7 +114,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /**
    * initializes the surface submitting the orientation and one surface patch.
    * 
-   * @param surfacePatch patches of the surface.
+   * @param surfacePatch
+   *          patches of the surface.
    */
   public GM_Surface_Impl( char orientation, GM_SurfacePatch surfacePatch ) throws GM_Exception
   {
@@ -127,10 +127,10 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * initializes the surface with default orientation submitting the surfaces
-   * boundary
+   * initializes the surface with default orientation submitting the surfaces boundary
    * 
-   * @param boundary boundary of the surface
+   * @param boundary
+   *          boundary of the surface
    */
   public GM_Surface_Impl( GM_SurfaceBoundary boundary ) throws GM_Exception
   {
@@ -138,10 +138,10 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * initializes the surface submitting the orientation and the surfaces
-   * boundary.
+   * initializes the surface submitting the orientation and the surfaces boundary.
    * 
-   * @param boundary boundary of the surface
+   * @param boundary
+   *          boundary of the surface
    */
   public GM_Surface_Impl( char orientation, GM_SurfaceBoundary boundary ) throws GM_Exception
   {
@@ -212,8 +212,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * returns the length of all boundaries of the surface in a reference system
-   * appropriate for measuring distances.
+   * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
   public double getPerimeter()
   {
@@ -221,11 +220,9 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * The operation "area" shall return the area of this GM_GenericSurface. The
-   * area of a 2 dimensional geometric object shall be a numeric measure of its
-   * surface area Since area is an accumulation (integral) of the product of two
-   * distances, its return value shall be in a unit of measure appropriate for
-   * measuring distances squared.
+   * The operation "area" shall return the area of this GM_GenericSurface. The area of a 2 dimensional geometric object
+   * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
+   * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
   public double getArea()
   {
@@ -270,8 +267,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * writes a surface patch to the surface at submitted position. the old patch
-   * will be deleted
+   * writes a surface patch to the surface at submitted position. the old patch will be deleted
    */
   public void setSurfacePatchAt( GM_SurfacePatch patch, int index ) throws GM_Exception
   {
@@ -286,8 +282,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * inserts a surface patch in the curve at the submitted position. all points
-   * with a position that equals index or is higher will be shifted
+   * inserts a surface patch in the curve at the submitted position. all points with a position that equals index or is
+   * higher will be shifted
    */
   public void insertSurfacePatchAt( GM_SurfacePatch patch, int index ) throws GM_Exception
   {
@@ -314,14 +310,16 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   public void deleteSurfacePatchAt( int index )
   {
-    throw new NoSuchMethodError( "Surfaces made of more then one surface patch " + "are not supported at the moment. Because "
-        + "empty surface are not allowed you can't delete " + "the only existing patch." );
+    throw new NoSuchMethodError( "Surfaces made of more then one surface patch "
+        + "are not supported at the moment. Because " + "empty surface are not allowed you can't delete "
+        + "the only existing patch." );
   }
 
   /**
    * checks if this surface is completly equal to the submitted geometry
    * 
-   * @param other object to compare to
+   * @param other
+   *          object to compare to
    */
   public boolean equals( Object other )
   {
@@ -360,11 +358,10 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * The operation "dimension" shall return the inherent dimension of this
-   * GM_Object, which shall be less than or equal to the coordinate dimension.
-   * The dimension of a collection of geometric objects shall be the largest
-   * dimension of any of its pieces. Points are 0-dimensional, curves are
-   * 1-dimensional, surfaces are 2-dimensional, and solids are 3-dimensional.
+   * The operation "dimension" shall return the inherent dimension of this GM_Object, which shall be less than or equal
+   * to the coordinate dimension. The dimension of a collection of geometric objects shall be the largest dimension of
+   * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
+   * 3-dimensional.
    */
   public int getDimension()
   {
@@ -372,9 +369,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * The operation "coordinateDimension" shall return the dimension of the
-   * coordinates that define this GM_Object, which must be the same as the
-   * coordinate dimension of the coordinate reference system for this GM_Object.
+   * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
+   * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   public int getCoordinateDimension()
   {
@@ -401,8 +397,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * translate each point of the surface with the values of the submitted double
-   * array.
+   * translate each point of the surface with the values of the submitted double array.
    */
   public void translate( double[] d )
   {
@@ -428,8 +423,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * The boolean valued operation "intersects" shall return TRUE if this
-   * <tt>GM_Surface_Impl</tt> intersects with the given <tt>GM_Object</t>.
+   * The boolean valued operation "intersects" shall return TRUE if this <tt>GM_Surface_Impl</tt> intersects with the
+   * given <tt>GM_Object</t>.
    * Within a <tt>GM_Complex</tt>, the <tt>GM_Primitives</tt> do not
    * intersect one another. In general, topologically structured data uses
    * shared geometric objects to capture intersection information.
@@ -446,8 +441,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains a single point given by a coordinate.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains a single point given by a
+   * coordinate.
    * <p>
    * </p>
    */
@@ -457,8 +452,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains another GM_Object.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    * <p>
    * </p>
    */

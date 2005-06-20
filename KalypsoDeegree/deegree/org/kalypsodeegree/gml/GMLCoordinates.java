@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,27 +57,22 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.gml;
 
 /**
  * <p>
- * As an alternative to the sequence of &lt;coords&gt;, coordinates can also be
- * conveyed by a single string. By default the coordinates in a tuple are
- * separated by commas, and successive tuples are separated by a space character
- * (#x20). While these delimiters are specified by several attributes, a user is
- * free to define a localized coordinates list that is derived by restriction
- * from gml:CoordinatesType. An instance document could then employ the xsi:type
- * attribute to substitute the localized coordinates list wherever a
- * <coordinates>element is expected; such a subtype could employ other
- * delimiters to reflect local usage.
+ * As an alternative to the sequence of &lt;coords&gt;, coordinates can also be conveyed by a single string. By default
+ * the coordinates in a tuple are separated by commas, and successive tuples are separated by a space character (#x20).
+ * While these delimiters are specified by several attributes, a user is free to define a localized coordinates list
+ * that is derived by restriction from gml:CoordinatesType. An instance document could then employ the xsi:type
+ * attribute to substitute the localized coordinates list wherever a <coordinates>element is expected; such a subtype
+ * could employ other delimiters to reflect local usage.
  * <p>
- * It is expected that a specialized client application will extract and
- * validate string content, as these functions will not be performed by a
- * general XML parser. The formatting attributes will assume their default
- * values if they are not specified for a particular instance; the
- * &lt;coordinates&gt; element must conform to the XML Schema fragments.
+ * It is expected that a specialized client application will extract and validate string content, as these functions
+ * will not be performed by a general XML parser. The formatting attributes will assume their default values if they are
+ * not specified for a particular instance; the &lt;coordinates&gt; element must conform to the XML Schema fragments.
  * 
  * <p>
  * ----------------------------------------------------------
@@ -141,18 +136,15 @@ public interface GMLCoordinates
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.5  2005/03/08 11:01:10  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:41  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:01  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:51  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 12:45:01 doemming ***
+ * Revision 1.6  2005/06/20 14:07:44  belger
+ * Formatierung
+ * Revision 1.5 2005/03/08 11:01:10 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:41 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:01 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31 12:45:01 doemming ***
  * empty log message *** Revision 1.2 2004/04/27 15:40:15 poth no message
  * 
  * Revision 1.1.1.1 2002/09/25 16:01:45 poth no message
@@ -163,8 +155,7 @@ public interface GMLCoordinates
  * 
  * Revision 1.3 2001/11/26 16:43:25 axel as
  * 
- * Revision 1.2 2001/11/23 10:41:26 axel as: CVS change-log comment added as/ap:
- * getDocument, setDocument deleted
+ * Revision 1.2 2001/11/23 10:41:26 axel as: CVS change-log comment added as/ap: getDocument, setDocument deleted
  * 
  *  
  */

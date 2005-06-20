@@ -13,8 +13,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * Sucht von allen Features jenes, welches am nächsten zu einem Punkt liegt.
  * </p>
  * <p>
- * Falls viele Objekte durchsucht werden, sollte die Suche zuerst durch ein
- * .query auf der FeatureList bzw. dem Workspace eingeschränkt werden.
+ * Falls viele Objekte durchsucht werden, sollte die Suche zuerst durch ein .query auf der FeatureList bzw. dem
+ * Workspace eingeschränkt werden.
  * </p>
  * 
  * @author belger
@@ -22,8 +22,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class FindNearestVisitor implements FeatureVisitor
 {
   /**
-   * Hilfspunkt für die Suche, wird lazy instatiiert, da wir nicht wissen, ob
-   * überhaupt eine Geoemetry gefunden wird
+   * Hilfspunkt für die Suche, wird lazy instatiiert, da wir nicht wissen, ob überhaupt eine Geoemetry gefunden wird
    */
   private GM_Point point = null;
 
@@ -56,10 +55,13 @@ public class FindNearestVisitor implements FeatureVisitor
     GM_Object fGeo = null;
     String type = f.getFeatureType().getName();
     // TODO handle this better
-    if(type.equals(RectifiedGridCoverage.getName())){
+    if( type.equals( RectifiedGridCoverage.getName() ) )
+    {
       GM_Object[] geoProps = f.getGeometryProperties();
       fGeo = geoProps[0];
-    }else{
+    }
+    else
+    {
       fGeo = f.getDefaultGeometryProperty();
     }
 

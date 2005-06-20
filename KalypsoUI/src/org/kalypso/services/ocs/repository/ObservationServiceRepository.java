@@ -73,8 +73,7 @@ public class ObservationServiceRepository extends AbstractRepository
    * @throws ServiceException
    *           when the underlying service is not available
    */
-  public ObservationServiceRepository( String name, String factory,
-      boolean readOnly ) throws ServiceException
+  public ObservationServiceRepository( String name, String factory, boolean readOnly ) throws ServiceException
   {
     super( name, factory, "", readOnly );
 
@@ -84,7 +83,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren() throws RepositoryException
   {
     try
     {
@@ -99,7 +98,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren() throws RepositoryException
   {
     try
     {
@@ -121,7 +120,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return "observation-service-repository";
   }
@@ -129,7 +128,7 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload( ) throws RepositoryException
+  public void reload() throws RepositoryException
   {
     try
     {
@@ -152,16 +151,15 @@ public class ObservationServiceRepository extends AbstractRepository
   }
 
   /**
-   * Helper: finds item using recursion TODO: better performance by caching
-   * items that were already found? do not forget to clear the cache in reload()
+   * Helper: finds item using recursion TODO: better performance by caching items that were already found? do not forget
+   * to clear the cache in reload()
    * 
    * @param id
    * @param item
    * @return item if found, otherwise null.
    * @throws RepositoryException
    */
-  private IRepositoryItem findItemRecursive( final String id,
-      final IRepositoryItem item ) throws RepositoryException
+  private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item ) throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )
       return item;

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import org.eclipse.core.resources.IProject;
@@ -62,7 +62,7 @@ public class CopyModelDelegate implements IWorkbenchWindowActionDelegate
    */
   public void dispose()
   {
-  // nichts zu tun  
+  // nichts zu tun
   }
 
   /**
@@ -87,16 +87,18 @@ public class CopyModelDelegate implements IWorkbenchWindowActionDelegate
     }
     catch( final CoreException ce )
     {
-      ErrorDialog.openError( m_window.getShell(), "Modell kopieren", "Modell konnte nicht kopiert werden", ce.getStatus() );
+      ErrorDialog.openError( m_window.getShell(), "Modell kopieren", "Modell konnte nicht kopiert werden", ce
+          .getStatus() );
     }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    // ignore
+  // ignore
   }
 
 }

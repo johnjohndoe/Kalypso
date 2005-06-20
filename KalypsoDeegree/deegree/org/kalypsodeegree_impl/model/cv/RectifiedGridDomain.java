@@ -26,8 +26,7 @@ public class RectifiedGridDomain //implements GM_Object
   private GM_Point origin = null;
 
   /**
-   * Array with offsetValue(size of one gridCell) for each dimension
-   * {offSetX,offsetY}
+   * Array with offsetValue(size of one gridCell) for each dimension {offSetX,offsetY}
    */
   private double[] offset = null;
 
@@ -36,8 +35,7 @@ public class RectifiedGridDomain //implements GM_Object
   private GM_Surface m_rasterBoundaryAsSurface = null;
 
   /**
-   * constructs a RectifiedGridDomain with the given origin, offset and
-   * gridRange
+   * constructs a RectifiedGridDomain with the given origin, offset and gridRange
    * 
    * @param origin
    * @param offset
@@ -179,8 +177,8 @@ public class RectifiedGridDomain //implements GM_Object
   /**
    * get envelope in real coordinates for the given gridRange
    */
-  public GM_Envelope getGM_Envelope( int lowX, int lowY, int highX, int highY,
-      CS_CoordinateSystem cs ) throws Exception
+  public GM_Envelope getGM_Envelope( int lowX, int lowY, int highX, int highY, CS_CoordinateSystem cs )
+      throws Exception
   {
 
     double minX = origin.getX() + ( lowX * offset[0] );
@@ -203,8 +201,7 @@ public class RectifiedGridDomain //implements GM_Object
     GM_Envelope orgEnvelope = getGM_Envelope( origin.getCoordinateSystem() );
     if( m_rasterBoundaryAsSurface == null )
     {
-      m_rasterBoundaryAsSurface = GeometryFactory.createGM_Surface( orgEnvelope, origin
-          .getCoordinateSystem() );
+      m_rasterBoundaryAsSurface = GeometryFactory.createGM_Surface( orgEnvelope, origin.getCoordinateSystem() );
     }
     GM_Surface resultSurface = m_rasterBoundaryAsSurface;
     if( cs != null && !cs.equals( origin.getCoordinateSystem() ) )
@@ -215,20 +212,16 @@ public class RectifiedGridDomain //implements GM_Object
     return resultSurface;
   }
 
-  public GM_Surface getGM_Surface( int lowX, int lowY, int highX, int highY, CS_CoordinateSystem cs )
-      throws Exception
+  public GM_Surface getGM_Surface( int lowX, int lowY, int highX, int highY, CS_CoordinateSystem cs ) throws Exception
   {
-    GM_Envelope orgEnvelope = getGM_Envelope( lowX, lowY, highX, highY, origin
-        .getCoordinateSystem() );
-    GM_Surface rasterBoundaryAsSurface = GeometryFactory.createGM_Surface( orgEnvelope, origin
-        .getCoordinateSystem() );
+    GM_Envelope orgEnvelope = getGM_Envelope( lowX, lowY, highX, highY, origin.getCoordinateSystem() );
+    GM_Surface rasterBoundaryAsSurface = GeometryFactory.createGM_Surface( orgEnvelope, origin.getCoordinateSystem() );
     GeoTransformer geoTrans = new GeoTransformer( cs );
     return (GM_Surface)geoTrans.transform( rasterBoundaryAsSurface );
   }
 
   /**
-   * get low and high (GridRange) of the RectifiedGridCoverage for the given
-   * envelope
+   * get low and high (GridRange) of the RectifiedGridCoverage for the given envelope
    */
   public int[] getGridExtent( GM_Envelope env, CS_CoordinateSystem cs ) throws Exception
   {

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.optimizers;
 
 import java.awt.Graphics2D;
@@ -66,8 +66,8 @@ import org.kalypsodeegree.graphics.MapView;
 import org.kalypsodeegree.graphics.Theme;
 
 /**
- * This is the general interface for optimizers that need to alter the contents
- * of <tt>Theme<tt>s before the parent <tt>MapView<tt> object is
+ * This is the general interface for optimizers that need to alter the contents of
+ * <tt>Theme<tt>s before the parent <tt>MapView<tt> object is
  * painted. For example, the placements of <tt>LabelDisplayElement</tt>s
  * in a <tt>Theme</tt> may be optimized to minimize overlapping using the
  * <tt>LabelOptimizer</tt>.
@@ -79,8 +79,8 @@ public interface Optimizer
 {
 
   /**
-   * Sets the associated <tt>MapView</tt> -instance. Is needed for the scale
-   * and projection information. Called by the <tt>MapView</tt>.
+   * Sets the associated <tt>MapView</tt> -instance. Is needed for the scale and projection information. Called by the
+   * <tt>MapView</tt>.
    * 
    * @param mapView
    */

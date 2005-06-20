@@ -198,9 +198,8 @@ public abstract class ObsView implements IObsViewEventProvider
   }
 
   /** Laods an observation into this view and sets default values */
-  public void loadObservation( final URL context, final String href,
-      final boolean ignoreExceptions, final String ignoreType, final String tokenizedName,
-      final ItemData data )
+  public void loadObservation( final URL context, final String href, final boolean ignoreExceptions,
+      final String ignoreType, final String tokenizedName, final ItemData data )
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
@@ -228,9 +227,8 @@ public abstract class ObsView implements IObsViewEventProvider
   }
 
   /**
-   * Implementors of this class must ensure, that there is a 1:1 relationship
-   * between provider and added item. So the given provider should be disposed
-   * and for each added item a copy of the given provider should be made.
+   * Implementors of this class must ensure, that there is a 1:1 relationship between provider and added item. So the
+   * given provider should be disposed and for each added item a copy of the given provider should be made.
    */
   protected abstract void addObservation( final IObsProvider provider, final String tokenizedName,
       final String ignoreType, final ItemData data );

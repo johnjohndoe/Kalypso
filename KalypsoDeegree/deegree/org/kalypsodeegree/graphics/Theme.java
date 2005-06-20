@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.graphics;
 
@@ -122,10 +122,9 @@ public interface Theme
   public void paintHighlighted( Graphics g );
 
   /**
-   * A selector is a class that offers methods for selecting and deselecting
-   * single DisplayElements or groups of DisplayElements. A selector may offers
-   * methods like 'select all DisplayElements within a specified bounding box'
-   * or 'select all DisplayElements thats area is larger than 120 km²' etc.
+   * A selector is a class that offers methods for selecting and deselecting single DisplayElements or groups of
+   * DisplayElements. A selector may offers methods like 'select all DisplayElements within a specified bounding box' or
+   * 'select all DisplayElements thats area is larger than 120 km²' etc.
    */
   void addSelector( Selector selector );
 
@@ -135,8 +134,7 @@ public interface Theme
   void removeSelector( Selector selector );
 
   /**
-   * A Highlighter is a class that is responsible for managing the highlight
-   * capabilities for one or more Themes.
+   * A Highlighter is a class that is responsible for managing the highlight capabilities for one or more Themes.
    */
   void addHighlighter( Highlighter highlighter );
 
@@ -146,8 +144,7 @@ public interface Theme
   void removeHighlighter( Highlighter highlighter );
 
   /**
-   * adds an eventcontroller to the Theme that's reponsible for handling events
-   * that targets the Theme.
+   * adds an eventcontroller to the Theme that's reponsible for handling events that targets the Theme.
    */
   void addEventController( ThemeEventController obj );
 
@@ -157,9 +154,8 @@ public interface Theme
   void removeEventController( ThemeEventController obj );
 
   /**
-   * sets the styles used for this <tt>Theme</tt>. If this method will be
-   * called all <tt>DisplayElement</tt> s will be recreated to consider the
-   * new style definitions.
+   * sets the styles used for this <tt>Theme</tt>. If this method will be called all <tt>DisplayElement</tt> s will
+   * be recreated to consider the new style definitions.
    */
   void setStyles( UserStyle[] styles );
 

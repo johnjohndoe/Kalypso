@@ -52,9 +52,8 @@ import org.kalypso.util.list.IListManipulator;
  */
 public class RemoveThemeAction extends AbstractOutlineAction
 {
-  public RemoveThemeAction( final String text, final ImageDescriptor image,
-      final String tooltipText, final GisMapOutlineViewer outlineViewer,
-      final IListManipulator listManip )
+  public RemoveThemeAction( final String text, final ImageDescriptor image, final String tooltipText,
+      final GisMapOutlineViewer outlineViewer, final IListManipulator listManip )
   {
     super( text, image, tooltipText, outlineViewer, listManip );
   }
@@ -64,18 +63,14 @@ public class RemoveThemeAction extends AbstractOutlineAction
    */
   public void run()
   {
-    getListManipulator().removeElement(
-        ( (IStructuredSelection)getOutlineviewer().getSelection() )
-            .getFirstElement() );
+    getListManipulator().removeElement( ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement() );
   }
 
   protected void refresh()
   {
-    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer()
-        .getSelection();
+    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
     setEnabled( !s.isEmpty()
         && ( ( s.getFirstElement() instanceof IKalypsoFeatureTheme )
-            || ( s.getFirstElement() instanceof KalypsoWMSTheme ) || ( s
-            .getFirstElement() instanceof KalypsoPictureTheme ) ) );
+            || ( s.getFirstElement() instanceof KalypsoWMSTheme ) || ( s.getFirstElement() instanceof KalypsoPictureTheme ) ) );
   }
 }

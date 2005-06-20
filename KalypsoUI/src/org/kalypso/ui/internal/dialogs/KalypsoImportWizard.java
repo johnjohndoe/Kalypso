@@ -51,8 +51,8 @@ import org.kalypso.ui.IKalypsoUIConstants;
 import org.kalypso.ui.internal.registry.KalypsoWizardRegistryReader;
 
 /**
- * This class extends the ImportWizard. This enables to call the import wizard
- * from any action. Entry point to kalypso import wizards.
+ * This class extends the ImportWizard. This enables to call the import wizard from any action. Entry point to kalypso
+ * import wizards.
  */
 public class KalypsoImportWizard extends Wizard
 {
@@ -77,21 +77,18 @@ public class KalypsoImportWizard extends Wizard
    */
   public void addPages()
   {
-    addPage( new KalypsoWizardSelectionPage( this.workbench, this.selection,
-        getAvailableImportWizards(), "Kalypso Import", m_outlineviewer ) );
+    addPage( new KalypsoWizardSelectionPage( this.workbench, this.selection, getAvailableImportWizards(),
+        "Kalypso Import", m_outlineviewer ) );
   }
 
   /**
-   * This method must be overwirtten to only get import wizards that are
-   * declared in the org.kalypo.ui plugin. Further the WizardsRegistryReader
-   * must be encapsuled in KalypsoWizardsRegistryReader to make shure only
-   * wizards from org.kalypso.ui are read. And not as specified from the
-   * Workbench ui -> see WizardsRegistryReader.
+   * This method must be overwirtten to only get import wizards that are declared in the org.kalypo.ui plugin. Further
+   * the WizardsRegistryReader must be encapsuled in KalypsoWizardsRegistryReader to make shure only wizards from
+   * org.kalypso.ui are read. And not as specified from the Workbench ui -> see WizardsRegistryReader.
    */
   protected AdaptableList getAvailableImportWizards()
   {
-    AdaptableList wizards = new KalypsoWizardRegistryReader(
-        IKalypsoUIConstants.PL_IMPORT ).getWizards();
+    AdaptableList wizards = new KalypsoWizardRegistryReader( IKalypsoUIConstants.PL_IMPORT ).getWizards();
     return wizards;
   }
 

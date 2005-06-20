@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import java.util.ArrayList;
@@ -184,8 +184,7 @@ class GMLGeometryCollection_Impl extends GMLGeometry_Impl implements GMLGeometry
       elem = ( (GMLMultiPolygon_Impl)geometry ).getAsElement();
     }
 
-    Element elem_ = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS,
-        "gml:geometryMember" );
+    Element elem_ = element.getOwnerDocument().createElementNS( CommonNamespaces.GMLNS, "gml:geometryMember" );
     XMLTools.insertNodeInto( elem, elem_ );
     element.appendChild( elem_ );
 
@@ -198,20 +197,16 @@ class GMLGeometryCollection_Impl extends GMLGeometry_Impl implements GMLGeometry
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.5  2005/03/08 11:01:03  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:14  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:31
- * doemming *** empty log message *** Revision 1.9 2004/04/07 06:43:48 poth no
- * message
+ * Revision 1.6  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.5 2005/03/08 11:01:03 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:14 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:03:31 doemming ***
+ * empty log message *** Revision 1.9 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.8 2004/03/02 07:38:14 poth no message
  * 

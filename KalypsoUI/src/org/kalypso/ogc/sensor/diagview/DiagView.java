@@ -67,7 +67,7 @@ public class DiagView extends ObsView
   /** axisID -> axis */
   private final Map m_axesMap = new Hashtable();
 
-  public DiagView( )
+  public DiagView()
   {
     this( "", "", false );
   }
@@ -77,54 +77,53 @@ public class DiagView extends ObsView
     this( "", "", showLegend );
   }
 
-  public DiagView( final String title, final String legendName,
-      final boolean showLegend )
+  public DiagView( final String title, final String legendName, final boolean showLegend )
   {
     super();
-    
+
     m_title = title;
     m_legendName = legendName;
     m_showLegend = showLegend;
   }
 
-  public void dispose( )
+  public void dispose()
   {
     removeAllAxes();
-    
+
     super.dispose();
   }
-  
-  private void removeAllAxes( )
+
+  private void removeAllAxes()
   {
     m_axesMap.clear();
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.template.ObsView#removeAllItems()
    */
-  public void removeAllItems( )
+  public void removeAllItems()
   {
     removeAllAxes();
 
     super.removeAllItems();
   }
 
-  public String getTitle( )
+  public String getTitle()
   {
     return m_title;
   }
 
-  public String toString( )
+  public String toString()
   {
     return m_title;
   }
 
-  public String getLegendName( )
+  public String getLegendName()
   {
     return m_legendName;
   }
 
-  public boolean isShowLegend( )
+  public boolean isShowLegend()
   {
     return m_showLegend;
   }
@@ -132,25 +131,25 @@ public class DiagView extends ObsView
   public void setTitle( String title )
   {
     m_title = title;
-    
-    refresh( );
+
+    refresh();
   }
 
   public void setLegendName( String name )
   {
     m_legendName = name;
 
-    refresh( );
+    refresh();
   }
 
   public void setShowLegend( boolean show )
   {
     m_showLegend = show;
-    
-    refresh( );
+
+    refresh();
   }
 
-  public DiagramAxis[] getDiagramAxes( )
+  public DiagramAxis[] getDiagramAxes()
   {
     return (DiagramAxis[])m_axesMap.values().toArray( new DiagramAxis[m_axesMap.size()] );
   }
@@ -158,28 +157,28 @@ public class DiagView extends ObsView
   public void addAxis( final DiagramAxis axis )
   {
     m_axesMap.put( axis.getIdentifier(), axis );
-    
-    refresh( );
+
+    refresh();
   }
 
   public DiagramAxis getDiagramAxis( final String diagAxisId )
   {
-    return (DiagramAxis) m_axesMap.get( diagAxisId );
+    return (DiagramAxis)m_axesMap.get( diagAxisId );
   }
 
   /**
-   * Update the diagView with the new observation, perform best guess to know
-   * which curves will be added to it.
-   *
-   * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider, java.lang.String, java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
+   * Update the diagView with the new observation, perform best guess to know which curves will be added to it.
+   * 
+   * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
+   *      java.lang.String, java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
-  public void addObservation( final IObsProvider provider, final String tokenizedName, final String ignoreType, final ItemData data )
+  public void addObservation( final IObsProvider provider, final String tokenizedName, final String ignoreType,
+      final ItemData data )
   {
     final IObservation obs = provider.getObservation();
     if( obs != null )
     {
-      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClass( obs.getAxisList(),
-          Number.class, true );
+      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClass( obs.getAxisList(), Number.class, true );
       final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
 
       if( keyAxes.length == 0 )

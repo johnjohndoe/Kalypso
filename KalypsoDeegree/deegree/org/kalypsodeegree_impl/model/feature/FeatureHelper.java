@@ -33,7 +33,8 @@ public class FeatureHelper
     return defaultStatus;
   }
 
-  public static String getFormatedDate( Feature feature, String propName, String simpleDateFormatPattern, String defaultValue )
+  public static String getFormatedDate( Feature feature, String propName, String simpleDateFormatPattern,
+      String defaultValue )
   {
     Object property = feature.getProperty( propName );
     if( property != null && property instanceof Date )
@@ -70,26 +71,24 @@ public class FeatureHelper
   /**
    * Überträgt die Daten eines Features in die Daten eines anderen.
    * <p>
-   * Die Properties werden dabei anhand der übergebenen {@link Properties}
-   * zugeordnet.
+   * Die Properties werden dabei anhand der übergebenen {@link Properties}zugeordnet.
    * 
    * Es gilt:
    * <ul>
-   * <li>Es erfolgt ein Deep-Copy, inneliegende Features werden komplett
-   * kopiert.</li>
-   * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das
-   * Referenzierte Feature bleibt gleich./li>
+   * <li>Es erfolgt ein Deep-Copy, inneliegende Features werden komplett kopiert.</li>
+   * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
    * <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
    * </ul>
    * 
-   * @throws IllegalArgumentException Falls eine Zuordnung zwischen Properties
-   *           unterschiedlkicher Typen erfolgt.
-   * @throws NullPointerException falls eines der Argumente <codce>null</code>
-   *           ist.
-   * @throws UnsupportedOperationException Noch sind nicht alle Typen
-   *           implementiert
+   * @throws IllegalArgumentException
+   *           Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
+   * @throws NullPointerException
+   *           falls eines der Argumente <codce>null</code> ist.
+   * @throws UnsupportedOperationException
+   *           Noch sind nicht alle Typen implementiert
    */
-  public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap )
+  public static void copyProperties( final Feature sourceFeature, final Feature targetFeature,
+      final Properties propertyMap )
   {
     final FeatureType sourceType = sourceFeature.getFeatureType();
     final FeatureType targetType = targetFeature.getFeatureType();
@@ -108,7 +107,8 @@ public class FeatureHelper
       if( targetFTP == null )
         throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
       if( !sourceFTP.getType().equals( targetFTP.getType() ) )
-        throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
+        throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp
+            + "' and '" + targetProp + "'" );
 
       final Object object = sourceFeature.getProperty( sourceProp );
 
@@ -119,8 +119,8 @@ public class FeatureHelper
   }
 
   /**
-   * @throws UnsupportedOperationException If type of object is not supported
-   *           for clone
+   * @throws UnsupportedOperationException
+   *           If type of object is not supported for clone
    */
   public static Object cloneData( final Object object, final String type )
   {

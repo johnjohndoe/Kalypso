@@ -66,8 +66,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
    * 
    * @author doemming
    */
-  public GetGeomDestinationFeatureVisitor( GMLWorkspace workspace, String initialPropName,
-      int maxLevel )
+  public GetGeomDestinationFeatureVisitor( GMLWorkspace workspace, String initialPropName, int maxLevel )
   {
     m_workspace = workspace;
     m_initialPropName = initialPropName;
@@ -91,7 +90,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
 
   private void visit( Feature feature, int level )
   {
-   level++;
+    level++;
     FeatureTypeProperty[] properties = feature.getFeatureType().getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
@@ -113,11 +112,11 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
     else
     {
       Feature destFE = m_workspace.resolveLink( feature, linkProp );
-      if(destFE!=null)
-      destFEs = new Feature[]
-      { destFE};
+      if( destFE != null )
+        destFEs = new Feature[]
+        { destFE };
       else
-        destFEs=new Feature[0];
+        destFEs = new Feature[0];
     }
     // process childs
     for( int i = 0; i < destFEs.length; i++ )
@@ -136,4 +135,3 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
     }
   }
 }
-

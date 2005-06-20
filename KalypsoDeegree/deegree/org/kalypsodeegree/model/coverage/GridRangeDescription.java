@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.coverage;
 
 /**
- * In the case of a grid coverage layer, the range description adds several
- * optional elements of the generic range component description, using a
- * repeatable GridRangeDescription
+ * In the case of a grid coverage layer, the range description adds several optional elements of the generic range
+ * component description, using a repeatable GridRangeDescription
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -87,16 +86,14 @@ public interface GridRangeDescription
   String getSampleEncoding();
 
   /**
-   * A <tt>PseudoColorTable</tt> lists indexed color values, expressed as
-   * red-green-blue-alpha values, or hue-lightness-saturation,
-   * cyan-magenta-yellow-black, or grayscale.
+   * A <tt>PseudoColorTable</tt> lists indexed color values, expressed as red-green-blue-alpha values, or
+   * hue-lightness-saturation, cyan-magenta-yellow-black, or grayscale.
    */
   PseudoColorTable getPseudoColorTable();
 
   /**
-   * A <tt>Histogram</tt> records image statistics (mean and median value,
-   * etc.) and lists the counts and percentages of pixels in each of several
-   * brightness “bins.”
+   * A <tt>Histogram</tt> records image statistics (mean and median value, etc.) and lists the counts and percentages
+   * of pixels in each of several brightness “bins.”
    */
   Histogram getHistogram();
 
@@ -116,20 +113,16 @@ public interface GridRangeDescription
   String getDescription();
 
   /**
-   * The optional <tt>Observable</tt> field provides a structured description
-   * of the observations (quantities or properties) reported in this range
-   * component. This description consists of a name, a free-text description, a
-   * docURL (an index into a registry of observation types); and a
-   * referenceSystem that associates the reported values with real-world
-   * quantities or categories.
+   * The optional <tt>Observable</tt> field provides a structured description of the observations (quantities or
+   * properties) reported in this range component. This description consists of a name, a free-text description, a
+   * docURL (an index into a registry of observation types); and a referenceSystem that associates the reported values
+   * with real-world quantities or categories.
    */
   Observable getObservable();
 
   /**
-   * The optional RangeAxis element is for compound observations. It describes
-   * and lists the values at which the range component reports properties, or
-   * the “bins” by which the range componet reports counts or other aggregate
-   * values
+   * The optional RangeAxis element is for compound observations. It describes and lists the values at which the range
+   * component reports properties, or the “bins” by which the range componet reports counts or other aggregate values
    */
   RangeAxis[] getRangeAxis();
 }

@@ -182,9 +182,8 @@ public class StrokeDasharrayPanel
         }
         catch( NumberFormatException nfe )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
-              .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
-              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
           getLineInput().setText( "" + getLineValue() );
           getSpaceInput().setText( "" + getSpaceValue() );

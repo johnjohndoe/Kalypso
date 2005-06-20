@@ -45,11 +45,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.JMMarkSelectCommand;
@@ -57,6 +52,11 @@ import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.SingleSelectCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public abstract class AbstractSelectWidget extends AbstractWidget
 {
@@ -131,7 +131,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
   public void perform()
   {
-    // nothing
+  // nothing
   }
 
   private void select()
@@ -161,10 +161,11 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
         JMSelector selector = new JMSelector( getSelectionMode() );
 
-        GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, mapPanel.getMapModell().getCoordinatesSystem() );
+        GM_Point pointSelect = GeometryFactory
+            .createGM_Point( g1x, g1y, mapPanel.getMapModell().getCoordinatesSystem() );
 
-        final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme ).getFeatureListVisible( null ),
-            false, mapPanel.getSelectionID() );
+        final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme )
+            .getFeatureListVisible( null ), false, mapPanel.getSelectionID() );
 
         final List listFe = new ArrayList();
         if( fe != null )
@@ -193,8 +194,8 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         {
           final JMSelector selector = new JMSelector( getSelectionMode() );
           GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme ).getFeatureListVisible( null ), withinStatus, mapPanel
-              .getSelectionID() );
+          List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
+              .getFeatureListVisible( null ), withinStatus, mapPanel.getSelectionID() );
           if( !features.isEmpty() )
             fireCommand( features, (IKalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
         }

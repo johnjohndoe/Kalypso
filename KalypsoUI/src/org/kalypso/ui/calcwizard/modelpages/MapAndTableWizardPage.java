@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -52,6 +51,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author Belger
@@ -65,8 +65,7 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage implements Mod
   public final static String PROP_RIGHTSASH = "rightSash";
 
   /**
-   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen
-   * geben-Property geben: eine für jeden Kurventyp.
+   * Basisname der Zeitreihen-Properties. Es kann mehrere Zeitreihen geben-Property geben: eine für jeden Kurventyp.
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 

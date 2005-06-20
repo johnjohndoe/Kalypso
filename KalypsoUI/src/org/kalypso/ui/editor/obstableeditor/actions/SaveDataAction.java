@@ -75,11 +75,9 @@ public class SaveDataAction extends AbstractEditorActionDelegate
   {
     boolean atLeastOneDirty = false;
 
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin
-        .getId(), 0, "Zeitreihen speichern" );
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
 
-    final ObservationTableModel model = ( (ObservationTableEditor)getEditor() )
-        .getModel();
+    final ObservationTableModel model = ( (ObservationTableEditor)getEditor() ).getModel();
 
     final Map map = model.getMappedColumns();
     for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
@@ -98,11 +96,10 @@ public class SaveDataAction extends AbstractEditorActionDelegate
         {
           atLeastOneDirty = true;
 
-          final String msg = "Sie haben Änderungen in " + obs.getName()
-              + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
+          final String msg = "Sie haben Änderungen in " + obs.getName() + " vorgenommen. Wollen \n"
+              + "Sie die Änderungen übernehmen?";
 
-          final boolean bConfirm = MessageDialog.openQuestion( getShell(),
-              "Änderungen speichern", msg );
+          final boolean bConfirm = MessageDialog.openQuestion( getShell(), "Änderungen speichern", msg );
 
           if( !bConfirm )
             break;
@@ -113,8 +110,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
             {
               try
               {
-                final ResourcePool pool = KalypsoGisPlugin.getDefault()
-                    .getPool();
+                final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
                 pool.saveObject( obs, monitor );
               }
               catch( final Exception e )
@@ -138,11 +134,9 @@ public class SaveDataAction extends AbstractEditorActionDelegate
     }
 
     if( !atLeastOneDirty )
-      MessageDialog.openInformation( getShell(), "Keine Änderung",
-          "Keine geänderte Zeitreihe" );
+      MessageDialog.openInformation( getShell(), "Keine Änderung", "Keine geänderte Zeitreihe" );
 
     if( !status.isOK() )
-      ErrorDialog.openError( getShell(), "Zeitreihen speichern",
-          "Fehler sind aufgetreten. Siehe Details.", status );
+      ErrorDialog.openError( getShell(), "Zeitreihen speichern", "Fehler sind aufgetreten. Siehe Details.", status );
   }
 }

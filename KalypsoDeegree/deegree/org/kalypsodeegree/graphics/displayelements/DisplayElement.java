@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.displayelements;
 
 import java.awt.Graphics;
@@ -66,9 +66,8 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Basic interface of all display elements. A <tt>DisplayElement</tt> is
- * associated to one feature that may have a geometry property or not (usually
- * it has).
+ * Basic interface of all display elements. A <tt>DisplayElement</tt> is associated to one feature that may have a
+ * geometry property or not (usually it has).
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -114,8 +113,7 @@ public interface DisplayElement
   boolean isHighlighted();
 
   /**
-   * Returns if the <tt>DisplayElement</tt> should be painted at the current
-   * scale or not.
+   * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
    */
   boolean doesScaleConstraintApply( double scale );
 }

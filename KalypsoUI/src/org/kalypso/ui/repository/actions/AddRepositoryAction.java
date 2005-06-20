@@ -126,10 +126,9 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
     }
     catch( final InvocationTargetException e )
     {
-   e.getCause().printStackTrace();
-      
-      MessageDialog.openError( getShell(), "Repository hinzufügen", e.getTargetException()
-          .getLocalizedMessage() );     
+      e.getCause().printStackTrace();
+
+      MessageDialog.openError( getShell(), "Repository hinzufügen", e.getTargetException().getLocalizedMessage() );
     }
     catch( Exception e )
     {

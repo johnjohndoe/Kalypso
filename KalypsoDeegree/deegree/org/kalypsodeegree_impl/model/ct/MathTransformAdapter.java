@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependencies
@@ -72,9 +72,8 @@ import org.opengis.ct.CT_MathTransform;
 import org.opengis.pt.PT_CoordinatePoint;
 
 /**
- * Wrap an {@link CT_MathTransform}into a {@link MathTransform}. This class is
- * provided for compatibility with OpenGIS. It is serializable if the underlying
- * {@link CT_MathTransform}is serializable too.
+ * Wrap an {@link CT_MathTransform}into a {@link MathTransform}. This class is provided for compatibility with
+ * OpenGIS. It is serializable if the underlying {@link CT_MathTransform}is serializable too.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -131,8 +130,8 @@ class MathTransformAdapter extends AbstractMathTransform implements Serializable
    * @throws TransformException
    *           if the points can't be transformed, or if a remote call failed.
    */
-  public final void transform( final double[] srcPts, final int srcOff, final double[] dstPts,
-      final int dstOff, final int numPts ) throws TransformException
+  public final void transform( final double[] srcPts, final int srcOff, final double[] dstPts, final int dstOff,
+      final int numPts ) throws TransformException
   {
     try
     {
@@ -175,8 +174,8 @@ class MathTransformAdapter extends AbstractMathTransform implements Serializable
    * @throws TransformException
    *           if the points can't be transformed, or if a remote call failed.
    */
-  public final void transform( final float[] srcPts, final int srcOff, final float[] dstPts,
-      final int dstOff, final int numPts ) throws TransformException
+  public final void transform( final float[] srcPts, final int srcOff, final float[] dstPts, final int dstOff,
+      final int numPts ) throws TransformException
   {
     try
     {
@@ -239,8 +238,7 @@ class MathTransformAdapter extends AbstractMathTransform implements Serializable
    * Creates the inverse transform of this object.
    * 
    * @throws NoninvertibleTransformException
-   *           if the inverse transform can't be created, or if a remote call
-   *           failed.
+   *           if the inverse transform can't be created, or if a remote call failed.
    */
   public synchronized MathTransform inverse() throws NoninvertibleTransformException
   {

@@ -1,8 +1,7 @@
 package org.kalypsodeegree_impl.extension;
 
 /**
- * Die Type - Registry dient dazu, neue Typen im System anzumelden und die
- * entsprechende Handler zu finden.
+ * Die Type - Registry dient dazu, neue Typen im System anzumelden und die entsprechende Handler zu finden.
  * 
  * @author belger
  */

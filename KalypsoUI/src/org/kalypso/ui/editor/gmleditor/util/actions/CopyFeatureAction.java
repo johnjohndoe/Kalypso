@@ -40,11 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
-import org.kalypsodeegree.model.feature.Feature;
 import org.eclipse.jface.action.Action;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand;
+import org.kalypsodeegree.model.feature.Feature;
 
 public final class CopyFeatureAction extends Action
 {

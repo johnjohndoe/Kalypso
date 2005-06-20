@@ -1,31 +1,25 @@
 /*
- * SEAGIS - An OpenSource implementation of OpenGIS specification (C) 2001,
- * Institut de Recherche pour le Développement
+ * SEAGIS - An OpenSource implementation of OpenGIS specification (C) 2001, Institut de Recherche pour le Développement
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * 
- * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite
- * Institut de Recherche pour le Développement / US-Espace
- * mailto:seasnet@teledetection.fr
+ * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite Institut de Recherche pour le Développement /
+ * US-Espace mailto:seasnet@teledetection.fr
  * 
- * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne
- * mailto:osl@osl.gc.ca
+ * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne mailto:osl@osl.gc.ca
  * 
- * This package contains documentation from OpenGIS specifications. OpenGIS
- * consortium's work is fully acknowledged here.
+ * This package contains documentation from OpenGIS specifications. OpenGIS consortium's work is fully acknowledged
+ * here.
  */
 package org.kalypsodeegree_impl.model.cs;
 
@@ -36,9 +30,8 @@ import java.util.NoSuchElementException;
 import javax.units.Unit;
 
 /**
- * Creates spatial reference objects using codes. The codes are maintained by an
- * external authority. A commonly used authority is EPSG, which is also used in
- * the GeoTIFF standard.
+ * Creates spatial reference objects using codes. The codes are maintained by an external authority. A commonly used
+ * authority is EPSG, which is also used in the GeoTIFF standard.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -54,8 +47,7 @@ public abstract class CoordinateSystemAuthorityFactory
   protected final CoordinateSystemFactory factory;
 
   /**
-   * Construct an authority factory using the specified coordinate system
-   * factory.
+   * Construct an authority factory using the specified coordinate system factory.
    * 
    * @param factory
    *          The underlying factory used for objects creation.
@@ -102,8 +94,8 @@ public abstract class CoordinateSystemAuthorityFactory
   }
 
   /**
-   * Set the properties fon an {@link Info}object. This method should be
-   * invoked from all <code>create*</code> methods.
+   * Set the properties fon an {@link Info}object. This method should be invoked from all <code>create*</code>
+   * methods.
    * 
    * @param code
    *          The authority code (must not be <code>null</code>).
@@ -114,8 +106,7 @@ public abstract class CoordinateSystemAuthorityFactory
    * @param remarks
    *          The remarks, or <code>null</code> if none.
    */
-  final void setProperties( final String code, final String alias,
-      final String abbreviation, final String remarks )
+  final void setProperties( final String code, final String alias, final String abbreviation, final String remarks )
   {
     Info.ensureNonNull( "code", code );
     final Map properties = null; // TODO: Fetch the properties from the Info

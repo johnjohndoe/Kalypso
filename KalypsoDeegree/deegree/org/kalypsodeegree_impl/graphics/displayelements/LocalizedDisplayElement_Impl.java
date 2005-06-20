@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Component;
@@ -68,8 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 /**
- * Basic interface for DisplayElements that are not Geometries but shall be
- * rendered to one or more locations.
+ * Basic interface for DisplayElements that are not Geometries but shall be rendered to one or more locations.
  * <p>
  * ------------------------------------------------------------------------
  * </p>
@@ -77,8 +76,8 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-abstract class LocalizedDisplayElement_Impl extends GeometryDisplayElement_Impl implements
-    LocalizedDisplayElement, Serializable
+abstract class LocalizedDisplayElement_Impl extends GeometryDisplayElement_Impl implements LocalizedDisplayElement,
+    Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 2022439787509226293L;

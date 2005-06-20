@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
 import java.awt.Color;
@@ -55,9 +55,8 @@ import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 
 /**
- * Handles the rendering with the given NumberFormat and for each
- * value asks the ObservationTableModel for possible RenderingRules
- * that will be used to modify the layout: icon, tooltip, color, etc.
+ * Handles the rendering with the given NumberFormat and for each value asks the ObservationTableModel for possible
+ * RenderingRules that will be used to modify the layout: icon, tooltip, color, etc.
  * 
  * @author schlienger
  */
@@ -71,18 +70,17 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 
     setHorizontalAlignment( SwingConstants.RIGHT );
   }
-  
-  /**
-   * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
-   *      java.lang.Object, boolean, boolean, int, int)
-   */
-  public Component getTableCellRendererComponent( JTable table, Object value,
-      boolean isSelected, boolean hasFocus, int row, int column )
-  {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent( table,
-        value, isSelected, hasFocus, row, column );
 
-    final Number n = (Number) value;
+  /**
+   * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
+   *      boolean, boolean, int, int)
+   */
+  public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
+      int row, int column )
+  {
+    final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+
+    final Number n = (Number)value;
     if( n == null )
       return label;
 
@@ -106,7 +104,7 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
         label.setBackground( table.getSelectionBackground() );
       }
     }
-    
+
     // apply rendering rule
     String ttext = table.getColumnName( column );
     for( int i = 0; i < r.length; i++ )
@@ -120,7 +118,7 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 
       final Icon ic = r[i].getIcon();
       label.setIcon( ic );
-      
+
       if( !isSelected )
       {
         // FOREGROUND
@@ -134,13 +132,13 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     }
 
     label.setToolTipText( ttext );
-    
+
     // type dependent format
     final NumberFormat nf = m_model.getNumberFormat( column );
     final String text = nf.format( n.doubleValue() );
-    
+
     label.setText( text );
-    
+
     return label;
   }
 }

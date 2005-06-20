@@ -39,21 +39,21 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     if( m_view != null )
       m_view.dispose();
 
     if( m_outline != null )
       m_outline.dispose();
-    
+
     super.dispose();
   }
-  
+
   /**
    * @return template
    */
-  public ObsView getView( )
+  public ObsView getView()
   {
     return m_view;
   }
@@ -66,8 +66,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
     if( adapter == IContentOutlinePage.class )
     {
       // lazy loading
-      if( m_outline == null || m_outline.getControl() != null
-          && m_outline.getControl().isDisposed() )
+      if( m_outline == null || m_outline.getControl() != null && m_outline.getControl().isDisposed() )
       {
         // dispose when not null (not sure if this is ok)
         if( m_outline != null )
@@ -100,7 +99,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
       {
         final TemplateStorage ts = (TemplateStorage)storage;
         if( view instanceof DiagView )
-          ((DiagView)view).setTitle( ts.getName() );
+          ( (DiagView)view ).setTitle( ts.getName() );
 
         loadObservation( ts.getContext(), ts.getHref() );
       }
@@ -108,20 +107,20 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
       {
         if( view instanceof DiagView )
         {
-          final ObsdiagviewType baseTemplate = DiagViewUtils.loadDiagramTemplateXML( storage
-              .getContents() );
-  
+          final ObsdiagviewType baseTemplate = DiagViewUtils.loadDiagramTemplateXML( storage.getContents() );
+
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Vorlage: " + storage.getName(), null );
+          final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Vorlage: " + storage.getName(),
+              null );
           DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), false, status );
         }
         else if( view instanceof TableView )
         {
-          final ObstableviewType baseTemplate = TableViewUtils
-          .loadTableTemplateXML( storage.getContents() );
-  
+          final ObstableviewType baseTemplate = TableViewUtils.loadTableTemplateXML( storage.getContents() );
+
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Vorlage: " + storage.getName(), null );
+          final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Vorlage: " + storage.getName(),
+              null );
           TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false, status );
         }
       }
@@ -139,7 +138,8 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
   public void loadObservation( final URL context, final String href )
   {
     if( m_view != null )
-      m_view.loadObservation( context, href, false, null, NameUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( true, null ) );
+      m_view.loadObservation( context, href, false, null, NameUtils.DEFAULT_ITEM_NAME,
+          new ObsView.ItemData( true, null ) );
   }
 
 }

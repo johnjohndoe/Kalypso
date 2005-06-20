@@ -72,12 +72,11 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public void dispose()
   {
-    // nix zu disposen
+  // nix zu disposen
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
-   *      int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
   public Image getColumnImage( Object element, int columnIndex )
   {
@@ -93,8 +92,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
-   *      int)
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
   public String getColumnText( final Object element, final int columnIndex )
   {
@@ -118,13 +116,12 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // TODO Listener informieren, wenn sich der Wert eines Features geändert
-    // hat?
+  // TODO Listener informieren, wenn sich der Wert eines Features geändert
+  // hat?
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
-   *      java.lang.String)
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
   public boolean isLabelProperty( final Object element, final String property )
   {
@@ -136,7 +133,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public void removeListener( final ILabelProviderListener listener )
   {
-    //  TODO
+  //  TODO
   }
 
   /**

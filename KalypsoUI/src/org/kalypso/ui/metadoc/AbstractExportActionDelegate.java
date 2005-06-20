@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.metadoc;
 
 import java.lang.reflect.Constructor;
@@ -59,7 +59,11 @@ import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
  */
 public abstract class AbstractExportActionDelegate extends AbstractEditorActionDelegate
 {
-  private final static Class[] CONS_SIGN = { IExportableDocument.class, Document.class };
+  private final static Class[] CONS_SIGN =
+  {
+      IExportableDocument.class,
+      Document.class };
+
   private MetadocServiceWrapper m_metadocService;
 
   /**
@@ -74,12 +78,15 @@ public abstract class AbstractExportActionDelegate extends AbstractEditorActionD
     try
     {
       final String username = System.getProperty( "user.name" );
-      
-      m_metadocService = new MetadocServiceWrapper(  );
+
+      m_metadocService = new MetadocServiceWrapper();
       final Document doc = m_metadocService.prepareDocument( expDoc.getDocumentExtension(), username );
 
       final Constructor constructor = wizardClass.getConstructor( CONS_SIGN );
-      final Wizard exportWizard = (Wizard) constructor.newInstance( new Object[] {expDoc, doc} ); 
+      final Wizard exportWizard = (Wizard)constructor.newInstance( new Object[]
+      {
+          expDoc,
+          doc } );
 
       final WizardDialog dialog = new WizardDialog( shell, exportWizard );
       if( dialog.open() == Window.OK )
@@ -91,8 +98,8 @@ public abstract class AbstractExportActionDelegate extends AbstractEditorActionD
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( shell, "Fehler",
-          "Bericht konnte nicht exportiert werden", KalypsoGisPlugin.createErrorStatus("", e ) );
+      ErrorDialog.openError( shell, "Fehler", "Bericht konnte nicht exportiert werden", KalypsoGisPlugin
+          .createErrorStatus( "", e ) );
     }
   }
 }

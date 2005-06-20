@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources.css;
 
 // Miscellaneous
@@ -67,9 +67,8 @@ import java.util.MissingResourceException;
 import org.kalypsodeegree_impl.model.resources.ResourceBundle;
 
 /**
- * Base class for local-dependent resources. Instances of this class should
- * never been created directly. Use the factory method {@link #getResources}or
- * use static methods instead.
+ * Base class for local-dependent resources. Instances of this class should never been created directly. Use the factory
+ * method {@link #getResources}or use static methods instead.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -77,8 +76,8 @@ import org.kalypsodeegree_impl.model.resources.ResourceBundle;
 public class Resources extends ResourceBundle
 {
   /**
-   * Construct a resource bundle using english language. This is the default
-   * when no resource are available in user language.
+   * Construct a resource bundle using english language. This is the default when no resource are available in user
+   * language.
    */
   public Resources()
   {
@@ -95,8 +94,7 @@ public class Resources extends ResourceBundle
   }
 
   /**
-   * Returns the name of the logger to use, which is
-   * <code>org.kalypsodeegree_impl.model.css</code>.
+   * Returns the name of the logger to use, which is <code>org.kalypsodeegree_impl.model.css</code>.
    */
   protected String getLoggerName()
   {
@@ -123,8 +121,7 @@ public class Resources extends ResourceBundle
   }
 
   /**
-   * Gets a string for the given key from this resource bundle or one of its
-   * parents.
+   * Gets a string for the given key from this resource bundle or one of its parents.
    * 
    * @param key
    *          The key for the desired string.
@@ -138,8 +135,7 @@ public class Resources extends ResourceBundle
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}" with
-   * values of <code>arg0</code>.
+   * Gets a string for the given key are replace all occurence of "{0}" with values of <code>arg0</code>.
    * 
    * @param key
    *          The key for the desired string.
@@ -155,8 +151,8 @@ public class Resources extends ResourceBundle
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}", "{1}",
-   * with values of <code>arg0</code>,<code>arg1</code>.
+   * Gets a string for the given key are replace all occurence of "{0}", "{1}", with values of <code>arg0</code>,
+   * <code>arg1</code>.
    * 
    * @param key
    *          The key for the desired string.
@@ -168,15 +164,14 @@ public class Resources extends ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public static String format( final int key, final Object arg0, final Object arg1 )
-      throws MissingResourceException
+  public static String format( final int key, final Object arg0, final Object arg1 ) throws MissingResourceException
   {
     return getResources( null ).getString( key, arg0, arg1 );
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}", "{1}",
-   * with values of <code>arg0</code>,<code>arg1</code>, etc.
+   * Gets a string for the given key are replace all occurence of "{0}", "{1}", with values of <code>arg0</code>,
+   * <code>arg1</code>, etc.
    * 
    * @param key
    *          The key for the desired string.
@@ -190,8 +185,8 @@ public class Resources extends ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public static String format( final int key, final Object arg0, final Object arg1,
-      final Object arg2 ) throws MissingResourceException
+  public static String format( final int key, final Object arg0, final Object arg1, final Object arg2 )
+      throws MissingResourceException
   {
     return getResources( null ).getString( key, arg0, arg1, arg2 );
   }

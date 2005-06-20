@@ -91,9 +91,8 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * Class representing an ESRI Shape File.
  * <p>
- * This is a modification of the <tt>ShapeFile</tt> class within the shpapi
- * package of sfcorba2java project performed by the EXSE-Working group of of the
- * geogr. institute of the university of Bonn
+ * This is a modification of the <tt>ShapeFile</tt> class within the shpapi package of sfcorba2java project performed
+ * by the EXSE-Working group of of the geogr. institute of the university of Bonn
  * (http://www.giub.uni-bonn.de/exse/results/welcome.html).
  * 
  * 
@@ -318,29 +317,26 @@ public class ShapeFile
   }
 
   /**
-   * Same as
-   * {@link #getFeatureByRecNo(int, boolean) getFeatureByRecNo(int, true)}
+   * Same as {@link #getFeatureByRecNo(int, boolean) getFeatureByRecNo(int, true)}
    */
-  public Feature getFeatureByRecNo( int RecNo ) throws IOException,
-      HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( int RecNo ) throws IOException, HasNoDBaseFileException, DBaseException
   {
     return getFeatureByRecNo( RecNo, false );
   }
 
   /**
-   * returns the RecNo'th entry of the shape file as Feature. This contains the
-   * geometry as well as the attributes stored into the dbase file.
+   * returns the RecNo'th entry of the shape file as Feature. This contains the geometry as well as the attributes
+   * stored into the dbase file.
    * 
    * @param allowNull
    *          if true, everything wich cannot parsed gets 'null' instaed of ""
    */
-  public Feature getFeatureByRecNo( int RecNo, boolean allowNull ) throws IOException,
-      HasNoDBaseFileException, DBaseException
+  public Feature getFeatureByRecNo( int RecNo, boolean allowNull ) throws IOException, HasNoDBaseFileException,
+      DBaseException
   {
     if( !hasDBaseFile )
     {
-      throw new HasNoDBaseFileException( "Exception: there is no dBase-file "
-          + "associated to this shape-file" );
+      throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
     Feature feature = dbf.getFRow( RecNo, allowNull );
@@ -442,11 +438,9 @@ public class ShapeFile
   }
 
   /**
-   * returns a int array that containts all the record numbers that matches the
-   * search operation
+   * returns a int array that containts all the record numbers that matches the search operation
    */
-  public int[] getGeoNumbersByAttribute( String column, Comparable value ) throws IOException,
-      DBaseIndexException
+  public int[] getGeoNumbersByAttribute( String column, Comparable value ) throws IOException, DBaseIndexException
   {
     DBaseIndex index = (DBaseIndex)dBaseIndexes.get( column );
 
@@ -482,8 +476,8 @@ public class ShapeFile
       try
       {
         // translate envelope (deegree) to bounding box (rtree)
-        HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( r.getMin().getAsArray() ),
-            new HyperPoint( r.getMax().getAsArray() ) );
+        HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( r.getMin().getAsArray() ), new HyperPoint( r
+            .getMax().getAsArray() ) );
         Object[] iNumbers = rti.intersects( box );
         num = new int[iNumbers.length];
 
@@ -574,8 +568,7 @@ public class ShapeFile
   {
     if( !hasDBaseFile )
     {
-      throw new HasNoDBaseFileException( "Exception: there is no dBase-file "
-          + "associated to this shape-file" );
+      throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
     return dbf.getProperties();
@@ -589,8 +582,7 @@ public class ShapeFile
   {
     if( !hasDBaseFile )
     {
-      throw new HasNoDBaseFileException( "Exception: there is no dBase-file "
-          + "associated to this shape-file" );
+      throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
     return dbf.getDataTypes();
@@ -599,8 +591,8 @@ public class ShapeFile
   /**
    * 
    * 
-   * @return @throws
-   *         HasNoDBaseFileException
+   * @return
+   * @throws HasNoDBaseFileException
    * @throws DBaseException
    */
   public int[] getDataLengths() throws HasNoDBaseFileException, DBaseException
@@ -624,8 +616,7 @@ public class ShapeFile
   {
     if( !hasDBaseFile )
     {
-      throw new HasNoDBaseFileException( "Exception: there is no dBase-file "
-          + "associated to this shape-file" );
+      throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
     return dbf.getDataTypes( fields );
@@ -639,8 +630,7 @@ public class ShapeFile
   {
     if( !hasDBaseFile )
     {
-      throw new HasNoDBaseFileException( "Exception: there is no dBase-file "
-          + "associated to this shape-file" );
+      throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
     }
 
     return dbf.getRow( rowNo );
@@ -701,10 +691,9 @@ public class ShapeFile
     FeatureType featT = features[0].getFeatureType();
     FeatureTypeProperty[] ftp = featT.getProperties();
 
-
     // get properties names and types and create a FieldDescriptor
     // for each properties except the geometry-property
-    final List fieldList=new ArrayList();
+    final List fieldList = new ArrayList();
     for( int i = 0; i < ftp.length; i++ )
     {
       int pos = ftp[i].getName().lastIndexOf( '.' );
@@ -715,51 +704,51 @@ public class ShapeFile
       String s = ftp[i].getName().substring( pos + 1 );
       if( ftp[i].getType().endsWith( "Integer" ) )
       {
-        fieldList.add(new FieldDescriptor( s, "N", (byte)20, (byte)0 ));
+        fieldList.add( new FieldDescriptor( s, "N", (byte)20, (byte)0 ) );
       }
       else if( ftp[i].getType().endsWith( "Byte" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte)4, (byte)0 ));
+        fieldList.add( new FieldDescriptor( s, "N", (byte)4, (byte)0 ) );
       }
       else if( ftp[i].getType().endsWith( "Character" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "C", (byte)1, (byte)0 ));
+        fieldList.add( new FieldDescriptor( s, "C", (byte)1, (byte)0 ) );
       }
       else if( ftp[i].getType().endsWith( "Float" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ));
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ) );
       }
       else if( ftp[i].getType().endsWith( "Double" ) || ftp[i].getType().endsWith( "Number" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ));
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ) );
       }
       else if( ftp[i].getType().endsWith( "BigDecimal" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ));
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ) );
       }
       else if( ftp[i].getType().equals( "java.lang.String" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "C", (byte)127, (byte)0 ));
+        fieldList.add( new FieldDescriptor( s, "C", (byte)127, (byte)0 ) );
       }
       else if( ftp[i].getType().endsWith( "Date" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "D", (byte)12, (byte)0 ));
+        fieldList.add( new FieldDescriptor( s, "D", (byte)12, (byte)0 ) );
       }
       else if( ftp[i].getType().endsWith( "Long" ) )
       {
-        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ));
+        fieldList.add( new FieldDescriptor( s, "N", (byte)30, (byte)10 ) );
       }
       else
       {
-//      System.out.println("no db-type:" + ftp[i].getType());
+        //      System.out.println("no db-type:" + ftp[i].getType());
       }
     }
 
     //initialize/create DBaseFile
     try
     {
-    // allocate memory for fielddescriptors
-    final FieldDescriptor[] fieldDesc = (FieldDescriptor[])fieldList.toArray( new FieldDescriptor[fieldList.size()] );
+      // allocate memory for fielddescriptors
+      final FieldDescriptor[] fieldDesc = (FieldDescriptor[])fieldList.toArray( new FieldDescriptor[fieldList.size()] );
       dbf = new DBaseFile( url, fieldDesc );
     }
     catch( DBaseException e )
@@ -783,7 +772,7 @@ public class ShapeFile
     SHPEnvelope mbr = null;
     // mbr of the whole shape file
     SHPEnvelope shpmbr = new SHPEnvelope();
-//    FeatureProperty[] pairs = null;
+    //    FeatureProperty[] pairs = null;
 
     // Set the Offset to the end of the fileHeader
     int offset = ShapeConst.SHAPE_FILE_HEADER_LENGTH;
@@ -796,23 +785,22 @@ public class ShapeFile
     for( int i = 0; i < features.length; i++ )
     {
       // get i'th features properties
-      Feature feature=features[i];
-//      pairs = getFeatureProperties( features[i] );
+      Feature feature = features[i];
+      //      pairs = getFeatureProperties( features[i] );
 
       // write i'th features properties to a ArrayList
       ArrayList vec = new ArrayList();
       FeatureTypeProperty[] ftp = features[0].getFeatureType().getProperties();
       for( int j = 0; j < ftp.length; j++ )
       {
-        Object value=feature.getProperty(ftp[j].getName());
+        Object value = feature.getProperty( ftp[j].getName() );
         if( ( ftp[j].getType().endsWith( "Integer" ) ) || ( ftp[j].getType().endsWith( "Byte" ) )
-            || ( ftp[j].getType().endsWith( "Character" ) )
-            || ( ftp[j].getType().endsWith( "Float" ) ) || ( ftp[j].getType().endsWith( "Double" ) )
-            || ( ftp[j].getType().endsWith( "Number" ) )
+            || ( ftp[j].getType().endsWith( "Character" ) ) || ( ftp[j].getType().endsWith( "Float" ) )
+            || ( ftp[j].getType().endsWith( "Double" ) ) || ( ftp[j].getType().endsWith( "Number" ) )
             || ( ftp[j].getType().equals( "java.lang.String" ) )
             || ( ftp[j].getType().endsWith( "Date" ) || ( ftp[j].getType().endsWith( "Long" ) ) ) )
         {
-          vec.add( value);
+          vec.add( value );
         }
         else if( ftp[j].getType().endsWith( "BigDecimal" ) )
         {

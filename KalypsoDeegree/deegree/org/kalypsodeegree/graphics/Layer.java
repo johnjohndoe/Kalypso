@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,18 +57,17 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * A Layer is a collection of <tt>Feature</tt> s or rasters building a
- * thematic 'unit' waterways or country borders for example. <tt>Feature</tt>
- * s or raster can be added or removed from the layer. A <tt>Feature</tt> or
- * raster can e changed by a modul of the application using the layer because
- * only references to <tt>Feature</tt> s or rasters are stored within a layer.
+ * A Layer is a collection of <tt>Feature</tt> s or rasters building a thematic 'unit' waterways or country borders
+ * for example. <tt>Feature</tt> s or raster can be added or removed from the layer. A <tt>Feature</tt> or raster
+ * can e changed by a modul of the application using the layer because only references to <tt>Feature</tt> s or
+ * rasters are stored within a layer.
  * 
  * <p>
  * ------------------------------------------------------------------------
@@ -85,8 +84,8 @@ public interface Layer
   String getName();
 
   /**
-   * returns the BoundingBox (Envelope) of Layer. This is the BoundingBox of the
-   * layers data. The BoundingBox of the View maybe larger or smaler
+   * returns the BoundingBox (Envelope) of Layer. This is the BoundingBox of the layers data. The BoundingBox of the
+   * View maybe larger or smaler
    */
   GM_Envelope getBoundingBox();
 
@@ -96,16 +95,14 @@ public interface Layer
   CS_CoordinateSystem getCoordinatesSystem();
 
   /**
-   * sets the coordinate reference system of the MapView. If a new crs is set
-   * all geometries of GeometryFeatures will be transformed to the new
-   * coordinate reference system.
+   * sets the coordinate reference system of the MapView. If a new crs is set all geometries of GeometryFeatures will be
+   * transformed to the new coordinate reference system.
    */
   void setCoordinatesSystem( CS_CoordinateSystem crs ) throws Exception;
 
   /**
-   * adds an eventcontroller to the MapView that's reponsible for handling
-   * events that targets the map. E.g.: zooming, panning, selecting a feature
-   * etc.
+   * adds an eventcontroller to the MapView that's reponsible for handling events that targets the map. E.g.: zooming,
+   * panning, selecting a feature etc.
    */
   void addEventController( LayerEventController obj );
 

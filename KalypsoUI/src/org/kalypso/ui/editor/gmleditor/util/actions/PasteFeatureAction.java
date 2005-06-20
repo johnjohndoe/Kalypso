@@ -40,11 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.eclipse.jface.action.Action;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 public final class PasteFeatureAction extends Action
 {
@@ -58,8 +58,8 @@ public final class PasteFeatureAction extends Action
 
   public static final String NAME = "Paste Feature";
 
-  public PasteFeatureAction( CommandableWorkspace workspace, Feature parentFeature,
-      String propertyName, Clipboard clipboard )
+  public PasteFeatureAction( CommandableWorkspace workspace, Feature parentFeature, String propertyName,
+      Clipboard clipboard )
   {
     super( NAME );
     m_propertyName = propertyName;
@@ -78,8 +78,8 @@ public final class PasteFeatureAction extends Action
       try
       {
         // TODO use command !!
-        m_workspace.addFeatureAsAggregation( m_parentFeature, m_propertyName, 0, m_clipboard
-            .getClipboardFeature().getId() );
+        m_workspace.addFeatureAsAggregation( m_parentFeature, m_propertyName, 0, m_clipboard.getClipboardFeature()
+            .getId() );
       }
       catch( Exception e )
       {

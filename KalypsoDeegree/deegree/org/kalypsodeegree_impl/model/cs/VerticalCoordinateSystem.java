@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -90,9 +90,8 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   private static final long serialVersionUID = -8629573233560414552L;
 
   /**
-   * Default vertical coordinate system using ellipsoidal datum. Ellipsoidal
-   * heights are measured along the normal to the ellipsoid used in the
-   * definition of horizontal datum.
+   * Default vertical coordinate system using ellipsoidal datum. Ellipsoidal heights are measured along the normal to
+   * the ellipsoid used in the definition of horizontal datum.
    */
   public static final VerticalCoordinateSystem ELLIPSOIDAL = (VerticalCoordinateSystem)pool
       .intern( new VerticalCoordinateSystem( "Ellipsoidal", VerticalDatum.ELLIPSOIDAL ) );
@@ -113,8 +112,7 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   private final AxisInfo axis;
 
   /**
-   * Creates a vertical coordinate system from a datum. Units will be metres and
-   * values will be increasing upward.
+   * Creates a vertical coordinate system from a datum. Units will be metres and values will be increasing upward.
    * 
    * @param name
    *          Name to give new object.
@@ -139,8 +137,7 @@ public class VerticalCoordinateSystem extends CoordinateSystem
    *          Axis to use for new coordinate system.
    *  
    */
-  public VerticalCoordinateSystem( final String name, final VerticalDatum datum, final Unit unit,
-      final AxisInfo axis )
+  public VerticalCoordinateSystem( final String name, final VerticalDatum datum, final Unit unit, final AxisInfo axis )
   {
     super( name );
     this.datum = datum;
@@ -165,8 +162,7 @@ public class VerticalCoordinateSystem extends CoordinateSystem
    * @param axis
    *          Axis to use for new coordinate system.
    */
-  VerticalCoordinateSystem( final Map properties, final VerticalDatum datum, final Unit unit,
-      final AxisInfo axis )
+  VerticalCoordinateSystem( final Map properties, final VerticalDatum datum, final Unit unit, final AxisInfo axis )
   {
     super( properties );
     this.datum = datum;
@@ -204,8 +200,8 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Gets axis details for vertical dimension within coordinate system. A
-   * vertical coordinate system have only one axis, always at index 0.
+   * Gets axis details for vertical dimension within coordinate system. A vertical coordinate system have only one axis,
+   * always at index 0.
    * 
    * @param dimension
    *          Zero based index of axis.
@@ -217,13 +213,13 @@ public class VerticalCoordinateSystem extends CoordinateSystem
     final int maxDim = getDimension();
     if( dimension >= 0 && dimension < maxDim )
       return axis;
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
-   * Gets units for dimension within coordinate system. A vertical coordinate
-   * system have only one unit, always at index 0.
+   * Gets units for dimension within coordinate system. A vertical coordinate system have only one unit, always at index
+   * 0.
    * 
    * @param dimension
    *          Must be 0.
@@ -236,18 +232,16 @@ public class VerticalCoordinateSystem extends CoordinateSystem
     final int maxDim = getDimension();
     if( dimension >= 0 && dimension < maxDim )
       return unit;
-    throw new IndexOutOfBoundsException( Resources.format(
-        ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer( dimension ) ) );
+    throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
+        dimension ) ) );
   }
 
   /**
-   * Returns <code>true</code> if this coordinate system is equivalents to the
-   * specified coordinate system. Two coordinate systems are considered
-   * equivalent if the
-   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from
-   * <code>this</code> to <code>cs</code> would be the identity transform.
-   * The default implementation compare datum, units and axis, but ignore name,
-   * alias and other meta-data informations.
+   * Returns <code>true</code> if this coordinate system is equivalents to the specified coordinate system. Two
+   * coordinate systems are considered equivalent if the
+   * {@link org.kalypsodeegree_impl.model.ct.CoordinateTransformation}from <code>this</code> to <code>cs</code>
+   * would be the identity transform. The default implementation compare datum, units and axis, but ignore name, alias
+   * and other meta-data informations.
    * 
    * @param cs
    *          The coordinate system (may be <code>null</code>).
@@ -281,11 +275,9 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   }
 
   /**
-   * Returns an OpenGIS interface for this vertical coordinate system. The
-   * returned object is suitable for RMI use.
+   * Returns an OpenGIS interface for this vertical coordinate system. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -299,8 +291,7 @@ public class VerticalCoordinateSystem extends CoordinateSystem
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link VerticalCoordinateSystem}object for use with OpenGIS. This
-   * class is suitable for RMI use.
+   * Wrap a {@link VerticalCoordinateSystem}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

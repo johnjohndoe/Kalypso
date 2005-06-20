@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -89,8 +89,8 @@ public class PrimeMeridian extends Info
   /**
    * The Greenwich meridian, with angular measures in degrees.
    */
-  public static final PrimeMeridian GREENWICH = (PrimeMeridian)pool.intern( new PrimeMeridian(
-      "Greenwich", Unit.DEGREE, 0 ) );
+  public static final PrimeMeridian GREENWICH = (PrimeMeridian)pool.intern( new PrimeMeridian( "Greenwich",
+      Unit.DEGREE, 0 ) );
 
   /**
    * The angular units.
@@ -110,8 +110,7 @@ public class PrimeMeridian extends Info
    * @param unit
    *          Angular units of longitude.
    * @param longitude
-   *          Longitude of prime meridian in supplied angular units East of
-   *          Greenwich.
+   *          Longitude of prime meridian in supplied angular units East of Greenwich.
    *  
    */
   public PrimeMeridian( final String name, final Unit unit, final double longitude )
@@ -131,8 +130,7 @@ public class PrimeMeridian extends Info
    * @param unit
    *          Angular units of longitude.
    * @param longitude
-   *          Longitude of prime meridian in supplied angular units East of
-   *          Greenwich.
+   *          Longitude of prime meridian in supplied angular units East of Greenwich.
    */
   PrimeMeridian( final Map properties, final Unit unit, final double longitude )
   {
@@ -143,8 +141,8 @@ public class PrimeMeridian extends Info
   }
 
   /**
-   * Returns the longitude value relative to the Greenwich Meridian. The
-   * longitude is expressed in this objects angular units.
+   * Returns the longitude value relative to the Greenwich Meridian. The longitude is expressed in this objects angular
+   * units.
    * 
    * @see org.opengis.cs.CS_PrimeMeridian#getLongitude()
    */
@@ -154,10 +152,9 @@ public class PrimeMeridian extends Info
   }
 
   /**
-   * Returns the longitude value relative to the Greenwich Meridian, expressed
-   * in the specified units. This convenience method make easier to obtains
-   * longitude in degrees (<code>getLongitude(Unit.DEGREE)</code>), no
-   * matter the underlying angular units of this prime meridian.
+   * Returns the longitude value relative to the Greenwich Meridian, expressed in the specified units. This convenience
+   * method make easier to obtains longitude in degrees (<code>getLongitude(Unit.DEGREE)</code>), no matter the
+   * underlying angular units of this prime meridian.
    * 
    * @param targetUnit
    *          The unit in which to express longitude.
@@ -211,11 +208,9 @@ public class PrimeMeridian extends Info
   }
 
   /**
-   * Returns an OpenGIS interface for this prime meridian. The returned object
-   * is suitable for RMI use.
+   * Returns an OpenGIS interface for this prime meridian. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -229,8 +224,7 @@ public class PrimeMeridian extends Info
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link PrimeMeridian}object for use with OpenGIS. This class is
-   * suitable for RMI use.
+   * Wrap a {@link PrimeMeridian}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

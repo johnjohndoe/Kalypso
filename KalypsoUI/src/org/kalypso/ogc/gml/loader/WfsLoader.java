@@ -53,15 +53,12 @@ public class WfsLoader extends AbstractLoader
    * Loads a WFS DataSource from the given URL
    * 
    * @param source
-   *          the href-tag from the gmt-file 'ex:
-   *          http://localhost:8080/deegreewfs#river' where river denotes the
+   *          the href-tag from the gmt-file 'ex: http://localhost:8080/deegreewfs#river' where river denotes the
    *          feature to be loaded
    * @param context
-   *          the URL form the map context (here the path to the associated gmt
-   *          file)
+   *          the URL form the map context (here the path to the associated gmt file)
    */
-  protected Object loadIntern( String source, URL context, IProgressMonitor monitor )
-      throws LoaderException
+  protected Object loadIntern( String source, URL context, IProgressMonitor monitor ) throws LoaderException
   {
     BufferedInputStream inputStream = null;
     try
@@ -77,8 +74,7 @@ public class WfsLoader extends AbstractLoader
       {
         url = new URL( path );
       }
-      m_schemaURL = new URL( url
-          + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + m_featureType );
+      m_schemaURL = new URL( url + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + m_featureType );
 
       //
       //          if (array[0].length() > 0 && array[0].startsWith("http://"))
@@ -126,17 +122,15 @@ public class WfsLoader extends AbstractLoader
       // TODO: Bitte in zukunft immer die Streams schliessen!
       // TODO: und immer die Streams buffern
       // TODO: und immer alles committen, damits keine compiler-Fehler gibt!
-      
+
       inputStream = new BufferedInputStream( con.getInputStream() );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, m_schemaURL );
       inputStream.close();
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(),
-          FeatureVisitor.DEPTH_INFINITE );
-      workspace.accept( new ResortVisitor(), workspace.getRootFeature(),
-          FeatureVisitor.DEPTH_INFINITE );
+      workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       return new CommandableWorkspace( workspace );
     }
@@ -157,8 +151,7 @@ public class WfsLoader extends AbstractLoader
     WFSCapabilities caps = null;
     try
     {
-      final URL urlGetCap = new URL( url + "?"
-          + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
+      final URL urlGetCap = new URL( url + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
       final URLConnection conGetCap = urlGetCap.openConnection();
       conGetCap.addRequestProperty( "SERVICE", "WFS" );
       conGetCap.addRequestProperty( "VERSION", "1.0.0" );
@@ -208,19 +201,18 @@ public class WfsLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL,
-   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
+   *      java.lang.Object)
    */
-  public void save( final String source, final URL context, final IProgressMonitor monitor,
-      final Object data )
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
   {
     // TODO implementation of a transactional WFS
     if( data instanceof CommandableWorkspace )
     {
       Display display = new Display();
       MessageDialog md = new MessageDialog( new Shell( display ), "Speichern der Daten vom WFS",
-          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                 ).createImage(),
-          "Sollen die Daten Lokal gespeichrt werden?", MessageDialog.QUESTION, new String[]
+          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                  ).createImage(), "Sollen die Daten Lokal gespeichrt werden?",
+          MessageDialog.QUESTION, new String[]
           {
               "Ja",
               "Nein" }, 0 );
@@ -266,27 +258,27 @@ public class WfsLoader extends AbstractLoader
   }
 
   // not used
-  // better use: ioutils.copy(  );
+  // better use: ioutils.copy( );
   // and close stream in finally block
-//  /**
-//   * This method is just for debuging, to write an imput stream to a file
-//   */
-//  private void writeInputStreamToFile( String filename, InputStream is )
-//  {
-//    try
-//    {
-//      FileWriter fileWriterGetCap = new FileWriter( filename, true );
-//      int i = 0;
-//      while( ( i = is.read() ) >= 0 )
-//      {
-//        fileWriterGetCap.write( (char)i );
-//      }
-//      fileWriterGetCap.close();
-//    }
-//    catch( Exception e )
-//    {
-//      e.printStackTrace();
-//      // TODO: handle exception
-//    }
-//  }
+  //  /**
+  //   * This method is just for debuging, to write an imput stream to a file
+  //   */
+  //  private void writeInputStreamToFile( String filename, InputStream is )
+  //  {
+  //    try
+  //    {
+  //      FileWriter fileWriterGetCap = new FileWriter( filename, true );
+  //      int i = 0;
+  //      while( ( i = is.read() ) >= 0 )
+  //      {
+  //        fileWriterGetCap.write( (char)i );
+  //      }
+  //      fileWriterGetCap.close();
+  //    }
+  //    catch( Exception e )
+  //    {
+  //      e.printStackTrace();
+  //      // TODO: handle exception
+  //    }
+  //  }
 }

@@ -36,15 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.core.runtime.jobs;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 /**
- * MutexSchedulingRule.
- * Schliesst alle anderen Rules aus.
+ * MutexSchedulingRule. Schliesst alle anderen Rules aus.
  * 
  * @author schlienger
  */
@@ -57,7 +56,7 @@ public class MutexSchedulingRule implements ISchedulingRule
   {
     if( rule instanceof MutexSchedulingRule )
       return this == rule;
-    
+
     return true;
   }
 

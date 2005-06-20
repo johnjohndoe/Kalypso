@@ -37,7 +37,7 @@
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
 
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
 import org.eclipse.core.resources.IFolder;
@@ -53,8 +53,8 @@ import org.kalypso.ui.calcwizard.ICalcWizardPage;
  */
 public interface IModelWizardPage extends ICalcWizardPage
 {
-  public void init( final IProject project, final String pagetitle,
-      final ImageDescriptor imagedesc, final Arguments arguments, final IFolder calcFolder );
-  
+  public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc,
+      final Arguments arguments, final IFolder calcFolder );
+
   public void saveData( final IProgressMonitor monitor ) throws CoreException;
 }

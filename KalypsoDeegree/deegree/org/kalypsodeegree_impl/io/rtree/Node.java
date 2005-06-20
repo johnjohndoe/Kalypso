@@ -24,9 +24,8 @@
 package org.kalypsodeegree_impl.io.rtree;
 
 /**
- * Abstracte Klasse AbstractNode von der LeafNode und NoneLeafNode erben.
- * Definiert und implementiert gemeinsame Felder und Operationen Definiert
- * abstrakte Methoden.
+ * Abstracte Klasse AbstractNode von der LeafNode und NoneLeafNode erben. Definiert und implementiert gemeinsame Felder
+ * und Operationen Definiert abstrakte Methoden.
  * 
  * @version 1.0
  * @author Wolfgang Bär
@@ -169,8 +168,8 @@ public abstract class Node
   }
 
   /**
-   * Array von HyperBoundingBoxen der Einträge im Knoten. Array kann leer sein !
-   * Anzahl belegter Plätze siehe getUsedSpace.
+   * Array von HyperBoundingBoxen der Einträge im Knoten. Array kann leer sein ! Anzahl belegter Plätze siehe
+   * getUsedSpace.
    * 
    * @return HyperBoundingBox[] Boxes der Einträge
    * @see #getUsedSpace()
@@ -203,8 +202,7 @@ public abstract class Node
   }
 
   /**
-   * Tiefe Kopie ohne Dateneinträge (nur HyperBoundingBoxes) Überschreibt
-   * Methode clone in Object.
+   * Tiefe Kopie ohne Dateneinträge (nur HyperBoundingBoxes) Überschreibt Methode clone in Object.
    * 
    * @see java.lang.Object#clone()
    */

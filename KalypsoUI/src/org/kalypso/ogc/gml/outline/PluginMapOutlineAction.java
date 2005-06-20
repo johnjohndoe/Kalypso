@@ -62,8 +62,7 @@ public interface PluginMapOutlineAction
 
   /**
    * selection changed <br>
-   * implement here to disable or enable action, eventually remember your
-   * selection and use it in your action
+   * implement here to disable or enable action, eventually remember your selection and use it in your action
    */
   public void selectionChanged( PluginMapOutlineActionDelegate action, ISelection selection );
 }

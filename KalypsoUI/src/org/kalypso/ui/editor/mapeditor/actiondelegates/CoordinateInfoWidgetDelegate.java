@@ -66,11 +66,9 @@ public class CoordinateInfoWidgetDelegate extends AbstractGisMapEditorActionDele
     try
     {
       // we want the options view to be visible
-      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance()
-          .getActiveWorkbenchWindow();
+      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
       final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-      activeWorkbenchWindow.getActivePage().showView(
-          "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView", null,
+      activeWorkbenchWindow.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView", null,
           IWorkbenchPage.VIEW_VISIBLE );
       activeWorkbenchWindow.setActivePage( activePage );
     }

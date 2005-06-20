@@ -54,7 +54,7 @@ public class ExportActionDelegate extends AbstractGisEditorActionDelegate
    * 
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
    */
-  protected void refreshAction(IAction action)
+  protected void refreshAction( IAction action )
   {
   // egal
   }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import java.awt.Color;
@@ -46,17 +46,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import org.kalypsodeegree.graphics.Encoders;
-import org.kalypsodeegree.graphics.legend.LegendElement;
-import org.kalypsodeegree.graphics.legend.LegendElementCollection;
-import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.graphics.legend.LegendElementCollection_Impl;
-import org.kalypsodeegree_impl.graphics.legend.LegendFactory;
-import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
-import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -69,6 +58,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypsodeegree.graphics.Encoders;
+import org.kalypsodeegree.graphics.legend.LegendElement;
+import org.kalypsodeegree.graphics.legend.LegendElementCollection;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.graphics.legend.LegendElementCollection_Impl;
+import org.kalypsodeegree_impl.graphics.legend.LegendFactory;
+import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
+import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
  * @author F.Lindemann

@@ -31,12 +31,10 @@ public interface GMLWorkspace extends ModellEventProvider
   public Feature[] resolveLinks( final Feature srcFeature, final String linkPropertyName );
 
   /**
-   * returns all Features that that link to the linkTargetFeature, with the
-   * specified linkPropertyname and are type of linkSourceFeatureType or do
-   * substitue it
+   * returns all Features that that link to the linkTargetFeature, with the specified linkPropertyname and are type of
+   * linkSourceFeatureType or do substitue it
    */
-  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType,
-      String linkPropertyName );
+  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType, String linkPropertyName );
 
   public URL getContext();
 
@@ -48,7 +46,7 @@ public interface GMLWorkspace extends ModellEventProvider
 
   /** Visit alle features in the given list */
   public void accept( final FeatureVisitor fv, final List features, final int depth );
-  
+
   /** Visit alle features denoted by this path */
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth );
 
@@ -66,27 +64,24 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public Feature createFeature( FeatureType type );
 
-  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature )
-      throws Exception;
+  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature ) throws Exception;
 
-  public void addFeatureAsAggregation( Feature parent, String propName, int pos, String featureID)
-      throws Exception;
+  public void addFeatureAsAggregation( Feature parent, String propName, int pos, String featureID ) throws Exception;
 
   /**
-   * removes a related feature from the parent. Works only if the child is
-   * linked <br>
-   * <i>and the relation is not a composition </i>
-   * see also @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature, java.lang.String, org.kalypsodeegree.model.feature.Feature)
+   * removes a related feature from the parent. Works only if the child is linked <br>
+   * <i>and the relation is not a composition </i> see also
+   * 
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
    */
   public boolean removeLinkedAsAggregationFeature( Feature parentFeature, String propName, String childFeatureID );
 
   /**
-   * removes a related feature from the parent. Works only if the child is a
-   * composition <br>
+   * removes a related feature from the parent. Works only if the child is a composition <br>
    * <i>and the relation is not linked </i>
    */
-  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName,
-      Feature childFeature );
+  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName, Feature childFeature );
 
   public Map getNamespaceMap();
 

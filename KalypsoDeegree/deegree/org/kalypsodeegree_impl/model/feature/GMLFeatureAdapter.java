@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
 import java.io.PrintWriter;
@@ -90,8 +90,8 @@ public class GMLFeatureAdapter
    * @param feature
    *          feature to export
    * @param prefixes
-   *          prefixes of the elements to be used. gml: will be used for
-   *          GML-namespace; xlink: will be used for XLink ns.
+   *          prefixes of the elements to be used. gml: will be used for GML-namespace; xlink: will be used for XLink
+   *          ns.
    * @param pw
    *          PrintWriter to write to
    */

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.util.Date;
@@ -84,8 +84,8 @@ class XYCurveSerie extends Series
    *          the IDiagramAxis mapped to yAxis
    * @throws SensorException
    */
-  public XYCurveSerie( final DiagViewCurve curve, final IAxis xAxis, final IAxis yAxis,
-      final DiagramAxis xDiagAxis, final DiagramAxis yDiagAxis ) throws SensorException
+  public XYCurveSerie( final DiagViewCurve curve, final IAxis xAxis, final IAxis yAxis, final DiagramAxis xDiagAxis,
+      final DiagramAxis yDiagAxis ) throws SensorException
   {
     super( curve.getName() );
 
@@ -96,14 +96,14 @@ class XYCurveSerie extends Series
     m_yDiagAxis = yDiagAxis;
 
     final Logger logger = Logger.getLogger( getClass().getName() );
-    
+
     final IObservation obs = m_curve.getObservation();
     if( obs == null )
       logger.warning( "!!! No Observation for curve: " + m_curve.getName() );
     else
     {
       m_values = obs.getValues( m_curve.getArguments() );
-      
+
       if( m_values == null )
         logger.warning( "!!! Values null for Observation: " + obs );
     }
@@ -129,9 +129,9 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_xAxis );
 
     if( obj instanceof Number )
-      return (Number) obj;
+      return (Number)obj;
     else if( obj instanceof Date )
-      return new Double(( (Date)obj ).getTime());
+      return new Double( ( (Date)obj ).getTime() );
 
     return null;
   }
@@ -142,7 +142,7 @@ class XYCurveSerie extends Series
 
     if( obj instanceof Number )
     {
-      return (Number) obj;
+      return (Number)obj;
     }
 
     return null;

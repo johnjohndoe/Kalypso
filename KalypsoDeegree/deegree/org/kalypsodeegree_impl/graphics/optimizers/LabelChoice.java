@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.optimizers;
 
 import org.kalypsodeegree.graphics.displayelements.Label;
@@ -81,8 +81,8 @@ public class LabelChoice
   // boundingbox of all contained labels
   private int maxX, maxY, minX, minY;
 
-  public LabelChoice( LabelDisplayElement element, Label[] candidates, float[] qualities,
-      int selected, int maxX, int maxY, int minX, int minY )
+  public LabelChoice( LabelDisplayElement element, Label[] candidates, float[] qualities, int selected, int maxX,
+      int maxY, int minX, int minY )
   {
     this.element = element;
     this.candidates = candidates;

@@ -8,12 +8,12 @@ import org.kalypsodeegree.model.feature.Feature;
 public class Clipboard
 {
   private Feature clipboardFeature = null;
-  
-  public void setClipboardFeature(Feature ft)
+
+  public void setClipboardFeature( Feature ft )
   {
-    clipboardFeature = ft;    
+    clipboardFeature = ft;
   }
-  
+
   public Feature getClipboardFeature()
   {
     return clipboardFeature;

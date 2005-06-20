@@ -54,8 +54,8 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  *  ---------------------------------------------------------------------------*/
 
 /**
- * this featurelist cascades serveral lists, so it is possible to merge other
- * lists without resorting or copying listcontents <br>
+ * this featurelist cascades serveral lists, so it is possible to merge other lists without resorting or copying
+ * listcontents <br>
  * this featurelist is <b>readonly </b>
  */
 public class CascadingFeatureList implements FeatureList
@@ -91,11 +91,11 @@ public class CascadingFeatureList implements FeatureList
    */
   public void accept( FeatureVisitor visitor )
   {
-    //  TODO
-    //    for( int i = 0; i < m_lists.length; i++ )
-    //    {
-    //       m_lists[i];
-    //    }
+  //  TODO
+  //    for( int i = 0; i < m_lists.length; i++ )
+  //    {
+  //       m_lists[i];
+  //    }
   }
 
   /**

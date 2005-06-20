@@ -1,28 +1,22 @@
 /*
- * SEAGIS - An OpenSource implementation of OpenGIS specification (C) 2002,
- * Institut de Recherche pour le Développement
+ * SEAGIS - An OpenSource implementation of OpenGIS specification (C) 2002, Institut de Recherche pour le Développement
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * 
- * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite
- * Institut de Recherche pour le Développement / US-Espace
- * mailto:seasnet@teledetection.fr
+ * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite Institut de Recherche pour le Développement /
+ * US-Espace mailto:seasnet@teledetection.fr
  * 
- * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne
- * mailto:osl@osl.gc.ca
+ * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne mailto:osl@osl.gc.ca
  */
 package javax.units.resources;
 
@@ -33,9 +27,8 @@ import java.util.MissingResourceException;
 import org.kalypsodeegree_impl.model.resources.ResourceBundle;
 
 /**
- * Base class for local-dependent resources. Instances of this class should
- * never been created directly. Use the factory method {@link #getResources}or
- * use static methods instead.
+ * Base class for local-dependent resources. Instances of this class should never been created directly. Use the factory
+ * method {@link #getResources}or use static methods instead.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -43,8 +36,8 @@ import org.kalypsodeegree_impl.model.resources.ResourceBundle;
 public class Resources extends ResourceBundle
 {
   /**
-   * Construct a resource bundle using english language. This is the default
-   * when no resource are available in user language.
+   * Construct a resource bundle using english language. This is the default when no resource are available in user
+   * language.
    */
   public Resources()
   {
@@ -88,8 +81,7 @@ public class Resources extends ResourceBundle
   }
 
   /**
-   * Gets a string for the given key from this resource bundle or one of its
-   * parents.
+   * Gets a string for the given key from this resource bundle or one of its parents.
    * 
    * @param key
    *          The key for the desired string.
@@ -103,8 +95,7 @@ public class Resources extends ResourceBundle
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}" with
-   * values of <code>arg0</code>.
+   * Gets a string for the given key are replace all occurence of "{0}" with values of <code>arg0</code>.
    * 
    * @param key
    *          The key for the desired string.
@@ -120,8 +111,8 @@ public class Resources extends ResourceBundle
   }
 
   /**
-   * Gets a string for the given key are replace all occurence of "{0}", "{1}",
-   * with values of <code>arg0</code>,<code>arg1</code>.
+   * Gets a string for the given key are replace all occurence of "{0}", "{1}", with values of <code>arg0</code>,
+   * <code>arg1</code>.
    * 
    * @param key
    *          The key for the desired string.
@@ -133,8 +124,7 @@ public class Resources extends ResourceBundle
    * @throws MissingResourceException
    *           If no object for the given key can be found.
    */
-  public static String format( final int key, final Object arg0, final Object arg1 )
-      throws MissingResourceException
+  public static String format( final int key, final Object arg0, final Object arg1 ) throws MissingResourceException
   {
     return getResources( null ).getString( key, arg0, arg1 );
   }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.eclipse.core.runtime;
 
 import java.io.BufferedReader;
@@ -50,9 +50,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * LogStatus, a status that gets its children from a log file. Can be used
- * within an ErrorDialog, when the user clicks on 'Details', the contents of the
- * log file are displayed.
+ * LogStatus, a status that gets its children from a log file. Can be used within an ErrorDialog, when the user clicks
+ * on 'Details', the contents of the log file are displayed.
  * 
  * @author schlienger
  */
@@ -70,8 +69,8 @@ public class LogStatus extends Status
    * @param exception
    * @param logFile
    */
-  public LogStatus( final int severity, final String pluginId, final int code,
-      final String message, final Throwable exception, final IFile logFile )
+  public LogStatus( final int severity, final String pluginId, final int code, final String message,
+      final Throwable exception, final IFile logFile )
   {
     super( severity, pluginId, code, message, exception );
     m_logFile = logFile;
@@ -80,15 +79,15 @@ public class LogStatus extends Status
   /**
    * @see org.eclipse.core.runtime.Status#isMultiStatus()
    */
-  public boolean isMultiStatus( )
+  public boolean isMultiStatus()
   {
     return true;
   }
-  
+
   /**
    * @see org.eclipse.core.runtime.Status#getChildren()
    */
-  public IStatus[] getChildren( )
+  public IStatus[] getChildren()
   {
     if( m_children == null )
     {
@@ -97,8 +96,7 @@ public class LogStatus extends Status
       BufferedReader reader = null;
       try
       {
-        reader = new BufferedReader( new InputStreamReader( m_logFile
-            .getContents(), m_logFile.getCharset() ) );
+        reader = new BufferedReader( new InputStreamReader( m_logFile.getContents(), m_logFile.getCharset() ) );
         String line = reader.readLine();
         while( line != null )
         {
@@ -120,11 +118,10 @@ public class LogStatus extends Status
       m_children = new IStatus[lines.size()];
       for( int i = 0; i < m_children.length; i++ )
       {
-        String str = lines.get(i).toString();
-        m_children[i] = new Status( getSeverity(), getPlugin(),
-          getCode(), str, null );
+        String str = lines.get( i ).toString();
+        m_children[i] = new Status( getSeverity(), getPlugin(), getCode(), str, null );
       }
-      
+
       lines.clear();
     }
 

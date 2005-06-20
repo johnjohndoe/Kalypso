@@ -90,12 +90,12 @@ public class ObservationPlot extends XYPlot
 {
   private static final ConfigurableCachableObjectFactory OF;
 
-//  /** default line renderer */
-//  private final XYItemRenderer LINE_RENDERER = new StandardXYItemRenderer(
-//      StandardXYItemRenderer.LINES );
-//
-//  /** default bar renderer */
-//  private final XYItemRenderer BAR_RENDERER = new XYBarRenderer();
+  //  /** default line renderer */
+  //  private final XYItemRenderer LINE_RENDERER = new StandardXYItemRenderer(
+  //      StandardXYItemRenderer.LINES );
+  //
+  //  /** default bar renderer */
+  //  private final XYItemRenderer BAR_RENDERER = new XYBarRenderer();
 
   static
   {
@@ -178,9 +178,8 @@ public class ObservationPlot extends XYPlot
 
     try
     {
-      vAxis = (ValueAxis)OF.getObjectInstance( diagAxis.getDataType(), ValueAxis.class,
-          new Object[]
-          { diagAxis.toFullString() } );
+      vAxis = (ValueAxis)OF.getObjectInstance( diagAxis.getDataType(), ValueAxis.class, new Object[]
+      { diagAxis.toFullString() } );
     }
     catch( FactoryException e )
     {
@@ -277,7 +276,7 @@ public class ObservationPlot extends XYPlot
    */
   public synchronized void addCurve( final DiagViewCurve curve ) throws SensorException
   {
-    if( curve == null || !curve.isShown() || m_curve2serie.containsKey( curve ))
+    if( curve == null || !curve.isShown() || m_curve2serie.containsKey( curve ) )
       return;
 
     final AxisMapping[] mings = curve.getMappings();
@@ -335,10 +334,8 @@ public class ObservationPlot extends XYPlot
       final XYItemRenderer renderer = getRenderer( yAxis.getType() );
       setRenderer( pos, renderer );
 
-      mapDatasetToDomainAxis( pos, ( (Integer)m_chartAxes2Pos
-          .get( m_diag2chartAxis.get( xDiagAxis ) ) ).intValue() );
-      mapDatasetToRangeAxis( pos, ( (Integer)m_chartAxes2Pos
-          .get( m_diag2chartAxis.get( yDiagAxis ) ) ).intValue() );
+      mapDatasetToDomainAxis( pos, ( (Integer)m_chartAxes2Pos.get( m_diag2chartAxis.get( xDiagAxis ) ) ).intValue() );
+      mapDatasetToRangeAxis( pos, ( (Integer)m_chartAxes2Pos.get( m_diag2chartAxis.get( yDiagAxis ) ) ).intValue() );
     }
 
     // if a curve gets removed meanwhile, the mapping seriespos -> curvecolor
@@ -358,9 +355,8 @@ public class ObservationPlot extends XYPlot
       if( !m_markers.containsKey( begin ) )
       {
         final long end = fr.getTo().getTime();
-        final Marker marker = createMarker( begin.doubleValue(), end,
-            TimeserieConstants.MD_VORHERSAGE, TimeserieUtils
-                .getColorForMD( TimeserieConstants.MD_VORHERSAGE ) );
+        final Marker marker = createMarker( begin.doubleValue(), end, TimeserieConstants.MD_VORHERSAGE, TimeserieUtils
+            .getColorForMD( TimeserieConstants.MD_VORHERSAGE ) );
 
         addDomainMarker( marker, Layer.BACKGROUND );
 
@@ -388,8 +384,8 @@ public class ObservationPlot extends XYPlot
           final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() );
           ann.setPaint( color );
 
-          final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( alarms[i] + " ("
-              + value.doubleValue() + ")", value.doubleValue(), color, ann, yDiagAxis );
+          final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( alarms[i] + " (" + value.doubleValue() + ")",
+              value.doubleValue(), color, ann, yDiagAxis );
 
           m_yConsts.put( value, vac );
         }
@@ -468,10 +464,10 @@ public class ObservationPlot extends XYPlot
    */
   public synchronized ValueAxis getDomainAxis()
   {
-      if( m_diag2chartAxis.size() == 0 )
-        return new NumberAxis();
+    if( m_diag2chartAxis.size() == 0 )
+      return new NumberAxis();
 
-      return super.getDomainAxis();
+    return super.getDomainAxis();
   }
 
   /**
@@ -481,17 +477,17 @@ public class ObservationPlot extends XYPlot
    */
   public synchronized ValueAxis getRangeAxis()
   {
-      if( m_diag2chartAxis.size() == 0 )
-        return new NumberAxis();
+    if( m_diag2chartAxis.size() == 0 )
+      return new NumberAxis();
 
-      return super.getRangeAxis();
+    return super.getRangeAxis();
   }
 
   /**
    * overriden to also draw our alarmlevels
    * 
-   * @see org.jfree.chart.plot.XYPlot#drawAnnotations(java.awt.Graphics2D,
-   *      java.awt.geom.Rectangle2D, org.jfree.chart.plot.PlotRenderingInfo)
+   * @see org.jfree.chart.plot.XYPlot#drawAnnotations(java.awt.Graphics2D, java.awt.geom.Rectangle2D,
+   *      org.jfree.chart.plot.PlotRenderingInfo)
    */
   public synchronized void drawAnnotations( Graphics2D g2d, Rectangle2D rec, PlotRenderingInfo arg2 )
   {
@@ -616,8 +612,8 @@ public class ObservationPlot extends XYPlot
 
     final XYTextAnnotation annotation;
 
-    public AlarmLevelPlotElement( final String lbl, final double val, final Color col,
-        XYTextAnnotation ann, final DiagramAxis diagAxis )
+    public AlarmLevelPlotElement( final String lbl, final double val, final Color col, XYTextAnnotation ann,
+        final DiagramAxis diagAxis )
     {
       this.label = lbl;
       this.value = val;

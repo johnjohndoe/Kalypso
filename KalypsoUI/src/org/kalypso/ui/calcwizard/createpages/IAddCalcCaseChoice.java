@@ -53,11 +53,10 @@ public interface IAddCalcCaseChoice
 {
   public void createControl( final Composite parent );
 
-  public Control getControl( );
+  public Control getControl();
 
   /**
-   * Erzeugt oder wählt eine Rechenvariante und gibt derem Basisverzeichnis
-   * zurück
+   * Erzeugt oder wählt eine Rechenvariante und gibt derem Basisverzeichnis zurück
    * 
    * @param monitor
    * @return Gewählte Rechenvariante
@@ -68,11 +67,10 @@ public interface IAddCalcCaseChoice
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( );
+  public String toString();
 
   /**
-   * Die View refreshen, mittlerweile können Sich die benutzten und vorhandenen
-   * Rechenfälle geändert haben
+   * Die View refreshen, mittlerweile können Sich die benutzten und vorhandenen Rechenfälle geändert haben
    * 
    * @param monitor
    * @throws CoreException
@@ -80,12 +78,11 @@ public interface IAddCalcCaseChoice
   public void refresh( final IProgressMonitor monitor ) throws CoreException;
 
   /**
-   * Ob bei dieser Wahl der Rechenvariante nach Eingabe der Steuerparameter
-   * aktualisiert werden sollte
+   * Ob bei dieser Wahl der Rechenvariante nach Eingabe der Steuerparameter aktualisiert werden sollte
    * 
    * @return true wenn Aktualisierung erfolgen soll
    */
-  public boolean shouldUpdate( );
+  public boolean shouldUpdate();
 
-  public void validateChoice( );
+  public void validateChoice();
 }

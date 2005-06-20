@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.file;
 
 import java.io.File;
@@ -47,8 +47,7 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 
 /**
- * An item of a <code>FileRepository</code> that represents a
- * <code>File</code>.
+ * An item of a <code>FileRepository</code> that represents a <code>File</code>.
  * 
  * @author schlienger
  */
@@ -69,7 +68,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_file.getName();
   }
@@ -77,7 +76,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( )
+  public IRepositoryItem getParent()
   {
     return m_rep.createItem( m_file.getParentFile() );
   }
@@ -85,7 +84,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( )
+  public IRepositoryItem[] getChildren()
   {
     final File[] files = m_file.listFiles( m_rep.getFilter() );
 
@@ -100,12 +99,12 @@ public class FileItem implements IRepositoryItem
     return items;
   }
 
-  public File getFile( )
+  public File getFile()
   {
     return m_file;
   }
 
-  public FileRepository getRep( )
+  public FileRepository getRep()
   {
     return m_rep;
   }
@@ -113,12 +112,12 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( )
+  public boolean hasChildren()
   {
     return m_file.isDirectory();
   }
 
-  public String toString( )
+  public String toString()
   {
     return getName();
   }
@@ -137,21 +136,18 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public IRepository getRepository()
   {
     return m_rep;
   }
 
   /**
-   * Returns the identifier of the FileRepository and the relative path of the
-   * file in the repository
+   * Returns the identifier of the FileRepository and the relative path of the file in the repository
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
-    return m_rep.getIdentifier()
-        + ":/"
-        + FileUtilities.getRelativePathTo( m_rep.m_root, m_file ).replace('\\', '/');
+    return m_rep.getIdentifier() + ":/" + FileUtilities.getRelativePathTo( m_rep.m_root, m_file ).replace( '\\', '/' );
   }
 }

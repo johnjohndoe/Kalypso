@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -60,13 +60,16 @@ public class GisTemplateLauncher implements IEditorLauncher
     final IOFileFilter gftFilter = FileFilterUtils.suffixFileFilter( ".gft" );
     final IOFileFilter filter1 = FileFilterUtils.orFileFilter( gmtFilter, gttFilter );
     final IOFileFilter filter = FileFilterUtils.orFileFilter( filter1, gftFilter );
-    
+
     // virtuelle Vorlagen finden
-//    final Object gmtDefault = "<Standard Kartenansicht>";
-//    final Object gttDefault = "<Standard Datenansicht>";
+    //    final Object gmtDefault = "<Standard Kartenansicht>";
+    //    final Object gttDefault = "<Standard Datenansicht>";
     final IDefaultTemplateLauncher featureDefault = new FeatureTemplateLauncher();
     final IDefaultTemplateLauncher baumDefault = new GmlEditorTemplateLauncher();
 
-    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { featureDefault, baumDefault } );
+    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[]
+    {
+        featureDefault,
+        baumDefault } );
   }
 }

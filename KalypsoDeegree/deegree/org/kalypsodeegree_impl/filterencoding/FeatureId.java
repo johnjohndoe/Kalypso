@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,17 +57,16 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a <FeatureId>element as defined in the
- * FeatureId DTD. The <FeatureId>element is used to encode the unique identifier
- * for any feature instance. Within a filter expression, the <FeatureId>is used
- * as a reference to a particular feature instance.
+ * Encapsulates the information of a <FeatureId>element as defined in the FeatureId DTD. The <FeatureId>element is used
+ * to encode the unique identifier for any feature instance. Within a filter expression, the <FeatureId>is used as a
+ * reference to a particular feature instance.
  * 
  * @author Markus Schneider
  * @version 06.08.2002
@@ -85,9 +84,8 @@ public class FeatureId
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object is built. This
-   * method recursively calls other buildFromDOM () - methods to validate the
-   * structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
@@ -108,8 +106,8 @@ public class FeatureId
   }
 
   /**
-   * Returns the feature id. A feature id is built from it's feature type name
-   * and it's id separated by a ".". e.g. Road.A565
+   * Returns the feature id. A feature id is built from it's feature type name and it's id separated by a ".". e.g.
+   * Road.A565
    */
   public String getValue()
   {

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS (SEAS) dependencies
@@ -70,15 +70,12 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Projection conique conforme de Lambert. Les aires et les formes sont
- * déformées à mesure que l'on s'éloigne de parallèles standards. Les angles
- * sont vrais dans une région limitée. Cette projection est utilisée pour les
- * cartes de l'Amérique du Nord. Elle utilise par défaut une latitude centrale
- * de 40°N. <br>
+ * Projection conique conforme de Lambert. Les aires et les formes sont déformées à mesure que l'on s'éloigne de
+ * parallèles standards. Les angles sont vrais dans une région limitée. Cette projection est utilisée pour les cartes de
+ * l'Amérique du Nord. Elle utilise par défaut une latitude centrale de 40°N. <br>
  * <br>
  * 
- * Référence: John P. Snyder (Map Projections - A Working Manual, U.S.
- * Geological Survey Professional Paper 1395, 1987)
+ * Référence: John P. Snyder (Map Projections - A Working Manual, U.S. Geological Survey Professional Paper 1395, 1987)
  * 
  * @version 1.0
  * @author André Gosselin
@@ -104,8 +101,7 @@ final class LambertConformalProjection extends ConicProjection
    * @throws MissingParameterException
    *           if a mandatory parameter is missing.
    */
-  protected LambertConformalProjection( final Projection parameters )
-      throws MissingParameterException
+  protected LambertConformalProjection( final Projection parameters ) throws MissingParameterException
   {
     //////////////////////////
     //   Fetch parameters //
@@ -119,9 +115,8 @@ final class LambertConformalProjection extends ConicProjection
     //////////////////////////
     if( Math.abs( phi1 + phi2 ) < EPS )
     {
-      throw new IllegalArgumentException( Resources.format(
-          ResourceKeys.ERROR_ANTIPODE_LATITUDES_$2, new Latitude( Math.toDegrees( phi1 ) ),
-          new Latitude( Math.toDegrees( phi2 ) ) ) );
+      throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_ANTIPODE_LATITUDES_$2, new Latitude(
+          Math.toDegrees( phi1 ) ), new Latitude( Math.toDegrees( phi2 ) ) ) );
     }
     final double cosphi = Math.cos( phi1 );
     final double sinphi = Math.sin( phi1 );
@@ -131,8 +126,7 @@ final class LambertConformalProjection extends ConicProjection
       if( secant )
       {
         n = Math.log( cosphi / Math.cos( phi2 ) )
-            / Math.log( Math.tan( ( Math.PI / 4 ) + 0.5 * phi2 )
-                / Math.tan( ( Math.PI / 4 ) + 0.5 * phi1 ) );
+            / Math.log( Math.tan( ( Math.PI / 4 ) + 0.5 * phi2 ) / Math.tan( ( Math.PI / 4 ) + 0.5 * phi1 ) );
       }
       else
         n = sinphi;
@@ -176,8 +170,7 @@ final class LambertConformalProjection extends ConicProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
   protected Point2D transform( double x, double y, final Point2D ptDst ) throws TransformException
   {
@@ -187,8 +180,8 @@ final class LambertConformalProjection extends ConicProjection
     {
       if( y * n <= 0 )
       {
-        throw new TransformException( Resources.format( ResourceKeys.ERROR_POLE_PROJECTION_$1,
-            new Latitude( Math.toDegrees( y ) ) ) );
+        throw new TransformException( Resources.format( ResourceKeys.ERROR_POLE_PROJECTION_$1, new Latitude( Math
+            .toDegrees( y ) ) ) );
       }
       else
         rho = 0;
@@ -216,11 +209,9 @@ final class LambertConformalProjection extends ConicProjection
   }
 
   /**
-   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and
-   * stores the result in <code>ptDst</code>.
+   * Transforms the specified ( <var>x </var>, <var>y </var>) coordinate and stores the result in <code>ptDst</code>.
    */
-  protected Point2D inverseTransform( double x, double y, final Point2D ptDst )
-      throws TransformException
+  protected Point2D inverseTransform( double x, double y, final Point2D ptDst ) throws TransformException
   {
     x -= false_easting;
     y -= false_northing;
@@ -286,8 +277,7 @@ final class LambertConformalProjection extends ConicProjection
   }
 
   /**
-   * Implémentation de la partie entre crochets de la chaîne retournée par
-   * {@link #toString()}.
+   * Implémentation de la partie entre crochets de la chaîne retournée par {@link #toString()}.
    */
   void toString( final StringBuffer buffer )
   {

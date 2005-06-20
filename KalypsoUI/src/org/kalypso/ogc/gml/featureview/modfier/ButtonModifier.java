@@ -196,6 +196,6 @@ public class ButtonModifier implements IFeatureModifier
    */
   public void dispose()
   {
-    // nichts zu tun
+  // nichts zu tun
   }
 }

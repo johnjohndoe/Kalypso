@@ -167,13 +167,13 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     {
       try
       {
-        
-        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURL() )
-            .getAxisList() );
+
+        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURL() ).getAxisList() );
       }
       catch( Exception e )
       {
-        MessageDialog.openInformation(getShell(), "Fehler beim laden der Zieldatei-Datei","Uebernahme der Axen aus bestehender Ziel-Datei nicht moeglich");
+        MessageDialog.openInformation( getShell(), "Fehler beim laden der Zieldatei-Datei",
+            "Uebernahme der Axen aus bestehender Ziel-Datei nicht moeglich" );
       }
     }
 

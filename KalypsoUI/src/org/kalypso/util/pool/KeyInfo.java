@@ -114,11 +114,9 @@ public final class KeyInfo extends Job implements ILoaderListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoaderListener#onLoaderObjectInvalid(java.lang.Object,
-   *      boolean)
+   * @see org.kalypso.loader.ILoaderListener#onLoaderObjectInvalid(java.lang.Object, boolean)
    */
-  public void onLoaderObjectInvalid( final Object object, final boolean bCannotReload )
-      throws Exception
+  public void onLoaderObjectInvalid( final Object object, final boolean bCannotReload ) throws Exception
   {
     Object oldObject = null;
     synchronized( this )
@@ -144,8 +142,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     if( oldObject != null )
     {
-      final IPoolListener[] ls = (IPoolListener[])m_listeners
-          .toArray( new IPoolListener[m_listeners.size()] );
+      final IPoolListener[] ls = (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners.size()] );
 
       // TRICKY: objectInvalid may add/remove PoolListener for this key,
       // so we cannot iterate over m_listeners
@@ -167,8 +164,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       o = m_object;
     }
 
-    final IPoolListener[] ls = (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners
-        .size()] );
+    final IPoolListener[] ls = (IPoolListener[])m_listeners.toArray( new IPoolListener[m_listeners.size()] );
     // TRICKY: objectLoaded may add a new PoolListener for this key,
     // so we cannot iterate over m_listeners
     for( int i = 0; i < ls.length; i++ )
@@ -198,8 +194,7 @@ public final class KeyInfo extends Job implements ILoaderListener
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;
 
-        return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-            "Fehler beim Laden einer Resource", e );
+        return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Laden einer Resource", e );
       }
     }
 
@@ -226,8 +221,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     if( m_object != null )
       b.append( "  pooled object (type): " + m_object.getClass().getName() + "\n" );
     else
-      b
-          .append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
+      b.append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
     b.append( "  loader (type): " + m_loader.getClass().getName() + "\n" );
     b.append( "  key: " + m_key + "\n" );
     b.append( "  number of listeners: " + m_listeners.size() + "\n" );

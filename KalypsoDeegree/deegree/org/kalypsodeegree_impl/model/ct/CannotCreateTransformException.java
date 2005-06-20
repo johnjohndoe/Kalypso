@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
 // OpenGIS dependences (SEAGIS)
@@ -67,9 +67,8 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * Thrown when a coordinate transformation can't be created. It may be because
- * there is no known path between source and coordinate systems, or because the
- * requested transformation is not available in the environment.
+ * Thrown when a coordinate transformation can't be created. It may be because there is no known path between source and
+ * coordinate systems, or because the requested transformation is not available in the environment.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -96,14 +95,12 @@ public class CannotCreateTransformException extends TransformException
   }
 
   /**
-   * Construct an exception with a message stating that no transformation path
-   * has been found between the specified coordinate system.
+   * Construct an exception with a message stating that no transformation path has been found between the specified
+   * coordinate system.
    */
-  public CannotCreateTransformException( final CoordinateSystem sourceCS,
-      final CoordinateSystem targetCS )
+  public CannotCreateTransformException( final CoordinateSystem sourceCS, final CoordinateSystem targetCS )
   {
-    this( Resources.format( ResourceKeys.ERROR_NO_TRANSFORMATION_PATH_$2, getName( sourceCS ),
-        getName( targetCS ) ) );
+    this( Resources.format( ResourceKeys.ERROR_NO_TRANSFORMATION_PATH_$2, getName( sourceCS ), getName( targetCS ) ) );
   }
 
   /**

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.grafik;
 
 import java.util.HashMap;
@@ -66,14 +66,14 @@ public class GrafikAchsen
   {
     for( final Iterator ita = taxList.iterator(); ita.hasNext(); )
     {
-      final TypeAxis ta = (TypeAxis) ita.next();
+      final TypeAxis ta = (TypeAxis)ita.next();
 
       if( ta.getDirection().equals( DiagramAxis.DIRECTION_VERTICAL ) )
       {
         GrafikAchse gAchse = null;
-        
+
         final String name = ta.getLabel() + " [" + ta.getUnit() + "]";
-        
+
         if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
         {
           if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
@@ -89,7 +89,7 @@ public class GrafikAchsen
         }
         else
           gAchse = new GrafikAchse( 3, name );
-        
+
         m_name2grafikAxis.put( ta.getId(), gAchse );
       }
       else if( ta.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
@@ -97,28 +97,28 @@ public class GrafikAchsen
     }
   }
 
-  public String getBottomLabel( )
+  public String getBottomLabel()
   {
     return m_bottomLabel;
   }
-  
+
   public String getRightLabel()
   {
     return m_rightLabel;
   }
-  
+
   public String getLeftLabel()
   {
     return m_leftLabel;
   }
-  
+
   /**
    * @param diagAxisID
    * @return corresponding Achse for the Grafik tool or null if not possible
    */
   public GrafikAchse getFor( final String diagAxisID )
   {
-    return (GrafikAchse) m_name2grafikAxis.get( diagAxisID );
+    return (GrafikAchse)m_name2grafikAxis.get( diagAxisID );
   }
 
   /**
@@ -141,7 +141,7 @@ public class GrafikAchsen
     /**
      * @return Returns the id.
      */
-    public int getId( )
+    public int getId()
     {
       return m_id;
     }
@@ -149,15 +149,15 @@ public class GrafikAchsen
     /**
      * @return Returns the name.
      */
-    public String getName( )
+    public String getName()
     {
       return m_name;
     }
-    
+
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString( )
+    public String toString()
     {
       return getName();
     }

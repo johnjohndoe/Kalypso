@@ -1,13 +1,10 @@
 /*
- * OpenGIS® Coordinate Transformation Services Implementation Specification
- * Copyright (2001) OpenGIS consortium
+ * OpenGIS® Coordinate Transformation Services Implementation Specification Copyright (2001) OpenGIS consortium
  * 
- * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official
- * OpenGIS's interface files doesn't contain a copyright notice yet. This file
- * is a slightly modified version of official OpenGIS's interface. Changes have
- * been done in order to fix RMI problems and are documented on the SEAGIS web
- * site (seagis.sourceforge.net). THIS FILE WILL LIKELY BE REPLACED BY NEXT
- * VERSION OF OPENGIS SPECIFICATIONS.
+ * THIS COPYRIGHT NOTICE IS A TEMPORARY PATCH. Version 1.00 of official OpenGIS's interface files doesn't contain a
+ * copyright notice yet. This file is a slightly modified version of official OpenGIS's interface. Changes have been
+ * done in order to fix RMI problems and are documented on the SEAGIS web site (seagis.sourceforge.net). THIS FILE WILL
+ * LIKELY BE REPLACED BY NEXT VERSION OF OPENGIS SPECIFICATIONS.
  */
 package org.opengis.cs;
 
@@ -16,21 +13,16 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Builds up complex objects from simpler objects or values.
- * <code>CS_CoordinateSystemFactory</code> allows applications to make
- * coordinate systems that cannot be created by a
- * {@link CS_CoordinateSystemAuthorityFactory}. This factory is very flexible,
- * whereas the authority factory is easier to use.
+ * Builds up complex objects from simpler objects or values. <code>CS_CoordinateSystemFactory</code> allows
+ * applications to make coordinate systems that cannot be created by a {@link CS_CoordinateSystemAuthorityFactory}.
+ * This factory is very flexible, whereas the authority factory is easier to use.
  * 
- * So {@link CS_CoordinateSystemAuthorityFactory}can be used to make 'standard'
- * coordinate systems, and <code>CS_CoordinateSystemFactory</code> can be used
- * to make 'special' coordinate systems.
+ * So {@link CS_CoordinateSystemAuthorityFactory}can be used to make 'standard' coordinate systems, and
+ * <code>CS_CoordinateSystemFactory</code> can be used to make 'special' coordinate systems.
  * 
- * For example, the EPSG authority has codes for USA state plane coordinate
- * systems using the NAD83 datum, but these coordinate systems always use
- * meters. EPSG does not have codes for NAD83 state plane coordinate systems
- * that use feet units. This factory lets an application create such a hybrid
- * coordinate system.
+ * For example, the EPSG authority has codes for USA state plane coordinate systems using the NAD83 datum, but these
+ * coordinate systems always use meters. EPSG does not have codes for NAD83 state plane coordinate systems that use feet
+ * units. This factory lets an application create such a hybrid coordinate system.
  * 
  * @version 1.01
  * @since 1.00
@@ -70,17 +62,14 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_CompoundCoordinateSystem createCompoundCoordinateSystem( String name,
-      CS_CoordinateSystem head, CS_CoordinateSystem tail ) throws RemoteException;
+  CS_CompoundCoordinateSystem createCompoundCoordinateSystem( String name, CS_CoordinateSystem head,
+      CS_CoordinateSystem tail ) throws RemoteException;
 
   /**
-   * Creates a fitted coordinate system. The units of the axes in the fitted
-   * coordinate system will be inferred from the units of the base coordinate
-   * system. If the affine map performs a rotation, then any mixed axes must
-   * have identical units. For example, a (lat_deg,lon_deg,height_feet) system
-   * can be rotated in the (lat,lon) plane, since both affected axes are in
-   * degrees. But you should not rotate this coordinate system in any other
-   * plane.
+   * Creates a fitted coordinate system. The units of the axes in the fitted coordinate system will be inferred from the
+   * units of the base coordinate system. If the affine map performs a rotation, then any mixed axes must have identical
+   * units. For example, a (lat_deg,lon_deg,height_feet) system can be rotated in the (lat,lon) plane, since both
+   * affected axes are in degrees. But you should not rotate this coordinate system in any other plane.
    * 
    * @param name
    *          Name to give new object.
@@ -89,20 +78,18 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @param toBaseWKT
    *          Well-Known Text of transform from returned CS to base CS.
    * @param arAxes
-   *          Axes for fitted coordinate system. The number of axes must match
-   *          the source dimension of the transform "toBaseWKT".
+   *          Axes for fitted coordinate system. The number of axes must match the source dimension of the transform
+   *          "toBaseWKT".
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_FittedCoordinateSystem createFittedCoordinateSystem( String name, CS_CoordinateSystem base,
-      String toBaseWKT, CS_AxisInfo[] arAxes ) throws RemoteException;
+  CS_FittedCoordinateSystem createFittedCoordinateSystem( String name, CS_CoordinateSystem base, String toBaseWKT,
+      CS_AxisInfo[] arAxes ) throws RemoteException;
 
   /**
-   * Creates a local coordinate system. The dimension of the local coordinate
-   * system is determined by the size of the axis array. All the axes will have
-   * the same units. If you want to make a coordinate system with mixed units,
-   * then you can make a compound coordinate system from different local
-   * coordinate systems.
+   * Creates a local coordinate system. The dimension of the local coordinate system is determined by the size of the
+   * axis array. All the axes will have the same units. If you want to make a coordinate system with mixed units, then
+   * you can make a compound coordinate system from different local coordinate systems.
    * 
    * @param name
    *          Name to give new object.
@@ -115,8 +102,8 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_LocalCoordinateSystem createLocalCoordinateSystem( String name, CS_LocalDatum datum,
-      CS_Unit unit, CS_AxisInfo[] arAxes ) throws RemoteException;
+  CS_LocalCoordinateSystem createLocalCoordinateSystem( String name, CS_LocalDatum datum, CS_Unit unit,
+      CS_AxisInfo[] arAxes ) throws RemoteException;
 
   /**
    * Creates an ellipsoid from radius values.
@@ -132,8 +119,8 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_Ellipsoid createEllipsoid( String name, double semiMajorAxis, double semiMinorAxis,
-      CS_LinearUnit linearUnit ) throws RemoteException;
+  CS_Ellipsoid createEllipsoid( String name, double semiMajorAxis, double semiMinorAxis, CS_LinearUnit linearUnit )
+      throws RemoteException;
 
   /**
    * Creates an ellipsoid from an major radius, and inverse flattening.
@@ -170,9 +157,8 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_ProjectedCoordinateSystem createProjectedCoordinateSystem( String name,
-      CS_GeographicCoordinateSystem gcs, CS_Projection projection, CS_LinearUnit linearUnit,
-      CS_AxisInfo axis0, CS_AxisInfo axis1 ) throws RemoteException;
+  CS_ProjectedCoordinateSystem createProjectedCoordinateSystem( String name, CS_GeographicCoordinateSystem gcs,
+      CS_Projection projection, CS_LinearUnit linearUnit, CS_AxisInfo axis0, CS_AxisInfo axis1 ) throws RemoteException;
 
   /**
    * Creates a projection.
@@ -186,15 +172,14 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_Projection createProjection( String name, String wktProjectionClass,
-      CS_ProjectionParameter[] parameters ) throws RemoteException;
+  CS_Projection createProjection( String name, String wktProjectionClass, CS_ProjectionParameter[] parameters )
+      throws RemoteException;
 
   /**
-   * Creates horizontal datum from ellipsoid and Bursa-Wolf parameters. Since
-   * this method contains a set of Bursa-Wolf parameters, the created datum will
-   * always have a relationship to WGS84. If you wish to create a horizontal
-   * datum that has no relationship with WGS84, then you can either specify
-   * CS_HD_Other as the horizontalDatumType, or create it via WKT.
+   * Creates horizontal datum from ellipsoid and Bursa-Wolf parameters. Since this method contains a set of Bursa-Wolf
+   * parameters, the created datum will always have a relationship to WGS84. If you wish to create a horizontal datum
+   * that has no relationship with WGS84, then you can either specify CS_HD_Other as the horizontalDatumType, or create
+   * it via WKT.
    * 
    * @param name
    *          Name to give new object.
@@ -207,8 +192,8 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_HorizontalDatum createHorizontalDatum( String name, CS_DatumType horizontalDatumType,
-      CS_Ellipsoid ellipsoid, CS_WGS84ConversionInfo toWGS84 ) throws RemoteException;
+  CS_HorizontalDatum createHorizontalDatum( String name, CS_DatumType horizontalDatumType, CS_Ellipsoid ellipsoid,
+      CS_WGS84ConversionInfo toWGS84 ) throws RemoteException;
 
   /**
    * Creates a prime meridian, relative to Greenwich.
@@ -218,8 +203,7 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @param angularUnit
    *          Angular units of longitude.
    * @param longitude
-   *          Longitude of prime meridian in supplied angular units East of
-   *          Greenwich.
+   *          Longitude of prime meridian in supplied angular units East of Greenwich.
    * @throws RemoteException
    *           if a remote method call failed.
    */
@@ -244,9 +228,9 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_GeographicCoordinateSystem createGeographicCoordinateSystem( String name,
-      CS_AngularUnit angularUnit, CS_HorizontalDatum horizontalDatum,
-      CS_PrimeMeridian primeMeridian, CS_AxisInfo axis0, CS_AxisInfo axis1 ) throws RemoteException;
+  CS_GeographicCoordinateSystem createGeographicCoordinateSystem( String name, CS_AngularUnit angularUnit,
+      CS_HorizontalDatum horizontalDatum, CS_PrimeMeridian primeMeridian, CS_AxisInfo axis0, CS_AxisInfo axis1 )
+      throws RemoteException;
 
   /**
    * Creates a local datum.
@@ -270,8 +254,7 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_VerticalDatum createVerticalDatum( String name, CS_DatumType verticalDatumType )
-      throws RemoteException;
+  CS_VerticalDatum createVerticalDatum( String name, CS_DatumType verticalDatumType ) throws RemoteException;
 
   /**
    * Creates a vertical coordinate system from a datum and linear units.
@@ -287,7 +270,6 @@ public interface CS_CoordinateSystemFactory extends Remote
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  CS_VerticalCoordinateSystem createVerticalCoordinateSystem( String name,
-      CS_VerticalDatum verticalDatum, CS_LinearUnit verticalUnit, CS_AxisInfo axis )
-      throws RemoteException;
+  CS_VerticalCoordinateSystem createVerticalCoordinateSystem( String name, CS_VerticalDatum verticalDatum,
+      CS_LinearUnit verticalUnit, CS_AxisInfo axis ) throws RemoteException;
 }

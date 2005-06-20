@@ -36,22 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.PointSymbolizer;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -65,6 +57,14 @@ import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.PolygonSymbolizerLayo
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.RasterSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.SymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.model.feature.FeatureType;
 
 /**
  * @author F.Lindemann
@@ -73,8 +73,8 @@ import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
 public class SymbolizerTabItemBuilder
 {
 
-  public SymbolizerTabItemBuilder( TabFolder tabFolder, Symbolizer symbolizer,
-      KalypsoUserStyle userStyle, FeatureType featureType )
+  public SymbolizerTabItemBuilder( TabFolder tabFolder, Symbolizer symbolizer, KalypsoUserStyle userStyle,
+      FeatureType featureType )
   {
     TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
 
@@ -115,7 +115,7 @@ public class SymbolizerTabItemBuilder
     else if( symbolizer instanceof TextSymbolizer )
     {
       tabItem.setText( "Text" );
-      symbolizerLayout = new TextSymbolizerLayout( composite, symbolizer, userStyle, featureType);
+      symbolizerLayout = new TextSymbolizerLayout( composite, symbolizer, userStyle, featureType );
     }
 
     if( symbolizerLayout != null )

@@ -56,19 +56,17 @@ public class XMLHelper
     return ( XMLSCHEMA_NS.equals( ns ) && "schema".equals( name ) );
   }
 
-    public static Document getAsDOM( File file, boolean namespaceaware ) throws Exception
+  public static Document getAsDOM( File file, boolean namespaceaware ) throws Exception
   {
     return getAsDOM( new FileInputStream( file ), namespaceaware );
   }
 
-  public static Document getAsDOM( final InputStream inStream, boolean namespaceaware )
-      throws Exception
+  public static Document getAsDOM( final InputStream inStream, boolean namespaceaware ) throws Exception
   {
     return getAsDOM( new InputSource( inStream ), namespaceaware );
   }
 
-  public static Document getAsDOM( final InputSource inputSource, boolean namespaceaware )
-      throws Exception
+  public static Document getAsDOM( final InputSource inputSource, boolean namespaceaware ) throws Exception
   {
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( namespaceaware );
@@ -80,7 +78,7 @@ public class XMLHelper
 
   public static Document getAsDOM( final URL url, boolean namespaceaware ) throws Exception
   {
-    InputStream inputStream  = null;
+    InputStream inputStream = null;
 
     try
     {
@@ -103,22 +101,25 @@ public class XMLHelper
     }
   }
 
-  public static void writeDOM( final Document xmlDOM, final String charset, final OutputStream os ) throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final OutputStream os )
+      throws TransformerException
   {
     writeDOM( xmlDOM, charset, new StreamResult( os ) );
   }
 
-  public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer ) throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer )
+      throws TransformerException
   {
     // sollte nichte benutzt werden, wenn das charset nicht bekannt ist,
     // da sonst Mist rauskommt
     if( charset == null )
       throw new NullPointerException();
-    
+
     writeDOM( xmlDOM, charset, new StreamResult( writer ) );
   }
-  
-  public static void writeDOM( final Document xmlDOM, final String charset, final StreamResult streamResult ) throws TransformerException
+
+  public static void writeDOM( final Document xmlDOM, final String charset, final StreamResult streamResult )
+      throws TransformerException
   {
     final TransformerFactory tFactory = TransformerFactory.newInstance();
 
@@ -127,7 +128,7 @@ public class XMLHelper
     t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
     t.setOutputProperty( OutputKeys.INDENT, "yes" );
     if( charset != null )
-      t.setOutputProperty( OutputKeys.ENCODING , charset );
+      t.setOutputProperty( OutputKeys.ENCODING, charset );
 
     t.transform( new DOMSource( xmlDOM ), streamResult );
   }
@@ -157,7 +158,7 @@ public class XMLHelper
 
     try
     {
-      // TODO: Andreas: hab die xalan-j.jar zu deegree hinzugefügt, 
+      // TODO: Andreas: hab die xalan-j.jar zu deegree hinzugefügt,
       // schau mal obs noch geht...
       nl = XPathAPI.selectNodeList( domNode, xPathQuery );
     }
@@ -274,10 +275,9 @@ public class XMLHelper
   {
     try
     {
-      String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-          + "<xsl:stylesheet version=\"1.0\" "
-          + " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" + "<xsl:output method=\""
-          + outputMethod + "\" />" + xslTemplateString + "</xsl:stylesheet>";
+      String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<xsl:stylesheet version=\"1.0\" "
+          + " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" + "<xsl:output method=\"" + outputMethod + "\" />"
+          + xslTemplateString + "</xsl:stylesheet>";
 
       DOMSource xmlSource = new DOMSource( domNode );
       StreamSource xslSource = new StreamSource( new StringReader( xslString ) );
@@ -315,9 +315,8 @@ public class XMLHelper
     }
   }
 
-  public static void xslTransform( final InputStream xmlInputStream, InputStream xslInputStream,
-      Writer writer ) throws TransformerException, ParserConfigurationException, SAXException,
-      IOException
+  public static void xslTransform( final InputStream xmlInputStream, InputStream xslInputStream, Writer writer )
+      throws TransformerException, ParserConfigurationException, SAXException, IOException
   {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( true );
@@ -335,8 +334,7 @@ public class XMLHelper
     return xslTransform( new FileInputStream( xmlFile ), new FileInputStream( xslFile ) );
   }
 
-  public static String xslTransform( final InputStream xmlFile, final InputStream xslFile )
-      throws Exception
+  public static String xslTransform( final InputStream xmlFile, final InputStream xslFile ) throws Exception
   {
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -354,8 +352,7 @@ public class XMLHelper
     String abstractStatus = ( (Element)node ).getAttribute( "abstract" );
     if( abstractStatus == null )
       return false;
-    if( "false".equals( abstractStatus ) || "0".equals( abstractStatus )
-        || "".equals( abstractStatus ) )
+    if( "false".equals( abstractStatus ) || "0".equals( abstractStatus ) || "".equals( abstractStatus ) )
       return false;
     return true;
   }
@@ -363,8 +360,7 @@ public class XMLHelper
   /**
    * Helper methode for easy handling obects in switch blocks
    * 
-   * @return position of object in objectArray TODO move to a general
-   *         HelperClass
+   * @return position of object in objectArray TODO move to a general HelperClass
    */
   public static int indexOf( Object object, Object[] objectArray )
   {
@@ -375,11 +371,10 @@ public class XMLHelper
   }
 
   /**
-   * as every Feature must extend from AbstractFeatureType or
-   * AbstractFeatureCollection this methods search for the root.
+   * as every Feature must extend from AbstractFeatureType or AbstractFeatureCollection this methods search for the
+   * root.
    * 
-   * @return root type. e.g. "AbstractFeatureType" or
-   *         "AbstractFeatureCollectionType"
+   * @return root type. e.g. "AbstractFeatureType" or "AbstractFeatureCollectionType"
    */
   public static String getGMLBaseType( GMLSchema schema, Node complexTypeNode )
   {
@@ -393,12 +388,10 @@ public class XMLHelper
     {
       if( !XMLHelper.GMLSCHEMA_NS.equals( schema.getTargetNS() ) )
         return null;
-      SchemaAttribute typeNameAttribute = new SchemaAttribute( schema, getAttributeNode(
-          complexTypeNode, "name" ) );
+      SchemaAttribute typeNameAttribute = new SchemaAttribute( schema, getAttributeNode( complexTypeNode, "name" ) );
       return typeNameAttribute.getValue();
     }
-    SchemaAttribute attribute = new SchemaAttribute( schema,
-        getAttributeNode( nl.item( 0 ), "base" ) );
+    SchemaAttribute attribute = new SchemaAttribute( schema, getAttributeNode( nl.item( 0 ), "base" ) );
 
     final String typeName = attribute.getValue();
     final String typeNameSpace = attribute.getValueNS();
@@ -412,8 +405,7 @@ public class XMLHelper
     return baseName;
   }
 
-  public static String getStringFromChildElement( final Element elt, final String namespace,
-      final String eltName )
+  public static String getStringFromChildElement( final Element elt, final String namespace, final String eltName )
   {
     final NodeList nlL = elt.getElementsByTagNameNS( namespace, eltName );
     if( nlL.getLength() > 0 )
@@ -425,8 +417,7 @@ public class XMLHelper
     return null;
   }
 
-  public static Node getFirstChildElement( final Node parentNode, final String ns,
-      final String name, int maxDepth )
+  public static Node getFirstChildElement( final Node parentNode, final String ns, final String name, int maxDepth )
   {
     final NodeList childNodes = parentNode.getChildNodes();
     for( int i = 0; i < childNodes.getLength(); i++ )

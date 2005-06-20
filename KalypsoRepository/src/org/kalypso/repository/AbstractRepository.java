@@ -48,8 +48,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 /**
- * Abstract implementation of <code>IRepository</code> to provide basic
- * functionality.
+ * Abstract implementation of <code>IRepository</code> to provide basic functionality.
  * 
  * @author schlienger
  */
@@ -67,8 +66,7 @@ public abstract class AbstractRepository implements IRepository
 
   private final String m_conf;
 
-  public AbstractRepository( String name, String factory, String conf,
-      boolean readOnly )
+  public AbstractRepository( String name, String factory, String conf, boolean readOnly )
   {
     m_name = name;
     m_factory = factory;
@@ -162,14 +160,13 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
-   * This default implementation uses recursion to find an item with the
-   * requested id. Subclasses may use this method if they want to implement
-   * findItem using recursion.
+   * This default implementation uses recursion to find an item with the requested id. Subclasses may use this method if
+   * they want to implement findItem using recursion.
    * 
    * @return item if found, else null
    */
-  protected final IRepositoryItem findItemRecursive(
-      final IRepositoryItem item, final String id ) throws RepositoryException
+  protected final IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id )
+      throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )
       return item;
@@ -230,8 +227,8 @@ public abstract class AbstractRepository implements IRepository
   /**
    * Dumps the contents of this item and all its children using recursion
    */
-  private void dumpRecursive( final Writer writer, final IRepositoryItem item,
-      final String indent ) throws RepositoryException
+  private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent )
+      throws RepositoryException
   {
     try
     {
@@ -254,8 +251,7 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
-   * @see org.kalypso.repository.IRepository#getProperty(java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypso.repository.IRepository#getProperty(java.lang.String, java.lang.String)
    */
   public String getProperty( final String name, final String defaultValue )
   {
@@ -288,8 +284,7 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
-   * @see org.kalypso.repository.IRepository#setProperty(java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypso.repository.IRepository#setProperty(java.lang.String, java.lang.String)
    */
   public void setProperty( final String name, final String value )
   {

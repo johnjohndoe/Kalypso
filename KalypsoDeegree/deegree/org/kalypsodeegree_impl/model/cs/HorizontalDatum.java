@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -88,8 +88,8 @@ public class HorizontalDatum extends Datum
   /**
    * The default WGS 1984 datum.
    */
-  public static final HorizontalDatum WGS84 = (HorizontalDatum)pool.intern( new HorizontalDatum(
-      "WGS84", DatumType.GEOCENTRIC, Ellipsoid.WGS84, null ) );
+  public static final HorizontalDatum WGS84 = (HorizontalDatum)pool.intern( new HorizontalDatum( "WGS84",
+      DatumType.GEOCENTRIC, Ellipsoid.WGS84, null ) );
 
   /**
    * The ellipsoid for this datum.
@@ -102,8 +102,7 @@ public class HorizontalDatum extends Datum
   private final WGS84ConversionInfo parameters;
 
   /**
-   * Creates horizontal datum from an ellipsoid. The datum type will be
-   * {@link DatumType.Horizontal#OTHER}.
+   * Creates horizontal datum from an ellipsoid. The datum type will be {@link DatumType.Horizontal#OTHER}.
    * 
    * @param name
    *          Name to give new object.
@@ -125,12 +124,11 @@ public class HorizontalDatum extends Datum
    * @param ellipsoid
    *          Ellipsoid to use in new horizontal datum.
    * @param parameters
-   *          Suggested approximate conversion from new datum to WGS84, or
-   *          <code>null</code> if there is none.
+   *          Suggested approximate conversion from new datum to WGS84, or <code>null</code> if there is none.
    *  
    */
-  public HorizontalDatum( final String name, final DatumType.Horizontal type,
-      final Ellipsoid ellipsoid, final WGS84ConversionInfo parameters )
+  public HorizontalDatum( final String name, final DatumType.Horizontal type, final Ellipsoid ellipsoid,
+      final WGS84ConversionInfo parameters )
   {
     super( name, type );
     this.ellipsoid = ellipsoid;
@@ -148,8 +146,7 @@ public class HorizontalDatum extends Datum
    * @param ellipsoid
    *          Ellipsoid to use in new horizontal datum.
    * @param parameters
-   *          Suggested approximate conversion from new datum to WGS84, or
-   *          <code>null</code> if there is none.
+   *          Suggested approximate conversion from new datum to WGS84, or <code>null</code> if there is none.
    */
   HorizontalDatum( final Map properties, final DatumType type, final Ellipsoid ellipsoid,
       final WGS84ConversionInfo parameters )
@@ -163,8 +160,8 @@ public class HorizontalDatum extends Datum
   /**
    * Gets the type of the datum as an enumerated code.
    * 
-   * Note: return type will be changed to {@link DatumType.Horizontal}when we
-   * will be able to use generic types (with JDK 1.5).
+   * Note: return type will be changed to {@link DatumType.Horizontal}when we will be able to use generic types (with
+   * JDK 1.5).
    * 
    * @see org.opengis.cs.CS_HorizontalDatum#getDatumType()
    */
@@ -184,12 +181,10 @@ public class HorizontalDatum extends Datum
   }
 
   /**
-   * Gets preferred parameters for a Bursa Wolf transformation into WGS84. The 7
-   * returned values correspond to (dx,dy,dz) in meters, (ex,ey,ez) in
-   * arc-seconds, and scaling in parts-per-million. This method will always
-   * returns <code>null</code> for horizontal datums with type
-   * {@link DatumType.Horizontal#OTHER}. This method may also returns
-   * <code>null</code> if no suitable transformation is available.
+   * Gets preferred parameters for a Bursa Wolf transformation into WGS84. The 7 returned values correspond to
+   * (dx,dy,dz) in meters, (ex,ey,ez) in arc-seconds, and scaling in parts-per-million. This method will always returns
+   * <code>null</code> for horizontal datums with type {@link DatumType.Horizontal#OTHER}. This method may also
+   * returns <code>null</code> if no suitable transformation is available.
    * 
    * @see org.opengis.cs.CS_HorizontalDatum#getWGS84Parameters()
    */
@@ -222,18 +217,15 @@ public class HorizontalDatum extends Datum
     if( super.equals( object ) )
     {
       final HorizontalDatum that = (HorizontalDatum)object;
-      return Utilities.equals( this.ellipsoid, that.ellipsoid )
-          && Utilities.equals( this.parameters, that.parameters );
+      return Utilities.equals( this.ellipsoid, that.ellipsoid ) && Utilities.equals( this.parameters, that.parameters );
     }
     return false;
   }
 
   /**
-   * Returns an OpenGIS interface for this datum. The returned object is
-   * suitable for RMI use.
+   * Returns an OpenGIS interface for this datum. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   final Object toOpenGIS( final Object adapters )
   {
@@ -247,8 +239,7 @@ public class HorizontalDatum extends Datum
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link HorizontalDatum}object for use with OpenGIS. This class is
-   * suitable for RMI use.
+   * Wrap a {@link HorizontalDatum}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

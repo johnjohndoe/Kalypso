@@ -87,8 +87,7 @@ public class ControlRulePanel
 
   private int possibleNumericFeatureTypeNumber = 0;
 
-  public ControlRulePanel( Composite parent, String m_labelText, int m_size,
-      int m_possibleNumericFeatureTypeNumber )
+  public ControlRulePanel( Composite parent, String m_labelText, int m_size, int m_possibleNumericFeatureTypeNumber )
   {
     setCanDelete( m_size );
     setPossibleNumericFeatureTypeNumber( m_possibleNumericFeatureTypeNumber );

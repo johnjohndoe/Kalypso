@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor;
 
 /**
@@ -248,6 +248,6 @@ public class MessageBundle
   public static final String STYLE_EDITOR_PATTERN_UPPER_ERROR = "UpperBoundary ist kein numerischer Wert";
 
   public static final String STYLE_EDITOR_PATTERN_UPPER_LOWER_ERROR = "UpperBoundary darf nicht kleiner als LowerBoundary sein";
-  
+
   public static final String STYLE_EDITOR_COLORMAP = "ColorMap";
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.text.DateFormat;
@@ -45,13 +45,13 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
 
 /**
  * @author belger
@@ -88,7 +88,7 @@ public class CalendarFeatureDialog implements IFeatureDialog
 
       m_change = new FeatureChange( m_feature, m_ftp.getName(), newDate );
     }
-    
+
     return open;
   }
 
@@ -96,7 +96,7 @@ public class CalendarFeatureDialog implements IFeatureDialog
   {
     if( m_change != null )
       return (Date)m_change.newValue;
-    
+
     return (Date)m_feature.getProperty( m_ftp.getName() );
   }
 

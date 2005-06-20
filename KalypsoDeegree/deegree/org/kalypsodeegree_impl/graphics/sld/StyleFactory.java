@@ -105,8 +105,7 @@ public class StyleFactory
 {
 
   /**
-   * creates a <tt>ParameterValueType</tt> instance with a <tt>String</tt>
-   * as value
+   * creates a <tt>ParameterValueType</tt> instance with a <tt>String</tt> as value
    * 
    * @param value
    *          value of the <tt>ParameterValueType</tt>
@@ -120,8 +119,7 @@ public class StyleFactory
   }
 
   /**
-   * creates a <tt>ParameterValueType</tt> instance with a <tt>int</tt> as
-   * value
+   * creates a <tt>ParameterValueType</tt> instance with a <tt>int</tt> as value
    * 
    * @param value
    *          value of the <tt>ParameterValueType</tt>
@@ -135,8 +133,7 @@ public class StyleFactory
   }
 
   /**
-   * creates a <tt>ParameterValueType</tt> instance with a <tt>String</tt>
-   * as value
+   * creates a <tt>ParameterValueType</tt> instance with a <tt>String</tt> as value
    * 
    * @param value
    *          value of the <tt>ParameterValueType</tt>
@@ -150,8 +147,7 @@ public class StyleFactory
   }
 
   /**
-   * creates a <tt>ParameterValueType</tt> instance with an array of
-   * <tt>Expression</tt> s as value
+   * creates a <tt>ParameterValueType</tt> instance with an array of <tt>Expression</tt> s as value
    * 
    * @param expressions
    * 
@@ -237,8 +233,7 @@ public class StyleFactory
   }
 
   /**
-   * create a default Stroke that black, 1 pixel width, complete opaque, with
-   * round linejoin and square line cap
+   * create a default Stroke that black, 1 pixel width, complete opaque, with round linejoin and square line cap
    * 
    * @return the Stroke created
    */
@@ -315,8 +310,7 @@ public class StyleFactory
    * @param width
    *          the width of the line
    * @param opacity
-   *          the opacity or <I>see throughness </I> of the line, 0 - is
-   *          transparent, 1 is completely drawn
+   *          the opacity or <I>see throughness </I> of the line, 0 - is transparent, 1 is completely drawn
    * @param lineJoin
    *          the type of join to be used at points along the line
    * @param lineCap
@@ -324,8 +318,8 @@ public class StyleFactory
    * 
    * @return the stroke created
    */
-  public static Stroke createStroke( Color color, double width, double opacity, float[] dashArray,
-      String lineJoin, String lineCap )
+  public static Stroke createStroke( Color color, double width, double opacity, float[] dashArray, String lineJoin,
+      String lineCap )
   {
     HashMap cssParams = new HashMap();
 
@@ -405,8 +399,7 @@ public class StyleFactory
    * @param width
    *          the width of the line
    * @param opacity
-   *          the opacity or <I>see throughness </I> of the line, 0 - is
-   *          transparent, 1 is completely drawn
+   *          the opacity or <I>see throughness </I> of the line, 0 - is transparent, 1 is completely drawn
    * 
    * @return the stroke created
    */
@@ -454,8 +447,7 @@ public class StyleFactory
   }
 
   /**
-   * create a fill with color and opacity supplied and uses the graphic fill
-   * supplied for the fill
+   * create a fill with color and opacity supplied and uses the graphic fill supplied for the fill
    * 
    * @param color
    *          the foreground color
@@ -503,8 +495,7 @@ public class StyleFactory
    * 
    * @return the mark created
    */
-  public static Mark createMark( String wellKnownName, Color fillColor, Color borderColor,
-      double borderWidth )
+  public static Mark createMark( String wellKnownName, Color fillColor, Color borderColor, double borderWidth )
   {
     Stroke stroke = createStroke( borderColor, borderWidth );
     Fill fill = createFill( fillColor );
@@ -574,8 +565,7 @@ public class StyleFactory
    * 
    * @return the external graphic
    */
-  public static ExternalGraphic createExternalGraphic( String uri, String format )
-      throws MalformedURLException
+  public static ExternalGraphic createExternalGraphic( String uri, String format ) throws MalformedURLException
   {
     return createExternalGraphic( new URL( uri ), format );
   }
@@ -611,8 +601,8 @@ public class StyleFactory
    * 
    * @return the graphic created
    */
-  public static Graphic createGraphic( ExternalGraphic externalGraphic, Mark mark, double opacity,
-      double size, double rotation )
+  public static Graphic createGraphic( ExternalGraphic externalGraphic, Mark mark, double opacity, double size,
+      double rotation )
   {
 
     Object[] mae = null;
@@ -689,8 +679,8 @@ public class StyleFactory
    * 
    * @return the pointplacement created
    */
-  public static PointPlacement createPointPlacement( double anchorX, double anchorY,
-      double displacementX, double displacementY, double rotation )
+  public static PointPlacement createPointPlacement( double anchorX, double anchorY, double displacementX,
+      double displacementY, double rotation )
   {
     ParameterValueType pvt1 = createParameterValueType( anchorX );
     ParameterValueType pvt2 = createParameterValueType( anchorY );
@@ -727,8 +717,8 @@ public class StyleFactory
    * 
    * @return the pointplacement created
    */
-  public static PointPlacement createPointPlacement( double anchorX, double anchorY,
-      double displacementX, double displacementY, double rotation, boolean auto )
+  public static PointPlacement createPointPlacement( double anchorX, double anchorY, double displacementX,
+      double displacementY, double rotation, boolean auto )
   {
     ParameterValueType pvt1 = createParameterValueType( anchorX );
     ParameterValueType pvt2 = createParameterValueType( anchorY );
@@ -749,11 +739,9 @@ public class StyleFactory
   }
 
   /**
-   * creates a <tt>LinePlacement</tt> with a user defined distance between the
-   * labels and the lines. A positive value indicates a position above the line,
-   * a negative value indicates a position below. The line width is asumed to be
-   * 2 pixel and the gap between the labels is set to factor 10 of the label
-   * width.
+   * creates a <tt>LinePlacement</tt> with a user defined distance between the labels and the lines. A positive value
+   * indicates a position above the line, a negative value indicates a position below. The line width is asumed to be 2
+   * pixel and the gap between the labels is set to factor 10 of the label width.
    * 
    * @param offset -
    *          the distance between the line and the label
@@ -771,9 +759,8 @@ public class StyleFactory
   }
 
   /**
-   * creates a <tt>LinePlacement</tt> with a relative position of the label
-   * according to the line the lines. The line width is asumed to be 2 pixel and
-   * the gap between the labels is set to factor 10 of the label width.
+   * creates a <tt>LinePlacement</tt> with a relative position of the label according to the line the lines. The line
+   * width is asumed to be 2 pixel and the gap between the labels is set to factor 10 of the label width.
    * 
    * @param position
    *          of the label relative to the line
@@ -791,9 +778,8 @@ public class StyleFactory
   }
 
   /**
-   * creates a <tt>LinePlacement</tt> with a user defined distance between the
-   * labels and the lines. A positive value indicates a position above the line,
-   * a negative value indicates a position below.
+   * creates a <tt>LinePlacement</tt> with a user defined distance between the labels and the lines. A positive value
+   * indicates a position above the line, a negative value indicates a position below.
    * 
    * @param offset -
    *          the distance between the line and the label
@@ -815,9 +801,8 @@ public class StyleFactory
   }
 
   /**
-   * creates a <tt>LinePlacement</tt> with a user defined distance between the
-   * labels and the lines. A positive value indicates a position above the line,
-   * a negative value indicates a position below.
+   * creates a <tt>LinePlacement</tt> with a user defined distance between the labels and the lines. A positive value
+   * indicates a position above the line, a negative value indicates a position below.
    * 
    * @param position -
    *          relative position of the label to the line
@@ -1061,8 +1046,7 @@ public class StyleFactory
    * 
    * @return the new line symbolizer
    */
-  public static LineSymbolizer createLineSymbolizer( Color color, double width,
-      String geometryPropertyName )
+  public static LineSymbolizer createLineSymbolizer( Color color, double width, String geometryPropertyName )
   {
     return createLineSymbolizer( createStroke( color, width ), geometryPropertyName );
   }
@@ -1109,8 +1093,7 @@ public class StyleFactory
    * 
    * @return the new line symbolizer
    */
-  public static LineSymbolizer createLineSymbolizer( Stroke stroke, String geometryPropertyName,
-      double min, double max )
+  public static LineSymbolizer createLineSymbolizer( Stroke stroke, String geometryPropertyName, double min, double max )
   {
     Geometry geom = null;
     if( geometryPropertyName != null )
@@ -1155,11 +1138,9 @@ public class StyleFactory
    * 
    * @return the new polygon symbolizer
    */
-  public static PolygonSymbolizer createPolygonSymbolizer( Color fillColor, Color borderColor,
-      double borderWidth )
+  public static PolygonSymbolizer createPolygonSymbolizer( Color fillColor, Color borderColor, double borderWidth )
   {
-    return createPolygonSymbolizer( createStroke( borderColor, borderWidth ),
-        createFill( fillColor ) );
+    return createPolygonSymbolizer( createStroke( borderColor, borderWidth ), createFill( fillColor ) );
   }
 
   /**
@@ -1205,8 +1186,7 @@ public class StyleFactory
    * 
    * @return the new polygon symbolizer
    */
-  public static PolygonSymbolizer createPolygonSymbolizer( Stroke stroke, Fill fill,
-      String geometryPropertyName )
+  public static PolygonSymbolizer createPolygonSymbolizer( Stroke stroke, Fill fill, String geometryPropertyName )
   {
     return createPolygonSymbolizer( stroke, fill, geometryPropertyName, 0, Double.MAX_VALUE );
   }
@@ -1227,8 +1207,8 @@ public class StyleFactory
    * 
    * @return the new polygon symbolizer
    */
-  public static PolygonSymbolizer createPolygonSymbolizer( Stroke stroke, Fill fill,
-      String geometryPropertyName, double min, double max )
+  public static PolygonSymbolizer createPolygonSymbolizer( Stroke stroke, Fill fill, String geometryPropertyName,
+      double min, double max )
   {
     Geometry geom = null;
     if( geometryPropertyName != null )
@@ -1239,16 +1219,14 @@ public class StyleFactory
   }
 
   /**
-   * create a default raster symbolizer with one colorMap entry for noData
-   * values
+   * create a default raster symbolizer with one colorMap entry for noData values
    * 
    * @return the new raster symbolizer
    */
   public static RasterSymbolizer createRasterSymbolizer()
   {
     TreeMap colorMap = new TreeMap();
-    ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999,
-        "Keine Daten" );
+    ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
     return new RasterSymbolizer_Impl( colorMap );
   }
@@ -1307,8 +1285,8 @@ public class StyleFactory
    * 
    * @return the new point symbolizer
    */
-  public static PointSymbolizer createPointSymbolizer( Graphic graphic,
-      String geometryPropertyName, double min, double max )
+  public static PointSymbolizer createPointSymbolizer( Graphic graphic, String geometryPropertyName, double min,
+      double max )
   {
     Geometry geom = null;
     if( geometryPropertyName != null )
@@ -1357,8 +1335,8 @@ public class StyleFactory
       LabelPlacement labelPlacement )
   {
     Font font = createFont( java.awt.Font.decode( "Sans Serif" ) );
-    return createTextSymbolizer( geometryPropertyName, attribute, font, labelPlacement,
-        createHalo(), createFill(), 0, Double.MAX_VALUE );
+    return createTextSymbolizer( geometryPropertyName, attribute, font, labelPlacement, createHalo(), createFill(), 0,
+        Double.MAX_VALUE );
   }
 
   /**
@@ -1384,8 +1362,8 @@ public class StyleFactory
    * @return the new textsymbolizer
    *  
    */
-  public static TextSymbolizer createTextSymbolizer( String geometryPropertyName, String attribute,
-      Font font, LabelPlacement labelPlacement, Halo halo, Fill fill, double min, double max )
+  public static TextSymbolizer createTextSymbolizer( String geometryPropertyName, String attribute, Font font,
+      LabelPlacement labelPlacement, Halo halo, Fill fill, double min, double max )
   {
     Geometry geom = null;
     if( geometryPropertyName != null )
@@ -1419,8 +1397,8 @@ public class StyleFactory
    * @return the new textsymbolizer
    *  
    */
-  public static TextSymbolizer createTextSymbolizer( Geometry geometry, ParameterValueType label,
-      Font font, LabelPlacement labelPlacement, Halo halo, Fill fill, double min, double max )
+  public static TextSymbolizer createTextSymbolizer( Geometry geometry, ParameterValueType label, Font font,
+      LabelPlacement labelPlacement, Halo halo, Fill fill, double min, double max )
   {
     return new TextSymbolizer_Impl( geometry, label, font, labelPlacement, halo, fill, min, max );
   }
@@ -1488,8 +1466,7 @@ public class StyleFactory
   }
 
   /**
-   * create a simple styling rule, see the SLD Spec for more details of
-   * scaleDenominators
+   * create a simple styling rule, see the SLD Spec for more details of scaleDenominators
    * 
    * @param symbolizer -
    *          the symbolizer to use
@@ -1500,16 +1477,14 @@ public class StyleFactory
    * 
    * @return the new rule
    */
-  public static Rule createRule( Symbolizer symbolizer, double minScaleDenominator,
-      double maxScaleDenominator )
+  public static Rule createRule( Symbolizer symbolizer, double minScaleDenominator, double maxScaleDenominator )
   {
     return createRule( new Symbolizer[]
     { symbolizer }, minScaleDenominator, maxScaleDenominator );
   }
 
   /**
-   * create a simple styling rule, see the SLD Spec for more details of
-   * scaleDenominators
+   * create a simple styling rule, see the SLD Spec for more details of scaleDenominators
    * 
    * @param symbolizers -
    *          an array of symbolizers to use
@@ -1520,16 +1495,13 @@ public class StyleFactory
    * 
    * @return the new rule
    */
-  public static Rule createRule( Symbolizer[] symbolizers, double minScaleDenominator,
-      double maxScaleDenominator )
+  public static Rule createRule( Symbolizer[] symbolizers, double minScaleDenominator, double maxScaleDenominator )
   {
-    return createRule( symbolizers, "default", "default", "default", minScaleDenominator,
-        maxScaleDenominator );
+    return createRule( symbolizers, "default", "default", "default", minScaleDenominator, maxScaleDenominator );
   }
 
   /**
-   * create a simple styling rule, see the SLD Spec for more details of
-   * scaleDenominators
+   * create a simple styling rule, see the SLD Spec for more details of scaleDenominators
    * 
    * @param symbolizers -
    *          an array of symbolizers to use
@@ -1546,16 +1518,14 @@ public class StyleFactory
    * 
    * @return the new rule
    */
-  public static Rule createRule( Symbolizer[] symbolizers, String name, String title,
-      String abstract_, double minScaleDenominator, double maxScaleDenominator )
+  public static Rule createRule( Symbolizer[] symbolizers, String name, String title, String abstract_,
+      double minScaleDenominator, double maxScaleDenominator )
   {
-    return createRule( symbolizers, name, title, abstract_, null, null, false, minScaleDenominator,
-        maxScaleDenominator );
+    return createRule( symbolizers, name, title, abstract_, null, null, false, minScaleDenominator, maxScaleDenominator );
   }
 
   /**
-   * create a complex styling rule, see the SLD Spec for more details of
-   * scaleDenominators
+   * create a complex styling rule, see the SLD Spec for more details of scaleDenominators
    * 
    * @param symbolizers -
    *          an array of symbolizers to use
@@ -1576,12 +1546,12 @@ public class StyleFactory
    * 
    * @return the new rule
    */
-  public static Rule createRule( Symbolizer[] symbolizers, String name, String title,
-      String abstract_, LegendGraphic legendGraphic, Filter filter, boolean elseFilter,
-      double minScaleDenominator, double maxScaleDenominator )
+  public static Rule createRule( Symbolizer[] symbolizers, String name, String title, String abstract_,
+      LegendGraphic legendGraphic, Filter filter, boolean elseFilter, double minScaleDenominator,
+      double maxScaleDenominator )
   {
-    return new Rule_Impl( symbolizers, name, title, abstract_, legendGraphic, filter, elseFilter,
-        minScaleDenominator, maxScaleDenominator );
+    return new Rule_Impl( symbolizers, name, title, abstract_, legendGraphic, filter, elseFilter, minScaleDenominator,
+        maxScaleDenominator );
   }
 
   /**
@@ -1598,8 +1568,7 @@ public class StyleFactory
   }
 
   /**
-   * create a Feature type styler see the SLD Spec for more details of
-   * scaleDenominators
+   * create a Feature type styler see the SLD Spec for more details of scaleDenominators
    * 
    * @param symbolizer -
    *          the symbolizer to use
@@ -1610,15 +1579,14 @@ public class StyleFactory
    * 
    * @return the new feature type styler
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( Symbolizer symbolizer,
-      double minScaleDenominator, double maxScaleDenominator )
+  public static FeatureTypeStyle createFeatureTypeStyle( Symbolizer symbolizer, double minScaleDenominator,
+      double maxScaleDenominator )
   {
     return createFeatureTypeStyle( null, symbolizer, minScaleDenominator, maxScaleDenominator );
   }
 
   /**
-   * create a Feature type styler see the SLD Spec for more details of
-   * scaleDenominators
+   * create a Feature type styler see the SLD Spec for more details of scaleDenominators
    * 
    * @param symbolizers -
    *          an array of symbolizers to use
@@ -1629,8 +1597,8 @@ public class StyleFactory
    * 
    * @return the new feature type styler
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( Symbolizer[] symbolizers,
-      double minScaleDenominator, double maxScaleDenominator )
+  public static FeatureTypeStyle createFeatureTypeStyle( Symbolizer[] symbolizers, double minScaleDenominator,
+      double maxScaleDenominator )
   {
     return createFeatureTypeStyle( null, symbolizers, minScaleDenominator, maxScaleDenominator );
   }
@@ -1645,8 +1613,7 @@ public class StyleFactory
    * 
    * @return the new feature type styler
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName,
-      Symbolizer symbolizer )
+  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName, Symbolizer symbolizer )
   {
     return createFeatureTypeStyle( featureTypeStyleName, symbolizer, 0, Double.MAX_VALUE );
   }
@@ -1661,15 +1628,13 @@ public class StyleFactory
    * 
    * @return the new feature type styler
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName,
-      Symbolizer[] symbolizers )
+  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName, Symbolizer[] symbolizers )
   {
     return createFeatureTypeStyle( featureTypeStyleName, symbolizers, 0, Double.MAX_VALUE );
   }
 
   /**
-   * create a Feature type styler see the SLD Spec for more details of
-   * scaleDenominators
+   * create a Feature type styler see the SLD Spec for more details of scaleDenominators
    * 
    * @param featureTypeStyleName -
    *          name for the feature type styler
@@ -1682,16 +1647,15 @@ public class StyleFactory
    * 
    * @return the new feature type styler
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName,
-      Symbolizer symbolizer, double minScaleDenominator, double maxScaleDenominator )
+  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName, Symbolizer symbolizer,
+      double minScaleDenominator, double maxScaleDenominator )
   {
     return createFeatureTypeStyle( featureTypeStyleName, new Symbolizer[]
     { symbolizer }, minScaleDenominator, maxScaleDenominator );
   }
 
   /**
-   * create a Feature type styler see the SLD Spec for more details of
-   * scaleDenominators
+   * create a Feature type styler see the SLD Spec for more details of scaleDenominators
    * 
    * @param featureTypeStyleName -
    *          name for the feature type styler
@@ -1704,8 +1668,8 @@ public class StyleFactory
    * 
    * @return the new feature type styler
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName,
-      Symbolizer[] symbolizers, double minScaleDenominator, double maxScaleDenominator )
+  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName, Symbolizer[] symbolizers,
+      double minScaleDenominator, double maxScaleDenominator )
   {
     Rule rule = createRule( symbolizers, minScaleDenominator, maxScaleDenominator );
 
@@ -1780,8 +1744,7 @@ public class StyleFactory
    * @param featureTypeStyleName -
    *          name for the feature type styler
    * @param featureTypeName -
-   *          name of the feature type the Feature type style shall be assigned
-   *          to
+   *          name of the feature type the Feature type style shall be assigned to
    * @param title -
    *          title of the FeatureTypeStyle
    * @param abstract_ -
@@ -1791,14 +1754,13 @@ public class StyleFactory
    * 
    * @return the new feature type styler
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName, String title,
-      String abstract_, String featureTypeName, Rule[] rules )
+  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName, String title, String abstract_,
+      String featureTypeName, Rule[] rules )
   {
 
     featureTypeStyleName = StringExtend.toUTF8( featureTypeStyleName );
     title = StringExtend.toUTF8( title );
-    return new FeatureTypeStyle_Impl( featureTypeStyleName, title, abstract_, featureTypeName,
-        null, rules );
+    return new FeatureTypeStyle_Impl( featureTypeStyleName, title, abstract_, featureTypeName, null, rules );
   }
 
   /**
@@ -1826,8 +1788,7 @@ public class StyleFactory
    * 
    * @return the new style
    */
-  public static Style createStyle( Symbolizer symbolizer, double minScaleDenominator,
-      double maxScaleDenominator )
+  public static Style createStyle( Symbolizer symbolizer, double minScaleDenominator, double maxScaleDenominator )
   {
     return createStyle( "default", symbolizer, minScaleDenominator, maxScaleDenominator );
   }
@@ -1865,8 +1826,7 @@ public class StyleFactory
       double maxScaleDenominator )
   {
     // create the feature type style
-    FeatureTypeStyle fts = createFeatureTypeStyle( name, symbolizer, minScaleDenominator,
-        maxScaleDenominator );
+    FeatureTypeStyle fts = createFeatureTypeStyle( name, symbolizer, minScaleDenominator, maxScaleDenominator );
 
     return createStyle( name, null, null, fts );
   }
@@ -1877,8 +1837,7 @@ public class StyleFactory
    * @param name -
    *          the name of the style
    * @param featureTypeName -
-   *          name of the feature type the Feature type style shall be assigned
-   *          to
+   *          name of the feature type the Feature type style shall be assigned to
    * @param title -
    *          title of the FeatureTypeStyle
    * @param abstract_ -
@@ -1888,8 +1847,7 @@ public class StyleFactory
    * 
    * @return the new style
    */
-  public static Style createStyle( String name, String title, String abstract_,
-      String featureTypeName, Rule[] rules )
+  public static Style createStyle( String name, String title, String abstract_, String featureTypeName, Rule[] rules )
   {
 
     FeatureTypeStyle fts = createFeatureTypeStyle( name, title, abstract_, featureTypeName, rules );
@@ -1910,8 +1868,7 @@ public class StyleFactory
    * 
    * @return the new style
    */
-  public static Style createStyle( String name, String title, String abstract_,
-      FeatureTypeStyle featureTypeStyle )
+  public static Style createStyle( String name, String title, String abstract_, FeatureTypeStyle featureTypeStyle )
   {
     return createStyle( name, title, abstract_, new FeatureTypeStyle[]
     { featureTypeStyle } );
@@ -1931,8 +1888,7 @@ public class StyleFactory
    * 
    * @return the new style
    */
-  public static Style createStyle( String name, String title, String abstract_,
-      FeatureTypeStyle[] featureTypeStyles )
+  public static Style createStyle( String name, String title, String abstract_, FeatureTypeStyle[] featureTypeStyles )
   {
     return new UserStyle_Impl( name, title, abstract_, false, featureTypeStyles );
   }
@@ -1961,8 +1917,8 @@ public class StyleFactory
    * 
    * @return the style created
    */
-  public static Style createPointStyle( String wellKnownName, Color fillColor, Color borderColor,
-      double borderWidth, double opacity, double size, double rotation, double min, double max )
+  public static Style createPointStyle( String wellKnownName, Color fillColor, Color borderColor, double borderWidth,
+      double opacity, double size, double rotation, double min, double max )
   {
     Mark mark = createMark( wellKnownName, fillColor, borderColor, borderWidth );
     Graphic graphic = createGraphic( null, mark, opacity, size, rotation );
@@ -1986,8 +1942,7 @@ public class StyleFactory
    * 
    * @return the style created
    */
-  public static Style createLineStyle( Color color, double width, double opacity, double min,
-      double max )
+  public static Style createLineStyle( Color color, double width, double opacity, double min, double max )
   {
     Stroke stroke = createStroke( color, width, opacity );
     Symbolizer symbolizer = createLineSymbolizer( stroke, null, min, max );
@@ -2014,8 +1969,8 @@ public class StyleFactory
    * 
    * @return the style created
    */
-  public static Style createPolygonStyle( Color fillColor, double fillOpacity, Color strokeColor,
-      double strokeWidth, double strokeOpacity, double min, double max )
+  public static Style createPolygonStyle( Color fillColor, double fillOpacity, Color strokeColor, double strokeWidth,
+      double strokeOpacity, double min, double max )
   {
     Stroke stroke = createStroke( strokeColor, strokeWidth, strokeOpacity );
     Fill fill = createFill( fillColor, fillOpacity );
@@ -2187,9 +2142,8 @@ public class StyleFactory
   //  }
 
   /**
-   * transforms the color of the request from java.awt.Color to the hexadecimal
-   * representation as in an OGC conform WMS-GetMap request (e.g. white ==
-   * "#ffffff").
+   * transforms the color of the request from java.awt.Color to the hexadecimal representation as in an OGC conform
+   * WMS-GetMap request (e.g. white == "#ffffff").
    * 
    * @return the color as hexadecimal representation
    */

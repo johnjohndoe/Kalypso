@@ -37,8 +37,8 @@ public class HyperPoint
    * Konstruktor für eine Multidimensionalen Punkt.
    * 
    * @param coords
-   *          double[] Array von double-Werten mit den Koordinaten für jede
-   *          Dimension. Länge des Array entspricht der Dimension des Punktes
+   *          double[] Array von double-Werten mit den Koordinaten für jede Dimension. Länge des Array entspricht der
+   *          Dimension des Punktes
    */
   public HyperPoint( double[] coords )
   {

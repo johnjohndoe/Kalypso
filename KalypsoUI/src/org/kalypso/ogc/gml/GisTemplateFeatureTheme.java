@@ -81,26 +81,25 @@ import org.kalypsodeegree_impl.model.feature.visitors.SetSelectionVisitor;
 
 /**
  * <p>
- * Ein Decorator f?r ein {@link org.kalypso.ogc.gml.KalypsoFeatureTheme},
- * welches dieses (asynchron) ?ber den Pool aus einer Source l?dt.
+ * Ein Decorator f?r ein {@link org.kalypso.ogc.gml.KalypsoFeatureTheme}, welches dieses (asynchron) ?ber den Pool aus
+ * einer Source l?dt.
  * </p>
  * <p>
- * Die ganze dynamic, also die ?berwachung, ob sich das Pool-Objekt ge?ndert
- * etc. findet hier statt
+ * Die ganze dynamic, also die ?berwachung, ob sich das Pool-Objekt ge?ndert etc. findet hier statt
  * </p>
  * 
  * <p>
- * Hier findet auch die Verwaltung statt, ob sich Daten des Themas ge?ndert
- * haben
+ * Hier findet auch die Verwaltung statt, ob sich Daten des Themas ge?ndert haben
  * </p>
  * <p>
- * Implementiert unter anderem {@link org.kalypso.util.command.ICommandTarget},
- * da sich die Daten des unterliegenden Themas ?ndern k?nnen
+ * Implementiert unter anderem {@link org.kalypso.util.command.ICommandTarget}, da sich die Daten des unterliegenden
+ * Themas ?ndern k?nnen
  * </p>
  * 
  * @author Belger
  */
-public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget, IKalypsoFeatureTheme, IPooledObject
+public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget,
+    IKalypsoFeatureTheme, IPooledObject
 {
   protected static final Logger LOGGER = Logger.getLogger( GisTemplateFeatureTheme.class.getName() );
 
@@ -119,8 +118,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   private KalypsoFeatureTheme m_theme = null;
 
   /**
-   * Um bei einem Neuladen der Daten die Selektion zu erhalten featureId ->
-   * selection
+   * Um bei einem Neuladen der Daten die Selektion zu erhalten featureId -> selection
    */
   private final Map m_lastSelectedFeaturesMap = new HashMap();
 
@@ -224,8 +222,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -279,8 +276,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
@@ -357,8 +354,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {

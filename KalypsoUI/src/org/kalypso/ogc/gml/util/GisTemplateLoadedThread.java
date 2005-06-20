@@ -49,8 +49,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
  * Dieser Thread wartet solange, bis eine Karte vollständig geladen wurde.
  * </p>
  * <p>
- * Danach macht er etwas (d.h. führt ein übergebenen Runnable aus) und beendet
- * sich.
+ * Danach macht er etwas (d.h. führt ein übergebenen Runnable aus) und beendet sich.
  * </p>
  * 
  * @author belger

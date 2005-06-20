@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -122,11 +122,9 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   }
 
   /**
-   * The operation "boundary" shall return the boundary of this GM_SurfacePatch
-   * represented as a collection of GM_Curves organized as a GM_SurfaceBoundary,
-   * consisting of GM_Curve instances along the boundary of the aggregate
-   * GM_Surface, and interior to the GM_Surface where GM_SurfacePatches are
-   * adjacent.
+   * The operation "boundary" shall return the boundary of this GM_SurfacePatch represented as a collection of GM_Curves
+   * organized as a GM_SurfaceBoundary, consisting of GM_Curve instances along the boundary of the aggregate GM_Surface,
+   * and interior to the GM_Surface where GM_SurfacePatches are adjacent.
    */
   public GM_SurfaceBoundary getBoundary()
   {
@@ -179,8 +177,8 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
     try
     {
-      p = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl( getInterpolation().getValue() ),
-          getExteriorRing(), getInteriorRings(), this.crs );
+      p = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl( getInterpolation().getValue() ), getExteriorRing(),
+          getInteriorRings(), this.crs );
     }
     catch( Exception ex )
     {
@@ -191,11 +189,9 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   }
 
   /**
-   * The Boolean valued operation "intersects" shall return TRUE if this
-   * GM_Object intersects another GM_Object. Within a GM_Complex, the
-   * GM_Primitives do not intersect one another. In general, topologically
-   * structured data uses shared geometric objects to capture intersection
-   * information.
+   * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
+   * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
+   * geometric objects to capture intersection information.
    */
   public boolean intersects( GM_Object gmo )
   {
@@ -227,8 +223,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   }
 
   /**
-   * the operations returns true if the submitted multi primitive intersects
-   * with the curve segment
+   * the operations returns true if the submitted multi primitive intersects with the curve segment
    */
   private boolean intersectsMultiObject( GM_Aggregate mprim ) throws Exception
   {
@@ -249,8 +244,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object
-   * contains another GM_Object.
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    * <p>
    * </p>
    */

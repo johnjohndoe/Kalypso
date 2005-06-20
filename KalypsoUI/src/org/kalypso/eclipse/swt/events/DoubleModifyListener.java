@@ -7,11 +7,10 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.java.lang.NumberUtils;
 
 /**
- * On each modification, checks if widget contains a Double-Text, if not,
- * setForeground Color *
+ * On each modification, checks if widget contains a Double-Text, if not, setForeground Color *
  * 
  * @author gernot
- * 
+ *  
  */
 public class DoubleModifyListener implements ModifyListener
 {
@@ -32,7 +31,7 @@ public class DoubleModifyListener implements ModifyListener
   {
     if( e.widget instanceof Text )
     {
-      final Text text = (Text) e.widget;
+      final Text text = (Text)e.widget;
       final String number = text.getText();
       if( NumberUtils.isDouble( number ) )
         text.setForeground( m_goodColor );

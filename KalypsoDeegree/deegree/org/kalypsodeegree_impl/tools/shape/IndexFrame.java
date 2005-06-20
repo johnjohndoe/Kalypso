@@ -1,19 +1,16 @@
 /*
  * Coyright 2003 IDgis BV
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 package org.kalypsodeegree_impl.tools.shape;
@@ -115,11 +112,9 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
         {
           if( checkboxes[i].isSelected() && !hasIndex[i] )
           {
-            index[i] = DBaseIndex
-                .createIndex( fileName + "$" + properties[i], properties[i], lengths[i],
-                    uniqueBoxes[i].isSelected(), ( dataTypes[i].equalsIgnoreCase( "N" )
-                        || dataTypes[i].equalsIgnoreCase( "I" ) || dataTypes[i]
-                        .equalsIgnoreCase( "F" ) ) );
+            index[i] = DBaseIndex.createIndex( fileName + "$" + properties[i], properties[i], lengths[i],
+                uniqueBoxes[i].isSelected(), ( dataTypes[i].equalsIgnoreCase( "N" )
+                    || dataTypes[i].equalsIgnoreCase( "I" ) || dataTypes[i].equalsIgnoreCase( "F" ) ) );
             indexes = true;
           }
           else
@@ -148,11 +143,10 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
                 //System.out.println("geo-class: " +
                 // geometries[0].getClass().getName());
                 GM_Point pnt = (GM_Point)geometries[0];
-                envelope = GeometryFactory.createGM_Envelope( pnt.getX(), pnt.getY(), pnt.getX(),
-                    pnt.getY() );
+                envelope = GeometryFactory.createGM_Envelope( pnt.getX(), pnt.getY(), pnt.getX(), pnt.getY() );
               }
-              HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( envelope.getMin()
-                  .getAsArray() ), new HyperPoint( envelope.getMax().getAsArray() ) );
+              HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( envelope.getMin().getAsArray() ),
+                  new HyperPoint( envelope.getMax().getAsArray() ) );
               rtree.insert( new Integer( i ), box );
             }
 
@@ -298,8 +292,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
     {
       if( indexing != null )
       {
-        if( JOptionPane.showConfirmDialog( this, "Cancel indexing?", "Question",
-            JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
+        if( JOptionPane.showConfirmDialog( this, "Cancel indexing?", "Question", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
           indexing.stopIndexing();
       }
     }

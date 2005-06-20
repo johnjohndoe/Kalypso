@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import org.kalypsodeegree.gml.GMLCoord;
@@ -94,8 +94,7 @@ public class GMLLineString_Impl extends GMLGeometry_Impl implements GMLLineStrin
   }
 
   /**
-   * factory method to create a GMLLineString. the linestring that will be
-   * returned doesn't contain any point
+   * factory method to create a GMLLineString. the linestring that will be returned doesn't contain any point
    */
   public static GMLLineString createGMLLineString( Document doc )
   {
@@ -114,8 +113,7 @@ public class GMLLineString_Impl extends GMLGeometry_Impl implements GMLLineStrin
   }
 
   /**
-   * returns the coordinates (location) of the LineString as as array of
-   * GMLCoord
+   * returns the coordinates (location) of the LineString as as array of GMLCoord
    */
   public GMLCoord[] getCoords()
   {
@@ -140,8 +138,7 @@ public class GMLLineString_Impl extends GMLGeometry_Impl implements GMLLineStrin
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.GMLLinearRing_Impl#getCoord() already existing
-   *      coords will be removed
+   * @see org.kalypsodeegree_impl.gml.GMLLinearRing_Impl#getCoord() already existing coords will be removed
    */
   public void setCoords( GMLCoord[] coord )
   {
@@ -222,22 +219,18 @@ public class GMLLineString_Impl extends GMLGeometry_Impl implements GMLLineStrin
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/04/15 19:46:42  belger
- * *** empty log message ***
- *
- * Revision 1.5  2005/03/08 11:01:04  doemming
- * *** empty log message ***
- *
- * Revision 1.4  2005/01/18 12:50:42  doemming
- * *** empty log message ***
- *
- * Revision 1.3  2004/10/07 14:09:13  doemming
- * *** empty log message ***
- *
- * Revision 1.1  2004/09/02 23:56:58  doemming
- * *** empty log message ***
- * Revision 1.3 2004/08/31 13:03:31 doemming
- * *** empty log message *** Revision 1.5 2004/04/07 06:43:48 poth no message
+ * Revision 1.7  2005/06/20 14:07:46  belger
+ * Formatierung
+ * Revision 1.6 2005/04/15 19:46:42 belger *** empty log message ***
+ * 
+ * Revision 1.5 2005/03/08 11:01:04 doemming *** empty log message ***
+ * 
+ * Revision 1.4 2005/01/18 12:50:42 doemming *** empty log message ***
+ * 
+ * Revision 1.3 2004/10/07 14:09:13 doemming *** empty log message ***
+ * 
+ * Revision 1.1 2004/09/02 23:56:58 doemming *** empty log message *** Revision 1.3 2004/08/31 13:03:31 doemming ***
+ * empty log message *** Revision 1.5 2004/04/07 06:43:48 poth no message
  * 
  * Revision 1.4 2004/03/02 07:38:14 poth no message
  * 

@@ -101,8 +101,7 @@ public class GMLSchemaFactory
       else
       { // type definition referenced e.g. ' type="ns:abcType" '
 
-        SchemaAttribute typeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode(
-            node, "type" ) );
+        SchemaAttribute typeAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node, "type" ) );
         // XML_SCHEMA_Types can not be Applicationschema Root-Elements
         if( XMLHelper.XMLSCHEMA_NS.equals( typeAttribute.getValueNS() ) )
           continue;
@@ -166,15 +165,13 @@ public class GMLSchemaFactory
     }
   }
 
-  private static void map( GMLSchema schema, NodeList nl, FeatureTypeBuilder collector )
-      throws Exception
+  private static void map( GMLSchema schema, NodeList nl, FeatureTypeBuilder collector ) throws Exception
   {
     for( int i = 0; i < nl.getLength(); i++ )
       map( schema, nl.item( i ), collector );
   }
 
-  public static void map( GMLSchema schema, Node node, FeatureTypeBuilder collector )
-      throws Exception
+  public static void map( GMLSchema schema, Node node, FeatureTypeBuilder collector ) throws Exception
   {
     if( DEBUG )
     {
@@ -203,8 +200,7 @@ public class GMLSchemaFactory
 
     case ELEMENT_REF:
     {
-      SchemaAttribute refAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node,
-          "ref" ) );
+      SchemaAttribute refAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node, "ref" ) );
       if( DEBUG )
         System.out.println( refAttribute.getValueNS() );
 
@@ -225,8 +221,7 @@ public class GMLSchemaFactory
       // else
       {
         GMLSchema refSchema = schema.getGMLSchema( refAttribute.getValueNS() );
-        NodeList nl = refSchema.getSchema().getElementsByTagNameNS(
-            "http://www.w3.org/2001/XMLSchema", "element" );
+        NodeList nl = refSchema.getSchema().getElementsByTagNameNS( "http://www.w3.org/2001/XMLSchema", "element" );
         nl = XMLHelper.reduceByAttribute( nl, "name", refAttribute.getValue() );
         // NodeList_Impl nl2=new NodeList_Impl();
         // must refer to a global element definition, so filter for it
@@ -267,8 +262,8 @@ public class GMLSchemaFactory
 
           }
           else
-            throw new Exception( "refered element is nether featuretype "
-                + "nor featuretypeproperty :" + mapedElement.getClass().toString() );
+            throw new Exception( "refered element is nether featuretype " + "nor featuretypeproperty :"
+                + mapedElement.getClass().toString() );
 
           // FeatureTypeBuilder childCollector = new
           // FeatureTypeBuilder(
@@ -319,8 +314,7 @@ public class GMLSchemaFactory
       Element element = (Element)node;
       if( element.hasAttribute( "base" ) )
       {
-        SchemaAttribute baseAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode(
-            node, "base" ) );
+        SchemaAttribute baseAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node, "base" ) );
         collector.setTypeName( baseAttribute );
       }
       else
@@ -333,8 +327,7 @@ public class GMLSchemaFactory
       Element element = (Element)node;
       if( element.hasAttribute( "value" ) )
       {
-        SchemaAttribute valueAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode(
-            node, "value" ) );
+        SchemaAttribute valueAttribute = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node, "value" ) );
         collector.addEnumerationObject( valueAttribute.getValue() );
       }
       else
@@ -371,8 +364,8 @@ public class GMLSchemaFactory
     default:
 
       if( node.getNodeType() == Node.ELEMENT_NODE )
-        throw ( new Exception( "unsupported node: " + node.getLocalName() + " \n"
-            + node.getNodeName() + "\n" + node.getNodeValue() + "\n" + node.toString() ) );
+        throw ( new Exception( "unsupported node: " + node.getLocalName() + " \n" + node.getNodeName() + "\n"
+            + node.getNodeValue() + "\n" + node.toString() ) );
 
     // UNSUPPORTED_TYPE
     }
@@ -386,12 +379,10 @@ public class GMLSchemaFactory
   private static Annotation createAnnotation( Element element )
   {
     String lang = element.getAttributeNS( "http://www.w3.org/XML/1998/namespace", "lang" );
-    final String tooltip = XMLHelper.getStringFromChildElement( element,
-        "http://www.w3.org/2001/XMLSchema", "tooltip" );
-    final String label = XMLHelper.getStringFromChildElement( element,
-        "http://www.w3.org/2001/XMLSchema", "label" );
-    final String description = XMLHelper.getStringFromChildElement( element,
-        "http://www.w3.org/2001/XMLSchema", "description" );
+    final String tooltip = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "tooltip" );
+    final String label = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "label" );
+    final String description = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema",
+        "description" );
 
     return new Annotation( lang, label, tooltip, description );
   }
@@ -407,8 +398,7 @@ public class GMLSchemaFactory
   // false);
   // }
   // }
-  private static void mapBaseType( GMLSchema schema, Node node, FeatureTypeBuilder collector )
-      throws Exception
+  private static void mapBaseType( GMLSchema schema, Node node, FeatureTypeBuilder collector ) throws Exception
   {
     SchemaAttribute base = new SchemaAttribute( schema, XMLHelper.getAttributeNode( node, "base" ) );
     if( XMLHelper.XMLSCHEMA_NS.equals( base.getValueNS() ) )
@@ -433,18 +423,15 @@ public class GMLSchemaFactory
     String parentNodeName = element.getParentNode().getLocalName();
 
     final String localName = node.getLocalName();
-    if( "complexType".equals( localName )
-        && "http://www.w3.org/2001/XMLSchema".equals( node.getNamespaceURI() ) )
+    if( "complexType".equals( localName ) && "http://www.w3.org/2001/XMLSchema".equals( node.getNamespaceURI() ) )
       return COMPLEX_TYPE;
 
     // element referenz
-    if( "element".equals( localName )
-        && "http://www.w3.org/2001/XMLSchema".equals( node.getNamespaceURI() )
+    if( "element".equals( localName ) && "http://www.w3.org/2001/XMLSchema".equals( node.getNamespaceURI() )
         && element.hasAttribute( "ref" ) )
       return ELEMENT_REF;
 
-    if( "element".equals( localName )
-        && "http://www.w3.org/2001/XMLSchema".equals( node.getNamespaceURI() )
+    if( "element".equals( localName ) && "http://www.w3.org/2001/XMLSchema".equals( node.getNamespaceURI() )
         && element.hasAttribute( "name" ) )
     {
       return NAMED_ELEMENT;
@@ -492,8 +479,8 @@ public class GMLSchemaFactory
       return ATTRIBUTEGROUP_TYPE;
     }
 
-    String message = "unsupported node:" + localName + "\n" + XMLHelper.toString( node ) + "\n"
-        + node.getNodeName() + "\n" + node.getNodeValue() + "\n" + node.toString();
+    String message = "unsupported node:" + localName + "\n" + XMLHelper.toString( node ) + "\n" + node.getNodeName()
+        + "\n" + node.getNodeValue() + "\n" + node.toString();
 
     throw new Exception( message );
   }

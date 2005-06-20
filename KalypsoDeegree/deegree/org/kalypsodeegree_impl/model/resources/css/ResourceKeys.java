@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,15 +57,14 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources.css;
 
 /**
- * Resource keys. This interface is used when compiling sources, but no
- * dependencies to <code>ResourceKeys</code> should appear in any resulting
- * class files. Since Java compiler inline final integers values, using long
- * identifiers will not bloat constant pools of classes compiled against the
- * interface, providing that no class implements this interface.
+ * Resource keys. This interface is used when compiling sources, but no dependencies to <code>ResourceKeys</code>
+ * should appear in any resulting class files. Since Java compiler inline final integers values, using long identifiers
+ * will not bloat constant pools of classes compiled against the interface, providing that no class implements this
+ * interface.
  * 
  * @see org.kalypsodeegree_impl.model.resources.ResourceBundle
  */

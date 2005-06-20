@@ -36,13 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.rules;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
 
 /**
  * Container for rendering-rules
@@ -52,8 +51,9 @@ import java.util.NoSuchElementException;
 public interface ITableViewRules
 {
   public void addRule( RenderingRule rule );
+
   public void removeRule( RenderingRule rule );
-  
+
   /**
    * Finds a rule that contains the mask
    * 
@@ -61,7 +61,7 @@ public interface ITableViewRules
    * @throws NoSuchElementException
    */
   public RenderingRule[] findRules( int mask );
-  
+
   /**
    * Finds a rule that contains the mask
    * 
@@ -69,9 +69,10 @@ public interface ITableViewRules
    * @throws NoSuchElementException
    */
   public RenderingRule[] findRules( Number mask );
-  
+
   public boolean isEmpty();
 
   public List getRules();
-  public void removeAllRules( );
+
+  public void removeAllRules();
 }

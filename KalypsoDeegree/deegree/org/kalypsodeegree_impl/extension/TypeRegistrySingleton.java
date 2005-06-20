@@ -1,8 +1,7 @@
 package org.kalypsodeegree_impl.extension;
 
 /**
- * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse
- * integriert werden
+ * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse integriert werden
  * 
  * @author belger
  */

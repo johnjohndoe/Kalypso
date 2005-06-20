@@ -58,8 +58,7 @@ import org.kalypso.ui.repository.view.ObservationChooser;
  * 
  * @author schlienger
  */
-public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction
-    implements ISelectionChangedListener
+public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
 {
   public ConfigurePreviewAction( final ObservationChooser explorer )
   {
@@ -73,23 +72,20 @@ public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction
 
   public void run()
   {
-    final IRepository rep = getExplorer().isRepository(
-        getExplorer().getSelection() );
+    final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )
       return;
 
-    final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(),
-        "Zeitraum-Eingabe", "Bitte geben Sie einen Zeitraum ein.",
-        DateRangeInputControlStuct.create( rep.getProperties(), DateFormat
+    final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "Zeitraum-Eingabe",
+        "Bitte geben Sie einen Zeitraum ein.", DateRangeInputControlStuct.create( rep.getProperties(), DateFormat
             .getDateTimeInstance() ) );
 
     if( dlg.open() == Window.OK )
     {
       // save dialog settings for next dialog call
       final DateRangeInputControlStuct struct = dlg.getStruct();
-      struct.save( KalypsoGisPlugin.getDefault()
-          .getDialogSettings() );
-      
+      struct.save( KalypsoGisPlugin.getDefault().getDialogSettings() );
+
       // save properties of the repository
       struct.save( rep.getProperties() );
 

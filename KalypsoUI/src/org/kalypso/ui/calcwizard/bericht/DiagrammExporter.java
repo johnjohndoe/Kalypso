@@ -86,8 +86,8 @@ public class DiagrammExporter extends AbstractBerichtExporter
 
       final String featurename = arguments.getProperty( "nameproperty", "Name" );
       final Object nameProp = feature.getProperty( featurename );
-      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString(); 
-      
+      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString();
+
       final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
       final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
 
@@ -98,14 +98,14 @@ public class DiagrammExporter extends AbstractBerichtExporter
       final URL url = new UrlResolver().resolveURL( getContext(), templateurl );
       final URLConnection connection = url.openConnection();
       final Reader reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
-      final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%',
-          '%' );
+      final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%', '%' );
 
       final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader2 );
 
       tpl = new DiagView();
-      
-      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, this.toString() + " - " + name + ": ", null );
+
+      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, this.toString() + " - " + name + ": ",
+          null );
       DiagViewUtils.applyXMLTemplate( tpl, xml, getContext(), true, result );
 
       // diagramm refresh may take a while
@@ -126,7 +126,7 @@ public class DiagrammExporter extends AbstractBerichtExporter
     {
       if( chart != null )
         chart.dispose();
-      
+
       if( tpl != null )
         tpl.dispose();
     }

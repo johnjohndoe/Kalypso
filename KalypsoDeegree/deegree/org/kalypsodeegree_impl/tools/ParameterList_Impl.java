@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 import java.util.ArrayList;
@@ -67,9 +67,8 @@ import org.kalypsodeegree.tools.Parameter;
 import org.kalypsodeegree.tools.ParameterList;
 
 /**
- * The interface defines the access to a list of paramters that can be used as
- * submitted parameters to methods that may receive an variable list of
- * parameters.
+ * The interface defines the access to a list of paramters that can be used as submitted parameters to methods that may
+ * receive an variable list of parameters.
  * <p>
  * ---------------------------------------------------------------------
  * </p>
@@ -85,8 +84,8 @@ final public class ParameterList_Impl implements ParameterList
   private ArrayList keys = new ArrayList( 100 );
 
   /**
-   * returns the parameter that matches the submitted name. if no parameter can
-   * be found <tt>null</tt> will be returned.
+   * returns the parameter that matches the submitted name. if no parameter can be found <tt>null</tt> will be
+   * returned.
    */
   public Parameter getParameter( String name )
   {
@@ -112,8 +111,8 @@ final public class ParameterList_Impl implements ParameterList
   }
 
   /**
-   * returns all <tt>Parameter</tt> s contained within the list as array. it
-   * is guarenteered that the arrays isn't <tt>null</tt>
+   * returns all <tt>Parameter</tt> s contained within the list as array. it is guarenteered that the arrays isn't
+   * <tt>null</tt>
    */
   public Parameter[] getParameters()
   {
@@ -126,8 +125,7 @@ final public class ParameterList_Impl implements ParameterList
   }
 
   /**
-   * returns an array of all <tt>Parameter</tt> s names. it is guarenteered
-   * that the arrays isn't <tt>null</tt>
+   * returns an array of all <tt>Parameter</tt> s names. it is guarenteered that the arrays isn't <tt>null</tt>
    */
   public String[] getParameterNames()
   {
@@ -136,8 +134,7 @@ final public class ParameterList_Impl implements ParameterList
   }
 
   /**
-   * returns an array of all <tt>Parameter</tt> s values. it is guarenteered
-   * that the arrays isn't <tt>null</tt>
+   * returns an array of all <tt>Parameter</tt> s values. it is guarenteered that the arrays isn't <tt>null</tt>
    */
   public Object[] getParameterValues()
   {

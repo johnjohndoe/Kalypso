@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.xml;
 
@@ -66,8 +66,8 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 
 /**
- * Convenience class for easy handling of list containing only Objects of type
- * org.w3c.dom.Element. Same as org.w3c.dom.NodeList, just for Elements!
+ * Convenience class for easy handling of list containing only Objects of type org.w3c.dom.Element. Same as
+ * org.w3c.dom.NodeList, just for Elements!
  * 
  * @author Markus Schneider
  * @version 06.08.2002

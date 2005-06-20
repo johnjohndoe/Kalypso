@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import java.io.IOException;
@@ -91,7 +91,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
     try
     {
       final IPath projectRelativePath = file.getProjectRelativePath();
-      
+
       // ein default template erzeugen
       final ObjectFactory factory = new ObjectFactory();
 
@@ -121,13 +121,13 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
     catch( JAXBException e )
     {
       e.printStackTrace();
-      
+
       return null;
     }
     catch( IOException e )
     {
       e.printStackTrace();
-      
+
       return null;
     }
   }

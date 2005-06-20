@@ -22,8 +22,7 @@ public class GetSelectionVisitor implements FeatureVisitor
     return visitor.getSelectedFeatures();
   }
 
-  public static List getSelectedFeatures( final GMLWorkspace workspace, final FeatureType ft,
-      final int selectionID )
+  public static List getSelectedFeatures( final GMLWorkspace workspace, final FeatureType ft, final int selectionID )
   {
     final GetSelectionVisitor visitor = new GetSelectionVisitor( selectionID );
     workspace.accept( visitor, ft, FeatureVisitor.DEPTH_ZERO );
@@ -37,7 +36,7 @@ public class GetSelectionVisitor implements FeatureVisitor
     return visitor.getSelectedFeatures();
   }
 
-  /** List<Feature> */
+  /** List <Feature> */
   private final List m_selectedFeatures = new ArrayList();
 
   private final int m_selectionID;

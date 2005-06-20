@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.swtcalendar;
 
 import java.util.Calendar;
@@ -56,12 +56,13 @@ import org.vafada.swtcalendar.SWTCalendar;
 public class SWTCalendarDialog extends Dialog
 {
   private SWTCalendar m_swtcal;
+
   private final Calendar m_calendar = Calendar.getInstance();
 
   public SWTCalendarDialog( final Shell parent, final Date date )
   {
     super( parent );
-    
+
     m_calendar.setTime( date );
   }
 
@@ -73,14 +74,14 @@ public class SWTCalendarDialog extends Dialog
     final Composite panel = (Composite)super.createDialogArea( parent );
 
     panel.getShell().setText( "Datum wählen" );
-    
+
     m_swtcal = new SWTCalendar( panel );
     m_swtcal.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_swtcal.setCalendar( m_calendar );
-    
+
     return panel;
   }
-  
+
   public Date getDate()
   {
     return m_swtcal.getCalendar().getTime();

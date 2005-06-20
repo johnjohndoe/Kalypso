@@ -57,8 +57,8 @@ public class HeavyRelationType implements IRelationType
   /**
    * @author doemming
    */
-  public HeavyRelationType( FeatureType ft1, FeatureAssociationTypeProperty linkFTP1,
-      FeatureType ft2, FeatureAssociationTypeProperty linkFTP2, FeatureType ft3 )
+  public HeavyRelationType( FeatureType ft1, FeatureAssociationTypeProperty linkFTP1, FeatureType ft2,
+      FeatureAssociationTypeProperty linkFTP2, FeatureType ft3 )
   {
     m_relationType1 = new RelationType( ft1, linkFTP1, ft2 );
     m_relationType2 = new RelationType( ft2, linkFTP2, ft3 );
@@ -70,7 +70,7 @@ public class HeavyRelationType implements IRelationType
    *      org.kalypsodeegree.model.feature.FeatureType)
    */
   public boolean fitsTypes( FeatureType f1, FeatureType f2 )
-  {    
+  {
     if( f1 == null || f2 == null )
       return false;
     return m_relationType1.getSrcFT() == f1 && m_relationType2.getDestFT() == f2;
@@ -78,11 +78,12 @@ public class HeavyRelationType implements IRelationType
 
   /**
    * 
-   * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getFitProblems(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.Feature, boolean)
+   * @see org.kalypso.ogc.gml.map.widgets.editrelation.IRelationType#getFitProblems(org.kalypsodeegree.model.feature.GMLWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.Feature, boolean)
    */
   public String getFitProblems( GMLWorkspace workspace, Feature f1, Feature f2, boolean isAddMode )
   {
-    FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace,this );
+    FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace, this );
     visitor.visit( f1 );
     boolean exists = visitor.relationExistsTo( f2 );
     if( !isAddMode )

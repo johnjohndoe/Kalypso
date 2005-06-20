@@ -55,8 +55,6 @@ public class AddFeatureCommand implements ICommand
 {
   private final Feature m_parentFeature;
 
-
-
   private final int m_pos;
 
   private final String m_propName;
@@ -67,8 +65,8 @@ public class AddFeatureCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
-  public AddFeatureCommand( final GMLWorkspace workspace, FeatureType type,
-      Feature parentFeature, String propertyName, int pos )
+  public AddFeatureCommand( final GMLWorkspace workspace, FeatureType type, Feature parentFeature, String propertyName,
+      int pos )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -130,7 +128,8 @@ public class AddFeatureCommand implements ICommand
       List list = (List)prop;
       list.remove( newFeature );
     }
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
@@ -144,6 +143,7 @@ public class AddFeatureCommand implements ICommand
   private void addFeature() throws Exception
   {
     m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, newFeature );
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 }

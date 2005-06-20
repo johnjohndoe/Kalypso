@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,13 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.legend;
 
 /**
- * <tt>LegendElementCollection</tt> is a collection of <tt>LegendElement</tt>
- * s and is a <tt>LegendElement</tt> too. It can be used to group elements or
- * to create more complex elements.
+ * <tt>LegendElementCollection</tt> is a collection of <tt>LegendElement</tt> s and is a <tt>LegendElement</tt>
+ * too. It can be used to group elements or to create more complex elements.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -80,8 +79,8 @@ public interface LegendElementCollection extends LegendElement
   void addLegendElement( LegendElement legendElement );
 
   /**
-   * sets the title of the <tt>LegendElement</tt>. The title will be
-   * displayed on top of the <tt>LegendElementCollection</tt>
+   * sets the title of the <tt>LegendElement</tt>. The title will be displayed on top of the
+   * <tt>LegendElementCollection</tt>
    * 
    * @param title
    *          title of the <tt>LegendElement</tt>

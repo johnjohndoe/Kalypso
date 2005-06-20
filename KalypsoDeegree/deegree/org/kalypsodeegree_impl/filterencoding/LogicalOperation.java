@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
@@ -71,8 +71,7 @@ import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a logical_ops entity (as defined in the
- * Filter DTD).
+ * Encapsulates the information of a logical_ops entity (as defined in the Filter DTD).
  * 
  * @author Markus Schneider
  * @version 10.08.2002
@@ -95,8 +94,7 @@ public class LogicalOperation extends AbstractOperation
   }
 
   /**
-   * Returns the arguments of the operation. These are <tt>Operations</tt> as
-   * well.
+   * Returns the arguments of the operation. These are <tt>Operations</tt> as well.
    */
   public ArrayList getArguments()
   {
@@ -104,9 +102,8 @@ public class LogicalOperation extends AbstractOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This
-   * method recursively calls other buildFromDOM () - methods to validate the
-   * structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
@@ -170,13 +167,12 @@ public class LogicalOperation extends AbstractOperation
   }
 
   /**
-   * Calculates the <tt>LogicalOperation</tt>'s logical value based on the
-   * certain property values of the given <tt>Feature</tt>.
+   * Calculates the <tt>LogicalOperation</tt>'s logical value based on the certain property values of the given
+   * <tt>Feature</tt>.
    * 
    * @param feature
    *          that determines the property values
-   * @return true, if the <tt>LogicalOperation</tt> evaluates to true, else
-   *         false
+   * @return true, if the <tt>LogicalOperation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
    *           if the evaluation fails
    */
@@ -211,8 +207,7 @@ public class LogicalOperation extends AbstractOperation
     }
     default:
     {
-      throw new FilterEvaluationException( "Unknown LogicalOperation encountered: '"
-          + getOperatorName() + "'" );
+      throw new FilterEvaluationException( "Unknown LogicalOperation encountered: '" + getOperatorName() + "'" );
     }
     }
   }

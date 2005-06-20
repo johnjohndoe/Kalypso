@@ -136,7 +136,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
       final Object[] result = dialog.getResult();
 
       final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
-      
+
       final Job job = new Job( "Rechenvarianten vom Server laden" )
       {
         protected IStatus run( final IProgressMonitor monitor )
@@ -186,7 +186,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    // empty
+  // empty
   }
 
   /**
@@ -202,8 +202,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
     }
     catch( final IOException e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Fehler beim Laden der Daten vom Server: ", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Daten vom Server: ", e ) );
     }
   }
 }

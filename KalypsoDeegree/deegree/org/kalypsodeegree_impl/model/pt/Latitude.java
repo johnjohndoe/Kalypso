@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,12 +57,12 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.pt;
 
 /**
- * A latitude angle. Positive latitudes are North, while negative latitudes are
- * South. This class has no direct OpenGIS equivalent.
+ * A latitude angle. Positive latitudes are North, while negative latitudes are South. This class has no direct OpenGIS
+ * equivalent.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -99,11 +99,9 @@ public final class Latitude extends Angle
   }
 
   /**
-   * Constructs a newly allocated <code>Latitude</code> object that represents
-   * the latitude value represented by the string. The string should represents
-   * an angle in either fractional degrees (e.g. 45.5°) or degrees with minutes
-   * and seconds (e.g. 45°30'). The hemisphere (N or S) is optional (default to
-   * North).
+   * Constructs a newly allocated <code>Latitude</code> object that represents the latitude value represented by the
+   * string. The string should represents an angle in either fractional degrees (e.g. 45.5°) or degrees with minutes and
+   * seconds (e.g. 45°30'). The hemisphere (N or S) is optional (default to North).
    * 
    * @param source
    *          A string to be converted to a <code>Latitude</code>.

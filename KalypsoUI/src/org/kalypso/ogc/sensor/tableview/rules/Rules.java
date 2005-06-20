@@ -61,7 +61,7 @@ public class Rules implements ITableViewRules
 
   public Rules()
   {
-    // empty
+  // empty
   }
 
   /**
@@ -95,8 +95,7 @@ public class Rules implements ITableViewRules
   /**
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#findRules(java.lang.Integer)
    */
-  public RenderingRule[] findRules( final Number mask )
-      throws NoSuchElementException
+  public RenderingRule[] findRules( final Number mask ) throws NoSuchElementException
   {
     RenderingRule[] r = (RenderingRule[])m_map.get( mask );
 

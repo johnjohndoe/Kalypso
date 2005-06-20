@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,17 +57,16 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 /**
- * A user-defined allows map styling to be defined externally from a system and
- * to be passed around in an interoperable format.
+ * A user-defined allows map styling to be defined externally from a system and to be passed around in an interoperable
+ * format.
  * <p>
  * </p>
- * A UserStyle is at the same semantic level as a NamedStyle used in the context
- * of a WMS. In a sense, a named style can be thought of as a reference to a
- * hidden UserStyle that is stored inside of a map server.
+ * A UserStyle is at the same semantic level as a NamedStyle used in the context of a WMS. In a sense, a named style can
+ * be thought of as a reference to a hidden UserStyle that is stored inside of a map server.
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -79,8 +78,7 @@ public interface UserStyle extends Style
 {
 
   /**
-   * The Title is a human-readable short description for the style that might be
-   * displayed in a GUI pick list.
+   * The Title is a human-readable short description for the style that might be displayed in a GUI pick list.
    * 
    * @return the title of the User-Style
    */
@@ -110,9 +108,8 @@ public interface UserStyle extends Style
   void setAbstract( String abstract_ );
 
   /**
-   * The IsDefault element identifies whether a style is the default style of a
-   * layer, for use in SLD library mode when rendering or for storing inside of
-   * a map server. The default value is <tt>false</tt>.
+   * The IsDefault element identifies whether a style is the default style of a layer, for use in SLD library mode when
+   * rendering or for storing inside of a map server. The default value is <tt>false</tt>.
    * 
    * @return true if the style ist the default style
    */
@@ -126,19 +123,15 @@ public interface UserStyle extends Style
   void setDefault( boolean default_ );
 
   /**
-   * A UserStyle can contain one or more FeatureTypeStyles which allow the
-   * rendering of features of specific types.
+   * A UserStyle can contain one or more FeatureTypeStyles which allow the rendering of features of specific types.
    * <p>
    * </p>
-   * The FeatureTypeStyle defines the styling that is to be applied to a single
-   * feature type of a layer.
+   * The FeatureTypeStyle defines the styling that is to be applied to a single feature type of a layer.
    * <p>
    * </p>
-   * The FeatureTypeStyle element identifies that explicit separation in SLD
-   * between the handling of layers and the handling of features of specific
-   * feature types. The layer concept is unique to WMS and SLD, but features are
-   * used more generally, such as in WFS and GML, so this explicit separation is
-   * important.
+   * The FeatureTypeStyle element identifies that explicit separation in SLD between the handling of layers and the
+   * handling of features of specific feature types. The layer concept is unique to WMS and SLD, but features are used
+   * more generally, such as in WFS and GML, so this explicit separation is important.
    * 
    * @return the FeatureTypeStyles of a User-Style
    */

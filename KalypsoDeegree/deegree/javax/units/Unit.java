@@ -9,13 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Placeholder for future <code>Unit</code> class. This skeleton will be
- * removed when the real classes (from <A
- * HREF="http://www.jcp.org/jsr/detail/108.jsp">JSR-108: Units specification
- * </A>) will be publicly available. <br>
+ * Placeholder for future <code>Unit</code> class. This skeleton will be removed when the real classes (from <A
+ * HREF="http://www.jcp.org/jsr/detail/108.jsp">JSR-108: Units specification </A>) will be publicly available. <br>
  * <br>
- * <strong>IMPORTANT: future version will NOT be compatible will this one.
- * Remind, this is a temporary class! </strong>
+ * <strong>IMPORTANT: future version will NOT be compatible will this one. Remind, this is a temporary class! </strong>
  */
 public final class Unit implements Serializable
 {
@@ -86,8 +83,7 @@ public final class Unit implements Serializable
   }
 
   /**
-   * Unit constructor. Don't allow user creation, since this is not the official
-   * Unit class.
+   * Unit constructor. Don't allow user creation, since this is not the official Unit class.
    */
   private Unit( final String symbol )
   {
@@ -97,8 +93,7 @@ public final class Unit implements Serializable
   }
 
   /**
-   * Unit constructor. Don't allow user creation, since this is not the official
-   * Unit class.
+   * Unit constructor. Don't allow user creation, since this is not the official Unit class.
    */
   private Unit( final String symbol, final double scale, final Unit unit )
   {
@@ -108,8 +103,7 @@ public final class Unit implements Serializable
   }
 
   /**
-   * Check if amount of the specified unit can be converted into amount of this
-   * unit.
+   * Check if amount of the specified unit can be converted into amount of this unit.
    */
   public boolean canConvert( final Unit other )
   {
@@ -117,8 +111,8 @@ public final class Unit implements Serializable
   }
 
   /**
-   * Convert a value from one unit to an other. This method is not implemented
-   * (the JSR-108 will provide the reference implementation).
+   * Convert a value from one unit to an other. This method is not implemented (the JSR-108 will provide the reference
+   * implementation).
    */
   public double convert( final double value, final Unit unit )
   {
@@ -144,8 +138,8 @@ public final class Unit implements Serializable
   }
 
   /**
-   * Compare this unit symbol with the specified object for equality. Only
-   * symbols are compared; other parameters are ignored.
+   * Compare this unit symbol with the specified object for equality. Only symbols are compared; other parameters are
+   * ignored.
    */
   public boolean equals( final Object object )
   {

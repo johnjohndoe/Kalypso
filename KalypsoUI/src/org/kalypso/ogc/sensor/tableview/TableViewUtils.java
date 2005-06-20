@@ -134,8 +134,7 @@ public class TableViewUtils
    */
   public static ObstableviewType loadTableTemplateXML( final InputSource ins ) throws JAXBException
   {
-    final ObstableviewType baseTemplate = (ObstableviewType)OTT_OF.createUnmarshaller().unmarshal(
-        ins );
+    final ObstableviewType baseTemplate = (ObstableviewType)OTT_OF.createUnmarshaller().unmarshal( ins );
 
     return baseTemplate;
   }
@@ -147,8 +146,7 @@ public class TableViewUtils
    * @param outs
    * @throws JAXBException
    */
-  public static void saveTableTemplateXML( final ObstableviewType xml, final OutputStream outs )
-      throws JAXBException
+  public static void saveTableTemplateXML( final ObstableviewType xml, final OutputStream outs ) throws JAXBException
   {
     try
     {
@@ -169,8 +167,7 @@ public class TableViewUtils
    * @param writer
    * @throws JAXBException
    */
-  public static void saveTableTemplateXML( final ObstableviewType xml, final Writer writer )
-      throws JAXBException
+  public static void saveTableTemplateXML( final ObstableviewType xml, final Writer writer ) throws JAXBException
   {
     try
     {
@@ -191,8 +188,7 @@ public class TableViewUtils
    * @return xml binding object (ready for marshalling for instance)
    * @throws JAXBException
    */
-  public static ObstableviewType buildTableTemplateXML( final TableView template )
-      throws JAXBException
+  public static ObstableviewType buildTableTemplateXML( final TableView template ) throws JAXBException
   {
     final ObstableviewType xmlTemplate = OTT_OF.createObstableview();
 
@@ -225,7 +221,7 @@ public class TableViewUtils
     int colCount = 0;
 
     final Map map = ObsView.mapItems( template.getItems() );
-    
+
     for( final Iterator itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
     {
       final Map.Entry entry = (Entry)itThemes.next();
@@ -262,8 +258,8 @@ public class TableViewUtils
     return xmlTemplate;
   }
 
-  public static void applyXMLTemplate( final TableView view, final ObstableviewType xml,
-      final URL context, final boolean synchron, final MultiStatus status )
+  public static void applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
+      final boolean synchron, final MultiStatus status )
   {
     view.removeAllItems();
 
@@ -285,17 +281,16 @@ public class TableViewUtils
       TableViewColumnXMLLoader loader;
       try
       {
-        loader = new TableViewColumnXMLLoader( view, tobs, context,
-            synchron );
+        loader = new TableViewColumnXMLLoader( view, tobs, context, synchron );
         status.add( loader.getResult() );
       }
       catch( final Throwable e )
       {
         e.printStackTrace();
-        
+
         status.add( KalypsoGisPlugin.createErrorStatus( "Zeitreihe konnte nicht geladen werden", e ) );
       }
-      
+
     }
   }
 }

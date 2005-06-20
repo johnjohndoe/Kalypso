@@ -24,8 +24,7 @@
 package org.kalypsodeegree_impl.io.rtree;
 
 /**
- * Implementierung eines Zwischen-Knotens. Erbt Methoden von AbstractNode.
- * Implementiert abstrakte Methoden.
+ * Implementierung eines Zwischen-Knotens. Erbt Methoden von AbstractNode. Implementiert abstrakte Methoden.
  * 
  * @version 1.0
  * @author Wolfgang Bär
@@ -74,8 +73,7 @@ public class NoneLeafNode extends Node
   }
 
   /**
-   * Fügt Kindknoten als Eintrag zum Knoten hinzu. Überprüft keine
-   * Aufnahmefähigkeit des Knotens
+   * Fügt Kindknoten als Eintrag zum Knoten hinzu. Überprüft keine Aufnahmefähigkeit des Knotens
    * 
    * @param node
    *          einzufügender Kindknoten (Type AbstractNode)
@@ -98,8 +96,7 @@ public class NoneLeafNode extends Node
     catch( PageFileException e )
     {
       System.out
-          .println( "PageFileException NoneLeafNode.insertData - bei writeNode(AbstractNode) \n"
-              + e.getMessage() );
+          .println( "PageFileException NoneLeafNode.insertData - bei writeNode(AbstractNode) \n" + e.getMessage() );
     }
   }
 
@@ -137,9 +134,8 @@ public class NoneLeafNode extends Node
         }
         catch( PageFileException e )
         {
-          System.out
-              .println( "PageFileException NoneLeafNode.deleteData - bei writeNode(AbstractNode) \n"
-                  + e.getMessage() );
+          System.out.println( "PageFileException NoneLeafNode.deleteData - bei writeNode(AbstractNode) \n"
+              + e.getMessage() );
         }
       }
     }
@@ -148,9 +144,8 @@ public class NoneLeafNode extends Node
   }
 
   /**
-   * Gibt den Index des Eintrages mit geringster Vergrößerung zurück. Gibt den
-   * Index des Eintrages zurück, dessen BoundingBox am geringsten bei Hinzunahme
-   * der übergebenen HyperBoundingBox vergrößert wird.
+   * Gibt den Index des Eintrages mit geringster Vergrößerung zurück. Gibt den Index des Eintrages zurück, dessen
+   * BoundingBox am geringsten bei Hinzunahme der übergebenen HyperBoundingBox vergrößert wird.
    * 
    * @param box
    *          für die der Index bestimmt werden soll.
@@ -179,8 +174,7 @@ public class NoneLeafNode extends Node
   }
 
   /**
-   * Erstellt eine Kopie des NoneLeafNodes. Tiefe Kopie bis auf Referenz auf
-   * PageFile.
+   * Erstellt eine Kopie des NoneLeafNodes. Tiefe Kopie bis auf Referenz auf PageFile.
    * 
    * @return Object NoneLeafNode-Kopie
    */

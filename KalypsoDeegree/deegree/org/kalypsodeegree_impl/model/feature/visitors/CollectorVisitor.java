@@ -30,8 +30,7 @@ public class CollectorVisitor implements FeatureVisitor
    * Returns alle visited features.
    * 
    * @param reset
-   *          if true, resets the inner result set, so next call to getResults
-   *          results in empty array.
+   *          if true, resets the inner result set, so next call to getResults results in empty array.
    */
   public Feature[] getResults( final boolean reset )
   {

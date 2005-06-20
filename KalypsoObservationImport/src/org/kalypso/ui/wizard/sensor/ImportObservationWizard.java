@@ -133,8 +133,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   {
     try
     {
-      final ObservationImportSelection selection = (ObservationImportSelection)m_page1
-          .getSelection();
+      final ObservationImportSelection selection = (ObservationImportSelection)m_page1.getSelection();
       final File fileSource = selection.getFileSource();
       final File fileTarget = selection.getFileTarget();
       final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
@@ -174,8 +173,8 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
           final WQTuppleModel wq = (WQTuppleModel)( tuppelModelTarget );
           final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length - 1];
           final ITuppleModel model = new SimpleTuppleModel( axesNew, newValues );
-          newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq
-              .getDestAxis(), wq.getDestStatusAxis(), wq.getConverter() );
+          newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getDestAxis(), wq
+              .getDestStatusAxis(), wq.getConverter() );
         }
         else
         {
@@ -212,8 +211,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       {
         for( int i = 0; i < countTarget; i++ )
           for( int a = 0; a < axesNew.length; a++ )
-            newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, axesNew[a] ),
-                axesNew[a] );
+            newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, axesNew[a] ), axesNew[a] );
       }
       final String href = "";
       final String id = "";
@@ -223,8 +221,8 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
-      IObservation newObservation = new SimpleObservation( href, id, name, false, xlink, metadata,
-          axesNew, newTuppelModel );
+      IObservation newObservation = new SimpleObservation( href, id, name, false, xlink, metadata, axesNew,
+          newTuppelModel );
       ObservationType type = ZmlFactory.createXML( newObservation, null );
       // create new Observation...
 

@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cs;
 
 // OpenGIS dependencies
@@ -68,15 +68,12 @@ import org.opengis.cs.CS_Datum;
 import org.opengis.cs.CS_DatumType;
 
 /**
- * A set of quantities from which other quantities are calculated. It may be a
- * textual description and/or a set of parameters describing the relationship of
- * a coordinate system to some predefined physical locations (such as center of
- * mass) and physical directions (such as axis of spin). It can be defined as a
- * set of real points on the earth that have coordinates. For example a datum
- * can be thought of as a set of parameters defining completely the origin and
- * orientation of a coordinate system with respect to the earth. The definition
- * of the datum may also include the temporal behavior (such as the rate of
- * change of the orientation of the coordinate axes).
+ * A set of quantities from which other quantities are calculated. It may be a textual description and/or a set of
+ * parameters describing the relationship of a coordinate system to some predefined physical locations (such as center
+ * of mass) and physical directions (such as axis of spin). It can be defined as a set of real points on the earth that
+ * have coordinates. For example a datum can be thought of as a set of parameters defining completely the origin and
+ * orientation of a coordinate system with respect to the earth. The definition of the datum may also include the
+ * temporal behavior (such as the rate of change of the orientation of the coordinate axes).
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -172,11 +169,9 @@ public class Datum extends Info
   }
 
   /**
-   * Returns an OpenGIS interface for this datum. The returned object is
-   * suitable for RMI use.
+   * Returns an OpenGIS interface for this datum. The returned object is suitable for RMI use.
    * 
-   * Note: The returned type is a generic {@link Object}in order to avoid too
-   * early class loading of OpenGIS interface.
+   * Note: The returned type is a generic {@link Object}in order to avoid too early class loading of OpenGIS interface.
    */
   Object toOpenGIS( final Object adapters )
   {
@@ -190,8 +185,7 @@ public class Datum extends Info
   /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Wrap a {@link Datum}object for use with OpenGIS. This class is suitable
-   * for RMI use.
+   * Wrap a {@link Datum}object for use with OpenGIS. This class is suitable for RMI use.
    * 
    * @version 1.0
    * @author Martin Desruisseaux

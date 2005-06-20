@@ -1,37 +1,30 @@
 /*
- * Map and oceanographical data visualisation Copyright (C) 1998 University
- * Corporation for Atmospheric Research (Unidata) 1998 Bill Hibbard & al.
- * (VisAD) 1999 Pêches et Océans Canada 2000 Institut de Recherche pour le
+ * Map and oceanographical data visualisation Copyright (C) 1998 University Corporation for Atmospheric Research
+ * (Unidata) 1998 Bill Hibbard & al. (VisAD) 1999 Pêches et Océans Canada 2000 Institut de Recherche pour le
  * Développement
  * 
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Library General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option) any
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General
+ * Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any
  * later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
  * details (http://www.gnu.org/).
  * 
  * 
- * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite
- * Institut de Recherche pour le Développement / US-Espace
- * mailto:seasnet@teledetection.fr
+ * Contacts: FRANCE: Surveillance de l'Environnement Assistée par Satellite Institut de Recherche pour le Développement /
+ * US-Espace mailto:seasnet@teledetection.fr
  * 
- * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne
- * mailto:osl@osl.gc.ca
+ * CANADA: Observatoire du Saint-Laurent Institut Maurice-Lamontagne mailto:osl@osl.gc.ca
  * 
  * 
- * This package is inspired from the units package of VisAD. Unidata and Visad's
- * work is fully acknowledged here.
+ * This package is inspired from the units package of VisAD. Unidata and Visad's work is fully acknowledged here.
  * 
  * THIS IS A TEMPORARY CLASS
  * 
- * This is a placeholder for future <code> Unit </code> class. This skeleton
- * will be removed when the real classes from JSR-108: Units specification will
- * be publicly available.
+ * This is a placeholder for future <code> Unit </code> class. This skeleton will be removed when the real classes from
+ * JSR-108: Units specification will be publicly available.
  */
 package javax.units;
 
@@ -42,9 +35,8 @@ import java.util.Arrays;
 import org.kalypsodeegree_impl.model.resources.WeakHashSet;
 
 /**
- * Ensemble de préfix. Cette classe maintient une liste d'objets {@link Prefix}
- * en ordre croissant et sans doublons, c'est-à-dire qu'elle garanti qu'il n'y
- * aura pas deux préfix représentant la même quantité {@link Prefix#amount}.
+ * Ensemble de préfix. Cette classe maintient une liste d'objets {@link Prefix}en ordre croissant et sans doublons,
+ * c'est-à-dire qu'elle garanti qu'il n'y aura pas deux préfix représentant la même quantité {@link Prefix#amount}.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -52,21 +44,18 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
 /* public */final class PrefixSet implements Serializable
 {
   /**
-   * Banque des objets qui ont été précédemment créés et enregistrés par un
-   * appel à la méthode {@link #intern}.
+   * Banque des objets qui ont été précédemment créés et enregistrés par un appel à la méthode {@link #intern}.
    */
   private static final WeakHashSet pool = Prefix.pool;
 
   /**
-   * Ensemble de préfix. Les préfix de cet ensemble doivent obligatoirement être
-   * un ordre croissant et sans doublons.
+   * Ensemble de préfix. Les préfix de cet ensemble doivent obligatoirement être un ordre croissant et sans doublons.
    */
   private final Prefix[] prefix;
 
   /**
-   * Construit un ensemble de préfix. Le tableau <code>p</code> sera copié,
-   * puis classé. Les éventuels doublons seront éliminés. Le tableau
-   * <code>p</code> original ne sera pas affecté par ces traitements.
+   * Construit un ensemble de préfix. Le tableau <code>p</code> sera copié, puis classé. Les éventuels doublons seront
+   * éliminés. Le tableau <code>p</code> original ne sera pas affecté par ces traitements.
    */
   private PrefixSet( final Prefix[] p )
   {
@@ -93,9 +82,8 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Construit un ensemble de préfix. Le tableau <code>p</code> sera copié,
-   * puis classé. Les éventuels doublons seront éliminés. Le tableau
-   * <code>p</code> original ne sera pas affecté par ces traitements.
+   * Construit un ensemble de préfix. Le tableau <code>p</code> sera copié, puis classé. Les éventuels doublons seront
+   * éliminés. Le tableau <code>p</code> original ne sera pas affecté par ces traitements.
    */
   public static PrefixSet getPrefixSet( final Prefix[] p )
   {
@@ -103,8 +91,8 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne le préfix représenté par le symbole spéfifié. Si aucun préfix ne
-   * correspond à ce symbole, retourne <code>null</code>.
+   * Retourne le préfix représenté par le symbole spéfifié. Si aucun préfix ne correspond à ce symbole, retourne
+   * <code>null</code>.
    * 
    * @param symbol
    *          Symbole du préfix recherché.
@@ -122,15 +110,14 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne le préfix représentant une quantité égale ou inférieure à la
-   * quantité spécifiée. Si <code>amount</code> est inférieur à la plus petite
-   * quantité pouvant être représenté par un préfix, alors cette méthode
-   * retourne <code>null</code>.
+   * Retourne le préfix représentant une quantité égale ou inférieure à la quantité spécifiée. Si <code>amount</code>
+   * est inférieur à la plus petite quantité pouvant être représenté par un préfix, alors cette méthode retourne
+   * <code>null</code>.
    */
   public Prefix getPrefix( double amount )
   {
     amount += 1E-8 * Math.abs( amount ); // Pour éviter d'éventuelles erreurs
-                                         // d'arrondissements.
+    // d'arrondissements.
     int index = Arrays.binarySearch( prefix, new Prefix( amount ) );
     if( index < 0 )
     {
@@ -145,8 +132,7 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne une chaîne de caractères qui énumère tous les préfix contenu dans
-   * cet ensemble. La chaîne sera de la forme
+   * Retourne une chaîne de caractères qui énumère tous les préfix contenu dans cet ensemble. La chaîne sera de la forme
    * "milli(m),centi(c),déci(d),kilo(k)" par exemple.
    */
   public String toString()
@@ -176,9 +162,8 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Vérifie si cet ensemble est identique à l'objet <code>other</code>
-   * spécifié. Deux ensembles sont considérés identiques s'ils contienent les
-   * mêmes préfix.
+   * Vérifie si cet ensemble est identique à l'objet <code>other</code> spécifié. Deux ensembles sont considérés
+   * identiques s'ils contienent les mêmes préfix.
    */
   public boolean equals( final Object other )
   {
@@ -210,19 +195,15 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Retourne un exemplaire unique de cet ensemble de préfix. Une banque de
-   * préfix, initialement vide, est maintenue de façon interne par la classe
-   * <code>PrefixSet</code>. Lorsque la méthode <code>intern</code> est
-   * appelée, elle recherchera des préfix égaux à <code>this</code> au sens de
-   * la méthode {@link #equals}. Si de tels préfix sont trouvés, ils seront
-   * retournés. Sinon, les préfix <code>this</code> seront ajoutés à la banque
-   * de données en utilisant une
-   * {@link java.lang.ref.WeakReference référence faible}et cette méthode
-   * retournera <code>this</code>.<br>
+   * Retourne un exemplaire unique de cet ensemble de préfix. Une banque de préfix, initialement vide, est maintenue de
+   * façon interne par la classe <code>PrefixSet</code>. Lorsque la méthode <code>intern</code> est appelée, elle
+   * recherchera des préfix égaux à <code>this</code> au sens de la méthode {@link #equals}. Si de tels préfix sont
+   * trouvés, ils seront retournés. Sinon, les préfix <code>this</code> seront ajoutés à la banque de données en
+   * utilisant une {@link java.lang.ref.WeakReference référence faible}et cette méthode retournera <code>this</code>.
    * <br>
-   * De cette méthode il s'ensuit que pour deux ensembles de préfix <var>u
-   * </var> et <var>v </var>, la condition <code>u.intern()==v.intern()</code>
-   * sera vrai si et seulement si <code>u.equals(v)</code> est vrai.
+   * <br>
+   * De cette méthode il s'ensuit que pour deux ensembles de préfix <var>u </var> et <var>v </var>, la condition
+   * <code>u.intern()==v.intern()</code> sera vrai si et seulement si <code>u.equals(v)</code> est vrai.
    */
   private final PrefixSet intern()
   {
@@ -230,11 +211,10 @@ import org.kalypsodeegree_impl.model.resources.WeakHashSet;
   }
 
   /**
-   * Après la lecture d'une unité, vérifie si ce préfix apparaît déjà dans la
-   * banque des préfix {@link #prefix}. Si oui, l'exemplaire de la banque sera
-   * retourné plutôt que de garder inutilement le préfix courant comme copie.
+   * Après la lecture d'une unité, vérifie si ce préfix apparaît déjà dans la banque des préfix {@link #prefix}. Si
+   * oui, l'exemplaire de la banque sera retourné plutôt que de garder inutilement le préfix courant comme copie.
    */
-  private Object readResolve() 
+  private Object readResolve()
   {
     return intern();
   }

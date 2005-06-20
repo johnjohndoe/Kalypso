@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.perspectives;
 
 import org.eclipse.ui.IFolderLayout;
@@ -60,24 +60,25 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     final String editorArea = layout.getEditorArea();
 
     // Top left.
-    final IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, (float)0.26, editorArea);//$NON-NLS-1$
-    topLeft.addView(IPageLayout.ID_RES_NAV);
+    final IFolderLayout topLeft = layout.createFolder( "topLeft", IPageLayout.LEFT, (float)0.26, editorArea );//$NON-NLS-1$
+    topLeft.addView( IPageLayout.ID_RES_NAV );
 
     // Bottom left.
-    IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, (float)0.50,//$NON-NLS-1$
-      "topLeft");//$NON-NLS-1$
-    bottomLeft.addView(IPageLayout.ID_OUTLINE);
+    IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float)0.50,//$NON-NLS-1$
+        "topLeft" );//$NON-NLS-1$
+    bottomLeft.addView( IPageLayout.ID_OUTLINE );
 
     setContentsOfShowViewMenu( layout );
-    
+
     layout.addActionSet( "org.kalypso.actionSet.model" );
-    
-    layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");//$NON-NLS-1$
-    layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.file");//$NON-NLS-1$
+
+    layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$
+    layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.file" );//$NON-NLS-1$
   }
-  
+
   /**
    * Sets the intial contents of the "Show View" menu
+   * 
    * @param layout
    */
   protected void setContentsOfShowViewMenu( IPageLayout layout )

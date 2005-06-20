@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -67,9 +67,8 @@ import org.kalypsodeegree.model.geometry.GM_OrientableSurface;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementation of the GM_OrientableSurface interface from package
- * jago.model. the implementation is abstract because only initialization of the
- * spatial reference system is unique to all orientated surfaces
+ * default implementation of the GM_OrientableSurface interface from package jago.model. the implementation is abstract
+ * because only initialization of the spatial reference system is unique to all orientated surfaces
  * 
  * <p>
  * -----------------------------------------------------------------------
@@ -78,8 +77,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @version 05.04.2002
  * @author Andreas Poth
  */
-abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl implements
-    GM_OrientableSurface, Serializable
+abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl implements GM_OrientableSurface,
+    Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4169996004405925850L;
@@ -104,8 +103,7 @@ abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl imp
    * 
    * @throws GM_Exception
    */
-  protected GM_OrientableSurface_Impl( CS_CoordinateSystem crs, char orientation )
-      throws GM_Exception
+  protected GM_OrientableSurface_Impl( CS_CoordinateSystem crs, char orientation ) throws GM_Exception
   {
     super( crs, orientation );
   }

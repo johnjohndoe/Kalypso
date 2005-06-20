@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
 import java.io.InputStream;
@@ -49,15 +49,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
 /**
- * TemplateStorage is a wrapper over an IFile. It delivers additionaly its context
- * and the URL from which the file was retrieved.
+ * TemplateStorage is a wrapper over an IFile. It delivers additionaly its context and the URL from which the file was
+ * retrieved.
  * 
  * @author schlienger
  */
 public class TemplateStorage implements IEncodedStorage
 {
   private final URL m_context;
+
   private final IFile m_file;
+
   private final String m_href;
 
   public TemplateStorage( final IFile file, final URL context, final String href )
@@ -70,15 +72,15 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @return Returns the context
    */
-  public URL getContext( )
+  public URL getContext()
   {
     return m_context;
   }
-  
+
   /**
    * @return Returns the file
    */
-  public IFile getFile( )
+  public IFile getFile()
   {
     return m_file;
   }
@@ -86,15 +88,15 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @return Returns the href
    */
-  public String getHref( )
+  public String getHref()
   {
     return m_href;
   }
-  
+
   /**
    * @see org.eclipse.core.resources.IStorage#getContents()
    */
-  public InputStream getContents( ) throws CoreException
+  public InputStream getContents() throws CoreException
   {
     return m_file.getContents();
   }
@@ -102,7 +104,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#getFullPath()
    */
-  public IPath getFullPath( )
+  public IPath getFullPath()
   {
     return m_file.getFullPath();
   }
@@ -110,7 +112,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_file.getName();
   }
@@ -118,7 +120,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IStorage#isReadOnly()
    */
-  public boolean isReadOnly( )
+  public boolean isReadOnly()
   {
     return false;
   }
@@ -134,7 +136,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @see org.eclipse.core.resources.IEncodedStorage#getCharset()
    */
-  public String getCharset( ) throws CoreException
+  public String getCharset() throws CoreException
   {
     return m_file.getCharset();
   }

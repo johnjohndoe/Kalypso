@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -68,12 +68,11 @@ import org.kalypsodeegree.model.feature.Feature;
  * <p>
  * Contains some deegree-specific extensions:
  * <ul>
- * <li>PerpendicularOffset: may be used as defined by the OGC, but it can also
- * be set to one of the special values 'center', 'above', 'below', 'auto'
+ * <li>PerpendicularOffset: may be used as defined by the OGC, but it can also be set to one of the special values
+ * 'center', 'above', 'below', 'auto'
  * <li>Gap: defines the distance between two captions on the line string
- * <li>LineWidth: provides the thickness of the styled line (needed as
- * information for the correct positioning of labels above and below the line
- * string)
+ * <li>LineWidth: provides the thickness of the styled line (needed as information for the correct positioning of
+ * labels above and below the line string)
  * </ul>
  * <p>
  * 
@@ -94,18 +93,16 @@ public interface LinePlacement
   final static int TYPE_AUTO = 4;
 
   /**
-   * The PerpendicularOffset element of a LinePlacement gives the perpendicular
-   * distance away from a line to draw a label. The distance is in pixels and is
-   * positive to the left-hand side of the line string. Negative numbers mean
+   * The PerpendicularOffset element of a LinePlacement gives the perpendicular distance away from a line to draw a
+   * label. The distance is in pixels and is positive to the left-hand side of the line string. Negative numbers mean
    * right. The default offset is 0.
    * <p>
-   * deegree-specific extension: if the element has one of the values: 'center',
-   * 'above', 'below', 'auto', the return value is invalid
+   * deegree-specific extension: if the element has one of the values: 'center', 'above', 'below', 'auto', the return
+   * value is invalid
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the offset (only valid if type is TYPE_ABSOLUTE)
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -120,19 +117,17 @@ public interface LinePlacement
   void setPerpendicularOffset( double perpendicularOffset );
 
   /**
-   * Returns the placement type (one of the constants defined in
-   * <tt>LinePlacement</tt>).
+   * Returns the placement type (one of the constants defined in <tt>LinePlacement</tt>).
    * <p>
    * 
    * @param feature
-   * @return @throws
-   *         FilterEvaluationException
+   * @return
+   * @throws FilterEvaluationException
    */
   int getPlacementType( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * Sets the placement type (one of the constants defined in
-   * <tt>LinePlacement</tt>).
+   * Sets the placement type (one of the constants defined in <tt>LinePlacement</tt>).
    * <p>
    * 
    * @param placementType
@@ -140,19 +135,19 @@ public interface LinePlacement
   void setPlacementType( int placementType );
 
   /**
-   * Provides the thickness of the styled line (needed as information for the
-   * correct positioning of labels above and below the line string).
+   * Provides the thickness of the styled line (needed as information for the correct positioning of labels above and
+   * below the line string).
    * <p>
    * 
    * @param feature
-   * @return @throws
-   *         FilterEvaluationException
+   * @return
+   * @throws FilterEvaluationException
    */
   double getLineWidth( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * Provides the thickness of the styled line (needed as information for the
-   * correct positioning of labels above and below the line string).
+   * Provides the thickness of the styled line (needed as information for the correct positioning of labels above and
+   * below the line string).
    * <p>
    * 
    * @param lineWidth
@@ -161,19 +156,17 @@ public interface LinePlacement
   void setLineWidth( double lineWidth );
 
   /**
-   * Defines the distance between two captions on the line string. One unit is
-   * the width of the label caption.
+   * Defines the distance between two captions on the line string. One unit is the width of the label caption.
    * <p>
    * 
    * @param feature
-   * @return @throws
-   *         FilterEvaluationException
+   * @return
+   * @throws FilterEvaluationException
    */
   int getGap( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * Defines the distance between two captions on the line string. One unit is
-   * the width of the label caption.
+   * Defines the distance between two captions on the line string. One unit is the width of the label caption.
    * <p>
    * 
    * @param gap

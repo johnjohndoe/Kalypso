@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -68,8 +68,7 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * The simple SVG/CSS2 styling parameters are given with the CssParameter
- * element, which is defined as follows:
+ * The simple SVG/CSS2 styling parameters are given with the CssParameter element, which is defined as follows:
  * 
  * <pre> 
  *  <xs:element name="CssParameter" type="sld:ParameterValueType"/>
@@ -80,11 +79,9 @@ import org.kalypsodeegree_impl.tools.Debug;
  *  </xs:complexType>
  * </pre>
  * 
- * The parameter values are allowed to be complex expressions for maximum
- * flexibility. The mixed="true" definition means that regular text may be mixed
- * in with various sub-expressions, implying a text-substitution model for
- * parameter values. Numeric and character-string data types are not
- * distinguished, which may cause some complications.
+ * The parameter values are allowed to be complex expressions for maximum flexibility. The mixed="true" definition means
+ * that regular text may be mixed in with various sub-expressions, implying a text-substitution model for parameter
+ * values. Numeric and character-string data types are not distinguished, which may cause some complications.
  * <p>
  * </p>
  * Here are some usage examples:
@@ -104,10 +101,9 @@ import org.kalypsodeegree_impl.tools.Debug;
  * of state <wfs:PropertyName>/STATE</wfs:PropertyName></Label>
  * </pre>
  * 
- * The allowed SVG/CSS styling parameters for a stroke are: stroke (color),
- * stroke-opacity, stroke-width, stroke-linejoin, stroke-linecap,
- * stroke-dasharray, and stroke-dashoffset. The chosen parameter is given by the
- * name attribute of the CssParameter element.
+ * The allowed SVG/CSS styling parameters for a stroke are: stroke (color), stroke-opacity, stroke-width,
+ * stroke-linejoin, stroke-linecap, stroke-dasharray, and stroke-dashoffset. The chosen parameter is given by the name
+ * attribute of the CssParameter element.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -176,13 +172,11 @@ class CssParameter_Impl implements CssParameter, Marshallable
   }
 
   /**
-   * Returns the (evaluated) value of the CssParameter as a simple
-   * <tt>String</tt>.
+   * Returns the (evaluated) value of the CssParameter as a simple <tt>String</tt>.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the
-   *          underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) <tt>String</tt> value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluations fails

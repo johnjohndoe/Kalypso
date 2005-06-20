@@ -45,8 +45,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  *   
  *  ---------------------------------------------------------------------------*/
 
-public class VirtualAssociationFeatureTypePropertyHandler implements
-    VirtualFeatureTypePropertyHandler
+public class VirtualAssociationFeatureTypePropertyHandler implements VirtualFeatureTypePropertyHandler
 {
 
   /*

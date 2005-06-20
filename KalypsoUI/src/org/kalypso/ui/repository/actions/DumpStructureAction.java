@@ -3,27 +3,23 @@
  * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestr. 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -51,13 +47,11 @@ import org.kalypso.ui.repository.view.ObservationChooser;
  * 
  * @author schlienger (16.06.2005)
  */
-public class DumpStructureAction extends AbstractRepositoryExplorerAction
-    implements ISelectionChangedListener
+public class DumpStructureAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
 {
   public DumpStructureAction( final ObservationChooser explorer )
   {
-    super( explorer, "Struktur exportieren",
-        ImageProvider.IMAGE_ZML_REPOSITORY,
+    super( explorer, "Struktur exportieren", ImageProvider.IMAGE_ZML_REPOSITORY,
         "Exportiert die Gesamtstruktur in der Zwischenablage" );
 
     explorer.addSelectionChangedListener( this );
@@ -72,8 +66,7 @@ public class DumpStructureAction extends AbstractRepositoryExplorerAction
 
   public void run()
   {
-    final IRepository rep = getExplorer().isRepository(
-        getExplorer().getSelection() );
+    final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )
       return;
 
@@ -84,8 +77,9 @@ public class DumpStructureAction extends AbstractRepositoryExplorerAction
       writer.close();
 
       final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-      clipboard.setContents( new Object[] { writer.toString() },
-          new Transfer[] { TextTransfer.getInstance() } );
+      clipboard.setContents( new Object[]
+      { writer.toString() }, new Transfer[]
+      { TextTransfer.getInstance() } );
       clipboard.dispose();
     }
     catch( Exception e )

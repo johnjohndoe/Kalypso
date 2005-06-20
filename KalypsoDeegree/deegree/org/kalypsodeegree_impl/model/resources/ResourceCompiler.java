@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.resources;
 
 // Collections
@@ -86,18 +86,14 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
- * Resources compiler. This class is run from the command-line at compile-time
- * only. <code>ResourceCompiler</code> scan for <code>.properties</code>
- * files and copy their content to <code>.utf</code> files using UTF8
- * encoding. It also check for key validity (making sure that the same set of
- * keys is defined in every language) and change values for
- * {@link MessageFormat}compatibility. Lastly, it create a
- * <code>ResourceKeys.java</code> source file declaring resource keys as
- * integer constants. <br>
+ * Resources compiler. This class is run from the command-line at compile-time only. <code>ResourceCompiler</code>
+ * scan for <code>.properties</code> files and copy their content to <code>.utf</code> files using UTF8 encoding. It
+ * also check for key validity (making sure that the same set of keys is defined in every language) and change values
+ * for {@link MessageFormat}compatibility. Lastly, it create a <code>ResourceKeys.java</code> source file declaring
+ * resource keys as integer constants. <br>
  * <br>
- * <code>ResourceCompiler</code> and all <code>ResourceKeys</code> classes
- * don't need to be included in the final JAR file. They are used at
- * compile-time only and no other classes should keep reference to them.
+ * <code>ResourceCompiler</code> and all <code>ResourceKeys</code> classes don't need to be included in the final
+ * JAR file. They are used at compile-time only and no other classes should keep reference to them.
  * 
  * @version 1.0
  * @author Martin Desruisseaux
@@ -126,31 +122,27 @@ final class ResourceCompiler implements Comparator
   private static final String RESOURCES_EXT = ".utf";
 
   /**
-   * Prefix for argument count in resource key names. For example a resource
-   * expecting one argument may has a key name like "HELLO_$1".
+   * Prefix for argument count in resource key names. For example a resource expecting one argument may has a key name
+   * like "HELLO_$1".
    */
   private static final String ARGUMENT_COUNT_PREFIX = "_$";
 
   /**
-   * Integer IDs allocated to resource keys. This map use
-   * <code>&lt;Integer,String&gt;</code> entries.
+   * Integer IDs allocated to resource keys. This map use <code>&lt;Integer,String&gt;</code> entries.
    */
   private final Map allocatedIDs = new HashMap();
 
   /**
-   * Resources keys and their localized values. This map use
-   * <code>&lt;String,String&gt;</code> entries.
+   * Resources keys and their localized values. This map use <code>&lt;String,String&gt;</code> entries.
    */
   private final Map resources = new HashMap();
 
   /**
-   * Construct a new <code>ResourceCompiler</code>. This method will
-   * immediately looks for a <code>ResourceKeys.class</code> file. If one is
-   * found, integer keys are loaded in order to reuse same values.
+   * Construct a new <code>ResourceCompiler</code>. This method will immediately looks for a
+   * <code>ResourceKeys.class</code> file. If one is found, integer keys are loaded in order to reuse same values.
    * 
    * @param directory
-   *          The resource directory. This directory should or will contains the
-   *          following input and output files:
+   *          The resource directory. This directory should or will contains the following input and output files:
    *          <ul>
    *          <li><code>resources*.properties</code> (mandatory input)</li>
    *          <li><code>ResourceKeys.class</code> (optional input)</li>
@@ -238,11 +230,9 @@ final class ResourceCompiler implements Comparator
   }
 
   /**
-   * Load all properties from a <code>.properties</code> file. Resource keys
-   * are checked for naming convention (i.e. resources expecting some arguments
-   * must have a key ending with "_$n" where "n" is the number of arguments).
-   * This method transform resource values in legal {@link MessageFormat}
-   * patterns when necessary.
+   * Load all properties from a <code>.properties</code> file. Resource keys are checked for naming convention (i.e.
+   * resources expecting some arguments must have a key ending with "_$n" where "n" is the number of arguments). This
+   * method transform resource values in legal {@link MessageFormat}patterns when necessary.
    * 
    * @param file
    *          Resource file to read.
@@ -291,8 +281,8 @@ final class ResourceCompiler implements Comparator
         continue;
       }
       /*
-       * Check if the expected arguments count (according naming convention)
-       * matches the arguments count found in the MessageFormat's pattern.
+       * Check if the expected arguments count (according naming convention) matches the arguments count found in the
+       * MessageFormat's pattern.
        */
       final int argumentCount;
       final int index = key.lastIndexOf( ARGUMENT_COUNT_PREFIX );
@@ -304,8 +294,7 @@ final class ResourceCompiler implements Comparator
       else
         try
         {
-          argumentCount = Integer
-              .parseInt( key.substring( index + ARGUMENT_COUNT_PREFIX.length() ) );
+          argumentCount = Integer.parseInt( key.substring( index + ARGUMENT_COUNT_PREFIX.length() ) );
           resources.put( key, message.toPattern() );
         }
         catch( NumberFormatException exception )
@@ -318,8 +307,7 @@ final class ResourceCompiler implements Comparator
       {
         if( !hasBug ) // Work around for bug in JDK 1.3 (fixed in JDK 1.4).
         {
-          warning( file, key, "Key name should ends with \"" + ARGUMENT_COUNT_PREFIX + expected
-              + "\".", null );
+          warning( file, key, "Key name should ends with \"" + ARGUMENT_COUNT_PREFIX + expected + "\".", null );
           continue;
         }
       }
@@ -359,17 +347,16 @@ final class ResourceCompiler implements Comparator
       {
         Integer ID;
         while( allocatedIDs.containsKey( ID = new Integer( freeID++ ) ) )
-          {
+        {
           // nix
-          }
+        }
         allocatedIDs.put( ID, key );
       }
     }
   }
 
   /**
-   * Write UTF file. Method {@link #loadPropertyFile}should be invoked before
-   * to <code>writeUTFFile</code>.
+   * Write UTF file. Method {@link #loadPropertyFile}should be invoked before to <code>writeUTFFile</code>.
    * 
    * @param file
    *          The destination file.
@@ -378,10 +365,8 @@ final class ResourceCompiler implements Comparator
    */
   private void writeUTFFile( final File file ) throws IOException
   {
-    final int count = allocatedIDs.isEmpty() ? 0 : ( (Integer)Collections.max( allocatedIDs
-        .keySet() ) ).intValue() + 1;
-    final DataOutputStream out = new DataOutputStream( new BufferedOutputStream(
-        new FileOutputStream( file ) ) );
+    final int count = allocatedIDs.isEmpty() ? 0 : ( (Integer)Collections.max( allocatedIDs.keySet() ) ).intValue() + 1;
+    final DataOutputStream out = new DataOutputStream( new BufferedOutputStream( new FileOutputStream( file ) ) );
     out.writeInt( count );
     for( int i = 0; i < count; i++ )
     {
@@ -400,8 +385,7 @@ final class ResourceCompiler implements Comparator
   }
 
   /**
-   * Returns the class name for the specified source file. The returned class
-   * name to not include package name.
+   * Returns the class name for the specified source file. The returned class name to not include package name.
    */
   private static String toClassName( final File file )
   {
@@ -413,21 +397,19 @@ final class ResourceCompiler implements Comparator
   }
 
   /**
-   * Make a file path relative to the classpath. The file path may be relative
-   * (to current <code>chdir</code>) or absolute. This method find the
-   * canonical form of <code>path</code> and compare it with canonical forms
-   * of every paths in the class path. If a classpath matchs the begining of
-   * <code>path</code>, then the corresponding part of <code>path</code> is
-   * removed. If there is more than one matches, the one resulting in the
-   * shortest relative path is choosen.
+   * Make a file path relative to the classpath. The file path may be relative (to current <code>chdir</code>) or
+   * absolute. This method find the canonical form of <code>path</code> and compare it with canonical forms of every
+   * paths in the class path. If a classpath matchs the begining of <code>path</code>, then the corresponding part of
+   * <code>path</code> is removed. If there is more than one matches, the one resulting in the shortest relative path
+   * is choosen.
    */
   private static String toRelative( final File path ) throws IOException
   {
     String bestpath = null;
     final String absolutePath = path.getCanonicalPath();
     final String fileSeparator = System.getProperty( "file.separator", "/" );
-    final StringTokenizer tokr = new StringTokenizer( System.getProperty( "java.class.path", "." ),
-        System.getProperty( "path.separator", ":" ) );
+    final StringTokenizer tokr = new StringTokenizer( System.getProperty( "java.class.path", "." ), System.getProperty(
+        "path.separator", ":" ) );
     while( tokr.hasMoreTokens() )
     {
       String classpath = new File( tokr.nextToken() ).getCanonicalPath();
@@ -447,9 +429,8 @@ final class ResourceCompiler implements Comparator
   }
 
   /**
-   * Change a "normal" text string into a pattern compatible with
-   * {@link MessageFormat}. The main operation consist in changing ' for '',
-   * except for '{' and '}' strings.
+   * Change a "normal" text string into a pattern compatible with {@link MessageFormat}. The main operation consist in
+   * changing ' for '', except for '{' and '}' strings.
    */
   private static String toMessageFormatString( final String text )
   {
@@ -462,9 +443,8 @@ final class ResourceCompiler implements Comparator
       switch( buffer.charAt( i ) )
       {
       /*
-       * Les accolades ouvrantes et fermantes nous font monter et descendre d'un
-       * niveau. Les guillemets ne seront doublés que si on se trouve au niveau
-       * 0. Si l'accolade était entre des guillemets, il ne sera pas pris en
+       * Les accolades ouvrantes et fermantes nous font monter et descendre d'un niveau. Les guillemets ne seront
+       * doublés que si on se trouve au niveau 0. Si l'accolade était entre des guillemets, il ne sera pas pris en
        * compte car il aura été sauté lors du passage précédent de la boucle.
        */
       case '{':
@@ -478,9 +458,8 @@ final class ResourceCompiler implements Comparator
       case '\'':
       {
         /*
-         * Si on détecte une accolade entre guillemets ('{' ou '}'), on ignore
-         * tout ce bloc et on continue au caractère qui suit le guillemet
-         * fermant.
+         * Si on détecte une accolade entre guillemets ('{' ou '}'), on ignore tout ce bloc et on continue au caractère
+         * qui suit le guillemet fermant.
          */
         if( i + 2 < buffer.length() && buffer.charAt( i + 2 ) == '\'' )
         {
@@ -497,16 +476,14 @@ final class ResourceCompiler implements Comparator
         if( level <= 0 )
         {
           /*
-           * Si nous n'étions pas entre des accolades, alors il faut doubler les
-           * guillemets.
+           * Si nous n'étions pas entre des accolades, alors il faut doubler les guillemets.
            */
           buffer.insert( i++, '\'' );
           continue search;
         }
         /*
-         * Si on se trouve entre des accolades, on ne doit normalement pas
-         * doubler les guillemets. Toutefois, le format {0,choice,...} est une
-         * exception.
+         * Si on se trouve entre des accolades, on ne doit normalement pas doubler les guillemets. Toutefois, le format
+         * {0,choice,...} est une exception.
          */
         if( last >= 0 && buffer.charAt( last ) == '{' )
         {
@@ -535,15 +512,13 @@ final class ResourceCompiler implements Comparator
    * @param file
    *          File that produced the error, or <code>null</code> if none.
    * @param key
-   *          Resource key that produced the error, or <code>null</code> if
-   *          none.
+   *          Resource key that produced the error, or <code>null</code> if none.
    * @param message
    *          The message string.
    * @param exception
    *          An optional exception that is the cause of this warning.
    */
-  private static void warning( final File file, final String key, final String message,
-      final Exception exception )
+  private static void warning( final File file, final String key, final String message, final Exception exception )
   {
     System.out.flush();
     System.err.print( "ERROR " );
@@ -590,9 +565,8 @@ final class ResourceCompiler implements Comparator
   }
 
   /**
-   * Write a multi-lines text to the specified output stream. All occurences of
-   * '\r' will be replaced by the line separator for the underlying operating
-   * system.
+   * Write a multi-lines text to the specified output stream. All occurences of '\r' will be replaced by the line
+   * separator for the underlying operating system.
    * 
    * @param out
    *          The output stream.
@@ -601,8 +575,7 @@ final class ResourceCompiler implements Comparator
    * @throws IOException
    *           if an input/output operation failed.
    */
-  private static void writeMultiLines( final BufferedWriter out, final String text )
-      throws IOException
+  private static void writeMultiLines( final BufferedWriter out, final String text ) throws IOException
   {
     final StringTokenizer tokr = new StringTokenizer( text, "\n" );
     while( tokr.hasMoreTokens() )
@@ -624,34 +597,29 @@ final class ResourceCompiler implements Comparator
   {
     final String packageName = toRelative( file.getParentFile() ).replace( File.separatorChar, '.' );
     final BufferedWriter out = new BufferedWriter( new FileWriter( file ) );
-    writeMultiLines( out, "/*\n"
-        + " * SEAGIS - An OpenSource implementation of OpenGIS specification\n"
+    writeMultiLines( out, "/*\n" + " * SEAGIS - An OpenSource implementation of OpenGIS specification\n"
         + " *          (C) 2001, Institut de Recherche pour le Développement\n" + " *\n"
         + " *          THIS IS AN AUTOMATICALLY GENERATED FILE. DO NOT EDIT!\n"
-        + " *          Generated with: org.kalypsodeegree_impl.model.resources.ResourceCompiler\n"
-        + " */\n" );
+        + " *          Generated with: org.kalypsodeegree_impl.model.resources.ResourceCompiler\n" + " */\n" );
     out.write( "package " );
     out.write( packageName );
     out.write( ";" );
     out.newLine();
     out.newLine();
     out.newLine();
-    writeMultiLines( out, "/**\n"
-        + " * Resource keys. This interface is used when compiling sources, but\n"
+    writeMultiLines( out, "/**\n" + " * Resource keys. This interface is used when compiling sources, but\n"
         + " * no dependencies to <code>ResourceKeys</code> should appear in any\n"
         + " * resulting class files.  Since Java compiler inline final integers\n"
         + " * values, using long identifiers will not bloat constant pools of\n"
-        + " * classes compiled against the interface, providing that no class\n"
-        + " * implements this interface.\n" + " *\n"
-        + " * @see org.kalypsodeegree_impl.model.resources.ResourceBundle\n"
+        + " * classes compiled against the interface, providing that no class\n" + " * implements this interface.\n"
+        + " *\n" + " * @see org.kalypsodeegree_impl.model.resources.ResourceBundle\n"
         + " * @see org.kalypsodeegree_impl.model.resources.ResourceCompiler\n" + " */\n" );
     out.write( "public interface " );
     out.write( toClassName( file ) );
     out.newLine();
     out.write( '{' );
     out.newLine();
-    final Map.Entry[] entries = (Map.Entry[])allocatedIDs.entrySet().toArray(
-        new Map.Entry[allocatedIDs.size()] );
+    final Map.Entry[] entries = (Map.Entry[])allocatedIDs.entrySet().toArray( new Map.Entry[allocatedIDs.size()] );
     Arrays.sort( entries, this );
     int maxLength = 0;
     for( int i = entries.length; --i >= 0; )
@@ -684,11 +652,10 @@ final class ResourceCompiler implements Comparator
   }
 
   /**
-   * Compare two resource keys. Object <code>o1</code> and <code>o2</code>
-   * are usually {@link String}objects representing resource keys (for example "
-   * <code>MISMATCHED_DIMENSION</code> "). This method compares strings as of
-   * {@link String#compareTo(java.lang.Object)}, except that string starting with one of the
-   * prefix enumetated in {@link #ORDER}will appear last in the sorted array.
+   * Compare two resource keys. Object <code>o1</code> and <code>o2</code> are usually {@link String}objects
+   * representing resource keys (for example "<code>MISMATCHED_DIMENSION</code> "). This method compares strings as
+   * of {@link String#compareTo(java.lang.Object)}, except that string starting with one of the prefix enumetated in
+   * {@link #ORDER}will appear last in the sorted array.
    */
   public int compare( Object o1, Object o2 )
   {

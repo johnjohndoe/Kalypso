@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml;
 
 import java.util.StringTokenizer;
@@ -84,9 +84,8 @@ import org.kalypsodeegree_impl.tools.StringExtend;
 import org.w3c.dom.Document;
 
 /**
- * This class transforms GML-documents. Possible GML-geometries are: GMLPoint,
- * GMLMultiPoint, GMLLineString, GMLMultiLineString, GMLPolygon and
- * GMLMultiPolygon
+ * This class transforms GML-documents. Possible GML-geometries are: GMLPoint, GMLMultiPoint, GMLLineString,
+ * GMLMultiLineString, GMLPolygon and GMLMultiPolygon
  * 
  * <p>
  * ----------------------------------------------------------------------
@@ -101,8 +100,7 @@ public class GML_Transformer
   private TransformationFactory transformationfactory = null;
 
   /**
-   * This selects the GMLGeometry and leads it to the corresponending
-   * transform-method
+   * This selects the GMLGeometry and leads it to the corresponending transform-method
    */
   public GMLGeometry transform( GMLGeometry gmlgeo, String target_srs ) throws Exception
   {
@@ -139,9 +137,8 @@ public class GML_Transformer
   }
 
   /**
-   * Transforms the target_srs (like EPSG 1234) to a qualified srsName attribute
-   * (like http://www.opengis.net/gml/srs/epsg.xml#1234) ONLY "EPSG 1234" is
-   * featured, not "EPSG_1234" (underlined).
+   * Transforms the target_srs (like EPSG 1234) to a qualified srsName attribute (like
+   * http://www.opengis.net/gml/srs/epsg.xml#1234) ONLY "EPSG 1234" is featured, not "EPSG_1234" (underlined).
    * 
    * @param ts
    *          target_srs
@@ -151,8 +148,7 @@ public class GML_Transformer
     ts = ts.replace( ':', ' ' );
 
     StringTokenizer a = new StringTokenizer( ts, " " );
-    return "http://www.opengis.net/gml/srs/" + a.nextToken().toLowerCase() + ".xml#"
-        + a.nextToken();
+    return "http://www.opengis.net/gml/srs/" + a.nextToken().toLowerCase() + ".xml#" + a.nextToken();
   }
 
   /**
@@ -209,11 +205,10 @@ public class GML_Transformer
    * @param gmlgeo
    * @param target_srs
    * 
-   * @return @throws
-   *         Exception
+   * @return
+   * @throws Exception
    */
-  public GMLMultiPoint transformMultiPoint( GMLMultiPoint gmlgeo, String target_srs )
-      throws Exception
+  public GMLMultiPoint transformMultiPoint( GMLMultiPoint gmlgeo, String target_srs ) throws Exception
   {
 
     //Creates the GMLMultiPoint
@@ -241,8 +236,7 @@ public class GML_Transformer
   /**
    * Transforms the coords of a GMLLineString-geometry
    */
-  public GMLLineString transformLineString( GMLLineString gmlgeo, String target_srs )
-      throws Exception
+  public GMLLineString transformLineString( GMLLineString gmlgeo, String target_srs ) throws Exception
   {
     // Gets the SRS from the Source-GMLLineString
     String src_srs = gmlgeo.getSrs();
@@ -303,8 +297,7 @@ public class GML_Transformer
   /**
    * Transforms the coords of a GMLMultiLineString-geometry
    */
-  public GMLMultiLineString transformMultiLineString( GMLMultiLineString gmlgeo, String target_srs )
-      throws Exception
+  public GMLMultiLineString transformMultiLineString( GMLMultiLineString gmlgeo, String target_srs ) throws Exception
   {
 
     // creates an empty GMLMultiLineString
@@ -421,8 +414,7 @@ public class GML_Transformer
   /**
    * Transforms the coords of a GMLMultiPolygon-geometry
    */
-  public GMLMultiPolygon transformMultiPolygon( GMLMultiPolygon gmlgeo, String target_srs )
-      throws Exception
+  public GMLMultiPolygon transformMultiPolygon( GMLMultiPolygon gmlgeo, String target_srs ) throws Exception
   {
 
     String complete_srs = completeSrs( target_srs );
@@ -455,9 +447,8 @@ public class GML_Transformer
   }
 
   /**
-   * since a GMLBoundingBox is a GMLGeometry (independent from the ISO-Standard
-   * for geometries), the possiblity to transform a GMLBoundingBox must be
-   * provided.
+   * since a GMLBoundingBox is a GMLGeometry (independent from the ISO-Standard for geometries), the possiblity to
+   * transform a GMLBoundingBox must be provided.
    */
 
   //    public GMLBox transformBoundingBox(GMLBox gmlgeo, String target_srs)

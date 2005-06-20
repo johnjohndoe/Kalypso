@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
 import java.awt.image.BufferedImage;
@@ -74,10 +74,9 @@ import com.sun.media.jai.codec.ByteArraySeekableStream;
 import com.sun.media.jai.codec.SeekableStream;
 
 /**
- * This class provides encode/decode for RFC 2045 Base64 as defined by RFC 2045,
- * N. Freed and N. Borenstein. <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC
- * 2045 </a>: Multipurpose Internet Mail Extensions (MIME) Part One: Format of
- * Internet Message Bodies. Reference 1996
+ * This class provides encode/decode for RFC 2045 Base64 as defined by RFC 2045, N. Freed and N. Borenstein. <a
+ * href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045 </a>: Multipurpose Internet Mail Extensions (MIME) Part One:
+ * Format of Internet Message Bodies. Reference 1996
  * 
  * @author Jeffrey Rodriguez
  * @version $Id$
@@ -94,7 +93,7 @@ public final class Base64
 
   static private final int SIXTEENBIT = 16;
 
-//  static private final int SIXBIT = 6;
+  //  static private final int SIXBIT = 6;
 
   static private final int FOURBYTE = 4;
 

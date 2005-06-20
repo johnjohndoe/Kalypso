@@ -1,13 +1,11 @@
 /*
  * OpenGIS® Grid Coverage Implementation Specification
  * 
- * This Java profile is derived from OpenGIS's specification available on their
- * public web site:
+ * This Java profile is derived from OpenGIS's specification available on their public web site:
  * 
  * http://www.opengis.org/techno/implementation.htm
  * 
- * You can redistribute it, but should not modify it unless for greater OpenGIS
- * compliance.
+ * You can redistribute it, but should not modify it unless for greater OpenGIS compliance.
  */
 package org.opengis.gp;
 
@@ -40,8 +38,8 @@ public interface GP_GridAnalysis extends GC_GridCoverage
    * @throws RemoteException
    *           if a remote method call failed.
    */
-  int[] getHistogram( int sampleDimension, double minimumEntryValue, double maximumEntryValue,
-      int numberEntries ) throws RemoteException;
+  int[] getHistogram( int sampleDimension, double minimumEntryValue, double maximumEntryValue, int numberEntries )
+      throws RemoteException;
 
   /**
    * Determine the minimum grid value for a sample dimension.
@@ -99,13 +97,11 @@ public interface GP_GridAnalysis extends GC_GridCoverage
   double getModeValue( int sampleDimension ) throws RemoteException;
 
   /**
-   * Determine the standard deviation from the mean of the grid values for a
-   * sample dimension.
+   * Determine the standard deviation from the mean of the grid values for a sample dimension.
    * 
    * @param sampleDimension
    *          Index of sample dimension.
-   * @return he standard deviation from the mean of the grid values for a sample
-   *         dimension.
+   * @return he standard deviation from the mean of the grid values for a sample dimension.
    * @throws RemoteException
    *           if a remote method call failed.
    */

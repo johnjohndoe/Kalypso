@@ -11,17 +11,13 @@ import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
 /**
  * Der FeaturePath denotiert ein Feature, eine FeatureList oder einen FeatureType innerhalb eines GMLWorkspace.
  * 
- * Notation:
- * <!CDATA[[
- *    property  ::=  Der Name einer FeatureAssociationProperty
- *    typename  ::=  Ein beliebiger Typname, sollte nur für abgeleitete Typen benutzt werden
- *    emptypath ::=  Der leere Pfad, zeigt auf das Root-Feature bzw. dessen Typ
+ * Notation: <!CDATA[[ property ::= Der Name einer FeatureAssociationProperty typename ::= Ein beliebiger Typname,
+ * sollte nur für abgeleitete Typen benutzt werden emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen
+ * Typ
  * 
- *    segment ::=  #fid#<id>  |
- *                 <property> |
- *                 <property>[<typename>]
- *
- *    featurePath ::=  <emptypath> |
+ * segment ::= #fid# <id>|<property>| <property>[ <typename>]
+ * 
+ * featurePath ::= <emptypath>|
  *                      <segment>/<segment>                 
  * ]]>
  * 
@@ -31,10 +27,10 @@ public class FeaturePath
 {
   /** Separates two segments in the feature-path */
   public final static char SEGMENT_SEPARATOR = '/';
-  
+
   /** Something between two '/' */
   private final Segment[] m_segments;
-  
+
   public FeaturePath( final String path )
   {
     if( path.trim().length() == 0 )
@@ -47,12 +43,13 @@ public class FeaturePath
         m_segments[i] = new Segment( segments[i] );
     }
   }
-  
+
   public FeaturePath( final Feature feature )
   {
-    m_segments = new Segment[] { new Segment( feature ) };
+    m_segments = new Segment[]
+    { new Segment( feature ) };
   }
-  
+
   public FeaturePath( final FeaturePath parent, final String segment )
   {
     final int parentLength = parent.m_segments.length;
@@ -66,16 +63,15 @@ public class FeaturePath
    * Gibt das durch den FeaturPath gegebene Feature zurück.
    * </p>
    * <p>
-   * Syntax des FeaturePath:
-   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei
-   * der featureTypeName optional ist
+   * Syntax des FeaturePath: <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei der
+   * featureTypeName optional ist
    * </p>
    * <p>
    * Es darf innerhalb des Pfads keine (Feature)Liste vorkommen, nur am Ende
    * </p>
    * <p>
-   * Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue)
-   * FeatureList zurückgegeben, deren Elemente alle vom angegebenen Typ sind
+   * Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue) FeatureList zurückgegeben, deren
+   * Elemente alle vom angegebenen Typ sind
    * </p>
    * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
@@ -84,7 +80,7 @@ public class FeaturePath
   {
     return getFeatureForSegment( workspace, workspace.getRootFeature(), 0 );
   }
-  
+
   public Object getFeatureForSegment( final GMLWorkspace workspace, final Feature feature, final int segmentIndex )
   {
     if( segmentIndex >= m_segments.length )
@@ -101,15 +97,16 @@ public class FeaturePath
     // alles andere ist ein Fehler
     return null;
   }
-  
+
   /** Voraussetzung, mindestens das Root-Feature muss existieren */
   public FeatureType getFeatureType( final GMLWorkspace workspace )
   {
     final FeatureType rootType = workspace.getRootFeature().getFeatureType();
     return getFeatureTypeForSegment( workspace, rootType, 0 );
   }
-  
-  private FeatureType getFeatureTypeForSegment( final GMLWorkspace workspace, final FeatureType featureType, final int segmentIndex )
+
+  private FeatureType getFeatureTypeForSegment( final GMLWorkspace workspace, final FeatureType featureType,
+      final int segmentIndex )
   {
     if( segmentIndex >= m_segments.length )
       return featureType;
@@ -119,38 +116,39 @@ public class FeaturePath
 
     return getFeatureTypeForSegment( workspace, type, segmentIndex + 1 );
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   public String toString()
   {
     final StringBuffer buffer = new StringBuffer();
-    
+
     for( int i = 0; i < m_segments.length; i++ )
     {
       buffer.append( m_segments[i].toString() );
       if( i != m_segments.length - 1 )
         buffer.append( SEGMENT_SEPARATOR );
     }
-    
+
     return buffer.toString();
   }
-  
+
   private final class Segment
   {
     private final static String ID_MARKER = "#fid#";
 
     private final String m_name;
+
     private final boolean m_isId;
-    
+
     /** Path may be filtered with type (Applies only to End of Path) */
     private final String m_typename;
 
     public Segment( final String segment )
     {
       m_isId = segment.startsWith( ID_MARKER );
-      
+
       // FeatureID?: '#fid#pegel_123'
       if( m_isId )
       {
@@ -172,7 +170,7 @@ public class FeaturePath
         }
       }
     }
-    
+
     public Segment( final Feature feature )
     {
       m_name = feature.getId();
@@ -184,12 +182,12 @@ public class FeaturePath
     {
       return m_name;
     }
-    
+
     public boolean isID()
     {
       return m_isId;
     }
-    
+
     public Object getValue( final GMLWorkspace workspace, final Feature feature )
     {
       if( isID() )
@@ -202,11 +200,11 @@ public class FeaturePath
       if( m_typename != null )
       {
         if( value instanceof FeatureList )
-          return  new FilteredFeatureList( (FeatureList)value, m_typename, true );
-        
+          return new FilteredFeatureList( (FeatureList)value, m_typename, true );
+
         return null;
       }
-      
+
       return value;
     }
 
@@ -214,7 +212,7 @@ public class FeaturePath
     {
       if( isID() )
         return workspace.getFeature( getName() ).getFeatureType();
-      
+
       final FeatureTypeProperty ftp = featureType.getProperty( getName() );
       if( ftp instanceof FeatureAssociationTypeProperty )
       {
@@ -228,31 +226,31 @@ public class FeaturePath
             if( m_typename.equals( type.getName() ) )
               return type;
           }
-          
+
           return null;
         }
 
         return assocFtp.getAssociationFeatureType();
       }
-      
+
       return null;
     }
-    
+
     /**
      * @see java.lang.Object#toString()
      */
     public String toString()
     {
       final StringBuffer buffer = new StringBuffer();
-      
+
       if( isID() )
         buffer.append( ID_MARKER );
-      
+
       buffer.append( m_name );
-      
+
       if( m_typename != null )
         buffer.append( '[' ).append( m_typename ).append( ']' );
-      
+
       return buffer.toString();
     }
   }

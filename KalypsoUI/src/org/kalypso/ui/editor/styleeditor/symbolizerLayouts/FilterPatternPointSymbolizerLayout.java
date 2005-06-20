@@ -36,21 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.Graphic;
-import org.kalypsodeegree.graphics.sld.Mark;
-import org.kalypsodeegree.graphics.sld.PointSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -66,6 +59,13 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.SliderPanel;
 import org.kalypso.ui.editor.styleeditor.panels.WellKnownNameComboPanel;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Graphic;
+import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
@@ -110,8 +110,8 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
     final Object objects[] = graphic.getMarksAndExtGraphics();
     Mark mark = (Mark)objects[0];
 
-    ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group,
-        MessageBundle.STYLE_EDITOR_TYPE, mark.getWellKnownName() );
+    ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group, MessageBundle.STYLE_EDITOR_TYPE, mark
+        .getWellKnownName() );
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
@@ -146,8 +146,8 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
       }
     } );
 
-    SliderPanel graphicSizePanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_SIZE, 1, 15,
-        1, SliderPanel.INTEGER, graphic.getSize( null ) );
+    SliderPanel graphicSizePanel = new SliderPanel( group, MessageBundle.STYLE_EDITOR_SIZE, 1, 15, 1,
+        SliderPanel.INTEGER, graphic.getSize( null ) );
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
       Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
@@ -202,10 +202,8 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
           Object[] obj = ( (PointSymbolizer)symb ).getGraphic().getMarksAndExtGraphics();
           if( obj.length > 0 && obj[0] instanceof Mark )
           {
-            ( (Mark)obj[0] ).getFill()
-                .setFill(
-                    new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i]
-                        .getBlue() ) );
+            ( (Mark)obj[0] ).getFill().setFill(
+                new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
           }
         }
       }
@@ -221,9 +219,9 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerLayout
             Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
             if( symb instanceof PointSymbolizer )
             {
-              ( (Mark)( (PointSymbolizer)symb ).getGraphic().getMarksAndExtGraphics()[0] )
-                  .setFill( StyleFactory.createFill( new java.awt.Color( colorArray[i].getRed(),
-                      colorArray[i].getGreen(), colorArray[i].getBlue() ) ) );
+              ( (Mark)( (PointSymbolizer)symb ).getGraphic().getMarksAndExtGraphics()[0] ).setFill( StyleFactory
+                  .createFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i]
+                      .getBlue() ) ) );
             }
           }
           userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );

@@ -36,19 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.PointSymbolizer;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -61,6 +56,11 @@ import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.FilterPatternLineSymb
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.FilterPatternPointSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.FilterPatternPolygonSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.SymbolizerLayout;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
  * @author F.Lindemann
@@ -69,8 +69,8 @@ import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.SymbolizerLayout;
 public class FilterPatternSymbolizerTabItemBuilder
 {
 
-  public FilterPatternSymbolizerTabItemBuilder( TabFolder tabFolder, Symbolizer symbolizer,
-      KalypsoUserStyle userStyle, RuleCollection ruleCollection, int symbolizerIndex )
+  public FilterPatternSymbolizerTabItemBuilder( TabFolder tabFolder, Symbolizer symbolizer, KalypsoUserStyle userStyle,
+      RuleCollection ruleCollection, int symbolizerIndex )
   {
     TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
 
@@ -91,20 +91,20 @@ public class FilterPatternSymbolizerTabItemBuilder
     else if( symbolizer instanceof PolygonSymbolizer )
     {
       tabItem.setText( "Polygon" );
-      symbolizerLayout = new FilterPatternPolygonSymbolizerLayout( composite, symbolizer,
-          userStyle, ruleCollection, symbolizerIndex );
+      symbolizerLayout = new FilterPatternPolygonSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
+          symbolizerIndex );
     }
     else if( symbolizer instanceof PointSymbolizer )
     {
       tabItem.setText( "Point" );
-      symbolizerLayout = new FilterPatternPointSymbolizerLayout( composite, symbolizer, userStyle,
-          ruleCollection, symbolizerIndex );
+      symbolizerLayout = new FilterPatternPointSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
+          symbolizerIndex );
     }
     else if( symbolizer instanceof LineSymbolizer )
     {
       tabItem.setText( "Line" );
-      symbolizerLayout = new FilterPatternLineSymbolizerLayout( composite, symbolizer, userStyle,
-          ruleCollection, symbolizerIndex );
+      symbolizerLayout = new FilterPatternLineSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
+          symbolizerIndex );
     }
 
     if( symbolizerLayout != null )

@@ -12,8 +12,7 @@ import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 
 /**
- * Helper class that delves into the extensions of the extension point
- * org.kalypso.repositories.
+ * Helper class that delves into the extensions of the extension point org.kalypso.repositories.
  * 
  * @author schlienger
  */
@@ -30,22 +29,18 @@ public class RepositoriesExtensions
   public final static String ATT_RO = "readOnly";
 
   /**
-   * Uses the platform extension registry to retrieve all extensions for the
-   * repositories extension point.
+   * Uses the platform extension registry to retrieve all extensions for the repositories extension point.
    * <p>
-   * For each extension, a RepositoryFactoryConfig is created which can be used
-   * in your application.
+   * For each extension, a RepositoryFactoryConfig is created which can be used in your application.
    * 
    * @return array of config items
    * @throws CoreException
    */
-  public static RepositoryFactoryConfig[] retrieveExtensions( )
-      throws CoreException
+  public static RepositoryFactoryConfig[] retrieveExtensions() throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    final IExtensionPoint extensionPoint = registry
-        .getExtensionPoint( REPOSITORIES_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( REPOSITORIES_EXTENSION_POINT );
 
     if( extensionPoint == null )
       return new RepositoryFactoryConfig[0];
@@ -57,8 +52,7 @@ public class RepositoriesExtensions
     for( int i = 0; i < extensions.length; i++ )
     {
       final IExtension extension = extensions[i];
-      final IConfigurationElement[] elements = extension
-          .getConfigurationElements();
+      final IConfigurationElement[] elements = extension.getConfigurationElements();
 
       for( int j = 0; j < elements.length; j++ )
       {
@@ -66,23 +60,19 @@ public class RepositoriesExtensions
 
         final String name = element.getAttribute( ATT_NAME );
         final String conf = element.getAttribute( ATT_CONF );
-        final boolean ro = Boolean.valueOf( element.getAttribute( ATT_RO ) )
-            .booleanValue();
+        final boolean ro = Boolean.valueOf( element.getAttribute( ATT_RO ) ).booleanValue();
 
-        final IRepositoryFactory factory = (IRepositoryFactory) element
-            .createExecutableExtension( ATT_FACTORY );
+        final IRepositoryFactory factory = (IRepositoryFactory)element.createExecutableExtension( ATT_FACTORY );
 
         items.add( new RepositoryFactoryConfig( factory, name, conf, ro ) );
       }
     }
 
-    return (RepositoryFactoryConfig[]) items
-        .toArray( new RepositoryFactoryConfig[items.size()] );
+    return (RepositoryFactoryConfig[])items.toArray( new RepositoryFactoryConfig[items.size()] );
   }
 
   /**
-   * Returns the corresponding factory config for the given repository factory
-   * classname
+   * Returns the corresponding factory config for the given repository factory classname
    * 
    * @param factoryClassName
    * @param repositoryName
@@ -90,14 +80,12 @@ public class RepositoriesExtensions
    * @param readOnly
    * @throws CoreException
    */
-  public static RepositoryFactoryConfig retrieveExtensionFor(
-      String factoryClassName, String repositoryName, String conf,
-      boolean readOnly ) throws CoreException
+  public static RepositoryFactoryConfig retrieveExtensionFor( String factoryClassName, String repositoryName,
+      String conf, boolean readOnly ) throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    final IExtensionPoint extensionPoint = registry
-        .getExtensionPoint( REPOSITORIES_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( REPOSITORIES_EXTENSION_POINT );
 
     if( extensionPoint == null )
       return null;
@@ -107,8 +95,7 @@ public class RepositoriesExtensions
     for( int i = 0; i < extensions.length; i++ )
     {
       final IExtension extension = extensions[i];
-      final IConfigurationElement[] elements = extension
-          .getConfigurationElements();
+      final IConfigurationElement[] elements = extension.getConfigurationElements();
 
       for( int j = 0; j < elements.length; j++ )
       {
@@ -116,11 +103,9 @@ public class RepositoriesExtensions
 
         if( factoryClassName.equals( element.getAttribute( ATT_FACTORY ) ) )
         {
-          final IRepositoryFactory factory = (IRepositoryFactory) element
-              .createExecutableExtension( ATT_FACTORY );
+          final IRepositoryFactory factory = (IRepositoryFactory)element.createExecutableExtension( ATT_FACTORY );
 
-          return new RepositoryFactoryConfig( factory, repositoryName, conf,
-              readOnly );
+          return new RepositoryFactoryConfig( factory, repositoryName, conf, readOnly );
         }
       }
     }

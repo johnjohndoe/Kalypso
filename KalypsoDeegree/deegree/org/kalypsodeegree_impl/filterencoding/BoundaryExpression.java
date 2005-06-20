@@ -2,7 +2,6 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.filterencoding.Expression_Impl;
 
 /**
  * @author F.Lindemann
@@ -32,8 +31,7 @@ public class BoundaryExpression extends Expression_Impl
     }
     catch( NumberFormatException e )
     {
-      throw new FilterEvaluationException( "BoundaryExpression:  can only be applied to numerical "
-          + "expressions!" );
+      throw new FilterEvaluationException( "BoundaryExpression:  can only be applied to numerical " + "expressions!" );
     }
     return returnValue;
   }

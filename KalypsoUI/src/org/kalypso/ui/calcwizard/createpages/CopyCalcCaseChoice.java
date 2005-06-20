@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.createpages;
 
 import java.util.Collection;
@@ -73,8 +73,7 @@ import org.kalypso.ui.nature.CalcCaseCollector;
 import org.kalypso.ui.nature.ModelNature;
 
 /**
- * Diese Implementierung erzeugt eine völlig neue Rechenvariante im
- * Prognoseverzeichnis
+ * Diese Implementierung erzeugt eine völlig neue Rechenvariante im Prognoseverzeichnis
  * 
  * @author belger
  */
@@ -166,14 +165,14 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
   protected void setName( final String text )
   {
     m_name = text;
-    
+
     validateChoice();
   }
 
   protected void setFolder( final IFolder folder )
   {
     m_folder = folder;
-    
+
     validateChoice();
   }
 
@@ -238,8 +237,8 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
 
     final IFolder folder = nature.getPrognoseFolder();
     if( m_name.length() == 0 )
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Geben Sie einen Namen für die Vorhersage ein", null ) );
+      throw new CoreException( KalypsoGisPlugin
+          .createErrorStatus( "Geben Sie einen Namen für die Vorhersage ein", null ) );
 
     final IFolder calcCaseFolder = folder.getFolder( m_name );
     if( calcCaseFolder.exists() )
@@ -291,7 +290,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
       m_page.setMessage( null );
       m_page.setPageComplete( false );
     }
-    
+
     final IStatus status = m_project.getWorkspace().validateName( m_name, IResource.FOLDER );
     if( status.getSeverity() == IStatus.OK )
     {

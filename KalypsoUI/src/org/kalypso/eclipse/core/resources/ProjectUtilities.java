@@ -60,7 +60,7 @@ public class ProjectUtilities
 {
   private ProjectUtilities()
   {
-    // do not instantiate
+  // do not instantiate
   }
 
   /**
@@ -94,8 +94,7 @@ public class ProjectUtilities
   }
 
   /**
-   * TODO does this work? seems not... Note from Marc: this only works when the
-   * navigator has an active selection
+   * TODO does this work? seems not... Note from Marc: this only works when the navigator has an active selection
    * 
    * Returns the currently selected project from the navigator.
    * 

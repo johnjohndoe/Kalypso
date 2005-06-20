@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -56,14 +56,15 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 public class BooleanModifier implements IFeatureModifier
 {
   private Image m_checkedImage = null;
+
   private Image m_uncheckedImage = null;
-  
+
   private final FeatureTypeProperty m_ftp;
-  
+
   public BooleanModifier( final FeatureTypeProperty ftp )
   {
     m_ftp = ftp;
-    
+
     if( !"java.lang.Boolean".equals( ftp.getType() ) )
       throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" );
   }
@@ -76,12 +77,13 @@ public class BooleanModifier implements IFeatureModifier
     final Object property = f.getProperty( m_ftp.getName() );
     if( property == null )
       return Boolean.FALSE;
-    
+
     return property;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature, java.lang.Object)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.Object)
    */
   public Object parseInput( final Feature f, final Object value )
   {
@@ -133,19 +135,19 @@ public class BooleanModifier implements IFeatureModifier
     {
       if( m_uncheckedImage == null )
       {
-         final ImageDescriptor id = ImageProvider.IMAGE_UTIL_UNCHECKED;
+        final ImageDescriptor id = ImageProvider.IMAGE_UTIL_UNCHECKED;
         m_uncheckedImage = id.createImage();
       }
-      
+
       return m_uncheckedImage;
     }
-    
+
     if( m_checkedImage == null )
     {
       final ImageDescriptor id = ImageProvider.IMAGE_UTIL_CHECKED;
       m_checkedImage = id.createImage();
     }
-    
+
     return m_checkedImage;
   }
 

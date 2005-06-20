@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -83,8 +83,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
-      
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(),
+          "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+
       return new Object[0];
     }
   }
@@ -106,8 +107,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
-      
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(),
+          "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+
       return null;
     }
   }
@@ -126,8 +128,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
-      
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(),
+          "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+
       return false;
     }
   }
@@ -138,7 +141,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   public Object[] getElements( final Object inputElement )
   {
     final IRepositoryContainer container = (IRepositoryContainer)inputElement;
-    
+
     return container.getRepositories().toArray();
   }
 
@@ -151,8 +154,8 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-   *      java.lang.Object, java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {

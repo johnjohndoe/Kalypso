@@ -20,7 +20,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( )
+  public boolean configureRepository()
   {
     return true;
   }
@@ -33,8 +33,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * <p>
    * root_location: the location of the root directory
    * <p>
-   * filter_spec: [optional] the filter specification as used in
-   * <code>MultipleWildCardFileFilter</code>
+   * filter_spec: [optional] the filter specification as used in <code>MultipleWildCardFileFilter</code>
    * 
    * <p>
    * Beispiel:
@@ -44,13 +43,12 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * 
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository( ) throws RepositoryException
+  public IRepository createRepository() throws RepositoryException
   {
     final String[] conf = getConfiguration().split( SEPARATOR );
 
     if( conf.length < 1 )
-      throw new RepositoryException(
-          "Invalid configuration in RepositoryFactory: " + getConfiguration() );
+      throw new RepositoryException( "Invalid configuration in RepositoryFactory: " + getConfiguration() );
 
     final String location = conf[0];
 
@@ -64,14 +62,12 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     else
       filter = new AcceptAllFileFilter();
 
-    return createRepository( getConfiguration(), location, getRepositoryName(), isReadOnly(),
-        filter );
+    return createRepository( getConfiguration(), location, getRepositoryName(), isReadOnly(), filter );
   }
 
   /**
-   * Actually instanciates a FileRepository. This default implementation
-   * instanciates a FileRepository. You can override this method to instanciate
-   * your custom version of FileRepository.
+   * Actually instanciates a FileRepository. This default implementation instanciates a FileRepository. You can override
+   * this method to instanciate your custom version of FileRepository.
    * 
    * @param conf
    * @param location
@@ -80,8 +76,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * @param filter
    * @return instance of FileRepository
    */
-  public FileRepository createRepository( String conf, String location, String id,
-      boolean ro, FileFilter filter )
+  public FileRepository createRepository( String conf, String location, String id, boolean ro, FileFilter filter )
   {
     return new FileRepository( getClass().getName(), conf, location, id, ro, filter );
   }

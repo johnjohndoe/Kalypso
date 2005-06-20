@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree.model.geometry;
 
@@ -65,8 +65,8 @@ import java.util.Iterator;
 
 /**
  * 
- * This interface defines the basis functionallity of all geometry aggregations.
- * it will be specialized for the use of primitive, and solid geometries.
+ * This interface defines the basis functionallity of all geometry aggregations. it will be specialized for the use of
+ * primitive, and solid geometries.
  * 
  * <p>
  * -----------------------------------------------------
@@ -89,8 +89,7 @@ public interface GM_Aggregate extends GM_Object
    * merges two aggregation.
    * 
    * @exception GM_Exception
-   *              a GM_Exception will be thrown if the submitted isn't the same
-   *              type as the recieving one.
+   *              a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
   void merge( GM_Aggregate aggregate ) throws GM_Exception;
 
@@ -100,9 +99,8 @@ public interface GM_Aggregate extends GM_Object
   void add( GM_Object gmo );
 
   /**
-   * inserts a GM_Object in the aggregation. all elements with an index equal or
-   * larger index will be moved. if index is larger then getSize() - 1 an
-   * exception will be thrown.
+   * inserts a GM_Object in the aggregation. all elements with an index equal or larger index will be moved. if index is
+   * larger then getSize() - 1 an exception will be thrown.
    * 
    * @param gmo
    *          GM_Object to insert.
@@ -112,9 +110,8 @@ public interface GM_Aggregate extends GM_Object
   void insertObjectAt( GM_Object gmo, int index ) throws GM_Exception;
 
   /**
-   * sets the submitted GM_Object at the submitted index. the element at the
-   * position <code>index</code> will be removed. if index is larger then
-   * getSize() - 1 an exception will be thrown.
+   * sets the submitted GM_Object at the submitted index. the element at the position <code>index</code> will be
+   * removed. if index is larger then getSize() - 1 an exception will be thrown.
    * 
    * @param gmo
    *          GM_Object to set.
@@ -131,8 +128,8 @@ public interface GM_Aggregate extends GM_Object
   GM_Object removeObject( GM_Object gmo );
 
   /**
-   * removes the GM_Object at the submitted index from the aggregation. if index
-   * is larger then getSize() - 1 an exception will be thrown.
+   * removes the GM_Object at the submitted index from the aggregation. if index is larger then getSize() - 1 an
+   * exception will be thrown.
    * 
    * @return the removed GM_Object
    */

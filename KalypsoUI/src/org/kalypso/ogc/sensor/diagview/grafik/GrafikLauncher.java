@@ -111,25 +111,23 @@ public class GrafikLauncher
   public final static String TPL_FILE_EXTENSION = "tpl";
 
   /** date format understood by the grafik tool */
-  protected final static DateFormat GRAFIK_DF = new SimpleDateFormat(
-      "dd.MM.yyyy HH:mm:ss" );
+  protected final static DateFormat GRAFIK_DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
-  private final static NumberFormat GRAFIK_NF_W = NumberFormat
-      .getIntegerInstance();
+  private final static NumberFormat GRAFIK_NF_W = NumberFormat.getIntegerInstance();
 
   static
   {
     GRAFIK_NF_W.setMaximumFractionDigits( 0 );
   }
 
-  private GrafikLauncher( )
+  private GrafikLauncher()
   {
-    // no instanciation
+  // no instanciation
   }
 
   /**
-   * Opens the grafik tool using an observation template file. Note: this method
-   * should be called using a WorkspaceModifyOperation.
+   * Opens the grafik tool using an observation template file. Note: this method should be called using a
+   * WorkspaceModifyOperation.
    * 
    * @param odtFile
    * @param dest
@@ -138,8 +136,8 @@ public class GrafikLauncher
    * 
    * @throws SensorException
    */
-  public static IFile startGrafikODT( final IFile odtFile, final IFolder dest,
-      final IProgressMonitor monitor ) throws SensorException
+  public static IFile startGrafikODT( final IFile odtFile, final IFolder dest, final IProgressMonitor monitor )
+      throws SensorException
   {
     final ObsdiagviewType odt;
     try
@@ -156,8 +154,8 @@ public class GrafikLauncher
   }
 
   /**
-   * Opens the grafik tool using an observation template xml object. Note: this
-   * method should be called using a WorkspaceModifyOperation.
+   * Opens the grafik tool using an observation template xml object. Note: this method should be called using a
+   * WorkspaceModifyOperation.
    * 
    * @param fileName
    *          the filename to use for the grafik template file
@@ -169,8 +167,7 @@ public class GrafikLauncher
    * 
    * @throws SensorException
    */
-  public static IFile startGrafikODT( final String fileName,
-      final ObsdiagviewType odt, final IFolder dest,
+  public static IFile startGrafikODT( final String fileName, final ObsdiagviewType odt, final IFolder dest,
       final IProgressMonitor monitor ) throws SensorException
   {
     List sync = new Vector();
@@ -180,9 +177,7 @@ public class GrafikLauncher
       if( !dest.exists() )
         dest.create( true, true, monitor );
 
-      final IFile tplFile = dest.getFile( FileUtilities
-          .nameWithoutExtension( fileName )
-          + ".tpl" );
+      final IFile tplFile = dest.getFile( FileUtilities.nameWithoutExtension( fileName ) + ".tpl" );
 
       strWriter = new StringWriter();
 
@@ -192,16 +187,14 @@ public class GrafikLauncher
       // so inform the use here with the current info
       if( !status.isOK() )
       {
-        final Display disp = KalypsoGisPlugin.getDefault().getWorkbench()
-            .getDisplay();
+        final Display disp = KalypsoGisPlugin.getDefault().getWorkbench().getDisplay();
 
         disp.syncExec( new Runnable()
         {
-          public void run( )
+          public void run()
           {
-            ErrorDialog.openError( disp.getActiveShell(), "Warnung",
-                "Fehler sind während der für das Grafikprogramm "
-                    + "benötigten Datenkonvertierung aufgetaucht.", status );
+            ErrorDialog.openError( disp.getActiveShell(), "Warnung", "Fehler sind während der für das Grafikprogramm "
+                + "benötigten Datenkonvertierung aufgetaucht.", status );
           }
         } );
       }
@@ -219,8 +212,7 @@ public class GrafikLauncher
         }
       };
 
-      sch.setFileContents( tplFile, false, false, new NullProgressMonitor(),
-          GRAFIK_ENCODING );
+      sch.setFileContents( tplFile, false, false, new NullProgressMonitor(), GRAFIK_ENCODING );
 
       startGrafikTPL( tplFile, sync );
 
@@ -247,11 +239,9 @@ public class GrafikLauncher
    * 
    * @throws SensorException
    */
-  public static void startGrafikTPL( final IFile tplFile, final List sync )
-      throws SensorException
+  public static void startGrafikTPL( final IFile tplFile, final List sync ) throws SensorException
   {
-    final File file = ResourceUtilities
-        .makeFileFromPath( tplFile.getFullPath() );
+    final File file = ResourceUtilities.makeFileFromPath( tplFile.getFullPath() );
 
     startGrafikTPL( file, sync );
   }
@@ -262,38 +252,26 @@ public class GrafikLauncher
    * @param tplFile
    * @throws SensorException
    */
-  private static void startGrafikTPL( final File tplFile, final List sync )
-      throws SensorException
+  private static void startGrafikTPL( final File tplFile, final List sync ) throws SensorException
   {
     try
     {
       // create the grafik exe
       // TODO: check if version has changed an then try to delete old file
       // TODO: always use file name 'grafik.exe'
-      final File grafikExe = FileUtilities
-          .makeFileFromStream(
-              false,
-              "grafik",
-              ".exe",
-              DiagViewUtils.class
-                  .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ),
-              true );
+      final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", DiagViewUtils.class
+          .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true );
       grafikExe.deleteOnExit();
 
       // also create the help file if not already existing
-      final File grafikHelp = new File( grafikExe.getParentFile(),
-          FileUtilities.nameWithoutExtension( grafikExe.getName() ) + ".hlp" );
+      final File grafikHelp = new File( grafikExe.getParentFile(), FileUtilities.nameWithoutExtension( grafikExe
+          .getName() )
+          + ".hlp" );
       grafikHelp.deleteOnExit();
       if( !grafikHelp.exists() )
       {
-        final File tmp = FileUtilities
-            .makeFileFromStream(
-                false,
-                "grafik",
-                ".hlp",
-                DiagViewUtils.class
-                    .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ),
-                true );
+        final File tmp = FileUtilities.makeFileFromStream( false, "grafik", ".hlp", DiagViewUtils.class
+            .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true );
 
         // the help must have the same name as the exe (except file-extension)
         FileUtils.copyFile( tmp, grafikHelp );
@@ -301,14 +279,13 @@ public class GrafikLauncher
       }
 
       final Process proc = Runtime.getRuntime().exec(
-          grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath()
-              + '"' );
+          grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"' );
 
       final ProcessWraper wraper = new ProcessWraper( proc, null )
       {
-        public void processCanceled( )
+        public void processCanceled()
         {
-          // empty
+        // empty
         }
 
         public void processTerminated( final int returnCode )
@@ -316,11 +293,11 @@ public class GrafikLauncher
           synchroniseZml();
         }
 
-        private void synchroniseZml( )
+        private void synchroniseZml()
         {
           for( final Iterator it = sync.iterator(); it.hasNext(); )
           {
-            final RememberForSync rfs = (RememberForSync) it.next();
+            final RememberForSync rfs = (RememberForSync)it.next();
 
             try
             {
@@ -346,11 +323,10 @@ public class GrafikLauncher
   /**
    * Converts a diagram template file to a grafik tpl.
    * <p>
-   * Important note: the XML-Schema for the diag template file says that if no
-   * curve element or specified for a given observation, then all curves of that
-   * observation should be displayed. This is not possible here using the grafik
-   * tool. As a conclusion: when a template file is meant to be used with the
-   * grafik tool, then curves need to be explicitely specified in the xml.
+   * Important note: the XML-Schema for the diag template file says that if no curve element or specified for a given
+   * observation, then all curves of that observation should be displayed. This is not possible here using the grafik
+   * tool. As a conclusion: when a template file is meant to be used with the grafik tool, then curves need to be
+   * explicitely specified in the xml.
    * 
    * @param odt
    * @param dest
@@ -360,9 +336,8 @@ public class GrafikLauncher
    * @throws CoreException
    * @throws IOException
    */
-  private static IStatus odt2tpl( final ObsdiagviewType odt,
-      final IFolder dest, final Writer writer, final IProgressMonitor monitor,
-      final List sync ) throws CoreException, IOException
+  private static IStatus odt2tpl( final ObsdiagviewType odt, final IFolder dest, final Writer writer,
+      final IProgressMonitor monitor, final List sync ) throws CoreException, IOException
   {
     final UrlResolver urlRes = new UrlResolver();
     final URL context = ResourceUtilities.createURL( dest.getParent() );
@@ -375,12 +350,10 @@ public class GrafikLauncher
 
     final Logger logger = Logger.getLogger( GrafikLauncher.class.getName() );
 
-    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING,
-        KalypsoGisPlugin.getId(), 0,
+    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
         "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
 
-    final TypeObservation[] tobs = (TypeObservation[]) odt.getObservation()
-        .toArray( new TypeObservation[0] );
+    final TypeObservation[] tobs = (TypeObservation[])odt.getObservation().toArray( new TypeObservation[0] );
     for( int i = 0; i < tobs.length; i++ )
     {
       if( monitor.isCanceled() )
@@ -406,13 +379,12 @@ public class GrafikLauncher
       try
       {
         ins = zmlFile.getContents();
-        obs = ZmlFactory.parseXML( new InputSource( ins ), zmlFile.toString(),
-            context );
+        obs = ZmlFactory.parseXML( new InputSource( ins ), zmlFile.toString(), context );
       }
       catch( Exception e )
       {
-        final String msg = "Zeitreihe konnte nicht eingelesen werden. Datei: "
-            + zmlFile.getName() + " Grund: " + e.getLocalizedMessage();
+        final String msg = "Zeitreihe konnte nicht eingelesen werden. Datei: " + zmlFile.getName() + " Grund: "
+            + e.getLocalizedMessage();
         logger.warning( msg );
         multiStatus.addMessage( msg, e );
         continue;
@@ -424,10 +396,8 @@ public class GrafikLauncher
 
       // find out which axes to use
       final IAxis[] axes = obs.getAxisList();
-      final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes,
-          Date.class );
-      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClass( axes,
-          Number.class, true );
+      final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
+      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClass( axes, Number.class, true );
 
       final List displayedAxes = new ArrayList( numberAxes.length );
 
@@ -435,12 +405,11 @@ public class GrafikLauncher
       final List curves = tobs[i].getCurve();
       for( final Iterator itc = curves.iterator(); itc.hasNext(); )
       {
-        final TypeCurve tc = (TypeCurve) itc.next();
+        final TypeCurve tc = (TypeCurve)itc.next();
 
         // create a corresponding dat-File for the current observation file
-        final IFile datFile = dest.getFile( FileUtilities
-            .nameWithoutExtension( zmlFile.getName() )
-            + "-" + cc + ".dat" );
+        final IFile datFile = dest
+            .getFile( FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" );
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
 
@@ -464,8 +433,7 @@ public class GrafikLauncher
       // W-axis
       try
       {
-        ObservationUtilities.findAxisByType( (IAxis[]) displayedAxes
-            .toArray( new IAxis[displayedAxes.size()] ),
+        ObservationUtilities.findAxisByType( (IAxis[])displayedAxes.toArray( new IAxis[displayedAxes.size()] ),
             TimeserieConstants.TYPE_WATERLEVEL );
 
         final MetadataList mdl = obs.getMetadataList();
@@ -473,8 +441,8 @@ public class GrafikLauncher
         for( int j = 0; j < mds.length; j++ )
         {
           final Double value = new Double( mdl.getProperty( mds[j] ) );
-          yLines.put( value, new ValueAndColor( mds[j] + " ("
-              + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) );
+          yLines.put( value, new ValueAndColor( mds[j] + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(),
+              null ) );
         }
       }
       catch( NoSuchElementException e )
@@ -503,9 +471,8 @@ public class GrafikLauncher
     // constant horizontal lines...
     for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
     {
-      final ValueAndColor vac = (ValueAndColor) yLines.get( it.next() );
-      writer.write( "yKonst: " + GRAFIK_NF_W.format( vac.value ) + " "
-          + vac.label + '\n' );
+      final ValueAndColor vac = (ValueAndColor)yLines.get( it.next() );
+      writer.write( "yKonst: " + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' );
     }
     yLines.clear();
 
@@ -522,9 +489,8 @@ public class GrafikLauncher
    * @param monitor
    * @throws CoreException
    */
-  private static IStatus zml2dat( final IObservation obs, final IFile datFile,
-      final IAxis dateAxis, final IAxis axis, final IProgressMonitor monitor )
-      throws CoreException
+  private static IStatus zml2dat( final IObservation obs, final IFile datFile, final IAxis dateAxis, final IAxis axis,
+      final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper sch = new SetContentHelper()
     {

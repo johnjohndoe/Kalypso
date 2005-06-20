@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
 import java.io.InputStreamReader;
@@ -49,7 +49,6 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.java.io.ReaderUtilities;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
@@ -59,6 +58,7 @@ import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.util.UrlResolver;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
@@ -68,7 +68,8 @@ public class ZmlTableExporter extends AbstractBerichtExporter
   private static final String EXT = ".csv";
 
   /**
-   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature, java.io.OutputStream)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature,
+   *      java.io.OutputStream)
    */
   public IStatus export( final Feature feature, final OutputStream os )
   {
@@ -84,7 +85,7 @@ public class ZmlTableExporter extends AbstractBerichtExporter
       final String templateurl = arguments.getProperty( "template", null );
 
       final String featurename = arguments.getProperty( "nameproperty", "Name" );
-      
+
       // - replacetokens / featureprops
       final Arguments tokens = arguments.getArguments( "tokens" );
       final Properties replacetokens = ExporterHelper.createReplaceTokens( feature, tokens );
@@ -92,17 +93,17 @@ public class ZmlTableExporter extends AbstractBerichtExporter
       final URL url = new UrlResolver().resolveURL( getContext(), templateurl );
       final URLConnection connection = url.openConnection();
       final Reader reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
-      final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%',
-          '%' );
+      final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%', '%' );
 
       final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader2 );
       view = new TableView();
       table = new ObservationTable( view, true, false );
 
       final Object nameProp = feature.getProperty( featurename );
-      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString(); 
-      
-      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, this.toString() + " - " + name + ": ", null );
+      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString();
+
+      final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, this.toString() + " - " + name + ": ",
+          null );
       TableViewUtils.applyXMLTemplate( view, xml, getContext(), true, result );
 
       new ExportableObservationTable( table ).exportDocument( os );
@@ -125,7 +126,7 @@ public class ZmlTableExporter extends AbstractBerichtExporter
   /**
    * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#getExtension()
    */
-  public String getExtension( )
+  public String getExtension()
   {
     return EXT;
   }

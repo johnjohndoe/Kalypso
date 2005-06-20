@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
 import org.eclipse.jface.action.IAction;
@@ -63,7 +63,7 @@ public class NewCalcCaseAction implements IWorkbenchWindowActionDelegate
    */
   public void dispose()
   {
-    // nichts zu tun
+  // nichts zu tun
   }
 
   /**
@@ -83,7 +83,7 @@ public class NewCalcCaseAction implements IWorkbenchWindowActionDelegate
     final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     // NewCalcCaseWizard starten
-    final NewCalculationCaseWizard wizard = new NewCalculationCaseWizard(  );
+    final NewCalculationCaseWizard wizard = new NewCalculationCaseWizard();
     wizard.init( m_window.getWorkbench(), (IStructuredSelection)selection );
 
     final WizardDialog dlg = new WizardDialog( m_window.getShell(), wizard )
@@ -94,7 +94,7 @@ public class NewCalcCaseAction implements IWorkbenchWindowActionDelegate
       public void updateButtons()
       {
         super.updateButtons();
-        
+
         final Button nextButton = getButton( IDialogConstants.NEXT_ID );
         getShell().setDefaultButton( nextButton );
       }
@@ -104,10 +104,11 @@ public class NewCalcCaseAction implements IWorkbenchWindowActionDelegate
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    // mir egal
+  // mir egal
   }
 }

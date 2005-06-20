@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.core.runtime.CoreException;
@@ -71,19 +71,20 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
     try
     {
       final String username = System.getProperty( "user.name" );
-      final MetadocServiceWrapper service = new MetadocServiceWrapper(  );
+      final MetadocServiceWrapper service = new MetadocServiceWrapper();
       final Document doc = service.prepareDocument( ".csv", username );
-      
+
       final ExportableLayerTable exp = new ExportableLayerTable( editor.getLayerTable() );
-      
-      final Wizard exportWizard = new ExportTableBerichtWizard( exp , doc );
+
+      final Wizard exportWizard = new ExportTableBerichtWizard( exp, doc );
 
       final WizardDialog dialog = new WizardDialog( editor.getSite().getShell(), exportWizard );
       final int ok = dialog.open();
 
-      final Job job = new Job( "Berichtsablage" ) {
+      final Job job = new Job( "Berichtsablage" )
+      {
         protected IStatus run( IProgressMonitor monitor )
-        { 
+        {
           try
           {
             if( ok == Window.OK )
@@ -95,11 +96,12 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
           {
             return e.getStatus();
           }
-          
+
           return Status.OK_STATUS;
-        }};
-        job.setUser( true );
-        job.schedule();
+        }
+      };
+      job.setUser( true );
+      job.schedule();
     }
     catch( final CoreException e )
     {
@@ -113,8 +115,8 @@ public class ExportBerichtActionDelegate extends AbstractGisEditorActionDelegate
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
    */
-  protected void refreshAction(IAction action)
+  protected void refreshAction( IAction action )
   {
-    // nix tun, immer Aktiv
+  // nix tun, immer Aktiv
   }
 }

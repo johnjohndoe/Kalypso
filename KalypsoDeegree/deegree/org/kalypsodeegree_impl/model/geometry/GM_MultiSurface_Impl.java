@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
@@ -70,8 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * default implementation of the GM_MultiSurface interface from package
- * jago.model.
+ * default implementation of the GM_MultiSurface interface from package jago.model.
  * 
  * <p>
  * ------------------------------------------------------------
@@ -81,8 +80,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author Andreas Poth
  *         <p>
  */
-final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_MultiSurface,
-    Serializable
+final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_MultiSurface, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -6471121873087659850L;
@@ -143,9 +141,8 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   }
 
   /**
-   * inserts a GM_Surface in the aggregation. all elements with an index equal
-   * or larger index will be moved. if index is larger then getSize() - 1 or
-   * smaller then 0 or gms equals null an exception will be thrown.
+   * inserts a GM_Surface in the aggregation. all elements with an index equal or larger index will be moved. if index
+   * is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
    * 
    * @param gms
    *          GM_Surface to insert.
@@ -158,10 +155,8 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   }
 
   /**
-   * sets the submitted GM_Surface at the submitted index. the element at the
-   * position <code>index</code> will be removed. if index is larger then
-   * getSize() - 1 or smaller then 0 or gms equals null an exception will be
-   * thrown.
+   * sets the submitted GM_Surface at the submitted index. the element at the position <code>index</code> will be
+   * removed. if index is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
    * 
    * @param gms
    *          GM_Surface to set.
@@ -184,9 +179,8 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   }
 
   /**
-   * removes the GM_Surface at the submitted index from the aggregation. if
-   * index is larger then getSize() - 1 or smaller then 0 an exception will be
-   * thrown.
+   * removes the GM_Surface at the submitted index from the aggregation. if index is larger then getSize() - 1 or
+   * smaller then 0 an exception will be thrown.
    * 
    * @return the removed GM_Surface
    */
@@ -300,8 +294,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   }
 
   /**
-   * returns the area of the multi surface. this is calculate as the sum of all
-   * containing surface areas.
+   * returns the area of the multi surface. this is calculate as the sum of all containing surface areas.
    */
   public double getArea()
   {
@@ -338,11 +331,10 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   }
 
   /**
-   * The operation "dimension" shall return the inherent dimension of this
-   * GM_Object, which shall be less than or equal to the coordinate dimension.
-   * The dimension of a collection of geometric objects shall be the largest
-   * dimension of any of its pieces. Points are 0-dimensional, curves are
-   * 1-dimensional, surfaces are 2-dimensional, and solids are 3-dimensional.
+   * The operation "dimension" shall return the inherent dimension of this GM_Object, which shall be less than or equal
+   * to the coordinate dimension. The dimension of a collection of geometric objects shall be the largest dimension of
+   * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
+   * 3-dimensional.
    */
   public int getDimension()
   {
@@ -350,9 +342,8 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   }
 
   /**
-   * The operation "coordinateDimension" shall return the dimension of the
-   * coordinates that define this GM_Object, which must be the same as the
-   * coordinate dimension of the coordinate reference system for this GM_Object.
+   * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
+   * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
    */
   public int getCoordinateDimension()
   {

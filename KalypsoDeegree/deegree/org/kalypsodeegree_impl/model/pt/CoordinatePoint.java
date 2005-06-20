@@ -39,11 +39,11 @@
  
  
  history:
-  
+ 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
  interface-compatibility to deegree is wanted but not retained always. 
-     
+ 
  If you intend to use this software in other ways than in kalypso 
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
@@ -57,7 +57,7 @@
  lat/lon GmbH
  http://www.lat-lon.de
  
----------------------------------------------------------------------------------------------------*/
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.pt;
 
 // Miscellaneous
@@ -70,9 +70,9 @@ import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;
 
 /**
- * A position defined by a list of numbers. The ordinate values are indexed from
- * <code>0</code> to <code>(numDim-1)</code>, where <code>numDim</code>
- * is the dimension of the coordinate system the coordinate point belongs in.
+ * A position defined by a list of numbers. The ordinate values are indexed from <code>0</code> to
+ * <code>(numDim-1)</code>, where <code>numDim</code> is the dimension of the coordinate system the coordinate
+ * point belongs in.
  * 
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
@@ -109,8 +109,7 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Construct a coordinate with the specified ordinates. The <code>ord</code>
-   * array will be copied.
+   * Construct a coordinate with the specified ordinates. The <code>ord</code> array will be copied.
    */
   public CoordinatePoint( final double[] ord )
   {
@@ -123,7 +122,9 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   public CoordinatePoint( final double x, final double y )
   {
     ord = new double[]
-    { x, y };
+    {
+        x,
+        y };
   }
 
   /**
@@ -132,7 +133,10 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   public CoordinatePoint( final double x, final double y, final double z )
   {
     ord = new double[]
-    { x, y, z };
+    {
+        x,
+        y,
+        z };
   }
 
   /**
@@ -144,8 +148,8 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns the ordinate value along the specified dimension. This is
-   * equivalent to <code>{@link #ord}[dimension]</code>.
+   * Returns the ordinate value along the specified dimension. This is equivalent to
+   * <code>{@link #ord}[dimension]</code>.
    */
   public final double getOrdinate( final int dimension )
   {
@@ -153,8 +157,8 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * The number of ordinates of a <code>CoordinatePoint</code>. This is
-   * equivalent to <code>{@link #ord}.length</code>.
+   * The number of ordinates of a <code>CoordinatePoint</code>. This is equivalent to
+   * <code>{@link #ord}.length</code>.
    */
   public final int getDimension()
   {
@@ -162,16 +166,14 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Convenience method for checking the point's dimension validity. This method
-   * is usually call for argument checking.
+   * Convenience method for checking the point's dimension validity. This method is usually call for argument checking.
    * 
    * @param expectedDimension
    *          Expected dimension for this point.
    * @throws MismatchedDimensionException
    *           if this point doesn't have the expected dimension.
    */
-  final void ensureDimensionMatch( final int expectedDimension )
-      throws MismatchedDimensionException
+  final void ensureDimensionMatch( final int expectedDimension ) throws MismatchedDimensionException
   {
     final int dimension = getDimension();
     if( dimension != expectedDimension )
@@ -181,9 +183,8 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns a {@link Point2D}with the same coordinate as this
-   * <code>CoordinatePoint</code>. This is a convenience method for
-   * interoperability with Java2D.
+   * Returns a {@link Point2D}with the same coordinate as this <code>CoordinatePoint</code>. This is a convenience
+   * method for interoperability with Java2D.
    * 
    * @throws IllegalStateException
    *           if this coordinate point is not two-dimensional.
@@ -194,13 +195,13 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
     {
       return new Point2D.Double( ord[0], ord[1] );
     }
-    throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_TWO_DIMENSIONAL_$1,
-        new Integer( ord.length ) ) );
+    throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_TWO_DIMENSIONAL_$1, new Integer(
+        ord.length ) ) );
   }
 
   /**
-   * Returns a hash value for this coordinate. This value need not remain
-   * consistent between different implementations of the same class.
+   * Returns a hash value for this coordinate. This value need not remain consistent between different implementations
+   * of the same class.
    */
   public int hashCode()
   {
@@ -243,8 +244,8 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns a string representation of this coordinate. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes.
+   * Returns a string representation of this coordinate. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes.
    */
   public String toString()
   {
@@ -252,8 +253,8 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   }
 
   /**
-   * Returns a string representation of an object. The returned string is
-   * implementation dependent. It is usually provided for debugging purposes.
+   * Returns a string representation of an object. The returned string is implementation dependent. It is usually
+   * provided for debugging purposes.
    */
   static String toString( final Object owner, final double[] ord )
   {

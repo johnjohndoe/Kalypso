@@ -36,11 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.views;
 
-import org.kalypsodeegree.graphics.sld.Rule;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -53,6 +52,7 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.RuleTreeObject;
 import org.kalypso.ogc.gml.outline.ThemeStyleTreeObject;
 import org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder;
+import org.kalypsodeegree.graphics.sld.Rule;
 
 /**
  * 
@@ -89,7 +89,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
    */
   public void createPartControl( Composite parent )
   {
-    guiBuilder = new SLDEditorGuiBuilder( parent);
+    guiBuilder = new SLDEditorGuiBuilder( parent );
   }
 
   public void initStyleEditor( KalypsoUserStyle userStyle, IKalypsoFeatureTheme theme, int index )
@@ -99,7 +99,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
 
   public void initStyleEditor( KalypsoUserStyle userStyle, IKalypsoFeatureTheme theme )
   {
-  	guiBuilder.buildSWTGui( userStyle, theme);
+    guiBuilder.buildSWTGui( userStyle, theme );
   }
 
   /**
@@ -124,7 +124,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       if( !( theme instanceof IKalypsoFeatureTheme ) )
         initStyleEditor( null, null );
       else
-      {        
+      {
         KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
         initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme)theme );
       }
