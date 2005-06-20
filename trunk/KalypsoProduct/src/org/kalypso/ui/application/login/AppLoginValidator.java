@@ -44,8 +44,8 @@ import org.kalypso.users.User;
 import org.kalypso.users.UserServiceConstants;
 
 /**
- * AppLoginValidator: last resort login without need for user service. Checks
- * password again hardcoded one. Username is not changeable.
+ * AppLoginValidator: last resort login without need for user service. Checks password again hardcoded one. Username is
+ * not changeable.
  * 
  * @author schlienger
  */
@@ -54,28 +54,28 @@ public class AppLoginValidator implements ILoginValidator
   public User validate( final String username, final String password )
   {
     if( "hochwasser".equals( password ) )
-      return new User( "Administrator",
-          new String[] { UserServiceConstants.RIGHT_ADMIN } );
+      return new User( "Administrator", new String[]
+      { UserServiceConstants.RIGHT_ADMIN } );
 
     return null;
   }
 
-  public boolean userNameChangeable( )
+  public boolean userNameChangeable()
   {
     return false;
   }
 
-  public boolean passwordEnabled( )
+  public boolean passwordEnabled()
   {
     return true;
   }
 
-  public String getDefaultUserName( )
+  public String getDefaultUserName()
   {
     return "Administrator";
   }
 
-  public String getMessage( )
+  public String getMessage()
   {
     return "Es konnten keine Benutzerrechte vom Server ermittelt werden.\n"
         + "Geben Sie das Administrator-Passwort ein, um im Administrator-Modus zu starten.";

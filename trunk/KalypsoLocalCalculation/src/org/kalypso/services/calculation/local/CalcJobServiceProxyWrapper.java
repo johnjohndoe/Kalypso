@@ -50,8 +50,7 @@ import org.kalypso.services.proxy.CalcJobServerBean;
 import org.kalypso.services.proxy.ICalculationService;
 
 /**
- * Wraps an original
- * {@link org.kalypso.services.calculation.service.ICalculationService}as stub.
+ * Wraps an original {@link org.kalypso.services.calculation.service.ICalculationService}as stub.
  * 
  * @author belger
  */
@@ -59,8 +58,7 @@ public class CalcJobServiceProxyWrapper implements ICalculationService
 {
   private final org.kalypso.services.calculation.service.ICalculationService m_service;
 
-  public CalcJobServiceProxyWrapper(
-      final org.kalypso.services.calculation.service.ICalculationService service )
+  public CalcJobServiceProxyWrapper( final org.kalypso.services.calculation.service.ICalculationService service )
   {
     m_service = service;
   }
@@ -105,8 +103,7 @@ public class CalcJobServiceProxyWrapper implements ICalculationService
     return wrapCalcJobServerBeans( m_service.getDeliveringResults( arg0 ) );
   }
 
-  private CalcJobServerBean[] wrapCalcJobServerBeans(
-      org.kalypso.services.calculation.service.CalcJobServerBean[] beans )
+  private CalcJobServerBean[] wrapCalcJobServerBeans( org.kalypso.services.calculation.service.CalcJobServerBean[] beans )
   {
     final CalcJobServerBean[] newBeans = new CalcJobServerBean[beans.length];
     for( int i = 0; i < beans.length; i++ )
@@ -127,8 +124,7 @@ public class CalcJobServiceProxyWrapper implements ICalculationService
     return wrapCalcJobInfoBean( m_service.getJob( arg0 ) );
   }
 
-  private CalcJobInfoBean wrapCalcJobInfoBean(
-      org.kalypso.services.calculation.service.CalcJobInfoBean bean )
+  private CalcJobInfoBean wrapCalcJobInfoBean( org.kalypso.services.calculation.service.CalcJobInfoBean bean )
   {
     final CalcJobInfoBean newbean = new CalcJobInfoBean();
     newbean.setId( bean.getId() );
@@ -159,8 +155,7 @@ public class CalcJobServiceProxyWrapper implements ICalculationService
     return wrapCalcJobInfoBeans( m_service.getJobs() );
   }
 
-  private CalcJobInfoBean[] wrapCalcJobInfoBeans(
-      org.kalypso.services.calculation.service.CalcJobInfoBean[] beans )
+  private CalcJobInfoBean[] wrapCalcJobInfoBeans( org.kalypso.services.calculation.service.CalcJobInfoBean[] beans )
   {
     final CalcJobInfoBean[] newbeans = new CalcJobInfoBean[beans.length];
     for( int i = 0; i < beans.length; i++ )
@@ -202,31 +197,32 @@ public class CalcJobServiceProxyWrapper implements ICalculationService
   }
 
   /**
-   * @see org.kalypso.services.proxy.ICalculationService#startJob(java.lang.String,
-   *      java.lang.String, javax.activation.DataHandler,
-   *      org.kalypso.services.proxy.CalcJobClientBean[],
+   * @see org.kalypso.services.proxy.ICalculationService#startJob(java.lang.String, java.lang.String,
+   *      javax.activation.DataHandler, org.kalypso.services.proxy.CalcJobClientBean[],
    *      org.kalypso.services.proxy.CalcJobClientBean[])
    */
-  public CalcJobInfoBean startJob( String arg0, String arg1, DataHandler arg2,
-      CalcJobClientBean[] arg3, CalcJobClientBean[] arg4 ) throws RemoteException
+  public CalcJobInfoBean startJob( String arg0, String arg1, DataHandler arg2, CalcJobClientBean[] arg3,
+      CalcJobClientBean[] arg4 ) throws RemoteException
   {
-    return wrapCalcJobInfoBean( m_service.startJob( arg0, arg1, arg2, wrapCalcJobClientBeans( arg3 ), wrapCalcJobClientBeans( arg4 ) ) );
+    return wrapCalcJobInfoBean( m_service.startJob( arg0, arg1, arg2, wrapCalcJobClientBeans( arg3 ),
+        wrapCalcJobClientBeans( arg4 ) ) );
   }
 
-  private org.kalypso.services.calculation.service.CalcJobClientBean[] wrapCalcJobClientBeans( final CalcJobClientBean[] beans )
+  private org.kalypso.services.calculation.service.CalcJobClientBean[] wrapCalcJobClientBeans(
+      final CalcJobClientBean[] beans )
   {
     final org.kalypso.services.calculation.service.CalcJobClientBean[] newbeans = new org.kalypso.services.calculation.service.CalcJobClientBean[beans.length];
     for( int i = 0; i < beans.length; i++ )
     {
       final CalcJobClientBean bean = beans[i];
-    
+
       final org.kalypso.services.calculation.service.CalcJobClientBean newbean = new org.kalypso.services.calculation.service.CalcJobClientBean();
       newbean.setId( bean.getId() );
       newbean.setPath( bean.getPath() );
-      
+
       newbeans[i] = newbean;
     }
-    
+
     return newbeans;
   }
 

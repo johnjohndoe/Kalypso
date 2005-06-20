@@ -82,8 +82,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     super.initialize( configurer );
 
-    final ActionSetRegistry reg = WorkbenchPlugin.getDefault()
-        .getActionSetRegistry();
+    final ActionSetRegistry reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
     final IActionSetDescriptor[] array = reg.getActionSets();
     final int count = array.length;
     for( int nX = 0; nX < count; nX++ )
@@ -97,7 +96,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   /**
    * @see org.eclipse.ui.application.WorkbenchAdvisor#getInitialWindowPerspectiveId()
    */
-  public String getInitialWindowPerspectiveId( )
+  public String getInitialWindowPerspectiveId()
   {
     return IKalypsoProductConstants.PROGNOSE_PERSPECTIVE;
   }
@@ -106,8 +105,8 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#fillActionBars(org.eclipse.ui.IWorkbenchWindow,
    *      org.eclipse.ui.application.IActionBarConfigurer, int)
    */
-  public void fillActionBars( final IWorkbenchWindow window,
-      final IActionBarConfigurer actionConfigurer, final int flags )
+  public void fillActionBars( final IWorkbenchWindow window, final IActionBarConfigurer actionConfigurer,
+      final int flags )
   {
     super.fillActionBars( window, actionConfigurer, flags );
 
@@ -135,13 +134,11 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       //      fileMenu.remove( "import" );
       //      fileMenu.remove( "export" );
 
-      final IMenuManager editMenu = (IMenuManager) menuManager
-          .find( IWorkbenchActionConstants.M_EDIT );
+      final IMenuManager editMenu = (IMenuManager)menuManager.find( IWorkbenchActionConstants.M_EDIT );
       editMenu.remove( "bookmark" );
       editMenu.remove( "addTask" );
 
-      final IMenuManager helpMenu = menuManager
-          .findMenuUsingPath( IWorkbenchActionConstants.M_HELP );
+      final IMenuManager helpMenu = menuManager.findMenuUsingPath( IWorkbenchActionConstants.M_HELP );
       helpMenu.remove( "tipsAndTricks" );
     }
   }
@@ -153,8 +150,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     super.preWindowOpen( windowConfigurer );
 
-    if( !m_user.hasRight( UserServiceConstants.RIGHT_EXPERT )
-        && !m_user.hasRight( UserServiceConstants.RIGHT_ADMIN ) )
+    if( !m_user.hasRight( UserServiceConstants.RIGHT_EXPERT ) && !m_user.hasRight( UserServiceConstants.RIGHT_ADMIN ) )
     {
       windowConfigurer.setShowCoolBar( false );
       windowConfigurer.setShowFastViewBars( false );
@@ -168,7 +164,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   /**
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#postStartup()
    */
-  public void postStartup( )
+  public void postStartup()
   {
     super.postStartup();
 
@@ -191,8 +187,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final IWorkbench workbench = PlatformUI.getWorkbench();
     try
     {
-      workbench.showPerspective( IKalypsoProductConstants.PROGNOSE_PERSPECTIVE,
-          workbench.getActiveWorkbenchWindow() );
+      workbench.showPerspective( IKalypsoProductConstants.PROGNOSE_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
     }
     catch( final WorkbenchException e )
     {

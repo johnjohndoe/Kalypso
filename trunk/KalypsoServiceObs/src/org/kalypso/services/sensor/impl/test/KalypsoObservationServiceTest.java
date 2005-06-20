@@ -65,18 +65,17 @@ public class KalypsoObservationServiceTest extends TestCase
   /**
    * @see junit.framework.TestCase#setUp()
    */
-  protected void setUp( ) throws Exception
+  protected void setUp() throws Exception
   {
     super.setUp();
 
     // because we are not in the server context
-    System.setProperty( ServiceConfig.CONF_DIR, getClass().getResource( "." )
-        .getFile() );
+    System.setProperty( ServiceConfig.CONF_DIR, getClass().getResource( "." ).getFile() );
 
     m_srv = new KalypsoObservationService();
   }
 
-  public void testGetServiceVersion( )
+  public void testGetServiceVersion()
   {
     final int ver = m_srv.getServiceVersion();
 
@@ -85,7 +84,7 @@ public class KalypsoObservationServiceTest extends TestCase
     assertTrue( ver >= 0 );
   }
 
-  public void testGetChildren( ) throws RemoteException
+  public void testGetChildren() throws RemoteException
   {
     System.out.println( "Start Tree Listing:" );
 
@@ -97,8 +96,7 @@ public class KalypsoObservationServiceTest extends TestCase
     System.out.println( ":Stop Tree Listing" );
   }
 
-  private void outputBean( final ItemBean bean, final String space )
-      throws RemoteException
+  private void outputBean( final ItemBean bean, final String space ) throws RemoteException
   {
     assertNotNull( bean );
 
@@ -113,7 +111,7 @@ public class KalypsoObservationServiceTest extends TestCase
     }
   }
 
-  public void testReadData( ) throws RemoteException, MalformedURLException
+  public void testReadData() throws RemoteException, MalformedURLException
   {
     System.out.println( "Start Test Read Data:" );
 
@@ -125,8 +123,7 @@ public class KalypsoObservationServiceTest extends TestCase
     System.out.println( ":Stop Test Read Data" );
   }
 
-  private void readData( final ItemBean bean, final String space )
-      throws RemoteException, MalformedURLException
+  private void readData( final ItemBean bean, final String space ) throws RemoteException, MalformedURLException
   {
     final ObservationBean ob = m_srv.adaptItem( bean );
 
@@ -135,8 +132,7 @@ public class KalypsoObservationServiceTest extends TestCase
       final Map map = ob.getMetadataList();
 
       System.out.println( space + "Bean is observation: " + ob.getId() );
-      System.out.println( space + "Metadata for " + ob.getName() + " are:"
-          + map );
+      System.out.println( space + "Metadata for " + ob.getName() + " are:" + map );
 
       //      final OCSDataBean oddb = m_srv.readData( ob, drb );
       //      final URL url = new URL( oddb.getLocation() );
@@ -152,8 +148,7 @@ public class KalypsoObservationServiceTest extends TestCase
     }
     else
     {
-      System.out.println( space + "Bean not adaptable: " + bean.getName()
-          + " ID=" + bean.getId() );
+      System.out.println( space + "Bean not adaptable: " + bean.getName() + " ID=" + bean.getId() );
     }
 
     if( m_srv.hasChildren( bean ) )
@@ -165,14 +160,13 @@ public class KalypsoObservationServiceTest extends TestCase
     }
   }
 
-  public void testFindItem( ) throws RemoteException
+  public void testFindItem() throws RemoteException
   {
     final ItemBean b1 = m_srv.findItem( "Spree://2004/PA_GROEDI.zml" );
     assertNotNull( b1 );
     assertFalse( m_srv.hasChildren( b1 ) );
 
-    final ItemBean b2 = m_srv
-        .findItem( "psicompact://HN.1_ES.02PG...501010.P1_MW" );
+    final ItemBean b2 = m_srv.findItem( "psicompact://HN.1_ES.02PG...501010.P1_MW" );
     assertNotNull( b2 );
     assertFalse( m_srv.hasChildren( b2 ) );
 

@@ -122,8 +122,7 @@ public class PrognoseView extends ViewPart
     if( m_panel == null )
     {
       final Label label = toolkit.createLabel( form.getBody(),
-          "Es konnte kein Kontakt zum Server hergestellt werden.\n"
-              + "Hochwasser-Vorhersage nicht möglich.\n" );
+          "Es konnte kein Kontakt zum Server hergestellt werden.\n" + "Hochwasser-Vorhersage nicht möglich.\n" );
 
       label.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
@@ -131,8 +130,8 @@ public class PrognoseView extends ViewPart
       labelData.horizontalAlignment = GridData.CENTER;
       label.setLayoutData( labelData );
 
-      final Font headingFont = m_fontUtils.createChangedFontData( label
-          .getFont().getFontData(), 8, SWT.NONE, label.getDisplay() );
+      final Font headingFont = m_fontUtils.createChangedFontData( label.getFont().getFontData(), 8, SWT.NONE, label
+          .getDisplay() );
       label.setFont( headingFont );
     }
     else
@@ -141,8 +140,7 @@ public class PrognoseView extends ViewPart
       panelControl.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
       panelControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-      m_button = toolkit.createButton( form.getBody(),
-          "Hochwasser-Vorhersage starten", SWT.PUSH );
+      m_button = toolkit.createButton( form.getBody(), "Hochwasser-Vorhersage starten", SWT.PUSH );
 
       final PrognosePanel panel = m_panel;
       m_button.addSelectionListener( new SelectionAdapter()
@@ -160,7 +158,7 @@ public class PrognoseView extends ViewPart
    */
   public void setFocus()
   {
-    // mir doch egal
+  // mir doch egal
   }
 
   protected void startModel( final String projectName )
@@ -168,29 +166,24 @@ public class PrognoseView extends ViewPart
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
     // Projekt updaten
-    final File serverRoot = KalypsoGisPlugin.getDefault()
-        .getServerModelRoot();
+    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
 
     if( serverRoot == null )
-      throw new IllegalStateException(
-          "Modellwurzel exisitiert nicht! Prognose kann nicht gestartet werden." );
+      throw new IllegalStateException( "Modellwurzel exisitiert nicht! Prognose kann nicht gestartet werden." );
 
     final File serverProject = new File( serverRoot, projectName );
     if( !serverProject.exists() )
-      throw new IllegalStateException(
-          "Servermodell existiert nicht! Prognose kann nicht gestartet werden." );
+      throw new IllegalStateException( "Servermodell existiert nicht! Prognose kann nicht gestartet werden." );
 
     final IProject project = root.getProject( projectName );
 
     final IRunnableWithProgress op = new IRunnableWithProgress()
     {
-      public void run( IProgressMonitor monitor )
-          throws InvocationTargetException
+      public void run( IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
         {
-          final ModelSynchronizer synchronizer = new ModelSynchronizer(
-              project, serverProject );
+          final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
           synchronizer.updateLocal( monitor );
         }
         catch( final CoreException ce )
@@ -211,9 +204,8 @@ public class PrognoseView extends ViewPart
       e.printStackTrace();
 
       final CoreException ce = (CoreException)e.getTargetException();
-      ErrorDialog.openError( workbench.getDisplay().getActiveShell(),
-          "Vorhersage starten", "Modell konnte nicht aktualisiert werden", ce
-              .getStatus() );
+      ErrorDialog.openError( workbench.getDisplay().getActiveShell(), "Vorhersage starten",
+          "Modell konnte nicht aktualisiert werden", ce.getStatus() );
     }
     catch( final InterruptedException e )
     {
@@ -222,8 +214,7 @@ public class PrognoseView extends ViewPart
 
     final CalcWizard wizard = new CalcWizard( project );
 
-    final WizardDialog dialog = new CalcWizardDialog( getSite().getShell(),
-        wizard );
+    final WizardDialog dialog = new CalcWizardDialog( getSite().getShell(), wizard );
     dialog.open();
   }
 }

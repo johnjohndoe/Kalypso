@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.view;
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -52,7 +52,7 @@ public class ModelLabelProvider extends LabelProvider
   public String getText( final Object element )
   {
     final ModellistType.ModelType model = (ModelType)element;
-    
+
     return model.getLabel();
   }
 }

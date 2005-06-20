@@ -46,8 +46,7 @@ import org.kalypso.services.proxy.IUserService;
 import org.kalypso.users.User;
 
 /**
- * AuthLoginValidator: allows full-authentication (user name is changeable and
- * password must be entered by user).
+ * AuthLoginValidator: allows full-authentication (user name is changeable and password must be entered by user).
  * 
  * @author schlienger
  */
@@ -60,8 +59,7 @@ public class AuthLoginValidator implements ILoginValidator
     m_srv = srv;
   }
 
-  public User validate( final String username, final String password )
-      throws Exception
+  public User validate( final String username, final String password ) throws Exception
   {
     try
     {
@@ -78,22 +76,22 @@ public class AuthLoginValidator implements ILoginValidator
     return null;
   }
 
-  public boolean userNameChangeable( )
+  public boolean userNameChangeable()
   {
     return true;
   }
 
-  public boolean passwordEnabled( )
+  public boolean passwordEnabled()
   {
     return true;
   }
 
-  public String getDefaultUserName( )
+  public String getDefaultUserName()
   {
     return System.getProperty( "user.name" );
   }
 
-  public String getMessage( )
+  public String getMessage()
   {
     return "Melden Sie sich bitte an.";
   }
