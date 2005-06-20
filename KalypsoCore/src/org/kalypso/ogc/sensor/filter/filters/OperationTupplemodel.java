@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.util.Date;
@@ -62,7 +62,7 @@ public class OperationTupplemodel extends AbstractTuppleModel
   public OperationTupplemodel( double operand, int operation, ITuppleModel baseModel )
   {
     super( baseModel.getAxisList() );
-    
+
     m_operand = operand;
     m_operation = operation;
     m_baseModel = baseModel;
@@ -87,7 +87,7 @@ public class OperationTupplemodel extends AbstractTuppleModel
   {
     // Andreas: ObservationUtilities already has this function so I removed FilterHelper
     IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
-    if(index>=m_baseModel.getCount())
+    if( index >= m_baseModel.getCount() )
       return null;
     Object object = m_baseModel.getElement( index, a );
     if( object == null || object instanceof Date )
@@ -113,27 +113,24 @@ public class OperationTupplemodel extends AbstractTuppleModel
 
   /*
    * 
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   public void setElement( int index, Object element, IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName()
-        + " unterstuetzt setElement() nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt setElement() nicht." );
     // TODO support it
   }
 
   /*
    * 
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     if( element instanceof Date )
       return m_baseModel.indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName()
-        + " unterstuetzt indexOf fuer die Axe " + axis.getName() + " nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Axe "
+        + axis.getName() + " nicht." );
     // TODO support it
   }
 

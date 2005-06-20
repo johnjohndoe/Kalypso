@@ -27,7 +27,7 @@ public class WQTableSet implements IWQConverter
   {
     m_fromType = fromType;
     m_toType = toType;
-    
+
     for( int i = 0; i < tables.length; i++ )
       m_tables.put( tables[i].getValidity(), tables[i] );
 
@@ -36,8 +36,7 @@ public class WQTableSet implements IWQConverter
 
   /**
    * @param date
-   * @return a WQ-Table that is valid for the given date. This is the table such
-   *         as: Validity( Table ) &lt;= date
+   * @return a WQ-Table that is valid for the given date. This is the table such as: Validity( Table ) &lt;= date
    */
   public WQTable getFor( final Date date )
   {
@@ -48,33 +47,33 @@ public class WQTableSet implements IWQConverter
 
     final Date key;
     if( headSet.isEmpty() )
-      key = (Date) m_dates.first();
+      key = (Date)m_dates.first();
     else
-      key = (Date) headSet.last();
+      key = (Date)headSet.last();
 
-    return (WQTable) m_tables.get( key );
+    return (WQTable)m_tables.get( key );
   }
 
   /**
    * @return Returns the fromType.
    */
-  public String getFromType( )
+  public String getFromType()
   {
     return m_fromType;
   }
-  
+
   /**
    * @return Returns the toType.
    */
-  public String getToType( )
+  public String getToType()
   {
     return m_toType;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return m_tables.toString();
   }
@@ -82,14 +81,13 @@ public class WQTableSet implements IWQConverter
   /**
    * @return list of tables backed by this set
    */
-  public WQTable[] getTables( )
+  public WQTable[] getTables()
   {
-    return (WQTable[]) m_tables.values().toArray( new WQTable[m_tables.size()] );
+    return (WQTable[])m_tables.values().toArray( new WQTable[m_tables.size()] );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date,
-   *      double)
+   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
    */
   public double computeW( final Date date, final double Q ) throws WQException
   {
@@ -97,8 +95,7 @@ public class WQTableSet implements IWQConverter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date,
-   *      double)
+   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
   public double computeQ( final Date date, final double W ) throws WQException
   {

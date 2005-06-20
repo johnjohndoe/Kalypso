@@ -28,8 +28,7 @@ public class CsvTargetHandler implements ITargetHandler
 
   private final IUrlResolver m_resolver;
 
-  public CsvTargetHandler( final IUrlResolver resolver, final URL context,
-      final CsvTargetType target )
+  public CsvTargetHandler( final IUrlResolver resolver, final URL context, final CsvTargetType target )
   {
     m_resolver = resolver;
     m_context = context;
@@ -58,9 +57,9 @@ public class CsvTargetHandler implements ITargetHandler
         final CsvTargetType.ColumnType column = (ColumnType)colIt.next();
         final String property = column.getValue();
         final String def = column.getDefault();
-        final String label = column.getLabel() == null ?  property : column.getLabel();
+        final String label = column.getLabel() == null ? property : column.getLabel();
         properties.put( property, def );
-        
+
         if( writeHeader )
         {
           writer.print( label );
@@ -68,10 +67,10 @@ public class CsvTargetHandler implements ITargetHandler
             writer.print( delemiter );
         }
       }
-      
+
       if( writeHeader )
         writer.println();
-      
+
       final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
       if( featureFromPath instanceof FeatureList )
       {
@@ -79,8 +78,7 @@ public class CsvTargetHandler implements ITargetHandler
         ( (FeatureList)featureFromPath ).accept( visitor );
       }
       else
-        throw new GmlConvertException( "FeaturePath zeigt nicht auf eine Feature-Liste: "
-            + featurePath );
+        throw new GmlConvertException( "FeaturePath zeigt nicht auf eine Feature-Liste: " + featurePath );
     }
     catch( final GmlConvertException gce )
     {

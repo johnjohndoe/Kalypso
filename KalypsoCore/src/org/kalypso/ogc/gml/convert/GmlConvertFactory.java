@@ -48,66 +48,72 @@ public class GmlConvertFactory
   }
 
   /**
-   * Genau wie {@link #convertXml(URL, IUrlResolver, URL, Map)}. Die URL wird selbst als Kontext gesetzt. 
+   * Genau wie {@link #convertXml(URL, IUrlResolver, URL, Map)}. Die URL wird selbst als Kontext gesetzt.
+   * 
    * @throws IOException
    * @throws GmlConvertException
    * @throws GmlConvertException
    * @throws JAXBException
    */
-  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final Map externData ) throws IOException, JAXBException, GmlConvertException
+  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final Map externData )
+      throws IOException, JAXBException, GmlConvertException
   {
     return convertXml( url, resolver, url, externData );
   }
-  
+
   /**
-   * Genau wie {@link #convertXml(InputSource, IUrlResolver, URL, Map)}. Kümmert sich aber um die URL und Stream Details. 
+   * Genau wie {@link #convertXml(InputSource, IUrlResolver, URL, Map)}. Kümmert sich aber um die URL und Stream
+   * Details.
+   * 
    * @throws IOException
    * @throws GmlConvertException
    * @throws GmlConvertException
    * @throws JAXBException
    */
-  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final URL context, final Map externData ) throws IOException, JAXBException, GmlConvertException
+  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final URL context, final Map externData )
+      throws IOException, JAXBException, GmlConvertException
   {
     final URLConnection connection = url.openConnection();
     final String contentEncoding = connection.getContentEncoding();
     final InputStream inputStream = connection.getInputStream();
-       
+
     final InputSource source = new InputSource( inputStream );
     if( contentEncoding != null )
       source.setEncoding( contentEncoding );
-    
+
     return convertXml( source, resolver, context, externData );
   }
-  
+
   /**
    * Für die in einem XML (gmc) gespeicherte Konvertierung durch.
    * 
-   * @param resolver Wird für im XMl Referenzierte Dokumente gebraucht.
-   * @param context Gegen diesen Kontext werdenim XML definierte Dokumente aufgelöst.
+   * @param resolver
+   *          Wird für im XMl Referenzierte Dokumente gebraucht.
+   * @param context
+   *          Gegen diesen Kontext werdenim XML definierte Dokumente aufgelöst.
    * @throws JAXBException
    * @throws GmlConvertException
    */
-  public static IStatus convertXml( final InputSource inputSource, final IUrlResolver resolver, final URL context, final Map externData ) throws JAXBException, GmlConvertException
+  public static IStatus convertXml( final InputSource inputSource, final IUrlResolver resolver, final URL context,
+      final Map externData ) throws JAXBException, GmlConvertException
   {
     final ObjectFactory jc = new ObjectFactory();
     final Unmarshaller unmarshaller = jc.createUnmarshaller();
     final GmlconvertType convert = (GmlconvertType)unmarshaller.unmarshal( inputSource );
     final GMLWorkspace gml = GmlConvertFactory.loadSource( resolver, context, convert.getSource(), externData );
     GmlConvertFactory.writeIntoTarget( resolver, context, gml, convert.getTarget() );
-    
+
     final String message = "Ergebnis wurde nach " + convert.getTarget().getHref() + " geschrieben.";
     return new Status( IStatus.OK, IKalypsoCoreConstants.PLUGIN_ID, 0, message, null );
   }
 
-  
   /**
-   * Lädt das GML aus einer Source. Sorgt intern dafür, dass die richtigen
-   * Source-Handler benutzt werden.
+   * Lädt das GML aus einer Source. Sorgt intern dafür, dass die richtigen Source-Handler benutzt werden.
    * 
    * @throws GmlConvertException
    */
-  public static final GMLWorkspace loadSource( final IUrlResolver resolver, final URL context, final SourceType source, final Map externData )
-      throws GmlConvertException
+  public static final GMLWorkspace loadSource( final IUrlResolver resolver, final URL context, final SourceType source,
+      final Map externData ) throws GmlConvertException
   {
     // switch over source-type
     final ISourceHandler handler;
@@ -129,11 +135,12 @@ public class GmlConvertFactory
 
   /**
    * Schreibt das GML ins angegebene Target.
+   * 
    * @throws GmlConvertException
    *  
    */
-  public static void writeIntoTarget( final IUrlResolver resolver, final URL context,
-      final GMLWorkspace gml, final TargetType target ) throws GmlConvertException
+  public static void writeIntoTarget( final IUrlResolver resolver, final URL context, final GMLWorkspace gml,
+      final TargetType target ) throws GmlConvertException
   {
     final ITargetHandler handler;
     if( target instanceof CsvTargetType )

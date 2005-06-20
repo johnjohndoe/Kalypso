@@ -99,15 +99,14 @@ import org.kalypso.zml.AxisType.ValueLinkType;
 import org.xml.sax.InputSource;
 
 /**
- * Factory for ZML-Files. ZML is a flexible format that covers following
- * possibilities:
+ * Factory for ZML-Files. ZML is a flexible format that covers following possibilities:
  * <ul>
  * <li>inlined: values are stored as array of items in each axis definition
  * <li>linked: values are stored in an external CSV-like file
  * <li>block-inlined: values are stored CSV-like, but in the zml file itself
  * </ul>
- * The block-inlined Format is used with valueLink elements and if the
- * Href-Attribute is not specified, is empty, or contains "#data".
+ * The block-inlined Format is used with valueLink elements and if the Href-Attribute is not specified, is empty, or
+ * contains "#data".
  * 
  * @author schlienger
  */
@@ -123,7 +122,7 @@ public class ZmlFactory
 
   private ZmlFactory()
   {
-    // not to be instanciated
+  // not to be instanciated
   }
 
   private static Properties getProperties()
@@ -136,8 +135,7 @@ public class ZmlFactory
       {
         m_parserProps = new Properties();
 
-        ins = ZmlFactory.class
-            .getResourceAsStream( "resource/types2parser.properties" );
+        ins = ZmlFactory.class.getResourceAsStream( "resource/types2parser.properties" );
 
         m_parserProps.load( ins );
 
@@ -164,8 +162,7 @@ public class ZmlFactory
   public static synchronized ParserFactory getParserFactory()
   {
     if( m_parserFactory == null )
-      m_parserFactory = new ParserFactory( getProperties(), ZmlFactory.class
-          .getClassLoader() );
+      m_parserFactory = new ParserFactory( getProperties(), ZmlFactory.class.getClassLoader() );
 
     return m_parserFactory;
   }
@@ -173,8 +170,7 @@ public class ZmlFactory
   /**
    * Supported types are listed in the types2parser.properties file.
    * 
-   * TODO: noch das default format (_format) hinzufügen und eventuell die xs:
-   * Zeugs wegmachen Siehe properties datei
+   * TODO: noch das default format (_format) hinzufügen und eventuell die xs: Zeugs wegmachen Siehe properties datei
    * 
    * @param className
    * @return the XSD-Type for the given Java-Class
@@ -189,15 +185,17 @@ public class ZmlFactory
    * 
    * @see ZmlFactory#parseXML(InputSource, String, URL)
    * 
-   * @param url the url specification of the zml
-   * @param identifier [optional] ID für Repository
+   * @param url
+   *          the url specification of the zml
+   * @param identifier
+   *          [optional] ID für Repository
    * 
    * @return IObservation object
    * 
-   * @throws SensorException in case of parsing or creation problem
+   * @throws SensorException
+   *           in case of parsing or creation problem
    */
-  public static IObservation parseXML( final URL url, final String identifier )
-      throws SensorException
+  public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
   {
     InputStream inputStream = null;
 
@@ -208,9 +206,8 @@ public class ZmlFactory
       if( ZmlURL.isUseAsContext( url ) )
       {
         /*
-         * if there is a fragment called "useascontext" then we are dealing with
-         * a special kind of zml-url: the scheme denotes solely a context, the
-         * observation is strictly built using the query part and the context.
+         * if there is a fragment called "useascontext" then we are dealing with a special kind of zml-url: the scheme
+         * denotes solely a context, the observation is strictly built using the query part and the context.
          */
 
         // create the real context
@@ -224,8 +221,8 @@ public class ZmlFactory
       if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) )
       {
         /*
-         * if this is a local url, we remove the query part because Eclipse
-         * Platform's URLStreamHandler cannot deal with it.
+         * if this is a local url, we remove the query part because Eclipse Platform's URLStreamHandler cannot deal with
+         * it.
          */
 
         // only take the simple part of the url
@@ -250,8 +247,7 @@ public class ZmlFactory
     }
     catch( final IOException e )
     {
-      throw new SensorException( "Error while unmarshalling: "
-          + url.toExternalForm(), e );
+      throw new SensorException( "Error while unmarshalling: " + url.toExternalForm(), e );
     }
     finally
     {
@@ -262,13 +258,15 @@ public class ZmlFactory
   /**
    * Parse the XML and create an IObservation instance.
    * 
-   * @param source contains the zml
-   * @param identifier [optional] the identifier of the resulting observation
-   * @param context [optional] the context of the source in order to resolve
-   *          relative url
+   * @param source
+   *          contains the zml
+   * @param identifier
+   *          [optional] the identifier of the resulting observation
+   * @param context
+   *          [optional] the context of the source in order to resolve relative url
    */
-  public static IObservation parseXML( final InputSource source,
-      final String identifier, final URL context ) throws SensorException
+  public static IObservation parseXML( final InputSource source, final String identifier, final URL context )
+      throws SensorException
   {
     final Observation obs;
 
@@ -299,8 +297,8 @@ public class ZmlFactory
         if( md.getValue() != null )
           value = md.getValue();
         else if( md.getData() != null )
-          value = md.getData().replaceAll( XMLUtilities.CDATA_BEGIN_REGEX, "" )
-              .replaceAll( XMLUtilities.CDATA_END_REGEX, "" );
+          value = md.getData().replaceAll( XMLUtilities.CDATA_BEGIN_REGEX, "" ).replaceAll(
+              XMLUtilities.CDATA_END_REGEX, "" );
         else
           value = "";
 
@@ -318,8 +316,7 @@ public class ZmlFactory
     {
       final AxisType tmpAxis = (AxisType)tmpList.get( i );
 
-      final Properties props = PropertiesHelper.parseFromString( tmpAxis
-          .getDatatype(), '#' );
+      final Properties props = PropertiesHelper.parseFromString( tmpAxis.getDatatype(), '#' );
       final String type = props.getProperty( "TYPE" );
       String format = props.getProperty( "FORMAT" );
 
@@ -343,8 +340,8 @@ public class ZmlFactory
         throw new SensorException( e );
       }
 
-      final IAxis axis = new DefaultAxis( tmpAxis.getName(), tmpAxis.getType(),
-          tmpAxis.getUnit(), parser.getObjectClass(), tmpAxis.isKey() );
+      final IAxis axis = new DefaultAxis( tmpAxis.getName(), tmpAxis.getType(), tmpAxis.getUnit(), parser
+          .getObjectClass(), tmpAxis.isKey() );
 
       valuesMap.put( axis, values );
     }
@@ -357,48 +354,42 @@ public class ZmlFactory
 
     final String href = context != null ? context.toExternalForm() : "";
 
-    final SimpleObservation zmlObs = new SimpleObservation( href, identifier,
-        obs.getName(), obs.isEditable(), target, metadata, model.getAxisList(),
-        model );
+    final SimpleObservation zmlObs = new SimpleObservation( href, identifier, obs.getName(), obs.isEditable(), target,
+        metadata, model.getAxisList(), model );
 
     return decorateObservation( zmlObs, href, context );
   }
 
   /**
-   * Central method for decorating the observation according to its context and
-   * identifier. It internally checks for:
+   * Central method for decorating the observation according to its context and identifier. It internally checks for:
    * <ol>
    * <li>a filter specification (for example: interpolation filter)
    * <li>a proxy specification (for example: from-to)
    * <li>an auto-proxy possibility (for example: WQ-Metadata)
    * </ol>
    */
-  private static IObservation decorateObservation( final IObservation zmlObs,
-      final String href, final URL context ) throws SensorException
+  private static IObservation decorateObservation( final IObservation zmlObs, final String href, final URL context )
+      throws SensorException
   {
     // tricky: maybe make a filtered observation out of this one
-    final IObservation filteredObs = FilterFactory.createFilterFrom( href,
-        zmlObs, context );
+    final IObservation filteredObs = FilterFactory.createFilterFrom( href, zmlObs, context );
 
     // tricky: check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( href, filteredObs );
 
     // tricky: check if the observation is auto-proxyable using its own metadata
     // (for instance WQ)
-    final IObservation autoProxyObs = AutoProxyFactory.getInstance()
-        .proxyObservation( proxyObs );
+    final IObservation autoProxyObs = AutoProxyFactory.getInstance().proxyObservation( proxyObs );
 
     return autoProxyObs;
   }
 
   /**
-   * Helper: may create a proxy observation depending on the information coded
-   * in the url.
+   * Helper: may create a proxy observation depending on the information coded in the url.
    * 
    * @return proxy or original observation
    */
-  private static IObservation createProxyFrom( final String href,
-      final IObservation baseObs )
+  private static IObservation createProxyFrom( final String href, final IObservation baseObs )
   {
     if( href == null || href.length() == 0 )
       return baseObs;
@@ -416,21 +407,22 @@ public class ZmlFactory
   /**
    * Parses the values and create the corresponding objects.
    * 
-   * @param context context into which the original file exists
-   * @param axisType binding object for axis
-   * @param parser configured parser enabled for parsing the values according to
-   *          axis spec
-   * @param data [optional] contains the data-block if observation is
-   *          block-inline
+   * @param context
+   *          context into which the original file exists
+   * @param axisType
+   *          binding object for axis
+   * @param parser
+   *          configured parser enabled for parsing the values according to axis spec
+   * @param data
+   *          [optional] contains the data-block if observation is block-inline
    * @return corresponding values depending on value axis type
    * 
    * @throws ParserException
    * @throws MalformedURLException
    * @throws IOException
    */
-  private static IZmlValues createValues( final URL context,
-      final AxisType axisType, final IParser parser, final String data )
-      throws ParserException, MalformedURLException, IOException
+  private static IZmlValues createValues( final URL context, final AxisType axisType, final IParser parser,
+      final String data ) throws ParserException, MalformedURLException, IOException
   {
     final ValueArrayType va = axisType.getValueArray();
     if( va != null )
@@ -441,15 +433,14 @@ public class ZmlFactory
     if( vl != null )
       return new ZmlLinkValues( vl, parser, context, data );
 
-    throw new IllegalArgumentException( "AxisType is not supported: "
-        + axisType.toString() );
+    throw new IllegalArgumentException( "AxisType is not supported: " + axisType.toString() );
   }
 
   /**
    * Cover method of createXML( IObservation, IVariableArguments, TimeZone )
    */
-  public static ObservationType createXML( final IObservation obs,
-      final IVariableArguments args ) throws FactoryException
+  public static ObservationType createXML( final IObservation obs, final IVariableArguments args )
+      throws FactoryException
   {
     return createXML( obs, args, null );
   }
@@ -461,15 +452,14 @@ public class ZmlFactory
    * 
    * @param obs
    * @param args
-   * @param timezone the timezone into which dates should be converted before
-   *          serialized
+   * @param timezone
+   *          the timezone into which dates should be converted before serialized
    * @return an ObservationType object, ready for marshalling.
    * 
    * @throws FactoryException
    */
-  public static ObservationType createXML( final IObservation obs,
-      final IVariableArguments args, final TimeZone timezone )
-      throws FactoryException
+  public static ObservationType createXML( final IObservation obs, final IVariableArguments args,
+      final TimeZone timezone ) throws FactoryException
   {
     try
     {
@@ -483,8 +473,7 @@ public class ZmlFactory
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List metadataList = metadataListType.getMetadata();
-      for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it
-          .hasNext(); )
+      for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
       {
         final Map.Entry entry = (Entry)it.next();
 
@@ -522,8 +511,7 @@ public class ZmlFactory
         {
           final AxisType axisType = OF.createAxisType();
 
-          final String xsdType = getXSDTypeFor( axes[i].getDataClass()
-              .getName() );
+          final String xsdType = getXSDTypeFor( axes[i].getDataClass().getName() );
 
           axisType.setDatatype( xsdType );
           axisType.setName( axes[i].getName() );
@@ -531,12 +519,10 @@ public class ZmlFactory
           axisType.setType( axes[i].getType() );
           axisType.setKey( axes[i].isKey() );
 
-          final ValueArrayType valueArrayType = OF
-              .createAxisTypeValueArrayType();
+          final ValueArrayType valueArrayType = OF.createAxisTypeValueArrayType();
 
           valueArrayType.setSeparator( ";" );
-          valueArrayType
-              .setValue( buildValueString( values, axes[i], timezone ) );
+          valueArrayType.setValue( buildValueString( values, axes[i], timezone ) );
 
           axisType.setValueArray( valueArrayType );
 
@@ -557,8 +543,8 @@ public class ZmlFactory
    * 
    * @return string that contains the serialized values
    */
-  private static String buildValueString( final ITuppleModel model,
-      final IAxis axis, final TimeZone timezone ) throws SensorException
+  private static String buildValueString( final ITuppleModel model, final IAxis axis, final TimeZone timezone )
+      throws SensorException
   {
     final StringBuffer sb = new StringBuffer();
 
@@ -574,8 +560,7 @@ public class ZmlFactory
     return sb.toString();
   }
 
-  private static void buildStringAxis( ITuppleModel model, IAxis axis,
-      StringBuffer sb ) throws SensorException
+  private static void buildStringAxis( ITuppleModel model, IAxis axis, StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
@@ -585,27 +570,24 @@ public class ZmlFactory
       sb.append( model.getElement( amount, axis ) );
   }
 
-  private static void buildStringDateAxis( final ITuppleModel model,
-      final IAxis axis, final StringBuffer sb, final TimeZone timezone )
-      throws SensorException
+  private static void buildStringDateAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb,
+      final TimeZone timezone ) throws SensorException
   {
     XmlTypes.PDATE.setTimezone( timezone );
 
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
-      sb.append( XmlTypes.PDATE.toString( model.getElement( i, axis ) ) )
-          .append( ";" );
+      sb.append( XmlTypes.PDATE.toString( model.getElement( i, axis ) ) ).append( ";" );
 
     if( amount > 0 )
       sb.append( XmlTypes.PDATE.toString( model.getElement( amount, axis ) ) );
   }
 
   /**
-   * Uses the default toString() method of the elements. TODO: check if this
-   * always works fine for XML-Schema types
+   * Uses the default toString() method of the elements. TODO: check if this always works fine for XML-Schema types
    */
-  private static void buildStringNumberAxis( final ITuppleModel model,
-      final IAxis axis, final StringBuffer sb ) throws SensorException
+  private static void buildStringNumberAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb )
+      throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
@@ -647,8 +629,7 @@ public class ZmlFactory
   /**
    * @return valid parser for the given axis
    */
-  public static IParser createParser( final IAxis axis )
-      throws FactoryException
+  public static IParser createParser( final IAxis axis ) throws FactoryException
   {
     final ParserFactory pf = getParserFactory();
 
@@ -658,11 +639,10 @@ public class ZmlFactory
   /**
    * Helper method for simply writing the observation to a file
    * 
-   * @throws SensorException if an IOException or a FactoryException is thrown
-   *           internally
+   * @throws SensorException
+   *           if an IOException or a FactoryException is thrown internally
    */
-  public static void writeToFile( final IObservation obs, final File file )
-      throws SensorException
+  public static void writeToFile( final IObservation obs, final File file ) throws SensorException
   {
     OutputStream outs = null;
     try

@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
@@ -62,12 +61,12 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class MapModellHelper
 {
   /**
-   * calculates the map scale (denominator) as defined in the OGC SLD 1.0.0
-   * specification
+   * calculates the map scale (denominator) as defined in the OGC SLD 1.0.0 specification
    * 
    * @return scale of the map
    */
-  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, final int mapHeight )
+  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth,
+      final int mapHeight )
   {
     try
     {
@@ -93,10 +92,12 @@ public class MapModellHelper
       final double dy = box.getHeight() / mapHeight;
 
       // create a box on the central map pixel to determine its size in meters
-      final GM_Position min = GeometryFactory.createGM_Position( box.getMin().getX() + dx * ( mapWidth / 2d - 1 ), box.getMin().getY() + dy
-          * ( mapHeight / 2d - 1 ) );
-      final GM_Position max = GeometryFactory.createGM_Position( box.getMin().getX() + dx * ( mapWidth / 2d ), box.getMin().getY() + dy
-          * ( mapHeight / 2d ) );
+      final GM_Position min = GeometryFactory.createGM_Position( box.getMin().getX() + dx * ( mapWidth / 2d - 1 ), box
+          .getMin().getY()
+          + dy * ( mapHeight / 2d - 1 ) );
+      final GM_Position max = GeometryFactory.createGM_Position( box.getMin().getX() + dx * ( mapWidth / 2d ), box
+          .getMin().getY()
+          + dy * ( mapHeight / 2d ) );
       final double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
 
       // default pixel size defined in SLD specs is 28mm
@@ -111,8 +112,8 @@ public class MapModellHelper
     return 0.0;
   }
 
-  public static BufferedImage createImageFromModell( final GeoTransform p, final GM_Envelope bbox, final Rectangle bounds, final int width,
-      final int height, final IMapModell model, final int selectionID )
+  public static BufferedImage createImageFromModell( final GeoTransform p, final GM_Envelope bbox,
+      final Rectangle bounds, final int width, final int height, final IMapModell model, final int selectionID )
   {
     final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
     final Graphics gr = image.getGraphics();
@@ -150,8 +151,7 @@ public class MapModellHelper
   }
 
   /**
-   * calculates the distance in meters between two points in EPSG:4326
-   * coodinates .
+   * calculates the distance in meters between two points in EPSG:4326 coodinates .
    */
   private static double calcDistance( double lon1, double lat1, double lon2, double lat2 )
   {
@@ -159,7 +159,8 @@ public class MapModellHelper
     double rad = Math.PI / 180d;
     double cose = 0;
 
-    cose = Math.sin( rad * lon1 ) * Math.sin( rad * lon2 ) + Math.cos( rad * lon1 ) * Math.cos( rad * lon2 ) * Math.cos( rad * ( lat1 - lat2 ) );
+    cose = Math.sin( rad * lon1 ) * Math.sin( rad * lon2 ) + Math.cos( rad * lon1 ) * Math.cos( rad * lon2 )
+        * Math.cos( rad * ( lat1 - lat2 ) );
     double dist = r * Math.acos( cose );
 
     return dist * 1000;

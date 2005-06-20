@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.progress;
 
 /**
@@ -48,8 +48,7 @@ package org.kalypso.util.progress;
 public class NullProgressMonitor implements IProgressMonitor
 {
   /**
-   * @see org.kalypso.util.progress.IProgressMonitor#beginTask(java.lang.String,
-   *      int)
+   * @see org.kalypso.util.progress.IProgressMonitor#beginTask(java.lang.String, int)
    */
   public void beginTask( String name, int totalWork )
   {

@@ -68,9 +68,8 @@ import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 
 /**
- * Exposes the
- * {@link org.kalypso.services.calculation.service.impl.QueuedCalcJobService}
- * suitable as web-service. (default constructor etc.).
+ * Exposes the {@link org.kalypso.services.calculation.service.impl.QueuedCalcJobService}suitable as web-service.
+ * (default constructor etc.).
  * 
  * <p>
  * Reads configuration from file, support logging and register TypeHandler for GML.
@@ -80,8 +79,7 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
  */
 public class QueuedCalcJobServiceWrapper implements ICalculationService
 {
-  protected static final Logger LOGGER = Logger.getLogger( QueuedCalcJobServiceWrapper.class
-      .getName() );
+  protected static final Logger LOGGER = Logger.getLogger( QueuedCalcJobServiceWrapper.class.getName() );
 
   private final ICalculationService m_service;
 
@@ -91,14 +89,13 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     try
     {
       LOGGER.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/"
-          + ClassUtilities.getOnlyClassName( ICalculationService.class ) + "%g.log", 10000000, 10,
-          true ) );
+          + ClassUtilities.getOnlyClassName( ICalculationService.class ) + "%g.log", 10000000, 10, true ) );
     }
     catch( final IOException e ) // generic Exception caught for simplicity
     {
       throw new RemoteException( "LOGGER des Rechdienst konnte nicht initialisiert werden", e );
     }
-    
+
     try
     {
       // TODO sollten dies nicht die einzelnen calservices selber tun?
@@ -115,8 +112,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
     // die root aus dem Kalypso-Server-Properties lesen
     final File confDir = ServiceConfig.getConfDir();
-    final File myConfDir = new File( confDir, ClassUtilities
-        .getOnlyClassName( ICalculationService.class ) );
+    final File myConfDir = new File( confDir, ClassUtilities.getOnlyClassName( ICalculationService.class ) );
 
     // Konfiguration der Modelltypen
     final File typeFile = new File( myConfDir, "modelltypen.properties" );
@@ -143,8 +139,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     {
       e.printStackTrace();
 
-      LOGGER
-          .warning( "Could not load service configuration file.\nWill proceed with default values" );
+      LOGGER.warning( "Could not load service configuration file.\nWill proceed with default values" );
     }
 
     {
@@ -171,8 +166,8 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       m_service = new QueuedCalcJobService( factory, catalog, maxThreads, schedulingPeriod );
     }
 
-    LOGGER.info( "Service initialisiert mit:\nMAX_THREAD = " + maxThreads
-        + "\nSCHEDULING_PERIOD = " + schedulingPeriod );
+    LOGGER
+        .info( "Service initialisiert mit:\nMAX_THREAD = " + maxThreads + "\nSCHEDULING_PERIOD = " + schedulingPeriod );
     if( classCatalogFile == null )
       LOGGER
           .warning( "Kein Klassen-URL-Katalog angegeben (CLASS_CATALOG). Rechendienst ist vermutlich nicht richtig initialisiert." );
@@ -220,13 +215,12 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
   }
 
   /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#startJob(java.lang.String,
-   *      java.lang.String, javax.activation.DataHandler,
+   * @see org.kalypso.services.calculation.service.ICalculationService#startJob(java.lang.String, java.lang.String,
+   *      javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],org.kalypso.services.calculation.service.CalcJobClientBean[])
    */
-  public final CalcJobInfoBean startJob( final String typeID, final String description,
-      final DataHandler zipHandler, final CalcJobClientBean[] input,
-      final CalcJobClientBean[] output ) throws CalcJobServiceException
+  public final CalcJobInfoBean startJob( final String typeID, final String description, final DataHandler zipHandler,
+      final CalcJobClientBean[] input, final CalcJobClientBean[] output ) throws CalcJobServiceException
   {
     return m_service.startJob( typeID, description, zipHandler, input, output );
   }
@@ -261,8 +255,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#getDeliveringResults(java.lang.String)
    */
-  public CalcJobServerBean[] getDeliveringResults( final String typeID )
-      throws CalcJobServiceException
+  public CalcJobServerBean[] getDeliveringResults( final String typeID ) throws CalcJobServiceException
   {
     return m_service.getDeliveringResults( typeID );
   }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.service.impl;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public class PropertyCalcJobFactory implements ICalcJobFactory
       final String className = m_jobTypes.getProperty( typeID );
       if( className == null )
         throw new CalcJobServiceException( "Unbekannter Job-Typ: " + typeID, null );
-      
+
       return (ICalcJob)Class.forName( className ).newInstance();
     }
     catch( final Exception e )

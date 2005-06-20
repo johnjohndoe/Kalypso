@@ -1,30 +1,25 @@
 /*
- * --------------- Kalypso-Header
- * --------------------------------------------------------------------
+ * --------------- Kalypso-Header --------------------------------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestr. 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -100,8 +95,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private String m_source;
 
-  public KalypsoPictureTheme( String themeName, String linktype, String source,
-      CS_CoordinateSystem cs )
+  public KalypsoPictureTheme( String themeName, String linktype, String source, CS_CoordinateSystem cs )
   {
     super( themeName, linktype.toUpperCase() );
     m_themeName = themeName;
@@ -200,8 +194,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     //    
     //    m_image = bi;
 
-    m_origBBox = GeometryFactory.createGM_Envelope( ulcx, ulcy + ( height * m_dy ), ulcx
-        + ( width * m_dx ), ulcy );
+    m_origBBox = GeometryFactory.createGM_Envelope( ulcx, ulcy + ( height * m_dy ), ulcx + ( width * m_dx ), ulcy );
 
     m_imageCS = ConvenienceCSFactory.getInstance().getOGCCSByName( result[1] );
   }
@@ -211,7 +204,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
    */
   public void dispose()
   {
-    //nothing
+  //nothing
   }
 
   /**
@@ -219,8 +212,7 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
    */
-  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
-      int selectionId )
+  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
   {
     if( selectionId != 0 )
       return;
@@ -234,11 +226,12 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     }
 
   }
-  public void paintSelected( Graphics g,Graphics hg, GeoTransform p, double scale, GM_Envelope bbox,
-      int selectionId )
+
+  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
   {
-      paintSelected(hg, p, scale, bbox, selectionId);
+    paintSelected( hg, p, scale, bbox, selectionId );
   }
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */

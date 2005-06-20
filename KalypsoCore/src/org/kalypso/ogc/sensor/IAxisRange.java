@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
 /**
@@ -48,6 +48,6 @@ package org.kalypso.ogc.sensor;
 public interface IAxisRange
 {
   public Object getLower();
-  
+
   public Object getUpper();
 }

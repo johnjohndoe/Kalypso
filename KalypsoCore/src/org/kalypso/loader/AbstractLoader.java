@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
 import java.net.URL;
@@ -77,8 +77,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   /**
    * @see org.kalypso.loader.ILoader#load(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public Object load( final String source, final URL context, final IProgressMonitor monitor )
-      throws LoaderException
+  public Object load( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
     final Object newObject = loadIntern( source, context, monitor );
 
@@ -96,8 +95,8 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
    * @return loaded object
    * @throws LoaderException
    */
-  protected abstract Object loadIntern( final String source, final URL context,
-      final IProgressMonitor monitor ) throws LoaderException;
+  protected abstract Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
+      throws LoaderException;
 
   /**
    * @see org.kalypso.loader.ILoader#addLoaderListener(org.kalypso.loader.ILoaderListener)
@@ -115,18 +114,17 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     m_listener.remove( l );
   }
 
-  public final void fireLoaderObjectInvalid( final Object oldObject, final boolean bCannotReload )
-      throws Exception
+  public final void fireLoaderObjectInvalid( final Object oldObject, final boolean bCannotReload ) throws Exception
   {
     beforeObjectInvalid();
-    
+
     for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
       ( (ILoaderListener)iter.next() ).onLoaderObjectInvalid( oldObject, bCannotReload );
   }
 
-  protected void beforeObjectInvalid() 
+  protected void beforeObjectInvalid()
   {
-    // overwrite it
+  // overwrite it
   }
 
   /**
@@ -169,10 +167,11 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
+   *      java.lang.Object)
    */
-  public void save( final String source, final URL context, final IProgressMonitor monitor,
-      final Object data ) throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
+      throws LoaderException
   {
     throw new LoaderException( "Operation not supported" );
   }
@@ -182,6 +181,6 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     // den nächsten change event der resource ignorieren
     // etwas dirty, weil wir nicht sicher sien können, dass
     // der wirklich vom save kommt
-    m_visitor.ignoreResourceOneTime( resource ); 
+    m_visitor.ignoreResourceOneTime( resource );
   }
 }

@@ -117,16 +117,14 @@ public class JMSelector
   }
 
   /**
-   * // selects all features (display elements) that are located within the
-   * submitted bounding box. // GMLGeometry
+   * // selects all features (display elements) that are located within the submitted bounding box. // GMLGeometry
    * gmlGeometry=GMLFactory.createGMLGeometry(bbox);
    * 
-   * //Operation operation=new
-   * SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry);
-   * //Filter filter=new ComplexFilter(operation);
+   * //Operation operation=new SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry); //Filter filter=new
+   * ComplexFilter(operation);
    */
-  public List select( final GM_Envelope env, final FeatureList list,
-      final boolean selectWithinBoxStatus, final int selectionId )
+  public List select( final GM_Envelope env, final FeatureList list, final boolean selectWithinBoxStatus,
+      final int selectionId )
   {
     try
     {
@@ -192,22 +190,21 @@ public class JMSelector
   }
 
   /**
-   * selects all features (display elements) that are located within the circle
-   * described by the position and the radius.
+   * selects all features (display elements) that are located within the circle described by the position and the
+   * radius.
    */
-  public List select( GM_Position pos, double r, final FeatureList list, boolean withinStatus,
-      int selectionId )
+  public List select( GM_Position pos, double r, final FeatureList list, boolean withinStatus, int selectionId )
   {
-    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos
-        .getX()
-        + r, pos.getY() + r );
+    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos
+        .getY()
+        + r );
     final List resultDE = select( env, list, withinStatus, selectionId );
 
     return resultDE;
   }
 
-  public Feature selectNearest( GM_Point pos, final double r, final FeatureList list,
-      final boolean withinStatus, final int selectionId )
+  public Feature selectNearest( GM_Point pos, final double r, final FeatureList list, final boolean withinStatus,
+      final int selectionId )
   {
     Feature result = null;
     double dist = 0;

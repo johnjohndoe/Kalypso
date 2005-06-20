@@ -57,17 +57,15 @@ import org.kalypso.zml.filters.ForecastFilterType;
  */
 public class ForecastFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation baseObs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
+      throws SensorException
   {
     if( !( aft instanceof ForecastFilterType ) )
-      throw new IllegalArgumentException( "Not a "
-          + ForecastFilterType.class.getName() );
+      throw new IllegalArgumentException( "Not a " + ForecastFilterType.class.getName() );
 
     final ForecastFilterType ft = (ForecastFilterType)aft;
 
-    final IObservation[] filteredObs = FilterCreatorHelper.resolveFilters( ft
-        .getFilter(), baseObs, context );
+    final IObservation[] filteredObs = FilterCreatorHelper.resolveFilters( ft.getFilter(), baseObs, context );
 
     final ForecastFilter filter = new ForecastFilter();
     filter.initFilter( filteredObs, filteredObs[0], context );

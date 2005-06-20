@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -45,33 +45,38 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 
-
 /**
- * <p>Abstract implementation of IKalypsoTheme</p>
- * <p>Implements common features to all KalypsoTheme's</p>
+ * <p>
+ * Abstract implementation of IKalypsoTheme
+ * </p>
+ * <p>
+ * Implements common features to all KalypsoTheme's
+ * </p>
  * 
  * @author Belger
  */
 public abstract class AbstractKalypsoTheme implements IKalypsoTheme
 {
   private String m_name;
-  
+
   private String m_type = "unknown type";
-  
+
   private ModellEventProvider m_eventProvider = new ModellEventProviderAdapter();
-  
+
   public AbstractKalypsoTheme( final String name )
   {
     m_name = name;
   }
+
   public AbstractKalypsoTheme( final String name, final String type )
   {
     m_name = name;
     m_type = type;
   }
+
   public String getName()
   {
-    return  m_name;
+    return m_name;
   }
 
   /**
@@ -110,10 +115,12 @@ public abstract class AbstractKalypsoTheme implements IKalypsoTheme
   {
     return m_name;
   }
+
   public String getType()
   {
     return "[" + m_type + "] ";
   }
+
   public void setType( String type )
   {
     m_type = type;

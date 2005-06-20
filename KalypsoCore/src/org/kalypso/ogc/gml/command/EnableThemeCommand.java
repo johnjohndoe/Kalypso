@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -50,7 +50,9 @@ import org.kalypso.util.command.ICommand;
 public class EnableThemeCommand implements ICommand
 {
   private final boolean m_bEnable;
+
   private final IKalypsoTheme m_theme;
+
   private final IMapModell m_mapModell;
 
   public EnableThemeCommand( final IMapModell mapModell, final IKalypsoTheme theme, final boolean bEnable )
@@ -73,7 +75,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void process() throws Exception
   {
-  m_mapModell.enableTheme(m_theme, m_bEnable);  
+    m_mapModell.enableTheme( m_theme, m_bEnable );
   }
 
   /**
@@ -81,7 +83,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void redo() throws Exception
   {
-    m_mapModell.enableTheme(m_theme, m_bEnable);  
+    m_mapModell.enableTheme( m_theme, m_bEnable );
   }
 
   /**
@@ -89,7 +91,7 @@ public class EnableThemeCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_mapModell.enableTheme(m_theme, !m_bEnable);  
+    m_mapModell.enableTheme( m_theme, !m_bEnable );
   }
 
   /**

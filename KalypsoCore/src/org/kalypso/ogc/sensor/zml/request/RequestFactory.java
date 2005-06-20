@@ -3,27 +3,23 @@
  * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestr. 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -65,17 +61,16 @@ public class RequestFactory
 
   private RequestFactory()
   {
-    // empty
+  // empty
   }
 
   /**
-   * Parse an href (usually a Zml-Href) that might contain the request
-   * specification
+   * Parse an href (usually a Zml-Href) that might contain the request specification
    * 
-   * @throws SensorException if the href does not contain a valid request
+   * @throws SensorException
+   *           if the href does not contain a valid request
    */
-  public static RequestType parseRequest( final String href )
-      throws SensorException
+  public static RequestType parseRequest( final String href ) throws SensorException
   {
     if( href == null || href.length() == 0 )
       throw new SensorException( "No request definition" );
@@ -86,19 +81,15 @@ public class RequestFactory
 
     final int i2 = href.indexOf( ZmlURLConstants.TAG_REQUEST2, i1 );
     if( i2 == -1 )
-      throw new SensorException(
-          "URL-fragment does not contain a valid request definition. URL: "
-              + href );
+      throw new SensorException( "URL-fragment does not contain a valid request definition. URL: " + href );
 
-    final String strRequestXml = href.substring( i1, i2
-        + ZmlURLConstants.TAG_REQUEST2.length() );
+    final String strRequestXml = href.substring( i1, i2 + ZmlURLConstants.TAG_REQUEST2.length() );
 
     StringReader sr = null;
     try
     {
       sr = new StringReader( strRequestXml );
-      final RequestType xmlReq = (RequestType)OF.createUnmarshaller()
-          .unmarshal( new InputSource( sr ) );
+      final RequestType xmlReq = (RequestType)OF.createUnmarshaller().unmarshal( new InputSource( sr ) );
       sr.close();
 
       return xmlReq;
@@ -117,8 +108,7 @@ public class RequestFactory
   /**
    * Create a default observation (best effort) according to the request
    * 
-   * @return a new instance of SimpleObservation that will statisfy the request
-   *         specification
+   * @return a new instance of SimpleObservation that will statisfy the request specification
    */
   public static IObservation createDefaultObservation( final RequestType xmlReq )
   {
@@ -145,23 +135,21 @@ public class RequestFactory
     }
 
     // create observation instance
-    final SimpleObservation obs = new SimpleObservation( "", "", xmlReq
-        .getName(), false, null, new MetadataList(), (IAxis[])axes
-        .toArray( new IAxis[axes.size()] ) );
+    final SimpleObservation obs = new SimpleObservation( "", "", xmlReq.getName(), false, null, new MetadataList(),
+        (IAxis[])axes.toArray( new IAxis[axes.size()] ) );
 
     // update metadata
     final MetadataList mdl = obs.getMetadataList();
     mdl.setProperty( ObservationConstants.MD_NAME, xmlReq.getName() );
     mdl.setProperty( ObservationConstants.MD_ORIGIN, "Request-Mechanismus" );
-    
+
     return obs;
   }
 
   /**
    * Create a default observation using the href
    */
-  public static IObservation createDefaultObservation( final String href )
-      throws SensorException
+  public static IObservation createDefaultObservation( final String href ) throws SensorException
   {
     final RequestType xmlReq = parseRequest( href );
 

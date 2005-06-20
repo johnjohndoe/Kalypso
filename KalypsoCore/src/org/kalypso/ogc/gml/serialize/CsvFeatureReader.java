@@ -21,15 +21,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Lädt und schreibt ein CSV als
- * {@link org.kalypsodeegree.model.feature.GMLWorkspace}.
+ * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}.
  * 
- * Die Information, welche Spalte wie gelesen wird, wird per
- * {@link #addInfo(FeatureTypeProperty, CSVInfo)}übergeben.
+ * Die Information, welche Spalte wie gelesen wird, wird per {@link #addInfo(FeatureTypeProperty, CSVInfo)}übergeben.
  * 
- * @todo Einerseits ganz schön, genau zu spezifizieren, was die Spalten sind.
- *       Alternativ wäre aber auch super, wenn das auch automatisch anhand der
- *       1.Zeile ginge
+ * @todo Einerseits ganz schön, genau zu spezifizieren, was die Spalten sind. Alternativ wäre aber auch super, wenn das
+ *       auch automatisch anhand der 1.Zeile ginge
  * 
  * @todo Koordinatensystem berücksichtigen
  * 
@@ -61,8 +58,8 @@ public final class CsvFeatureReader
     m_infos.put( ftp, info );
   }
 
-  public final GMLWorkspace loadCSV( final Reader reader, final String comment,
-      final String delemiter, final int lineskip ) throws IOException, CsvException
+  public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter,
+      final int lineskip ) throws IOException, CsvException
   {
     final List list = new ArrayList();
     final FeatureType ft = loadCSVIntoList( list, reader, comment, delemiter, lineskip );
@@ -81,10 +78,9 @@ public final class CsvFeatureReader
   private FeatureType loadCSVIntoList( final List list, final Reader reader, final String comment,
       final String delemiter, final int lineskip ) throws IOException, CsvException
   {
-    final FeatureTypeProperty[] props = (FeatureTypeProperty[])m_infos.keySet().toArray(
-        new FeatureTypeProperty[0] );
-    final FeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null,
-        null, null, new HashMap() );
+    final FeatureTypeProperty[] props = (FeatureTypeProperty[])m_infos.keySet().toArray( new FeatureTypeProperty[0] );
+    final FeatureType featureType = FeatureFactory.createFeatureType( "csv", null, props, null, null, null,
+        new HashMap() );
 
     final LineNumberReader lnr = new LineNumberReader( reader );
     int skippedlines = 0;
@@ -108,8 +104,8 @@ public final class CsvFeatureReader
     return featureType;
   }
 
-  private Feature createFeatureFromTokens( final String index, final String[] tokens,
-      final FeatureType featureType ) throws CsvException
+  private Feature createFeatureFromTokens( final String index, final String[] tokens, final FeatureType featureType )
+      throws CsvException
   {
     final FeatureTypeProperty[] properties = featureType.getProperties();
     final Object[] data = new Object[properties.length];
@@ -123,9 +119,8 @@ public final class CsvFeatureReader
       {
         final int colNumber = info.columns[j];
         if( colNumber >= tokens.length )
-          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber
-              + " zu groß für FeatureProperty '" + ftp.getName() + "'" + "\nNur " + tokens.length
-              + " Spalten gefunden." );
+          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber + " zu groß für FeatureProperty '"
+              + ftp.getName() + "'" + "\nNur " + tokens.length + " Spalten gefunden." );
       }
 
       data[i] = parseColumns( ftp.getType(), info.format, info.columns, tokens, info.ignoreFormatExceptions );
@@ -133,8 +128,9 @@ public final class CsvFeatureReader
 
     return FeatureFactory.createFeature( index, featureType, data );
   }
-  
-  private Object parseColumns( final String type, final String format, final int[] columns, final String[] tokens, final boolean ignoreFormatExceptions ) throws CsvException
+
+  private Object parseColumns( final String type, final String format, final int[] columns, final String[] tokens,
+      final boolean ignoreFormatExceptions ) throws CsvException
   {
     try
     {
@@ -159,8 +155,7 @@ public final class CsvFeatureReader
         final int col1 = columns[1];
         final String rwString = tokens[col0].trim();
         final String hwString = tokens[col1].trim();
-        if( rwString == null || rwString.length() == 0 || hwString == null
-            || hwString.length() == 0 )
+        if( rwString == null || rwString.length() == 0 || hwString == null || hwString.length() == 0 )
           return null;
 
         final double rw = Double.parseDouble( rwString );
@@ -175,10 +170,10 @@ public final class CsvFeatureReader
     {
       if( ignoreFormatExceptions )
         return null;
-      
+
       throw new CsvException( "Formatfehler beim Lesen der Spalten: " + columns, nfe );
     }
-    
+
     throw new CsvException( "Unbekannter Datentyp: " + type );
   }
 }

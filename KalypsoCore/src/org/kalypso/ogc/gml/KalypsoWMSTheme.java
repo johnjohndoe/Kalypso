@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -109,7 +108,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private GM_Envelope m_maxEnv = null;
 
-  public KalypsoWMSTheme( final String linktype, final String themeName, final String source, final CS_CoordinateSystem localCRS )
+  public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
+      final CS_CoordinateSystem localCRS )
   {
     super( themeName, linktype.toUpperCase() );
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
@@ -193,10 +193,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   }
 
   /**
-   * @param g the graphics context from the map panel
-   * @param p world to screen transformation
-   * @param scale scale
-   * @param bbox bounding box from map model (screen)
+   * @param g
+   *          the graphics context from the map panel
+   * @param p
+   *          world to screen transformation
+   * @param scale
+   *          scale
+   * @param bbox
+   *          bounding box from map model (screen)
    * 
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
@@ -310,7 +314,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   //Helper
   private static String env2bboxString( GM_Envelope env )
   {
-    return round( env.getMin().getX() ) + "," + round( env.getMin().getY() ) + "," + round( env.getMax().getX() ) + "," + round( env.getMax().getY() );
+    return round( env.getMin().getX() ) + "," + round( env.getMin().getY() ) + "," + round( env.getMax().getX() ) + ","
+        + round( env.getMax().getY() );
   }
 
   //Helper
@@ -375,7 +380,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    */
   public void dispose()
   {
-    //do nothing (no graphics to dispose)
+  //do nothing (no graphics to dispose)
   }
 
   /**

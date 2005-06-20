@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.users;
 
 import java.util.Arrays;
@@ -48,21 +48,27 @@ import java.util.Arrays;
 public final class UserServiceConstants
 {
   public static final String RIGHT_PROGNOSE = "Vorhersage";
+
   public static final String RIGHT_EXPERT = "Experte";
+
   public static final String RIGHT_ADMIN = "Administration";
-  
+
   /** Convenience constant = empty array = no rights */
   public static final String[] NO_RIGHTS = {};
-  
+
   // full list of rights
-  public static final String[] FULL_RIGHTS = { RIGHT_PROGNOSE, RIGHT_EXPERT, RIGHT_ADMIN };
-  
+  public static final String[] FULL_RIGHTS =
+  {
+      RIGHT_PROGNOSE,
+      RIGHT_EXPERT,
+      RIGHT_ADMIN };
+
   // sort array because of call to binarySearch
   static
   {
     Arrays.sort( FULL_RIGHTS );
   }
-  
+
   /**
    * Returns true if the given right is a valid kalypso user right.
    * 

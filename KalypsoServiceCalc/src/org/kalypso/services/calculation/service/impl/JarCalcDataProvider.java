@@ -161,8 +161,8 @@ public class JarCalcDataProvider implements ICalcDataProvider
       }
       finally
       {
-         IOUtils.closeQuietly( jarstream );
-         IOUtils.closeQuietly( handlerStream );
+        IOUtils.closeQuietly( jarstream );
+        IOUtils.closeQuietly( handlerStream );
       }
     }
 

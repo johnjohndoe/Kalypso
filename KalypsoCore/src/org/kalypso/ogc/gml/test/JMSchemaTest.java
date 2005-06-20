@@ -95,8 +95,8 @@ public class JMSchemaTest extends TestCase
 
     System.out.println( result );
 
-    final BufferedReader reader = new BufferedReader( new InputStreamReader( getClass()
-        .getResourceAsStream( compareFile ) ) );
+    final BufferedReader reader = new BufferedReader( new InputStreamReader( getClass().getResourceAsStream(
+        compareFile ) ) );
     final StringBuffer goal = new StringBuffer();
     String buffer;
     while( ( buffer = reader.readLine() ) != null )
@@ -198,14 +198,12 @@ public class JMSchemaTest extends TestCase
   private String toString( int indent, FeatureType ft )
   {
 
-    String result = getIndent( indent ) + "--+" + ft.getNamespace() + ":" + ft.getName()
-        + " FeatureType ";
+    String result = getIndent( indent ) + "--+" + ft.getNamespace() + ":" + ft.getName() + " FeatureType ";
     result = result + annotationToString( indent, ft.getAnnotationMap() );
     final String substitutionGroup = ft.getSubstitutionGroup();
     if( substitutionGroup != null )
       result = result + getIndent( indent ) + "    substitutiongrup:" + substitutionGroup;
-    result = result + getIndent( indent + 1 ) + "-+props:"
-        + toString( indent, ft, ft.getProperties() );
+    result = result + getIndent( indent + 1 ) + "-+props:" + toString( indent, ft, ft.getProperties() );
 
     //    if(childs!=null && childs.length > 0 )
     //    result = result + toString( indent + 1, childs );
@@ -241,11 +239,10 @@ public class JMSchemaTest extends TestCase
 
   private String toString( int indent, FeatureType parent, FeatureTypeProperty ftp )
   {
-    String propName=ftp.getNamespace() + ":" + ftp.getName();
+    String propName = ftp.getNamespace() + ":" + ftp.getName();
     int maxOccurs = parent.getMaxOccurs( propName );
     int minOccurs = parent.getMinOccurs( propName );
-    String result = getIndent( indent, " +" + ftp.getNamespace() + ":" + ftp.getName(), 55 )
-        + ftp.getType();
+    String result = getIndent( indent, " +" + ftp.getNamespace() + ":" + ftp.getName(), 55 ) + ftp.getType();
     result = result + annotationToString( indent, ftp.getAnnotationMap() );
 
     //    String result = ( getIndent( indent ) +" +"+

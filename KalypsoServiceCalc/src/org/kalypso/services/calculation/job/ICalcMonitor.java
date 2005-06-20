@@ -42,10 +42,8 @@ package org.kalypso.services.calculation.job;
 
 import org.kalypso.java.lang.ICancelable;
 
-
 /**
- * Überwachungsmonitor für den
- * {@link org.kalypso.services.calculation.job.ICalcJob}.
+ * Überwachungsmonitor für den {@link org.kalypso.services.calculation.job.ICalcJob}.
  * 
  * @author belger
  */
@@ -61,10 +59,8 @@ public interface ICalcMonitor extends ICancelable
   public void setMessage( final String message );
 
   /**
-   * Dieser Text kann vom {@link ICalcJob}gesetzt werden, um Information über
-   * das Ende der Berechnung zu geben.
-   * Der Finish-Status des Calc-Jobs. Wird clientseitig als IStatus-Status
-   * interpretiert.
+   * Dieser Text kann vom {@link ICalcJob}gesetzt werden, um Information über das Ende der Berechnung zu geben. Der
+   * Finish-Status des Calc-Jobs. Wird clientseitig als IStatus-Status interpretiert.
    */
   public void setFinishInfo( final int status, final String text );
 

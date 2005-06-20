@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
 import java.io.IOException;
@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.kalypso.util.progress.IProgressMonitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -61,7 +62,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureAssociationTypeProperty_Impl
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypso.util.progress.IProgressMonitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -81,11 +81,10 @@ public class ShapeSerializer
 
   private ShapeSerializer()
   {
-    // wird nicht instantiiert
+  // wird nicht instantiiert
   }
 
-  public static void serialize( final GMLWorkspace workspace, final String filenameBase )
-      throws GmlSerializeException
+  public static void serialize( final GMLWorkspace workspace, final String filenameBase ) throws GmlSerializeException
   {
     final Feature rootFeature = workspace.getRootFeature();
     final List features = (List)rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
@@ -105,15 +104,13 @@ public class ShapeSerializer
   }
 
   /**
-   * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht
-   * einfach alle Properties geschrieben, sondern nur die über ein vorher
-   * festgelegt Mapping.
+   * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht einfach alle Properties geschrieben,
+   * sondern nur die über ein vorher festgelegt Mapping.
    * 
    * @param features
    *          Properties dieser Features werden geschrieben.
    * @param mapping
-   *          keys: Spaltennamen der Shape-Datei; Values: Property-Namen des
-   *          Features
+   *          keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
    * @param geoName
    *          Der Name der Property mit der Geometry
    * @param filenameBase
@@ -121,8 +118,8 @@ public class ShapeSerializer
    * 
    *  
    */
-  public static void serializeFeatures( final Feature[] features, final Map mapping,
-      final String geoName, final String filenameBase ) throws GmlSerializeException
+  public static void serializeFeatures( final Feature[] features, final Map mapping, final String geoName,
+      final String filenameBase ) throws GmlSerializeException
   {
     if( features.length == 0 )
       return;
@@ -132,8 +129,8 @@ public class ShapeSerializer
     final FeatureTypeProperty geomFeatureType = featureType.getProperty( geoName );
 
     final FeatureTypeProperty[] ftps = new FeatureTypeProperty[mapping.size() + 1];
-    ftps[0] = FeatureFactory.createFeatureTypeProperty( "GEOM", geomFeatureType.getType(),
-        geomFeatureType.isNullable() );
+    ftps[0] = FeatureFactory
+        .createFeatureTypeProperty( "GEOM", geomFeatureType.getType(), geomFeatureType.isNullable() );
     final int[] occurs = new int[ftps.length];
 
     int count = 1;
@@ -144,14 +141,13 @@ public class ShapeSerializer
       final FeatureTypeProperty ftp = featureType.getProperty( (String)entry.getValue() );
 
       occurs[count] = 1;
-      ftps[count] = FeatureFactory.createFeatureTypeProperty( (String)entry.getKey(),
-          ftp.getType(), ftp.isNullable() );
+      ftps[count] = FeatureFactory.createFeatureTypeProperty( (String)entry.getKey(), ftp.getType(), ftp.isNullable() );
 
       count++;
     }
 
-    final FeatureType shapeFeatureType = FeatureFactory.createFeatureType( "shapeType", null, ftps,
-        occurs, occurs, null, new HashMap() );
+    final FeatureType shapeFeatureType = FeatureFactory.createFeatureType( "shapeType", null, ftps, occurs, occurs,
+        null, new HashMap() );
 
     try
     {
@@ -189,9 +185,8 @@ public class ShapeSerializer
     }
   }
 
-  public final static GMLWorkspace deserialize( final String fileBase,
-      final CS_CoordinateSystem sourceCrs, final IProgressMonitor monitor )
-      throws GmlSerializeException
+  public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs,
+      final IProgressMonitor monitor ) throws GmlSerializeException
   {
     try
     {
@@ -235,28 +230,27 @@ public class ShapeSerializer
 
   public static Feature createShapeRootFeature( final FeatureType ft )
   {
-    final FeatureTypeProperty nameProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_NAME,
-        null, String.class.getName(), true, null );
-    final FeatureTypeProperty boundingProp = FeatureFactory.createFeatureTypeProperty(
-        PROPERTY_BBOX, null, GM_Envelope.class.getName(), true, null );
-    final FeatureTypeProperty memberProp = new FeatureAssociationTypeProperty_Impl(
-        PROPERTY_FEATURE_MEMBER, null, "FeatureAssociationType", false, ft, null );
+    final FeatureTypeProperty nameProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_NAME, null, String.class
+        .getName(), true, null );
+    final FeatureTypeProperty boundingProp = FeatureFactory.createFeatureTypeProperty( PROPERTY_BBOX, null,
+        GM_Envelope.class.getName(), true, null );
+    final FeatureTypeProperty memberProp = new FeatureAssociationTypeProperty_Impl( PROPERTY_FEATURE_MEMBER, null,
+        "FeatureAssociationType", false, ft, null );
 
     FeatureTypeProperty[] ftps = new FeatureTypeProperty[]
     {
         nameProp,
         boundingProp,
         memberProp };
-    final FeatureType collectionFT = FeatureFactory.createFeatureType( "featureCollection", null,
-        ftps, new int[]
-        {
-            1,
-            1,
-            0 }, new int[]
-        {
-            1,
-            1,
-            FeatureType.UNBOUND_OCCURENCY }, null, new HashMap() );
+    final FeatureType collectionFT = FeatureFactory.createFeatureType( "featureCollection", null, ftps, new int[]
+    {
+        1,
+        1,
+        0 }, new int[]
+    {
+        1,
+        1,
+        FeatureType.UNBOUND_OCCURENCY }, null, new HashMap() );
 
     return FeatureFactory.createFeature( "root", collectionFT );
   }
@@ -277,7 +271,7 @@ public class ShapeSerializer
         final Feature feature = dbf.getFRow( i + 1, true );
         features.add( feature );
       }
-      
+
       dbf.close();
     }
     catch( IOException e )

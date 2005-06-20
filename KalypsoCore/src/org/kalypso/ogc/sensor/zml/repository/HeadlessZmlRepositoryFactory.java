@@ -53,13 +53,11 @@ import org.kalypso.repository.file.FileRepositoryFactory;
 public class HeadlessZmlRepositoryFactory extends FileRepositoryFactory
 {
   /**
-   * @see org.kalypso.repository.file.FileRepositoryFactory#createRepository(java.lang.String,
-   *      java.lang.String, java.lang.String, boolean, java.io.FileFilter)
+   * @see org.kalypso.repository.file.FileRepositoryFactory#createRepository(java.lang.String, java.lang.String,
+   *      java.lang.String, boolean, java.io.FileFilter)
    */
-  public FileRepository createRepository( String conf, String location,
-      String id, boolean ro, FileFilter filter )
+  public FileRepository createRepository( String conf, String location, String id, boolean ro, FileFilter filter )
   {
-    return new ZmlObservationRepository( getClass().getName(), conf, location,
-        id, ro, filter );
+    return new ZmlObservationRepository( getClass().getName(), conf, location, id, ro, filter );
   }
 }

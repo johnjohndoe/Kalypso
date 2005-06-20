@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 /**
@@ -46,20 +46,23 @@ package org.kalypso.ogc.gml;
 public class SelectionId
 {
   private final String myName;
+
   private final int myId;
-  public SelectionId(String name,int id)
+
+  public SelectionId( String name, int id )
   {
-    myName=name;
-    myId=id;
+    myName = name;
+    myId = id;
   }
-  
+
   public int getId()
   {
     return myId;
   }
+
   public String toString()
   {
-  return myName;  
+    return myName;
   }
-  
+
 }

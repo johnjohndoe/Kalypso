@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
 import java.util.Collection;
@@ -81,10 +81,9 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
   }
 
   /**
-   * TRICKY: manchmal hat der Pfad der Resource zwei slashes, manchmal nicht.
-   * Deswegen dieser Methode: sie ersetzt die "//" mit "/" wenn es notwendig
-   * ist. Der PFad wird letztendlich als key für der Map benutzt, um zu prüfen
-   * ob eine Resource schon da ist.
+   * TRICKY: manchmal hat der Pfad der Resource zwei slashes, manchmal nicht. Deswegen dieser Methode: sie ersetzt die
+   * "//" mit "/" wenn es notwendig ist. Der PFad wird letztendlich als key für der Map benutzt, um zu prüfen ob eine
+   * Resource schon da ist.
    * 
    * @param resource
    * @return Pfad (ohne eventuelle "//")
@@ -128,7 +127,7 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
       m_ignoreOneTimeList.remove( resource );
       return true;
     }
-    
+
     final Object oldValue = m_resourceMap.get( pathFor( resource ) );
     if( oldValue != null )
     {
@@ -138,13 +137,13 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
         // todo: sollte eigentlich auch behandelt werden
         // aber so, dass och die chance auf ein add besteht
         break;
-        
+
       case IResourceDelta.ADDED:
       case IResourceDelta.CHANGED:
       {
         try
         {
-            m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
+          m_loader.fireLoaderObjectInvalid( oldValue, delta.getKind() == IResourceDelta.REMOVED );
         }
         catch( final Exception e )
         {

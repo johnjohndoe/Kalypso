@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -56,7 +56,7 @@ import org.kalypsodeegree.xml.Marshallable;
 public class KalypsoUserStyle implements UserStyle, Marshallable, ModellEventProvider
 {
   private UserStyle myUserStyle;
-  
+
   private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
 
   public KalypsoUserStyle( final UserStyle userStyle )
@@ -68,56 +68,57 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, ModellEventPro
   {
     myUserStyle.addFeatureTypeStyle( featureTypeStyle );
   }
+
   public String getAbstract()
   {
     return myUserStyle.getAbstract();
   }
-  
+
   public FeatureTypeStyle[] getFeatureTypeStyles()
   {
     return myUserStyle.getFeatureTypeStyles();
   }
-  
+
   public String getName()
   {
     return myUserStyle.getName();
   }
-  
+
   public String getTitle()
   {
     return myUserStyle.getTitle();
   }
-  
+
   public boolean isDefault()
   {
     return myUserStyle.isDefault();
   }
-  
+
   public void removeFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
   {
     myUserStyle.removeFeatureTypeStyle( featureTypeStyle );
   }
-  
+
   public void setAbstract( String abstract_ )
   {
     myUserStyle.setAbstract( abstract_ );
   }
-  
+
   public void setDefault( boolean default_ )
   {
     myUserStyle.setDefault( default_ );
   }
-  
+
   public void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles )
   {
     myUserStyle.setFeatureTypeStyles( featureTypeStyles );
   }
-  
+
   public void setName( String name )
   {
     myUserStyle.setName( name );
   }
-  
+
   public void setTitle( String title )
   {
     myUserStyle.setTitle( title );
@@ -127,10 +128,12 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, ModellEventPro
   {
     myEventProvider.addModellListener( listener );
   }
+
   public void fireModellEvent( ModellEvent event )
   {
     myEventProvider.fireModellEvent( event );
   }
+
   public void removeModellListener( ModellEventListener listener )
   {
     myEventProvider.removeModellListener( listener );
@@ -141,6 +144,6 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, ModellEventPro
    */
   public String exportAsXML()
   {
-    return ((Marshallable)myUserStyle).exportAsXML();
+    return ( (Marshallable)myUserStyle ).exportAsXML();
   }
 }

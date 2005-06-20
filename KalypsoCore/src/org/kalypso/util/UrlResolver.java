@@ -72,14 +72,14 @@ import org.kalypso.java.net.UrlUtilities;
  * Davor kann noch eine Token-Ersetzung stattfinden
  * </p>
  * 
- * TODO: untersuchen warum es auch org.kalypso.java.net.UrlUtilities gibt???
- * Marc.
+ * TODO: untersuchen warum es auch org.kalypso.java.net.UrlUtilities gibt??? Marc.
  * 
  * @author belger
  */
 public class UrlResolver implements IUrlResolver
 {
   private Properties m_replaceTokenMap = new Properties();
+
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
   /**
@@ -87,10 +87,9 @@ public class UrlResolver implements IUrlResolver
    * Löst eine URL relativ zu einer anderen auf.
    * </p>
    * <p>
-   * Also handles the pseudo protocol 'project:'. If project: ist specified in
-   * relativeURL, it tries to guess the project from the baseURL (e.g. the
-   * baseURL must be of the form platfrom:/resource/). It then replaces project:
-   * by 'platform:/resource/ <projectname>/
+   * Also handles the pseudo protocol 'project:'. If project: ist specified in relativeURL, it tries to guess the
+   * project from the baseURL (e.g. the baseURL must be of the form platfrom:/resource/). It then replaces project: by
+   * 'platform:/resource/ <projectname>/
    * </p>
    * 
    * @param baseURL
@@ -105,14 +104,14 @@ public class UrlResolver implements IUrlResolver
         throw new MalformedURLException( "Protocol 'project:' need a resource url as context" );
 
       final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
-      final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/"
-          + project.getName();
+      final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + project.getName();
 
       final String relPath = relativeURL.substring( "project:".length() + 1 );
       return new URL( projectURL + "/" + relPath );
     }
-    else if( relativeURL.startsWith("http:/") || relativeURL.startsWith("file:/") ){
-      return new URL ( relativeURL );
+    else if( relativeURL.startsWith( "http:/" ) || relativeURL.startsWith( "file:/" ) )
+    {
+      return new URL( relativeURL );
     }
 
     return new URL( baseURL, relativeURL );
@@ -127,8 +126,7 @@ public class UrlResolver implements IUrlResolver
   }
 
   /**
-   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypso.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
    */
   public void addReplaceToken( final String key, final String value )
   {
@@ -170,11 +168,10 @@ public class UrlResolver implements IUrlResolver
             }
           }
         };
-        
+
         if( !realFile.exists() )
           realFile.createNewFile();
-        final OutputStream os = new RunAfterCloseOutputStream( new FileOutputStream( realFile ),
-            runnable );
+        final OutputStream os = new RunAfterCloseOutputStream( new FileOutputStream( realFile ), runnable );
 
         String charset;
         try
@@ -188,8 +185,8 @@ public class UrlResolver implements IUrlResolver
           charset = null;
         }
 
-        final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os )
-            : new OutputStreamWriter( os, charset );
+        final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os ) : new OutputStreamWriter( os,
+            charset );
         return osw;
       }
 
@@ -218,7 +215,7 @@ public class UrlResolver implements IUrlResolver
     {
       throw new IOException( e.getMessage() );
     }
-    
+
     // wenn alles nichts hilfe, auf Standardzeug zurückgreifen
     return m_urlUtilities.createReader( url );
   }

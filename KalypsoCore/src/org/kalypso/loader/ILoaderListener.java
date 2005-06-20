@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
 /**
@@ -46,9 +46,7 @@ package org.kalypso.loader;
 public interface ILoaderListener
 {
   /**
-   * Wird aufgerufen, wenn dieses Objekt des Loaders nicht mehr gültig ist und
-   * neu geladen werden sollte
+   * Wird aufgerufen, wenn dieses Objekt des Loaders nicht mehr gültig ist und neu geladen werden sollte
    */
-  public void onLoaderObjectInvalid( final Object object, final boolean bCannotReload )
-      throws Exception;
+  public void onLoaderObjectInvalid( final Object object, final boolean bCannotReload ) throws Exception;
 }

@@ -1,6 +1,5 @@
 package org.kalypso.ogc.gml.widgets;
 
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.

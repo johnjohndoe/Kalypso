@@ -58,22 +58,18 @@ import org.kalypso.zml.filters.InterpolationFilterType;
  */
 public class InterpolationFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft,
-      IObservation baseObs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
+      throws SensorException
   {
     if( !( aft instanceof InterpolationFilterType ) )
-      throw new IllegalArgumentException( "Not a "
-          + InterpolationFilterType.class.getName() );
+      throw new IllegalArgumentException( "Not a " + InterpolationFilterType.class.getName() );
 
     final InterpolationFilterType ft = (InterpolationFilterType)aft;
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft
-        .getFilter(), baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs, context );
 
-    final InterpolationFilter filter = new InterpolationFilter(
-        CalendarUtilities.getCalendarField( ft.getCalendarField() ), ft
-            .getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft
-            .getDefaultStatus() );
+    final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft
+        .getCalendarField() ), ft.getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft.getDefaultStatus() );
     filter.initFilter( null, filteredObs, context );
 
     return filter;

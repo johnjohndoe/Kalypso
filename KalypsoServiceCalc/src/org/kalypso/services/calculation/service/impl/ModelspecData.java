@@ -67,8 +67,7 @@ public class ModelspecData
 
   private final Map m_outputHash;
 
-  public ModelspecData( final URL modelspecUrl, final Unmarshaller unmarshaller )
-      throws CalcJobServiceException
+  public ModelspecData( final URL modelspecUrl, final Unmarshaller unmarshaller ) throws CalcJobServiceException
   {
     try
     {
@@ -109,8 +108,8 @@ public class ModelspecData
       final String id = input.getId();
       final String description = input.getDescription();
       if( !input.isOptional() && !data.hasID( id ) )
-        throw new CalcJobServiceException( "Keine Eingangsdaten für ID " + id + " (" + description
-            + ") vorhanden.", null );
+        throw new CalcJobServiceException( "Keine Eingangsdaten für ID " + id + " (" + description + ") vorhanden.",
+            null );
     }
   }
 

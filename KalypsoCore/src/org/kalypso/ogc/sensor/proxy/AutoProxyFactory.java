@@ -52,8 +52,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.xml.sax.InputSource;
 
 /**
- * AutoProxyFactory: this class can create proxy of an IObservation based on its
- * metadata.
+ * AutoProxyFactory: this class can create proxy of an IObservation based on its metadata.
  * 
  * @author schlienger
  */
@@ -61,17 +60,17 @@ public class AutoProxyFactory implements IProxyFactory
 {
   private static AutoProxyFactory m_instance = null;
 
-  private AutoProxyFactory( )
+  private AutoProxyFactory()
   {
-    // do not instanciate
+  // do not instanciate
   }
 
   /**
-   * Return a proxy IObservation that may be a proxy of the original observation
-   * if sufficient information is found to create such a proxy.
+   * Return a proxy IObservation that may be a proxy of the original observation if sufficient information is found to
+   * create such a proxy.
    * <p>
-   * For instance, some observations have WQ-Information in their metadata that
-   * allows one to create a WQ-Observation from it.
+   * For instance, some observations have WQ-Information in their metadata that allows one to create a WQ-Observation
+   * from it.
    * 
    * @param obs
    * @return either a proxy observation or the original observation
@@ -101,7 +100,7 @@ public class AutoProxyFactory implements IProxyFactory
         final RatingTableList tableList;
         tableList = WQTableFactory.parseSimple( new InputSource( sr ) );
         sr.close();
-        
+
         final String source = tableList.getFromType();
         final String dest = tableList.getToType();
 
@@ -190,7 +189,7 @@ public class AutoProxyFactory implements IProxyFactory
   /**
    * @return default instance of this factory class
    */
-  public static AutoProxyFactory getInstance( )
+  public static AutoProxyFactory getInstance()
   {
     if( m_instance == null )
       m_instance = new AutoProxyFactory();

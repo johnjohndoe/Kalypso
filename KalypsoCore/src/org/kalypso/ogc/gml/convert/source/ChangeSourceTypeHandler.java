@@ -70,8 +70,8 @@ public class ChangeSourceTypeHandler implements ISourceHandler
 
   private final Map m_externData;
 
-  public ChangeSourceTypeHandler( final IUrlResolver resolver, final URL context,
-      final ChangeSourceType type, final Map externData )
+  public ChangeSourceTypeHandler( final IUrlResolver resolver, final URL context, final ChangeSourceType type,
+      final Map externData )
   {
     m_resolver = resolver;
     m_context = context;
@@ -86,7 +86,8 @@ public class ChangeSourceTypeHandler implements ISourceHandler
   {
     try
     {
-      final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource(), m_externData );
+      final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource(),
+          m_externData );
       applyVisitors( inputGML, m_type.getVisitor() );
       return inputGML;
     }
@@ -104,11 +105,13 @@ public class ChangeSourceTypeHandler implements ISourceHandler
       final ChangeSourceType.VisitorType visitorType = (VisitorType)iter.next();
       final String featurePath = visitorType.getFeaturePath();
       final String visitorClass = visitorType.getVisitorclass();
-      
+
       final Properties arguments = createArguments( visitorType.getArgument() );
-      
-      final FeatureVisitor visitor = (FeatureVisitor)ClassUtilities.newInstance( visitorClass, FeatureVisitor.class, classLoader, new Object[] { arguments } );
-      
+
+      final FeatureVisitor visitor = (FeatureVisitor)ClassUtilities.newInstance( visitorClass, FeatureVisitor.class,
+          classLoader, new Object[]
+          { arguments } );
+
       inputGML.accept( visitor, featurePath, FeatureVisitor.DEPTH_INFINITE );
     }
   }
@@ -116,13 +119,13 @@ public class ChangeSourceTypeHandler implements ISourceHandler
   private Properties createArguments( final List argumentList )
   {
     final Properties map = new Properties();
-    
+
     for( Iterator iter = argumentList.iterator(); iter.hasNext(); )
     {
       final ChangeSourceType.VisitorType.ArgumentType aType = (ArgumentType)iter.next();
       map.setProperty( aType.getName(), aType.getValue() );
     }
-    
+
     return map;
   }
 }

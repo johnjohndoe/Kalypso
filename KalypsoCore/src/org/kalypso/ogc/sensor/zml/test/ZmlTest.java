@@ -74,11 +74,12 @@ public class ZmlTest extends TestCase
   private final DoubleComparator dc = new DoubleComparator( 0 );
 
   // contains the list of ZMLs to test
-  private final static String[] ZMLs = { "./etc/schemas/zml/beispiel.zml",
+  private final static String[] ZMLs =
+  {
+      "./etc/schemas/zml/beispiel.zml",
       "./etc/schemas/zml/inline_ex.zml" };
 
-  public void testZmls( ) throws MalformedURLException, SensorException,
-      ParseException
+  public void testZmls() throws MalformedURLException, SensorException, ParseException
   {
     for( int i = 0; i < ZMLs.length; i++ )
     {
@@ -140,8 +141,7 @@ public class ZmlTest extends TestCase
     assertTrue( axes.length == 3 );
   }
 
-  private void _testGetValues( final IObservation obs ) throws SensorException,
-      ParseException
+  private void _testGetValues( final IObservation obs ) throws SensorException, ParseException
   {
     final ITuppleModel values = obs.getValues( null );
     assertNotNull( values );
@@ -160,19 +160,15 @@ public class ZmlTest extends TestCase
     assertNotNull( vAxis2 );
 
     assertEquals( values.getElement( 0, dateAxis ), df.parse( "01.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( 0, vAxis1 ), Double
-        .valueOf( "1.0" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( 0, vAxis1 ), Double.valueOf( "1.0" ) ) == 0 );
     assertTrue( dc.compare( values.getElement( 0, vAxis2 ), new Double( 11 ) ) == 0 );
 
     assertEquals( values.getElement( 20, dateAxis ), df.parse( "21.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( 20, vAxis1 ), Double
-        .valueOf( "16.6" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( 20, vAxis2 ), Double
-        .valueOf( "18.5" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( 20, vAxis1 ), Double.valueOf( "16.6" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( 20, vAxis2 ), Double.valueOf( "18.5" ) ) == 0 );
   }
 
-  private void _testSetValues( final IObservation obs ) throws SensorException,
-      ParseException
+  private void _testSetValues( final IObservation obs ) throws SensorException, ParseException
   {
     final IAxis[] axes = obs.getAxisList();
 
@@ -214,45 +210,38 @@ public class ZmlTest extends TestCase
 
     int i = 19;
     assertEquals( values.getElement( i, dateAxis ), df.parse( "20.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double
-        .valueOf( "44" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double
-        .valueOf( "11" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double.valueOf( "44" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double.valueOf( "11" ) ) == 0 );
 
     i = 20;
     assertEquals( values.getElement( i, dateAxis ), df.parse( "21.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double
-        .valueOf( "55" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double
-        .valueOf( "22" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double.valueOf( "55" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double.valueOf( "22" ) ) == 0 );
 
     i = 21;
     assertEquals( values.getElement( i, dateAxis ), df.parse( "22.01.2004" ) );
-    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double
-        .valueOf( "66" ) ) == 0 );
-    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double
-        .valueOf( "33" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( i, vAxis1 ), Double.valueOf( "66" ) ) == 0 );
+    assertTrue( dc.compare( values.getElement( i, vAxis2 ), Double.valueOf( "33" ) ) == 0 );
   }
 
   /**
    * Tests the new mechanism ('data'-Element) for storing Metadata stuff
    */
-  public void testMetadataEx( ) throws MalformedURLException, SensorException, FactoryException, JAXBException
+  public void testMetadataEx() throws MalformedURLException, SensorException, FactoryException, JAXBException
   {
     final File zmlFile = new File( "./etc/schemas/zml/beispiel-metadata.zml" );
     assertTrue( zmlFile.exists() );
 
-    final IObservation obs = ZmlFactory.parseXML( zmlFile.toURL(), zmlFile
-        .getAbsolutePath() );
+    final IObservation obs = ZmlFactory.parseXML( zmlFile.toURL(), zmlFile.getAbsolutePath() );
 
     final ObservationType xml = ZmlFactory.createXML( obs, null );
     final StringWriter writer = new StringWriter();
     ZmlFactory.getMarshaller().marshal( xml, writer );
-    
+
     final String xmlStr = writer.toString();
-    
+
     System.out.println( xmlStr );
-    
+
     final IObservation obs2 = ZmlFactory.parseXML( new InputSource( new StringReader( xmlStr ) ), "fake-id", null );
     final ObservationType xml2 = ZmlFactory.createXML( obs2, null );
     final StringWriter writer2 = new StringWriter();

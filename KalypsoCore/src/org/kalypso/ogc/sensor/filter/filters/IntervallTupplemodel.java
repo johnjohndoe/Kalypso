@@ -91,8 +91,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
   private SimpleTuppleModel m_intervallModel;
 
-  public IntervallTupplemodel( int mode, int calendarField, int amount, ITuppleModel baseModel,
-      Date from, Date to )
+  public IntervallTupplemodel( int mode, int calendarField, int amount, ITuppleModel baseModel, Date from, Date to )
   {
     super( baseModel.getAxisList() );
     m_mode = mode;
@@ -201,7 +200,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
         if( !( srcRow < m_baseModel.getCount() ) )
         {
           // create dummy intervall
-          srcIntervall=new Intervall( srcCal_last,m_to,defaultStatus, defaultValues );
+          srcIntervall = new Intervall( srcCal_last, m_to, defaultStatus, defaultValues );
           todo = TODO_NOTHING;
           continue;
         }
@@ -211,8 +210,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
         for( int i = 0; i < o.length; i++ )
           stati[i] = (Long)o[i];
 
-        final Object[] valueOs = ObservationUtilities
-            .getElements( m_baseModel, srcRow, m_valueAxis );
+        final Object[] valueOs = ObservationUtilities.getElements( m_baseModel, srcRow, m_valueAxis );
         final Double[] values = new Double[valueOs.length];
         for( int i = 0; i < valueOs.length; i++ )
           values[i] = (Double)valueOs[i];
@@ -260,8 +258,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
       // compute intersection intervall
       int matrix = srcIntervall.calcIntersectionMatrix( targetIntervall );
       Intervall intersection = null;
-      if( matrix != Intervall.STATUS_INTERSECTION_NONE_BEFORE
-          && matrix != Intervall.STATUS_INTERSECTION_NONE_AFTER )
+      if( matrix != Intervall.STATUS_INTERSECTION_NONE_BEFORE && matrix != Intervall.STATUS_INTERSECTION_NONE_AFTER )
         intersection = srcIntervall.getIntersection( targetIntervall, m_mode );
 
       switch( matrix )
@@ -289,8 +286,8 @@ public class IntervallTupplemodel extends AbstractTuppleModel
   }
 
   // accept values for result
-  private void updateModelfromintervall( ITuppleModel model, int targetRow,
-      Intervall targetIntervall ) throws SensorException
+  private void updateModelfromintervall( ITuppleModel model, int targetRow, Intervall targetIntervall )
+      throws SensorException
   {
     final Calendar cal = targetIntervall.getEnd();
     final long[] status = targetIntervall.getStatus();
@@ -331,8 +328,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
   public void setElement( int index, Object element, IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName()
-        + " unterstuetzt setElement() nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt setElement() nicht." );
     // TODO support it
   }
 
@@ -340,8 +336,8 @@ public class IntervallTupplemodel extends AbstractTuppleModel
   {
     if( element instanceof Date )
       return m_baseModel.indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName()
-        + " unterstuetzt indexOf fuer die Axe " + axis.getName() + " nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Axe "
+        + axis.getName() + " nicht." );
     // TODO support it
   }
 }

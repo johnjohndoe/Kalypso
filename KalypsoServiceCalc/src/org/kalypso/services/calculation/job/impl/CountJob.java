@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.job.impl;
 
 import java.io.File;
@@ -55,11 +55,13 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
 public final class CountJob implements ICalcJob
 {
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater, org.kalypso.services.calculation.job.ICalcMonitor)
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
   public void run( final File tmpdir, final ICalcDataProvider inputData, final ICalcResultEater outputData,
       final ICalcMonitor monitor ) throws CalcJobServiceException
-  {  
+  {
     while( !monitor.isCanceled() )
     {
       try

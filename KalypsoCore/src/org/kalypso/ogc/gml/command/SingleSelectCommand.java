@@ -36,13 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -50,7 +51,6 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree_impl.model.feature.visitors.GetSelectionVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
-import org.kalypso.util.command.ICommand;
 
 /**
  * @author doemming
@@ -78,7 +78,7 @@ public class SingleSelectCommand implements ICommand
 
     m_modellEventProvider = eventProvider;
     m_unselectVisitor = new UnselectFeatureVisitor( selectionId );
-    
+
     m_selectedFeatures = GetSelectionVisitor.getSelectedFeatures( workspace, selectionId );
   }
 
@@ -104,8 +104,8 @@ public class SingleSelectCommand implements ICommand
   {
     m_feature.unselect( mySelectionId );
     for( final Iterator iter = m_selectedFeatures.iterator(); iter.hasNext(); )
-      ((Feature)iter.next()).select( mySelectionId );
-    
+      ( (Feature)iter.next() ).select( mySelectionId );
+
     m_modellEventProvider.fireModellEvent( new ModellEvent( m_modellEventProvider, ModellEvent.SELECTION_CHANGED ) );
   }
 

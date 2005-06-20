@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.event;
 
 import java.util.ArrayList;
@@ -55,13 +55,14 @@ import org.kalypso.ogc.sensor.IObservationListener;
 public class ObservationEventAdapter implements IObservationEventProvider
 {
   private final List m_listeners = new ArrayList();
+
   private final IObservation m_obs;
 
   public ObservationEventAdapter( final IObservation obs )
   {
     m_obs = obs;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
    */
@@ -81,12 +82,12 @@ public class ObservationEventAdapter implements IObservationEventProvider
   /**
    * Fires obs changed event
    */
-  public void fireChangedEvent( )
+  public void fireChangedEvent()
   {
     final Object[] listeners = m_listeners.toArray();
     for( int i = 0; i < listeners.length; i++ )
     {
-      final IObservationListener listener = (IObservationListener) listeners[i];
+      final IObservationListener listener = (IObservationListener)listeners[i];
       listener.observationChanged( m_obs );
     }
   }
@@ -94,7 +95,7 @@ public class ObservationEventAdapter implements IObservationEventProvider
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */
-  public void clearListeners( )
+  public void clearListeners()
   {
     m_listeners.clear();
   }

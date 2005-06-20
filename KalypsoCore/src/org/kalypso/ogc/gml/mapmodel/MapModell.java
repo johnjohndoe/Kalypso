@@ -73,7 +73,7 @@ public class MapModell implements IMapModell
   private final CS_CoordinateSystem myCoordinatesSystem;
 
   private IKalypsoTheme m_activeTheme = null;
-  
+
   private IProject m_project;
 
   public MapModell( final CS_CoordinateSystem crs, IProject project )
@@ -182,8 +182,8 @@ public class MapModell implements IMapModell
   //    }
   //  }
 
-  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox,
-      final double scale, final int selectionId )
+  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
+      final int selectionId )
   {
     if( getThemeSize() == 0 )
       return;
@@ -197,7 +197,9 @@ public class MapModell implements IMapModell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintSelected(java.awt.Graphics, java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope, double, int)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintSelected(java.awt.Graphics, java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      double, int)
    */
   public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale, int selectionId )
   {
@@ -208,9 +210,10 @@ public class MapModell implements IMapModell
     {
       IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
       if( isThemeEnabled( theme ) )
-        theme.paintSelected( gr,hg, p, scale, bbox, selectionId );
+        theme.paintSelected( gr, hg, p, scale, bbox, selectionId );
     }
   }
+
   //  public double getScale()
   //  {
   //    return myScale;
@@ -356,5 +359,4 @@ public class MapModell implements IMapModell
     return m_project;
   }
 
-  
 }

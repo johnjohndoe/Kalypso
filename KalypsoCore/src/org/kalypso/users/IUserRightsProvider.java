@@ -43,24 +43,23 @@ package org.kalypso.users;
 import java.util.Properties;
 
 /**
- * IUserRightsProvider common interface for user rights providers. This
- * interface is used by the KalypsoUserService.
+ * IUserRightsProvider common interface for user rights providers. This interface is used by the KalypsoUserService.
  * 
  * @author schlienger
  */
 public interface IUserRightsProvider
 {
   /**
-   * Initialise the rights provider with the given properties. Properties
-   * are implementation dependent and might not be relevant in some cases.
+   * Initialise the rights provider with the given properties. Properties are implementation dependent and might not be
+   * relevant in some cases.
    */
   public void init( final Properties props ) throws UserRightsException;
-  
+
   /**
-   * This method is called when the rights consumer (possibly the
-   * KalypsoUserService) shuts down and implementers should clean hold resources
+   * This method is called when the rights consumer (possibly the KalypsoUserService) shuts down and implementers should
+   * clean hold resources
    */
-  public void dispose( );
+  public void dispose();
 
   /**
    * Delivers the list of rights the given user has.
@@ -72,8 +71,7 @@ public interface IUserRightsProvider
   public String[] getRights( final String username ) throws UserRightsException;
 
   /**
-   * Delivers the list of rights the user has after having beeing authenticated
-   * in the rigths provider.
+   * Delivers the list of rights the user has after having beeing authenticated in the rigths provider.
    * <p>
    * This operation is optional and might not be implemented by some providers
    * 
@@ -82,6 +80,5 @@ public interface IUserRightsProvider
    * @return list of rights
    * @throws UserRightsException
    */
-  public String[] getRights( final String username, final String password )
-      throws UserRightsException;
+  public String[] getRights( final String username, final String password ) throws UserRightsException;
 }

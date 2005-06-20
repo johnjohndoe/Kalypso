@@ -7,7 +7,7 @@ package org.kalypso.ogc.sensor.timeseries.wq;
  */
 public class WQException extends Exception
 {
-  public WQException( )
+  public WQException()
   {
     super();
   }

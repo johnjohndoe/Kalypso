@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -50,6 +50,7 @@ import org.kalypso.ogc.sensor.IAxisRange;
 public class DefaultAxisRange implements IAxisRange
 {
   private final Object m_from;
+
   private final Object m_to;
 
   public DefaultAxisRange( final Object from, final Object to )
@@ -61,7 +62,7 @@ public class DefaultAxisRange implements IAxisRange
   /**
    * @see org.kalypso.ogc.sensor.IAxisRange#getLower()
    */
-  public Object getLower( )
+  public Object getLower()
   {
     return m_from;
   }
@@ -69,7 +70,7 @@ public class DefaultAxisRange implements IAxisRange
   /**
    * @see org.kalypso.ogc.sensor.IAxisRange#getUpper()
    */
-  public Object getUpper( )
+  public Object getUpper()
   {
     return m_to;
   }

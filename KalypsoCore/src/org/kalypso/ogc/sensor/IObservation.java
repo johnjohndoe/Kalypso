@@ -36,24 +36,23 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
 import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.util.xml.xlink.IXlink;
 
 /**
- * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle
- * oder menschlische Wert-Erfassung.
+ * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle oder menschlische Wert-Erfassung.
  * 
  * @author schlienger
  */
 public interface IObservation extends IObservationEventProvider
 {
   /**
-   * Returns the identifier of this Observation. The identifier can be used to
-   * uniquely identify the Observation within its repository.
+   * Returns the identifier of this Observation. The identifier can be used to uniquely identify the Observation within
+   * its repository.
    * 
    * @return identifier
    */
@@ -95,13 +94,11 @@ public interface IObservation extends IObservationEventProvider
   public IAxis[] getAxisList();
 
   /**
-   * Returns the values resulting from the measurements this observation stands
-   * for.
+   * Returns the values resulting from the measurements this observation stands for.
    * 
    * @param args
-   *          some client defined arguments that can be interpretated by the
-   *          implementation. Implementors of this interface can use this
-   *          parameter, but they are not forced to do so.
+   *          some client defined arguments that can be interpretated by the implementation. Implementors of this
+   *          interface can use this parameter, but they are not forced to do so.
    * @return model
    * @throws SensorException
    */
@@ -120,5 +117,5 @@ public interface IObservation extends IObservationEventProvider
    * 
    * @return href
    */
-  public String getHref( );
+  public String getHref();
 }

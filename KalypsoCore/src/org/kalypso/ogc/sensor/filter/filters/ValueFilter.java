@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
@@ -69,16 +69,16 @@ public class ValueFilter extends AbstractObservationFilter
     super.initFilter( conf, obs, context );
 
     m_axisMap.clear();
-    
-    final Iterator it = ((List)conf).iterator();
+
+    final Iterator it = ( (List)conf ).iterator();
     while( it.hasNext() )
     {
-      final IValueComp vc = (IValueComp) it.next();
-      
+      final IValueComp vc = (IValueComp)it.next();
+
       m_axisMap.put( vc.getAxis(), vc );
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
@@ -86,21 +86,21 @@ public class ValueFilter extends AbstractObservationFilter
   {
     final ITuppleModel values = super.getValues( args );
     final IAxis[] axes = values.getAxisList();
-    
+
     final SimpleTuppleModel newValues = new SimpleTuppleModel( axes );
-    
+
     for( int i = 0; i < values.getCount(); i++ )
     {
       final Vector tupple = new Vector( axes.length );
-      
+
       boolean add = true;
-      
+
       for( int j = 0; j < axes.length; j++ )
       {
-        final IValueComp comp = (IValueComp) m_axisMap.get( axes[j] );
-        
+        final IValueComp comp = (IValueComp)m_axisMap.get( axes[j] );
+
         final Object elt = values.getElement( i, axes[j] );
-        
+
         if( comp == null || comp.validates( elt ) )
           tupple.add( newValues.getPositionFor( axes[j] ), elt );
         else
@@ -109,11 +109,11 @@ public class ValueFilter extends AbstractObservationFilter
           continue;
         }
       }
-      
+
       if( add )
         newValues.addTupple( tupple );
     }
-    
+
     return newValues;
   }
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
 import java.util.HashMap;
@@ -62,25 +62,25 @@ public abstract class AbstractTuppleModel implements ITuppleModel
 {
   /** maps an axis to its position in this tupple model */
   private final Map m_axes2pos = new HashMap();
-  
+
   private final IAxis[] m_axes;
-  
+
   public AbstractTuppleModel( final IAxis[] axes )
   {
     for( int ia = 0; ia < axes.length; ia++ )
       mapAxisToPos( axes[ia], ia );
-    
+
     m_axes = axes;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
    */
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxisList()
   {
     return m_axes;
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getPositionFor(org.kalypso.ogc.sensor.IAxis)
    */
@@ -88,10 +88,10 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   {
     if( !m_axes2pos.containsKey( axis ) )
       throw new SensorException( "Model does not contain axis: " + axis );
-    
-    return ((Integer)m_axes2pos.get( axis )).intValue();
+
+    return ( (Integer)m_axes2pos.get( axis ) ).intValue();
   }
-  
+
   /**
    * Maps an axis to its position in this model
    * 
@@ -100,9 +100,9 @@ public abstract class AbstractTuppleModel implements ITuppleModel
    */
   protected void mapAxisToPos( final IAxis axis, final int pos )
   {
-    m_axes2pos.put( axis, new Integer(pos) );
+    m_axes2pos.put( axis, new Integer( pos ) );
   }
-  
+
   /**
    * Clears the maps
    */
@@ -110,7 +110,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   {
     m_axes2pos.clear();
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getRangeFor(org.kalypso.ogc.sensor.IAxis)
    */
@@ -120,10 +120,10 @@ public abstract class AbstractTuppleModel implements ITuppleModel
     {
       Object begin = getElement( 0, axis );
       Object end = getElement( getCount() - 1, axis );
-      
+
       return new DefaultAxisRange( begin, end );
     }
-    
+
     return null;
   }
 }

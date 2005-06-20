@@ -80,8 +80,7 @@ public class TimeserieUtils
   }
 
   /**
-   * Finds out which metadata of the given observation begin with the given
-   * prefix.
+   * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
    * This is for instance usefull for the Alarmstufen
    * 
@@ -166,23 +165,21 @@ public class TimeserieUtils
   }
 
   /**
-   * Sets the 'forecast' metadata of the given observation using the given date
-   * range. If from or to are null, does nothing.
+   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
+   * nothing.
    */
   public final static void setForecast( final IObservation obs, final Date from, final Date to )
   {
     if( from != null && to != null )
     {
-      obs.getMetadataList().setProperty(
-          TimeserieConstants.MD_VORHERSAGE,
-          TimeserieConstants.DEFAULT_DF.format( from ) + ";"
-              + TimeserieConstants.DEFAULT_DF.format( to ) );
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE,
+          TimeserieConstants.DEFAULT_DF.format( from ) + ";" + TimeserieConstants.DEFAULT_DF.format( to ) );
     }
   }
 
   /**
-   * Returns a new instance of DateRangeArgument containing the beginning and
-   * the end of the forecast, given the observation is a forecast.
+   * Returns a new instance of DateRangeArgument containing the beginning and the end of the forecast, given the
+   * observation is a forecast.
    * <p>
    * An observation is a forecast when it has the MD_VORHERSAGE Metadata.
    * 
@@ -246,8 +243,7 @@ public class TimeserieUtils
 
   /**
    * @param type
-   * @return a Color that is defined to be used with the given axis type, or a
-   *         random color when no fits
+   * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
   public static Color getColorFor( final String type )
   {
@@ -296,8 +292,7 @@ public class TimeserieUtils
    */
   public static boolean isKey( final String type )
   {
-    return Boolean.valueOf( getProperties().getProperty( "IS_KEY_" + type, "false" ) )
-        .booleanValue();
+    return Boolean.valueOf( getProperties().getProperty( "IS_KEY_" + type, "false" ) ).booleanValue();
   }
 
   /**
@@ -305,18 +300,15 @@ public class TimeserieUtils
    */
   public static IAxis createDefaulAxis( final String type )
   {
-    return new DefaultAxis( getName( type ), type, getUnit( type ), getDataClass( type ),
-        isKey( type ) );
+    return new DefaultAxis( getName( type ), type, getUnit( type ), getDataClass( type ), isKey( type ) );
   }
 
   /**
-   * Returns a NumberFormat instance according to the given timeserie type. If
-   * there is no specific instance for the given type, then a default number
-   * format is returned.
+   * Returns a NumberFormat instance according to the given timeserie type. If there is no specific instance for the
+   * given type, then a default number format is returned.
    * 
    * @param type
-   * @return instance of NumberFormat that can be used to display the values to
-   *         the user
+   * @return instance of NumberFormat that can be used to display the values to the user
    */
   public static NumberFormat getNumberFormatFor( final String type )
   {

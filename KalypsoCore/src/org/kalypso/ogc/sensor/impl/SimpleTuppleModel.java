@@ -54,15 +54,14 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
- * <code>DefaultTableModel</code> based implementation of the
- * <code>ITuppleModel</code> interface.
+ * <code>DefaultTableModel</code> based implementation of the <code>ITuppleModel</code> interface.
  * 
  * @author schlienger
  */
 public class SimpleTuppleModel extends AbstractTuppleModel
 {
   public final static ITuppleModel EMPTY_TUPPLEMODEL = new SimpleTuppleModel( new IAxis[0] );
-  
+
   /** values are backed by this table model */
   private DefaultTableModel m_tupples;
 
@@ -73,7 +72,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    */
   public SimpleTuppleModel( final List axes )
   {
-    this( (IAxis[]) axes.toArray( new IAxis[axes.size()] ) );
+    this( (IAxis[])axes.toArray( new IAxis[axes.size()] ) );
   }
 
   /**
@@ -87,14 +86,13 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * Constructor with model. A <code>DefaultTableModel</code> is used to back
-   * the values which are taken from the given model.
+   * Constructor with model. A <code>DefaultTableModel</code> is used to back the values which are taken from the
+   * given model.
    * 
    * @param copyTupples
    * @throws SensorException
    */
-  public SimpleTuppleModel( final ITuppleModel copyTupples )
-      throws SensorException
+  public SimpleTuppleModel( final ITuppleModel copyTupples ) throws SensorException
   {
     this( copyTupples.getAxisList() );
 
@@ -102,17 +100,14 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * Constructor with model. A <code>DefaultTableModel</code> is used to back
-   * the values which are taken from the given model. The additional
-   * DateRangeArgument is used to limit the values that are returned by this
-   * model.
+   * Constructor with model. A <code>DefaultTableModel</code> is used to back the values which are taken from the
+   * given model. The additional DateRangeArgument is used to limit the values that are returned by this model.
    * 
    * @param tupples
    * @param dra
    * @throws SensorException
    */
-  public SimpleTuppleModel( final ITuppleModel tupples,
-      final DateRangeArgument dra ) throws SensorException
+  public SimpleTuppleModel( final ITuppleModel tupples, final DateRangeArgument dra ) throws SensorException
   {
     this( tupples.getAxisList() );
 
@@ -133,14 +128,12 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * A <code>DefaultTableModel</code> is used to back the values which are
-   * taken from the given model.
+   * A <code>DefaultTableModel</code> is used to back the values which are taken from the given model.
    * 
    * @param copyTupples
    * @throws SensorException
    */
-  public final void setFrom( final ITuppleModel copyTupples )
-      throws SensorException
+  public final void setFrom( final ITuppleModel copyTupples ) throws SensorException
   {
     IAxis[] axes = getAxisList();
 
@@ -162,21 +155,18 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * A <code>DefaultTableModel</code> is used to back the values which are
-   * taken from the given model. Uses the given <code>DateRangeArgument</code>
-   * to check which values to copy.
+   * A <code>DefaultTableModel</code> is used to back the values which are taken from the given model. Uses the given
+   * <code>DateRangeArgument</code> to check which values to copy.
    * 
    * @param copyTupples
    * @param dra
    * @throws SensorException
    */
-  public final void setFrom( final ITuppleModel copyTupples,
-      final DateRangeArgument dra ) throws SensorException
+  public final void setFrom( final ITuppleModel copyTupples, final DateRangeArgument dra ) throws SensorException
   {
     IAxis[] axes = getAxisList();
 
-    final IAxis dateAxis = ObservationUtilities.findAxisByClassNoEx( axes,
-        Date.class );
+    final IAxis dateAxis = ObservationUtilities.findAxisByClassNoEx( axes, Date.class );
     if( dra == null || dateAxis == null )
     {
       setFrom( copyTupples );
@@ -194,7 +184,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
     for( int ix = 0; ix < copyTupples.getCount(); ix++ )
     {
-      final Date d = (Date) copyTupples.getElement( ix, dateAxis );
+      final Date d = (Date)copyTupples.getElement( ix, dateAxis );
 
       if( d.compareTo( dra.getFrom() ) >= 0 && d.compareTo( dra.getTo() ) <= 0 )
       {
@@ -216,7 +206,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount( )
+  public int getCount()
   {
     return m_tupples.getRowCount();
   }
@@ -254,11 +244,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( final Object element, final IAxis axis )
-      throws SensorException
+  public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( element == null )
       return -1;
@@ -273,21 +261,17 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( final int index, final IAxis axis )
-      throws SensorException
+  public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     return m_tupples.getValueAt( index, getPositionFor( axis ) );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
-   *      org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( final int index, final Object element,
-      final IAxis axis ) throws SensorException
+  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
     // TODO: for debug purposes! once problem with "null" is solved remove?
     if( element == null )

@@ -83,7 +83,8 @@ public class KrigingReader
   private final Pattern BLOCK = Pattern.compile( ".*BLOCK:.+?(" + doublePattern + ").+?(" + doublePattern + ").+" );
 
   // example: 4485832.000 5603328.000 0.420 4234
-  private final Pattern RELATION = Pattern.compile( ".*?(" + doublePattern + ") +?(" + doublePattern + ") +?(" + doublePattern + ") +(.+?) *" );
+  private final Pattern RELATION = Pattern.compile( ".*?(" + doublePattern + ") +?(" + doublePattern + ") +?("
+      + doublePattern + ") +(.+?) *" );
 
   private final List m_krigingElements;
 
@@ -95,7 +96,8 @@ public class KrigingReader
 
   private final CS_CoordinateSystem m_crs;
 
-  public KrigingReader( Logger logger, Reader reader, SourceObservationProvider srcObservationProvider, CS_CoordinateSystem crs ) throws IOException
+  public KrigingReader( Logger logger, Reader reader, SourceObservationProvider srcObservationProvider,
+      CS_CoordinateSystem crs ) throws IOException
   {
     m_logger = logger;
     m_srcObservationProvider = srcObservationProvider;
@@ -110,7 +112,8 @@ public class KrigingReader
     final GM_Object geom = (GM_Object)feature.getProperty( geoPropName );
     final List elements = getKrigingElementsFor( geom );
     if( elements.isEmpty() )
-      throw new InvalidParameterException( "Raster ist zu grob, Keine zuordnung fuer " + feature.getId() + " gefunden.\n" );
+      throw new InvalidParameterException( "Raster ist zu grob, Keine zuordnung fuer " + feature.getId()
+          + " gefunden.\n" );
     return createFilter( elements );
   }
 

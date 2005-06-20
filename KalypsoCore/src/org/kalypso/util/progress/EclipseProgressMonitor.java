@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.progress;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -55,8 +55,7 @@ public final class EclipseProgressMonitor implements org.kalypso.util.progress.I
   }
 
   /**
-   * @see org.kalypso.util.progress.IProgressMonitor#beginTask(java.lang.String,
-   *      int)
+   * @see org.kalypso.util.progress.IProgressMonitor#beginTask(java.lang.String, int)
    */
   public void beginTask( String name, int totalWork )
   {

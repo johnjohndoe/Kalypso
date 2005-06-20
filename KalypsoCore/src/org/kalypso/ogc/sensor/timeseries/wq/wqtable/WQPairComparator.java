@@ -10,11 +10,13 @@ import java.util.Comparator;
 public class WQPairComparator implements Comparator
 {
   public static final int W = 0;
+
   public static final int Q = 1;
 
   public static final WQPairComparator Q_COMPARATOR = new WQPairComparator( Q );
+
   public static final WQPairComparator W_COMPARATOR = new WQPairComparator( W );
-  
+
   private final int m_field;
 
   private WQPairComparator( final int field )
@@ -27,9 +29,9 @@ public class WQPairComparator implements Comparator
    */
   public int compare( Object o1, Object o2 )
   {
-    final WQPair p1 = (WQPair) o1;
-    final WQPair p2 = (WQPair) o2;
-    
+    final WQPair p1 = (WQPair)o1;
+    final WQPair p2 = (WQPair)o2;
+
     if( m_field == W )
       return Double.compare( p1.getW(), p2.getW() );
 

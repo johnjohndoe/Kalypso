@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.deegree;
 
 import java.net.URL;
@@ -71,7 +71,7 @@ public class ObservationLinkHandler implements ITypeHandler
 
   public ObservationLinkHandler() throws JAXBException
   {
-  // nur da, um die exception zu werfen
+    // nur da, um die exception zu werfen
     m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
   }
 
@@ -90,12 +90,12 @@ public class ObservationLinkHandler implements ITypeHandler
   {
     return getNamespaceUri() + ":" + ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class );
   }
-  
+
   private String getElementName()
   {
     return ClassUtilities.getOnlyClassName( TimeseriesLink.class );
   }
-  
+
   private String getNamespaceUri()
   {
     return "obslink.zml.kalypso.org";
@@ -119,22 +119,22 @@ public class ObservationLinkHandler implements ITypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
-  public Object unmarshall( final Node node,URL context, IUrlResolver urlResolver ) throws TypeRegistryException
+  public Object unmarshall( final Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     try
     {
-    	final Element element = (Element)node;
-      final NodeList childNodes=(element).getElementsByTagNameNS(getNamespaceUri(),getElementName());
-      
+      final Element element = (Element)node;
+      final NodeList childNodes = ( element ).getElementsByTagNameNS( getNamespaceUri(), getElementName() );
+
       for( int i = 0; i < childNodes.getLength(); i++ )
       {
         final Node child = childNodes.item( i );
 
         // child namespace may be null
-        if( getNamespaceUri( ).equals( child.getNamespaceURI() ) && getElementName().equals( child.getLocalName() ) )
-          return m_unmarshaller.unmarshal( child );    
+        if( getNamespaceUri().equals( child.getNamespaceURI() ) && getElementName().equals( child.getLocalName() ) )
+          return m_unmarshaller.unmarshal( child );
       }
-      
+
       return null;
     }
     catch( final JAXBException e )

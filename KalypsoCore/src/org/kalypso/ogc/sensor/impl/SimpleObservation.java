@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
 import java.util.HashMap;
@@ -96,7 +96,7 @@ public class SimpleObservation implements IObservation
   {
     this( href, identifier, name, editable, target, metadata, axes, new SimpleTuppleModel( axes ) );
   }
-  
+
   public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
       final IXlink target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
   {
@@ -160,7 +160,7 @@ public class SimpleObservation implements IObservation
 
     if( args instanceof DateRangeArgument )
       return new SimpleTuppleModel( m_tupples, (DateRangeArgument)args );
-    
+
     return m_tupples;
   }
 
@@ -174,13 +174,13 @@ public class SimpleObservation implements IObservation
       m_tupples = null;
       return;
     }
-    
+
     if( m_tupples == null )
     {
       m_tupples = values;
       return;
     }
-    
+
     final IAxis[] otherAxes = values.getAxisList();
 
     // TODO: commented this test out because the gui might add the status axis when not
@@ -238,7 +238,7 @@ public class SimpleObservation implements IObservation
         {
           final IAxis myA = (IAxis)it.next();
           final IAxis oA = (IAxis)map.get( myA );
-          
+
           final Object obj = values.getElement( i, oA );
           m_tupples.setElement( ixPresent, obj, myA );
         }
@@ -247,29 +247,28 @@ public class SimpleObservation implements IObservation
       {
         final Set kset = map.keySet();
 
-        final Object[] tupple = new Object[ kset.size() ];
-        
+        final Object[] tupple = new Object[kset.size()];
+
         final SimpleTuppleModel stm = prepareForAdding();
-        
+
         for( final Iterator it = kset.iterator(); it.hasNext(); )
         {
           final IAxis myA = (IAxis)it.next();
 
           final Object obj = values.getElement( i, (IAxis)map.get( myA ) );
-          tupple[ stm.getPositionFor( myA ) ] = obj;
+          tupple[stm.getPositionFor( myA )] = obj;
         }
-        
+
         stm.addTupple( tupple );
       }
     }
-    
+
     m_evtPrv.fireChangedEvent();
   }
 
   /**
-   * Helper: since we are adding tupples to our model, we need a way to be sure that this
-   * is possible. For now, we simply copy the existing values in a SimpleTuppleModel
-   * which finally allows to add tupples as desired.
+   * Helper: since we are adding tupples to our model, we need a way to be sure that this is possible. For now, we
+   * simply copy the existing values in a SimpleTuppleModel which finally allows to add tupples as desired.
    * 
    * @return a SimpleTuppleModel
    * 
@@ -280,7 +279,7 @@ public class SimpleObservation implements IObservation
     // since we are adding
     if( !( m_tupples instanceof SimpleTuppleModel ) )
       m_tupples = new SimpleTuppleModel( m_tupples );
-    
+
     return (SimpleTuppleModel)m_tupples;
   }
 
@@ -307,11 +306,11 @@ public class SimpleObservation implements IObservation
   {
     m_evtPrv.removeListener( listener );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */
-  public void clearListeners( )
+  public void clearListeners()
   {
     m_evtPrv.clearListeners();
   }
@@ -319,25 +318,26 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getHref()
    */
-  public String getHref( )
+  public String getHref()
   {
     return m_href;
   }
-  
+
   /**
    * Sets the href
    * 
-   * @param href localisation of the observation when it comes from a zml file for instance.
+   * @param href
+   *          localisation of the observation when it comes from a zml file for instance.
    */
   public void setHref( final String href )
   {
     m_href = href;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return "Obs: " + m_name + " - Id:" + m_identifier + " - Href:" + m_href;
   }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
 /**
@@ -49,10 +49,10 @@ public interface ObservationConstants
 {
   /** Name of the observation */
   public final static String MD_NAME = "Name";
-  
+
   /** Description of the observation */
   public final static String MD_DESCRIPTION = "Beschreibung";
-  
+
   /** Some information about the Origin of the observation */
   public final static String MD_ORIGIN = "Entstehung";
 }

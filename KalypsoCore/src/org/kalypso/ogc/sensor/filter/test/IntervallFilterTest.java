@@ -8,6 +8,8 @@ import java.util.Date;
 
 import javax.xml.bind.Marshaller;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.io.IOUtils;
 import org.kalypso.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -18,8 +20,6 @@ import org.kalypso.zml.filters.IntervallFilter;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.ZmlFilter;
 import org.w3._1999.xlinkext.SimpleLinkType;
-
-import junit.framework.TestCase;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -64,7 +64,7 @@ import junit.framework.TestCase;
 
 public class IntervallFilterTest extends TestCase
 {
-  public void testIntervallFilter() 
+  public void testIntervallFilter()
   {
     final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
@@ -97,8 +97,7 @@ public class IntervallFilterTest extends TestCase
       final IObservation observation = ZmlFactory.parseXML( zmlURL, "id" );
       final Date from = XML_DATETIME_FORMAT.parse( "2005-02-16T17:00:00" );
       final Date to = XML_DATETIME_FORMAT.parse( "2005-02-16T17:36:00" );
-      String dump = ObservationUtilities.dump( observation.getValues( new DateRangeArgument( from,
-          to ) ), "," );
+      String dump = ObservationUtilities.dump( observation.getValues( new DateRangeArgument( from, to ) ), "," );
       System.out.println( dump );
     }
     catch( Exception e )

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann.test;
 
 import java.io.StringReader;
@@ -68,23 +68,28 @@ public class WechmannFactoryTest extends TestCase
   {
     WechmannParams wp1 = new WechmannParams( -38.12, -7.87274, 2.25925, 170 );
     WechmannParams wp2 = new WechmannParams( -43.32, -7.24065, 2.131 );
-    WechmannSet ws = new WechmannSet( new Date(), new WechmannParams[] {
-        wp1, wp2 } );
+    WechmannSet ws = new WechmannSet( new Date(), new WechmannParams[]
+    {
+        wp1,
+        wp2 } );
 
-    m_wg = new WechmannGroup( new WechmannSet[] { ws, ws } );
+    m_wg = new WechmannGroup( new WechmannSet[]
+    {
+        ws,
+        ws } );
   }
 
   public void testParse() throws WQException
   {
     final String xml = WechmannFactory.createXMLString( m_wg );
-    
+
     assertNotNull( xml );
     assertTrue( xml.length() > 0 );
-    
+
     System.out.println( xml );
-    
-    final WechmannGroup group = WechmannFactory.parse( new InputSource( new StringReader( xml )) );
-    
+
+    final WechmannGroup group = WechmannFactory.parse( new InputSource( new StringReader( xml ) ) );
+
     assertNotNull( group );
   }
 }

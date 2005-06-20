@@ -36,15 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
 /**
  * Exceptionklasse für Exceptions innerhalb diesesPakets.
- *
+ * 
  * @author Schlienger
- *
+ *  
  */
 public class LoaderException extends Exception
 {

@@ -65,22 +65,22 @@ public interface KalypsoStati
 
   /** Value has been MODIFIED by user ( bin: 1000 dec: 8 ) */
   public final static int BIT_USER_MODIFIED = 0x08;
-  
+
   /** Value could not be computed or derived from another value ( bin: 10000 dec: 16 ) */
   public final static int BIT_DERIVATION_ERROR = 0x10;
-  
+
   /** Value was derivated from another one (such as a WQ-Transformation for instance) ( bin: 100000 dec: 32 ) */
   public final static int BIT_DERIVATED = 0x20;
 
   /** convenience object for usermod status */
   public final static Integer STATUS_USERMOD = new Integer( BIT_USER_MODIFIED );
-  
-  /** convenience object for check status  */
+
+  /** convenience object for check status */
   public final static Integer STATUS_CHECK = new Integer( BIT_CHECK );
-  
+
   /** convenience object for derivation-error status */
   public final static Integer STATUS_DERIVATION_ERROR = new Integer( BIT_DERIVATION_ERROR );
-  
+
   /** convenience object for derivated-status */
   public final static Integer STATUS_DERIVATED = new Integer( BIT_DERIVATED );
 }

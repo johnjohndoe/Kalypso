@@ -57,13 +57,14 @@ public interface IObservationFilter extends IObservation
   /**
    * Initializes the filter with the given configuration and the observation.
    * 
-   * @param conf implementation dependent configuration.
-   * @param obs [nullable] observation that will be filtered. Can also be a
-   *          subclass of IObservationFiler. This argument is optional.
-   * @param context [nullable] the context to use when resolving a zml-url. This
-   *          argument is optional.
+   * @param conf
+   *          implementation dependent configuration.
+   * @param obs
+   *          [nullable] observation that will be filtered. Can also be a subclass of IObservationFiler. This argument
+   *          is optional.
+   * @param context
+   *          [nullable] the context to use when resolving a zml-url. This argument is optional.
    * @throws SensorException
    */
-  public void initFilter( final Object conf, final IObservation obs,
-      final URL context ) throws SensorException;
+  public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException;
 }

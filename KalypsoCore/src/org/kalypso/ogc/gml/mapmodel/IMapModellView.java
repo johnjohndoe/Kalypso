@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -48,5 +48,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 public interface IMapModellView extends ModellEventListener
 {
   public IMapModell getMapModell();
+
   public void setMapModell( final IMapModell modell );
 }

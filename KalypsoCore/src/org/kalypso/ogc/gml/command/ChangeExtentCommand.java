@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.util.command.ICommand;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * 

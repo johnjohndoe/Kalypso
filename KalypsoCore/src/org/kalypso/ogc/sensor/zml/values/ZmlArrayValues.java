@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.values;
 
 import java.util.List;
@@ -78,8 +78,7 @@ public class ZmlArrayValues implements IZmlValues
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int, java.lang.Object)
    */
   public void setElement( int index, Object element )
   {

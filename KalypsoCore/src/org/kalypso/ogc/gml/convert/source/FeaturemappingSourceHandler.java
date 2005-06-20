@@ -34,7 +34,8 @@ public class FeaturemappingSourceHandler implements ISourceHandler
 
   private final Map m_externData;
 
-  public FeaturemappingSourceHandler( final IUrlResolver resolver, final URL context, final FeaturemappingSourceType source, final Map externData )
+  public FeaturemappingSourceHandler( final IUrlResolver resolver, final URL context,
+      final FeaturemappingSourceType source, final Map externData )
   {
     m_resolver = resolver;
     m_context = context;
@@ -52,10 +53,10 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     final Iterator sourceIt = sourceList.iterator();
 
     // XSD schreibt vor, dass es genau 2 sources gibt
-    final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, (SourceType)sourceIt
-        .next(), m_externData );
-    final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, (SourceType)sourceIt
-        .next(), m_externData );
+    final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, (SourceType)sourceIt.next(),
+        m_externData );
+    final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, (SourceType)sourceIt.next(),
+        m_externData );
 
     final List mappingList = m_source.getMapping();
     for( final Iterator mappingIt = mappingList.iterator(); mappingIt.hasNext(); )
@@ -86,8 +87,9 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     return secondGML;
   }
 
-  private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures, final FeatureType toFeatureType, final String fromID, final String toID, 
-      final Properties properties ) throws GmlConvertException
+  private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures,
+      final FeatureType toFeatureType, final String fromID, final String toID, final Properties properties )
+      throws GmlConvertException
   {
     if( mapping instanceof AddFeaturesMappingType )
     {
@@ -97,20 +99,17 @@ public class FeaturemappingSourceHandler implements ISourceHandler
       return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, handleExisting, fID );
     }
     else if( mapping instanceof ChangeFeaturesMappingType )
-      return new ChangeFeaturesFromFeaturelist( toFeatures, properties, fromID,
-          toID );
+      return new ChangeFeaturesFromFeaturelist( toFeatures, properties, fromID, toID );
     else
       throw new GmlConvertException( "Mapping-Type wird nicht unterstützt: " + mapping.getClass().getName() );
   }
 
-  private FeatureList getFeatureList( final GMLWorkspace workspace, final String path )
-      throws GmlConvertException
+  private FeatureList getFeatureList( final GMLWorkspace workspace, final String path ) throws GmlConvertException
   {
     final Object featureFromPath = workspace.getFeatureFromPath( path );
     if( featureFromPath instanceof FeatureList )
       return (FeatureList)featureFromPath;
 
-    throw new GmlConvertException( "Dieser FeaturePath zeigt auf keine FeatureListe: "
-        + path );
+    throw new GmlConvertException( "Dieser FeaturePath zeigt auf keine FeatureListe: " + path );
   }
 }

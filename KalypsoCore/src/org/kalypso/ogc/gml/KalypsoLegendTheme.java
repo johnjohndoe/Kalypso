@@ -124,8 +124,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
    */
-  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
-      int selectionId )
+  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
   {
     int w = g.getClipBounds().width;
     int h = g.getClipBounds().height;
@@ -138,11 +137,11 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     }
   }
 
-  public void paintSelected( Graphics g, Graphics hg,GeoTransform p, double scale, GM_Envelope bbox,
-      int selectionId )
+  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
   {
-      paintSelected(hg, p, scale, bbox, selectionId);
+    paintSelected( hg, p, scale, bbox, selectionId );
   }
+
   public void addModellListener( final ModellEventListener listener )
   {
     myEventProvider.addModellListener( listener );
@@ -241,8 +240,7 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     double yborder = m_font.getSize() + 3;
     double xborder = width / 3;
     GM_Envelope srcEnv = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
-    GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width - xborder,
-        height - yborder );
+    GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width - xborder, height - yborder );
     GeoTransform transform = new WorldToScreenTransform( srcEnv, destEnv );
 
     Image image = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );

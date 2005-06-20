@@ -3,27 +3,23 @@
  * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestr. 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
+ * Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -41,11 +37,10 @@ import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.util.xml.XmlTypes;
 
 /**
- * Provides utility methods for manipulating the URLs designed to be used as
- * Zml-Identifiers between kalypso client and server.
+ * Provides utility methods for manipulating the URLs designed to be used as Zml-Identifiers between kalypso client and
+ * server.
  * <p>
- * This utility class is not intended to be instanciated. Use its static
- * methods.
+ * This utility class is not intended to be instanciated. Use its static methods.
  * 
  * @author schlienger (18.05.2005)
  */
@@ -53,12 +48,12 @@ public final class ZmlURL
 {
   private ZmlURL()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
   /**
-   * Returns true if the given Zml-Url solely denotes a context. In that case
-   * the Zml-Url will not be parsed the usual way. 
+   * Returns true if the given Zml-Url solely denotes a context. In that case the Zml-Url will not be parsed the usual
+   * way.
    */
   public static boolean isUseAsContext( final URL zmlUrl )
   {
@@ -66,20 +61,21 @@ public final class ZmlURL
   }
 
   /**
-   * Returns true if the given Zml-Url solely denotes a context. In that case
-   * the Zml-Url will not be parsed the usual way. 
+   * Returns true if the given Zml-Url solely denotes a context. In that case the Zml-Url will not be parsed the usual
+   * way.
    */
   public static boolean isUseAsContext( final String href )
   {
     final String test = href.toLowerCase();
     return test.indexOf( ZmlURLConstants.FRAGMENT_USEASCONTEXT ) != -1;
   }
-  
+
   /**
-   * Return true if the given id represents a server-side url. A server-side url
-   * begins with the server-specific scheme-name.
+   * Return true if the given id represents a server-side url. A server-side url begins with the server-specific
+   * scheme-name.
    * 
-   * @param href string representation of the zml url
+   * @param href
+   *          string representation of the zml url
    * @return true if server side
    * @see ZmlURLConstants#SCHEME_OCS
    */
@@ -111,8 +107,8 @@ public final class ZmlURL
   }
 
   /**
-   * Returns only the identifier part of the zml url. The URL may contain a
-   * query part which will be ignored by this convenience method.
+   * Returns only the identifier part of the zml url. The URL may contain a query part which will be ignored by this
+   * convenience method.
    * 
    * @return only identifier part
    */
@@ -122,8 +118,8 @@ public final class ZmlURL
   }
 
   /**
-   * Returns only the identifier part of the zml url. The URL may contain a
-   * query part which will be ignored by this convenience method.
+   * Returns only the identifier part of the zml url. The URL may contain a query part which will be ignored by this
+   * convenience method.
    * 
    * @return only identifier part
    */
@@ -160,19 +156,16 @@ public final class ZmlURL
   }
 
   /**
-   * Inserts the date range or replaces the one if existing. The date range is
-   * inserted in the from-to specification in the query part of the url.
+   * Inserts the date range or replaces the one if existing. The date range is inserted in the from-to specification in
+   * the query part of the url.
    * 
    * @return string containing the given date range
    */
-  public static String insertDateRange( final String str,
-      final DateRangeArgument dra )
+  public static String insertDateRange( final String str, final DateRangeArgument dra )
   {
     // first replace the date range spec (does nothing if not present)
-    String tmpUrl = str.replaceFirst( ZmlURLConstants.TAG_FROM1 + ".*"
-        + ZmlURLConstants.TAG_FROM2, "" );
-    tmpUrl = tmpUrl.replaceFirst( ZmlURLConstants.TAG_TO1 + ".*"
-        + ZmlURLConstants.TAG_TO2, "" );
+    String tmpUrl = str.replaceFirst( ZmlURLConstants.TAG_FROM1 + ".*" + ZmlURLConstants.TAG_FROM2, "" );
+    tmpUrl = tmpUrl.replaceFirst( ZmlURLConstants.TAG_TO1 + ".*" + ZmlURLConstants.TAG_TO2, "" );
 
     String[] strs = tmpUrl.split( "\\?", 2 );
 
@@ -188,8 +181,7 @@ public final class ZmlURL
   }
 
   /**
-   * Builds the String representation of the given date range. Constructs a
-   * simple XML representation in the format:
+   * Builds the String representation of the given date range. Constructs a simple XML representation in the format:
    * 
    * <pre>
    *   	&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;
@@ -199,19 +191,16 @@ public final class ZmlURL
   {
     final StringBuffer bf = new StringBuffer();
 
-    bf.append( ZmlURLConstants.TAG_FROM1 ).append(
-        XmlTypes.PDATE.toString( dra.getFrom() ) ).append(
+    bf.append( ZmlURLConstants.TAG_FROM1 ).append( XmlTypes.PDATE.toString( dra.getFrom() ) ).append(
         ZmlURLConstants.TAG_FROM2 );
-    bf.append( ZmlURLConstants.TAG_TO1 ).append(
-        XmlTypes.PDATE.toString( dra.getTo() ) ).append(
+    bf.append( ZmlURLConstants.TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) ).append(
         ZmlURLConstants.TAG_TO2 );
 
     return bf.toString();
   }
 
   /**
-   * Checks if the string contains the from-to specification and eventually
-   * creates the corresponding DateRangeArgument.
+   * Checks if the string contains the from-to specification and eventually creates the corresponding DateRangeArgument.
    * 
    * <pre>
    *       The format of the from-to specification should be as follows:
@@ -279,21 +268,21 @@ public final class ZmlURL
   }
 
   /**
-   * Insert the filter spec into the zml url. Return the newly build url string.
-   * The filter string should not contain the %lt;filter/&gt; tags, this is
-   * automatically handled by this method.
+   * Insert the filter spec into the zml url. Return the newly build url string. The filter string should not contain
+   * the %lt;filter/&gt; tags, this is automatically handled by this method.
    * 
-   * @param href the zml url to update
-   * @param filter the xml oriented filter specification
+   * @param href
+   *          the zml url to update
+   * @param filter
+   *          the xml oriented filter specification
    */
   public static String insertFilter( final String href, final String filter )
   {
     if( filter == null || filter.length() == 0 )
       return href;
-    
+
     // first replace the filter spec (does nothing if not present)
-    String tmp = href.replaceFirst( ZmlURLConstants.TAG_FILTER1+ ".*"
-        + ZmlURLConstants.TAG_FILTER2, "" );
+    String tmp = href.replaceFirst( ZmlURLConstants.TAG_FILTER1 + ".*" + ZmlURLConstants.TAG_FILTER2, "" );
 
     String[] strs = tmp.split( "\\?", 2 );
 

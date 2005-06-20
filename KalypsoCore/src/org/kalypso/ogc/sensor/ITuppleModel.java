@@ -36,10 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
-
 
 /**
  * Data Model for the value elements of observations.
@@ -48,20 +47,21 @@ package org.kalypso.ogc.sensor;
  */
 public interface ITuppleModel
 {
-  /** 
+  /**
    * @return axis list for which this model delivers elements
    */
   public IAxis[] getAxisList();
-  
+
   /**
    * Returns the position of the axis in this tupple model
    * 
    * @param axis
    * @return the position of the axis in this tupple model
-   * @throws SensorException when axis not part of this model
+   * @throws SensorException
+   *           when axis not part of this model
    */
   public int getPositionFor( final IAxis axis ) throws SensorException;
-  
+
   /**
    * @return amount of items in this observation's model
    * @throws SensorException
@@ -74,7 +74,7 @@ public interface ITuppleModel
    * @throws SensorException
    */
   public IAxisRange getRangeFor( IAxis axis ) throws SensorException;
-  
+
   /**
    * @param index
    * @param axis
@@ -83,27 +83,28 @@ public interface ITuppleModel
    * @throws SensorException
    */
   public Object getElement( final int index, final IAxis axis ) throws SensorException;
-  
+
   /**
    * Sets the element at index for axis.
+   * 
    * @param index
    * @param element
    * @param axis
    * 
-   * @throws SensorException 
+   * @throws SensorException
    */
   public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException;
 
   /**
-   * Returns the index of the given element in the valueslist for the given axis. Calling
-   * this method makes only sense for key axes since other axes can have duplicates. In either
-   * case it returns the index of the first element found.
+   * Returns the index of the given element in the valueslist for the given axis. Calling this method makes only sense
+   * for key axes since other axes can have duplicates. In either case it returns the index of the first element found.
    * 
    * @param element
    * @param axis
    * @return index >= 0 if element is found. Returns -1 if element could not be found.
    * 
-   * @throws SensorException when there are no axis
+   * @throws SensorException
+   *           when there are no axis
    */
   public int indexOf( final Object element, final IAxis axis ) throws SensorException;
 }
