@@ -82,8 +82,7 @@ public class NAZMLGenerator
   }
 
   /**
-   * generate copy of custom timeseriesfile to zml-format, and returns
-   * timeserieslink
+   * generate copy of custom timeseriesfile to zml-format, and returns timeserieslink
    * 
    * @param copySource
    *          url to the data to copy
@@ -92,9 +91,8 @@ public class NAZMLGenerator
    * @param targetRelativePath
    *          relative path from basedir to store target zml file
    */
-  public static TimeseriesLink copyToTimeseriesLink( URL copySource, String axis1Type,
-      String axis2Type, File targetBaseDir, String targetRelativePath, boolean relative,
-      boolean simulateCopy ) throws Exception
+  public static TimeseriesLink copyToTimeseriesLink( URL copySource, String axis1Type, String axis2Type,
+      File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy ) throws Exception
   {
 
     File targetZmlFile = new File( targetBaseDir, targetRelativePath );
@@ -134,8 +132,7 @@ public class NAZMLGenerator
     return link;
   }
 
-  private static void convert( URL sourceURL, String axis1Type, String axis2Type, File targetZmlFile )
-      throws Exception
+  private static void convert( URL sourceURL, String axis1Type, String axis2Type, File targetZmlFile ) throws Exception
   {
     StringBuffer buffer = new StringBuffer();
     generateTmpZml( buffer, axis1Type, axis2Type, sourceURL );
@@ -156,8 +153,8 @@ public class NAZMLGenerator
 
   }
 
-  private static void generateTmpZml( StringBuffer buffer, String axis1Type, String axis2Type,
-      URL sourceURL ) throws Exception
+  private static void generateTmpZml( StringBuffer buffer, String axis1Type, String axis2Type, URL sourceURL )
+      throws Exception
   {
     final String location = sourceURL.toExternalForm();
 
@@ -197,14 +194,12 @@ public class NAZMLGenerator
     buffer.append( "</observation>" );
   }
 
-  public static void createFile( FileWriter writer, String axisValueType, IObservation observation )
-      throws Exception
+  public static void createFile( FileWriter writer, String axisValueType, IObservation observation ) throws Exception
   {
     createGRAPFile( writer, axisValueType, observation );
   }
 
-  private static void createGRAPFile( Writer writer, String valueAxisType, IObservation observation )
-      throws Exception
+  private static void createGRAPFile( Writer writer, String valueAxisType, IObservation observation ) throws Exception
   {
     SimpleDateFormat sd = new SimpleDateFormat( "yyMMddHH" );
     // write standard header

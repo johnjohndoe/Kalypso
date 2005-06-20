@@ -87,8 +87,7 @@ public class CatchmentManager extends AbstractManager
     m_bodenKorrekturFT = ( (FeatureAssociationTypeProperty_Impl)ftp1 ).getAssociationFeatureTypes()[0];
 
     FeatureTypeProperty ftp2 = m_featureType.getProperty( "grundwasserabflussMember" );
-    m_grundwasserabflussFT = ( (FeatureAssociationTypeProperty_Impl)ftp2 )
-        .getAssociationFeatureTypes()[0];
+    m_grundwasserabflussFT = ( (FeatureAssociationTypeProperty_Impl)ftp2 ).getAssociationFeatureTypes()[0];
   }
 
   /**
@@ -98,8 +97,9 @@ public class CatchmentManager extends AbstractManager
   public Feature[] parseFile( URL url ) throws Exception
   {
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// new FileReader( file
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+                                                                                                                     // FileReader(
+                                                                                                                     // file
     // ) );
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
@@ -123,8 +123,7 @@ public class CatchmentManager extends AbstractManager
     FeatureProperty prop = (FeatureProperty)propCollector.get( "anzlayy" );
     int anzlayy = Integer.parseInt( (String)prop.getValue() );
     List list = new ArrayList();
-    FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty(
-        "bodenkorrekturmember", list );
+    FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty( "bodenkorrekturmember", list );
     propCollector.put( bodenkorrekturProperty.getName(), bodenkorrekturProperty );
     // 9
     for( int i = 0; i < anzlayy; i++ )
@@ -154,8 +153,7 @@ public class CatchmentManager extends AbstractManager
     // 13-14
     int igwzu = Integer.parseInt( (String)prop.getValue() );
     List gwList = new ArrayList();
-    FeatureProperty property = FeatureFactory.createFeatureProperty( "grundwasserabflussMember",
-        gwList );
+    FeatureProperty property = FeatureFactory.createFeatureProperty( "grundwasserabflussMember", gwList );
     propCollector.put( "grundwasserabflussMember", property );
     if( igwzu > 0 )
     {
@@ -216,11 +214,9 @@ public class CatchmentManager extends AbstractManager
     // is relative
     // no copy
 
-    Object relativeLink = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(),
-        TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(),
-        relativeZmlPath, true, true );
-    FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR",
-        relativeLink );
+    Object relativeLink = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(), TimeserieConstants.TYPE_DATE,
+        TimeserieConstants.TYPE_RAINFALL, m_conf.getGmlBaseDir(), relativeZmlPath, true, true );
+    FeatureProperty niederschlagZRProp = FeatureFactory.createFeatureProperty( "niederschlagZR", relativeLink );
     propCollector.put( "niederschlagZR", niederschlagZRProp );
 
     // continue reading
@@ -246,14 +242,12 @@ public class CatchmentManager extends AbstractManager
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace workSpace, Feature feature )
-      throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace workSpace, Feature feature ) throws Exception
   {
     // 0
     asciiBuffer.getCatchmentBuffer().append(
-        "           "
-            + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "inum" ), "i5" )
-            + "      7" + "\n" );
+        "           " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "inum" ), "i5" ) + "      7"
+            + "\n" );
     // 1-2
     for( int i = 1; i <= 2; i++ )
       asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
@@ -265,9 +259,7 @@ public class CatchmentManager extends AbstractManager
     // "pns" ), "a1" ) );
     b.append( "n " + getNiederschlagEingabeDateiString( feature ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
-    b.append( " "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" )
-        + "\n" );
+    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" ) + "\n" );
 
     // 4-6
     b.append( "std.tmp std.ver\n" );
@@ -287,21 +279,16 @@ public class CatchmentManager extends AbstractManager
     buf.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "vsg" ), "f5.3" ) );
     //anzlayy
     buf.append( FortranFormatHelper.printf( Integer.toString( list.size() ), "i5" ) );
-    buf.append( "     "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bimax" ), "f5.1" ) );
-    buf.append( "     "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bianf" ), "f5.1" ) );
+    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bimax" ), "f5.1" ) );
+    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bianf" ), "f5.1" ) );
 
     Feature nodeFeVers = workSpace.resolveLink( feature, "izkn_vers" );
     if( nodeFeVers == null )
       buf.append( "    0" );
     else
       buf.append( toAscci( nodeFeVers, 18 ) );
-    buf.append( "     "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) );
-    buf.append( "     "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rintmx" ), "f5.1" )
-        + "\n" );
+    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) );
+    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rintmx" ), "f5.1" ) + "\n" );
     asciiBuffer.getCatchmentBuffer().append( buf.toString() );
     Double banf = (Double)feature.getProperty( "faktorBianf" );
 
@@ -349,23 +336,18 @@ public class CatchmentManager extends AbstractManager
 
     if( gwList.size() > 0 )
     {
-    asciiBuffer.getCatchmentBuffer().append( line13 + "\n" );
-    asciiBuffer.getCatchmentBuffer().append( line14 + "\n" );
- }
+      asciiBuffer.getCatchmentBuffer().append( line13 + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( line14 + "\n" );
+    }
     // 15
 
     StringBuffer buffer = new StringBuffer();
     buffer.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgru" ), "*" ) );
-    buffer.append( " "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgro" ), "*" ) );
-    buffer.append( " "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rtr" ), "*" ) );
-    buffer.append( " "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "pors" ), "*" ) );
-    buffer.append( " "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "gwsent" ), "*" ) );
-    buffer.append( " "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "klupor" ), "*" ) );
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgro" ), "*" ) );
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rtr" ), "*" ) );
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "pors" ), "*" ) );
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "gwsent" ), "*" ) );
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "klupor" ), "*" ) );
 
     Feature nodeFeGW = workSpace.resolveLink( feature, "izkn" );
     if( nodeFeVers == null )
@@ -381,8 +363,7 @@ public class CatchmentManager extends AbstractManager
   } /*
      * (non-Javadoc)
      * 
-     * @see org.kalypso.convert.AbstractManager#mapID(int,
-     *      org.kalypsodeegree.model.feature.FeatureType)
+     * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
      */
 
   public String mapID( int id, FeatureType ft )

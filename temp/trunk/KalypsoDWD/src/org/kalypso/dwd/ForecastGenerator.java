@@ -66,8 +66,8 @@ import org.kalypso.dwd.dwdzml.DwdzmlConfType.CatchmentType;
 
 /**
  * 
- * ForecastGenerator generates zml-forecast timeseries from dwd raster formated
- * files. parameters must be provided via configuration file.
+ * ForecastGenerator generates zml-forecast timeseries from dwd raster formated files. parameters must be provided via
+ * configuration file.
  * 
  * @author doemming
  */
@@ -138,8 +138,7 @@ public class ForecastGenerator
 
   public void generateForecast() throws IOException, ParseException
   {
-    final File rasterFile = DWDRasterHelper.getNewestFileAndRemoveOthers( new File( m_conf
-        .getInputFolder() ) );
+    final File rasterFile = DWDRasterHelper.getNewestFileAndRemoveOthers( new File( m_conf.getInputFolder() ) );
     m_storage.loadRaster( rasterFile );
     final List catchmentList = m_conf.getCatchment();
     for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
@@ -172,8 +171,7 @@ public class ForecastGenerator
   private boolean createTimserie( String id, List posList ) throws IOException
   {
     System.out.println( "Feature: " + id + " has " + posList.size() + " rasterpoints" );
-    final String statusValue = m_conf.getDefaultStatusValue() == null ? "" : m_conf
-        .getDefaultStatusValue();
+    final String statusValue = m_conf.getDefaultStatusValue() == null ? "" : m_conf.getDefaultStatusValue();
     final SortedMap zr = new TreeMap();
     createTimserie( zr, posList, DWDRaster.KEY_RAIN );
     createTimserie( zr, posList, DWDRaster.KEY_SNOW );
@@ -184,8 +182,8 @@ public class ForecastGenerator
       final Date date = (Date)iter.next();
       final Double value = (Double)zr.get( date );
       final double niederschlag = value.doubleValue() / 100d;
-      csvBuffer.append( m_zmlDF.format( date ) + "," + m_decimalFormat.format( niederschlag ) + ","
-          + statusValue + "\n" );
+      csvBuffer.append( m_zmlDF.format( date ) + "," + m_decimalFormat.format( niederschlag ) + "," + statusValue
+          + "\n" );
     }
     final File ascciZmlFile = new File( m_conf.getOutputFolder(), id + ".csv" );
     if( ascciZmlFile.exists() )
@@ -255,8 +253,7 @@ public class ForecastGenerator
     {
 
       StringBuffer result = new StringBuffer();
-      InputStream resourceAsStream = getClass().getResourceAsStream(
-          "resource/baseLinkVorhersage.zml" );
+      InputStream resourceAsStream = getClass().getResourceAsStream( "resource/baseLinkVorhersage.zml" );
       InputStreamReader reader = new InputStreamReader( resourceAsStream );
       char[] buffer = new char[100];
       int i;

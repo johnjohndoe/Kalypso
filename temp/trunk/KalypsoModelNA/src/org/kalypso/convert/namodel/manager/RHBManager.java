@@ -49,15 +49,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.java.util.FortranFormatHelper;
+import org.kalypso.ogc.gml.typehandler.DiagramProperty;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.java.util.FortranFormatHelper;
-import org.kalypso.ogc.gml.typehandler.DiagramProperty;
 
 /**
  * @author huebsch
@@ -82,8 +82,12 @@ public class RHBManager extends AbstractManager
   public Feature[] parseFile( URL url ) throws Exception
   {
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// TODO: Abfrage ob *.rhb vorhanden ist.
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// TODO:
+                                                                                                                     // Abfrage
+                                                                                                                     // ob
+                                                                                                                     // *.rhb
+                                                                                                                     // vorhanden
+                                                                                                                     // ist.
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
       result.add( fe );
@@ -113,8 +117,7 @@ public class RHBManager extends AbstractManager
     if( iknotNr > 0 )
     {
       final Feature knotFE = getFeature( iknotNr, m_conf.getNodeFT() );
-      final FeatureProperty iknotNodeMember = FeatureFactory.createFeatureProperty(
-          "iknotNodeMember", knotFE.getId() );
+      final FeatureProperty iknotNodeMember = FeatureFactory.createFeatureProperty( "iknotNodeMember", knotFE.getId() );
       rhbStrangFE.setProperty( iknotNodeMember );
     }
     FeatureProperty jevProp = (FeatureProperty)propCollector.get( "jev" );

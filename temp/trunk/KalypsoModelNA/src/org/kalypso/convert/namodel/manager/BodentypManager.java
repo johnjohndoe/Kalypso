@@ -76,8 +76,8 @@ public class BodentypManager extends AbstractManager
    * 
    * @author huebsch
    */
-  public BodentypManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema,
-      NAConfiguration conf ) throws IOException
+  public BodentypManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema, NAConfiguration conf )
+      throws IOException
   {
     super( conf.getParameterFormatURL() );
     m_conf = conf;
@@ -86,8 +86,7 @@ public class BodentypManager extends AbstractManager
   }
 
   /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int,
-   *      org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
   public String mapID( int id, FeatureType ft )
   {
@@ -100,8 +99,9 @@ public class BodentypManager extends AbstractManager
   public Feature[] parseFile( URL url ) throws Exception
   {
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// new FileReader( file
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+                                                                                                                     // FileReader(
+                                                                                                                     // file
     // ) );
     Feature fe = null;
     //  Kommentarzeilen
@@ -149,8 +149,7 @@ public class BodentypManager extends AbstractManager
       final FeatureProperty BodArtNameProp = (FeatureProperty)bodArtPropCollector.get( "char3" );
       String asciiBodArtId = (String)( BodArtNameProp.getValue() );
       final Feature BodArtFE = getFeature( asciiBodArtId, m_conf.getBodartFT() );
-      final FeatureProperty BodArtLink = FeatureFactory.createFeatureProperty( "BodArtLink",
-          BodArtFE.getId() );
+      final FeatureProperty BodArtLink = FeatureFactory.createFeatureProperty( "BodArtLink", BodArtFE.getId() );
       bodArtParameterFeature.setProperty( BodArtLink );
 
       Collection collection = bodArtPropCollector.values();
@@ -186,8 +185,7 @@ public class BodentypManager extends AbstractManager
 
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature )
-      throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature ) throws Exception
   {
     // 1
     List bodartList = (List)feature.getProperty( BodArtParameterPropName );
@@ -202,20 +200,16 @@ public class BodentypManager extends AbstractManager
       Feature BodArtLink = paraWorkspace.resolveLink( fe, "BodArtLink" );
       if( BodArtLink != null )
       {
-        asciiBuffer.getBodtypBuffer()
-            .append(
-                FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "typchar" ),
-                    "a8" )
-                    + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" )
-                    + " "
-                    + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xret" ), "*" )
-                    + "\n" );
+        asciiBuffer.getBodtypBuffer().append(
+            FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "typchar" ), "a8" )
+                + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " "
+                + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xret" ), "*" ) + "\n" );
       }
       else
       {
-        // TODO use logger 
-        System.out.println( "Fehler in der Bodentypdatei zu Bodentyp " + feature.getId()
-            + " (Link zu Bodenart " + fe.getProperty( "BodArtLink" ) + " nicht vorhanden)" );
+        // TODO use logger
+        System.out.println( "Fehler in der Bodentypdatei zu Bodentyp " + feature.getId() + " (Link zu Bodenart "
+            + fe.getProperty( "BodArtLink" ) + " nicht vorhanden)" );
       }
     }
 

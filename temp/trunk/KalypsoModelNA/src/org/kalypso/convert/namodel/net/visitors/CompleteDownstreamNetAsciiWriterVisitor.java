@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypsodeegree.model.feature.Feature;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -90,7 +90,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
     for( Iterator iter = downStreamNetElements.iterator(); iter.hasNext(); )
     {
       final NetElement childElement = (NetElement)iter.next();
-      if( childElement.getChannel() == downStreamChannel && childElement.isCalculated() &&!childElement.resultExists() )
+      if( childElement.getChannel() == downStreamChannel && childElement.isCalculated() && !childElement.resultExists() )
       {
         visit( childElement );
         needToComplete = false;

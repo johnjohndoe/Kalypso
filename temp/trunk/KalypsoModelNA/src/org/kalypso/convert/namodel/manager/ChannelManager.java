@@ -98,8 +98,9 @@ public class ChannelManager extends AbstractManager
   public Feature[] parseFile( URL url ) throws Exception
   {
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// new FileReader( file
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+                                                                                                                     // FileReader(
+                                                                                                                     // file
     // ) );
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
@@ -146,8 +147,7 @@ public class ChannelManager extends AbstractManager
         createProperties( kmPropCollector, line, 3 );
         Collection collection = kmPropCollector.values();
         setParsedProperties( kmParameterFeature, collection );
-        FeatureProperty kmProp = FeatureFactory.createFeatureProperty( KMParameterpropName,
-            kmParameterFeature );
+        FeatureProperty kmProp = FeatureFactory.createFeatureProperty( KMParameterpropName, kmParameterFeature );
         feature.addProperty( kmProp );
       }
       break;
@@ -209,7 +209,7 @@ public class ChannelManager extends AbstractManager
       else
         asciiBuffer.getRhbBuffer().append( toAscci( nodeFE, 6 ) );
       asciiBuffer.getRhbBuffer().append( toAscci( feature, 7 ) + "\n" );
-      
+
       // (itext,a80)
       // RHB 8
       asciiBuffer.getRhbBuffer().append( toAscci( feature, 8 ) + "\n" );
@@ -221,11 +221,11 @@ public class ChannelManager extends AbstractManager
       asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
       DiagramProperty rhbDiagram = (DiagramProperty)feature.getProperty( "hvvsqd" );
-      asciiBuffer.getRhbBuffer().append(
-          FortranFormatHelper.printf( Integer.toString( rhbDiagram.size() ), "i4" ) );
+      asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( Integer.toString( rhbDiagram.size() ), "i4" ) );
       if( rhbDiagram.size() > 24 )
-        throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rueckhaltebecken: #"
-            + FeatureHelper.getAsString( feature, "inum" ) );
+        throw new Exception(
+            "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rueckhaltebecken: #"
+                + FeatureHelper.getAsString( feature, "inum" ) );
       asciiBuffer.getRhbBuffer().append( "\n" );
 
       // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
@@ -250,8 +250,7 @@ public class ChannelManager extends AbstractManager
 
     }
     else
-      throw new UnsupportedOperationException( "can not write Feature to ascii"
-          + feature.toString() );
+      throw new UnsupportedOperationException( "can not write Feature to ascii" + feature.toString() );
   }
 
   public String mapID( int id, FeatureType ft )

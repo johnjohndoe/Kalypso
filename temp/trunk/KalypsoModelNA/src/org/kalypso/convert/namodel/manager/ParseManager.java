@@ -82,11 +82,10 @@ public class ParseManager
 
   private final SchneeManager m_schneeManager;
 
-  public ParseManager( GMLSchema schema, GMLSchema hydSchema, GMLSchema paraSchema,
-      NAConfiguration conf, CatchmentManager catchmentManager, ChannelManager channelManager,
-      NetFileManager nodeManager, RHBManager rhbManager, HydrotopManager hydManager,
-      BodenartManager bodartManager, BodentypManager bodtypManager, NutzungManager nutzManager,
-      SchneeManager schneeManager )
+  public ParseManager( GMLSchema schema, GMLSchema hydSchema, GMLSchema paraSchema, NAConfiguration conf,
+      CatchmentManager catchmentManager, ChannelManager channelManager, NetFileManager nodeManager,
+      RHBManager rhbManager, HydrotopManager hydManager, BodenartManager bodartManager, BodentypManager bodtypManager,
+      NutzungManager nutzManager, SchneeManager schneeManager )
   {
     m_conf = conf;
     m_catchmentManager = catchmentManager;
@@ -119,8 +118,7 @@ public class ParseManager
     Feature nodeCollectionFe = modelManager.createFeature( nodeCollectionFT );
 
     // complete Feature NaModell
-    FeatureProperty prop = FeatureFactory.createFeatureProperty( "CatchmentCollectionMember",
-        catchmentCollectionFe );
+    FeatureProperty prop = FeatureFactory.createFeatureProperty( "CatchmentCollectionMember", catchmentCollectionFe );
     naModellFe.setProperty( prop );
 
     prop = FeatureFactory.createFeatureProperty( "ChannelCollectionMember", channelCollectionFe );
@@ -182,8 +180,7 @@ public class ParseManager
     Feature schneeCollectionFe = modelManager.createFeature( schneeCollectionFT );
 
     // complete Feature NaParameter
-    FeatureProperty prop = FeatureFactory.createFeatureProperty( "BodenartCollectionMember",
-        bodenartCollectionFe );
+    FeatureProperty prop = FeatureFactory.createFeatureProperty( "BodenartCollectionMember", bodenartCollectionFe );
     naParaFe.setProperty( prop );
 
     prop = FeatureFactory.createFeatureProperty( "BodentypCollectionMember", bodentypCollectionFe );
@@ -212,7 +209,7 @@ public class ParseManager
       prop = FeatureFactory.createFeatureProperty( "BodentypMember", bodentypFE );
       bodentypCollectionFe.addProperty( prop );
     }
-    
+
     //complete Feature ParameterCollection - Nutzung
     File nutzungDir = m_conf.getNutzungDir();
     FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" );

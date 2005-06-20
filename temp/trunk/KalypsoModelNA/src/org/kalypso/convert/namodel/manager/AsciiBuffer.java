@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
 import java.util.ArrayList;
@@ -55,35 +55,35 @@ public class AsciiBuffer
   private final StringBuffer m_catchmentBuffer = new StringBuffer();
 
   private final StringBuffer m_channelBuffer = new StringBuffer();
-  
+
   private final StringBuffer m_rhbBuffer = new StringBuffer();
-  
+
   private final StringBuffer m_hydBuffer = new StringBuffer();
-  
+
   private final StringBuffer m_bodartBuffer = new StringBuffer();
-  
+
   private final StringBuffer m_bodtypBuffer = new StringBuffer();
-  
+
   private final StringBuffer m_snowBuffer = new StringBuffer();
 
-  private final List m_featuresToWrite=new ArrayList();
-  
+  private final List m_featuresToWrite = new ArrayList();
+
   public AsciiBuffer()
   {
-    // nothing to do here
+  // nothing to do here
   }
 
-  public void addFeatureToWrite(Feature feature)
+  public void addFeatureToWrite( Feature feature )
   {
-    if(!m_featuresToWrite.contains(feature))
-      m_featuresToWrite.add(feature);
+    if( !m_featuresToWrite.contains( feature ) )
+      m_featuresToWrite.add( feature );
   }
-  
-  public boolean writeFeature(Feature feature)
+
+  public boolean writeFeature( Feature feature )
   {
-    return m_featuresToWrite.contains(feature);
+    return m_featuresToWrite.contains( feature );
   }
-  
+
   public StringBuffer getNetBuffer()
   {
     return m_netBuffer;
@@ -98,23 +98,27 @@ public class AsciiBuffer
   {
     return m_catchmentBuffer;
   }
-  
+
   public StringBuffer getRhbBuffer()
   {
     return m_rhbBuffer;
   }
+
   public StringBuffer getHydBuffer()
   {
     return m_hydBuffer;
   }
+
   public StringBuffer getBodartBuffer()
   {
     return m_bodartBuffer;
   }
+
   public StringBuffer getBodtypBuffer()
   {
     return m_bodtypBuffer;
   }
+
   public StringBuffer getSnowBuffer()
   {
     return m_snowBuffer;

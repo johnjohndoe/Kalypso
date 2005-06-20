@@ -36,12 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on Oct 6, 2004
- *
-  */
+ *  
+ */
 package org.kalypso.convert.namodel.manager;
 
 import java.io.IOException;
@@ -53,37 +53,44 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
- *
-  */
-public class ModelManager extends AbstractManager {
+ *  
+ */
+public class ModelManager extends AbstractManager
+{
 
-	/* (non-Javadoc)
-	 * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
-	 */
-	public ModelManager() throws IOException 
-	{
-		super(null);
-	}
-	
-	public String mapID(int id, FeatureType ft)
-	{
-		return ft.getName()+id;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
+   */
+  public ModelManager() throws IOException
+  {
+    super( null );
+  }
 
-	/* (non-Javadoc)
-	 * @see org.kalypso.convert.AbstractManager#parseFile(java.io.File)
-	 */
-	public Feature[] parseFile(URL url)  
-	{
-		// nothing to do
-		return null;
-	}
+  public String mapID( int id, FeatureType ft )
+  {
+    return ft.getName() + id;
+  }
 
-	/* (non-Javadoc)
-	 * @see org.kalypso.convert.AbstractManager#writeFile(java.io.Writer)
-	 */
-	public void writeFile(AsciiBuffer asciiBuffer,GMLWorkspace workspace)
-	{
-	// nothing to do
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.kalypso.convert.AbstractManager#parseFile(java.io.File)
+   */
+  public Feature[] parseFile( URL url )
+  {
+    // nothing to do
+    return null;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.kalypso.convert.AbstractManager#writeFile(java.io.Writer)
+   */
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace )
+  {
+  // nothing to do
+  }
 }

@@ -65,8 +65,8 @@ public class UpdateHelper
   //      + "forceFill=\"true\" "
   //      + "defaultValue=\"0.0\"/></filter>";
 
-  public static String createInterpolationFilter( int amountHours, double defaultValue,
-      boolean forceFill ) throws JAXBException
+  public static String createInterpolationFilter( int amountHours, double defaultValue, boolean forceFill )
+      throws JAXBException
   {
     StringWriter writer = null;
     try
@@ -90,8 +90,7 @@ public class UpdateHelper
     }
   }
 
-  public static String createIntervallFilter( int amount, String calendarField, String mode )
-      throws JAXBException
+  public static String createIntervallFilter( int amount, String calendarField, String mode ) throws JAXBException
   {
     Writer writer = null;
     try

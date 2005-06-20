@@ -87,17 +87,17 @@ public class SimulationVisitor extends NetElementVisitor
         if( element.getProperty( "inum" ) != null )
         {
 
-          b.append( ( i - start+1 ) + ". bei Strang Nr. " + element.getProperty( "inum" ).toString()
-              + "(ID=" + element.getId() + ")\n" );
+          b.append( ( i - start + 1 ) + ". bei Strang Nr. " + element.getProperty( "inum" ).toString() + "(ID="
+              + element.getId() + ")\n" );
         }
         else
           b.append( ( i - start ) + ". bei " + element.getId() + "\n" );
       }
-      log(b.toString());
-      throw new Exception(b.toString());
+      log( b.toString() );
+      throw new Exception( b.toString() );
     }
     m_cycleTest.add( netElement );
-    
+
     // first calculate upstream
     if( !netElement.resultExists() )
     {

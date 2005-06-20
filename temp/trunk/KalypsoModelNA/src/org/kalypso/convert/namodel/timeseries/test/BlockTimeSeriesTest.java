@@ -1,8 +1,7 @@
 /*
  * Created on 08.06.2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated file go to Window - Preferences - Java - Code Style - Code Templates
  */
 package org.kalypso.convert.namodel.timeseries.test;
 
@@ -12,40 +11,42 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.TreeMap;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 
-import junit.framework.TestCase;
-
 /**
  * @author flows
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code
+ * Templates
  */
-public class BlockTimeSeriesTest extends TestCase {
-	public void testBlocktimeSeries() throws IOException {
-		
-		TreeMap map =  load("./resources/test.dat", "103");
-		TreeMap map2 = load("resources/qgs.dat", "103");		                               
-		
-	}
+public class BlockTimeSeriesTest extends TestCase
+{
+  public void testBlocktimeSeries() throws IOException
+  {
 
-	public TreeMap load(String resource, String key) throws IOException {
-		BlockTimeSeries block = new BlockTimeSeries();
-		File tmpFile = File.createTempFile("block", "txt");
-		InputStream resourceAsStream = getClass().getResourceAsStream(resource);
-		FileWriter fileWriter = new FileWriter(tmpFile);
-		CopyUtils.copy(resourceAsStream,
-				fileWriter);
-		IOUtils.closeQuietly(fileWriter);
-		block.importBlockFile(tmpFile);
-		TreeMap map = block.getTimeSerie(key);
-		assertNotNull(map);
-		System.out.println( " von "+map.firstKey());
-		System.out.println( " bis "+map.lastKey());
-		return map;
-	}
+    TreeMap map = load( "./resources/test.dat", "103" );
+    TreeMap map2 = load( "resources/qgs.dat", "103" );
+
+  }
+
+  public TreeMap load( String resource, String key ) throws IOException
+  {
+    BlockTimeSeries block = new BlockTimeSeries();
+    File tmpFile = File.createTempFile( "block", "txt" );
+    InputStream resourceAsStream = getClass().getResourceAsStream( resource );
+    FileWriter fileWriter = new FileWriter( tmpFile );
+    CopyUtils.copy( resourceAsStream, fileWriter );
+    IOUtils.closeQuietly( fileWriter );
+    block.importBlockFile( tmpFile );
+    TreeMap map = block.getTimeSerie( key );
+    assertNotNull( map );
+    System.out.println( " von " + map.firstKey() );
+    System.out.println( " bis " + map.lastKey() );
+    return map;
+  }
 
 }

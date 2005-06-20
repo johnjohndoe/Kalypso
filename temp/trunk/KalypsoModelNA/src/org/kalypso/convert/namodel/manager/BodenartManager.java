@@ -70,8 +70,8 @@ public class BodenartManager extends AbstractManager
    * 
    * @author huebsch
    */
-  public BodenartManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema,
-      NAConfiguration conf ) throws IOException
+  public BodenartManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema, NAConfiguration conf )
+      throws IOException
   {
     super( conf.getParameterFormatURL() );
     //    m_crs = crs;
@@ -81,13 +81,11 @@ public class BodenartManager extends AbstractManager
   }
 
   /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int,
-   *      org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
   public String mapID( int id, FeatureType ft )
   {
-    throw new UnsupportedOperationException(
-        " bodenartManager does not support int-ID mapping. (not necessary) " );
+    throw new UnsupportedOperationException( " bodenartManager does not support int-ID mapping. (not necessary) " );
   }
 
   /**
@@ -97,8 +95,9 @@ public class BodenartManager extends AbstractManager
   {
 
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// new FileReader( file
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+                                                                                                                     // FileReader(
+                                                                                                                     // file
     // ) );
     Feature fe = null;
     //  3 Kommentarzeilen
@@ -144,8 +143,7 @@ public class BodenartManager extends AbstractManager
    */
   public Feature getFeature( int asciiID, FeatureType ft )
   {
-    throw new UnsupportedOperationException(
-        " bodenartManager does not support int-ID mapping. (not necessary) " );
+    throw new UnsupportedOperationException( " bodenartManager does not support int-ID mapping. (not necessary) " );
   }
 
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
@@ -154,25 +152,21 @@ public class BodenartManager extends AbstractManager
     Feature col = (Feature)rootFeature.getProperty( "BodenartCollectionMember" );
     List list = (List)col.getProperty( "BodenartMember" );
     Date calcDate = new Date();
-    asciiBuffer.getBodartBuffer().append(
-        "Bodenparameter NA-Modell, Datum " + ( calcDate.toString() ) + "\n" );
-    asciiBuffer.getBodartBuffer().append(
-        "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" );
-    asciiBuffer.getBodartBuffer().append(
-        "                [mm/dm] [mm/dm] [mm/dm] [mm/d] [-]\n" );
+    asciiBuffer.getBodartBuffer().append( "Bodenparameter NA-Modell, Datum " + ( calcDate.toString() ) + "\n" );
+    asciiBuffer.getBodartBuffer().append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" );
+    asciiBuffer.getBodartBuffer().append( "                [mm/dm] [mm/dm] [mm/dm] [mm/d] [-]\n" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
       final Feature bodenartFE = (Feature)iter.next();
-//    TODO: nur die schreiben, die auch in Bodentyp verwendet werden.      
-//      if( asciiBuffer.writeFeature( bodenartFE ) )
-        writeFeature( asciiBuffer, paraWorkspace, bodenartFE );
+      //    TODO: nur die schreiben, die auch in Bodentyp verwendet werden.
+      //      if( asciiBuffer.writeFeature( bodenartFE ) )
+      writeFeature( asciiBuffer, paraWorkspace, bodenartFE );
     }
 
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature )
-      throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature ) throws Exception
   {
     asciiBuffer.getBodartBuffer().append( toAscci( feature, 6 ) + "\n" );
   }

@@ -59,11 +59,10 @@ public class OptimizeCalcResultEater extends HashMap implements ICalcResultEater
   }
 
   /**
-   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
-   *      java.io.File)
+   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
    */
-  public void addResult( String id, File file ) 
+  public void addResult( String id, File file )
   {
-    put(id, file);
+    put( id, file );
   }
 }

@@ -67,12 +67,11 @@ public class NaModelCalcJob implements ICalcJob
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider,
-   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider dataProvider, ICalcResultEater resultEater,
-      ICalcMonitor monitor ) throws CalcJobServiceException
+  public void run( File tmpdir, ICalcDataProvider dataProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
+      throws CalcJobServiceException
   {
     try
     {
@@ -82,8 +81,7 @@ public class NaModelCalcJob implements ICalcJob
       final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
           .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
       final Feature rootFeature = controlWorkspace.getRootFeature();
-      final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration",
-          false );
+      final boolean optimize = FeatureHelper.booleanIsTrue( rootFeature, "automaticCallibration", false );
 
       if( optimize )
       {

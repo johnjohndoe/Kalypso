@@ -126,23 +126,23 @@ public class UpdateModell
   private static void updateCatchments( Feature[] features ) throws Exception
   {
     String intervallFilter = "?" + UpdateHelper.createIntervallFilter( 1, "HOUR", "sum" );
-//    String intervallFilter = "?" + UpdateHelper.createIntervallFilter( 15, "MINUTE", "sum" );
+    //    String intervallFilter = "?" + UpdateHelper.createIntervallFilter( 15, "MINUTE", "sum" );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
       // messung
       TimeseriesLink linkMessung = NAZMLGenerator
-          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell
-              + feature.getId() + intervallFilter );
+          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_GebietsNiederschlagModell + feature.getId()
+              + intervallFilter );
       setTSLink( feature, "niederschlagZRRepository", linkMessung );
       // vorhersage
       TimeseriesLink linkVorhersage = NAZMLGenerator
-          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_NIEDERSCHLAGVORHERSAGE
-              + feature.getId() + ".zml" + intervallFilter );
+          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_NIEDERSCHLAGVORHERSAGE + feature.getId() + ".zml"
+              + intervallFilter );
       setTSLink( feature, "niederschlagZRRepositoryVorhersage", linkVorhersage );
       // berechnung
-      TimeseriesLink linkBerechnung = NAZMLGenerator
-          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_N_LOKAL + feature.getId() + ".zml" );
+      TimeseriesLink linkBerechnung = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_N_LOKAL
+          + feature.getId() + ".zml" );
       setTSLink( feature, "niederschlagZR", linkBerechnung );
     }
   }
@@ -348,9 +348,9 @@ public class UpdateModell
           "Koberbach",
           "Node7310",
           "q_koberbach.zml",
-          "", 
+          "",
           "Z" }, };
-  
+
   private static void updatePegel( GMLWorkspace workspace ) throws Exception
   {
     for( int i = 0; i < m_pegel.length; i++ )
@@ -370,10 +370,9 @@ public class UpdateModell
       if( type.indexOf( "Z" ) > -1 )
       {
         //zuflussRep
-        String interpolationFilter = "?"
-            + UpdateHelper.createInterpolationFilter( 1, DEFAULT_Q, true );
-        TimeseriesLink zuflussRep = NAZMLGenerator
-            .generateobsLink( "project:/.model/zeitreihen/Q_leer.zml" + interpolationFilter );
+        String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, DEFAULT_Q, true );
+        TimeseriesLink zuflussRep = NAZMLGenerator.generateobsLink( "project:/.model/zeitreihen/Q_leer.zml"
+            + interpolationFilter );
         setTSLink( fe, "zuflussZRRepository", zuflussRep );
 
         //        if( available )
@@ -395,8 +394,8 @@ public class UpdateModell
         //        }
 
         //zuflussRepVorhersage
-        TimeseriesLink zuflussRepVorhersage = NAZMLGenerator
-            .generateobsLink( "project:/.model/zeitreihen/Q_leer.zml" + interpolationFilter );
+        TimeseriesLink zuflussRepVorhersage = NAZMLGenerator.generateobsLink( "project:/.model/zeitreihen/Q_leer.zml"
+            + interpolationFilter );
         setTSLink( fe, "zuflussZRRepositoryVorhersage", zuflussRepVorhersage );
 
         //        if( available )
@@ -419,34 +418,29 @@ public class UpdateModell
         //        }
 
         // zufluss lokal
-        TimeseriesLink linkZufluss = NAZMLGenerator
-            .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_ZUFLUSS_LOKAL + fe.getId()
-                + ".zml" );
+        TimeseriesLink linkZufluss = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_ZUFLUSS_LOKAL
+            + fe.getId() + ".zml" );
         setTSLink( fe, "zuflussZR", linkZufluss );
       }
       //pegelRep
       if( type.indexOf( "P" ) > -1 )
       {
-        String interpolationFilter = "?"
-            + UpdateHelper.createInterpolationFilter( 1, DEFAULT_W, true );
+        String interpolationFilter = "?" + UpdateHelper.createInterpolationFilter( 1, DEFAULT_W, true );
         if( available )
         {
-          TimeseriesLink pegelRep = NAZMLGenerator
-              .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID
-                  + interpolationFilter );
+          TimeseriesLink pegelRep = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep
+              + psiID + interpolationFilter );
           setTSLink( fe, "pegelZRRepository", pegelRep );
         }
         else if( zml != null )
         {
           TimeseriesLink pegelRep = NAZMLGenerator
-              .generateobsLink( WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep + zml
-                  + interpolationFilter );
+              .generateobsLink( WeisseElsterConstants.ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep + zml + interpolationFilter );
           setTSLink( fe, "pegelZRRepository", pegelRep );
         }
         //        pegelBerechnetZRRepository (Ablage)
         TimeseriesLink pegelBerechnetRep = NAZMLGenerator
-            .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID
-                + PSI_PROGNOSE_SUFFIX );
+            .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_Pegel_Rep + psiID + PSI_PROGNOSE_SUFFIX );
         setTSLink( fe, "pegelBerechnetZRAblage", pegelBerechnetRep );
       }
     }
@@ -459,13 +453,12 @@ public class UpdateModell
     {
       final Feature fe = features[i];
       // pegel lokal
-      TimeseriesLink linkPegel = NAZMLGenerator
-          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_PEGEL_LOKAL + fe.getId() + ".zml" );
+      TimeseriesLink linkPegel = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_PEGEL_LOKAL
+          + fe.getId() + ".zml" );
       setTSLink( fe, "pegelZR", linkPegel );
       // berechnet
       TimeseriesLink linkBerechnet = NAZMLGenerator
-          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId()
-              + ".zml" );
+          .generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId() + ".zml" );
       setTSLink( fe, "qberechnetZR", linkBerechnet );
       setTSLink( fe, "pegelBerechnetZRRepository", null );
       setTSLink( fe, "zuflussZR", null );

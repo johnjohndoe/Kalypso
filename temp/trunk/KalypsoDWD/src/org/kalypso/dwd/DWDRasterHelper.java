@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd;
 
 import java.io.File;
@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.io.filefilter.PrefixFileFilter;
+
 /**
  * Helper class for dwd raster based methodes
  * 
@@ -56,12 +57,13 @@ public class DWDRasterHelper
 {
   private static SimpleDateFormat m_lmDateFormat = new SimpleDateFormat( "'lm_'yyyy'_'MM'_'dd'_'hh" );
 
-  
-/**
- * example filename for dwd raster format: "lm_2004_11_10_00"
- * @param file rasterfile 
- * @return date from raster 
- */
+  /**
+   * example filename for dwd raster format: "lm_2004_11_10_00"
+   * 
+   * @param file
+   *          rasterfile
+   * @return date from raster
+   */
   public static Date getDateFromRaster( File file )
   {
     String fileName = file.getName();

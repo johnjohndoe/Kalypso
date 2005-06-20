@@ -78,8 +78,8 @@ public class NutzungManager extends AbstractManager
    * 
    * @author huebsch
    */
-  public NutzungManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema,
-      NAConfiguration conf ) throws IOException
+  public NutzungManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema, NAConfiguration conf )
+      throws IOException
   {
     super( conf.getParameterFormatURL() );
     //    m_crs = crs;
@@ -89,8 +89,7 @@ public class NutzungManager extends AbstractManager
   }
 
   /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int,
-   *      org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
   public String mapID( int id, FeatureType ft )
   {
@@ -106,8 +105,9 @@ public class NutzungManager extends AbstractManager
     String nutzDatei = url.getPath().replaceAll( ".+/", "" );
     String nutzID = nutzDatei.replaceAll( "\\.nuz", "" );
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// new FileReader( file
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+                                                                                                                     // FileReader(
+                                                                                                                     // file
     // ) );
     Feature fe = null;
     while( ( fe = readNextFeature( reader, nutzID ) ) != null )
@@ -147,8 +147,7 @@ public class NutzungManager extends AbstractManager
       createProperties( nutzungPropCollector, line, 10 );
       Collection collection = nutzungPropCollector.values();
       setParsedProperties( nutzungParameterFeature, collection );
-      FeatureProperty nutzProp = FeatureFactory.createFeatureProperty( NutzParameterpropName,
-          nutzungParameterFeature );
+      FeatureProperty nutzProp = FeatureFactory.createFeatureProperty( NutzParameterpropName, nutzungParameterFeature );
       feature.addProperty( nutzProp );
     }
     line = reader.readLine();
@@ -159,7 +158,7 @@ public class NutzungManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile(GMLWorkspace paraWorkspace ) throws Exception
+  public void writeFile( GMLWorkspace paraWorkspace ) throws Exception
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
     Feature col = (Feature)rootFeature.getProperty( "NutzungCollectionMember" );
@@ -171,13 +170,12 @@ public class NutzungManager extends AbstractManager
 
       final Feature nutzungFE = (Feature)iter.next();
       //      if( asciiBuffer.writeFeature( nutzungFE ) )
-      writeFeature(nutzungFE );
+      writeFeature( nutzungFE );
     }
 
   }
 
-  private void writeFeature(Feature feature )
-      throws Exception
+  private void writeFeature( Feature feature ) throws Exception
   {
 
     List nutzungList = (List)feature.getProperty( "NutzungParameterMember" );

@@ -79,23 +79,23 @@ public abstract class AbstractManager
 
   }
 
-  public Feature getFeature(String asciiStringId,FeatureType ft)
+  public Feature getFeature( String asciiStringId, FeatureType ft )
   {
-    String fId=mapID(asciiStringId, ft);
-    if(!m_allFeatures.containsKey(fId))
+    String fId = mapID( asciiStringId, ft );
+    if( !m_allFeatures.containsKey( fId ) )
     {
-      Feature feature = FeatureFactory.createFeature( fId, ft);
-      m_allFeatures.put(fId,feature);
+      Feature feature = FeatureFactory.createFeature( fId, ft );
+      m_allFeatures.put( fId, feature );
     }
-    return (Feature)m_allFeatures.get(fId);
+    return (Feature)m_allFeatures.get( fId );
   }
-  
+
   /**
-   * maps the asciiStringId to the FeatureId 
+   * maps the asciiStringId to the FeatureId
    */
   private String mapID( String asciiStringId, FeatureType ft )
   {
-    return ft.getName()+"_"+asciiStringId;
+    return ft.getName() + "_" + asciiStringId;
   }
 
   public Feature getFeature( int asciiID, FeatureType ft )
@@ -175,14 +175,12 @@ public abstract class AbstractManager
 
   public abstract Feature[] parseFile( URL url ) throws Exception;
 
-  public void createProperties( HashMap propCollector, String line, int formatLine )
-      throws Exception
+  public void createProperties( HashMap propCollector, String line, int formatLine ) throws Exception
   {
     createProperties( propCollector, line, m_asciiFormat[formatLine] );
   }
 
-  protected void createProperties( HashMap propCollector, String line, String formatLine )
-      throws Exception
+  protected void createProperties( HashMap propCollector, String line, String formatLine ) throws Exception
   {
     final HashMap propertyMap = FortranFormatHelper.scanf( formatLine, line );
     final Iterator it = propertyMap.keySet().iterator();
@@ -209,8 +207,7 @@ public abstract class AbstractManager
       if( ft.getProperty( feProp.getName() ) != null )
         feature.setProperty( feProp );
       else
-        System.out.println( "property does not exist: >" + feProp.getName() + "="
-            + feProp.getValue() + "<" );
+        System.out.println( "property does not exist: >" + feProp.getName() + "=" + feProp.getValue() + "<" );
     }
   }
 

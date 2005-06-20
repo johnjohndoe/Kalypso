@@ -36,21 +36,21 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.manager;
 
 import java.util.regex.Matcher;
 
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypso.java.util.FortranFormatHelper;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author doemming
  */
 public class ASCIIHelper
 {
-  public static String toAsciiLine(Feature feature,String formatLine)
+  public static String toAsciiLine( Feature feature, String formatLine )
   {
     StringBuffer result = new StringBuffer( "" );
     String[] formats = FortranFormatHelper.patternBrackets.split( formatLine );
@@ -64,7 +64,7 @@ public class ASCIIHelper
       if( m.matches() )
         result.append( format.replace( '_', ' ' ) );
     }
-  
+
     return result.toString();
   }
 
@@ -79,13 +79,13 @@ public class ASCIIHelper
       return "";
     //        System.out.println(s[0]);
     Object property = feature.getProperty( s[0] );
-  
+
     if( property == null )
       return "(" + s[0] + "==NULL ?)";
     String value = property.toString(); // PropertyName
-  
+
     final String format = s[1];
     return FortranFormatHelper.printf( value, format );
   }
-  
+
 }

@@ -76,12 +76,10 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * generates an initial configuration file for generating catchment based
- * timeseries files from dwd-raster based weather forecast files. the resulting
- * configuration file will include the mapping from catchments to the
- * rastercells. input and output directories must be added to the resulting
- * configurationfile manually. Use the configurationFile for the automatic
- * timeseries generating process (see KalypsoDWD)
+ * generates an initial configuration file for generating catchment based timeseries files from dwd-raster based weather
+ * forecast files. the resulting configuration file will include the mapping from catchments to the rastercells. input
+ * and output directories must be added to the resulting configurationfile manually. Use the configurationFile for the
+ * automatic timeseries generating process (see KalypsoDWD)
  * 
  * @author doemming
  */
@@ -137,8 +135,7 @@ public class ForecastGeneratorConfigurator
 
     try
     {
-      ForecastGeneratorConfigurator raster2ZML = new ForecastGeneratorConfigurator( baseRasterFile,
-          modelFile );
+      ForecastGeneratorConfigurator raster2ZML = new ForecastGeneratorConfigurator( baseRasterFile, modelFile );
       raster2ZML.init();
       raster2ZML.createConf();
     }
@@ -166,7 +163,7 @@ public class ForecastGeneratorConfigurator
   public void createConf() throws Exception
   {
     createGeoRaster();
-    final SplitSort featureSort = new SplitSort(null,null);
+    final SplitSort featureSort = new SplitSort( null, null );
     final HashMap f2rasterPos = new HashMap();
     for( int i = 0; i < m_features.length; i++ )
     {
@@ -176,8 +173,8 @@ public class ForecastGeneratorConfigurator
     final DWDRaster bbox_4326_Raster = (DWDRaster)m_storage.get( KEY_GEO_BBOX_4326 );
     Object o = m_storage.get( KEY_GEO_Point_4326 );
     final DWDRaster point_4326_Raster = (DWDRaster)o;
-    final GeoTransformer transformer = new GeoTransformer( m_features[0]
-        .getDefaultGeometryProperty().getCoordinateSystem() );
+    final GeoTransformer transformer = new GeoTransformer( m_features[0].getDefaultGeometryProperty()
+        .getCoordinateSystem() );
     final DWDRaster bbox_GK_Raster = transformRaster( bbox_4326_Raster, transformer );
     final DWDRaster fake_GK_Raster = createFakeRaster( point_4326_Raster, FAKE_DENSITY, transformer );
 
@@ -239,8 +236,7 @@ public class ForecastGeneratorConfigurator
     System.out.println( "wrote configuration to " + confFile.getCanonicalPath() );
   }
 
-  private DWDRaster createFakeRaster( DWDRaster pointGeoRaster, int max, GeoTransformer transformer )
-      throws Exception
+  private DWDRaster createFakeRaster( DWDRaster pointGeoRaster, int max, GeoTransformer transformer ) throws Exception
   {
     System.out.println( "increase resolution of raster" );
     double dx = rasterDX / ( 2d * max );
@@ -256,22 +252,25 @@ public class ForecastGeneratorConfigurator
       final List col = new ArrayList();
       for( int n = 0; n < max; n++ )
       {
-        col.add( transformer.transform( GeometryFactory.createGM_Point( px + dx * n, py, point
-            .getCoordinateSystem() ) ) );
-        col.add( transformer.transform( GeometryFactory.createGM_Point( px - dx * n, py, point
-            .getCoordinateSystem() ) ) );
-        col.add( transformer.transform( GeometryFactory.createGM_Point( px, py + dy * n, point
-            .getCoordinateSystem() ) ) );
-        col.add( transformer.transform( GeometryFactory.createGM_Point( px, py - dy * n, point
-            .getCoordinateSystem() ) ) );
+        col
+            .add( transformer
+                .transform( GeometryFactory.createGM_Point( px + dx * n, py, point.getCoordinateSystem() ) ) );
+        col
+            .add( transformer
+                .transform( GeometryFactory.createGM_Point( px - dx * n, py, point.getCoordinateSystem() ) ) );
+        col
+            .add( transformer
+                .transform( GeometryFactory.createGM_Point( px, py + dy * n, point.getCoordinateSystem() ) ) );
+        col
+            .add( transformer
+                .transform( GeometryFactory.createGM_Point( px, py - dy * n, point.getCoordinateSystem() ) ) );
       }
       result.addValue( col );
     }
     return result;
   }
 
-  private DWDRaster transformRaster( DWDRaster geoRaster, GeoTransformer transformer )
-      throws Exception
+  private DWDRaster transformRaster( DWDRaster geoRaster, GeoTransformer transformer ) throws Exception
   {
     System.out.println( "transforming coordinates" );
     final DWDRaster result = new DWDRaster( geoRaster.getDate(), 0 );
@@ -307,8 +306,8 @@ public class ForecastGeneratorConfigurator
       double maxx = x + rasterDX / 2d;
       double miny = y - rasterDY / 2d;
       double maxy = y + rasterDY / 2d;
-      GM_Surface box = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( minx,
-          miny, maxx, maxy ), csLatLon );
+      GM_Surface box = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy ),
+          csLatLon );
       geoRaster.addValue( box );
     }
   }

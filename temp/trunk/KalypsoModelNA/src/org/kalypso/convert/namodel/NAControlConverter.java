@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
 import java.io.File;
@@ -68,7 +68,7 @@ public class NAControlConverter
 
   public static final int RIGHT = 1;
 
-  public static void featureToASCII(NAConfiguration conf, File projectPath, GMLWorkspace controlWorkspace,
+  public static void featureToASCII( NAConfiguration conf, File projectPath, GMLWorkspace controlWorkspace,
       GMLWorkspace modellWorkspace ) throws IOException
   {
     final Feature controlFE = controlWorkspace.getRootFeature();
@@ -80,7 +80,7 @@ public class NAControlConverter
 
     // write FalStart
     final StringBuffer b1 = new StringBuffer();
-    writeFalstart( conf,startFile, b1 );
+    writeFalstart( conf, startFile, b1 );
     //write it
     final FileWriter writer1 = new FileWriter( falStartFile );
     writer1.write( b1.toString() );
@@ -89,7 +89,7 @@ public class NAControlConverter
     // generate Start
     final StringBuffer b = new StringBuffer();
     appendResultsToGenerate( controlFE, b );
-    appendResultInformation( modellWorkspace,controlWorkspace, b );
+    appendResultInformation( modellWorkspace, controlWorkspace, b );
     //write it
     final FileWriter writer = new FileWriter( startFile );
     writer.write( b.toString() );
@@ -100,71 +100,47 @@ public class NAControlConverter
   {
     b.append( " " + FeatureHelper.getAsString( controlFE, "timeStep" ) + "\n" );
 
-    b.append( getBoolean( controlFE.getProperty( "tmp" ) )
-        + "       Temperatur                 .tmp\n" );
-    b.append( getBoolean( controlFE.getProperty( "pre" ) )
-        + "       Niederschlag               .pre\n" );
-    b.append( getBoolean( controlFE.getProperty( "sch" ) )
-        + "       Schnee                     .sch\n" );
-    b.append( getBoolean( controlFE.getProperty( "bof" ) )
-        + "       Bodenfeuchte               .bof\n" );
-    b.append( getBoolean( controlFE.getProperty( "bsp" ) )
-        + "       Bodenspeicher              .bsp\n" );
-    b.append( getBoolean( controlFE.getProperty( "gws" ) )
-        + "       Grundwasserstand           .gws\n" );
-    b.append( getBoolean( controlFE.getProperty( "qgs" ) )
-        + "       Gesamtabfluss Knoten       .qgs\n" );
-    b.append( getBoolean( controlFE.getProperty( "qgg" ) )
-        + "       Gesamtabfluss TG           .qgg\n" );
-    b.append( getBoolean( controlFE.getProperty( "qna" ) )
-        + "       Oberflaechenabfluss        .qna\n" );
-    b.append( getBoolean( controlFE.getProperty( "qif" ) )
-        + "       Interflow                  .qif\n" );
-    b.append( getBoolean( controlFE.getProperty( "qvs" ) )
-        + "       Abfluss vers. Flaechen     .qvs\n" );
-    b.append( getBoolean( controlFE.getProperty( "qbs" ) )
-        + "       Basisabfluss               .qbs\n" );
-    b.append( getBoolean( controlFE.getProperty( "qt1" ) )
-        + "       Kluftgrundw1               .qt1\n" );
-    b.append( getBoolean( controlFE.getProperty( "qtg" ) )
-        + "       Kluftgrundw                .qtg\n" );
-    b.append( getBoolean( controlFE.getProperty( "qgw" ) )
-        + "       Krundwasser                .qgw\n" );
-    b.append( getBoolean( controlFE.getProperty( "kap" ) )
-        + "       Kapil.Aufstieg/Perkolation .kap\n" );
-    b.append( getBoolean( controlFE.getProperty( "vet" ) )
-        + "       Evapotranspiration         .vet\n" );
-    b.append( getBoolean( controlFE.getProperty( "hyd" ) )
-        + "       Ausgabe hydrotope          .hyd\n" );
-    b.append( getBoolean( controlFE.getProperty( "bil" ) )
-        + "       Abflussbilanz              .bil\n" );
-    b.append( getBoolean( controlFE.getProperty( "nmq" ) )
-        + "       Statistische Abflusswerte  .nmq\n" );
-    b.append( getBoolean( controlFE.getProperty( "spi" ) )
-        + "       Speicherinhalt             .spi\n" );
-    b.append( getBoolean( controlFE.getProperty( "sub" ) )
-        + "       Speicherueberlauf          .sup\n" );
-    b.append( getBoolean( controlFE.getProperty( "sph" ) )
-        + "       Wasserstand Speicher       .sph\n" );
-    b.append( getBoolean( controlFE.getProperty( "spv" ) )
-        + "       Talsperrenverdunstung      .spv\n" );
-    b.append( getBoolean( controlFE.getProperty( "spn" ) )
-        + "       Zehrung                    .spn\n" );
-    b.append( getBoolean( controlFE.getProperty( "vep" ) )
-        + "       Evaporation                .vep\n" );
+    b.append( getBoolean( controlFE.getProperty( "tmp" ) ) + "       Temperatur                 .tmp\n" );
+    b.append( getBoolean( controlFE.getProperty( "pre" ) ) + "       Niederschlag               .pre\n" );
+    b.append( getBoolean( controlFE.getProperty( "sch" ) ) + "       Schnee                     .sch\n" );
+    b.append( getBoolean( controlFE.getProperty( "bof" ) ) + "       Bodenfeuchte               .bof\n" );
+    b.append( getBoolean( controlFE.getProperty( "bsp" ) ) + "       Bodenspeicher              .bsp\n" );
+    b.append( getBoolean( controlFE.getProperty( "gws" ) ) + "       Grundwasserstand           .gws\n" );
+    b.append( getBoolean( controlFE.getProperty( "qgs" ) ) + "       Gesamtabfluss Knoten       .qgs\n" );
+    b.append( getBoolean( controlFE.getProperty( "qgg" ) ) + "       Gesamtabfluss TG           .qgg\n" );
+    b.append( getBoolean( controlFE.getProperty( "qna" ) ) + "       Oberflaechenabfluss        .qna\n" );
+    b.append( getBoolean( controlFE.getProperty( "qif" ) ) + "       Interflow                  .qif\n" );
+    b.append( getBoolean( controlFE.getProperty( "qvs" ) ) + "       Abfluss vers. Flaechen     .qvs\n" );
+    b.append( getBoolean( controlFE.getProperty( "qbs" ) ) + "       Basisabfluss               .qbs\n" );
+    b.append( getBoolean( controlFE.getProperty( "qt1" ) ) + "       Kluftgrundw1               .qt1\n" );
+    b.append( getBoolean( controlFE.getProperty( "qtg" ) ) + "       Kluftgrundw                .qtg\n" );
+    b.append( getBoolean( controlFE.getProperty( "qgw" ) ) + "       Krundwasser                .qgw\n" );
+    b.append( getBoolean( controlFE.getProperty( "kap" ) ) + "       Kapil.Aufstieg/Perkolation .kap\n" );
+    b.append( getBoolean( controlFE.getProperty( "vet" ) ) + "       Evapotranspiration         .vet\n" );
+    b.append( getBoolean( controlFE.getProperty( "hyd" ) ) + "       Ausgabe hydrotope          .hyd\n" );
+    b.append( getBoolean( controlFE.getProperty( "bil" ) ) + "       Abflussbilanz              .bil\n" );
+    b.append( getBoolean( controlFE.getProperty( "nmq" ) ) + "       Statistische Abflusswerte  .nmq\n" );
+    b.append( getBoolean( controlFE.getProperty( "spi" ) ) + "       Speicherinhalt             .spi\n" );
+    b.append( getBoolean( controlFE.getProperty( "sub" ) ) + "       Speicherueberlauf          .sup\n" );
+    b.append( getBoolean( controlFE.getProperty( "sph" ) ) + "       Wasserstand Speicher       .sph\n" );
+    b.append( getBoolean( controlFE.getProperty( "spv" ) ) + "       Talsperrenverdunstung      .spv\n" );
+    b.append( getBoolean( controlFE.getProperty( "spn" ) ) + "       Zehrung                    .spn\n" );
+    b.append( getBoolean( controlFE.getProperty( "vep" ) ) + "       Evaporation                .vep\n" );
   }
 
-  private static void appendResultInformation(GMLWorkspace modellWorkspace, GMLWorkspace controlWorkspace, StringBuffer b )
+  private static void appendResultInformation( GMLWorkspace modellWorkspace, GMLWorkspace controlWorkspace,
+      StringBuffer b )
   {
     // knoten
     final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
-    boolean onlyRootNodeResult=FeatureHelper.booleanIsTrue(controlWorkspace.getRootFeature(),"resultForRootNodeOnly",true);
-    final String rootNodeID=(String)controlWorkspace.getRootFeature().getProperty("rootNode");
+    boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
+        "resultForRootNodeOnly", true );
+    final String rootNodeID = (String)controlWorkspace.getRootFeature().getProperty( "rootNode" );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
       // fuer root node immer ein ergebnis generieren
-      if(rootNodeID!=null && rootNodeID.equals(nodeFEs[i].getId()))
+      if( rootNodeID != null && rootNodeID.equals( nodeFEs[i].getId() ) )
         b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
       // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
       else if( !onlyRootNodeResult && FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
@@ -184,22 +160,22 @@ public class NAControlConverter
     b.append( "99999\n" );
   }
 
-  private static void writeFalstart(NAConfiguration conf, File startFile,
-      StringBuffer b )
+  private static void writeFalstart( NAConfiguration conf, File startFile, StringBuffer b )
   {
 
     String system = "we";//"sys";
     String zustand = "nat";
-    SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH");
+    SimpleDateFormat format = new SimpleDateFormat( "yyyy MM dd HH" );
 
-    String startDate=format.format(conf.getSimulationStart());
-    String endDate=format.format(conf.getSimulationEnd());
+    String startDate = format.format( conf.getSimulationStart() );
+    String endDate = format.format( conf.getSimulationEnd() );
 
     b.append( "xxx\n" );
     b.append( "x einzugsgebiet\n" );
-    b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
-    b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start"
-        + File.separator + startFile.getName() + "\n" );
+    b
+        .append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
+    b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator
+        + startFile.getName() + "\n" );
   }
 
   private static String getBoolean( Object object )

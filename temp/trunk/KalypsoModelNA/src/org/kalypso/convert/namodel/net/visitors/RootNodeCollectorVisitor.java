@@ -3,11 +3,11 @@ package org.kalypso.convert.namodel.net.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypso.convert.namodel.net.NetElement;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -70,8 +70,7 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
   }
 
   /**
-   * collect all netelements that have direct downstream depedency to a result
-   * node
+   * collect all netelements that have direct downstream depedency to a result node
    */
   public RootNodeCollectorVisitor()
   {
@@ -93,8 +92,8 @@ public class RootNodeCollectorVisitor extends NetElementVisitor
     }
     else
     {
-      final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty(
-          "generateResult", new Boolean( nodeFE == m_singleResultNode ) );
+      final FeatureProperty createResultProp = FeatureFactory.createFeatureProperty( "generateResult", new Boolean(
+          nodeFE == m_singleResultNode ) );
       nodeFE.setProperty( createResultProp );
       if( m_singleResultNode == nodeFE )
         m_rootNetElements.add( netElement );

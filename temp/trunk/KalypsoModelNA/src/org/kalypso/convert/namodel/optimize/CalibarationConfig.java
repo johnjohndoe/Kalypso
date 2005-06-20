@@ -36,16 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.optimize;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.optimize.transform.ParameterOptimizeContext;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypso.optimize.transform.ParameterOptimizeContext;
 
 /**
  * @author doemming
@@ -99,8 +99,7 @@ public class CalibarationConfig
     generateAndAddContexts( rootFeatureControl, queryKMChannels, propNamesII );
   }
 
-  private void generateAndAddContexts( Feature rootFeatureControl, String[][] xpathModel,
-      String[] xpathControl )
+  private void generateAndAddContexts( Feature rootFeatureControl, String[][] xpathModel, String[] xpathControl )
   {
     final int n = xpathControl.length;
     for( int i = 0; i < n; i++ )
@@ -125,4 +124,3 @@ public class CalibarationConfig
   }
 
 }
-

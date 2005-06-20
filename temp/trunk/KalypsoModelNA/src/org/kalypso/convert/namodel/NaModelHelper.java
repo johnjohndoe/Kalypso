@@ -1,15 +1,5 @@
 package org.kalypso.convert.namodel;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
-import org.kalypso.zml.obslink.TimeseriesLink;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -54,33 +44,33 @@ import org.kalypso.zml.obslink.TimeseriesLink;
 public class NaModelHelper
 {
 
-//  public static File getResultFile( URL context, Feature nodeFE ) throws MalformedURLException
-//  {
-//    final TimeseriesLink link = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
-//    if( link == null )
-//      return null;
-//    final String href = link.getHref().replaceAll( "\\?.*", "" ); // optionen
-//    // loeschen
-//
-//    IUrlResolver res = new UrlUtilities();
-//    final URL url = res.resolveURL( context, href );
-//
-//    return new File( url.getFile() );
-//  }
-//
-//  public static boolean resultExists( GMLWorkspace modellWorkspace, Feature nodeFE )
-//  {
-//    try
-//    {
-//      final File resultFile = NaModelHelper.getResultFile( modellWorkspace.getContext(), nodeFE );
-//      if( resultFile == null )
-//        return false;
-//      return resultFile.exists();
-//    }
-//    catch( MalformedURLException e )
-//    {
-//      return false;
-//    }
-//  }
+  //  public static File getResultFile( URL context, Feature nodeFE ) throws MalformedURLException
+  //  {
+  //    final TimeseriesLink link = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
+  //    if( link == null )
+  //      return null;
+  //    final String href = link.getHref().replaceAll( "\\?.*", "" ); // optionen
+  //    // loeschen
+  //
+  //    IUrlResolver res = new UrlUtilities();
+  //    final URL url = res.resolveURL( context, href );
+  //
+  //    return new File( url.getFile() );
+  //  }
+  //
+  //  public static boolean resultExists( GMLWorkspace modellWorkspace, Feature nodeFE )
+  //  {
+  //    try
+  //    {
+  //      final File resultFile = NaModelHelper.getResultFile( modellWorkspace.getContext(), nodeFE );
+  //      if( resultFile == null )
+  //        return false;
+  //      return resultFile.exists();
+  //    }
+  //    catch( MalformedURLException e )
+  //    {
+  //      return false;
+  //    }
+  //  }
 
 }

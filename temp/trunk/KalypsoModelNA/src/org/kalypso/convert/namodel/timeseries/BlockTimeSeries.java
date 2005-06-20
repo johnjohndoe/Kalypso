@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel.timeseries;
 
 import java.io.File;
@@ -71,12 +71,14 @@ public class BlockTimeSeries
   private final static int SEARCH_BLOCK_HEADER = 1;
 
   private final static int SEARCH_VALUES = 2;
-// simulationszeitraum:   von  970101  24 uhr   bis  980102  24 uhr           24.000
-// simulationszeitraum:   von  970101  24 uhr   bis     102  24 uhr           24.000
+
+  // simulationszeitraum: von 970101 24 uhr bis 980102 24 uhr 24.000
+  // simulationszeitraum: von 970101 24 uhr bis 102 24 uhr 24.000
   private final static Pattern pTime = Pattern
-  .compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
-//  private final static Pattern pTime = Pattern
-//      .compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{5,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
+      .compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{3,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
+
+  //  private final static Pattern pTime = Pattern
+  //      .compile( ".+simulationszeitraum.+([0-9]{6}).+?([0-9]{1,2}).+[0-9]{5,6}.+[0-9]{1,2}.+?(\\d+\\.\\d+)\\D*" );
 
   private final Pattern pBlock = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" );
 
@@ -84,8 +86,7 @@ public class BlockTimeSeries
 
   private final Hashtable m_blocks;
 
-  private static TimeZone m_timeZone = new SimpleTimeZone( 1000 * 60 * 60 * 2,
-      "OmbrometerTimeZone" );
+  private static TimeZone m_timeZone = new SimpleTimeZone( 1000 * 60 * 60 * 2, "OmbrometerTimeZone" );
 
   public BlockTimeSeries()
   {
@@ -249,6 +250,6 @@ public class BlockTimeSeries
 
   public boolean dataExistsForKey( String key )
   {
-    return m_blocks.containsKey(key);
+    return m_blocks.containsKey( key );
   }
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-  
----------------------------------------------------------------------------------------------------*/
+ 
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.update;
 
 public class WeisseElsterConstants
@@ -48,7 +48,8 @@ public class WeisseElsterConstants
 
   //      kalypso-ocs:GebietsNiederschlaege://Catchment1002
   public final static String PREFIX_LINK_GebietsNiederschlagModell = "kalypso-ocs:GebietsNiederschlaege://";// ..+
-                                                                                                            // catchmentFE.ID
+
+  // catchmentFE.ID
 
   //      kalypso-ocs:Vorhersage://Niederschlaege/Catchment1022.zml
   public final static String PREFIX_LINK_NIEDERSCHLAGVORHERSAGE = "kalypso-ocs:Vorhersage://Niederschlaege/";// ...".zml"
@@ -57,6 +58,7 @@ public class WeisseElsterConstants
 
   //      kalypso-ocs:psicompact://HN.5_WE.02PG...577510
   public final static String PREFIX_LINK_WQ_Zufluss_Rep = "kalypso-ocs:psicompact://HN.5_WE.02PG...";//...+PSIID
+
   //    kalypso-ocs:WeisseElster://Zufluss/Zufluss_Node1500
 
   public final static String ALTERNATIV_PREFIX_LINK_WQ_Zufluss_Rep = "kalypso-ocs:WeisseElster://Zufluss/Zufluss_";//...+FID
@@ -66,6 +68,7 @@ public class WeisseElsterConstants
 
   //      kalypso-ocs:psicompact://HN.5_WE.02PG...577510
   public final static String PREFIX_LINK_WQ_Pegel_Rep = "kalypso-ocs:psicompact://HN.5_WE.02PG...";//...+ID
+
   //    kalypso-ocs:FlussPegel://Pegel/q_goessnitz.zml
 
   public final static String ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep = "kalypso-ocs:FlussPegel://Pegel/";//...ZML-datei

@@ -67,9 +67,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * A NetElement encapsulates a Channel-Element and its dependencies <br>
- * In the example below each channel represents one netelement. Here you can see
- * the dependencies related the one channel written in capital letter in the
- * middle.
+ * In the example below each channel represents one netelement. Here you can see the dependencies related the one
+ * channel written in capital letter in the middle.
  * 
  * <pre>
  *                    Node----->-----Node
@@ -136,7 +135,8 @@ public class NetElement
   //    m_workspace = workspace;
   //  }
 
-  public NetElement( NetFileManager manager, GMLWorkspace modellWorkspace, Feature channelFE,NaNodeResultProvider nodeResultProvider )
+  public NetElement( NetFileManager manager, GMLWorkspace modellWorkspace, Feature channelFE,
+      NaNodeResultProvider nodeResultProvider )
   {
     m_channelFE = channelFE;
     m_manager = manager;
@@ -201,16 +201,15 @@ public class NetElement
 
   public void generateTimeSeries() throws IOException, Exception
   {
-    Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, m_manager.m_conf
-        .getCatchemtFT(), "entwaesserungsStrangMember" );
+    Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, m_manager.m_conf.getCatchemtFT(),
+        "entwaesserungsStrangMember" );
     for( int i = 0; i < catchmentFeatures.length; i++ )
     {
       final Feature feature = catchmentFeatures[i];
       final TimeseriesLink link = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
       final URL linkURL = m_urlUtils.resolveURL( m_workspace.getContext(), link.getHref() );
       final String tsFileName = CatchmentManager.getNiederschlagEingabeDateiString( feature );
-      final File targetFile = new File( m_manager.m_conf.getAsciiBaseDir(), "klima.dat/"
-          + tsFileName );
+      final File targetFile = new File( m_manager.m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileName );
       final File parent = targetFile.getParentFile();
       if( !parent.exists() )
         parent.mkdirs();
@@ -282,8 +281,7 @@ public class NetElement
     final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
 
     //  append channel:
-    asciiBuffer.getNetBuffer()
-        .append( ASCIIHelper.toAsciiLine( m_channelFE, m_netAsciiFormat[12] ) );
+    asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( m_channelFE, m_netAsciiFormat[12] ) );
 
     Feature[] features = m_workspace.getFeatures( m_manager.m_conf.getNodeFT() );
     Feature knotO = null;
@@ -322,8 +320,7 @@ public class NetElement
       {
         Feature catchmentFE = (Feature)iter.next();
         asciiBuffer.addFeatureToWrite( catchmentFE );
-        asciiBuffer.getNetBuffer().append(
-            ASCIIHelper.toAsciiLine( catchmentFE, m_netAsciiFormat[12] ) + "\n" );
+        asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( catchmentFE, m_netAsciiFormat[12] ) + "\n" );
       }
     }
     else

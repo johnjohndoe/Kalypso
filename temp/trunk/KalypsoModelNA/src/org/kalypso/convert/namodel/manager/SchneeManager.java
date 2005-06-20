@@ -69,8 +69,8 @@ public class SchneeManager extends AbstractManager
    * 
    * @author huebsch
    */
-  public SchneeManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema,
-      NAConfiguration conf ) throws IOException
+  public SchneeManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema, NAConfiguration conf )
+      throws IOException
   {
     super( conf.getParameterFormatURL() );
     //    m_crs = crs;
@@ -79,8 +79,7 @@ public class SchneeManager extends AbstractManager
   }
 
   /**
-   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int,
-   *      org.kalypsodeegree.model.feature.FeatureType)
+   * @see org.kalypso.convert.namodel.manager.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
    */
   public String mapID( int id, FeatureType ft )
   {
@@ -93,8 +92,9 @@ public class SchneeManager extends AbstractManager
   public Feature[] parseFile( URL url ) throws Exception
   {
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection()
-        .getInputStream() ) );// new FileReader( file
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
+                                                                                                                     // FileReader(
+                                                                                                                     // file
     // ) );
     Feature fe = null;
     //  Kommentarzeilen
@@ -139,26 +139,22 @@ public class SchneeManager extends AbstractManager
     Feature rootFeature = paraWorkspace.getRootFeature();
     Feature col = (Feature)rootFeature.getProperty( "SnowCollectionMember" );
     List list = (List)col.getProperty( "SnowMember" );
-    asciiBuffer.getSnowBuffer().append(
-        "/Parameter zur Schneeberechnung nach dem snow compaction verfahren\n" );
-    asciiBuffer.getSnowBuffer().append(
-        "/                     wwo wwmax snotem snorad h0\n" );
-    asciiBuffer.getSnowBuffer().append(
-        "/                      *    *     *      *    *\n" );
+    asciiBuffer.getSnowBuffer().append( "/Parameter zur Schneeberechnung nach dem snow compaction verfahren\n" );
+    asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" );
+    asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
 
       final Feature snowFE = (Feature)iter.next();
-//    TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
-//      if( asciiBuffer.writeFeature( snowFE ) )
-        writeFeature( asciiBuffer, paraWorkspace, snowFE );
+      //    TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
+      //      if( asciiBuffer.writeFeature( snowFE ) )
+      writeFeature( asciiBuffer, paraWorkspace, snowFE );
     }
 
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature )
-      throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature ) throws Exception
   {
     asciiBuffer.getSnowBuffer().append( toAscci( feature, 13 ) + "\n" );
   }

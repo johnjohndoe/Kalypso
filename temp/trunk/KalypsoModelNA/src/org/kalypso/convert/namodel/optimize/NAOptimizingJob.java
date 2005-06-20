@@ -121,8 +121,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
   public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far";
 
-  public NAOptimizingJob( File tmpDir, final ICalcDataProvider dataProvider, ICalcMonitor monitor )
-      throws Exception
+  public NAOptimizingJob( File tmpDir, final ICalcDataProvider dataProvider, ICalcMonitor monitor ) throws Exception
   {
     m_tmpDir = tmpDir;
     m_dataProvider = dataProvider;
@@ -234,13 +233,11 @@ public class NAOptimizingJob implements IOptimizingJob
   }
 
   /**
-   * @see org.kalypso.optimize.IOptimizingJob#optimize(org.kalypso.optimizer.Parameter[],
-   *      double[])
+   * @see org.kalypso.optimize.IOptimizingJob#optimize(org.kalypso.optimizer.Parameter[], double[])
    */
   public void optimize( Parameter[] parameterConf, double values[] ) throws Exception
   {
-    final Document dom = XMLHelper.getAsDOM( m_dataProvider
-        .getURLForID( NaModelConstants.IN_CONTROL_ID ), true );
+    final Document dom = XMLHelper.getAsDOM( m_dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ), true );
 
     final ParameterOptimizeContext[] calcContexts = new ParameterOptimizeContext[parameterConf.length];
     for( int i = 0; i < parameterConf.length; i++ )
@@ -288,8 +285,7 @@ public class NAOptimizingJob implements IOptimizingJob
       URL measuredURL = null;
       try
       {
-        measuredURL = new URL( m_dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ),
-            m_linkMeasuredTS.getHref() );
+        measuredURL = new URL( m_dataProvider.getURLForID( NaModelConstants.IN_CONTROL_ID ), m_linkMeasuredTS.getHref() );
       }
       catch( Exception e )
       {
@@ -298,10 +294,8 @@ public class NAOptimizingJob implements IOptimizingJob
         e.printStackTrace();
       }
       IObservation observation = ZmlFactory.parseXML( measuredURL, "measured" );
-      IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(),
-          TimeserieConstants.TYPE_DATE );
-      IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(),
-          TimeserieConstants.TYPE_RUNOFF );
+      IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
+      IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_RUNOFF );
       ITuppleModel values = observation.getValues( null );
       for( int i = 0; i < values.getCount(); i++ )
       {
@@ -324,15 +318,13 @@ public class NAOptimizingJob implements IOptimizingJob
     final TreeMap result = new TreeMap();
     final File optimizeResultDir = new File( m_lastOptimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
-    String calcHref = m_linkCalcedTS.getHref().replaceFirst(
-        "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" );
+    String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" );
 
     final File tsFile = new File( optimizeResultDir, calcHref );
     final IObservation observation = ZmlFactory.parseXML( tsFile.toURL(), "result" );
-    final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(),
-        TimeserieConstants.TYPE_DATE );
-    final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(),
-        TimeserieConstants.TYPE_RUNOFF );
+    final IAxis dateAxis = ObservationUtilities
+        .findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
+    final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_RUNOFF );
     final ITuppleModel values = observation.getValues( null );
     for( int i = 0; i < values.getCount(); i++ )
     {
