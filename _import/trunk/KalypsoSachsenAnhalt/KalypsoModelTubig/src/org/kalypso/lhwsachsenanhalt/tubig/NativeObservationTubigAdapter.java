@@ -65,8 +65,7 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName,
-      final Object data )
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_title = config.getAttribute( "label" );
     m_axisTypeValue = config.getAttribute( "axisType" );
@@ -86,8 +85,7 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
     //    reader = new FileReader( file );
     reader = new InputStreamReader( new FileInputStream( file ), TubigConst.TUBIG_CODEPAGE );
 
-    obsOut = TubigConverter
-        .tubig2Zml( reader, m_axisTypeValue, TubigUtils.getFileNameWOExt( file ) );
+    obsOut = TubigConverter.tubig2Zml( reader, m_axisTypeValue, TubigUtils.getFileNameWOExt( file ) );
     IOUtils.closeQuietly( reader );
 
     return obsOut;
@@ -95,11 +93,10 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
 
   public IAxis[] createAxis()
   {
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class,
-        true );
+    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
     TimeserieUtils.getUnit( m_axisTypeValue );
-    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ),
-        m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
+    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils
+        .getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[]
     {
         dateAxis,
@@ -107,4 +104,3 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
     return axis;
   }
 }
-

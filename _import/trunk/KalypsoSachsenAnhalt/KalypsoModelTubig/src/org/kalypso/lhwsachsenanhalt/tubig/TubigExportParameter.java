@@ -76,23 +76,20 @@ public class TubigExportParameter
   /**
    * writeSpeicherPars <br>
    * schreibt Speicherparameter-Dateien (*.sra, *.qmi, *.qma, *.twa, *.lea) <br>
-   * für alle "echten" Speicher aus dem GML-Workspace in das angegebene
-   * Verzeichnis
+   * für alle "echten" Speicher aus dem GML-Workspace in das angegebene Verzeichnis
    * 
    * @param workspace
    * @param dir
    * @throws TubigException
    */
-  public static void writeSpeicherPars( final GMLWorkspace workspace, final File dir )
-      throws TubigException
+  public static void writeSpeicherPars( final GMLWorkspace workspace, final File dir ) throws TubigException
   {
     //String sName;
     String sKurzName;
     Iterator itSpeicher;
     Feature featSpeicher;
 
-    final FeatureList speicherlist = (FeatureList)workspace
-        .getFeatureFromPath( TubigConst.GML_SPEICHER_COLL );
+    final FeatureList speicherlist = (FeatureList)workspace.getFeatureFromPath( TubigConst.GML_SPEICHER_COLL );
     for( itSpeicher = speicherlist.iterator(); itSpeicher.hasNext(); )
     {
       featSpeicher = (Feature)itSpeicher.next();
@@ -109,8 +106,8 @@ public class TubigExportParameter
     }
   }
 
-  private static void writeSpeicherStauraum( final Feature speicher, final File dir,
-      final String kurzname ) throws TubigException
+  private static void writeSpeicherStauraum( final Feature speicher, final File dir, final String kurzname )
+      throws TubigException
   {
     final Feature featStauraum;
     final Double dTotraum;
@@ -131,8 +128,7 @@ public class TubigExportParameter
     {
       stream = new FileOutputStream( outfile );
 
-      pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream,
-          TubigConst.TUBIG_CODEPAGE ) ) );
+      pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream, TubigConst.TUBIG_CODEPAGE ) ) );
 
       featStauraum = (Feature)speicher.getProperty( "StauraumParameter" );
       dTotraum = (Double)featStauraum.getProperty( "Totraum" );
@@ -175,9 +171,9 @@ public class TubigExportParameter
     }
   }
 
-  private static void writeSpeicherKommentarUndJahr( final Feature speicher, final File dir,
-      final String dateiName, final String sFeatProp1, final String sFeatProp2,
-      final String sFeatLstProp1, final boolean bAddComment ) throws TubigException
+  private static void writeSpeicherKommentarUndJahr( final Feature speicher, final File dir, final String dateiName,
+      final String sFeatProp1, final String sFeatProp2, final String sFeatLstProp1, final boolean bAddComment )
+      throws TubigException
   {
     final Feature featMindestabgabe;
     final Feature featMindestabgabeJahr;
@@ -195,8 +191,7 @@ public class TubigExportParameter
     {
       stream = new FileOutputStream( outfile );
 
-      pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream,
-          TubigConst.TUBIG_CODEPAGE ) ) );
+      pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream, TubigConst.TUBIG_CODEPAGE ) ) );
 
       featMindestabgabe = (Feature)speicher.getProperty( sFeatProp1 );
 
@@ -222,8 +217,7 @@ public class TubigExportParameter
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new TubigException( "Fehler beim Schreiben der Speicherparameter (Kommentar und Jahr)",
-          e );
+      throw new TubigException( "Fehler beim Schreiben der Speicherparameter (Kommentar und Jahr)", e );
     }
     finally
     {
@@ -231,32 +225,32 @@ public class TubigExportParameter
     }
   }
 
-  private static void writeSpeicherMindestabgabe( final Feature speicher, final File dir,
-      final String kurzname ) throws TubigException
+  private static void writeSpeicherMindestabgabe( final Feature speicher, final File dir, final String kurzname )
+      throws TubigException
   {
     // [m³/s]
-    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qmi", "MindestabgabeParameter",
-        "Mindestabgabe", "MonatMember", false );
+    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qmi", "MindestabgabeParameter", "Mindestabgabe",
+        "MonatMember", false );
   }
 
-  private static void writeSpeicherMaximalabgabe( final Feature speicher, final File dir,
-      final String kurzname ) throws TubigException
+  private static void writeSpeicherMaximalabgabe( final Feature speicher, final File dir, final String kurzname )
+      throws TubigException
   {
     // [m³/s]
-    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qma", "MaximalabgabeParameter",
-        "Maximalabgabe", "MonatMember", false );
+    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".qma", "MaximalabgabeParameter", "Maximalabgabe",
+        "MonatMember", false );
   }
 
-  private static void writeSpeicherTrinkwasser( final Feature speicher, final File dir,
-      final String kurzname ) throws TubigException
+  private static void writeSpeicherTrinkwasser( final Feature speicher, final File dir, final String kurzname )
+      throws TubigException
   {
     // [m³/s]
-    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".twa", "TrinkwasserParameter",
-        "Trinkwasser", "MonatMember", true );
+    writeSpeicherKommentarUndJahr( speicher, dir, kurzname + ".twa", "TrinkwasserParameter", "Trinkwasser",
+        "MonatMember", true );
   }
 
-  private static void writeSpeicherEntlastungsanlagen( final Feature speicher, final File dir,
-      final String kurzname ) throws TubigException
+  private static void writeSpeicherEntlastungsanlagen( final Feature speicher, final File dir, final String kurzname )
+      throws TubigException
   {
     final Feature featEntlastungsanlagen;
     final FeatureList featLstEntlastungen;
@@ -282,8 +276,7 @@ public class TubigExportParameter
     {
       stream = new FileOutputStream( outfile );
 
-      pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream,
-          TubigConst.TUBIG_CODEPAGE ) ) );
+      pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream, TubigConst.TUBIG_CODEPAGE ) ) );
 
       featEntlastungsanlagen = (Feature)speicher.getProperty( "EACollectionAssociation" );
       featLstEntlastungen = (FeatureList)featEntlastungsanlagen.getProperty( "EAMember" );
@@ -302,15 +295,12 @@ public class TubigExportParameter
         sLeaZeile = Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
         { featEntlastung.getProperty( "Höhe" ) } );
         dHoehe = (Double)featEntlastung.getProperty( "Höhe" );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP
-            + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-            { featEntlastung.getProperty( "Inhalt" ) } );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP
-            + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-            { featEntlastung.getProperty( "Grundablass" ) } );
-        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP
-            + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
-            { featEntlastung.getProperty( "Überlauf" ) } );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
+        { featEntlastung.getProperty( "Inhalt" ) } );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
+        { featEntlastung.getProperty( "Grundablass" ) } );
+        sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_NUMBER_FORMAT, new Object[]
+        { featEntlastung.getProperty( "Überlauf" ) } );
         dUeberlauf = (Double)featEntlastung.getProperty( "Überlauf" );
         if( dUeberlauf.doubleValue() <= 0.0 )
         {
@@ -318,9 +308,8 @@ public class TubigExportParameter
         }
         sBemerkung = (String)featEntlastung.getProperty( "Bemerkung" );
         if( sBemerkung != null )
-          sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP
-              + Format.sprintf( TubigConst.TUBIG_STRING_FORMAT, new Object[]
-              { TubigConst.TUBIG_SEP + sBemerkung } );
+          sLeaZeile = sLeaZeile + TubigConst.TUBIG_SEP + Format.sprintf( TubigConst.TUBIG_STRING_FORMAT, new Object[]
+          { TubigConst.TUBIG_SEP + sBemerkung } );
         leaMap.put( dHoehe, sLeaZeile );
       }
 
@@ -338,8 +327,7 @@ public class TubigExportParameter
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new TubigException( "Fehler beim Schreiben der Speicherparameter (Entlastungsanlagen)",
-          e );
+      throw new TubigException( "Fehler beim Schreiben der Speicherparameter (Entlastungsanlagen)", e );
     }
     finally
     {
@@ -350,15 +338,14 @@ public class TubigExportParameter
   /**
    * writePegelPars <br>
    * schreibt Parameter-Dateien <br>
-   * für alle Pegel aus dem Workspace in das angegebene Verzeichnis derzeit
-   * werden nur WLM-Parameter-Dateien (wlm_ <pegel>.par) geschrieben <br>
+   * für alle Pegel aus dem Workspace in das angegebene Verzeichnis derzeit werden nur WLM-Parameter-Dateien (wlm_
+   * <pegel>.par) geschrieben <br>
    * 
    * @param workspace
    * @param dir
    * @throws TubigException
    */
-  public static void writePegelPars( final GMLWorkspace workspace, final File dir )
-      throws TubigException
+  public static void writePegelPars( final GMLWorkspace workspace, final File dir ) throws TubigException
   {
     //String sName;
     String sKurzName;
@@ -379,8 +366,8 @@ public class TubigExportParameter
     }
   }
 
-  private static void writePegelWlmPars( final Feature featPegel, final File dir,
-      final String kurzname ) throws TubigException
+  private static void writePegelWlmPars( final Feature featPegel, final File dir, final String kurzname )
+      throws TubigException
   {
     final File outfile;
     final FileOutputStream stream;
@@ -395,8 +382,7 @@ public class TubigExportParameter
     {
       stream = new FileOutputStream( outfile );
 
-      pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream,
-          TubigConst.TUBIG_CODEPAGE ) ) );
+      pWrtr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( stream, TubigConst.TUBIG_CODEPAGE ) ) );
 
       sComment = (String)featPegel.getProperty( "Kommentar" );
       pWrtr.println( sComment );

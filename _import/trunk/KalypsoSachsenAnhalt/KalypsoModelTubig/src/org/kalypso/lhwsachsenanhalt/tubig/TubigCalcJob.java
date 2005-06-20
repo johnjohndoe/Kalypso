@@ -31,13 +31,11 @@ public class TubigCalcJob implements ICalcJob
   /**
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider,
-   *      org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, final ICalcDataProvider inputProvider,
-      final ICalcResultEater resultEater, final ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( final File tmpdir, final ICalcDataProvider inputProvider, final ICalcResultEater resultEater,
+      final ICalcMonitor monitor ) throws CalcJobServiceException
 
   {
     final File outputDir; // Grundverzeichnis für Ergebnisse (Logs, Zeitreihen)
@@ -87,20 +85,17 @@ public class TubigCalcJob implements ICalcJob
     try
     {
       strmLog = new FileOutputStream( fleCalcLog );
-      pwCalcLog = new PrintWriter( new BufferedWriter( new OutputStreamWriter( strmLog,
-          TubigConst.TUBIG_CODEPAGE ) ) );
+      pwCalcLog = new PrintWriter( new BufferedWriter( new OutputStreamWriter( strmLog, TubigConst.TUBIG_CODEPAGE ) ) );
 
       // Eingabedateien erzeugen
       monitor.setMessage( TubigConst.MESS_DATEIEN_ERZEUGEN );
-      pwCalcLog.println( TubigConst.MESS_DATEIEN_ERZEUGEN + " (" + TubigUtils.getAktuelleUhrzeit()
-          + ")" );
+      pwCalcLog.println( TubigConst.MESS_DATEIEN_ERZEUGEN + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
 
       dataCrtl = TubigInputWorker.createCalcInput( bodevorDir, inputProvider, metaMap );
 
       // Schleife über die Batches (und jeweils starten)
       monitor.setMessage( TubigConst.MESS_RECHENKERN_AUFRUFEN );
-      pwCalcLog.println( TubigConst.MESS_RECHENKERN_AUFRUFEN + " ("
-          + TubigUtils.getAktuelleUhrzeit() + ")" );
+      pwCalcLog.println( TubigConst.MESS_RECHENKERN_AUFRUFEN + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
       iCntBat = dataCrtl.getBatches().length;
       for( ii = 0; ii < iCntBat; ii++ )
       {
@@ -110,16 +105,15 @@ public class TubigCalcJob implements ICalcJob
             + TubigUtils.getAktuelleUhrzeit() + ")" );
 
         // Falls erforderlich, werden Eingangsdaten noch manipuliert (umbenannt)
-        fleBatLog = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH
-            + sBatNme + TubigConst.NAME_EXT_LOG );
-        fleBatErr = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH
-            + sBatNme + TubigConst.NAME_EXT_ERR );
+        fleBatLog = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH + sBatNme
+            + TubigConst.NAME_EXT_LOG );
+        fleBatErr = new File( logCopyInDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_IN_BATCH + sBatNme
+            + TubigConst.NAME_EXT_ERR );
         fleBat = new File( bodevorDir, TubigConst.PRE_COPY_IN_BATCH + sBatNme );
         TubigBatchInterpreter.runBatch( bodevorDir, fleBat, fleBatLog, fleBatErr, monitor );
         if( monitor.isCanceled() )
         {
-          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " ("
-              + TubigUtils.getAktuelleUhrzeit() + ")" );
+          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
           return;
         }
 
@@ -130,62 +124,55 @@ public class TubigCalcJob implements ICalcJob
         TubigBatchInterpreter.runBatch( bodevorDir, fleBat, fleBatLog, fleBatErr, monitor );
         if( monitor.isCanceled() )
         {
-          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " ("
-              + TubigUtils.getAktuelleUhrzeit() + ")" );
+          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
           return;
         }
 
         // Ergebnis-Dateien werden in Unterverzeichnisse Pegel, bzw. Speicher
         // kopiert
-        fleBatLog = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH
-            + sBatNme + TubigConst.NAME_EXT_LOG );
-        fleBatErr = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH
-            + sBatNme + TubigConst.NAME_EXT_ERR );
+        fleBatLog = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH + sBatNme
+            + TubigConst.NAME_EXT_LOG );
+        fleBatErr = new File( logCopyErgDir, TubigConst.NAME_BAT + "_" + TubigConst.PRE_COPY_OUT_BATCH + sBatNme
+            + TubigConst.NAME_EXT_ERR );
         fleBat = new File( bodevorDir, TubigConst.PRE_COPY_OUT_BATCH + sBatNme );
         TubigBatchInterpreter.runBatch( bodevorDir, fleBat, fleBatLog, fleBatErr, monitor );
         if( monitor.isCanceled() )
         {
-          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " ("
-              + TubigUtils.getAktuelleUhrzeit() + ")" );
+          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
           return;
         }
 
         monitor.setProgress( 33 );
         if( monitor.isCanceled() )
         {
-          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " ("
-              + TubigUtils.getAktuelleUhrzeit() + ")" );
+          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
           return;
         }
 
         monitor.setProgress( 33 );
         if( monitor.isCanceled() )
         {
-          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " ("
-              + TubigUtils.getAktuelleUhrzeit() + ")" );
+          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
           return;
         }
 
         monitor.setProgress( 34 );
         if( monitor.isCanceled() )
         {
-          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " ("
-              + TubigUtils.getAktuelleUhrzeit() + ")" );
+          pwCalcLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
           return;
         }
 
         monitor.setMessage( TubigConst.MESS_BERECHNUNG_BEENDET + " (" + sBatNme + ")" );
-        pwCalcLog.println( TubigConst.MESS_BERECHNUNG_BEENDET + " (" + sBatNme + ", "
-            + TubigUtils.getAktuelleUhrzeit() + ")" );
+        pwCalcLog.println( TubigConst.MESS_BERECHNUNG_BEENDET + " (" + sBatNme + ", " + TubigUtils.getAktuelleUhrzeit()
+            + ")" );
 
       }
       monitor.setMessage( TubigConst.MESS_BERECHNUNG_BEENDET );
-      pwCalcLog.println( TubigConst.MESS_BERECHNUNG_BEENDET + " ("
-          + TubigUtils.getAktuelleUhrzeit() + ")" );
+      pwCalcLog.println( TubigConst.MESS_BERECHNUNG_BEENDET + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
 
       monitor.setMessage( TubigConst.MESS_ERGEBNISSE_ZURUECK );
-      pwCalcLog.println( TubigConst.MESS_ERGEBNISSE_ZURUECK + " ("
-          + TubigUtils.getAktuelleUhrzeit() + ")" );
+      pwCalcLog.println( TubigConst.MESS_ERGEBNISSE_ZURUECK + " (" + TubigUtils.getAktuelleUhrzeit() + ")" );
       // Besucher, der aus jeder TUBIG-Datei, die er in den
       // Unterverzeichnissen von CALC (Pegel und Speicher) findet, eine ZML
       // macht
@@ -194,8 +181,8 @@ public class TubigCalcJob implements ICalcJob
       dirHelp = new File( bodevorDir, TubigConst.PEGEL );
       if( dirHelp.isDirectory() )
       {
-        TubigFileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.PEGEL, inputProvider
-            .getURLForID( "MODELL_GML" ), metaMap );
+        TubigFileVisitorTubig2Zml.writeZml( dirHelp, ergDir, TubigConst.PEGEL,
+            inputProvider.getURLForID( "MODELL_GML" ), metaMap );
       }
       dirHelp = new File( bodevorDir, TubigConst.SPEICHER );
       if( dirHelp.isDirectory() )

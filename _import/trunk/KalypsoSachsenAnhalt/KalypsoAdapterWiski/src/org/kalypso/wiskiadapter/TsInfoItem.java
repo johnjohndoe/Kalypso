@@ -122,8 +122,7 @@ public class TsInfoItem implements IRepositoryItem
   }
 
   /**
-   * @return the internal id which is used within wiski. This id should not
-   * be used "outside of the program code"
+   * @return the internal id which is used within wiski. This id should not be used "outside of the program code"
    */
   Long getWiskiId()
   {
@@ -139,11 +138,10 @@ public class TsInfoItem implements IRepositoryItem
   {
     return m_map.getProperty( "stationparameter_longname" );
   }
-  
+
   /**
-   * @return the id (string) which can be used outside of wiski in a persistent and
-   * viable manner. This id is actually defined by the administrator and is not
-   * likely to change for this timeserie.
+   * @return the id (string) which can be used outside of wiski in a persistent and viable manner. This id is actually
+   *         defined by the administrator and is not likely to change for this timeserie.
    */
   String getWiskiCustomId()
   {
@@ -167,9 +165,8 @@ public class TsInfoItem implements IRepositoryItem
   }
 
   /**
-   * Helper: finds a sibling timeserie (under same station) of the given
-   * otherType. For instance if 'this' is a timeserie named MyStation.Type.XX,
-   * then the timeserie named MyStation.otherType.XX is looked for.
+   * Helper: finds a sibling timeserie (under same station) of the given otherType. For instance if 'this' is a
+   * timeserie named MyStation.Type.XX, then the timeserie named MyStation.otherType.XX is looked for.
    */
   TsInfoItem findSibling( final String otherType )
   {

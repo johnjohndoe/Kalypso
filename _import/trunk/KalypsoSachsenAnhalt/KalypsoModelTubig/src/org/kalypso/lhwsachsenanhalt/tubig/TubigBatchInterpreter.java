@@ -72,8 +72,8 @@ public class TubigBatchInterpreter
    * 
    * @author Thül
    */
-  public static void runBatch( final File fleExeDir, final File fleBatch,
-      final ICalcMonitor cancelable ) throws TubigBatchException
+  public static void runBatch( final File fleExeDir, final File fleBatch, final ICalcMonitor cancelable )
+      throws TubigBatchException
   {
     final File fleLog;
     final File fleErr;
@@ -97,23 +97,19 @@ public class TubigBatchInterpreter
     {
       strmLog = new FileOutputStream( fleLog );
       strmErr = new FileOutputStream( fleErr );
-      pwLog = new PrintWriter( new BufferedWriter( new OutputStreamWriter( strmLog,
-          TubigConst.TUBIG_CODEPAGE ) ) );
-      pwErr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( strmErr,
-          TubigConst.TUBIG_CODEPAGE ) ) );
+      pwLog = new PrintWriter( new BufferedWriter( new OutputStreamWriter( strmLog, TubigConst.TUBIG_CODEPAGE ) ) );
+      pwErr = new PrintWriter( new BufferedWriter( new OutputStreamWriter( strmErr, TubigConst.TUBIG_CODEPAGE ) ) );
       runBatch( fleExeDir, fleBatch, pwLog, pwErr, cancelable );
     }
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
-          TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
-          TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -137,8 +133,7 @@ public class TubigBatchInterpreter
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
-          TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -146,9 +141,8 @@ public class TubigBatchInterpreter
     }
   }
 
-  public static void runBatch( final File fleExeDir, final Reader rdrBatch,
-      final PrintWriter pwLog, final PrintWriter pwErr, final ICalcMonitor cancelable )
-      throws TubigBatchException
+  public static void runBatch( final File fleExeDir, final Reader rdrBatch, final PrintWriter pwLog,
+      final PrintWriter pwErr, final ICalcMonitor cancelable ) throws TubigBatchException
   {
     final LineNumberReader lneNumRdrBatch;
     final String sRegExPath = "\\Q%1\\E";
@@ -187,8 +181,7 @@ public class TubigBatchInterpreter
         }
         else
         {
-          if( sZeileUpper.startsWith( "BREAK" ) || sZeileUpper.startsWith( "HALT" )
-              || sZeileUpper.startsWith( "ENDE" ) )
+          if( sZeileUpper.startsWith( "BREAK" ) || sZeileUpper.startsWith( "HALT" ) || sZeileUpper.startsWith( "ENDE" ) )
           {
             // Überlesen, Info in Log aber kein Abbruch und keine
             // Benutzerinteraktion
@@ -271,18 +264,16 @@ public class TubigBatchInterpreter
                           // cancel: wird durch cancelable.isCanceled()weiterverarbeitet
                           // normal fertig: RückgabeWert = 0
                           swInStream = new StringWriter();
-                          ProcessHelper.startProcess( sCmd, null, fleExeDir, cancelable, iTimeout,
-                              swInStream, pwErr );
+                          ProcessHelper.startProcess( sCmd, null, fleExeDir, cancelable, iTimeout, swInStream, pwErr );
 
                           if( cancelable.isCanceled() )
                           {
                             pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
                           }
-                          
+
                           // TODO Monika Ende-Token **ende** noch
                           // weiterverabeiten
-                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog,
-                              pwErr, cancelable );
+                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog, pwErr, cancelable );
 
                         }
                       }
@@ -307,16 +298,14 @@ public class TubigBatchInterpreter
       pwErr.println( "Fehlergrund (IOException): " + e.getCause() );
       pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
-          TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     catch( final ProcessTimeoutException e )
     {
       pwErr.println( "Fehlergrund (ProcessTimeoutException): " + e.getCause() );
       pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR,
-          TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -324,9 +313,6 @@ public class TubigBatchInterpreter
       pwLog.flush();
     }
   }
-
- 
-
 
   public static void main( String[] args ) throws IOException, TubigBatchException
   {

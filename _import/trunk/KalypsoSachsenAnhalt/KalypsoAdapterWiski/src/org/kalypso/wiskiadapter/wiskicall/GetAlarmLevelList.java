@@ -16,6 +16,7 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 public class GetAlarmLevelList implements IWiskiCall
 {
   private List alarmList;
+
   private final Long m_id;
 
   public GetAlarmLevelList( final Long id )
@@ -23,15 +24,16 @@ public class GetAlarmLevelList implements IWiskiCall
     m_id = id;
   }
 
-  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException, RemoteException
+  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
+      RemoteException
   {
-    final HashMap alarmlevel = wiski.getAlarmLevelList(
-        userData, new Long[] { m_id }, null );
+    final HashMap alarmlevel = wiski.getAlarmLevelList( userData, new Long[]
+    { m_id }, null );
 
-    alarmList = (List) alarmlevel.get( m_id );
+    alarmList = (List)alarmlevel.get( m_id );
   }
-  
-  public List getAlarmList( )
+
+  public List getAlarmList()
   {
     return alarmList;
   }

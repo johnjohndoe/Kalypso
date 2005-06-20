@@ -27,8 +27,7 @@ public class WiskiRepository extends AbstractRepository
   /** separator of the configuration string */
   private final static String CONF_SEP = "#";
 
-  private final static Logger LOG = Logger.getLogger( WiskiRepository.class
-      .getName() );
+  private final static Logger LOG = Logger.getLogger( WiskiRepository.class.getName() );
 
   private KiWWDataProviderRMIf m_wiski = null;
 
@@ -46,19 +45,16 @@ public class WiskiRepository extends AbstractRepository
 
   /**
    * @param conf
-   *          the configuration should be build the followin way: URL # DOMAIN #
-   *          LOGIN-NAME # PASSWORD # LANGUAGE
+   *          the configuration should be build the followin way: URL # DOMAIN # LOGIN-NAME # PASSWORD # LANGUAGE
    */
-  public WiskiRepository( String name, String factory, String conf,
-      boolean readOnly ) throws RepositoryException
+  public WiskiRepository( String name, String factory, String conf, boolean readOnly ) throws RepositoryException
   {
     super( name, factory, conf, readOnly );
 
     final String[] items = conf.split( CONF_SEP );
 
     if( items.length != CONF_NB_ITEMS )
-      throw new RepositoryException( "Configuration should have "
-          + CONF_NB_ITEMS + " items separated by " + CONF_SEP );
+      throw new RepositoryException( "Configuration should have " + CONF_NB_ITEMS + " items separated by " + CONF_SEP );
 
     m_url = items[0];
     m_domain = items[1];
@@ -76,18 +72,16 @@ public class WiskiRepository extends AbstractRepository
   }
 
   /**
-   * Perform initialisation of WISKI RMI proxy. Declared final since called from
-   * constructor (good java practice)
+   * Perform initialisation of WISKI RMI proxy. Declared final since called from constructor (good java practice)
    * 
    * @throws RepositoryException
    */
-  private final KiWWDataProviderRMIf wiskiInit( ) throws RepositoryException
+  private final KiWWDataProviderRMIf wiskiInit() throws RepositoryException
   {
     try
     {
       //create a server object
-      final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf) Naming
-          .lookup( m_url );
+      final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf)Naming.lookup( m_url );
       LOG.info( "Wiski About()=" + myServerObject.about() );
 
       // optional params (used for timeout, entry in seconds)
@@ -95,17 +89,13 @@ public class WiskiRepository extends AbstractRepository
       // 604800 = 1 week
       // 125798400 = 1 year
       final HashMap optParam = new HashMap();
-      optParam.put(
-          KiWWDataProviderInterface.OPT_GETUSERAUTHORISATION_MAXINACTIVE,
-          Integer.toString( 28800 ) );
+      optParam.put( KiWWDataProviderInterface.OPT_GETUSERAUTHORISATION_MAXINACTIVE, Integer.toString( 28800 ) );
 
-      final HashMap auth = myServerObject.getUserAuthorisation( m_domain,
-          m_logonName, m_password, "myhost.kisters.de", optParam );
+      final HashMap auth = myServerObject.getUserAuthorisation( m_domain, m_logonName, m_password, "myhost.kisters.de",
+          optParam );
       LOG.info( "Wiski login=" + auth );
 
-      if( auth == null
-          || !"1"
-              .equals( auth.get( KiWWDataProviderInterface.AUTHKEY_ALLOWED ) ) )
+      if( auth == null || !"1".equals( auth.get( KiWWDataProviderInterface.AUTHKEY_ALLOWED ) ) )
         throw new RepositoryException( "Login not allowed" );
 
       return myServerObject;
@@ -119,16 +109,16 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
 
     m_children = null;
-    
+
     wiskiLogout();
   }
 
-  private final void wiskiLogout( )
+  private final void wiskiLogout()
   {
     try
     {
@@ -153,7 +143,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload( ) throws RepositoryException
+  public void reload() throws RepositoryException
   {
     WiskiUtils.forcePropertiesReload();
   }
@@ -161,7 +151,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return "wiski://";
   }
@@ -169,7 +159,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren() throws RepositoryException
   {
     return true;
   }
@@ -177,40 +167,37 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren() throws RepositoryException
   {
     if( m_children == null )
     {
-	    final String prop = WiskiUtils.getProperties().getProperty(
-	        WiskiUtils.PROP_SUPERGROUPNAMES );
-	    if( prop == null )
-	      throw new RepositoryException(
-	          "Gruppenliste in die Einstellungen (config.ini) nicht definiert" );
-	
-	    final String[] superGroupNames = prop.split( "," );
-	    m_children = new IRepositoryItem[superGroupNames.length];
-	    for( int i = 0; i < superGroupNames.length; i++ )
-	      m_children[i] = new SuperGroupItem( this, superGroupNames[i] );
+      final String prop = WiskiUtils.getProperties().getProperty( WiskiUtils.PROP_SUPERGROUPNAMES );
+      if( prop == null )
+        throw new RepositoryException( "Gruppenliste in die Einstellungen (config.ini) nicht definiert" );
+
+      final String[] superGroupNames = prop.split( "," );
+      m_children = new IRepositoryItem[superGroupNames.length];
+      for( int i = 0; i < superGroupNames.length; i++ )
+        m_children[i] = new SuperGroupItem( this, superGroupNames[i] );
     }
 
     return m_children;
   }
 
-  public HashMap getUserData( )
+  public HashMap getUserData()
   {
     return m_userData;
   }
 
   /**
-   * Performs a call on the wiski remote object. This should be used in order to
-   * allow automatic re-loging-in if the session has timed out.
+   * Performs a call on the wiski remote object. This should be used in order to allow automatic re-loging-in if the
+   * session has timed out.
    * 
    * @throws RemoteException
    * @throws KiWWException
    * @throws RepositoryException
    */
-  public void executeWiskiCall( final IWiskiCall call ) throws RemoteException,
-      KiWWException, RepositoryException
+  public void executeWiskiCall( final IWiskiCall call ) throws RemoteException, KiWWException, RepositoryException
   {
     try
     {

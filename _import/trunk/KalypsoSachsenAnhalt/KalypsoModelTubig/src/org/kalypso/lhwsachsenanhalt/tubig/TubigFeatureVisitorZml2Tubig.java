@@ -3,27 +3,23 @@
  * 
  * This file is part of kalypso. Copyright (C) 2004 by:
  * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
- * engineering Denickestraße 22 21073 Hamburg, Germany http://www.tuhh.de/wb
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestraße 22 21073
+ * Hamburg, Germany http://www.tuhh.de/wb
  * 
  * and
  * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
- * http://www.bjoernsen.de
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
  * 
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation, Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contact:
  * 
@@ -56,10 +52,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
 {
-  public static void writeTimeseries( final GMLWorkspace workspace, final String featurePath,
-      final URL context, final File outdir, final String tubigProperty, final String linkProperty,
-      final int step, final String ext, Date dtStartForecast, final Map metaMap,
-      final String sFeatTyp ) throws TubigException
+  public static void writeTimeseries( final GMLWorkspace workspace, final String featurePath, final URL context,
+      final File outdir, final String tubigProperty, final String linkProperty, final int step, final String ext,
+      Date dtStartForecast, final Map metaMap, final String sFeatTyp ) throws TubigException
   {
     final FeatureList features = (FeatureList)workspace.getFeatureFromPath( featurePath );
     final TubigFeatureVisitorZml2Tubig speicherVisitor = new TubigFeatureVisitorZml2Tubig( context, outdir,
@@ -67,8 +62,8 @@ public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
     features.accept( speicherVisitor );
 
     if( speicherVisitor.hasException() )
-      throw new TubigException( "Fehler beim Schreiben der Zeitreihen ins Tubig-Format",
-          speicherVisitor.getExceptions()[0] );
+      throw new TubigException( "Fehler beim Schreiben der Zeitreihen ins Tubig-Format", speicherVisitor
+          .getExceptions()[0] );
   }
 
   private final String m_linkProperty;
@@ -95,15 +90,14 @@ public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
 
   /**
    * @param ext
-   *          Dateiextension ohne Punkt. Bestimmt die Achse der Observation, die
-   *          rausgeschrieben wird.
+   *          Dateiextension ohne Punkt. Bestimmt die Achse der Observation, die rausgeschrieben wird.
    * @param dtStartForecast
    * @param metaMap
    * @param sFeatTyp
    */
   public TubigFeatureVisitorZml2Tubig( final URL context, final File outdir, final String tubigProperty,
-      final String linkProperty, final int step, final String ext, final Date dtStartForecast,
-      final Map metaMap, final String sFeatTyp )
+      final String linkProperty, final int step, final String ext, final Date dtStartForecast, final Map metaMap,
+      final String sFeatTyp )
   {
     m_outdir = outdir;
     m_tubigProperty = tubigProperty;
@@ -140,8 +134,7 @@ public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
           final String sValueType = TubigUtils.getObservationType( tubigFile );
           if( m_metaMap != null )
           {
-            final ZmlInfo info = new ZmlInfo( observation.getName(), observation
-                .getMetadataList() );
+            final ZmlInfo info = new ZmlInfo( observation.getName(), observation.getMetadataList() );
 
             createDefaultMetaInfo( m_metaMap, info );
 
@@ -170,10 +163,9 @@ public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
   }
 
   /**
-   * Wenn noch nicht vorhanden, wird ein Default-Eintrag für MetaMap generiert,
-   * der die StartZeit und den Simualationszeitraum aus info holt <br>
-   * In der metaMap werden die ursprünglichen Metadaten der ZMLs aufbewahrt, und
-   * beim Schreiben der Ergebnisse verwendet
+   * Wenn noch nicht vorhanden, wird ein Default-Eintrag für MetaMap generiert, der die StartZeit und den
+   * Simualationszeitraum aus info holt <br>
+   * In der metaMap werden die ursprünglichen Metadaten der ZMLs aufbewahrt, und beim Schreiben der Ergebnisse verwendet
    */
   private static void createDefaultMetaInfo( Map metaMap, ZmlInfo info )
   {
@@ -195,8 +187,7 @@ public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
       sTempProp = metaDataList.getProperty( TubigConst.PROP_STARTZEIT );
       if( sTempProp != null )
       {
-        metaDataListDef.setProperty( TubigConst.PROP_STARTZEIT, metaDataList
-            .getProperty( TubigConst.PROP_STARTZEIT ) );
+        metaDataListDef.setProperty( TubigConst.PROP_STARTZEIT, metaDataList.getProperty( TubigConst.PROP_STARTZEIT ) );
       }
       metaDataListDef.setProperty( TubigConst.PROP_NAME, sNameDef );
       sTempProp = metaDataList.getProperty( TubigConst.PROP_VORHERSAGE );

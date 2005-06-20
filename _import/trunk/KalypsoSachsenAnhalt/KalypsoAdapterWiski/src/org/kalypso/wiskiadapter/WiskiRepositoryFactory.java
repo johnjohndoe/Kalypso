@@ -14,7 +14,7 @@ public class WiskiRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository( ) throws RepositoryException
+  public boolean configureRepository() throws RepositoryException
   {
     return true;
   }
@@ -22,7 +22,7 @@ public class WiskiRepositoryFactory extends AbstractRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository( ) throws RepositoryException
+  public IRepository createRepository() throws RepositoryException
   {
     return new WiskiRepository( "Wiski", getClass().getName(), getConfiguration(), false );
   }

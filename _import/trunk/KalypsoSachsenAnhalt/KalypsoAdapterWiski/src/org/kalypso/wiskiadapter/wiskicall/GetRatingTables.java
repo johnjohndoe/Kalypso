@@ -33,37 +33,35 @@ public class GetRatingTables implements IWiskiCall
     m_validity = validity;
   }
 
-  public void execute( KiWWDataProviderRMIf wiski, HashMap userData )
-      throws NoSuchObjectException, KiWWException, RemoteException
+  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
+      RemoteException
   {
-    final HashMap tables = wiski.getRatingTables( userData,
-        KiWWDataProviderInterface.OBJECT_TIMESERIES, new Long[] { m_id },
-        new Timestamp( m_validity.getTime() ) );
+    final HashMap tables = wiski.getRatingTables( userData, KiWWDataProviderInterface.OBJECT_TIMESERIES, new Long[]
+    { m_id }, new Timestamp( m_validity.getTime() ) );
 
-    final LinkedList list = (LinkedList) tables.get( m_id );
+    final LinkedList list = (LinkedList)tables.get( m_id );
     if( list.size() > 0 )
     {
-      final HashMap table = (HashMap) list.getFirst();
+      final HashMap table = (HashMap)list.getFirst();
 
-      W = (Number[])((List) table.get( "curve_table_stage" )).toArray( new Number[0]);
-      Q = (Number[]) ((List) table.get( "curve_table_flow" )).toArray( new Number[0]);
+      W = (Number[])( (List)table.get( "curve_table_stage" ) ).toArray( new Number[0] );
+      Q = (Number[])( (List)table.get( "curve_table_flow" ) ).toArray( new Number[0] );
 
       if( W.length != Q.length )
-        throw new IllegalArgumentException(
-            "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
+        throw new IllegalArgumentException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
     }
   }
 
-  public Number[] getW( )
+  public Number[] getW()
   {
     return W;
   }
 
-  public Number[] getQ( )
+  public Number[] getQ()
   {
     return Q;
   }
-  
+
   public boolean hasTable()
   {
     return W != null;

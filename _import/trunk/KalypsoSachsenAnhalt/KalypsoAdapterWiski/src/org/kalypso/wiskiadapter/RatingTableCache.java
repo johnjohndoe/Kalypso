@@ -21,11 +21,10 @@ public class RatingTableCache
 
   private RatingTableCache()
   {
-    final File dir = new File( System.getProperty( "java.io.tmpdir" )
-        + File.separator + "wiskiRatingTables" );
+    final File dir = new File( System.getProperty( "java.io.tmpdir" ) + File.separator + "wiskiRatingTables" );
     if( !dir.exists() )
       dir.mkdir();
-    
+
     m_cache = new StringValidityFileCache( WQTableFactory.getInstance(), dir );
   }
 
@@ -44,16 +43,13 @@ public class RatingTableCache
    */
   public WQTableSet get( final String tsInfoName, final Date validity )
   {
-    return (WQTableSet)m_cache
-        .get( new StringValidityKey( tsInfoName, validity ) );
+    return (WQTableSet)m_cache.get( new StringValidityKey( tsInfoName, validity ) );
   }
 
   /**
-   * Checks if this one is more recent than the one in the cache and eventually
-   * stores it in the cache
+   * Checks if this one is more recent than the one in the cache and eventually stores it in the cache
    */
-  public void check( final WQTableSet wqTableSet, final String tsInfoName,
-      final Date to )
+  public void check( final WQTableSet wqTableSet, final String tsInfoName, final Date to )
   {
     final StringValidityKey key = new StringValidityKey( tsInfoName, to );
 

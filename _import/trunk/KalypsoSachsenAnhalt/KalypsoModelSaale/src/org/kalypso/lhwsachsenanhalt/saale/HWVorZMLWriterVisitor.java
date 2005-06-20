@@ -60,15 +60,14 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * Ein FeatureVisitor, um alle Zeitreihen eines bestimmten typs aus dem GML
- * rauszuschreiben
+ * Ein FeatureVisitor, um alle Zeitreihen eines bestimmten typs aus dem GML rauszuschreiben
  * 
  * @author belger
  */
 public class HWVorZMLWriterVisitor implements FeatureVisitor
 {
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
-  
+
   private final HWVOR00Converter m_converter = new HWVOR00Converter();
 
   private final URL m_context;
@@ -79,8 +78,8 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
 
   private final String m_linkProperty;
 
-  public HWVorZMLWriterVisitor( final String linkProperty, final String dataAxis,
-      final IUrlResolver resolver, final URL context )
+  public HWVorZMLWriterVisitor( final String linkProperty, final String dataAxis, final IUrlResolver resolver,
+      final URL context )
   {
     m_linkProperty = linkProperty;
     m_dataAxis = dataAxis;
@@ -97,8 +96,7 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
     final TimeseriesLink link = (TimeseriesLink)f.getProperty( m_linkProperty );
     try
     {
-      final IObservation observation = ZmlFactory.parseXML( m_resolver.resolveURL( m_context, link
-          .getHref() ), "id" );
+      final IObservation observation = ZmlFactory.parseXML( m_resolver.resolveURL( m_context, link.getHref() ), "id" );
       m_converter.addObservation( observation, TimeserieConstants.TYPE_DATE, m_dataAxis );
     }
     catch( final MalformedURLException e )
@@ -109,10 +107,9 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
     catch( final SensorException e )
     {
       e.printStackTrace();
-      
+
       m_logger.warning( "Zeitreihe konnte aus Modell nicht gelesen werden: " + link.getHref() );
-      
-      
+
     }
 
     return true;

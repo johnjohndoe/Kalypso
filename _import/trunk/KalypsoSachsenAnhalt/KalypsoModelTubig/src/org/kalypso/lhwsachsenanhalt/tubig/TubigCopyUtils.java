@@ -8,14 +8,13 @@ import org.kalypso.services.calculation.job.ICalcMonitor;
 
 /**
  * <p>
- * This class provides static utility method for buffered copying between source
- * <code>Reader</code> and destination <code>Writer</code>.
+ * This class provides static utility method for buffered copying between source <code>Reader</code> and destination
+ * <code>Writer</code>.
  * </p>
  * 
  * <p>
- * The <code>copy</code> methods use an internal buffer when copying. It is
- * therefore advisable <em>not</em> to deliberately wrap the stream arguments
- * to the <code>copy</code> methods in <code>Buffered*</code> streams. For
+ * The <code>copy</code> methods use an internal buffer when copying. It is therefore advisable <em>not</em> to
+ * deliberately wrap the stream arguments to the <code>copy</code> methods in <code>Buffered*</code> streams. For
  * example, don't do the following:
  * </p>
  * 
@@ -80,8 +79,7 @@ public class TubigCopyUtils
         sMess = sMess.replaceAll( TubigConst.STDERR, "" );
         pwErr.println( sMess );
         sLastWrtr = "pwErr";
-        throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR,
-            TubigConst.FINISH_ERROR_TEXT );
+        throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
       }
       else
       {

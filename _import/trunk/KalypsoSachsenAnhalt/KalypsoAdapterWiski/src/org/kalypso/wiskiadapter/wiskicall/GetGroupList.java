@@ -19,8 +19,11 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 public class GetGroupList implements IWiskiCall
 {
   /** columns of GROUP */
-  public static final String[] COLUMNS = { "group_id", "group_name" };
-  
+  public static final String[] COLUMNS =
+  {
+      "group_id",
+      "group_name" };
+
   private final SimpleRequestFilterTerm filtergroup;
 
   private final SimpleRequestSortTerm sort;
@@ -38,18 +41,16 @@ public class GetGroupList implements IWiskiCall
     sort.addColumnAscent( "group_name" );
   }
 
-  public void execute( final KiWWDataProviderRMIf wiski, final HashMap userData )
-      throws NoSuchObjectException, KiWWException, RemoteException
+  public void execute( final KiWWDataProviderRMIf wiski, final HashMap userData ) throws NoSuchObjectException,
+      KiWWException, RemoteException
   {
-    final HashMap grouplist = wiski.getGroupList( userData, COLUMNS,
-        KiWWDataProviderInterface.TIMESERIES_GROUP, sort, filtergroup, 0, 0,
-        false, null );
+    final HashMap grouplist = wiski.getGroupList( userData, COLUMNS, KiWWDataProviderInterface.TIMESERIES_GROUP, sort,
+        filtergroup, 0, 0, false, null );
 
-    resultList = (List) grouplist
-        .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
+    resultList = (List)grouplist.get( KiWWDataProviderInterface.KEY_RESULT_LIST );
   }
 
-  public List getResultList( )
+  public List getResultList()
   {
     return resultList;
   }

@@ -57,10 +57,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class TubigInputWorker
 {
   /**
-   * Holt aus den Resourcen (PATH_RECHENKERN_ZIP) und entpackt sie nach fleDir
-   * <br>
-   * PATH_RECHENKERN_ZIP enthält alle benötigten Batch-Dateien, Steuer-Dateien,
-   * allg. Parameter-Dateien etc.
+   * Holt aus den Resourcen (PATH_RECHENKERN_ZIP) und entpackt sie nach fleDir <br>
+   * PATH_RECHENKERN_ZIP enthält alle benötigten Batch-Dateien, Steuer-Dateien, allg. Parameter-Dateien etc.
    * 
    * @throws TubigException
    * 
@@ -95,8 +93,7 @@ public class TubigInputWorker
    * Bereitstellen und ggf. Umwandeln aller Eingabedaten für die Berechnung <br>
    * 
    * Rechenkern.zip aus den Resourcen holen und entpacken <br>
-   * Datei AKTDT.TXT (aktuelle Modellzeit) aus .calculation (Id = CALC) erzeugen
-   * <br>
+   * Datei AKTDT.TXT (aktuelle Modellzeit) aus .calculation (Id = CALC) erzeugen <br>
    * Eingabedateien (Zeitreihen) konvertieren <br>
    * Parameterdateien schreiben (Speicher, WLM_ <pegel>.par <br>
    * alle Dateien werden ins Rechenverzeichnis ("BODEVOR") geschrieben <br>
@@ -109,9 +106,8 @@ public class TubigInputWorker
    * @throws CalcJobServiceException
    * @author Thül
    */
-  public static TubigCalculationData createCalcInput( final File dirCalc,
-      final ICalcDataProvider inputData, final Map metaMap ) throws CalcJobServiceException,
-      TubigException
+  public static TubigCalculationData createCalcInput( final File dirCalc, final ICalcDataProvider inputData,
+      final Map metaMap ) throws CalcJobServiceException, TubigException
   {
     final TubigCalculationData calcData;
 
@@ -126,16 +122,14 @@ public class TubigInputWorker
 
     // Parameter aus modell.gml in Dateien schreiben (Speicher, Pegel)
     // und auch Zeitreihen in TUBIG-Dateien konvertieren
-    writeParameterAndTimeseries( inputData.getURLForID( "MODELL_GML" ), dirCalc, calcData
-        .getStartforecast(), metaMap );
+    writeParameterAndTimeseries( inputData.getURLForID( "MODELL_GML" ), dirCalc, calcData.getStartforecast(), metaMap );
 
     return calcData;
   }
 
   /**
    * 
-   * Liest Parameter (Speicher, Pegel) aus modell.gml und schreibt die
-   * Parameterdateien ins Rechenverzeichnis (BODEVOR)
+   * Liest Parameter (Speicher, Pegel) aus modell.gml und schreibt die Parameterdateien ins Rechenverzeichnis (BODEVOR)
    * 
    * @param dtStartForecast
    * @throws TubigException
@@ -143,8 +137,8 @@ public class TubigInputWorker
    * @author Thül
    */
 
-  private static void writeParameterAndTimeseries( final URL urlGml, final File dirCalc,
-      final Date dtStartForecast, final Map metaMap ) throws TubigException
+  private static void writeParameterAndTimeseries( final URL urlGml, final File dirCalc, final Date dtStartForecast,
+      final Map metaMap ) throws TubigException
   {
     final GMLWorkspace gmlWrkSpce;
     try
@@ -161,40 +155,33 @@ public class TubigInputWorker
     TubigExportParameter.writePegelPars( gmlWrkSpce, dirCalc );
 
     // Speicherabgabe, Vergangenheit
-    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml,
-        dirCalc, TubigConst.GML_KURZ_NAME, "Abgabe", -1, "vsa", dtStartForecast, metaMap,
-        TubigConst.SPEICHER );
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml, dirCalc,
+        TubigConst.GML_KURZ_NAME, "Abgabe", -1, "vsa", dtStartForecast, metaMap, TubigConst.SPEICHER );
 
     // Speicherabgabe, Prognose (auch Überleitung)
-    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_ALLE_SPEICHER_COLL, urlGml,
-        dirCalc, TubigConst.GML_KURZ_NAME, "Abgabe", 1, "psa", dtStartForecast, metaMap,
-        TubigConst.SPEICHER );
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_ALLE_SPEICHER_COLL, urlGml, dirCalc,
+        TubigConst.GML_KURZ_NAME, "Abgabe", 1, "psa", dtStartForecast, metaMap, TubigConst.SPEICHER );
 
     // Speicherinhalt, Vergangenheit
-    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml,
-        dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vvs", dtStartForecast,
-        metaMap, TubigConst.SPEICHER );
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_SPEICHER_COLL, urlGml, dirCalc,
+        TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vvs", dtStartForecast, metaMap, TubigConst.SPEICHER );
 
     // Abfluss am Pegel, Vergangenheit
-    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml,
-        dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vq", dtStartForecast,
-        metaMap, TubigConst.PEGEL );
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml, dirCalc,
+        TubigConst.GML_KURZ_NAME, "Ganglinie_gemessen", -1, "vq", dtStartForecast, metaMap, TubigConst.PEGEL );
 
     // Abfluss am Pegel, Prognose (wird für Batch 3-5 elen.pq und/oder wege.pq
     // benötigt)
-    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml,
-        dirCalc, TubigConst.GML_KURZ_NAME, "Ganglinie_gerechnet", 1, "pq", dtStartForecast, null,
-        TubigConst.PEGEL );
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_PEGEL_COLL, urlGml, dirCalc,
+        TubigConst.GML_KURZ_NAME, "Ganglinie_gerechnet", 1, "pq", dtStartForecast, null, TubigConst.PEGEL );
 
     // Gebietsniederschlag, Vergangenheit
-    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml,
-        dirCalc, TubigConst.GML_KURZ_NAME, "Niederschlag", -1, "vns", dtStartForecast, metaMap,
-        TubigConst.PEGEL );
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml, dirCalc,
+        TubigConst.GML_KURZ_NAME, "Niederschlag", -1, "vns", dtStartForecast, metaMap, TubigConst.PEGEL );
 
     // Gebietsniederschlag, Prognose
-    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml,
-        dirCalc, TubigConst.GML_KURZ_NAME, "Niederschlag", 1, "pns", dtStartForecast, metaMap,
-        TubigConst.PEGEL );
+    TubigFeatureVisitorZml2Tubig.writeTimeseries( gmlWrkSpce, TubigConst.GML_NSGEB_COLL, urlGml, dirCalc,
+        TubigConst.GML_KURZ_NAME, "Niederschlag", 1, "pns", dtStartForecast, metaMap, TubigConst.PEGEL );
   }
 
   public static void main( final String[] args ) throws TubigException

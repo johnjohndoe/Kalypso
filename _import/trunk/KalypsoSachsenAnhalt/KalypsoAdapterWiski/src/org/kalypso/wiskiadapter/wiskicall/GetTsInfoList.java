@@ -19,7 +19,8 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 public class GetTsInfoList implements IWiskiCall
 {
   /** Columns of TSINFO */
-  public final static String[] COLUMNS = {
+  public final static String[] COLUMNS =
+  {
       "tsinfo_id",
       "tsinfo_name",
       "tsinfo_group_ident",
@@ -45,8 +46,7 @@ public class GetTsInfoList implements IWiskiCall
   private List resultList;
 
   /**
-   * Constructor with groupId. All tsInfoList objects in the group will be
-   * fetched in the wiski database.
+   * Constructor with groupId. All tsInfoList objects in the group will be fetched in the wiski database.
    */
   public GetTsInfoList( final String groupId )
   {
@@ -60,13 +60,14 @@ public class GetTsInfoList implements IWiskiCall
   }
 
   /**
-   * Constructor with tsinfo_name. Note that groupId is ignored here (leaved as
-   * argument in order to overload constructor) and should be null. The one and
-   * only one tsinfolist with that tsinfo_name will be fetched from the wiski
-   * database.
+   * Constructor with tsinfo_name. Note that groupId is ignored here (leaved as argument in order to overload
+   * constructor) and should be null. The one and only one tsinfolist with that tsinfo_name will be fetched from the
+   * wiski database.
    * 
-   * @param groupId not used, should be null
-   * @param tsinfo_name name of the timeserie
+   * @param groupId
+   *          not used, should be null
+   * @param tsinfo_name
+   *          name of the timeserie
    */
   public GetTsInfoList( final String groupId, final String tsinfo_name )
   {
@@ -78,14 +79,12 @@ public class GetTsInfoList implements IWiskiCall
     sort = null;
   }
 
-  public void execute( KiWWDataProviderRMIf wiski, HashMap userData )
-      throws NoSuchObjectException, KiWWException, RemoteException
+  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
+      RemoteException
   {
-    final HashMap tsinfolist = wiski.getTsInfoList( userData, COLUMNS, sort,
-        filter, 0, 0, false, null );
+    final HashMap tsinfolist = wiski.getTsInfoList( userData, COLUMNS, sort, filter, 0, 0, false, null );
 
-    resultList = (List)tsinfolist
-        .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
+    resultList = (List)tsinfolist.get( KiWWDataProviderInterface.KEY_RESULT_LIST );
   }
 
   public List getResultList()

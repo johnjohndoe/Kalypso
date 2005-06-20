@@ -84,8 +84,7 @@ public class SuperGroupItem implements IRepositoryItem
         for( final Iterator it = call.getResultList().iterator(); it.hasNext(); )
         {
           final HashMap map = (HashMap)it.next();
-          m_children[i++] = new GroupItem( this, (String)map.get( "group_id" ),
-              (String)map.get( "group_name" ) );
+          m_children[i++] = new GroupItem( this, (String)map.get( "group_id" ), (String)map.get( "group_name" ) );
         }
       }
       catch( final Exception e ) // RemoteException or KiWWException

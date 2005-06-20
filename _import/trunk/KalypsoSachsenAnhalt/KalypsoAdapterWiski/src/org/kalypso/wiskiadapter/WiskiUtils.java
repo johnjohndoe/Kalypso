@@ -22,22 +22,21 @@ public final class WiskiUtils
   final static String PROP_SUPERGROUPNAMES = "SUPERGROUPNAMES";
 
   /**
-   * name of the properties delivering the number of days in the past that can
-   * be used as default date-range
+   * name of the properties delivering the number of days in the past that can be used as default date-range
    */
   final static String PROP_NUMBER_OF_DAYS = "NUMBER_OF_DAYS";
 
   private static Properties PROPS = null;
 
-  private WiskiUtils( )
+  private WiskiUtils()
   {
-    // not to be instanciated
+  // not to be instanciated
   }
 
   /**
    * Reads the properties from the configuration file in resources/config.ini
    */
-  public static Properties getProperties( )
+  public static Properties getProperties()
   {
     // lazy loading
     if( PROPS != null )
@@ -67,46 +66,40 @@ public final class WiskiUtils
   /**
    * Forces the properties to be reloaded for the next call to getProperties()
    */
-  public static void forcePropertiesReload( )
+  public static void forcePropertiesReload()
   {
     PROPS = null;
   }
 
   /**
-   * Parse the commonInfoList type as defined by the WDP (which is a HashMap
-   * with a specific construction). See WDP-Doc for more information on this
-   * structure.
+   * Parse the commonInfoList type as defined by the WDP (which is a HashMap with a specific construction). See WDP-Doc
+   * for more information on this structure.
    * <p>
-   * The parsing here only returns the list of values for the given column. Each
-   * resultset is scanned and the value of the column is fetched in an array.
-   * Finally the array is returned.
+   * The parsing here only returns the list of values for the given column. Each resultset is scanned and the value of
+   * the column is fetched in an array. Finally the array is returned.
    */
-  public static String[] parseCommonInfoList( final HashMap commonInfoList,
-      final String columnName )
+  public static String[] parseCommonInfoList( final HashMap commonInfoList, final String columnName )
   {
-    final List resultList = (List) commonInfoList
-        .get( KiWWDataProviderInterface.KEY_RESULT_LIST );
+    final List resultList = (List)commonInfoList.get( KiWWDataProviderInterface.KEY_RESULT_LIST );
 
     return parseResultList( resultList, columnName );
   }
 
   /**
-   * Parse the resultList type as defined by the WDP (which is a List of
-   * HashMaps). See WDP-Doc for more information on this structure.
+   * Parse the resultList type as defined by the WDP (which is a List of HashMaps). See WDP-Doc for more information on
+   * this structure.
    * <p>
-   * The parsing here only returns the list of values for the given column. Each
-   * resultset is scanned and the value of the column is fetched in an array.
-   * Finally the array is returned.
+   * The parsing here only returns the list of values for the given column. Each resultset is scanned and the value of
+   * the column is fetched in an array. Finally the array is returned.
    */
-  public static String[] parseResultList( final List resultList,
-      final String columnName )
+  public static String[] parseResultList( final List resultList, final String columnName )
   {
     final String[] results = new String[resultList.size()];
     int i = 0;
     for( final Iterator it = resultList.iterator(); it.hasNext(); )
     {
-      final HashMap map = (HashMap) it.next();
-      results[i++] = (String) map.get( columnName );
+      final HashMap map = (HashMap)it.next();
+      results[i++] = (String)map.get( columnName );
     }
 
     return results;
@@ -120,8 +113,7 @@ public final class WiskiUtils
     final String type = getProperties().getProperty( "TYPE_" + wiskiType );
 
     if( type == null )
-      throw new IllegalArgumentException( "Wiski-Typ nicht erkannt: "
-          + wiskiType );
+      throw new IllegalArgumentException( "Wiski-Typ nicht erkannt: " + wiskiType );
 
     return type;
   }
@@ -134,8 +126,7 @@ public final class WiskiUtils
     final String md = getProperties().getProperty( "MD_" + wiskiName );
 
     if( md == null )
-      throw new IllegalArgumentException( "Wiski-Name nicht erkannt: "
-          + wiskiName );
+      throw new IllegalArgumentException( "Wiski-Name nicht erkannt: " + wiskiName );
 
     return md;
   }
@@ -148,8 +139,7 @@ public final class WiskiUtils
     final String status = getProperties().getProperty( "STATUS_" + wiskiStatus );
 
     if( status == null )
-      throw new IllegalArgumentException( "Wiski-Status nicht erkannt: "
-          + wiskiStatus );
+      throw new IllegalArgumentException( "Wiski-Status nicht erkannt: " + wiskiStatus );
 
     return Integer.valueOf( status );
   }

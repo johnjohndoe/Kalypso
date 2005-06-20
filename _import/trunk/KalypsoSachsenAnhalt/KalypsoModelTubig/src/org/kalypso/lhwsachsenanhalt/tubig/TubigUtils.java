@@ -76,8 +76,7 @@ public class TubigUtils
 
   /**
    * gibt nur den Dateinamen zurück (ohne Dateiendung) <br>
-   * wird verwendet, um den Kurznamen aus den Datei-Namen der TUBIG-Dateien zu
-   * generieren
+   * wird verwendet, um den Kurznamen aus den Datei-Namen der TUBIG-Dateien zu generieren
    */
   public static String getFileNameWOExt( final File file )
   {
@@ -93,8 +92,7 @@ public class TubigUtils
   }
 
   /**
-   * gibt entsprechend der Datei-Extension die zugehörige TimeserieConstant für
-   * ZML-Achse zurück
+   * gibt entsprechend der Datei-Extension die zugehörige TimeserieConstant für ZML-Achse zurück
    * 
    * @author Thül
    */
@@ -112,8 +110,8 @@ public class TubigUtils
       sObsType = TimeserieConstants.TYPE_RAINFALL;
     else if( "VVS".equals( sExt ) || "PV".equals( sExt ) || "VV".equals( sExt ) )
       sObsType = TimeserieConstants.TYPE_VOLUME;
-    else if( "VSA".equals( sExt ) || "PSA".equals( sExt ) || "Q".equals( sExt )
-        || "PQ".equals( sExt ) || "VQ".equals( sExt ) || "ZFL".equals( sExt ) )
+    else if( "VSA".equals( sExt ) || "PSA".equals( sExt ) || "Q".equals( sExt ) || "PQ".equals( sExt )
+        || "VQ".equals( sExt ) || "ZFL".equals( sExt ) )
       sObsType = TimeserieConstants.TYPE_RUNOFF;
     else
     {
@@ -134,14 +132,11 @@ public class TubigUtils
 
     gregCal = new GregorianCalendar();
     sUhrzeit = String.valueOf( gregCal.get( Calendar.DAY_OF_MONTH ) ) + "."
-        + String.valueOf( gregCal.get( Calendar.MONTH ) + 1 ) + "."
-        + String.valueOf( gregCal.get( Calendar.YEAR ) ) + " "
-        + String.valueOf( gregCal.get( Calendar.HOUR_OF_DAY ) ) + ":"
-        + String.valueOf( gregCal.get( Calendar.MINUTE ) ) + ":"
-        + String.valueOf( gregCal.get( Calendar.SECOND ) );
+        + String.valueOf( gregCal.get( Calendar.MONTH ) + 1 ) + "." + String.valueOf( gregCal.get( Calendar.YEAR ) )
+        + " " + String.valueOf( gregCal.get( Calendar.HOUR_OF_DAY ) ) + ":"
+        + String.valueOf( gregCal.get( Calendar.MINUTE ) ) + ":" + String.valueOf( gregCal.get( Calendar.SECOND ) );
 
     return sUhrzeit;
   }
 
 }
-

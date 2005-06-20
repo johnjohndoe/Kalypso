@@ -34,8 +34,8 @@ public class GetTsData implements IWiskiCall
     m_dr = dr;
   }
 
-  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException,
-      KiWWException, RemoteException
+  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
+      RemoteException
   {
     //  date range
     final Timestamp from = new Timestamp( m_dr.getFrom().getTime() );
@@ -52,8 +52,7 @@ public class GetTsData implements IWiskiCall
     {
       data = (LinkedList)serie.get( KiWWDataProviderInterface.KEY_TSDATA );
 
-      utcOffset = (Integer)( (HashMap)serie.get( KiWWDataProviderInterface.KEY_TSINFO ) )
-          .get( "utcoffset" );
+      utcOffset = (Integer)( (HashMap)serie.get( KiWWDataProviderInterface.KEY_TSINFO ) ).get( "utcoffset" );
     }
   }
 

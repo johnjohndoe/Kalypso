@@ -15,6 +15,7 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 public class IsTsWritable implements IWiskiCall
 {
   private final Long m_id;
+
   private Boolean m_editable;
 
   public IsTsWritable( final Long id )
@@ -22,15 +23,16 @@ public class IsTsWritable implements IWiskiCall
     m_id = id;
   }
 
-  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException, RemoteException
+  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
+      RemoteException
   {
-    final HashMap map = wiski.isTsWritable( userData,
-        new Long[] { m_id }, null );
-    
-    m_editable = (Boolean) map.get( m_id );
+    final HashMap map = wiski.isTsWritable( userData, new Long[]
+    { m_id }, null );
+
+    m_editable = (Boolean)map.get( m_id );
   }
-  
-  public Boolean getEditable( )
+
+  public Boolean getEditable()
   {
     return m_editable;
   }

@@ -25,8 +25,7 @@ public class GroupItem implements IRepositoryItem
 
   private IRepositoryItem[] m_children;
 
-  public GroupItem( final SuperGroupItem parent, final String id,
-      final String name )
+  public GroupItem( final SuperGroupItem parent, final String id, final String name )
   {
     m_parent = parent;
     m_id = id;

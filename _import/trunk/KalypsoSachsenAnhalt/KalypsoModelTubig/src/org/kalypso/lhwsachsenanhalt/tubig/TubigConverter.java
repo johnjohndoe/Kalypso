@@ -84,8 +84,7 @@ import com.braju.format.Format;
  *  ---------------------------------------------------------------------------*/
 /**
  * Im- und Export von TUBIG-Dateien von und nach ZML <br>
- * TUBIG = spezielles Dateiformat der Thiele & Büttner Ingenieurgesellschaft für
- * Zeitreihen-Dateien. <br>
+ * TUBIG = spezielles Dateiformat der Thiele & Büttner Ingenieurgesellschaft für Zeitreihen-Dateien. <br>
  * Verwendung für Tubigmodell-Dateien (*.vq, *.pq, *.q usw.)
  * 
  * @author Thül
@@ -97,26 +96,24 @@ public class TubigConverter
   /**
    * schreibt die gesamte Zeitreihe in TUBIG-Datei
    */
-  public static void zml2Tubig( final IObservation obsZml, final Writer wrtr, final int step,
-      final String sValueType ) throws SensorException, IOException
+  public static void zml2Tubig( final IObservation obsZml, final Writer wrtr, final int step, final String sValueType )
+      throws SensorException, IOException
   {
     zml2Tubig( obsZml, wrtr, step, sValueType, null );
   }
 
   /**
-   * schreibt Zeitreihe ab bzw. bis zu angegebenem Datum in TUBIG-Datei (bei
-   * step = -1 werden die Daten bis einschließlich dtStartForecast geschrieben,
-   * bei step = 1 werden die Werte zum Datum echt größer dtStartForecast
+   * schreibt Zeitreihe ab bzw. bis zu angegebenem Datum in TUBIG-Datei (bei step = -1 werden die Daten bis
+   * einschließlich dtStartForecast geschrieben, bei step = 1 werden die Werte zum Datum echt größer dtStartForecast
    * geschrieben)
    * 
    * @param step
-   *          gibt Sortierung/Reihenfolge der Daten an (Zukunft = 1,
-   *          Vergangenheit = -1)
+   *          gibt Sortierung/Reihenfolge der Daten an (Zukunft = 1, Vergangenheit = -1)
    * @param dtStartForecast
    *          Beginn der Vorhersage = aktuelle Modellzeit
    */
-  public static void zml2Tubig( final IObservation obsZml, final Writer wrtr, final int step,
-      final String sValueType, final Date dtStartForecast ) throws SensorException, IOException
+  public static void zml2Tubig( final IObservation obsZml, final Writer wrtr, final int step, final String sValueType,
+      final Date dtStartForecast ) throws SensorException, IOException
   {
     final String sComment;
     final PrintWriter pWrtr;
@@ -141,8 +138,7 @@ public class TubigConverter
 
     try
     {
-      intpolFlt = new InterpolationFilter( Calendar.HOUR_OF_DAY, Math.abs( step ), false, 0.0,
-          KalypsoStati.BIT_CHECK );
+      intpolFlt = new InterpolationFilter( Calendar.HOUR_OF_DAY, Math.abs( step ), false, 0.0, KalypsoStati.BIT_CHECK );
       intpolFlt.initFilter( null, obsZml, null );
 
       // Kommentar aus ZML-Datei lesen und in TUBIG-Datei schreiben
@@ -150,8 +146,7 @@ public class TubigConverter
       pWrtr.println( sComment );
 
       tplWerte = intpolFlt.getValues( null );
-      axDatum = ObservationUtilities.findAxisByType( tplWerte.getAxisList(),
-          TimeserieConstants.TYPE_DATE );
+      axDatum = ObservationUtilities.findAxisByType( tplWerte.getAxisList(), TimeserieConstants.TYPE_DATE );
       axWerte = ObservationUtilities.findAxisByType( tplWerte.getAxisList(), sValueType );
       //      axStatus = KalypsoStatusUtils.findStatusAxisFor(
       // tplWerte.getAxisList(), axWerte );
@@ -251,8 +246,8 @@ public class TubigConverter
     IOUtils.closeQuietly( wrtrTubig );
   }
 
-  public static IObservation tubig2Zml( final Reader reader, final String sValueType,
-      final String name ) throws TubigException
+  public static IObservation tubig2Zml( final Reader reader, final String sValueType, final String name )
+      throws TubigException
   {
     final LineNumberReader lneNumRdr;
     final Date dtDatum;
@@ -322,22 +317,19 @@ public class TubigConverter
         }
 
         tplWerte = new SimpleTuppleModel( axis, tuppleData );
-        obsOut = new SimpleObservation( "href", "ID", name, false, null, metaDataList, axis,
-            tplWerte );
+        obsOut = new SimpleObservation( "href", "ID", name, false, null, metaDataList, axis, tplWerte );
       }
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new TubigException(
-          "Fehler beim Lesen einer TUBIG-Datei (Schreiben von Zeitreihen - ZML", e );
+      throw new TubigException( "Fehler beim Lesen einer TUBIG-Datei (Schreiben von Zeitreihen - ZML", e );
     }
     catch( final ParseException e1 )
     {
       // lneNumRdr.getLineNumber() gibt die problematische Zeilennummer an
       e1.printStackTrace();
-      throw new TubigException( "Fehler beim Parsen eines Datums (Schreiben von Zeitreihen - ZML",
-          e1 );
+      throw new TubigException( "Fehler beim Parsen eines Datums (Schreiben von Zeitreihen - ZML", e1 );
     }
     finally
     {
@@ -346,8 +338,7 @@ public class TubigConverter
     return obsOut;
   }
 
-  public static IObservation tubig2Zml( final File fleTubig, final String name )
-      throws TubigException
+  public static IObservation tubig2Zml( final File fleTubig, final String name ) throws TubigException
   {
     InputStreamReader rdrTubig;
     final String sObsType;
@@ -367,8 +358,8 @@ public class TubigConverter
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
-      throw new TubigException( "Encoding " + TubigConst.TUBIG_CODEPAGE + " wird für "
-          + fleTubig.getName() + " nicht unterstützt. (Schreiben von Zeitreihen - ZML", e );
+      throw new TubigException( "Encoding " + TubigConst.TUBIG_CODEPAGE + " wird für " + fleTubig.getName()
+          + " nicht unterstützt. (Schreiben von Zeitreihen - ZML", e );
     }
     catch( final FileNotFoundException e )
     {
@@ -385,11 +376,10 @@ public class TubigConverter
 
   public static IAxis[] createAxis( final String sValueType )
   {
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class,
-        true );
+    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
     TimeserieUtils.getUnit( sValueType );
-    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( sValueType ), sValueType,
-        TimeserieUtils.getUnit( sValueType ), Double.class, false );
+    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( sValueType ), sValueType, TimeserieUtils
+        .getUnit( sValueType ), Double.class, false );
     final IAxis[] axis = new IAxis[]
     {
         dateAxis,
@@ -397,8 +387,7 @@ public class TubigConverter
     return axis;
   }
 
-  public static void createAktDtTxt( final File fleExeDir, final Date dtZeit )
-      throws TubigException
+  public static void createAktDtTxt( final File fleExeDir, final Date dtZeit ) throws TubigException
   {
     final String sSchritt = "1.00000000000000E-0004";
     final String sMin = "0";
@@ -407,13 +396,12 @@ public class TubigConverter
     createAktDtTxt( fleExeDir, dtZeit, sSchritt, sMin, sMax );
   }
 
-  public static void createAktDtTxt( final File fleExeDir, final Date dtAktModellZeit,
-      final String sSchritt, final String sMin, final String sMax ) throws TubigException
+  public static void createAktDtTxt( final File fleExeDir, final Date dtAktModellZeit, final String sSchritt,
+      final String sMin, final String sMax ) throws TubigException
   {
     try
     {
-      final FileWriter wrtrAktDtTxt = new FileWriter( new File( fleExeDir,
-          TubigConst.AKTDT_FILE_NAME ) );
+      final FileWriter wrtrAktDtTxt = new FileWriter( new File( fleExeDir, TubigConst.AKTDT_FILE_NAME ) );
       createAktDtTxt( wrtrAktDtTxt, dtAktModellZeit, sSchritt, sMin, sMax );
       IOUtils.closeQuietly( wrtrAktDtTxt );
     }
@@ -424,8 +412,8 @@ public class TubigConverter
     }
   }
 
-  public static void createAktDtTxt( final Writer wrtr, final Date dtAktModellZeit,
-      final String sSchritt, final String sMin, final String sMax )
+  public static void createAktDtTxt( final Writer wrtr, final Date dtAktModellZeit, final String sSchritt,
+      final String sMin, final String sMax )
   {
     final PrintWriter pWrtr = new PrintWriter( wrtr );
 
@@ -436,8 +424,7 @@ public class TubigConverter
     pWrtr.println( sMax );
   }
 
-  public static void main( final String[] args ) throws SensorException, IOException,
-      ParseException, TubigException
+  public static void main( final String[] args ) throws SensorException, IOException, ParseException, TubigException
   {
     //    String sDateiEndung;
 
@@ -448,8 +435,7 @@ public class TubigConverter
     final IObservation observation = ZmlFactory.parseXML( zmlurl, "Test" );
 
     // convert it
-    final FileWriter writer = new FileWriter( new File( System.getProperty( "java.io.tmpdir" ),
-        "elen_test.vw" ) );
+    final FileWriter writer = new FileWriter( new File( System.getProperty( "java.io.tmpdir" ), "elen_test.vw" ) );
     zml2Tubig( observation, writer, -1, TimeserieConstants.TYPE_WATERLEVEL );
     IOUtils.closeQuietly( writer );
     Date dtZeit;

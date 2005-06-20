@@ -15,6 +15,7 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 public class SetTsData implements IWiskiCall
 {
   private final HashMap m_timeseries_map;
+
   private boolean m_success = false;
 
   public SetTsData( final HashMap timeseries_map )
@@ -22,8 +23,8 @@ public class SetTsData implements IWiskiCall
     m_timeseries_map = timeseries_map;
   }
 
-  public void execute( KiWWDataProviderRMIf wiski, HashMap userData )
-      throws NoSuchObjectException, KiWWException, RemoteException
+  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
+      RemoteException
   {
     try
     {
@@ -32,12 +33,12 @@ public class SetTsData implements IWiskiCall
     catch( final InterruptedException e )
     {
       e.printStackTrace();
-      
+
       throw new KiWWException( e.getLocalizedMessage() );
     }
   }
 
-  public boolean isSuccess( )
+  public boolean isSuccess()
   {
     return m_success;
   }

@@ -15,8 +15,13 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
  */
 public class GetStationDetailList implements IWiskiCall
 {
-  private final static String[] COLUMNS = { "station_carteasting",
-      "station_cartnorthing", "river_name", "river_longname", "catchment_name" };
+  private final static String[] COLUMNS =
+  {
+      "station_carteasting",
+      "station_cartnorthing",
+      "river_name",
+      "river_longname",
+      "catchment_name" };
 
   private final Long m_id;
 
@@ -27,16 +32,16 @@ public class GetStationDetailList implements IWiskiCall
     m_id = id;
   }
 
-  public void execute( KiWWDataProviderRMIf wiski, HashMap userData )
-      throws NoSuchObjectException, KiWWException, RemoteException
+  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
+      RemoteException
   {
-    final HashMap map = wiski.getStationDetailList( userData, COLUMNS,
-        new Long[] { m_id }, null );
+    final HashMap map = wiski.getStationDetailList( userData, COLUMNS, new Long[]
+    { m_id }, null );
 
-    details = (HashMap) ((LinkedList) map.get( "resultList" )).getFirst();
+    details = (HashMap)( (LinkedList)map.get( "resultList" ) ).getFirst();
   }
 
-  public HashMap getDetails( )
+  public HashMap getDetails()
   {
     return details;
   }
