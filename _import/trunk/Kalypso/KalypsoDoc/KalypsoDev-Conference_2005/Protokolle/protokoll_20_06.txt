@@ -1,19 +1,22 @@
 Protokoll 20.06.2005 
 ---------------------
 
-Beginn:		9:45
+Beginn:		 9:45
+Ende:		ca. 1:00	
 
 Tagesordnung:
 
-1. Jeder stellt seine Tätigkeit vor.
+I. Jeder stellt seine Tätigkeit vor.
 
-	für welche Anwendung (welche Projekte)?
-	mit welchen Anwendern?
-	welche Code-Bereiche?
-	welche Schnittstellen zu anderen Entwicklern (Code-Bereichen, Abhängigkeiten)?
-	evt. Vorführungen
+	1) für welche Anwendung (welche Projekte)?
+	2) Welche Modelle werden verwendet?
+	3) Code
+	4) Erforderliche Überarbeitung von vorhandenem Code 
+	5) Anwender
+	6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	7) Anregungen/FeatureRequests
 
-2. Sonstiges
+II. Sonstiges
 --------------------------------------------------------------------------------------------------------
 Gernot:
 
@@ -47,7 +50,9 @@ Gernot:
 
 2) Welche Modelle werden verwendet?
 
+-Spree (Sachsen)
 -Integration der Saale (Sachsen-Anhalt)
+
 
 	Saale ist Vorhersagemodell (kein richtiges NA-Modell)
 	ca. 60 Pegel, welche durch das Modell abgedeckt sind, viele Parameterlisten (CSV)
@@ -57,7 +62,7 @@ Gernot:
 		Anstoßen vom Rechenkern fertig
 
 	Problem:
-		Programm ist nicht wirklich von außen anzustoßen (Entwickler des Programmes ist 						hier dran). - Rechendienst
+		Programm ist nicht wirklich von außen anzustoßen (Entwickler des Programmes ist hier dran). - Rechendienst
 		Datengrundlage ist für Karten fast nicht da
 
 	Besonderheiten Code:
@@ -126,12 +131,12 @@ Gernot:
 			~3 User
 	Sachsen-Anhalt	2 User (Wiermann, Rose)
 
-6) Schnittstellen zu anderen Entwicklern
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
 	Monika	- 	Bode
-
-7) Abhängigkeiten
 	Marc	-	Observation (WISKI), User-Service, Metadaten
 	Andreas	-	Gebietsniederschlagsmodell, GML
+
+7) Anregungen/FeatureRequests
 
 --------------------------------------------------------------------------------------------------------
 Monika:
@@ -162,12 +167,11 @@ Monika:
 5) Anwender
 	Sachsen-Anhalt
 
-6) Schnittstellen zu anderen Entwicklern
-
-7) Abhängigkeiten
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
 	Marc	- Observations
 	Gernot	- FeatureEditor,...
 
+7) Anregungen/FeatureRequests
 
 --------------------------------------------------------------------------------------------------------
 Marc:
@@ -235,14 +239,11 @@ Refaktoring (Observation) ITuppelModel unterstützt nicht das Hinzufügen von Wert
 	Sachsen
 	Sachsen-Anhalt
 
-6) Schnittstellen zu anderen Entwicklern
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
 	Andreas, Monika, Gernot
 	Jessica - Datacenter
 
-7) Abhängigkeiten
-	Andreas, Monika, Gernot
-
-8) Anregungen/FeatureRequests
+7) Anregungen/FeatureRequests
 	Unterstützten Datentyp Niederschlag in Intensität [mm/h] und Volumen [mm] unterscheiden 
 	Zeitreihenansichten - Farben nicht auf Datentyp
 
@@ -288,11 +289,10 @@ Nadja:
 	Stephan Kräßig
 	FLOWS
 
-6) Schnittstellen zu anderen Entwicklern
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
 	Es wird an der TUHH geklärt, wer zukünftik für das RisikoTool zuständig ist
-7) Abhängigkeiten
-	-/-
-8) Anregung
+	
+7) Anregungen/FeatureRequests
 	Query-Methode zur Rasterung verwenden
 
 --------------------------------------------------------------------------------------------------------
@@ -350,13 +350,11 @@ Tabellen editieren erweitern
 	FLOWS
 	Gehad Ujel - Anwender NA-Modell, GML-Schema, Dokbook - Manual	
 
-6) Schnittstellen zu anderen Entwicklern
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
 	Gernot - Niederschlagsraster
+	Marc, Jessica, Christoph, Nadja
 
-7) Abhängigkeiten
-	Marc, Gernot, Jessica, Christoph, Nadja
-
-8) Anregung
+7) Anregungen/FeatureRequests
 	OptimizingJob Clientseitig
 
 --------------------------------------------------------------------------------------------------------
@@ -373,7 +371,7 @@ Vorstellung NA-Modell
 - NA-Modell: AB-Wasserbau intern
 
 2) Welche Modelle werden verwendet?
-diverse NA-Modelle, ObereKollau, 
+diverse NA-Modelle, ObereKollau, ...
  
 3) Code
 KalypsoNA: komplettieren der Unterstützung des kompletten NA-Modells
@@ -388,43 +386,81 @@ Kalypso-TUHH-Manual
 Ingenieurbüros:
  Jetzt: 
  	- Aufstellung von NA-Modellen in Hamburg
- 	- Datenerhebung, Kallibrierung
+ 	- Datenerhebung, Kalibrierung
  Zukunft: Pflege der NA-Modelle
 Studenten:
- Übung Surface-Hydrology, NA-Modell Aufstellung, Kallibrierung
- (seit letzter Woche)
+ Übung Surface-Hydrology, NA-Modell Aufstellung, Kalibrierung
+ (seit letztem Monat)
 AB-Wasserbau, die Kollegen
 
 Kooperation mit Montenegro/Serbien: Summer-School (NA-Modell)
 
-6) Schnittstellen zu anderen Entwicklern
-Marc,Christoph, Gernot, Andreas
-7) Abhängigkeiten
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
 Marc,Christoph, Gernot, Andreas
 
-8) Anregung
+7) Anregungen/FeatureRequests
 
 --------------------------------------------------------------------------------------------------------
 Christoph:
 
 1) für welche Anwendung (welche Projekte)?
-			
+-Flows
+	EU-Projekt - Interreg 3B
+	Projektgebiet Nordseeraum (Binnengewässer, keine Küste)
+	4 Arbeitspakete
+		(1) Mapping und Modelling (Darstellung in GIS; Berechnungsmodule Wasserspiegelllage; Grundwasser...)
+				Deutschland: 	Hamburg Kollau (NA-Modell und WspWin, Szenarienberechnung) (Claudia Brüning)
+								Lüneburg Elbeinzugsgebiet Geesthacht bis Hitzhacker (Landwirtschaft auf
+								Überschwemmten Flächen, Schadstofftransport...)
+		(2) Risikowahrnehmung in Zusammenhang mit Hochwasser, Was ist das tollerierbare Risiko?
+				Hamburg:		interactive learning groupes (Timm Ruben Geissler) 
+								Software für Bürger ihr Schadenspotential zu ermitteln und zu reduzieren, den Bürger
+								sensibilisieren - Internetbasiert (Timm Ruben Geissler) 
+		(3) Applikation (Stadt- und Raumplaner mit hochwasserrelevanten Daten versorgen und bei der Planung
+			unterstützen)
+				Hamburg:		DSS - in Kalypso (komplexe Simulationsprogramme vereinfachen, so dass ein Planer
+								hiermit arbeiten kann - in den Planungsprozess integrieren)
+		(4) InteractiveLearningPackage
+								Tutor je nach Wissensgrad werden Fragen gestellt
+								TV-Produktion
+	Norwegen, Schweden, Finnland, Holland, Deutschland
+	Testrelease: Februar 2006
+	Projektabschluss: Termin 30 Juni 2006
+	
 2) Welche Modelle werden verwendet?
-
+	NA-Modell
+	WspWin
+	DSS (in der Konzeptionellen Phase) 
+	
 3) Code
-
+-KalypsoAddLayerPlugin
+	Importieren verschiedener Datenformate in eine Karte (Shape, GML, WMS, WFS, Raster, Image - tiff, jpg, png -)
+	DefaultStyle Factory (In Anlehnung an SchemaCache)
+	ExtensionPoint in Karte und beim DatenImport im AddLayer-Wizard definiert
+	Probleme: 	FeaturePath bei Auswahl von Features aus GML
+				Wohin mit den Styles?
+				Was ist mit Datenquellen extern
+-KalypsoDeegree
+-KalypsoCore
+-KalypsoUI
 
 4) Erforderliche Überarbeitung von vorhandenem Code 
-
-
+	DefaultStyle Factory
+	Abfrage WMS, WFS... in Thread - schon umgesetzt?
+	Auswahl der GML Resource (AbstrakteTypen, SubstitutionGroupes, Baum)
+	
 5) Anwender
+	BSU
+	HSE
+	LGV
+	Bezirksämter
+	TesterCommunity
 
-
-6) Schnittstellen zu anderen Entwicklern
-
-7) Abhängigkeiten
-
-8) Anregung
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	Gernot, Andreas, Jessica, Marc
+	
+7) Anregungen/FeatureRequests
+	Beim Produzieren einer neuen Karte einmalig AddLayer durchlaufen
 
 --------------------------------------------------------------------------------------------------------
 2) Sonstiges
