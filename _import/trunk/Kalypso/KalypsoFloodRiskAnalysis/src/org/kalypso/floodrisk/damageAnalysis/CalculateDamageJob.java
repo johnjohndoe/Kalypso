@@ -61,8 +61,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
@@ -246,11 +244,9 @@ public class CalculateDamageJob implements ICalcJob
     {
       Feature waterlevelFeature = (Feature)it.next();
       double annuality = ( (Double)waterlevelFeature.getProperty( annualityPropertyName ) ).doubleValue();
-      String resourceFilePath = (String)waterlevelFeature.getProperty( waterlevelDataURLPropertyName );
-      IPath resourcePath = new Path( resourceFilePath );
-      IFile dataFile = ResourceUtilities.findFileFromPath( resourcePath );
-      System.out.println( ResourceUtilities.createURL( dataFile ) );
-      RectifiedGridCoverage grid = rasterDataModel.getRectifiedGridCoverage( ResourceUtilities.createURL( dataFile ) );
+      IFile resourceFile = (IFile)waterlevelFeature.getProperty( waterlevelDataURLPropertyName );
+      System.out.println( ResourceUtilities.createURL( resourceFile ) );
+      RectifiedGridCoverage grid = rasterDataModel.getRectifiedGridCoverage( ResourceUtilities.createURL( resourceFile ) );
       double p = 1 / annuality;
       waterlevelGrids.put( new Double( p ), grid );
     }
