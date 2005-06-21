@@ -297,12 +297,13 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     m_isApplyTemplate = true;
     clearColumns();
-    setTheme( null );
+    
+    setInput( null );
 
     if( tableView != null )
     {
       final LayerType layer = tableView.getLayer();
-      setTheme( new GisTemplateFeatureTheme( layer, context ) );
+      setInput( new GisTemplateFeatureTheme( layer, context ) );
 
       final SortType sort = layer.getSort();
       if( sort != null )
@@ -329,24 +330,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   public IKalypsoFeatureTheme getTheme()
   {
     return (IKalypsoFeatureTheme)getInput();
-  }
-
-  private void setTheme( final IKalypsoFeatureTheme theme )
-  {
-    final IKalypsoTheme oldTheme = (IKalypsoTheme)getInput();
-
-    if( oldTheme != null )
-    {
-      oldTheme.removeModellListener( this );
-      oldTheme.dispose();
-    }
-
-    if( theme != null )
-      theme.addModellListener( this );
-
-    if( !isDisposed() )
-      setInput( theme );
-    checkColumns();
   }
 
   public void clearColumns()
@@ -896,5 +879,24 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( workspace == null )
       return selection;
     return new CommandableFeatureSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE, m_selectionID );
+  }
+  
+  protected void inputChanged( final Object input, final Object oldInput )
+  {
+    super.inputChanged( input, oldInput );
+    
+    final IKalypsoTheme oldTheme = (IKalypsoTheme)oldInput;
+
+    if( oldTheme != null )
+    {
+      oldTheme.removeModellListener( this );
+      oldTheme.dispose();
+    }
+
+    clearColumns();
+    
+    final IKalypsoTheme theme = (IKalypsoTheme)input;
+    if( theme != null )
+      theme.addModellListener( this );
   }
 }

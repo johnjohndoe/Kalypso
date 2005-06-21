@@ -46,7 +46,6 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -84,7 +83,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       return new Object[] {};
 
     final Object[] objects = featureList.toArray();
-    final KalypsoFeatureTheme theme = (KalypsoFeatureTheme)m_viewer.getInput();
+    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)m_viewer.getInput();
     final GMLWorkspace workspace = theme.getWorkspace();
     for( int i = 0, j = objects.length; i < j; i++ )
     {
