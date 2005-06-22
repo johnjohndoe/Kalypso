@@ -484,8 +484,7 @@
         <title>Parameter editieren</title>
 
         <para>Die Parameter können in den Karten sowie in den Tabellen
-        editiert werden (siehe <xref linkend="menu_tabelle" /> und <xref
-        linkend="menu_tabelle" />).</para>
+        editiert werden.</para>
       </section>
 
       <section>
@@ -606,7 +605,7 @@
 
                 <entry>TG-Flaeche</entry>
 
-                <entry>[m²]</entry>
+                <entry>[m^2]</entry>
 
                 <entry></entry>
 
@@ -1075,7 +1074,7 @@
 
                 <entry>Entnahme GW</entry>
 
-                <entry>[m³/s]</entry>
+                <entry>[m^3/s]</entry>
 
                 <entry></entry>
 
@@ -1348,7 +1347,7 @@
 
                 <entry>Q-Bordvoll</entry>
 
-                <entry>[m³/s]</entry>
+                <entry>[m^3/s]</entry>
 
                 <entry></entry>
 
@@ -1437,7 +1436,7 @@
 
                 <entry>Abfluss</entry>
 
-                <entry>[m³/s]</entry>
+                <entry>[m^3/s]</entry>
 
                 <entry></entry>
 
@@ -1542,7 +1541,7 @@
 
                 <entry>Anfangsinhalt</entry>
 
-                <entry>[hm³]</entry>
+                <entry>[hm^3]</entry>
 
                 <entry></entry>
 
@@ -1554,7 +1553,7 @@
 
                 <entry>max. Inhalt</entry>
 
-                <entry>[hm³]</entry>
+                <entry>[hm^3]</entry>
 
                 <entry></entry>
 
@@ -1566,7 +1565,7 @@
 
                 <entry>min. Inhalt</entry>
 
-                <entry>[hm³]</entry>
+                <entry>[hm^3]</entry>
 
                 <entry></entry>
 
