@@ -45,7 +45,8 @@ Ziel: Aufgabenverteilung
 
 - Vorbereitung auf Pasche
 
-Vortrag: 
+- Ingres/Datacenter (Marc, Jessica, Andreas)
+Vortrag:
 
 Freitag
 -------

@@ -41,7 +41,7 @@
 package org.kalypso.util.list;
 
 /**
- * @author bce
+ * @author belger
  */
 public interface IListManipulator
 {
@@ -52,5 +52,4 @@ public interface IListManipulator
   public void removeElement( final Object element );
 
   public void addElement( final Object element );
-
 }
