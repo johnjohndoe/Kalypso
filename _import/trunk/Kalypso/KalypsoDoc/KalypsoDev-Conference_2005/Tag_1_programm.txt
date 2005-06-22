@@ -19,25 +19,36 @@ Montag
 Dienstag
 --------
 Vormittag: Refaktoring-Plan (inkl. Extensionpoints)
-
-Nachmittag: evtl. QS
-
-- Vortrag 18.00: Marc GoodModularArchitekture
-
-- Kurz-Vortrag ab 20.00: Christoph Udig
+GUI-Workshop
 
 Mittwoch
 --------
-- Marketing/Business
--> erstmal GrosseRunde für Feinplanung
-Ziel: Aufgabenverteilung
-- Workshop Web-Präsenz
-- Vorbereitung auf Pasche
-
+- (Dienstag abschließen)
+s- Refactoring antesten
+13:00  Mittag kurzpicknick am strand
+-14:00
+Vorträge: Deichbuch(20 min),Udig(20min),GMA(25min)
+17:30 Christoph zum BF bringen
+20:00 Essen
 Vortrag:
 
 Donnerstag
 ----------
+QS: Workshops
+ - große runde: themen bilden, kleine gruppen bilden
+ - kleien gruppen - brainstorming qs
+Vormittag: Coding
+-> erstmal GrosseRunde für Feinplanung
+- Workshop Web-Präsenz
+Ziel: Aufgabenverteilung
+- Marketing/Business
+
+- Vorbereitung auf Pasche
+
+Vortrag: 
+
+Freitag
+-------
 - Diskussion Zusammenarbeit Entwickler - Pasche
 - Briefing Pasche Projektstände
 - Briefing Entwickler Stand Akquisition
@@ -47,13 +58,6 @@ Donnerstag
 		- was ist mit Kopplung zur Rest der Welt (CMS)
 
 Sonst: Coding, gegenseitige Hilfe, pairprogramming
-
-Vortrag: 
-
-Freitag
--------
-QS: Workshops
-Vormittag: Coding
 
 Aufgabenverteilung
 Abschlussdiskussion
