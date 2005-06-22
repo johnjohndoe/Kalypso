@@ -1,11 +1,3 @@
-package org.kalypso.ogc.sensor.adapter;
-
-import java.io.File;
-
-import org.eclipse.core.runtime.IExecutableExtension;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -46,15 +38,21 @@ import org.kalypso.ogc.sensor.IObservation;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.sensor.adapter;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+
+/**
+ * 
+ * @author doemming
+ */
 public interface INativeObservationAdapter extends IExecutableExtension
 {
-  /**
-   * 
-   * @author doemming
-   */
   public abstract IObservation createObservationFromSource( File file ) throws Exception;
 
   public abstract IAxis[] createAxis();
-
 }
