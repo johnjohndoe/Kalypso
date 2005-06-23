@@ -44,10 +44,10 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -85,11 +85,10 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( "FeatureAssociationType".equals( type ) )
       return new ButtonModifier( workspace, ftp );
 
-    // TODO: TypeHandler should decide, what todo
-    // jetzt: falls es ein externer handler ist, einfach immer nen button generieren
-    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( type );
+    final IGuiTypeHandler typeHandler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
+        .getTypeHandlerForClassName( type );
     if( typeHandler != null )
-      return new ButtonModifier( workspace, ftp );
+      return typeHandler.createFeatureModifier( workspace, ftp );
 
     return new StringModifier( ftp );
   }

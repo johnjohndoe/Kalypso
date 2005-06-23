@@ -60,7 +60,7 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.EnumerationFeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 
@@ -73,7 +73,7 @@ public class JMSchemaTest extends TestCase
   {
     try
     {
-      TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
+      MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
     }
     catch( TypeRegistryException e )
     {

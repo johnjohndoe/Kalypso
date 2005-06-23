@@ -296,7 +296,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_isApplyTemplate = true;
     clearColumns();
     
-    setInput( null );
+    if( getContentProvider() != null )
+      setInput( null );
 
     if( tableView != null )
     {

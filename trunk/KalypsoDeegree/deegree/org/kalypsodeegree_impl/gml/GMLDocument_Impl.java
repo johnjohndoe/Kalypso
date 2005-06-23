@@ -83,8 +83,8 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree.xml.DOMPrinter;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -732,7 +732,7 @@ public class GMLDocument_Impl implements GMLDocument, Document, Element
       final Element element = createElementNS( ftp.getNamespace(), ftp.getName() );
 
       // marshalling
-      final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName(
+      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName(
           ftp.getType() );
       // TODO give context not null
       typeHandler.marshall( customObject, element, null );

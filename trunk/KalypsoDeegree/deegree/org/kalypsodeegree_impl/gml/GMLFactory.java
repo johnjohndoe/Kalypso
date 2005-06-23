@@ -94,9 +94,9 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.StringExtend;
@@ -630,7 +630,7 @@ public class GMLFactory
   {
 
     // marshalling
-    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
 
     GMLProperty prop = null;
     if( value instanceof List )
@@ -688,6 +688,10 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.19  2005/06/23 23:13:27  belger
+ * Refaktoring TypeHandler
+ * FeatureView Layout noch schöner
+ *
  * Revision 1.18  2005/06/20 14:07:46  belger
  * Formatierung
  * Revision 1.17 2005/06/15 15:16:58 doemming *** empty log message ***

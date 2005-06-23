@@ -64,7 +64,7 @@ import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.common.ServiceConfig;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 
 /**
@@ -99,8 +99,8 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     try
     {
       // TODO sollten dies nicht die einzelnen calservices selber tun?
-      TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
-      TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new DiagramTypeHandler() );
+      MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
+      MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new DiagramTypeHandler() );
     }
     catch( final Exception e )
     {

@@ -257,7 +257,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   public Composite createControls( final Composite parent, final int style )
   {
-    m_creator = new ScrolledCompositeCreator()
+    m_creator = new ScrolledCompositeCreator( null )
     {
       protected Control createContents( final Composite scrollParent, final int contentStyle )
       {
@@ -268,7 +268,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       }
     };
 
-    m_creator.createControl( parent, style, SWT.NONE );
+    m_creator.createControl( parent, style | SWT.V_SCROLL, SWT.NONE );
 
     m_panel = (Composite)m_creator.getContentControl();
 

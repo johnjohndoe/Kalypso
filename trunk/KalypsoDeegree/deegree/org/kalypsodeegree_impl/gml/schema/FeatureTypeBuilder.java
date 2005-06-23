@@ -8,8 +8,8 @@ import java.util.Map;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.w3c.dom.Element;
@@ -123,7 +123,7 @@ public class FeatureTypeBuilder
 
     // is registred type ?
     final String typename = valueNS + ":" + typeName;
-    final ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( typename );
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( typename );
     if( typeHandler != null )
     {
       m_typeName = typeHandler.getClassName();
@@ -179,8 +179,8 @@ public class FeatureTypeBuilder
       // // is registred type ?
       // final String typename = valueNS + ":" + typeName;
       //
-      // final ITypeHandler typeHandler =
-      // TypeRegistrySingleton.getTypeRegistry()
+      // final IMarshallingTypeHandler typeHandler =
+      // MarshallingTypeRegistrySingleton.getTypeRegistry()
       // .getTypeHandlerForTypeName( typename );
       // if( typeHandler != null )
       // {

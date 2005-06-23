@@ -52,13 +52,12 @@ import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.table.celleditors.DialogCellEditor;
-import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 
 /**
  * @author belger
@@ -164,20 +163,9 @@ public class ButtonModifier implements IFeatureModifier
   {
     // besser: abhängig von der FeatureTypeProperty etwas machen
     final Object value = getValue( f );
-    final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( m_ftp.getType() );
+    final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( m_ftp.getType() );
     if( handler != null && value != null )
-    // TODO: schön wäre es, wenn der Type-Handler dies tun würde
-    {
-      // hack:
-      if( value instanceof TimeseriesLink )
-      {
-        String href = ( (TimeseriesLink)value ).getHref();
-        if( href == null || href.length() < 1 )
-          return "";
-        return href;
-      }
-      return value.toString();
-    }
+      return handler.getText(value);
 
     return "<Editieren...>";
   }

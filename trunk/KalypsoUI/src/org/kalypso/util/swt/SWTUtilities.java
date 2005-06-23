@@ -95,6 +95,7 @@ public class SWTUtilities
     putSWT( "SWT.CHECK", SWT.CHECK );
     putSWT( "SWT.CHECK", SWT.CHECK );
     putSWT( "SWT.MULTI", SWT.MULTI );
+    putSWT( "SWT.BEGINNING", SWT.BEGINNING );
     // TODO really a lot to complete SWT keys
   }
 

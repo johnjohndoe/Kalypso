@@ -21,7 +21,7 @@ public class TypeRegistry_impl implements ITypeRegistry
    * 
    * @throws TypeRegistryException
    * 
-   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#registerTypeHandler(org.kalypsodeegree_impl.extension.ITypeHandler)
+   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#registerTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
   public void registerTypeHandler( final ITypeHandler typeHandler ) throws TypeRegistryException
   {
@@ -60,7 +60,7 @@ public class TypeRegistry_impl implements ITypeRegistry
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#unregisterTypeHandler(org.kalypsodeegree_impl.extension.ITypeHandler)
+   * @see org.kalypsodeegree_impl.extension.ITypeRegistry#unregisterTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
   public void unregisterTypeHandler( ITypeHandler typeHandler )
   {

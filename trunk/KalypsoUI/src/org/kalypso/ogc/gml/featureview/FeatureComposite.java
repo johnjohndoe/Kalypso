@@ -347,11 +347,11 @@ public class FeatureComposite implements IFeatureControl
           plugin.getDefaultMapSelectionID() );
       fc.setFeature( workspace, feature );
 
-      final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( tableType.getStyle() ) );
-
       addFeatureControl( fc );
 
-      return control;
+      final Control control = fc.createControl( parent, SWT.NONE );
+      control.setLayoutData( new GridData() );
+      return (Composite)control;
     }
 
     final Label label = new Label( parent, SWT.NONE );

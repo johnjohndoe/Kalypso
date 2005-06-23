@@ -10,11 +10,11 @@ import org.w3c.dom.Node;
 /**
  * @author doemming
  */
-public class GMLFeatueAssociationTypeHandler implements ITypeHandler
+public class GMLFeatueAssociationTypeHandler implements IMarshallingTypeHandler
 {
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
   public String getClassName()
   {
@@ -24,7 +24,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   private static String m_nameSpaceURI = XMLHelper.GMLSCHEMA_NS + ":" + "FeatureAssociationType";
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
   public String getTypeName()
   {
@@ -32,7 +32,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
   public void marshall( Object object, Node node, URL context )
   {
@@ -40,7 +40,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
   {
@@ -48,7 +48,7 @@ public class GMLFeatueAssociationTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
   public String getShortname()
   {
