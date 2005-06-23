@@ -11,11 +11,11 @@ import javax.xml.bind.Marshaller;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.xml.XMLUtilities;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.filters.IntervallFilter;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.ZmlFilter;

@@ -43,11 +43,11 @@ package org.kalypso.ogc.gml.map.widgets;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -79,7 +79,7 @@ public abstract class AbstractWidget implements IWidget, ModellEventListener
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget,
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )

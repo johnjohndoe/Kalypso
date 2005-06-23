@@ -2,8 +2,8 @@ package org.kalypso.ogc.gml.convert.source;
 
 import java.net.URL;
 
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.GmlSourceType;
-import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

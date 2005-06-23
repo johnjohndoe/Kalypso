@@ -42,10 +42,10 @@ package org.kalypso.ui.editor.gmleditor.util.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 
 public final class EditFeatureAction extends Action

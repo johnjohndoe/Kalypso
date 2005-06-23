@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.AddFeaturesMappingType;
 import org.kalypso.gml.util.ChangeFeaturesMappingType;
 import org.kalypso.gml.util.FeaturemappingSourceType;
 import org.kalypso.gml.util.MappingType;
 import org.kalypso.gml.util.SourceType;
-import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypsodeegree.model.feature.FeatureList;

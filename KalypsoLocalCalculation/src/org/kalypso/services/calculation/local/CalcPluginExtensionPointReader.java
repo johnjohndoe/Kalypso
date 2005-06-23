@@ -52,8 +52,8 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.java.net.IUrlCatalog;
-import org.kalypso.java.net.MultiUrlCatalog;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.impl.ICalcJobFactory;
@@ -109,7 +109,7 @@ public class CalcPluginExtensionPointReader implements IUrlCatalog, ICalcJobFact
   }
 
   /**
-   * @see org.kalypso.java.net.IUrlCatalog#getURL(java.lang.String)
+   * @see org.kalypso.contribs.java.net.IUrlCatalog#getURL(java.lang.String)
    */
   public URL getURL( final String namespace )
   {
@@ -117,7 +117,7 @@ public class CalcPluginExtensionPointReader implements IUrlCatalog, ICalcJobFact
   }
 
   /**
-   * @see org.kalypso.java.net.IUrlCatalog#getCatalog()
+   * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
    */
   public Map getCatalog()
   {

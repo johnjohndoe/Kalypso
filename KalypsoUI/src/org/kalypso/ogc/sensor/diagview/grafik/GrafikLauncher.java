@@ -74,11 +74,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.io.ProcessWraper;
+import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.core.runtime.MultiStatus;
 import org.kalypso.eclipse.util.SetContentHelper;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.io.ProcessWraper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -94,8 +96,6 @@ import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.UrlResolver;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.xml.sax.InputSource;
 
 /**

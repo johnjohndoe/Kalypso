@@ -16,7 +16,10 @@
 	<target name="clean">
 		<echo message="Cleaning most common projects to all installations" />
 		
-		<ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/EclipsePlatformContributions/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="clean" inheritAll="false" />
@@ -26,7 +29,10 @@
 	<target name="build-core">
 		<echo message="Build most common projects to all installations" />
 		
-		<ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/EclipsePlatformContributions/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />

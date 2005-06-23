@@ -78,8 +78,7 @@ public class CopyOrMoveTransformation extends AbstractTransformation
   }
 
   /**
-   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
-   *      java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException

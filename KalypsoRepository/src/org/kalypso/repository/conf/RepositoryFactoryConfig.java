@@ -41,8 +41,8 @@
 package org.kalypso.repository.conf;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilityException;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.factory.IRepositoryFactory;

@@ -54,12 +54,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
@@ -301,7 +301,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( ICommand command, Runnable runnable )
   {

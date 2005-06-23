@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
-import org.bce.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
@@ -48,6 +47,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 
 /**
  * @author belger

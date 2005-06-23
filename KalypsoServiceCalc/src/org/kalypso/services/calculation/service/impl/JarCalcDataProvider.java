@@ -54,7 +54,7 @@ import javax.activation.DataHandler;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;

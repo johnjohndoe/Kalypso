@@ -2,7 +2,7 @@ package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
 
-import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.w3c.dom.Node;
 
 /**

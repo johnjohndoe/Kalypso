@@ -46,7 +46,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.java.util.CalendarIterator;
+import org.kalypso.contribs.java.util.CalendarIterator;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITuppleModel;

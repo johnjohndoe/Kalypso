@@ -16,9 +16,9 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.xml.xlink.IXlink;
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.commons.xml.xlink.IXlink;
 
 import com.bce.datacenter.db.timeseries.Timeserie;
 import com.bce.datacenter.db.timeseries.TimeserieTupple;
@@ -102,7 +102,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   }
 
   /**
-   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
   public Object getAdapter( Class anotherClass )
   {
@@ -193,7 +193,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {

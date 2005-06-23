@@ -47,11 +47,11 @@ import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * <code>DefaultTableModel</code> based implementation of the <code>ITuppleModel</code> interface.

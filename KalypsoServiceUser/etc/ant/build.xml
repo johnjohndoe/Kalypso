@@ -11,7 +11,8 @@
 		<fileset dir="${project.lib}" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoCoreServices/build/deploy" includes="**/*.jar" />
 		
-		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
 	</path>
 	

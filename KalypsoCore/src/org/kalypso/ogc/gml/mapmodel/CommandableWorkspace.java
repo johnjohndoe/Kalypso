@@ -44,10 +44,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.util.command.DefaultCommandManager;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandManager;
-import org.kalypso.util.command.ICommandManagerListener;
+import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandManager;
+import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
- * {@link org.kalypso.util.command.ICommandManager ICommandManagers}erweitert
+ * {@link org.kalypso.commons.command.ICommandManager ICommandManagers}erweitert
  * 
  * @author belger
  */

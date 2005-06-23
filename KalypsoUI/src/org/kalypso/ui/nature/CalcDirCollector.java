@@ -44,7 +44,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.kalypso.java.io.FileVisitor;
+import org.kalypso.contribs.java.io.FileVisitor;
 
 /**
  * Collect CalcCases in directory structure
@@ -56,7 +56,7 @@ public class CalcDirCollector implements FileVisitor
   private Collection m_calcDirs = new LinkedList();
 
   /**
-   * @see org.kalypso.java.io.FileVisitor#visit(java.io.File)
+   * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
   public boolean visit( final File file )
   {

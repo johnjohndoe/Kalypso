@@ -44,9 +44,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import org.kalypso.commons.io.CSV;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.metadoc.IExportableTableDocument;
-import org.kalypso.util.io.CSV;
 
 /**
  * ExportableTableDocument

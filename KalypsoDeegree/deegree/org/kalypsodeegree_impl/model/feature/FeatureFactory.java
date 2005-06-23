@@ -67,7 +67,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.gml.GMLFeature;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.gml.GMLProperty;

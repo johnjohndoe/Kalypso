@@ -50,7 +50,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.java.lang.CatchRunnable;
+import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -108,7 +108,7 @@ public abstract class SetContentHelper
       final CatchRunnable innerRunnable = new CatchRunnable()
       {
         /**
-         * @see org.kalypso.java.lang.CatchRunnable#runIntern()
+         * @see org.kalypso.contribs.java.lang.CatchRunnable#runIntern()
          */
         protected void runIntern() throws Throwable
         {

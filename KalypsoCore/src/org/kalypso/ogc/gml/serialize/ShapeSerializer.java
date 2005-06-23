@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.kalypso.util.progress.IProgressMonitor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -185,14 +184,10 @@ public class ShapeSerializer
     }
   }
 
-  public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs,
-      final IProgressMonitor monitor ) throws GmlSerializeException
+  public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs ) throws GmlSerializeException
   {
     try
     {
-      if( monitor != null )
-        monitor.beginTask( "Shape wird geladen", 100 );
-
       final ShapeFile sf = new ShapeFile( fileBase );
       final FeatureType featureType = sf.getFeatureByRecNo( 1 ).getFeatureType();
 
@@ -213,9 +208,6 @@ public class ShapeSerializer
       // TODO transform it!
 
       sf.close();
-
-      if( monitor != null )
-        monitor.done();
 
       return new GMLWorkspace_Impl( new FeatureType[]
       {

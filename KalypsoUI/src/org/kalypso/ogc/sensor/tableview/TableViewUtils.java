@@ -55,7 +55,7 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.MultiStatus;
-import org.kalypso.java.util.StringUtilities;
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;

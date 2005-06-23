@@ -50,14 +50,14 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.commons.parser.IParser;
+import org.kalypso.commons.parser.ParserException;
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.util.factory.FactoryException;
-import org.kalypso.util.parser.IParser;
-import org.kalypso.util.parser.ParserException;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * Utilities around IObservation.

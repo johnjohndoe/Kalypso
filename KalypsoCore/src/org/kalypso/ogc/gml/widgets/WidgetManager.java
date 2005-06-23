@@ -48,8 +48,8 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.util.command.ICommandTarget;
 
 /**
  * Der Controller fuer die MapView

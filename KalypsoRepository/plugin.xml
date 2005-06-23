@@ -17,8 +17,10 @@
 
    <requires>
       <import plugin="org.eclipse.core.runtime" export="true"/>
-      <import plugin="org.kalypso.util" export="false"/>
+      <import plugin="org.kalypso.commons" export="true"/>
       <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.kalypso.contribs.java"/>
+      <import plugin="org.junit"/>
    </requires>
 
    <extension-point id="factories" name="RepositoryFactories" schema="schema/repfactories.exsd"/>

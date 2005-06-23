@@ -42,6 +42,8 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
 
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -49,8 +51,6 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.xml.xlink.IXlink;
 
 /**
  * AbstractObservationFilter

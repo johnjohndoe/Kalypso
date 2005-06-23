@@ -17,8 +17,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
+import org.kalypso.commons.serializer.ISerializer;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
-import org.kalypso.util.serializer.ISerializer;
 import org.xml.sax.InputSource;
 
 /**
@@ -158,7 +158,7 @@ public class WQTableFactory implements ISerializer
   /**
    * Reads a WQTableSet from an InputStream
    * 
-   * @see org.kalypso.util.serializer.ISerializer#read(java.io.InputStream)
+   * @see org.kalypso.commons.serializer.ISerializer#read(java.io.InputStream)
    */
   public Object read( final InputStream ins ) throws InvocationTargetException
   {
@@ -174,7 +174,7 @@ public class WQTableFactory implements ISerializer
   }
 
   /**
-   * @see org.kalypso.util.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
+   * @see org.kalypso.commons.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
    */
   public void write( final Object object, final OutputStream os ) throws InvocationTargetException
   {

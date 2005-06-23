@@ -11,6 +11,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.gml.util.ChangeSourceType;
 import org.kalypso.gml.util.CsvSourceType;
@@ -23,7 +24,6 @@ import org.kalypso.gml.util.ObjectFactory;
 import org.kalypso.gml.util.RegisterSourceType;
 import org.kalypso.gml.util.SourceType;
 import org.kalypso.gml.util.TargetType;
-import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler;
 import org.kalypso.ogc.gml.convert.source.CsvSourceHandler;
 import org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler;

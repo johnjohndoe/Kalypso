@@ -43,11 +43,11 @@ package org.kalypso.ogc.gml.map.widgets;
 import java.awt.Point;
 
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;

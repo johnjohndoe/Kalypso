@@ -43,12 +43,12 @@ package org.kalypso.ogc.sensor.filter.filters;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * DataHoleFilter sets the status of elements that equals the marker-value. TODO: This filter only works if there
@@ -74,7 +74,7 @@ public class DataHoleFilter extends AbstractObservationFilter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {

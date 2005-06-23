@@ -45,13 +45,13 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.SingleSelectCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;

@@ -41,6 +41,8 @@
 package org.kalypso.util.command;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.commons.command.ICommandManager;
+import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.eclipse.jface.action.FullAction;
 
 /**
@@ -72,7 +74,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandManagerListener#onCommandManagerChanged(org.kalypso.util.command.ICommandManager)
+   * @see org.kalypso.commons.command.ICommandManagerListener#onCommandManagerChanged(org.kalypso.commons.command.ICommandManager)
    */
   public void onCommandManagerChanged( final ICommandManager source )
   {

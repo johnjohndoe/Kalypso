@@ -53,7 +53,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.java.util.zip.ZipUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**

@@ -49,7 +49,6 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import org.bce.eclipse.swt.widgets.TableColumnTooltipListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
@@ -75,6 +74,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.command.InvisibleCommand;
+import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
 import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -93,10 +97,6 @@ import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.actions.CommandableFeatureSelection;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
-import org.kalypso.util.command.DefaultCommandManager;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
-import org.kalypso.util.command.InvisibleCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Annotation;
@@ -208,11 +208,9 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
    * @param templateTarget
    * @param featureControlFactory
    * @param selectionID
-   * @param bCursorSelects
-   *          falls true, wird immer die unter dem Cursor liegende Zeile selektiert
    */
   public LayerTableViewer( final Composite parent, final int style, final ICommandTarget templateTarget,
-      final IFeatureModifierFactory featureControlFactory, final int selectionID, final boolean bCursorSelects )
+      final IFeatureModifierFactory featureControlFactory, final int selectionID )
   {
     super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
 
@@ -604,7 +602,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {

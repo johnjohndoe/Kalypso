@@ -40,11 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.proxy;
 
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * ArgsObservationProxy
@@ -63,7 +63,7 @@ public class ArgsObservationProxy extends AbstractObservationDecorator implement
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {

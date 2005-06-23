@@ -48,14 +48,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.UrlResolver;
-import org.kalypso.util.progress.EclipseProgressMonitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -143,8 +142,7 @@ public class ShapeLoader extends AbstractLoader
           csFac.getCSByName( sourceSrs ) );
 
       final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
-      final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs,
-          new EclipseProgressMonitor( monitor ) );
+      final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs );
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
       try

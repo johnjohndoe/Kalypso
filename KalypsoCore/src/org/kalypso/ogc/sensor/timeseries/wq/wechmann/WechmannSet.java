@@ -47,7 +47,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.java.util.DateUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
 
 /**
  * A Set of WechmannParams ordered by WGR and valid for the given Date.

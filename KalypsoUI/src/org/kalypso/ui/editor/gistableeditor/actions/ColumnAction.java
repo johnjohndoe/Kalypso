@@ -41,9 +41,9 @@
 package org.kalypso.ui.editor.gistableeditor.actions;
 
 import org.eclipse.jface.action.Action;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.model.feature.Annotation;
 
 public final class ColumnAction extends Action

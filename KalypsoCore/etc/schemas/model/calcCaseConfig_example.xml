@@ -2,17 +2,17 @@
 <calcCaseConfig xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.model.kalypso.org
 .\calcCaseConfig.xsd">
 	<createTransformations>
-		<transformation className="org.kalypso.util.transformation.CalculationTransformation">
+		<transformation className="org.kalypso.commons.transformation.CalculationTransformation">
 			<argument name="output" value="calcdir:.calculation"/>
 			<argument name="entry0" value="startTime=#SYSTEM_TIME#"/>
 		</transformation>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+		<transformation className="org.kalypso.commons.transformation.CopyTransformation">
 			<argument name="input" value="project:modell.gml"/>
 			<argument name="output" value="calcdir:calcCase.gml"/>
 		</transformation>
 	</createTransformations>
 	<updateTransformations>
-		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+		<transformation className="org.kalypso.commons.transformation.ObservationResolver">
 			<argument name="project" value="project:"/>
 			<argument name="type" value="gml"/>
 			<argument name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
@@ -20,7 +20,7 @@
 			<argument name="targetObservation" value="Niederschlag_eingabe"/>
 			<argument name="targetFolder" value="calcdir:zeitreihen"/>
 		</transformation>
-		<transformation className="org.kalypso.util.transformation.ObservationResolver">
+		<transformation className="org.kalypso.commons.transformation.ObservationResolver">
 			<argument name="project" value="project:"/>
 			<argument name="type" value="gml"/>
 			<argument name="href" value="PATH=calcdir:calcCase.gml#LAYER=Einzugsgebiet#SERVICE=RESOURCE#XSD=project:.modellTyp/modell.xsd"/>
@@ -31,7 +31,7 @@
 	</updateTransformations>
 	
 	<afterCalcTransformations>
-		<transformation className="org.kalypso.util.transformation.CopyTransformation">
+		<transformation className="org.kalypso.commons.transformation.CopyTransformation">
 			<argument name="input" value=":calcDir:Ergebnisse/calcCase.gml"/>
 			<argument name="output" value=":calcdir:calcCase.gml"/>
 		</transformation>

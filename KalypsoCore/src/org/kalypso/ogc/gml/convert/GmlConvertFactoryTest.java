@@ -11,9 +11,9 @@ import javax.xml.bind.JAXBException;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.net.UrlUtilities;
-import org.kalypso.java.util.zip.ZipUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;

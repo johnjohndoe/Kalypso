@@ -44,9 +44,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.bce.eclipse.swt.widgets.DateRangeInputControl;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * ObservationViewHelper

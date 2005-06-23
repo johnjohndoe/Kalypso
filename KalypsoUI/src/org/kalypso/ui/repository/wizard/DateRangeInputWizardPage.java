@@ -42,16 +42,16 @@ package org.kalypso.ui.repository.wizard;
 
 import java.text.DateFormat;
 
-import org.bce.eclipse.swt.widgets.DateRangeInputControl;
-import org.bce.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
+import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * DateRangeInputWizardPage

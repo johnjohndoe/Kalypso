@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -78,7 +78,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * </p>
  * 
  * <p>
- * Implementiert {@link org.kalypso.util.command.ICommandManager}f?r die Undo und Redo Action. Gibt alles an den
+ * Implementiert {@link org.kalypso.commons.command.ICommandManager}f?r die Undo und Redo Action. Gibt alles an den
  * DefaultCommandManager weiter, es wird zus?tzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
  * </p>
  * 

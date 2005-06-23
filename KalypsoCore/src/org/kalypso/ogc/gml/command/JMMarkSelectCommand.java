@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.command;
 
 import java.util.List;
 
-import org.kalypso.util.command.ICommand;
+import org.kalypso.commons.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -128,7 +128,7 @@ public class JMMarkSelectCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#getDescription()
+   * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription()
   {

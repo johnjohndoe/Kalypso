@@ -43,8 +43,8 @@ package org.kalypso.ogc.gml.widgets;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author bce

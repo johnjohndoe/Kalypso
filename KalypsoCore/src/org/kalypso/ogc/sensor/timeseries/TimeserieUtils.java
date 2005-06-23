@@ -53,13 +53,13 @@ import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.java.awt.ColorUtilities;
-import org.kalypso.java.util.StringUtilities;
+import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * Utilities when dealing with Observations which are Kalypso Timeseries.

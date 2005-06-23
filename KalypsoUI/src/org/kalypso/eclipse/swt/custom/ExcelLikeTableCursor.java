@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.java.util.Arrays;
+import org.kalypso.contribs.java.util.Arrays;
 
 /**
  * 

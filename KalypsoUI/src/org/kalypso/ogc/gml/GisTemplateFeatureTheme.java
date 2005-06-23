@@ -53,6 +53,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
@@ -61,8 +63,6 @@ import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.StyleType;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -92,7 +92,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.SetSelectionVisitor;
  * Hier findet auch die Verwaltung statt, ob sich Daten des Themas ge?ndert haben
  * </p>
  * <p>
- * Implementiert unter anderem {@link org.kalypso.util.command.ICommandTarget}, da sich die Daten des unterliegenden
+ * Implementiert unter anderem {@link org.kalypso.commons.command.ICommandTarget}, da sich die Daten des unterliegenden
  * Themas ?ndern k?nnen
  * </p>
  * 
@@ -222,7 +222,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -276,8 +276,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {

@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.xml.xlink.IXlink;
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.xml.xlink.IXlink;
 
 /**
  * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle oder menschlische Wert-Erfassung.

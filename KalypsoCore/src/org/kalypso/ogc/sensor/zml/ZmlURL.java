@@ -32,9 +32,9 @@ package org.kalypso.ogc.sensor.zml;
 import java.net.URL;
 import java.util.Date;
 
-import org.kalypso.util.parser.ParserException;
-import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.xml.XmlTypes;
+import org.kalypso.commons.parser.ParserException;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.commons.xml.XmlTypes;
 
 /**
  * Provides utility methods for manipulating the URLs designed to be used as Zml-Identifiers between kalypso client and

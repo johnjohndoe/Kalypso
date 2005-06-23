@@ -50,7 +50,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
-import org.bce.eclipse.jface.wizard.SaveFileWizardPage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -59,6 +58,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.internal.UIPlugin;
+import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;

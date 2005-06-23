@@ -48,7 +48,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bce.eclipse.jface.wizard.SaveFileWizardPage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -56,10 +55,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.internal.UIPlugin;
+import org.kalypso.commons.io.CSV;
+import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.metadoc.table.ExportTableOptionsPage;
-import org.kalypso.util.io.CSV;
 
 /**
  * @author belger

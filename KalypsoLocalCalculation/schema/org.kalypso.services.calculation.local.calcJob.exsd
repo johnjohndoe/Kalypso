@@ -64,7 +64,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.java.net.IUrlCatalog"/>
+                  <meta.attribute kind="java" basedOn="org.kalypso.contribs.java.net.IUrlCatalog"/>
                </appInfo>
             </annotation>
          </attribute>

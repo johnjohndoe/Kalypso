@@ -45,10 +45,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -62,7 +62,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
   private AbstractWidget myWidget = null;
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.util.command.ICommandTarget,
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )

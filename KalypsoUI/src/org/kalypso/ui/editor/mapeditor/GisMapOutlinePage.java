@@ -71,6 +71,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
 import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
@@ -90,7 +91,6 @@ import org.kalypso.ogc.gml.outline.SaveStyleAction;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypso.util.list.IListManipulator;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
@@ -370,7 +370,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   /**
    * 
-   * @see org.kalypso.util.list.IListManipulator#moveElementDown(java.lang.Object)
+   * @see org.kalypso.commons.list.IListManipulator#moveElementDown(java.lang.Object)
    */
   public void moveElementDown( final Object element )
   {
@@ -379,7 +379,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   }
 
   /**
-   * @see org.kalypso.util.list.IListManipulator#moveElementUp(java.lang.Object)
+   * @see org.kalypso.commons.list.IListManipulator#moveElementUp(java.lang.Object)
    */
   public void moveElementUp( final Object element )
   {
@@ -388,7 +388,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   }
 
   /**
-   * @see org.kalypso.util.list.IListManipulator#removeElement(java.lang.Object)
+   * @see org.kalypso.commons.list.IListManipulator#removeElement(java.lang.Object)
    */
   public void removeElement( final Object element )
   {
@@ -397,7 +397,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   }
 
   /**
-   * @see org.kalypso.util.list.IListManipulator#addElement(java.lang.Object)
+   * @see org.kalypso.commons.list.IListManipulator#addElement(java.lang.Object)
    */
   public void addElement( final Object element )
   {

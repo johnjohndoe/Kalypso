@@ -49,7 +49,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.user.IUserService;
 import org.kalypso.users.IUserRightsProvider;

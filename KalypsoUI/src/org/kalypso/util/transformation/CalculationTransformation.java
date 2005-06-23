@@ -54,8 +54,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.java.lang.CatchThread;
-import org.kalypso.java.util.PropertiesHelper;
+import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.contribs.java.lang.CatchThread;
 
 /**
  * @author belger
@@ -69,8 +69,7 @@ public class CalculationTransformation extends AbstractTransformation
   public static final String PROP_ENTRY = "entry";
 
   /**
-   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
-   *      java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException

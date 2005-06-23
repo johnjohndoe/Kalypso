@@ -42,10 +42,10 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
 
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.zml.filters.NOperationFilterType;
 
 /**

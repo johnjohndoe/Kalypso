@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -84,7 +84,7 @@ public class ChangeExtentCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#getDescription()
+   * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription()
   {

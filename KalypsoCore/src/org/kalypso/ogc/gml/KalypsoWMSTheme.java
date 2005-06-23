@@ -69,7 +69,7 @@ import org.deegree_impl.services.OGCWebServiceEvent_Impl;
 import org.deegree_impl.services.wms.RemoteWMService;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
 import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
-import org.kalypso.java.util.PropertiesHelper;
+import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;

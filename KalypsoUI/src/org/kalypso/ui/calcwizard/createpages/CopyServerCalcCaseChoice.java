@@ -44,7 +44,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.bce.eclipse.jface.viewers.FileLabelProvider;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -68,6 +67,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.viewers.FileLabelProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.util.synchronize.ModelSynchronizer;

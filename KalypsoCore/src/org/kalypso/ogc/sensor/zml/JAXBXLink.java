@@ -38,9 +38,11 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.util.xml.xlink;
+package org.kalypso.ogc.sensor.zml;
 
+import org.kalypso.commons.xml.xlink.IXlink;
 import org.w3._1999.xlinkext.SimpleLinkType;
+
 
 /**
  * XLink wrapper over Jaxb XlinkBase.
@@ -60,7 +62,7 @@ public class JAXBXLink implements IXlink
   }
 
   /**
-   * @see org.kalypso.util.xml.xlink.IXlink#getType()
+   * @see org.kalypso.commons.xml.xlink.IXlink#getType()
    */
   public String getType()
   {
@@ -68,7 +70,7 @@ public class JAXBXLink implements IXlink
   }
 
   /**
-   * @see org.kalypso.util.xml.xlink.IXlink#getActuate()
+   * @see org.kalypso.commons.xml.xlink.IXlink#getActuate()
    */
   public String getActuate()
   {
@@ -76,7 +78,7 @@ public class JAXBXLink implements IXlink
   }
 
   /**
-   * @see org.kalypso.util.xml.xlink.IXlink#getHRef()
+   * @see org.kalypso.commons.xml.xlink.IXlink#getHRef()
    */
   public String getHRef()
   {

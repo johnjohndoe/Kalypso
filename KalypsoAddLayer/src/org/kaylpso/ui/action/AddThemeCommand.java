@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType.StyleType;
-import org.kalypso.util.command.ICommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -114,7 +114,7 @@ public class AddThemeCommand implements ICommand
 
   /**
    * 
-   * @see org.kalypso.util.command.ICommand#isUndoable()
+   * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   public boolean isUndoable()
   {
@@ -123,7 +123,7 @@ public class AddThemeCommand implements ICommand
 
   /**
    * 
-   * @see org.kalypso.util.command.ICommand#process()
+   * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process() throws Exception
   {
@@ -133,7 +133,7 @@ public class AddThemeCommand implements ICommand
 
   /**
    * 
-   * @see org.kalypso.util.command.ICommand#redo()
+   * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo() throws Exception
   {
@@ -142,7 +142,7 @@ public class AddThemeCommand implements ICommand
 
   /**
    * 
-   * @see org.kalypso.util.command.ICommand#undo()
+   * @see org.kalypso.commons.command.ICommand#undo()
    */
   public void undo() throws Exception
   {
@@ -151,7 +151,7 @@ public class AddThemeCommand implements ICommand
 
   /**
    * 
-   * @see org.kalypso.util.command.ICommand#getDescription()
+   * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription()
   {

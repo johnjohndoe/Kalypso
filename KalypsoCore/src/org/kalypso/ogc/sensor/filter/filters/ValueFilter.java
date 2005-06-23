@@ -47,13 +47,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * ValueFilter
@@ -80,7 +80,7 @@ public class ValueFilter extends AbstractObservationFilter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {

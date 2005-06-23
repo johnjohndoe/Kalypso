@@ -2,7 +2,6 @@ package org.kaylpso.ui.wizard.gml;
 
 import java.net.URL;
 
-import org.bce.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -24,6 +23,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider;
@@ -33,7 +34,6 @@ import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.IModel;
 import org.kalypso.ui.editor.gmleditor.util.model.Model;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
-import org.kalypso.util.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 

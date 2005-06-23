@@ -56,7 +56,7 @@ import javax.activation.URLDataSource;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;

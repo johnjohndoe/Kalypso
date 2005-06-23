@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -179,7 +179,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, plugin.getDefaultMapSelectionID(), false );
+    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, plugin.getDefaultMapSelectionID() );
 
     MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );

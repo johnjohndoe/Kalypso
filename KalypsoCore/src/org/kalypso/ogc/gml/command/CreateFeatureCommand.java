@@ -43,7 +43,7 @@
 //
 //import org.kalypsodeegree.model.feature.Feature;
 //import org.kalypsodeegree.model.feature.GMLWorkspace;
-//import org.kalypso.util.command.ICommand;
+//import org.kalypso.commons.command.ICommand;
 //
 ///**
 // * @author belger
@@ -62,7 +62,7 @@
 //  }
 //
 //  /**
-//   * @see org.kalypso.util.command.ICommand#isUndoable()
+//   * @see org.kalypso.commons.command.ICommand#isUndoable()
 //   */
 //  public boolean isUndoable()
 //  {
@@ -70,7 +70,7 @@
 //  }
 //
 //  /**
-//   * @see org.kalypso.util.command.ICommand#process()
+//   * @see org.kalypso.commons.command.ICommand#process()
 //   */
 //  public void process() throws Exception
 //  {
@@ -78,7 +78,7 @@
 //  }
 //
 //  /**
-//   * @see org.kalypso.util.command.ICommand#redo()
+//   * @see org.kalypso.commons.command.ICommand#redo()
 //   */
 //  public void redo() throws Exception
 //  {
@@ -86,7 +86,7 @@
 //  }
 //
 //  /**
-//   * @see org.kalypso.util.command.ICommand#undo()
+//   * @see org.kalypso.commons.command.ICommand#undo()
 //   */
 //  public void undo() throws Exception
 //  {
@@ -94,7 +94,7 @@
 //  }
 //
 //  /**
-//   * @see org.kalypso.util.command.ICommand#getDescription()
+//   * @see org.kalypso.commons.command.ICommand#getDescription()
 //   */
 //  public String getDescription()
 //  {

@@ -47,12 +47,12 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
+import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
-import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
-import org.kalypso.util.factory.FactoryException;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.xml.sax.InputSource;

@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
@@ -97,7 +97,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
       {
       //read Shapefile
       GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBaseFile.toString(),
-          m_page.getCRS(), null );
+          m_page.getCRS() );
 
       //get DefaultStyle
       styleName = shapeBaseFile.getName();

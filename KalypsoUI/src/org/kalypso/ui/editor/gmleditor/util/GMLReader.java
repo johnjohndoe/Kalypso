@@ -9,6 +9,8 @@ import javax.swing.event.EventListenerList;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -17,8 +19,6 @@ import org.kalypso.ui.editor.gmleditor.util.model.GMLDocumentEvent;
 import org.kalypso.ui.editor.gmleditor.util.model.IGMLDocumentListener;
 import org.kalypso.ui.editor.gmleditor.util.model.LinkedFeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -131,8 +131,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
   {
@@ -190,7 +189,7 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( ICommand command, Runnable runnable )
   {

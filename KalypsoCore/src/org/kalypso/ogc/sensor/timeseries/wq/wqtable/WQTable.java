@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.kalypso.commons.math.LinearEquation;
+import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
-import org.kalypso.util.math.LinearEquation;
-import org.kalypso.util.math.LinearEquation.SameXValuesException;
 
 /**
  * WQTable

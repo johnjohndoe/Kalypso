@@ -51,7 +51,8 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
-import org.kalypso.java.util.DoubleComparator;
+import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -60,7 +61,6 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.util.factory.FactoryException;
 import org.kalypso.zml.ObservationType;
 import org.xml.sax.InputSource;
 

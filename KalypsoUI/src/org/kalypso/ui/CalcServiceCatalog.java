@@ -45,7 +45,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.kalypso.java.net.AbstractUrlCatalog;
+import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.services.proxy.ICalculationService;
 
 /**
@@ -54,7 +54,7 @@ import org.kalypso.services.proxy.ICalculationService;
 public class CalcServiceCatalog extends AbstractUrlCatalog
 {
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {

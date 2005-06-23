@@ -46,9 +46,9 @@ import java.util.Date;
 import javax.swing.JLabel;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * ForecastLabelMarker
