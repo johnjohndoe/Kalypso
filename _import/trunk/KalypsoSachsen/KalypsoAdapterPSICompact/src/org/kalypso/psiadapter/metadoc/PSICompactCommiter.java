@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.MetaDocException;
 import org.kalypso.psiadapter.PSICompactFactory;

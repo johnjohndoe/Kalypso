@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="src" path="/KalypsoCalcService"/>
-	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="src" path="/KalypsoDeegree"/>
 	<classpathentry kind="src" path="/JWSDPInstallation"/>

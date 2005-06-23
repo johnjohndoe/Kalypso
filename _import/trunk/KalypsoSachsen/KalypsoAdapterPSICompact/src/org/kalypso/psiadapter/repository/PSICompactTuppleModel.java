@@ -12,7 +12,7 @@ import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
-import org.kalypso.util.conversion.units.IValueConverter;
+import org.kalypso.commons.conversion.units.IValueConverter;
 
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 

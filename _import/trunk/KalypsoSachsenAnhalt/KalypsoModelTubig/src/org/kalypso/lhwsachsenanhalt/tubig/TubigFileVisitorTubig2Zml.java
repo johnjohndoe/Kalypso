@@ -1,4 +1,4 @@
-/**
+/*
  * ---------------- FILE HEADER KALYPSO ---------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004 by:
@@ -37,8 +37,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.io.FileVisitor;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -119,7 +119,7 @@ public class TubigFileVisitorTubig2Zml implements FileVisitor
   }
 
   /**
-   * @see org.kalypso.java.io.FileVisitor#visit(java.io.File)
+   * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
   public boolean visit( final File fleTubig )
   {

@@ -113,7 +113,7 @@ public class GroupItem implements IRepositoryItem
   }
 
   /**
-   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
   public Object getAdapter( Class anotherClass )
   {

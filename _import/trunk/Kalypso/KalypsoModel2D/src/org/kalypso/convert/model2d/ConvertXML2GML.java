@@ -74,7 +74,6 @@ import org.kalypso.convert.simulation2d.impl.Simulation2DTypeImpl;
 import org.kalypso.convert.util.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * This class converts a xml file to gml using java & xml binding (jaxb)

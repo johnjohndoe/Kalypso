@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 
 import de.psi.go.lhwz.PSICompact;
 

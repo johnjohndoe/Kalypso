@@ -17,10 +17,10 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.psiadapter.PSICompactFactory;
-import org.kalypso.util.conversion.units.IValueConverter;
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.xml.xlink.IXlink;
+import org.kalypso.commons.conversion.units.IValueConverter;
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.commons.xml.xlink.IXlink;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
@@ -266,7 +266,7 @@ public class PSICompactObservationItem implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {

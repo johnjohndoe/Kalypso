@@ -70,7 +70,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
@@ -160,7 +160,6 @@ public class ExportThemeAction implements PluginMapOutlineAction
    * @param activeTheme
    *          theme with featureTypeName = "RectifiedGridCoverage"
    * @param monitor
-   * @return
    *  
    */
   IStatus createImage( GisTemplateFeatureTheme activeTheme, IProgressMonitor monitor )
@@ -318,7 +317,6 @@ public class ExportThemeAction implements PluginMapOutlineAction
    * @param rangeSet
    * @param rasterSym
    * @param monitor
-   * @return
    *  
    */
   private Raster getSurrogateRaster( RectifiedGridDomain gridDomain, RangeSet rangeSet, RasterSymbolizer rasterSym,

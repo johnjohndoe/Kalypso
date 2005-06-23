@@ -1,7 +1,5 @@
 package org.kalypso.floodrisk.mathTool;
 
-import java.lang.Math;
-import java.lang.ArithmeticException;
 
 /***********************************************************************************************************************
  * ************************************************************************* * * Class SpecialFunction *

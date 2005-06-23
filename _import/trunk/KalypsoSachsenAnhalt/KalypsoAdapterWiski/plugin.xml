@@ -17,7 +17,7 @@
    <requires>
       <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.repository"/>
-      <import plugin="org.kalypso.util"/>
+      <import plugin="org.kalypso.commons"/>
    </requires>
    <extension
          id="org.kalypso.repository.factories"

@@ -55,16 +55,17 @@
 package org.kalypso.convert.model2d;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
-import org.kalypso.java.io.PrintWriter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
+
+import com.braju.format.Format;
 
 /**
  * 
@@ -162,7 +163,14 @@ public class FEMNodes {
                 new Double(y),
                 new Double(z),
         };
-        printWriter.printf(Locale.ENGLISH,format+"\n", o);
+        try
+        {
+          Format.fprintf( printWriter, format + "\n", o );
+        }
+        catch( IOException e1 )
+        {
+          e1.printStackTrace();
+        }
 
         this.sbNode.append(stringWriter.getBuffer());
         printWriter.close();

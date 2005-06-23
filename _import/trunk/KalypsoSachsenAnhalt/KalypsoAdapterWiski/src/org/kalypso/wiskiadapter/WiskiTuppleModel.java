@@ -12,7 +12,7 @@ import java.util.TimeZone;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
-import org.kalypso.util.conversion.units.IValueConverter;
+import org.kalypso.commons.conversion.units.IValueConverter;
 
 /**
  * WiskiTuppleModel

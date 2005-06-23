@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="org.bce.eclipse.platform.contrib"
+   id="org.kalypso.contribs.eclipseplatform"
    name="EclipsePlatformContributions Plug-in"
    version="0.0.1"
    provider-name="bce.org"
-   class="org.bce.eclipse.platform.EclipsePlatformContributionsPlugin">
+   class="org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin">
 
    <runtime>
       <library name="EclipsePlatformContributions.jar">
@@ -21,6 +21,7 @@
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.kalypso.contribs.eclipsercp" export="true"/>
    </requires>
    <extension
          point="org.eclipse.core.runtime.adapters">

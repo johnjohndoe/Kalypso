@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import org.kalypso.java.util.Arrays;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.psiadapter.util.ObjectInfoLengthComparator;
 import org.kalypso.repository.AbstractRepository;

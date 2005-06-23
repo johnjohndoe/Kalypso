@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.TimeZone;
 
-import org.kalypso.util.runtime.args.DateRangeArgument;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
 
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 import de.kisters.wiski.webdataprovider.common.util.KiWWException;

@@ -32,7 +32,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.util.runtime.args.DateRangeArgument;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.xml.sax.InputSource;
 
 /**

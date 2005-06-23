@@ -7,13 +7,13 @@ import javax.xml.bind.JAXBException;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.net.IUrlCatalog;
-import org.kalypso.java.net.MultiUrlCatalog;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
@@ -26,8 +26,6 @@ import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-
-import com.sun.rsasign.s;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *

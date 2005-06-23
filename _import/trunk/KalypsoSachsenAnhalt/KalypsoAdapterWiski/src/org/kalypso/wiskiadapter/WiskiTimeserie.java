@@ -31,10 +31,10 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.util.conversion.units.SIConverter;
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.xml.xlink.IXlink;
+import org.kalypso.commons.conversion.units.SIConverter;
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.wiskiadapter.wiskicall.GetAlarmLevelList;
 import org.kalypso.wiskiadapter.wiskicall.GetRatingTables;
 import org.kalypso.wiskiadapter.wiskicall.GetStationDetailList;
@@ -202,7 +202,7 @@ public class WiskiTimeserie implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {

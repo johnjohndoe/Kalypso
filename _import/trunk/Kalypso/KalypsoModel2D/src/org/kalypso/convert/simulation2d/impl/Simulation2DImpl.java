@@ -8,6 +8,8 @@
 
 package org.kalypso.convert.simulation2d.impl;
 
+import org.kalypso.convert.simulation2d.impl.Simulation2DTypeImpl.Unmarshaller;
+
 public class Simulation2DImpl
 
     extends org.kalypso.convert.simulation2d.impl.Simulation2DTypeImpl

@@ -54,14 +54,6 @@
 package org.kalypso.convert.model2d;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Katharina Lupp <a href="mailto:k.lupp@web.de>Katharina Lupp</a>

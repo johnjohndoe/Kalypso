@@ -39,13 +39,13 @@ import java.io.FileWriter;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NAModellConverter;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.net.IUrlCatalog;
-import org.kalypso.java.net.MultiUrlCatalog;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;

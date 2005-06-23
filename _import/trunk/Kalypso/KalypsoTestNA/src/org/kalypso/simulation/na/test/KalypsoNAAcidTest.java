@@ -17,8 +17,8 @@
 //import org.kalypso.convert.namodel.NaModelConstants;
 //import org.kalypso.convert.namodel.NaModelInnerCalcJob;
 //import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
-//import org.kalypso.java.io.FileCopyVisitor;
-//import org.kalypso.java.io.FileUtilities;
+//import org.kalypso.contribs.java.io.FileCopyVisitor;
+//import org.kalypso.contribs.java.io.FileUtilities;
 //import org.kalypso.ogc.gml.serialize.GmlSerializer;
 //import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 //import org.kalypso.services.calculation.common.ICalcServiceConstants;

@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.io.StreamUtilities;
-import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.StreamUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;

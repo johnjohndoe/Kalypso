@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;

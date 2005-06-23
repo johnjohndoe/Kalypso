@@ -5,8 +5,8 @@ import java.util.Date;
 
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
-import org.kalypso.util.cache.StringValidityFileCache;
-import org.kalypso.util.cache.StringValidityKey;
+import org.kalypso.commons.cache.StringValidityFileCache;
+import org.kalypso.commons.cache.StringValidityKey;
 
 /**
  * RatingTableCache

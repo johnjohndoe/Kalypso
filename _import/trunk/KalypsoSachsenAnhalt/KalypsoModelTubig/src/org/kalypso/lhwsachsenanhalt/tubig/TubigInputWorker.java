@@ -48,7 +48,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.util.zip.ZipUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobServiceException;

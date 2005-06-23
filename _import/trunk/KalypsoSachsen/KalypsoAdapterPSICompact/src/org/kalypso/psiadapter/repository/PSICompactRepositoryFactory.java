@@ -9,10 +9,10 @@ import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
-import org.kalypso.util.conversion.units.IValueConverter;
-import org.kalypso.util.conversion.units.KelvinCelsiusConverter;
-import org.kalypso.util.conversion.units.NoConverter;
-import org.kalypso.util.conversion.units.SIConverter;
+import org.kalypso.commons.conversion.units.IValueConverter;
+import org.kalypso.commons.conversion.units.KelvinCelsiusConverter;
+import org.kalypso.commons.conversion.units.NoConverter;
+import org.kalypso.commons.conversion.units.SIConverter;
 
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.WQData;

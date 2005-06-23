@@ -50,7 +50,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;

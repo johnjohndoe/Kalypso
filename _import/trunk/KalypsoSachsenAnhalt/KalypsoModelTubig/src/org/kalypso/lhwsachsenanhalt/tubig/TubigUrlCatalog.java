@@ -31,7 +31,7 @@ package org.kalypso.lhwsachsenanhalt.tubig;
 
 import java.util.Map;
 
-import org.kalypso.java.net.AbstractUrlCatalog;
+import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * @author thuel2

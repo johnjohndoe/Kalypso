@@ -57,8 +57,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.lang.ProcessHelper;
-import org.kalypso.java.lang.ProcessHelper.ProcessTimeoutException;
+import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 
 public class TubigBatchInterpreter

@@ -12,8 +12,8 @@ import java.util.logging.StreamHandler;
 
 import javax.xml.bind.JAXBException;
 
-import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.lhwsachsenanhalt.saale.batch.HWVORBatch;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;

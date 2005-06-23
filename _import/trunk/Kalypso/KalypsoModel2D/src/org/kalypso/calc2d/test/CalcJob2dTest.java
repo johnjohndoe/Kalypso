@@ -207,6 +207,19 @@ public class CalcJob2dTest extends TestCase
       {
         System.out.println( message );
       }
+
+      public void setFinishInfo( int status, String text )
+      {}
+
+      public String getFinishText()
+      {
+        return null;
+      }
+
+      public int getFinishStatus()
+      {
+        return 0;
+      }
     };
     try
     {

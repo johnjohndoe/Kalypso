@@ -1,26 +1,3 @@
-package org.kalypso.floodrisk.damageAnalysis.test;
-
-import junit.framework.TestCase;
-
-import org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob;
-import org.kalypso.floodrisk.process.impl.ProcessDataProvider;
-import org.kalypso.floodrisk.process.impl.ProcessResultEater;
-import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.net.IUrlCatalog;
-import org.kalypso.java.net.MultiUrlCatalog;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobInfoBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
-import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -61,6 +38,28 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.floodrisk.damageAnalysis.test;
+
+import junit.framework.TestCase;
+
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
+import org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob;
+import org.kalypso.floodrisk.process.impl.ProcessDataProvider;
+import org.kalypso.floodrisk.process.impl.ProcessResultEater;
+import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
+import org.kalypso.services.calculation.service.CalcJobInfoBean;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
 public class CalculateDamageJobTest extends TestCase
 {

@@ -105,7 +105,7 @@ public class SuperGroupItem implements IRepositoryItem
   }
 
   /**
-   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
   public Object getAdapter( final Class anotherClass )
   {

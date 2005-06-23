@@ -44,7 +44,7 @@ import javax.activation.URLDataSource;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -87,7 +87,7 @@ public class LocalCalculationService implements ICalculationService
 
   /**
    * @see org.kalypso.services.calculation.service.impl.QueuedCalcJobService#QueuedCalcJobService(org.kalypso.services.calculation.service.impl.ICalcJobFactory,
-   *      org.kalypso.java.net.IUrlCatalog, int, long)
+   *      org.kalypso.contribs.java.net.IUrlCatalog, int, long)
    * @param factory
    *          LocalCalcJobFactory
    * @param catalog

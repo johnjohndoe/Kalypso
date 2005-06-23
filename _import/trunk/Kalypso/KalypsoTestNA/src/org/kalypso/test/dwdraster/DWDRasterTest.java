@@ -38,14 +38,14 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.dwd.DWDRaster;
 import org.kalypso.dwd.DWDRasterGeoLayer;
 import org.kalypso.dwd.RasterPart;
 import org.kalypso.dwd.RasterStorage;
 import org.kalypso.dwd.schema.UrlCatalogDWD;
-import org.kalypso.java.net.IUrlCatalog;
-import org.kalypso.java.net.MultiUrlCatalog;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;

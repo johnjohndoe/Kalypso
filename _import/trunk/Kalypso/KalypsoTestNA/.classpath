@@ -7,9 +7,9 @@
 	<classpathentry kind="src" path="/KalypsoCalcService"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="src" path="/KalypsoOptimizePlugin"/>
-	<classpathentry kind="src" path="/KalypsoUtil"/>
 	<classpathentry kind="src" path="/KalypsoDeegree"/>
 	<classpathentry kind="src" path="/JWSDPInstallation"/>
 	<classpathentry kind="src" path="/KalypsoAnt"/>
+	<classpathentry kind="src" path="/KalypsoCommons"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
