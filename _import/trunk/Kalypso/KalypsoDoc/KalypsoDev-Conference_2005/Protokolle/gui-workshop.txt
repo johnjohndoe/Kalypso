@@ -1,4 +1,5 @@
 Perspectiven:
+
 -----------------------------------------------------------------------------------------------------------------
 HochwasserVorhersage Wizard
 -----------------------------
@@ -6,10 +7,76 @@ HochwasserVorhersage Wizard
 -----------------------------------------------------------------------------------------------------------------
 Kalypso ZeitreihenBrowser
 ---------------------------
+Datumslesezeichen
 
 -----------------------------------------------------------------------------------------------------------------
 Kalypso Modeller
 ------------------
+Konzept Daten und Datenansicht (Speichern) transparent machen:
+-Datei Dekorator für geöffnete resourcen
+-in Fenstertitel Resourcen anzeigen (bei der GMT in der Outline)
+-Speichern nach funktionalität überprüfen (beim schließen einer Ansicht wird über Daten speichern/ nicht speichern
+ zukünftig für alle anderen Ansichten entschieden?)
+
+Undo:
+zunächst OK
+bei Ansichtswechsel die Queue löschen
+Eclipse3.1 Konzept verwenden
+
+Eingabehilfe:
+In der ProblemsView
+Rot: verboten
+Gelb: Warnung
+Typprüfung immer
+Immer möglich zu rechnen
+
 1) KartenAnsicht
+KoordinatenInfo in die Statuszeile
+Reihenfolge Aktions:  AnsichtSpeichern, Exportieren, Zoomfunktionen, Pan, Koordinateninfo, FeatureInfo, Relationen Editieren
+Funktionalität bei aktiver Legende: Styleeditor öffnen, Legende verschieben?
+Datenspeichern Symbol aus Tabelle übernehemen (aktiv & inaktiv)
+
+1a) Styleeditor
+Namen anpassen (deutsch), Überschrift heraus, Häkchen weg, Max/Min Denom ausschaltbar, Symbolizer Zuordnung, Tooltip,
+Felder editierbar machen, Rotation und Größe in die allgemeien Box, Feldgöße, Verwendung von Annotations
+Unterstützen von Icons beim Point Symbolizer
+Anordnung der Symbole
+Speichern, Undo
+Voransicht, Übernehmen
 
 2) TabellenAnsicht
+Neue Tabellen erstellen
+Selektionen mit anderen Views koppeln
+Auswahl der angezeigten Spalten in extra Auswahldialog (Beispiel WFS)
+MoveUp, MoveDown (jedoch erst nachdem Sortierung aufgehoben ist)
+
+
+3) Baumansicht
+Zwischenstufen ohne Image, Annotations und ID´s verwenden, FeatureProperty Annotation (FTP) oder default "hat"
+Generell überarbeiten: Labelprovider verwenden, Contentprovider
+Erwartete Funktionen: Bearbeiten, Löschen, Multi Löschen, Neu ... (teilweise mehrere Möglichkeiten), MoveUp, MoveDown
+
+4) FeatureView
+ScrollBar fehlt bei FeatureInfo aus der Karte
+Bei Link ID hinzufügen
+
+5) alle
+Alle Menüs haben die gleiche Reihenfolge der Aktions
+Aktionen als Mauszeiger übernehmen
+Funktionalität Export(Image, Tabelle) und Berichtsablage zusammenführen
+Feature zurück auf default?
+Belegung der Mauszeige in die Statuszeile
+Selektionen mit anderen Views koppeln
+Symbole überarbeiten
+
+-----------------------------------------------------------------------------------------------------------------
+GUI-Guidelines
+---------------
+Alle Menüs haben die gleiche Reihenfolge der Aktions
+Aktionen als Mauszeiger übernehmen
+Alle Aktionen deutsch bennenen (i18n)
+Symbole
+Aktionen im Context Menu
+Übergeordnete Aktionen verwenden (Kopieren, Einfügen,...)
+Implementierungsbeispiele/ Referenzbeispiele in GUI-Guideline
+Möglichst globale Konzepte verwenden (Labelprovider, globale Aktions auf z.B. Featureselektionen)
