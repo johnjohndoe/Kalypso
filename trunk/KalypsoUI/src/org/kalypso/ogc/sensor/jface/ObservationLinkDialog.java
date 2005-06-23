@@ -198,8 +198,7 @@ public class ObservationLinkDialog extends TitleAreaDialog implements IPoolListe
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
   {

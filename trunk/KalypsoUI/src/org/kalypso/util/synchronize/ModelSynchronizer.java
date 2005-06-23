@@ -53,9 +53,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.java.io.DeleteObsoleteFilesVisitor;
-import org.kalypso.java.io.FileCopyVisitor;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.DeleteObsoleteFilesVisitor;
+import org.kalypso.commons.java.io.FileCopyVisitor;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.CalcDirCollector;
 import org.kalypso.ui.nature.ModelNature;
@@ -117,7 +117,7 @@ public class ModelSynchronizer
     try
     {
       final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true, ModelNature.CONTROL_NAME );
-      FileUtilities.accept( from, copyVisitor, true );
+      org.kalypso.commons.java.io.FileUtilities.accept( from, copyVisitor, true );
 
       final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from,
           ModelNature.CONTROL_NAME );

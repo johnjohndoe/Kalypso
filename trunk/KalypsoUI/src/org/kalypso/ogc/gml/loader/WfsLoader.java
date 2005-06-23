@@ -3,18 +3,12 @@ package org.kalypso.ogc.gml.loader;
 import java.io.BufferedInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.deegree.services.wfs.capabilities.WFSCapabilities;
-import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -25,7 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.kalypso.java.util.PropertiesHelper;
+import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -146,41 +140,41 @@ public class WfsLoader extends AbstractLoader
     }
   }
 
-  private WFSCapabilities getCapabilites( String url )
-  {
-    WFSCapabilities caps = null;
-    try
-    {
-      final URL urlGetCap = new URL( url + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
-      final URLConnection conGetCap = urlGetCap.openConnection();
-      conGetCap.addRequestProperty( "SERVICE", "WFS" );
-      conGetCap.addRequestProperty( "VERSION", "1.0.0" );
-      conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
-      InputStream isGetCap = conGetCap.getInputStream();
-      Reader reader = new InputStreamReader( isGetCap );
-      caps = WFSCapabilitiesFactory.createCapabilities( reader );
-    }
-    catch( MalformedURLException urle )
-    {
-      urle.printStackTrace();
-      // TODO
-      // MessageDialog urlMessage = new MessageDialog(null, "Loading WFS
-      // Capabilites",null , "Fehler beim Laden des WFS Themas",
-      // MessageDialog.ERROR, 0, null);
-    }
-    catch( IOException ioe )
-    {
-      ioe.printStackTrace();
-      // TODO MessageDialog
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      // TODO MessageDialog
-    }
-
-    return caps;
-  }
+//  private WFSCapabilities getCapabilites( String url )
+//  {
+//    WFSCapabilities caps = null;
+//    try
+//    {
+//      final URL urlGetCap = new URL( url + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
+//      final URLConnection conGetCap = urlGetCap.openConnection();
+//      conGetCap.addRequestProperty( "SERVICE", "WFS" );
+//      conGetCap.addRequestProperty( "VERSION", "1.0.0" );
+//      conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
+//      InputStream isGetCap = conGetCap.getInputStream();
+//      Reader reader = new InputStreamReader( isGetCap );
+//      caps = WFSCapabilitiesFactory.createCapabilities( reader );
+//    }
+//    catch( MalformedURLException urle )
+//    {
+//      urle.printStackTrace();
+//      // TODO
+//      // MessageDialog urlMessage = new MessageDialog(null, "Loading WFS
+//      // Capabilites",null , "Fehler beim Laden des WFS Themas",
+//      // MessageDialog.ERROR, 0, null);
+//    }
+//    catch( IOException ioe )
+//    {
+//      ioe.printStackTrace();
+//      // TODO MessageDialog
+//    }
+//    catch( Exception e )
+//    {
+//      e.printStackTrace();
+//      // TODO MessageDialog
+//    }
+//
+//    return caps;
+//  }
 
   public String getDescription()
   {

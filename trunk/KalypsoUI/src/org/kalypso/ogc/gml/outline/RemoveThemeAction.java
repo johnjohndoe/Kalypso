@@ -42,10 +42,10 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoPictureTheme;
 import org.kalypso.ogc.gml.KalypsoWMSTheme;
-import org.kalypso.util.list.IListManipulator;
 
 /**
  * @author belger

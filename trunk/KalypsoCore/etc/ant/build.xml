@@ -9,7 +9,8 @@
 		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
 
-		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoRepository/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
 	</path>

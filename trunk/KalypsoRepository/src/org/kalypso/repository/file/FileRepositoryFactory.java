@@ -2,8 +2,8 @@ package org.kalypso.repository.file;
 
 import java.io.FileFilter;
 
-import org.kalypso.java.io.filter.AcceptAllFileFilter;
-import org.kalypso.java.io.filter.MultipleWildCardFileFilter;
+import org.kalypso.contribs.java.io.filter.AcceptAllFileFilter;
+import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;

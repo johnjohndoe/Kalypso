@@ -47,8 +47,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.kalypso.java.awt.ColorUtilities;
-import org.kalypso.java.util.StringUtilities;
+import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -79,7 +79,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
   }
 
   /**
-   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
+   * @see org.kalypso.commons.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.commons.pool.IPoolableObjectType,
    *      java.lang.Object)
    */
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )

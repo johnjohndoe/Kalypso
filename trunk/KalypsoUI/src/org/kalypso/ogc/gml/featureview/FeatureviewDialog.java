@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.featureview;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.bce.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -55,8 +54,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

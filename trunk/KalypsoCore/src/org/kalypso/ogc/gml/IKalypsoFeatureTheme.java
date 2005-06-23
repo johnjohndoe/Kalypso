@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;

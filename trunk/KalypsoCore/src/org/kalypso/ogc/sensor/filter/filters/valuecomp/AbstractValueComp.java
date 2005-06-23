@@ -42,11 +42,11 @@ package org.kalypso.ogc.sensor.filter.filters.valuecomp;
 
 import java.lang.reflect.UndeclaredThrowableException;
 
+import org.kalypso.commons.parser.IParser;
+import org.kalypso.commons.parser.ParserException;
+import org.kalypso.commons.parser.ParserFactory;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.util.parser.IParser;
-import org.kalypso.util.parser.ParserException;
-import org.kalypso.util.parser.ParserFactory;
 
 /**
  * AbstractValueComp

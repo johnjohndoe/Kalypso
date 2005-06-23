@@ -44,7 +44,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Date;
 
-import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.util.transformation.TransformationException;
 import org.kalypsodeegree.model.feature.FeatureType;

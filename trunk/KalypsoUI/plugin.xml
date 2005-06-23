@@ -38,22 +38,22 @@
    </runtime>
 
    <requires>
-      <import plugin="org.eclipse.ui.workbench" export="true"/>
+      <import plugin="org.kalypso.core" export="true"/>
+      <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.resources" export="true"/>
       <import plugin="org.eclipse.ui.ide" export="true"/>
       <import plugin="org.eclipse.ui.views" export="true"/>
       <import plugin="org.eclipse.compare" export="true"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
+      <import plugin="org.eclipse.ui.workbench" export="true"/>
       <import plugin="org.eclipse.ui.forms" export="true"/>
       <import plugin="org.eclipse.debug.ui" export="true"/>
-      <import plugin="org.kalypso.core" export="true"/>
-      <import plugin="org.bce.eclipse.platform.contrib"/>
       <import plugin="org.kalypso.jwsdp" export="true"/>
-      <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ant.core"/>
       <import plugin="org.eclipse.core.variables"/>
       <import plugin="org.eclipse.ui.externaltools"/>
+      <import plugin="org.kalypso.contribs.eclipseplatform"/>
    </requires>
    <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
    <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>

@@ -51,11 +51,11 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.java.net.AbstractUrlCatalog;
-import org.kalypso.java.net.ClassUrlCatalog;
-import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.kalypso.contribs.java.net.ClassUrlCatalog;
+import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.services.calculation.service.CalcJobClientBean;

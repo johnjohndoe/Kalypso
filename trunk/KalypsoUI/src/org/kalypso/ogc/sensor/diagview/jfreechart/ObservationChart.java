@@ -48,7 +48,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.internal.Workbench;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
-import org.kalypso.java.lang.CatchRunnable;
+import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;

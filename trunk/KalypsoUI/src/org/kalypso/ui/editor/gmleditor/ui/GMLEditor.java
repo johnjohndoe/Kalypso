@@ -17,11 +17,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gmleditor.util.GMLReader;
-import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author F.Lindemann

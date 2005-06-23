@@ -48,13 +48,13 @@ import javax.xml.bind.Marshaller;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.util.UrlResolver;
 import org.kalypso.zml.ObservationType;
 
 /**

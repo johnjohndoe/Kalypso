@@ -42,8 +42,8 @@ package org.kalypso.ui.calcwizard.bericht;
 
 import java.util.List;
 
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.java.util.Arrays;
 import org.kalypso.metadoc.Document;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.metadoc.ExportBerichtWizard;

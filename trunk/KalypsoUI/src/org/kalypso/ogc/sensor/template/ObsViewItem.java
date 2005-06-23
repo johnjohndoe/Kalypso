@@ -40,10 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.eclipse.ui.IViewable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface

@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.calculation.job;
 
-import org.kalypso.java.lang.ICancelable;
+import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
  * Überwachungsmonitor für den {@link org.kalypso.services.calculation.job.ICalcJob}.

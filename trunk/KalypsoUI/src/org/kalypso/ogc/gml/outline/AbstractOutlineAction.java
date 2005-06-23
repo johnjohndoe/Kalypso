@@ -43,8 +43,8 @@ package org.kalypso.ogc.gml.outline;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.eclipse.jface.action.FullAction;
-import org.kalypso.util.list.IListManipulator;
 
 /**
  * @author belger

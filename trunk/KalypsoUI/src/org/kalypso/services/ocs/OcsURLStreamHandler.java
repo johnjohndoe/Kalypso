@@ -48,7 +48,7 @@ import java.net.URLConnection;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;

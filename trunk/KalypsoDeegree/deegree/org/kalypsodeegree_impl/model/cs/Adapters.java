@@ -70,8 +70,6 @@ import javax.media.jai.ParameterListDescriptorImpl;
 import javax.media.jai.ParameterListImpl;
 import javax.units.Unit;
 
-import org.kalypsodeegree_impl.model.cs.Info.AngularUnit;
-import org.kalypsodeegree_impl.model.cs.Info.LinearUnit;
 import org.kalypsodeegree_impl.model.resources.XArray;
 import org.kalypsodeegree_impl.model.resources.css.ResourceKeys;
 import org.kalypsodeegree_impl.model.resources.css.Resources;

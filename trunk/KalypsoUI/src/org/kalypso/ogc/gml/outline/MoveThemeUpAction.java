@@ -42,8 +42,8 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.util.list.IListManipulator;
 
 /**
  * @author belger

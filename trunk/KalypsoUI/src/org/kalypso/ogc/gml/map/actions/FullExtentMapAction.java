@@ -40,12 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.actions;
 
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**

@@ -61,8 +61,7 @@ public abstract class AbstractTransformation implements ITransformation
   }
 
   /**
-   * @see org.kalypso.util.transformation.ITransformation#transform(java.io.BufferedWriter, java.io.BufferedWriter,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.util.transformation.ITransformation#transform(java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   public void transform( final BufferedWriter msgWriter, final BufferedWriter logWriter, final IProgressMonitor monitor )
       throws TransformationException

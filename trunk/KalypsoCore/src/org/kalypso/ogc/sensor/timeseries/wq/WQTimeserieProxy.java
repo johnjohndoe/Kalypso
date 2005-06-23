@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.io.StringReader;
 
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -54,7 +55,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
-import org.kalypso.util.runtime.IVariableArguments;
 import org.xml.sax.InputSource;
 
 /**
@@ -133,7 +133,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {

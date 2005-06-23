@@ -44,7 +44,7 @@ package org.kalypsodeegree_impl.gml.schema.schemata.twoD;
 
 import java.util.Map;
 
-import org.kalypso.java.net.AbstractUrlCatalog;
+import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die
@@ -56,7 +56,7 @@ import org.kalypso.java.net.AbstractUrlCatalog;
 public class UrlCatalog2d extends AbstractUrlCatalog
 {
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
    *      java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )

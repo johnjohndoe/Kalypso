@@ -44,7 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.kalypso.java.util.PropertiesHelper;
+import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.ui.calcwizard.Arguments;

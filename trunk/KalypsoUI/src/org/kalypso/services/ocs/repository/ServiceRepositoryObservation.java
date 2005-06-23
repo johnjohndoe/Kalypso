@@ -53,6 +53,9 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -66,9 +69,6 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.proxy.DataBean;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.services.proxy.ObservationBean;
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.runtime.args.DateRangeArgument;
-import org.kalypso.util.xml.xlink.IXlink;
 import org.kalypso.zml.ObservationType;
 import org.xml.sax.InputSource;
 
@@ -212,7 +212,7 @@ public class ServiceRepositoryObservation implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public synchronized ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {

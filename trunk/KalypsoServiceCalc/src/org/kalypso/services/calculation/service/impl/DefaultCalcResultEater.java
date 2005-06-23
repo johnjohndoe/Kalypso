@@ -54,8 +54,8 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.util.zip.ZipFileVisitor;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipFileVisitor;
 import org.kalypso.services.calculation.job.ICalcResultPacker;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;

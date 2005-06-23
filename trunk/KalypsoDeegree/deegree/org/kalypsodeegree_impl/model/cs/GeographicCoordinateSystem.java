@@ -109,7 +109,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   /**
    * The angular unit.
    */
-  private final Unit unit;
+  private final Unit m_unit;
 
   /**
    * The prime meridian.
@@ -156,7 +156,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
     ensureNonNull( "unit", unit );
     ensureNonNull( "meridian", meridian );
     ensureAngularUnit( unit );
-    this.unit = unit;
+    this.m_unit = unit;
     this.meridian = meridian;
   }
 
@@ -181,7 +181,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
       final PrimeMeridian meridian, final AxisInfo axis0, final AxisInfo axis1 )
   {
     super( properties, datum, axis0, axis1 );
-    this.unit = unit;
+    this.m_unit = unit;
     this.meridian = meridian;
     // Accept null values.
   }
@@ -197,7 +197,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
   public Unit getUnits( final int dimension )
   {
     if( dimension >= 0 && dimension < getDimension() )
-      return unit;
+      return m_unit;
     throw new IndexOutOfBoundsException( Resources.format( ResourceKeys.ERROR_INDEX_OUT_OF_BOUNDS_$1, new Integer(
         dimension ) ) );
   }
@@ -283,7 +283,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
     if( super.equivalents( cs ) )
     {
       final GeographicCoordinateSystem that = (GeographicCoordinateSystem)cs;
-      return Utilities.equals( this.unit, that.unit ) && Utilities.equals( this.meridian, that.meridian );
+      return Utilities.equals( this.m_unit, that.m_unit ) && Utilities.equals( this.meridian, that.meridian );
     }
     return false;
   }
@@ -298,7 +298,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
     buffer.append( ", " );
     buffer.append( meridian );
     buffer.append( ", " );
-    addUnit( buffer, unit );
+    addUnit( buffer, m_unit );
     buffer.append( ", " );
     buffer.append( getAxis( 0 ) );
     buffer.append( ", " );
@@ -333,7 +333,7 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
     /**
      * Conversions infos. This array is constructed only the first time it is requested.
      */
-    private transient WGS84ConversionInfo[] infos;
+    private transient WGS84ConversionInfo[] m_infos;
 
     /**
      * Construct a remote object.
@@ -382,15 +382,15 @@ public class GeographicCoordinateSystem extends HorizontalCoordinateSystem
      */
     private synchronized WGS84ConversionInfo[] getWGS84ConversionInfos()
     {
-      if( infos == null )
+      if( m_infos == null )
       {
         final Set set = GeographicCoordinateSystem.this.getWGS84ConversionInfos();
         if( set != null )
         {
-          infos = (WGS84ConversionInfo[])set.toArray( new WGS84ConversionInfo[set.size()] );
+          m_infos = (WGS84ConversionInfo[])set.toArray( new WGS84ConversionInfo[set.size()] );
         }
       }
-      return infos;
+      return m_infos;
     }
   }
 }

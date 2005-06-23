@@ -78,8 +78,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   }
 
   /**
-   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
+   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {

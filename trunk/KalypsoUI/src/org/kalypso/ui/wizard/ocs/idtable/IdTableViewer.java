@@ -40,12 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.ocs.idtable;
 
-import org.bce.eclipse.jface.viewers.DefaultTableViewer;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Table;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.ui.repository.view.ObservationCellEditor;
 
 /**

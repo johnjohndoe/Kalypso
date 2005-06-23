@@ -45,7 +45,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.swing.table.TableUtils;
+import org.kalypso.contribs.java.swing.table.TableUtils;
 import org.kalypso.ui.metadoc.IExportableTableDocument;
 
 /**

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.IUrlCatalog;
 
 /**
  * <p>

@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.java.util.StringUtilities;
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.ui.KPImageProvider;
 
 /**

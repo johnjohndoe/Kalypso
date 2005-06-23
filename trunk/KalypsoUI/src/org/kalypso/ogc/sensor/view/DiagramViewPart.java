@@ -54,6 +54,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.title.TextTitle;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -63,7 +64,6 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * Diagram QuickView.

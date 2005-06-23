@@ -3,7 +3,7 @@ package org.kalypsodeegree_impl.model.cv;
 import java.net.URL;
 import java.util.Vector;
 
-import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -123,8 +123,7 @@ public class RectifiedGridDomainTypeHandler implements ITypeHandler
   }
 
   /**
-   * 
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
    */
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {

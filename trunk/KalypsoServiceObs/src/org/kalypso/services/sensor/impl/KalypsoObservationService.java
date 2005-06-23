@@ -60,8 +60,9 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
@@ -84,7 +85,6 @@ import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.sensor.DataBean;
 import org.kalypso.services.sensor.IObservationService;
 import org.kalypso.services.sensor.ObservationBean;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.ObservationType;
 import org.xml.sax.InputSource;
 

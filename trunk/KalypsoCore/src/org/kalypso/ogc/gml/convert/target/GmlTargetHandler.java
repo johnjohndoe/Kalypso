@@ -5,8 +5,8 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.Gmltarget;
-import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

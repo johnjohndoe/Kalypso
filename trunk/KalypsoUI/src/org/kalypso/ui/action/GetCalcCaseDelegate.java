@@ -64,7 +64,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.nature.CalcDirCollector;
 import org.kalypso.util.synchronize.ModelSynchronizer;

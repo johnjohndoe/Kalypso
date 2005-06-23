@@ -43,12 +43,12 @@ package org.kalypso.ogc.sensor.filter.filters;
 import java.net.URL;
 import java.util.Date;
 
-import org.kalypso.java.util.CalendarUtilities;
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.filters.IntervallFilterType;
 
 /**

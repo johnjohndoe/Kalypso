@@ -43,7 +43,7 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 
 import java.util.List;
 
-import org.kalypso.util.command.ICommand;
+import org.kalypso.commons.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -83,7 +83,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#isUndoable()
+   * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   public boolean isUndoable()
   {
@@ -92,7 +92,7 @@ public class AddHeavyRelationshipCommand implements ICommand
 
   /**
    * 
-   * @see org.kalypso.util.command.ICommand#process()
+   * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process() throws Exception
   {
@@ -108,7 +108,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#redo()
+   * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo() throws Exception
   {
@@ -116,7 +116,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#undo()
+   * @see org.kalypso.commons.command.ICommand#undo()
    */
   public void undo() throws Exception
   {
@@ -139,7 +139,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#getDescription()
+   * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription()
   {

@@ -42,10 +42,10 @@ package org.kalypso.ogc.sensor.view.test;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.adapter.IAdaptable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.view.ObservationCache;
-import org.kalypso.util.adapter.IAdaptable;
 
 /**
  * @author schlienger
@@ -64,7 +64,7 @@ public class ObservationCacheTest extends TestCase
   private static class FooAdaptable implements IAdaptable
   {
     /**
-     * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+     * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
      */
     public Object getAdapter( Class anotherClass )
     {

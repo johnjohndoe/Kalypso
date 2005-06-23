@@ -54,7 +54,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.kalypso.java.util.Arrays;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ui.nature.CalcCaseCollector;
 
 /**

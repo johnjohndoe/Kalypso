@@ -44,8 +44,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.kalypso.util.parser.IParser;
-import org.kalypso.util.parser.ParserException;
+import org.kalypso.commons.parser.IParser;
+import org.kalypso.commons.parser.ParserException;
 import org.kalypso.zml.AxisType.ValueArrayType;
 
 /**

@@ -12,9 +12,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 
-import org.kalypso.util.cache.StringValidityFileCache;
-import org.kalypso.util.cache.StringValidityKey;
-import org.kalypso.util.serializer.ISerializer;
+import org.kalypso.commons.cache.StringValidityFileCache;
+import org.kalypso.commons.cache.StringValidityKey;
+import org.kalypso.commons.serializer.ISerializer;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
@@ -144,7 +144,7 @@ public class SLDCache
   {
 
     /**
-     * @see org.kalypso.util.serializer.ISerializer#read(java.io.InputStream)
+     * @see org.kalypso.commons.serializer.ISerializer#read(java.io.InputStream)
      */
     public Object read( InputStream ins ) throws InvocationTargetException
     {
@@ -161,7 +161,7 @@ public class SLDCache
     }
 
     /**
-     * @see org.kalypso.util.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
+     * @see org.kalypso.commons.serializer.ISerializer#write(java.lang.Object, java.io.OutputStream)
      */
     public void write( Object object, OutputStream os ) throws InvocationTargetException
     {

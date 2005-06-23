@@ -24,7 +24,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.util.xml.xlink.IXlink;
+import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.ObservationType;
 

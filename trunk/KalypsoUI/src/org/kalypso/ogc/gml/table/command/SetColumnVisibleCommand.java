@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.util.command.ICommand;
 
 /**
  * @author Belger
@@ -75,7 +75,7 @@ public class SetColumnVisibleCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#isUndoable()
+   * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   public boolean isUndoable()
   {
@@ -83,7 +83,7 @@ public class SetColumnVisibleCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#process()
+   * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process() throws Exception
   {
@@ -91,7 +91,7 @@ public class SetColumnVisibleCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#redo()
+   * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo() throws Exception
   {
@@ -99,7 +99,7 @@ public class SetColumnVisibleCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#undo()
+   * @see org.kalypso.commons.command.ICommand#undo()
    */
   public void undo() throws Exception
   {
@@ -107,7 +107,7 @@ public class SetColumnVisibleCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.util.command.ICommand#getDescription()
+   * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription()
   {

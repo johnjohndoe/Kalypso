@@ -56,7 +56,7 @@ import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
-import org.kalypso.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.gml.GMLDocument;
 import org.kalypsodeegree.gml.GMLFeature;
 import org.kalypsodeegree.gml.GMLNameSpace;

@@ -47,7 +47,7 @@ import javax.activation.FileDataSource;
 import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.metadoc.Document;
 import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IMetaDocService;

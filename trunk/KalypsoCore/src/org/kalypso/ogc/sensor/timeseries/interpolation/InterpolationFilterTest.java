@@ -46,6 +46,7 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -53,7 +54,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * InterpolationFilterTest

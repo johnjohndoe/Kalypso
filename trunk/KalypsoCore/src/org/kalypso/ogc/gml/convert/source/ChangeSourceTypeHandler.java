@@ -46,12 +46,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.ChangeSourceType;
 import org.kalypso.gml.util.ChangeSourceType.VisitorType;
 import org.kalypso.gml.util.ChangeSourceType.VisitorType.ArgumentType;
-import org.kalypso.java.lang.reflect.ClassUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilityException;
-import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypsodeegree.model.feature.FeatureVisitor;

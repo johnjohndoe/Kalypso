@@ -66,6 +66,9 @@ import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.Spacer;
 import org.jfree.ui.TextAnchor;
+import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
+import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -77,9 +80,6 @@ import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
-import org.kalypso.util.factory.FactoryException;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * A plot for IObservation.

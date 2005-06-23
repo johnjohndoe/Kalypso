@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.kalypso.commons.adapter.IAdaptable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
@@ -61,7 +62,6 @@ import org.kalypso.ui.repository.actions.DumpStructureAction;
 import org.kalypso.ui.repository.actions.ExportAsFileAction;
 import org.kalypso.ui.repository.actions.ReloadAction;
 import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
-import org.kalypso.util.adapter.IAdaptable;
 
 /**
  * A view that allows the user to choose an observation within a tree of repositories

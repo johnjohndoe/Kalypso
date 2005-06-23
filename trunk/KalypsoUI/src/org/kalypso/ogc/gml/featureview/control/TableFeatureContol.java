@@ -21,11 +21,11 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
+import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
-import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -68,7 +68,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public Control createControl( final Composite parent, final int style )
   {
-    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionID, false );
+    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionID );
 
     setFeature( getWorkspace(), getFeature() );
 

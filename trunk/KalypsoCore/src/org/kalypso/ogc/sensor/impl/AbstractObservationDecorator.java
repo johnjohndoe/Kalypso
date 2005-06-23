@@ -40,14 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.xml.xlink.IXlink;
 
 /**
  * AbstractObservationDecorator decorates an IObservation. Decorates all the methods of IObservation and delegates the

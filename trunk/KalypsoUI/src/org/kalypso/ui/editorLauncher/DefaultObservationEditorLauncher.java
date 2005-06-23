@@ -49,7 +49,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 

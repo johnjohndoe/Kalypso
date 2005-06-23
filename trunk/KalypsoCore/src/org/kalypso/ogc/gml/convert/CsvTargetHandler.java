@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.CsvTargetType;
 import org.kalypso.gml.util.CsvTargetType.ColumnType;
-import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.target.ITargetHandler;
 import org.kalypso.ogc.gml.serialize.CsvWriterVisitor;
 import org.kalypsodeegree.model.feature.FeatureList;

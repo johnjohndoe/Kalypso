@@ -2,8 +2,8 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
 
-import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.xml.XMLUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.ITypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;

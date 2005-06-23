@@ -54,7 +54,6 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Vector;
 
-import org.bce.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -76,7 +75,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;

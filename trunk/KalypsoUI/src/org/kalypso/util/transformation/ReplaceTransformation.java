@@ -60,9 +60,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.java.io.ReaderUtilities;
-import org.kalypso.java.io.StreamUtilities;
-import org.kalypso.java.util.StringUtilities;
+import org.kalypso.commons.java.io.ReaderUtilities;
+import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.contribs.java.io.StreamUtilities;
 
 /**
  * @author belger
@@ -70,8 +70,7 @@ import org.kalypso.java.util.StringUtilities;
 public class ReplaceTransformation extends AbstractTransformation
 {
   /**
-   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
-   *      java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException

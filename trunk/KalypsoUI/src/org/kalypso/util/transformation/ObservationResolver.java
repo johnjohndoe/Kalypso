@@ -58,8 +58,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.core.resources.FolderUtilities;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
@@ -69,8 +71,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.util.UrlResolver;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -112,8 +112,7 @@ public class ObservationResolver extends AbstractTransformation
   private static final String PROP_STARTFORECAST = "startforecast";
 
   /**
-   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
-   *      java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   protected void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException

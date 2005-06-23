@@ -54,9 +54,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
-import org.kalypso.java.lang.CatchRunnable;
-import org.kalypso.java.swing.table.ExcelClipboardAdapter;
-import org.kalypso.java.swing.table.SelectAllCellEditor;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.java.lang.CatchRunnable;
+import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
+import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
@@ -67,7 +68,6 @@ import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRend
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * A JTable that can display observations.

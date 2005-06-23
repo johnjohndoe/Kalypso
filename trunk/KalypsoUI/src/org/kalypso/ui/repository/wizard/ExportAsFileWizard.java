@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.bce.eclipse.jface.wizard.FileSelectWizardPage;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -57,12 +56,13 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.FileSelectWizardPage;
 import org.kalypso.eclipse.core.resources.ProjectUtilities;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 import org.kalypso.zml.ObservationType;
 
 /**

@@ -49,8 +49,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.util.command.ICommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -273,7 +273,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {

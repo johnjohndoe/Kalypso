@@ -50,13 +50,13 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.commons.io.AbstractCSV;
+import org.kalypso.commons.io.CSV;
+import org.kalypso.commons.io.RegexCSV;
+import org.kalypso.commons.parser.IParser;
+import org.kalypso.commons.parser.ParserException;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.util.io.AbstractCSV;
-import org.kalypso.util.io.CSV;
-import org.kalypso.util.io.RegexCSV;
-import org.kalypso.util.parser.IParser;
-import org.kalypso.util.parser.ParserException;
 import org.kalypso.zml.AxisType.ValueLinkType;
 
 /**

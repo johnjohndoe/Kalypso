@@ -50,7 +50,8 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.kalypso.java.io.ReaderUtilities;
+import org.kalypso.commons.java.io.ReaderUtilities;
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
@@ -58,7 +59,6 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
-import org.kalypso.util.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

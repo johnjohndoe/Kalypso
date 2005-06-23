@@ -56,7 +56,6 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
-import org.bce.eclipse.core.runtime.StatusUtilities;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -67,7 +66,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.java.util.zip.ZipUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.model.xml.ModeldataType.ClearAfterCalcType;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;

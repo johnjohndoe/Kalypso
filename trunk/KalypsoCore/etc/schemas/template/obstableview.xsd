@@ -15,7 +15,7 @@
 					<xs:documentation>optional, contains the string definition 
 						of the color to use for the foreground (text). The 
 						syntax of the string representation is defined in the 
-						class org.kalypso.java.util.StringUtilities. 
+						class org.kalypso.contribs.java.util.StringUtilities. 
 						</xs:documentation>
 				</xs:annotation>
 			</xs:element>
@@ -25,7 +25,7 @@
 					<xs:documentation>optional, contains the string definition 
 						of the color to use for the background. The syntax of 
 						the string representation is defined in the class 
-						org.kalypso.java.util.StringUtilities. 
+						org.kalypso.contribs.java.util.StringUtilities. 
 						</xs:documentation>
 				</xs:annotation>
 			</xs:element>
@@ -43,7 +43,7 @@
 					<xs:documentation>optional, the font to use for the text of 
 						the cell. The syntax of the string representation is 
 						defined in the class 
-						org.kalypso.java.util.StringUtilities. 
+						org.kalypso.contribs.java.util.StringUtilities. 
 						</xs:documentation>
 				</xs:annotation>
 			</xs:element>

@@ -43,11 +43,11 @@ package org.kalypso.ogc.sensor.filter.creators;
 import java.net.URL;
 import java.util.List;
 
+import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
-import org.kalypso.util.factory.FactoryException;
 import org.kalypso.zml.filters.AbstractFilterType;
 
 /**

@@ -45,12 +45,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * A Theme for an IObservation
@@ -116,8 +116,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * Set the loaded observation and inform listeners that this theme has changed
    * 
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {

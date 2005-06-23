@@ -42,7 +42,7 @@ package org.kalypsodeegree_impl.gml.schema.schemata;
 
 import java.util.Map;
 
-import org.kalypso.java.net.AbstractUrlCatalog;
+import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die gleichen Schemata (zumindest obslink) werden
@@ -54,7 +54,7 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
 
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {

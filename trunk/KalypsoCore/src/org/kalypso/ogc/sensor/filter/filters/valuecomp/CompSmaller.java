@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.valuecomp;
 
+import org.kalypso.commons.parser.ParserException;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.util.parser.ParserException;
 
 /**
  * CompSmaller

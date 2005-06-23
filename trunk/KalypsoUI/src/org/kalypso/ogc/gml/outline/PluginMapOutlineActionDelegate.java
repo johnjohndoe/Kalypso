@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.kalypso.util.list.IListManipulator;
+import org.kalypso.commons.list.IListManipulator;
 
 /**
  * Superclass for plugins that modify the map model

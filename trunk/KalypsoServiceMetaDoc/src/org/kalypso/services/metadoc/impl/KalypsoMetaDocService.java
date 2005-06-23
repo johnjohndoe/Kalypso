@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.MetaDocException;
 import org.kalypso.services.common.ServiceConfig;

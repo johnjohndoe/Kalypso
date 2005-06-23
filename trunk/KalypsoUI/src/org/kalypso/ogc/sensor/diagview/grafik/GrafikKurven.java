@@ -46,8 +46,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.kalypso.java.awt.ColorUtilities;
-import org.kalypso.java.util.StringUtilities;
+import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.GrafikAchse;

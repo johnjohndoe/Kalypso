@@ -41,11 +41,15 @@
 package org.kalypso.util.command;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandManager;
+import org.kalypso.commons.command.ICommandManagerListener;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
 
 /**
  * <p>
- * Implementation eines {@link org.kalypso.util.command.ICommandTarget}
+ * Implementation eines {@link org.kalypso.commons.command.ICommandTarget}
  * </p>
  * <p>
  * Die Kommandos werden via {@link org.kalypso.util.command.CommandJob}abgesetzt
@@ -102,7 +106,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -111,7 +115,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandManagerListener#onCommandManagerChanged(org.kalypso.util.command.ICommandManager)
+   * @see org.kalypso.commons.command.ICommandManagerListener#onCommandManagerChanged(org.kalypso.commons.command.ICommandManager)
    */
   public void onCommandManagerChanged( final ICommandManager source )
   {

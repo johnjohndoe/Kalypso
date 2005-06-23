@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
-import org.kalypso.util.factory.FactoryException;
+import org.kalypso.commons.factory.FactoryException;
 
 /**
  * <p>

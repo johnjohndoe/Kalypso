@@ -37,10 +37,6 @@ import java.util.Date;
 
 import javax.swing.JScrollPane;
 
-import org.bce.eclipse.jface.dialog.DateRangeInputDialog;
-import org.bce.eclipse.swt.widgets.DateRangeInputControlStuct;
-import org.bce.eclipse.ui.dialogs.ResourceListSelectionDialog;
-import org.bce.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -62,8 +58,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DateRangeInputDialog;
+import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
+import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
+import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -77,8 +79,6 @@ import org.kalypso.ogc.sensor.template.ObsView.ItemData;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.util.UrlResolverSingleton;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * ObservationViewer

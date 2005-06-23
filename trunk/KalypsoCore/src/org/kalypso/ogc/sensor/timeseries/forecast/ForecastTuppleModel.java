@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.timeseries.forecast;
 
 import java.util.Date;
 
-import org.kalypso.java.util.DateUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;

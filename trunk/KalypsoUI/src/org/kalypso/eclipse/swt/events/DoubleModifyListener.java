@@ -4,7 +4,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.java.lang.NumberUtils;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * On each modification, checks if widget contains a Double-Text, if not, setForeground Color *

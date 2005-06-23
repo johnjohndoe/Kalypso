@@ -49,7 +49,8 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.kalypso.java.io.ReaderUtilities;
+import org.kalypso.commons.java.io.ReaderUtilities;
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
@@ -57,7 +58,6 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
-import org.kalypso.util.UrlResolver;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

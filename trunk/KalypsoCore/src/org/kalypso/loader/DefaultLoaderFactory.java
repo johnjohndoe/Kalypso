@@ -42,8 +42,8 @@ package org.kalypso.loader;
 
 import java.util.Properties;
 
-import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
-import org.kalypso.util.factory.FactoryException;
+import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
+import org.kalypso.commons.factory.FactoryException;
 
 /**
  * Die Standardimplementation der {@link ILoaderFactory}

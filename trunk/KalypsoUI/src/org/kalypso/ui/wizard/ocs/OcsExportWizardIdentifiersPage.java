@@ -45,7 +45,7 @@ import java.util.List;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.java.util.Arrays;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizard.ocs.idtable.IdStruct;
 import org.kalypso.ui.wizard.ocs.idtable.IdTableContentProvider;

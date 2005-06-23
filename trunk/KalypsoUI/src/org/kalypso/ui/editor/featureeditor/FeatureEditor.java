@@ -71,9 +71,9 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.progress.IProgressService;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**

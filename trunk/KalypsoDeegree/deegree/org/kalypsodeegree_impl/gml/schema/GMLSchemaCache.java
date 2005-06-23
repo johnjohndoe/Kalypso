@@ -50,9 +50,9 @@ import java.net.URLConnection;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.kalypso.util.cache.StringValidityFileCache;
-import org.kalypso.util.cache.StringValidityKey;
-import org.kalypso.util.serializer.ISerializer;
+import org.kalypso.commons.cache.StringValidityFileCache;
+import org.kalypso.commons.cache.StringValidityKey;
+import org.kalypso.commons.serializer.ISerializer;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 import org.w3c.dom.Document;

@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.commons.parser.ParserException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -55,7 +56,6 @@ import org.kalypso.ogc.sensor.filter.filters.valuecomp.CompBetween;
 import org.kalypso.ogc.sensor.filter.filters.valuecomp.CompBigger;
 import org.kalypso.ogc.sensor.filter.filters.valuecomp.CompSmaller;
 import org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp;
-import org.kalypso.util.parser.ParserException;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.ValueFilterType;
 import org.kalypso.zml.filters.valuecomp.AbstractValueCompType;

@@ -50,10 +50,6 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       m_pool.addPoolListener( this, key );
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
-   */
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( newValue != null && status.isOK() )

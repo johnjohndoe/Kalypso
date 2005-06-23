@@ -42,7 +42,7 @@ package org.kalypsodeegree_impl.gml.schema.schemata;
 
 import java.util.Map;
 
-import org.kalypso.java.net.AbstractUrlCatalog;
+import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * This catalog returns the gml schema that is used in the updatetransformationprocess
@@ -54,7 +54,7 @@ public class UrlCatalogUpdateObservationMapping extends AbstractUrlCatalog
   public final static String NS = "http://org.kalypso.updateObservationMapping";
 
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {

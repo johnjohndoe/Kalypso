@@ -43,6 +43,10 @@ package org.kalypso.ogc.sensor.timeseries.interpolation;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.kalypso.commons.math.LinearEquation;
+import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.commons.runtime.IVariableArguments;
+import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -50,10 +54,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.util.math.LinearEquation;
-import org.kalypso.util.math.LinearEquation.SameXValuesException;
-import org.kalypso.util.runtime.IVariableArguments;
-import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * InterpolationFilter. This is a simple yet tricky interpolation filter. It steps through the time and eventually
@@ -102,7 +102,7 @@ public class InterpolationFilter extends AbstractObservationFilter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.commons.runtime.IVariableArguments)
    */
   public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {

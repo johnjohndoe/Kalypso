@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Vector;
 
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypsodeegree_impl.extension.ITypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Document;
@@ -81,8 +81,7 @@ public class RangeSetTypeHandler implements ITypeHandler
   }
 
   /**
-   * 
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
    */
   public Object unmarshall( Node node, URL gmlURL, IUrlResolver urlResolver ) throws TypeRegistryException
   {
@@ -134,7 +133,7 @@ public class RangeSetTypeHandler implements ITypeHandler
   /**
    * reads the rangeSetData from the rangeSetDataFile
    * 
-   * @param rangeSetDataFile
+   * @param rangeSetReader
    *          File, where rangeSetData is stored
    * @return Vector, which stores the rangeSet data; the data of each row is stored in a Vector
    */

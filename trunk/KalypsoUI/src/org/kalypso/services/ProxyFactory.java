@@ -54,7 +54,7 @@ import java.util.Properties;
 import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Stub;
 
-import org.kalypso.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 
 /**
  * Factory for Kalypso WebService proxies.

@@ -46,9 +46,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.Workbench;
+import org.kalypso.commons.list.IListManipulator;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
-import org.kalypso.util.list.IListManipulator;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**

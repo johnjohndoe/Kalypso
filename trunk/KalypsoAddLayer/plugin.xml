@@ -20,7 +20,8 @@
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.bce.eclipse.platform.contrib"/>
+      <import plugin="org.kalypso.contribs.java"/>
+      <import plugin="org.kalypso.contribs.eclipseplatform"/>
    </requires>
    <extension
          id="mapviewaction"
@@ -29,7 +30,7 @@
       <MapviewAction
             title="AddLayer"
             enabled="true"
-            icon="icons/gistable/add_row.gif"
+            icon="icon/add_row.gif"
             class="org.kaylpso.ui.view.action.AddThemeAction"
             tooltip="Neues Thema zu activer Karte hinzufügen"/>
    </extension>

@@ -8,8 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.CsvSourceType;
-import org.kalypso.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader.CSVInfo;

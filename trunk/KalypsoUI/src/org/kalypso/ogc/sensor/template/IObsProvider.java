@@ -1,7 +1,7 @@
 package org.kalypso.ogc.sensor.template;
 
+import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * @author belger

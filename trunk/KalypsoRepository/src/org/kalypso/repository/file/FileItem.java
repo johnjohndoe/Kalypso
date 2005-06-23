@@ -42,7 +42,7 @@ package org.kalypso.repository.file;
 
 import java.io.File;
 
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 
@@ -123,7 +123,7 @@ public class FileItem implements IRepositoryItem
   }
 
   /**
-   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
   public Object getAdapter( Class anotherClass )
   {

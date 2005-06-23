@@ -80,7 +80,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
-import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -103,9 +106,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.ui.calcwizard.CalcWizard;
 import org.kalypso.ui.nature.ModelNature;
-import org.kalypso.util.command.DefaultCommandManager;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
@@ -338,7 +338,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -520,7 +520,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final Gistableview template = GisTemplateHelper.loadGisTableview( templateFile, getReplaceProperties() );
 
       m_gisTableViewer = new LayerTableViewer( parent, SWT.BORDER, this, KalypsoGisPlugin.getDefault()
-          .createFeatureTypeCellEditorFactory(), getSelectionID(), false );
+          .createFeatureTypeCellEditorFactory(), getSelectionID() );
       m_gisTableViewer.applyTableTemplate( template, getContext() );
 
     }

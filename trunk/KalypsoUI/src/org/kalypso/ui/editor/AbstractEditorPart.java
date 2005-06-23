@@ -71,10 +71,10 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.command.DefaultCommandManager;
-import org.kalypso.util.command.ICommand;
-import org.kalypso.util.command.ICommandTarget;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -370,7 +370,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   }
 
   /**
-   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {

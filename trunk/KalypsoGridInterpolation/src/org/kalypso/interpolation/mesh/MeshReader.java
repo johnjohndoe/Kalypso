@@ -46,7 +46,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.xpath.XPathAPI;
 import org.deegree_impl.services.NotSupportedFormatException;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -262,7 +262,7 @@ public class MeshReader
       while( st.nextToken() != StreamTokenizer.TT_EOF )
       {
         //reads the ID
-        String pointID = String.valueOf( (int)( st.nval                                                                                                   ) );
+        String pointID = String.valueOf( (int)( st.nval                                                                                                    ) );
         st.nextToken();
         //reads elevation value
         Double elevation = new Double( st.nval );
@@ -542,7 +542,6 @@ public class MeshReader
           int nodeCounter = 0;
           GM_Position[] verticies = new GM_Position[totalNodes];
           double[] values = new double[totalNodes];
-          String vertIDs = null;
           if( totalNodes == 4 || totalNodes == 5 )
           {//check element is
             // triangle or
@@ -591,18 +590,16 @@ public class MeshReader
                 // not supported
                 throw new Exception( "Concave polygon import is not supported yet." );
               }
-              else
-              {//otherwise if its Convex then split it based on
-                // diagonal slope and keep it least
-                MeshElement[] splitElements = me.splitElement();
-                for( int j = 0; j < splitElements.length; j++ )
-                {
-                  MeshElement element = splitElements[j];
-                  mesh.addElement( element );
 
-                }
+              //otherwise if its Convex then split it based on
+              // diagonal slope and keep it least
+              MeshElement[] splitElements = me.splitElement();
+              for( int j = 0; j < splitElements.length; j++ )
+              {
+                MeshElement element = splitElements[j];
+                mesh.addElement( element );
+
               }
-
             }
           }//if 3 || 4
           else
@@ -629,7 +626,7 @@ public class MeshReader
       String shapebase = FileUtilities.nameWithoutExtension( file.getPath() );
       try
       {
-        GMLWorkspace gml = ShapeSerializer.deserialize( shapebase, crs, null );
+        GMLWorkspace gml = ShapeSerializer.deserialize( shapebase, crs );
         Feature root = gml.getRootFeature();
         List features = (List)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
         //check geometry type to disdinguish the two diffrent files
@@ -642,10 +639,6 @@ public class MeshReader
               ShapeSerializer.PROPERTY_GEOMETRY, wishbox );
       }
       catch( GmlSerializeException e )
-      {
-        e.printStackTrace();
-      }
-      catch( GM_Exception e )
       {
         e.printStackTrace();
       }
@@ -668,7 +661,6 @@ public class MeshReader
   }
 
   private void createElements( Mesh mesh, Feature[] meshElements, String geometryProperteyElement, GM_Surface wishbox )
-      throws GM_Exception
   {
     CS_CoordinateSystem cs = null;
     for( int i = 0; i < meshElements.length; i++ )
@@ -751,7 +743,7 @@ public class MeshReader
   }// createElements
 
   public void importMesh( Mesh mesh, Feature[] points, String geometryPropertyPoints, String valueProperty,
-      Feature[] elements, String geometryPropertyElements, GM_Surface wishbox ) throws GM_Exception
+      Feature[] elements, String geometryPropertyElements, GM_Surface wishbox )
   {
 
     createNodes( points, geometryPropertyPoints, valueProperty );
@@ -761,7 +753,7 @@ public class MeshReader
 
   private GM_Object readBorder( String shapefile, CS_CoordinateSystem cs ) throws GmlSerializeException
   {
-    GMLWorkspace ws = ShapeSerializer.deserialize( shapefile, cs, null );
+    GMLWorkspace ws = ShapeSerializer.deserialize( shapefile, cs );
     Feature root = ws.getRootFeature();
     FeatureList geoProperty = (FeatureList)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     Feature features = geoProperty.toFeatures()[0];
