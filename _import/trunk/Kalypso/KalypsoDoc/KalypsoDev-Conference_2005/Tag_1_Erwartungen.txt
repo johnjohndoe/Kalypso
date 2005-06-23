@@ -4,6 +4,7 @@ Andreas: - Übersicht über das ganze kalypso-projekt
 	- Kalypso_philosophie
 	- Veröffentlichung ?
 
+
 Nadja : - Schnittstellen zur erweiterung oder Benutzung später
 
 Gernot: - Welche Projekte mach die TUHH, (Flows ??)
