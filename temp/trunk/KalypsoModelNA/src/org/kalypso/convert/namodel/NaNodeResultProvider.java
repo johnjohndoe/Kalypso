@@ -46,8 +46,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.java.net.IUrlResolver;
-import org.kalypso.java.net.UrlUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

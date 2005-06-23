@@ -510,7 +510,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     try
     {
 
-      sourceWorkspace = ShapeSerializer.deserialize( fileBase, cs, null );
+      sourceWorkspace = ShapeSerializer.deserialize( fileBase, cs );
 
     }
     catch( GmlSerializeException e )

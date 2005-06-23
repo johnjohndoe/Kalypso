@@ -44,7 +44,7 @@ package org.kalypso.convert.namodel.schema;
 import java.util.Map;
 
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.java.net.AbstractUrlCatalog;
+import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * class UrlCatalogNA
@@ -58,7 +58,7 @@ import org.kalypso.java.net.AbstractUrlCatalog;
 public class UrlCatalogNA extends AbstractUrlCatalog
 {
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
   {

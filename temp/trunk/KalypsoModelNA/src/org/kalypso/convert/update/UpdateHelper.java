@@ -47,7 +47,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.java.xml.XMLUtilities;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.filters.InterpolationFilter;
 import org.kalypso.zml.filters.IntervallFilter;

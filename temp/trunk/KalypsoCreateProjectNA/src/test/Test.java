@@ -6,16 +6,17 @@
  */
 package test;
 
-import javax.xml.bind.JAXBException;
-
-import org.kalypsodeegree.model.feature.*;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.kalypsodeegree_impl.extension.*;
-import org.kalypso.ogc.sensor.deegree.*;
 
 /**
  * @author Tejas Doshi
@@ -39,7 +40,7 @@ public class Test {
 
 		GMLWorkspace gmlWS = null;
 		try {
-			gmlWS = ShapeSerializer.deserialize(SHP_FILE_BASE, cs, null);
+			gmlWS = ShapeSerializer.deserialize(SHP_FILE_BASE, cs);
 		} catch (GmlSerializeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

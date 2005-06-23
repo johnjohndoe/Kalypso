@@ -48,8 +48,8 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.CopyUtils;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.dwd.raster.ForecastGeneratorConfigurator;
-import org.kalypso.java.io.FileUtilities;
 
 /**
  * @author doemming

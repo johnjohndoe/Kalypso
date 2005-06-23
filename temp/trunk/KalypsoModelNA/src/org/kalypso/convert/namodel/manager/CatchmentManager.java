@@ -53,7 +53,7 @@ import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.java.util.FortranFormatHelper;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;

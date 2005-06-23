@@ -48,11 +48,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.net.IUrlCatalog;
-import org.kalypso.java.net.MultiUrlCatalog;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -230,16 +230,15 @@ public class UpdateModellKollau
     CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:31467" ) );
 
-    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Teileinzugsgebiete", cSystem,
-        null );
+    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Teileinzugsgebiete", cSystem );
     final List catchmentFeatures = (List)catchmentWorkspace.getRootFeature().getProperty(
         ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\straenge", cSystem, null );
+    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\straenge", cSystem );
     final List channelFeatures = (List)channelWorkspace.getRootFeature().getProperty(
         ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-    final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\modellknotenflows", cSystem, null );
+    final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\modellknotenflows", cSystem );
     final List nodeFeatures = (List)nodeWorkspace.getRootFeature()
         .getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 

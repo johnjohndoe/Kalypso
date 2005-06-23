@@ -50,7 +50,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.java.util.FortranFormatHelper;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;

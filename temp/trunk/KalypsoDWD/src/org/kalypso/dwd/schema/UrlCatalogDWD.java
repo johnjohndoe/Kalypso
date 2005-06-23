@@ -43,7 +43,7 @@ package org.kalypso.dwd.schema;
 
 import java.util.Map;
 
-import org.kalypso.java.net.AbstractUrlCatalog;
+import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * 
@@ -56,7 +56,7 @@ import org.kalypso.java.net.AbstractUrlCatalog;
 public class UrlCatalogDWD extends AbstractUrlCatalog
 {
   /**
-   * @see org.kalypso.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
    *      java.util.Map)
    */
   protected void fillCatalog( final Class myClass, final Map catalog )
