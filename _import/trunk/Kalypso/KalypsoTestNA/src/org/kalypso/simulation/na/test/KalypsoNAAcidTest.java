@@ -11,7 +11,7 @@
 //import org.kalypsodeegree.model.feature.FeatureType;
 //import org.kalypsodeegree.model.feature.GMLWorkspace;
 //import org.kalypsodeegree_impl.extension.ITypeRegistry;
-//import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+//import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 //import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 //import org.kalypso.convert.namodel.NaModelCalcJob;
 //import org.kalypso.convert.namodel.NaModelConstants;
@@ -71,7 +71,7 @@
 //
 //  public void testRun() throws Exception
 //  {
-//    final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+//    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 //    registry.registerTypeHandler( new ObservationLinkHandler() );
 //
 //    final File inputDir = new File( "C:\\Programme\\KalypsoServer\\data\\tmp\\TEST" );

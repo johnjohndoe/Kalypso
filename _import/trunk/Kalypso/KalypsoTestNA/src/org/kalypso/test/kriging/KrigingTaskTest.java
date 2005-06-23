@@ -47,7 +47,7 @@ import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
@@ -64,7 +64,7 @@ public class KrigingTaskTest extends TestCase
 {
   public void testExecute() throws TypeRegistryException, JAXBException
   {
-    final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     registry.registerTypeHandler( new ObservationLinkHandler() );
 
     // initalize urlcatalogs

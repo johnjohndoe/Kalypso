@@ -18,7 +18,7 @@ import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 
 import com.braju.format.Format;
 
@@ -454,7 +454,7 @@ public class TubigExportParameter
     //    final URL schemaurl = TubigExportParameter.class.getResource(
     // "resources/schema/bodemodell.xsd" );
 
-    TypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
+    MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
 
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlurl );
 

@@ -49,9 +49,21 @@ public abstract class ScrolledCompositeCreator
 
   private Control m_contentControl;
 
+  private final SizeProvider m_maxSizeProvider;
+  
+  public static interface SizeProvider
+  {
+    public Point getSize();
+  }
+  
+  public ScrolledCompositeCreator( final SizeProvider maxSizeProvider )
+  {
+    m_maxSizeProvider = maxSizeProvider;
+  }
+
   public void createControl( final Composite parent, final int style, final int contentStyle )
   {
-    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL | style );
+    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, style );
 
     // Die folgende Zeile hängt vom Layout des Parent ab, wenn der Parent kein GridLayout hat,
     // kommts zu seltsamen Effekten beim Resize etc.
@@ -62,7 +74,7 @@ public abstract class ScrolledCompositeCreator
     scrolledComposite.setContent( m_contentControl );
 
     m_scrolledComposite = scrolledComposite;
-    parent.addControlListener( new ControlAdapter()
+    m_scrolledComposite.addControlListener( new ControlAdapter()
     {
       /**
        * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
@@ -79,13 +91,26 @@ public abstract class ScrolledCompositeCreator
   public final void updateControlSize( final boolean ignoreZeroClientSize )
   {
     final Point controlSize = m_contentControl.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    final int controlX = controlSize.x;
+    final int controlY = controlSize.y;
+    
     final Rectangle clientArea = m_scrolledComposite.getClientArea();
+
     final int psizex = clientArea.width;
     final int psizey = clientArea.height;
     if( ignoreZeroClientSize && ( psizex == 0 || psizey == 0 ) )
       return;
 
-    final Point newSize = new Point( Math.max( controlSize.x, psizex ), Math.max( controlSize.y, psizey ) );
+    final int style = m_scrolledComposite.getStyle();
+
+    final Point maxSize = m_maxSizeProvider == null ? new Point( psizex, psizey ) : m_maxSizeProvider.getSize();
+    final int newX = ( ( style & SWT.H_SCROLL ) != 0 ) ? Math.max( controlX, psizex ) : Math.min( psizex, maxSize.x );
+    final int newY = ( ( style & SWT.V_SCROLL ) != 0 ) ? Math.max( controlY, psizey ) : Math.min( psizey, maxSize.y );
+    
+    
+    final Point newSize = new Point( newX == 0 ? controlX : newX, newY == 0 ? controlY : newY );
+
+    
     m_contentControl.setSize( newSize );
   }
 
