@@ -38,18 +38,31 @@
  v.doemming@tuhh.de
 
  ------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.extension;
+package org.kalypso.ogc.gml.gui;
+
+import javax.xml.bind.JAXBException;
+
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
+import org.kalypso.template.featureview.ControlType;
+import org.kalypso.template.featureview.ObjectFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
 
 /**
- * A common type handler.
- *
+ * Provides editors and visualisation for {@link org.kalypsodeegree.model.feature.Feature}s.
+ * 
  * @author bce
  */
-public interface ITypeHandler
+public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 {
-  /** Der Java-Name, auf den dieser Typ gemapt wird */
-  public String getClassName();
+  public IFeatureDialog createFeatureDialog( final GMLWorkspace workspace, final Feature feature,
+      final FeatureTypeProperty ftp );
 
-  /** Der XML-Typname */
-  public String getTypeName();
+  public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException;
+
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp );
 }

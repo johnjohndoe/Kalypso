@@ -46,7 +46,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
 
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.ControlType;
@@ -64,8 +65,6 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 
 /**
  * @author belger
@@ -129,21 +128,10 @@ public class FeatureviewHelper
 
       type = checkbox;
     }
-    else if( TypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
+    else if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
     {
-      final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
-      // TODO: TypeHandler should decide, what todo
-      if( handler instanceof ObservationLinkHandler )
-      {
-        final ButtonType button = FACTORY.createButton();
-        button.setStyle( "SWT.PUSH" );
-        button.setProperty( name );
-
-        griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-        button.setLayoutData( griddata );
-
-        type = button;
-      }
+      final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
+      type = handler.createFeatureviewControl( name, FACTORY );
     }
     else if( "FeatureAssociationType".equals( typename ) )
     {
@@ -158,6 +146,7 @@ public class FeatureviewHelper
         griddata.setGrabExcessHorizontalSpace( true );
         griddata.setGrabExcessVerticalSpace( true );
         griddata.setHorizontalSpan( 2 );
+        griddata.setHeightHint( 200 );
 
         table.setLayoutData( griddata );
 

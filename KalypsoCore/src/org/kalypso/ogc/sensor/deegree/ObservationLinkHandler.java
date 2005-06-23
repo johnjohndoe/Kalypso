@@ -52,7 +52,7 @@ import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -61,8 +61,15 @@ import org.w3c.dom.NodeList;
 /**
  * @author belger
  */
-public class ObservationLinkHandler implements ITypeHandler
+public class ObservationLinkHandler implements IMarshallingTypeHandler
 {
+  public static final String CLASS_NAME = TimeseriesLinkType.class.getName();
+
+  public static final String NAMESPACE = "obslink.zml.kalypso.org";
+
+  public static final String TYPE_NAME = NAMESPACE + ":"
+      + ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class );
+
   private final ObjectFactory m_factory = new ObjectFactory();
 
   private final Marshaller m_marshaller = m_factory.createMarshaller();
@@ -76,19 +83,19 @@ public class ObservationLinkHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
   public String getClassName()
   {
-    return TimeseriesLinkType.class.getName();
+    return CLASS_NAME;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
   public String getTypeName()
   {
-    return getNamespaceUri() + ":" + ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class );
+    return TYPE_NAME;
   }
 
   private String getElementName()
@@ -96,13 +103,9 @@ public class ObservationLinkHandler implements ITypeHandler
     return ClassUtilities.getOnlyClassName( TimeseriesLink.class );
   }
 
-  private String getNamespaceUri()
-  {
-    return "obslink.zml.kalypso.org";
-  }
-
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
+   *      java.net.URL)
    */
   public void marshall( final Object object, final Node node, URL context ) throws TypeRegistryException
   {
@@ -117,21 +120,22 @@ public class ObservationLinkHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   public Object unmarshall( final Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
     try
     {
       final Element element = (Element)node;
-      final NodeList childNodes = ( element ).getElementsByTagNameNS( getNamespaceUri(), getElementName() );
+      final NodeList childNodes = ( element ).getElementsByTagNameNS( NAMESPACE, getElementName() );
 
       for( int i = 0; i < childNodes.getLength(); i++ )
       {
         final Node child = childNodes.item( i );
 
         // child namespace may be null
-        if( getNamespaceUri().equals( child.getNamespaceURI() ) && getElementName().equals( child.getLocalName() ) )
+        if( NAMESPACE.equals( child.getNamespaceURI() ) && getElementName().equals( child.getLocalName() ) )
           return m_unmarshaller.unmarshal( child );
       }
 
@@ -144,11 +148,10 @@ public class ObservationLinkHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
   public String getShortname()
   {
     return "Zeitreihen Verknüpfung";
   }
-
 }

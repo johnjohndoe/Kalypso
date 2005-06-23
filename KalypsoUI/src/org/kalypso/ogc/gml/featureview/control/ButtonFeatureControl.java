@@ -61,16 +61,14 @@ import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog;
-import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.DateWithoutTime;
 import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
@@ -115,13 +113,10 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     if( DateWithoutTime.class.getName().equals( typename ) )
       return new CalendarFeatureDialog( feature, ftp );
 
-    if( TypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
+    if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
     {
-      final ITypeHandler handler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
-
-      // TODO: TypeHandler should decide, what todo
-      if( handler instanceof ObservationLinkHandler )
-        return new TimeserieLinkFeatureDialog( workspace, feature, ftp );
+      final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
+      return handler.createFeatureDialog( workspace, feature, ftp );
     }
 
     if( "FeatureAssociationType".equals( typename ) )

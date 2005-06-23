@@ -205,10 +205,10 @@ public class GMLSchemaFactory
         System.out.println( refAttribute.getValueNS() );
 
       // ITypeRegistry typeRegistry =
-      // TypeRegistrySingleton.getTypeRegistry();
+      // MarshallingTypeRegistrySingleton.getTypeRegistry();
       // String valueNS = refAttribute.getValueNS();
       // String value = refAttribute.getValue();
-      // ITypeHandler typeHandlerForTypeName =
+      // IMarshallingTypeHandler typeHandlerForTypeName =
       // typeRegistry.getTypeHandlerForTypeName(valueNS+":"+value);
       // if(typeHandlerForTypeName!=null)
       // {

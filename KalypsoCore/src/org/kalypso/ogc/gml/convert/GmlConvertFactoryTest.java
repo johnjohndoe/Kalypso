@@ -18,7 +18,7 @@ import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
 
@@ -31,7 +31,7 @@ public class GmlConvertFactoryTest extends TestCase
 
   public GmlConvertFactoryTest() throws TypeRegistryException, JAXBException
   {
-    final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     registry.registerTypeHandler( new ObservationLinkHandler() );
     registry.registerTypeHandler( new DiagramTypeHandler() );

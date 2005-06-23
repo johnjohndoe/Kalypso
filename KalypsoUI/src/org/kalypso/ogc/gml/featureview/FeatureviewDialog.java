@@ -78,14 +78,14 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
   private final ICommandTarget m_target;
 
-  public FeatureviewDialog( final GMLWorkspace workspace, final ICommandTarget target,
-      final Shell parentShell, final FeatureComposite featureComposite )
+  public FeatureviewDialog( final GMLWorkspace workspace, final ICommandTarget target, final Shell parentShell,
+      final FeatureComposite featureComposite )
   {
     super( parentShell );
     m_workspace = workspace;
     m_target = target;
     m_featureComposite = featureComposite;
-    
+
     setShellStyle( getShellStyle() | SWT.RESIZE | SWT.MAX );
   }
 
@@ -98,24 +98,22 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
     final Feature feature = m_featureComposite.getFeature();
     final FeatureType featureType = feature.getFeatureType();
-    
+
     final Group panel = new Group( parent, SWT.NONE );
     panel.setText( featureType.getName() + " - " + feature.getId() );
-    panel.setLayout( new GridLayout( ) );
+    panel.setLayout( new GridLayout() );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    
+
     final FeatureComposite featureComposite = m_featureComposite;
-    final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( ) {
+    final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( null )
+    {
       protected Control createContents( final Composite scrollParent, int style )
       {
-        return (Composite)featureComposite.createControl( scrollParent,
-            style );
-      }};
-      creator.createControl( panel, SWT.NONE, SWT.NONE );
-      // sTODO hier nur horizontal scrollen
-      // FIXME test 
-      creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-      
+        return (Composite)featureComposite.createControl( scrollParent, style );
+      }
+    };
+    creator.createControl( panel, SWT.V_SCROLL, SWT.NONE );
+    creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     featureComposite.addModifyListener( this );
 

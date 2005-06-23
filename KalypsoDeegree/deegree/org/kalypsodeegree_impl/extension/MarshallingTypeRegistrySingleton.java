@@ -5,7 +5,7 @@ package org.kalypsodeegree_impl.extension;
  * 
  * @author belger
  */
-public class TypeRegistrySingleton
+public class MarshallingTypeRegistrySingleton
 {
   private static ITypeRegistry m_typeRegistry = null;
 
@@ -24,7 +24,7 @@ public class TypeRegistrySingleton
 
   }
 
-  private TypeRegistrySingleton()
+  private MarshallingTypeRegistrySingleton()
   {
   // wird nicht instantiiert
   }

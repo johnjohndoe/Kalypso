@@ -16,11 +16,11 @@ import org.w3c.dom.Text;
 /**
  * @author doemming
  */
-public class GMLBoundingShapeTypeHandler implements ITypeHandler
+public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
 {
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
   public String getClassName()
   {
@@ -30,7 +30,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   private static String m_nameSpaceURI = XMLHelper.GMLSCHEMA_NS + ":" + "BoundingShapeType";
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
   public String getTypeName()
   {
@@ -38,7 +38,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
   public void marshall( final Object object, final Node node, URL context )
   {
@@ -110,7 +110,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL)
    */
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
   {
@@ -118,7 +118,7 @@ public class GMLBoundingShapeTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
   public String getShortname()
   {

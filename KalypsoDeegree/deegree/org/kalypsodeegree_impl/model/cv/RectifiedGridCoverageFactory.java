@@ -1,8 +1,8 @@
 package org.kalypsodeegree_impl.model.cv;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -48,14 +48,14 @@ public class RectifiedGridCoverageFactory
 
     Element e_rectifiedGridDomain = doc.createElementNS( NSRGC, "rgc:rectifiedGridDomain" );
     RectifiedGridDomain gridDomain = gridCoverage.getGridDomain();
-    ITypeHandler typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName(
+    IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName(
         NSRGC + ":" + "RectifiedGridDomainType" );
     typeHandler.marshall( gridDomain, e_rectifiedGridDomain, null );
     e_rectifiedGridCoverage.appendChild( e_rectifiedGridDomain );
 
     Element e_rangeSet = doc.createElementNS( NSRGC, "rgc:rangeSet" );
     RangeSet rangeSet = gridCoverage.getRangeSet();
-    typeHandler = TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( NSRGC + ":" + "RangeSetType" );
+    typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( NSRGC + ":" + "RangeSetType" );
     typeHandler.marshall( rangeSet, e_rangeSet, null );
     e_rectifiedGridCoverage.appendChild( e_rangeSet );
 

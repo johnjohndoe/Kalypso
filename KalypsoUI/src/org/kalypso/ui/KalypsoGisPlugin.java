@@ -84,6 +84,8 @@ import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
 import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -103,7 +105,7 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.users.User;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
@@ -749,7 +751,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private void registerTypeHandler()
   {
-    final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
 
     try
     {
@@ -759,6 +762,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       registry.registerTypeHandler( new DiagramTypeHandler() );
       registry.registerTypeHandler( new RangeSetTypeHandler() );
       registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+
+      guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

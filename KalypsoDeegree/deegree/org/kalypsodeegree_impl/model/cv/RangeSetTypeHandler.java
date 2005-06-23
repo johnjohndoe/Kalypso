@@ -13,7 +13,7 @@ import java.util.Vector;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,14 +25,14 @@ import org.w3c.dom.Node;
  * @author N. Peiler
  *  
  */
-public class RangeSetTypeHandler implements ITypeHandler
+public class RangeSetTypeHandler implements IMarshallingTypeHandler
 {
   public static final String NSRGC = "http://elbe.wb.tu-harburg.de/rectifiedGridCoverage";
 
   public static final String TYPENAME = NSRGC + ":" + "RangeSetType";
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
   public String getClassName()
   {
@@ -40,7 +40,7 @@ public class RangeSetTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getTypeName()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
    */
   public String getTypeName()
   {
@@ -49,7 +49,7 @@ public class RangeSetTypeHandler implements ITypeHandler
 
   /**
    * 
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
    */
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
 
@@ -81,7 +81,7 @@ public class RangeSetTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
    */
   public Object unmarshall( Node node, URL gmlURL, IUrlResolver urlResolver ) throws TypeRegistryException
   {
@@ -123,7 +123,7 @@ public class RangeSetTypeHandler implements ITypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getShortname()
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
    */
   public String getShortname()
   {

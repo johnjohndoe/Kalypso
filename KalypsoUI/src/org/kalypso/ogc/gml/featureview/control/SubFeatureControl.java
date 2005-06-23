@@ -41,19 +41,9 @@ public class SubFeatureControl extends AbstractFeatureControl
       m_fc = new FeatureComposite( workspace, (Feature)property, m_views );
     else
       m_fc = new ButtonFeatureControl( workspace, feature, getFeatureTypeProperty() );
-    //    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
-    //        | SWT.V_SCROLL );
 
-    // don't forget this line!
-    //    scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-    //    final Control control = m_fc.createControl( scrolledComposite, SWT.NONE );
     final Control control = m_fc.createControl( parent, SWT.NONE );
-    //    control.setSize( control.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-    //    scrolledComposite.setContent( control );
-
     return control;
-    //    return scrolledComposite;
   }
 
   /**
