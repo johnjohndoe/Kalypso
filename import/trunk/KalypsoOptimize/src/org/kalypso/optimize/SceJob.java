@@ -62,8 +62,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.kalypso.java.io.FileUtilities;
-import org.kalypso.java.io.StreamUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.services.calculation.service.CalcJobServiceException;

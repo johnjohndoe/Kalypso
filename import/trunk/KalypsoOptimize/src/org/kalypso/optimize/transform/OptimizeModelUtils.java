@@ -55,7 +55,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xpath.XPathAPI;
-import org.kalypso.java.xml.XMLUtilities;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
