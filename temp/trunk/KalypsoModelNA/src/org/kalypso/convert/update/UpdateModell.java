@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -77,7 +77,7 @@ public class UpdateModell
   {
     try
     {
-      final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
       UpdateModell modell2 = new UpdateModell();
       modell2.updateIt();

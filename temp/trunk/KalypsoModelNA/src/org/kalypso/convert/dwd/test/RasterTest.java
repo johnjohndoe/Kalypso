@@ -59,7 +59,7 @@
 //import org.kalypsodeegree.model.feature.Feature;
 //import org.kalypsodeegree.model.feature.GMLWorkspace;
 //import org.kalypsodeegree_impl.extension.ITypeRegistry;
-//import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+//import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 //
 //public class RasterTest extends TestCase
 //{
@@ -70,7 +70,7 @@
 //        "../resources/Kriging_GewichteWeisseElster.txt" );
 //    try
 //    {
-//      final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+//      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 //      registry.registerTypeHandler( new ObservationLinkHandler() );
 //      final InputStreamReader inputStreamReader = new InputStreamReader( resourceAsStream );
 //      reader = new KrigingReader(Logger.global, inputStreamReader );

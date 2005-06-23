@@ -33,7 +33,7 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
@@ -156,7 +156,7 @@ public class ImportShapeFile
 
       //			FeatureTypeProperty o = shapeFT.getProperty("TEILGEBNR");
 
-      final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
       GMLSchema gmlSchema = GMLSchemaCatalog.getSchema( schemaURL );
       FeatureType targetFT = gmlSchema.getFeatureType( "Node" );

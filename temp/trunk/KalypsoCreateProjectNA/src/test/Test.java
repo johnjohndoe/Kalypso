@@ -14,7 +14,7 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -31,7 +31,7 @@ public class Test {
 
 	public static final String SHP_FILE_BASE = "D://Daten//DataForCK//KalypsoQM//GIS//hydrotope_qm";//"d://Kellinghusen//shp//pegel_hydrologie";//"d://hydrotopesdata//hydrotope_qm";
 
-	final static ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+	final static ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
 	public static void main(String[] args) {
 		ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();

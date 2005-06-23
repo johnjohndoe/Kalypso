@@ -64,7 +64,7 @@ import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -100,7 +100,7 @@ public class UpdateModellKollau
     GMLSchemaCatalog.init( catalog, FileUtilities.createNewTempDir( "schemaCache" ) );
     try
     {
-      final ITypeRegistry registry = TypeRegistrySingleton.getTypeRegistry();
+      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       registry.registerTypeHandler( new ObservationLinkHandler() );
       registry.registerTypeHandler( new DiagramTypeHandler() );
       UpdateModellKollau modell2 = new UpdateModellKollau();
