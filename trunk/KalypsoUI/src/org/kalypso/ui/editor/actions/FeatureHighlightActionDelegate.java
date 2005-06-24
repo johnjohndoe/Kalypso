@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FeatureHighlightActionDelegate implements IActionDelegate
 {
 
-  private ICommandableFeatureSelection m_selection = null;
+  private IFeatureThemeSelection m_selection = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -82,9 +82,9 @@ public class FeatureHighlightActionDelegate implements IActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    if( selection instanceof ICommandableFeatureSelection )
+    if( selection instanceof IFeatureThemeSelection )
     {
-      m_selection = (ICommandableFeatureSelection)selection;
+      m_selection = (IFeatureThemeSelection)selection;
       // TODO check maxOccurs
       if( !m_selection.isEmpty() )
       {

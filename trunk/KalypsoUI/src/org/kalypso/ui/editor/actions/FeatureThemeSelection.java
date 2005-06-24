@@ -30,25 +30,42 @@
 package org.kalypso.ui.editor.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
- * IFeatureThemeSelection
+ * CommandableFeatureAction
  * <p>
+ * decorates a structuredselection and provides additional an
+ * 
+ * @see org.kalypso.ogc.gml.mapmodel.CommandableWorkspace editors that provide featureselections should overwrite
+ *      getSelection()
+ * @see org.eclipse.jface.viewers.ISelectionProvider and deliver this type of selection. Actions on the other hand
+ *      should cast for this type of selection and use the CommanableWorkspace as Commandtarget.
  * 
  * created by
  * 
- * @author belger
+ * @author doemming (24.05.2005)
  */
-public interface ICommandableFeatureSelection extends IStructuredSelection
+public class FeatureThemeSelection extends CommandableFeatureSelection implements IFeatureThemeSelection
 {
-  public CommandableWorkspace getCommandableWorkspace();
+  private final IKalypsoFeatureTheme m_theme;
 
-  public FeatureTypeProperty getFocusedFeatureTypeProperty();
+  public FeatureThemeSelection( final IKalypsoFeatureTheme theme, final IStructuredSelection selection,
+      final FeatureTypeProperty ftp, final Feature selectedRow, int selectionID )
+  {
+    super( theme.getWorkspace(), selection, ftp, selectedRow, selectionID );
+    
+    m_theme = theme;
+  }
 
-  public Feature getFocusedFeature();
-
-  public int getSelectionId();
+  /**
+   * 
+   * @see org.kalypso.ui.editor.actions.IFeatureThemeSelection#getKalypsoFeatureTheme()
+   */
+  public IKalypsoFeatureTheme getKalypsoFeatureTheme()
+  {
+    return m_theme;
+  }
 }

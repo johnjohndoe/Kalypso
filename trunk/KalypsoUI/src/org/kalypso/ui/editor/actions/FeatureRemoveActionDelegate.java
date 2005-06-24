@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 public class FeatureRemoveActionDelegate implements IActionDelegate
 {
 
-  private ICommandableFeatureSelection m_selection = null;
+  private IFeatureThemeSelection m_selection = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -91,9 +91,9 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    if( selection instanceof ICommandableFeatureSelection && !selection.isEmpty() )
+    if( selection instanceof IFeatureThemeSelection && !selection.isEmpty() )
     {
-      m_selection = (ICommandableFeatureSelection)selection;
+      m_selection = (IFeatureThemeSelection)selection;
       if( m_selection.size() >= 2 )
       {
         action.setEnabled( true );

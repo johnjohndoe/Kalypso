@@ -145,33 +145,33 @@
          point="org.eclipse.ui.views">
       <category
             name="Kalypso"
-            id="Kalypso">
+            id="org.kalypso.ui.kalypso">
       </category>
       <view
             name="Zeitreihenbrowser"
             icon="icons/repository/repository.gif"
-            category="Kalypso"
+            category="org.kalypso.ui.kalypso"
             class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
             id="org.kalypso.ui.repository.view.RepositoryExplorerPart">
       </view>
       <view
             name="Diagram QuickView"
             icon="icons/kalypso_odt.gif"
-            category="Kalypso"
+            category="org.kalypso.ui.kalypso"
             class="org.kalypso.ogc.sensor.view.DiagramViewPart"
             id="org.kalypso.ogc.sensor.view.DiagramViewPart">
       </view>
       <view
             name="Table QuickView"
             icon="icons/kalypso_ott.gif"
-            category="Kalypso"
+            category="org.kalypso.ui.kalypso"
             class="org.kalypso.ogc.sensor.view.TableViewPart"
             id="org.kalypso.ogc.sensor.view.TableViewPart">
       </view>
       <view
             name="Style Editor"
             icon="icons/full/elcl16/kde_filter.gif"
-            category="Kalypso"
+            category="org.kalypso.ui.kalypso"
             class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart"
             id="org.kalypso.ui.editor.mapeditor.views.styleeditor">
       </view>
@@ -179,7 +179,7 @@
             allowMultiple="false"
             icon="icons/kalypso16.gif"
             class="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
-            category="Kalypso"
+            category="org.kalypso.ui.kalypso"
             name="Edit Optionen"
             id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
    </extension>

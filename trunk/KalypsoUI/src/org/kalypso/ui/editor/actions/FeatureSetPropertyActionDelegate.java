@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 public class FeatureSetPropertyActionDelegate implements IActionDelegate
 {
 
-  private ICommandableFeatureSelection m_selection = null;
+  private IFeatureThemeSelection m_selection = null;
 
   private FeatureTypeProperty m_ftp = null;
 
@@ -67,9 +67,9 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
 
       final IKalypsoFeatureTheme theme = m_selection.getKalypsoFeatureTheme();
       final CommandableWorkspace workspace = theme.getWorkspace();
-      final FeatureTypeProperty ftp = m_selection.getSelectedFeatureTypeProperty();
+      final FeatureTypeProperty ftp = m_selection.getFocusedFeatureTypeProperty();
       final HashMap map = new HashMap();
-      final Object value = m_selection.getSelectedRow().getProperty( ftp.getName() );
+      final Object value = m_selection.getFocusedFeature().getProperty( ftp.getName() );
       map.put( m_ftp.getName(), value );
       final Feature[] fes = (Feature[])m_selection.toList().toArray( new Feature[m_selection.size()] );
       final ModifyFeatureCommand command = new ModifyFeatureCommand( workspace, fes, map );
@@ -92,10 +92,10 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    if( selection instanceof ICommandableFeatureSelection && !selection.isEmpty() )
+    if( selection instanceof IFeatureThemeSelection && !selection.isEmpty() )
     {
-      m_selection = (ICommandableFeatureSelection)selection;
-      m_ftp = m_selection.getSelectedFeatureTypeProperty();
+      m_selection = (IFeatureThemeSelection)selection;
+      m_ftp = m_selection.getFocusedFeatureTypeProperty();
       if( m_ftp != null && m_selection.size() >= 2 )
       {
         action.setEnabled( true );

@@ -64,9 +64,6 @@ public class FeatureDialog implements IFeatureDialog
     else
       fvType = FeatureviewHelper.createFeatureviewFromFeatureType( m_feature.getFeatureType() );
 
-    //    final GMLWorkspace workspace = new GMLWorkspace_Impl( new FeatureType[] {
-    // m_feature.getFeatureType() }, m_feature, null, null, null,
-    // m_feature.getFeatureType().getAnnotationMap() );
     final CommandableWorkspace commwork;
     if( m_workspace instanceof CommandableWorkspace )
       commwork = (CommandableWorkspace)m_workspace;

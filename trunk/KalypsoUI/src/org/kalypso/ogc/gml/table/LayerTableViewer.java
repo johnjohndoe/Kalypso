@@ -95,7 +95,7 @@ import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.actions.CommandableFeatureSelection;
+import org.kalypso.ui.editor.actions.FeatureThemeSelection;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
@@ -409,9 +409,12 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( input == null || !( input instanceof GisTemplateFeatureTheme ) )
       return;
     final FeatureType featureType = ( (GisTemplateFeatureTheme)input ).getFeatureType();
-    if( featureType == null )
+    final Table table = getTable();
+
+    if( featureType == null || table == null || table.isDisposed() )
       return;
-    final TableColumn[] columns = getTable().getColumns();
+    
+    final TableColumn[] columns = table.getColumns();
     boolean changed = false;
     for( int i = 0; i < columns.length; i++ )
     {
@@ -877,7 +880,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final CommandableWorkspace workspace = theme.getWorkspace();
     if( workspace == null )
       return selection;
-    return new CommandableFeatureSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE, m_selectionID );
+    return new FeatureThemeSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE, m_selectionID );
   }
   
   protected void inputChanged( final Object input, final Object oldInput )
