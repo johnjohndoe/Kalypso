@@ -190,9 +190,6 @@
 		<ant antfile="${workspace}/KalypsoUserService/etc/ant/build.xml" target="build-war" inheritAll="false">
 			<property file="deploy.properties" />
 		</ant>
-		<copy todir="${workspace}/KalypsoUserService/build/build-war/WEB-INF/lib">
-			<fileset dir="${workspace}/KalypsoPSICompactAdapter/build/deploy" includes="**/*.jar" />
-		</copy>
 	</target>
 
 	<target name="build-ObsService" depends="build-basic">
