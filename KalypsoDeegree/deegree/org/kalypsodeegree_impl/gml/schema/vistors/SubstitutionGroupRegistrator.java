@@ -23,10 +23,10 @@ public class SubstitutionGroupRegistrator implements GMLSchemaVisitor
     m_substitutionGroup = m_type.getSubstitutionGroup();
   }
 
-  public void visit( final GMLSchema schema )
+  public boolean visit( final GMLSchema schema )
   {
     if( m_substitutionGroup == null || m_substitutionGroup.length() < 1 )
-      return;
+      return false;
     FeatureType[] featureTypes = schema.getFeatureTypes();
     for( int i = 0; i < featureTypes.length; i++ )
       visit( featureTypes[i] );
@@ -42,6 +42,7 @@ public class SubstitutionGroupRegistrator implements GMLSchemaVisitor
         m_parsedUrls.add( url );
       }
     }
+    return false;
   }
 
   private void visit( final FeatureType ft )

@@ -69,7 +69,9 @@ import org.kalypsodeegree_impl.gml.GMLFactory;
 import org.kalypsodeegree_impl.gml.GMLNameSpace_Impl;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaUtils;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
+import org.kalypsodeegree_impl.gml.schema.vistors.CollectFeatureTypesSchemaVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.w3c.dom.Document;
@@ -158,7 +160,7 @@ public final class GmlSerializer
     final GMLSchema schema = new GMLSchema( schemaURL );
 
     // create feature and workspace gml
-    final FeatureType[] types = schema.getFeatureTypes();
+    final FeatureType[] types = GMLSchemaUtils.getAllFeatureTypesFromSchema( schema );
     final Feature feature = FeatureFactory.createFeature( gmlFeature, types, gmlURL, null );
 
     // nicht die echte URL der schemaLocation, sondern dass, was im gml steht!
@@ -247,7 +249,7 @@ public final class GmlSerializer
       final URL context, final IUrlResolver urlResolver ) throws Exception
   {
     // create feature and workspace gml
-    final FeatureType[] types = schema.getFeatureTypes();
+    final FeatureType[] types = GMLSchemaUtils.getAllFeatureTypesFromSchema( schema );
     final Feature feature = FeatureFactory.createFeature( gml.getRootFeature(), types, context, urlResolver );
 
     return new GMLWorkspace_Impl( types, feature, context, gml.getSchemaLocationName(), schema.getTargetNS(), schema

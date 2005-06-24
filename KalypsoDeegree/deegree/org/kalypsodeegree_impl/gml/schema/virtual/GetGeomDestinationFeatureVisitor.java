@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -105,7 +107,8 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
     // get childs
     final Feature[] destFEs;
 
-    if( feature.getFeatureType().getMaxOccurs( linkProp ) > 1 )
+    int maxOccurs = feature.getFeatureType().getMaxOccurs( linkProp );
+    if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
     {
       destFEs = m_workspace.resolveLinks( feature, linkProp );
     }

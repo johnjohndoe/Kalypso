@@ -225,6 +225,8 @@ public class KrigingTask extends Task
       final FeatureType mapFT = schema.getFeatureType( "MappingObservation" );
 
       final Feature rootFE = FeatureFactory.createFeature( "1", mapColFT );
+      
+      
       final GMLWorkspace resultWorkspace = new GMLWorkspace_Impl( schema.getFeatureTypes(), rootFE, m_context, null,
           schema.getTargetNS(), schema.getNamespaceMap() );
 

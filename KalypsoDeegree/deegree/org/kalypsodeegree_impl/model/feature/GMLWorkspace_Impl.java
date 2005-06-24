@@ -153,6 +153,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_rootFeature;
   }
 
+  /**
+   * 
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureTypes()
+   */
   public FeatureType[] getFeatureTypes()
   {
     return m_featureTypes;

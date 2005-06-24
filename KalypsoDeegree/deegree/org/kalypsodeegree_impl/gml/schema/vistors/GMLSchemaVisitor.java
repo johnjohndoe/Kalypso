@@ -4,5 +4,5 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 
 public interface GMLSchemaVisitor
 {
-  void visit( GMLSchema schema );
+  boolean visit( GMLSchema schema );
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 import org.deegree.gml.GMLException;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.gml.schema.vistors.GMLSchemaVisitor;
+import org.kalypsodeegree_impl.gml.schema.vistors.RecursiveSchemaVisitor;
 import org.kalypsodeegree_impl.gml.schema.vistors.SubstitutionGroupRegistrator;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -98,6 +99,11 @@ public class GMLSchema
     return getNameSpace( "xmlns" );
   }
 
+  /**
+   * 
+   * @return the featuretypes that are defined in this schema, <br>
+   *         featuretypes of imported schemas are not included
+   */
   public FeatureType[] getFeatureTypes()
   {
     if( m_featureTypes == null )
@@ -110,8 +116,7 @@ public class GMLSchema
       {
         e.printStackTrace();
       }
-
-    Collection result = m_featureTypes.values();
+    final Collection result = m_featureTypes.values();
     return (FeatureType[])result.toArray( new FeatureType[result.size()] );
   }
 
@@ -242,10 +247,10 @@ public class GMLSchema
     return m_ns;
   }
 
-  public void accept( GMLSchemaVisitor visitor )
+  public void accept( final GMLSchemaVisitor visitor )
   {
-    visitor.visit( this );
-
+    final RecursiveSchemaVisitor outer = new RecursiveSchemaVisitor( visitor );
+    outer.visit( this );
   }
 
   public GMLSchema[] getImportedSchemas()

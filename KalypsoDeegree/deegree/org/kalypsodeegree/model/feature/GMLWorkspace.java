@@ -14,6 +14,10 @@ public interface GMLWorkspace extends ModellEventProvider
 {
   public Feature getRootFeature();
 
+  /**
+   * 
+   * @return all FeatureTypes that can be used somewhere in the schema 
+   */
   public FeatureType[] getFeatureTypes();
 
   public Feature[] getFeatures( final FeatureType ft );
