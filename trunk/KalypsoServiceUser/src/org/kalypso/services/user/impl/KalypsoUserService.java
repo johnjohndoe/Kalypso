@@ -43,12 +43,16 @@ package org.kalypso.services.user.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.user.IUserService;
@@ -124,6 +128,21 @@ public class KalypsoUserService implements IUserService
 
       final Properties props = new Properties();
       props.load( stream );
+
+      // step through properties and 
+      final Set keys = props.keySet();
+      for( final Iterator it = keys.iterator(); it.hasNext(); )
+      {
+        final String key = (String)it.next();
+        if( key.endsWith( "URL" ) )
+        {
+          final String path = props.getProperty( key );
+          final URL resolved = UrlResolverSingleton.resolveUrl( conf.toURL() , path);
+          final String fullPath = resolved.toExternalForm();
+
+          props.setProperty( key, fullPath );
+        }
+      }
 
       // try to instanciate our commiter
       final String className = props.getProperty( PROP_PROVIDER );
@@ -237,7 +256,7 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#getScenarioDescriptions()
    */
-  public String[] getScenarioDescriptions() throws RemoteException
+  public String[] getScenarioDescriptions()
   {
     return m_scenarioDescriptions;
   }
