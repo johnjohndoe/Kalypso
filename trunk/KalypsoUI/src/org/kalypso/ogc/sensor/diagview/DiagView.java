@@ -184,23 +184,26 @@ public class DiagView extends ObsView
       if( keyAxes.length == 0 )
         return;
 
-      final IAxis dateAxis = keyAxes[0];
+      final IAxis keyAxis = keyAxes[0];
 
       for( int i = 0; i < valueAxis.length; i++ )
       {
+        if( keyAxis == valueAxis[i] )
+          continue;
+        
         final String type = valueAxis[i].getType();
         if( !type.equals( ignoreType ) )
         {
           final AxisMapping[] mappings = new AxisMapping[2];
 
           // look for a date diagram axis
-          DiagramAxis daDate = getDiagramAxis( dateAxis.getType() );
+          DiagramAxis daDate = getDiagramAxis( keyAxis.getType() );
           if( daDate == null )
           {
-            daDate = DiagViewUtils.createAxisFor( dateAxis );
+            daDate = DiagViewUtils.createAxisFor( keyAxis );
             addAxis( daDate );
           }
-          mappings[0] = new AxisMapping( dateAxis, daDate );
+          mappings[0] = new AxisMapping( keyAxis, daDate );
 
           // look for a value diagram axis
           DiagramAxis daValue = getDiagramAxis( type );

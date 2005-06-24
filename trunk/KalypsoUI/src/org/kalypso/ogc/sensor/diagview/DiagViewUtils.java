@@ -272,47 +272,49 @@ public class DiagViewUtils
   /**
    * Creates a diagram axis according to the given IObservation axis
    * 
-   * @param axis
    * @return diagram axis
    */
   public static DiagramAxis createAxisFor( final IAxis axis )
   {
-    return createAxisFor( axis.getType(), axis.getName(), axis.getUnit() );
+    return createAxisFor( axis.getType(), axis.getName(), axis.getUnit(), axis.isKey() );
   }
 
   /**
    * Creates a diagram axis according to the given IObservation axis
    * 
-   * @param axisType
-   * @param label
-   * @param unit
    * @return diagram axis
    */
-  public static DiagramAxis createAxisFor( final String axisType, final String label, final String unit )
+  public static DiagramAxis createAxisFor( final String axisType, final String label, final String unit,
+      final boolean isKey )
   {
+    final String direction = isKey == true ? DiagramAxis.DIRECTION_HORIZONTAL : DiagramAxis.DIRECTION_VERTICAL;
+    String position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_LEFT;
+
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
-      return new DiagramAxis( axisType, "date", label, unit, DiagramAxis.DIRECTION_HORIZONTAL,
-          DiagramAxis.POSITION_BOTTOM, false );
+      return new DiagramAxis( axisType, "date", label, unit, direction, position, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-      return new DiagramAxis( axisType, "double", label, unit, DiagramAxis.DIRECTION_VERTICAL,
-          DiagramAxis.POSITION_LEFT, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
-      return new DiagramAxis( axisType, "double", label, unit, DiagramAxis.DIRECTION_VERTICAL,
-          DiagramAxis.POSITION_LEFT, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+
+    if( axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+
+    position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return new DiagramAxis( axisType, "double", label, unit, DiagramAxis.DIRECTION_VERTICAL,
-          DiagramAxis.POSITION_RIGHT, true, null, new Double( 0.8 ) );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, new Double( 0.8 ) );
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
-      return new DiagramAxis( axisType, "double", label, unit, DiagramAxis.DIRECTION_VERTICAL,
-          DiagramAxis.POSITION_RIGHT, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+
+    if( axisType.equals( TimeserieConstants.TYPE_EVAPORATION ) )
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
     // default axis
-    return new DiagramAxis( axisType, "double", label, unit, DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT,
-        false );
+    return new DiagramAxis( axisType, "double", label, unit, direction, DiagramAxis.POSITION_LEFT, false );
   }
 
   public static void applyXMLTemplate( final DiagView view, final ObsdiagviewType xml, final URL context,

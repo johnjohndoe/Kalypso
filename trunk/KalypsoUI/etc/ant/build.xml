@@ -27,6 +27,7 @@
 		<echo message="Builds the most common project (needed for dependency from services projects)"/>
 		
 		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
+	  	<copy file="${workspace}/KalypsoCoreServices/build/deploy/KalypsoCoreServices.jar" todir="${workspace}/KalypsoUI/lib" overwrite="true"/>
 	</target>
 	
 	<target name="proxy-UserService" depends="build-core">

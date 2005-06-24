@@ -431,6 +431,9 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public NumberFormat getNumberFormat( int column )
   {
+    if( column == 0 )
+      return TimeserieUtils.getNumberFormatFor( m_sharedAxis.getType() );
+    
     synchronized( m_columns )
     {
       final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
