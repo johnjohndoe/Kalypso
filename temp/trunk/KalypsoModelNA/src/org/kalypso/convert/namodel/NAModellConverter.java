@@ -70,12 +70,15 @@ import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaUtils;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.kalypsodeegree_impl.gml.schema.vistors.CollectFeatureTypesSchemaVisitor;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -168,8 +171,10 @@ public class NAModellConverter
     final GMLSchema modelGmlSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
     final Document modelSchema = modelGmlSchema.getSchema();
 
-    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema.getFeatureTypes(), modelRootFeature,
-        null, " project:/.model/schema/namodell.xsd", modelSchema.getNamespaceURI(), modelGmlSchema.getNamespaceMap() );
+    FeatureType[] featureTypes = GMLSchemaUtils.getAllFeatureTypesFromSchema( modelGmlSchema );
+
+    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( featureTypes, modelRootFeature, null,
+        " project:/.model/schema/namodell.xsd", modelSchema.getNamespaceURI(), modelGmlSchema.getNamespaceMap() );
     GmlSerializer.serializeWorkspace( new FileWriter( modelGmlFile ), modelWorkspace );
 
     //    
