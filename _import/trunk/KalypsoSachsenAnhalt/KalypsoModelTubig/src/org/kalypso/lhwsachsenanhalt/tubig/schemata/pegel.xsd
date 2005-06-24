@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.tubig.pegel" version="0.1" xmlns:tubigpegel="org.kalypso.tubig.pegel" xmlns:tubigcommon="org.kalypso.tubig.common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+<schema xmlns:tubigpegel="org.kalypso.tubig.pegel" xmlns:tubigcommon="org.kalypso.tubig.common" xmlns:tubigombrometer="org.kalypso.tubig.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="org.kalypso.tubig.pegel" elementFormDefault="qualified" version="0.1">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
 	<import namespace="org.kalypso.tubig.common" schemaLocation="common.xsd"/>
+	<import namespace="org.kalypso.tubig.ombrometer" schemaLocation="ombrometer.xsd"/>
 	<element name="PegelCollectionAssociation" type="tubigpegel:PegelCollectionAssociationType"/>
 	<complexType name="PegelCollectionAssociationType">
 		<complexContent>
@@ -34,15 +35,15 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Pegel" abstract="false" type="tubigpegel:PegelType" substitutionGroup="gml:_Feature"/>
+	<element name="Pegel" type="tubigpegel:PegelType" abstract="false" substitutionGroup="gml:_Feature"/>
 	<complexType name="PegelType">
 		<complexContent>
 			<extension base="tubigcommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Messstellennummer" type="string" minOccurs="1"/>
-					<element name="Kurz_Name" type="string" minOccurs="1"/>
+					<element name="Messstellennummer" type="string"/>
+					<element name="Kurz_Name" type="string"/>
 					<element name="istEingabePegel" type="boolean"/>
 					<element name="istErgebnisPegel" type="boolean"/>
 					<!-- lokal, W und Q (tolle Zeitreihe) *.vw -->
@@ -62,10 +63,34 @@
 					<!-- lokal;   -->
 					<element name="Niederschlag" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<!-- hier kommen ggf. noch die Parameter aus der *.par hin -->
+					<element name="gewichtung" type="tubigpegel:GewichtungsAssociationType"  maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	<!-- Relation TG nach RelationsFeature -->
+	<complexType name="GewichtungsAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigpegel:GewichtungsElement"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- RelationsFeature -->
+	<element name="GewichtungsElement" type="tubigpegel:GewichtungsType" substitutionGroup="gml:_Feature"/>
+	<complexType name="GewichtungsType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="faktor" type="double"/>
+					<element name="ombrometerMember" type="tubigombrometer:OmbrometerAssociationType" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--  -->
 	<element name="WasserlaufModell" type="tubigpegel:WasserlaufModellType" substitutionGroup="tubigpegel:Pegel"/>
 	<complexType name="WasserlaufModellType">
 		<complexContent>
