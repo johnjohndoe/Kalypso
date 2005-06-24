@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
 <plugin
    id="org.kalypso.dcadapter"
    name="KalypsoDatacenterAdapter"
    version="0.0.5"
-   provider-name="org.kalypso">
+   provider-name="org.kalypso"
+   class="org.kalypso.dcadapter.DataCenterPlugin">
 
    <runtime>
       <library name="lib/edbc.jar">
@@ -17,6 +19,7 @@
 
    <requires>
       <import plugin="org.kalypso.core" export="false"/>
+      <import plugin="org.eclipse.ui"/>
    </requires>
 
    <extension
@@ -32,6 +35,11 @@
             factory="org.kalypso.dcadapter.DataCenterRepositoryFactory"
             name="DataCenterTUHH"
             conf="jdbc:edbc://134.28.87.20:WB7/elbe::abwb_v2/INGRES#ingres#ingres42">
+      </repository>
+      <repository
+            factory="org.kalypso.dcadapter.DataCenterRepositoryFactory"
+            name="DataCenterFlows"
+            conf="jdbc:edbc://134.28.87.75:II7/vn_datacenter::dbdatacenter/INGRES#ingres#ingres3">
       </repository>
    </extension>
 

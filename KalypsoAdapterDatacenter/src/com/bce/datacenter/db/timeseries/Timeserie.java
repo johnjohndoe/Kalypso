@@ -377,6 +377,7 @@ public class Timeserie extends Persistent
 
       final Vector list = new Vector();
 
+      // TODO Performanz verbessern!!!
       while( set.next() )
       {
         final java.util.Date datum = set.getTimestamp( 1 );
