@@ -54,6 +54,6 @@ public class DataCenterUtils
   {
     final String key = "TYPE_" + datacenterType;
     
-    return getProperties().getProperty( key );
+    return getProperties().getProperty( key, "W" );
   }
 }
