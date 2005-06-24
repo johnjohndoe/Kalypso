@@ -50,7 +50,7 @@ Feature Requests:
 	Kommentar:
 	Bearbeiter:	Huebsch
 
-7) Regionalisierung
+7) Internationalisierung
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
@@ -77,6 +77,14 @@ Feature Requests:
 	Bearbeiter:	
 
 10) Versiegelte Fläche im Teilgebiet wird nicht bei Import gesetzt, sollte durch Import berechnet werden (evtl. aus Hydrotopimport).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+	
+11) Anfnagswerte in Schema übernehmen
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
