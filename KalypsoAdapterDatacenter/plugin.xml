@@ -28,18 +28,8 @@
          point="org.kalypso.repository.factories">
       <repository
             factory="org.kalypso.dcadapter.DataCenterRepositoryFactory"
-            name="DataCenter"
-            conf="jdbc:edbc://pc072:II7/bce_pc072::kalypso/INGRES#ingres#ingres">
-      </repository>
-      <repository
-            factory="org.kalypso.dcadapter.DataCenterRepositoryFactory"
-            name="DataCenterTUHH"
-            conf="jdbc:edbc://134.28.87.20:WB7/elbe::abwb_v2/INGRES#ingres#ingres42">
-      </repository>
-      <repository
-            factory="org.kalypso.dcadapter.DataCenterRepositoryFactory"
-            name="DataCenterFlows"
-            conf="jdbc:edbc://134.28.87.75:II7/vn_datacenter::dbdatacenter/INGRES#ingres#ingres3">
+            name="Datenbank DataCenter"
+            >
       </repository>
    </extension>
 
