@@ -306,4 +306,12 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   //    //
   //    // return menuMgr;
   //  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( final Class adapter )
+  {
+    return super.getAdapter( adapter );
+  }
 }

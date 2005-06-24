@@ -203,8 +203,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public void fireModellEvent( final ModellEvent event )
   {
-    for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
-      ( (ModellEventListener)iter.next() ).onModellChange( event );
+    // use array instead of iterator, because the listener list may change in
+    // response to this event (lead to a ConcurrentodificationException)
+    final ModellEventListener[] objects = (ModellEventListener[])m_listener.toArray( new ModellEventListener[m_listener
+        .size()] );
+    for( int i = 0; i < objects.length; i++ )
+      objects[i].onModellChange( event );
   }
 
   /**

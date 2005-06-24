@@ -33,7 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
@@ -59,21 +59,18 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
 
   private final IStructuredSelection m_selection;
 
-  private final IKalypsoFeatureTheme m_theme;
-
   private final FeatureTypeProperty m_ftp;
 
   private final Feature m_selectedRow;
 
   private final int m_selectionId;
 
-  /**
-   *  
-   */
-  public CommandableFeatureSelection( final IKalypsoFeatureTheme theme, final IStructuredSelection selection,
+  private final CommandableWorkspace m_workspace;
+
+  public CommandableFeatureSelection( final CommandableWorkspace workspace, final IStructuredSelection selection,
       final FeatureTypeProperty ftp, final Feature selectedRow, int selectionID )
   {
-    m_theme = theme;
+    m_workspace = workspace;
     m_selection = selection;
     m_ftp = ftp;
     m_selectedRow = selectedRow;
@@ -115,34 +112,32 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   }
 
   /**
-   * 
-   * @see org.kalypso.ui.editor.actions.ICommandableFeatureSelection#getKalypsoFeatureTheme()
+   * @see org.kalypso.ui.editor.actions.IFeatureThemeSelection#getFocusedFeatureTypeProperty()
    */
-  public IKalypsoFeatureTheme getKalypsoFeatureTheme()
+  public FeatureTypeProperty getFocusedFeatureTypeProperty()
   {
-    return m_theme;
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.actions.ICommandableFeatureSelection#getSelectedFeatureTypeProperty()
-   */
-  public FeatureTypeProperty getSelectedFeatureTypeProperty()
-  {
-    // TODO Auto-generated method stub
     return m_ftp;
   }
 
-  public Feature getSelectedRow()
+  public Feature getFocusedFeature()
   {
     return m_selectedRow;
   }
 
   /**
-   * @see org.kalypso.ui.editor.actions.ICommandableFeatureSelection#getSelectionId()
+   * @see org.kalypso.ui.editor.actions.IFeatureThemeSelection#getSelectionId()
    */
   public int getSelectionId()
   {
     return m_selectionId;
 
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.actions.ICommandableFeatureSelection#getCommandableWorkspace()
+   */
+  public CommandableWorkspace getCommandableWorkspace()
+  {
+    return m_workspace;
   }
 }

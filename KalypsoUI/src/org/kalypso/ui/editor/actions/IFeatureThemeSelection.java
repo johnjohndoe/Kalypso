@@ -29,8 +29,7 @@
  */
 package org.kalypso.ui.editor.actions;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
@@ -40,11 +39,11 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * 
  * created by
  * 
- * @author belger
+ * @author doemming (24.05.2005)
  */
-public interface ICommandableFeatureSelection extends IStructuredSelection
+public interface IFeatureThemeSelection extends ICommandableFeatureSelection
 {
-  public CommandableWorkspace getCommandableWorkspace();
+  public IKalypsoFeatureTheme getKalypsoFeatureTheme();
 
   public FeatureTypeProperty getFocusedFeatureTypeProperty();
 
