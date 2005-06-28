@@ -3,7 +3,7 @@
 <project name="KalypsoOptimizer-binding" default="deploy">
 	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
 
-	<property name="project" value="${workspace}/KalypsoOptimizePlugin" />
+	<property name="project" value="${workspace}/KalypsoOptimize" />
 	<property name="project-name" value="optimizerBinding" />
   	<patternset id="binding.schemata">
  	    <include name="etc/schemas/**/*.xsd"/>
