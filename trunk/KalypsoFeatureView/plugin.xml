@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.featureview"
+   name="KalypsoFeatureView Plug-in"
+   version="0.0.1"
+   provider-name=""
+   class="org.kalypso.featureview.KalypsoFeatureViewPlugin">
+
+   <runtime>
+      <library name="KalypsoFeatureView.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.deegree"/>
+      <import plugin="org.kalypso.ui"/>
+   </requires>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.kalypso.featureview.views.FeatureView"
+            icon="icons/sample.gif"
+            category="org.kalypso.ui.kalypso"
+            name="Feature View"
+            id="org.kalypso.featureview.views.FeatureView"/>
+   </extension>
+
+</plugin>
