@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <project name="PSICompactAdapterBuild" default="deploy">
 
-	<property name="project" value="${workspace}/KalypsoPSICompactAdapter" />
+	<property name="project" value="${workspace}/KalypsoAdapterPSICompact" />
 
 	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
-	<property name="project-name" value="KalypsoPSICompactAdapter" />
+	<property name="project-name" value="KalypsoAdapterPSICompact" />
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoRepository/build/deploy" includes="**/*.jar"/>
-		<fileset dir="${workspace}/KalypsoCoreServices/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
 	</path>
 	
 	<!-- overriden to also copy non-java files -->

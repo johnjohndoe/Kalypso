@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <project name="KalypsoSpreePlugin" default="deploy">
 
-	<property name="project" value="${workspace}/KalypsoSpreePlugin" />
+	<property name="project" value="${workspace}/KalypsoModelSpree" />
 
 	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
-	<property name="project-name" value="KalypsoSpreePlugin" />
+	<property name="project-name" value="KalypsoModelSpree" />
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
@@ -14,7 +14,7 @@
 		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar"/>
-		<fileset dir="${workspace}/KalypsoCalcService/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoServiceCalc/build/deploy" includes="**/*.jar"/>
 		
 	</path>
 
