@@ -5,11 +5,10 @@
  */
 package org.kalypso.interpolation.grid;
 
-import java.io.BufferedOutputStream;
-import java.io.EOFException;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.List;
@@ -694,7 +693,7 @@ public class Grid implements IGrid
       out = File.createTempFile( m_id, Grid.DEFAULT_SUFFIX );
     int[][] newRange = null;
     GM_Object intersection = null;
-    BufferedOutputStream bw = new BufferedOutputStream( new FileOutputStream( out ) );
+    BufferedWriter bw = new BufferedWriter( new FileWriter( out ) );
     System.out.print( "\n" + "Exporting Grid..." );
     try
     {
@@ -712,19 +711,19 @@ public class Grid implements IGrid
       }
       else
         intersection = getExtend();
-      bw.write( "ncols ".getBytes() );
-      bw.write( m_cols );
-      bw.write( "\nnrows ".getBytes() );
-      bw.write( m_rows );
-      bw.write( "\nxllcorner ".getBytes() );
-      bw.write( String.valueOf( m_env.getEnvelope().getMin().getX() ).getBytes() );
-      bw.write( "\nyllcorner ".getBytes() );
-      bw.write( String.valueOf( m_env.getEnvelope().getMin().getY() ).getBytes() );
-      bw.write( "\ncellsize ".getBytes() );
-      bw.write( String.valueOf( m_cellsize ).getBytes() );
-      bw.write( "\nnodata_value ".getBytes() );
-      bw.write( nodata.getBytes() );
-      bw.write( "\n".getBytes() );
+      bw.write( "ncols " );
+      bw.write( String.valueOf( m_cols ) );
+      bw.write( "\nnrows " );
+      bw.write( String.valueOf( m_rows ) );
+      bw.write( "\nxllcorner " );
+      bw.write( String.valueOf( m_env.getEnvelope().getMin().getX() ) );
+      bw.write( "\nyllcorner " );
+      bw.write( String.valueOf( m_env.getEnvelope().getMin().getY() ) );
+      bw.write( "\ncellsize " );
+      bw.write( String.valueOf( m_cellsize ) );
+      bw.write( "\nnodata_value " );
+      bw.write( nodata );
+      bw.write( "\n" );
 
       for( int row = 0; row < m_rows; row++ )
       {
@@ -732,10 +731,9 @@ public class Grid implements IGrid
         {
           double value = readGridValue( row, col );
           if( intersection.contains( getPosition( row, col ) ) )
-            bw.write( String.valueOf( value ).getBytes() );
-
+            bw.write( String.valueOf( value ) );
           else
-            bw.write( nodata.getBytes() );
+            bw.write( nodata );
           bw.write( ' ' );
         }//for j
       }//for i
