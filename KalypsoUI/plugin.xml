@@ -23,7 +23,7 @@
       <library name="lib/kalypsoservice_user.jar">
          <export name="*"/>
       </library>
-      <library name="lib/KalypsoCoreServices.jar">
+      <library name="lib/KalypsoServiceCore.jar">
          <export name="*"/>
       </library>
       <library name="lib/swtcalendar.jar">

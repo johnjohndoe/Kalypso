@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="KalypsoObsService" default="fake" basedir=".">
 
-	<property name="project" value="${workspace}/KalypsoObsService" />
-	<property name="project-name" value="KalypsoObsService" />
+	<property name="project" value="${workspace}/KalypsoServiceObs" />
+	<property name="project-name" value="KalypsoServiceObs" />
 	<property file="service.properties" />
 
-	<import file="${workspace}/KalypsoCoreServices/etc/ant/service-build.xml" />
+	<import file="${workspace}/KalypsoServiceCore/etc/ant/service-build.xml" />
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
@@ -13,7 +13,7 @@
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoBuild/common-project/compile-libs" includes="**/*.jar" />
 
-	    <fileset dir="${workspace}/KalypsoCoreServices/build/deploy" includes="**/*.jar" />
+	    <fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
 
 		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />

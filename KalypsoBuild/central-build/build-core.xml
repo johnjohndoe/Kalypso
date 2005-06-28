@@ -36,6 +36,6 @@
 		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
-		<ant antfile="${workspace}/KalypsoCoreServices/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoServiceCore/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
 	</target>
 </project>

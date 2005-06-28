@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="KalypsoMetaDocService" default="fake" basedir=".">
 
-	<property name="project" value="${workspace}/KalypsoMetaDocService" />
-	<property name="project-name" value="KalypsoMetaDocService" />
+	<property name="project" value="${workspace}/KalypsoServiceMetaDoc" />
+	<property name="project-name" value="KalypsoServiceMetaDoc" />
     <property file="service.properties" />
 
-	<import file="${workspace}/KalypsoCoreServices/etc/ant/service-build.xml"/>
+	<import file="${workspace}/KalypsoServiceCore/etc/ant/service-build.xml"/>
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar"/>
 		<fileset dir="${jwsdp}/jwsdp-shared/lib" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoCoreServices/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
 		
 		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="KalypsoCalcservice" default="fake" basedir=".">
 
-	<property name="project" value="${workspace}/KalypsoCalcService" />
-	<property name="project-name" value="KalypsoCalcService" />
+	<property name="project" value="${workspace}/KalypsoServiceCalc" />
+	<property name="project-name" value="KalypsoServiceCalc" />
 	<property file="service.properties" />
 	
-	<import file="${workspace}/KalypsoCoreServices/etc/ant/service-build.xml" />
+	<import file="${workspace}/KalypsoServiceCore/etc/ant/service-build.xml" />
 
 	<path id="compile.classpath">
 
 		<fileset dir="${project.lib}" includes="**/*.jar" />
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
 		<fileset dir="${jwsdp}/jwsdp-shared/lib" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoCoreServices/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
 
 		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
