@@ -118,8 +118,8 @@ public class GridFactory
           * cellsize );
     double width = merge.getMax().getX() - llc.getX();
     double height = merge.getMax().getY() - llc.getY();
-    int cols = (int)( width / cellsize )+ 2;
-    int rows = (int)( height / cellsize )+ 2;
+    int cols = (int)( width / cellsize ) + 2;
+    int rows = (int)( height / cellsize ) + 2;
     return new Grid( key, null, llc, crs, rows, cols, cellsize, wishbox );
   }
 }

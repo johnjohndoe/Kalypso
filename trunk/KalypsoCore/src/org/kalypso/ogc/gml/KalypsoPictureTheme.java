@@ -36,7 +36,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.logging.Logger;
 
 import javax.media.jai.JAI;
@@ -79,9 +78,11 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private double m_dx = 0;
 
-  private double m_rx = 0;
+  // Andreas: dieses Pattern (variable m_rx und m_ry nicht benutzt)
+  // taucht im Code verteilt mehrfach auf; doppelter code?
+//  private double m_rx = 0;
 
-  private double m_ry = 0;
+//  private double m_ry = 0;
 
   private double m_dy = 0;
 
@@ -130,12 +131,11 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     try
     {
       worldFileURL = new URL( wf );
-      URLConnection con = worldFileURL.openConnection();
       InputStream is = worldFileURL.openStream();
       BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
       m_dx = Double.parseDouble( br.readLine().trim() );
-      m_rx = Double.parseDouble( br.readLine().trim() );
-      m_ry = Double.parseDouble( br.readLine().trim() );
+      /*m_rx = */Double.parseDouble( br.readLine().trim() );
+      /*m_ry =*/ Double.parseDouble( br.readLine().trim() );
       m_dy = Double.parseDouble( br.readLine().trim() );
       ulcx = Double.parseDouble( br.readLine().trim() );
       ulcy = Double.parseDouble( br.readLine().trim() );

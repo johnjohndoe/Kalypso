@@ -14,9 +14,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DCTableModel extends DefaultTableModel
 {
-  private final static String[] COLUMN_NAMES = { "Name", "Beschreibung" };
+  private final static String[] COLUMN_NAMES =
+  {
+      "Name",
+      "Beschreibung" };
 
-  private final static Class[] COLUMN_CLASSES = { String.class, String.class };
+  private final static Class[] COLUMN_CLASSES =
+  {
+      String.class,
+      String.class };
 
   private Level m_currentLevel = null;
 
@@ -52,7 +58,7 @@ public class DCTableModel extends DefaultTableModel
   /**
    * @see javax.swing.table.TableModel#getColumnCount()
    */
-  public int getColumnCount( )
+  public int getColumnCount()
   {
     return COLUMN_NAMES.length;
   }
@@ -83,7 +89,7 @@ public class DCTableModel extends DefaultTableModel
     fireTableDataChanged();
   }
 
-  public Level getCurrentLevel( )
+  public Level getCurrentLevel()
   {
     return m_currentLevel;
   }
@@ -91,13 +97,12 @@ public class DCTableModel extends DefaultTableModel
   /**
    * @see javax.swing.table.TableModel#getRowCount()
    */
-  public int getRowCount( )
+  public int getRowCount()
   {
     if( m_currentLevel == null )
       return 0;
-    else
 
-      return m_currentLevel.getObjects().size();
+    return m_currentLevel.getObjects().size();
   }
 
   /**
@@ -107,15 +112,14 @@ public class DCTableModel extends DefaultTableModel
   {
     List objects = m_currentLevel.getObjects();
 
-    if( (objects.size() == 0) || (row >= objects.size()) )
+    if( ( objects.size() == 0 ) || ( row >= objects.size() ) )
       return null;
 
-    DataObject d = (DataObject) objects.get( row );
+    DataObject d = (DataObject)objects.get( row );
 
     if( column == 0 )
       return d.getName();
-    else
 
-      return d.getDescription();
+    return d.getDescription();
   }
 }

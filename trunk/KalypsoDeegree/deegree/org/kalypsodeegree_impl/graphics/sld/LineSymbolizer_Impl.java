@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymbolizer, Marshallable
 {
-  private Stroke stroke = null;
+  private Stroke m_stroke = null;
 
   /**
    * Creates a new LineSymbolizer_Impl object.
@@ -114,7 +114,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    */
   public Stroke getStroke()
   {
-    return stroke;
+    return m_stroke;
   }
 
   /**
@@ -125,7 +125,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    */
   public void setStroke( Stroke stroke )
   {
-    this.stroke = stroke;
+    this.m_stroke = stroke;
   }
 
   /**
@@ -143,9 +143,9 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
     {
       sb.append( ( (Marshallable)geometry ).exportAsXML() );
     }
-    if( stroke != null )
+    if( m_stroke != null )
     {
-      sb.append( ( (Marshallable)stroke ).exportAsXML() );
+      sb.append( ( (Marshallable)m_stroke ).exportAsXML() );
     }
     sb.append( "</LineSymbolizer>" );
 

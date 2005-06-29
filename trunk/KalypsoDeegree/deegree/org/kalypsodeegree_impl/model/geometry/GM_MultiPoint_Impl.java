@@ -103,9 +103,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     super( null );
 
     for( int i = 0; i < gmp.length; i++ )
-    {
-      aggregate.add( gmp[i] );
-    }
+      m_aggregate.add( gmp[i] );
 
   }
 
@@ -120,10 +118,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     super( crs );
 
     for( int i = 0; i < gmp.length; i++ )
-    {
-      aggregate.add( gmp[i] );
-    }
-
+      m_aggregate.add( gmp[i] );
   }
 
   /**
@@ -196,7 +191,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   public GM_Point[] getAllPoints()
   {
-    return (GM_Point[])aggregate.toArray( new GM_Point[getSize()] );
+    return (GM_Point[])m_aggregate.toArray( new GM_Point[getSize()] );
   }
 
   /**

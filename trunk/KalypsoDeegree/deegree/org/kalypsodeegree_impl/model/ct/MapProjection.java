@@ -205,7 +205,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   /**
    * Convertit en radians une longitude exprimée en degrés. Au passage, cette méthode vérifiera si la longitude est bien
    * dans les limites permises (±180°). Cette méthode est utile pour vérifier la validité des paramètres de la
-   * projection, comme {@link #setCentralLongitude}.
+   * projection..
    * 
    * @param x
    *          Longitude à vérifier, en degrés.
@@ -229,7 +229,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
   /**
    * Convertit en radians une latitude exprimée en degrés. Au passage, cette méthode vérifiera si la latitude est bien
    * dans les limites permises (±90°). Cette méthode est utile pour vérifier la validité des paramètres de la
-   * projection, comme {@link #setCentralLongitude}.
+   * projection.
    * 
    * @param y
    *          Latitude à vérifier, en degrés.
@@ -786,7 +786,7 @@ abstract class MapProjection extends AbstractMathTransform implements MathTransf
      * @param classname
      *          The classification name.
      * @param nameKey
-     *          Resources key for a human readable name. This is used for {@link #getName}implementation.
+     *          Resources key for a human readable name. This is used for implementation.
      */
     protected Provider( final String classname, final int nameKey )
     {

@@ -46,7 +46,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.xpath.XPathAPI;
 import org.deegree_impl.services.NotSupportedFormatException;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -189,10 +189,10 @@ public class MeshReader
   private PointTable createNodes( File nodefile, File attributefile, CS_CoordinateSystem crs ) throws IOException
   {
     PointTable pt = new PointTable();
-//    double xmin = 0;
-//    double xmax = 0;
-//    double ymin = 0;
-//    double ymax = 0;
+    double xmin = 0;
+    double xmax = 0;
+    double ymin = 0;
+    double ymax = 0;
 
     System.out.println( "Reading Nodes.." );
     try
@@ -214,40 +214,41 @@ public class MeshReader
         st.nextToken();
         double ycor = st.nval;
         st.nextToken();
-//        if( firstLine == true )
-//        {
-//          xmin = xcor;
-//          xmax = xcor;
-//          ymin = ycor;
-//          ymax = ycor;
-//          firstLine = false;
-//        }
-//        else
-//        {
-//          if( xcor < xmin )
-//            xmin = xcor;
-//          else if( xcor > xmax )
-//            xmax = xcor;
-//
-//          if( ycor < ymin )
-//            ymin = ycor;
-//          else if( ycor > ymax )
-//            ymax = ycor;
-//        }
+        if( firstLine == true )
+        {
+          xmin = xcor;
+          xmax = xcor;
+          ymin = ycor;
+          ymax = ycor;
+          firstLine = false;
+        }
+        else
+        {
+          if( xcor < xmin )
+            xmin = xcor;
+          else if( xcor > xmax )
+            xmax = xcor;
+
+          if( ycor < ymin )
+            ymin = ycor;
+          else if( ycor > ymax )
+            ymax = ycor;
+        }
         //create a point from x,y coordinate and with dummy initial
         // elevation attribute
         Point p = new Point( pointID, xcor, ycor, crs );
         pt.addPoint( p );
+        //System.out.println(pointID + " point added..");
       }//while
     }//try
     catch( Exception e )
     {
       System.out.println( "Exception: " + e.toString() );
-    }
+    }//catch
     //assigning BoundigBox of Mesh
     try
     {
-//      m_meshEnv = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax ), crs );
+      m_meshEnv = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax ), crs );
 
       System.out.print( pt.size() + " points created." );
       System.out.println( "Bounding Box of the Net: " + m_meshEnv );
@@ -261,7 +262,7 @@ public class MeshReader
       while( st.nextToken() != StreamTokenizer.TT_EOF )
       {
         //reads the ID
-        String pointID = String.valueOf( (int)( st.nval                                                                                                   ) );
+        String pointID = String.valueOf( (int)( st.nval                                                                                                    ) );
         st.nextToken();
         //reads elevation value
         Double elevation = new Double( st.nval );
@@ -541,7 +542,6 @@ public class MeshReader
           int nodeCounter = 0;
           GM_Position[] verticies = new GM_Position[totalNodes];
           double[] values = new double[totalNodes];
-          String vertIDs = null;
           if( totalNodes == 4 || totalNodes == 5 )
           {//check element is
             // triangle or
@@ -590,18 +590,16 @@ public class MeshReader
                 // not supported
                 throw new Exception( "Concave polygon import is not supported yet." );
               }
-              else
-              {//otherwise if its Convex then split it based on
-                // diagonal slope and keep it least
-                MeshElement[] splitElements = me.splitElement();
-                for( int j = 0; j < splitElements.length; j++ )
-                {
-                  MeshElement element = splitElements[j];
-                  mesh.addElement( element );
 
-                }
+              //otherwise if its Convex then split it based on
+              // diagonal slope and keep it least
+              MeshElement[] splitElements = me.splitElement();
+              for( int j = 0; j < splitElements.length; j++ )
+              {
+                MeshElement element = splitElements[j];
+                mesh.addElement( element );
+
               }
-
             }
           }//if 3 || 4
           else
@@ -628,7 +626,7 @@ public class MeshReader
       String shapebase = FileUtilities.nameWithoutExtension( file.getPath() );
       try
       {
-        GMLWorkspace gml = ShapeSerializer.deserialize( shapebase, crs, null );
+        GMLWorkspace gml = ShapeSerializer.deserialize( shapebase, crs );
         Feature root = gml.getRootFeature();
         List features = (List)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
         //check geometry type to disdinguish the two diffrent files
@@ -644,10 +642,6 @@ public class MeshReader
       {
         e.printStackTrace();
       }
-      catch( GM_Exception e )
-      {
-        e.printStackTrace();
-      }
 
     }//for
   }
@@ -659,13 +653,14 @@ public class MeshReader
       Feature feature = pointFeature[i];
       GM_Point geom = (GM_Point)feature.getProperty( geometryPropertyPoint );
       Object value = feature.getProperty( valueProperty );
-      String key = String.valueOf( geom.getX() ) + "#" +String.valueOf( geom.getY() );
+      if( value instanceof Float && ( (Float)value ).floatValue() < 0 )
+        System.out.println( "value is smaller then zero" );
+      String key = String.valueOf( geom.getX() ) + String.valueOf( geom.getY() );
       m_hasMapPoints.put( key, value );
     }
   }
 
   private void createElements( Mesh mesh, Feature[] meshElements, String geometryProperteyElement, GM_Surface wishbox )
-      throws GM_Exception
   {
     CS_CoordinateSystem cs = null;
     for( int i = 0; i < meshElements.length; i++ )
@@ -688,7 +683,7 @@ public class MeshReader
       for( int j = 0; j < positions.length; j++ )
       {
         GM_Position pos = positions[j];
-        Object value = m_hasMapPoints.get( String.valueOf( pos.getX() ) + "#" +String.valueOf( pos.getY() ) );
+        Object value = m_hasMapPoints.get( String.valueOf( pos.getX() ) + String.valueOf( pos.getY() ) );
         if( value != null )
         {
           if( value instanceof Double )
@@ -699,8 +694,6 @@ public class MeshReader
             throw new NumberFormatException( "The value to interpolate is of type " + value.getClass().toString()
                 + " instead of Float or Double.\n" + "Change type in shape file!" );
         }
-        else
-          throw new GM_Exception("Point: " + pos + " has no value assigned. Mesh import aborted");
       }
 
       try
@@ -750,7 +743,7 @@ public class MeshReader
   }// createElements
 
   public void importMesh( Mesh mesh, Feature[] points, String geometryPropertyPoints, String valueProperty,
-      Feature[] elements, String geometryPropertyElements, GM_Surface wishbox ) throws GM_Exception
+      Feature[] elements, String geometryPropertyElements, GM_Surface wishbox )
   {
 
     createNodes( points, geometryPropertyPoints, valueProperty );
@@ -760,7 +753,7 @@ public class MeshReader
 
   private GM_Object readBorder( String shapefile, CS_CoordinateSystem cs ) throws GmlSerializeException
   {
-    GMLWorkspace ws = ShapeSerializer.deserialize( shapefile, cs, null );
+    GMLWorkspace ws = ShapeSerializer.deserialize( shapefile, cs );
     Feature root = ws.getRootFeature();
     FeatureList geoProperty = (FeatureList)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     Feature features = geoProperty.toFeatures()[0];

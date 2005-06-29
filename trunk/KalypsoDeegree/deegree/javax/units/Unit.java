@@ -64,7 +64,7 @@ public final class Unit implements Serializable
   /**
    * Base unit, or <code>this</code> if none.
    */
-  private final Unit unit;
+  private final Unit m_unit;
 
   /**
    * Returns an unit instance.
@@ -89,7 +89,7 @@ public final class Unit implements Serializable
   {
     this.symbol = symbol;
     this.scale = 1;
-    this.unit = this;
+    this.m_unit = this;
   }
 
   /**
@@ -99,7 +99,7 @@ public final class Unit implements Serializable
   {
     this.symbol = symbol;
     this.scale = scale;
-    this.unit = unit;
+    this.m_unit = unit;
   }
 
   /**
@@ -107,7 +107,7 @@ public final class Unit implements Serializable
    */
   public boolean canConvert( final Unit other )
   {
-    return ( unit == other.unit ) || ( unit != null && unit.equals( other.unit ) );
+    return ( m_unit == other.m_unit ) || ( m_unit != null && m_unit.equals( other.m_unit ) );
   }
 
   /**

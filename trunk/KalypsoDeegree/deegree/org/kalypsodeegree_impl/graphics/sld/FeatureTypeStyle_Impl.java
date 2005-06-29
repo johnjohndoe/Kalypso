@@ -86,7 +86,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 {
   private ArrayList rules = null;
 
-  private ArrayList semanticTypeIdentifier = null;
+  private ArrayList m_semanticTypeIdentifier = null;
 
   private String abstract_ = null;
 
@@ -101,7 +101,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public FeatureTypeStyle_Impl()
   {
-    semanticTypeIdentifier = new ArrayList();
+    m_semanticTypeIdentifier = new ArrayList();
     rules = new ArrayList();
   }
 
@@ -218,7 +218,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public String[] getSemanticTypeIdentifier()
   {
-    return (String[])semanticTypeIdentifier.toArray( new String[semanticTypeIdentifier.size()] );
+    return (String[])m_semanticTypeIdentifier.toArray( new String[m_semanticTypeIdentifier.size()] );
   }
 
   /**
@@ -229,13 +229,13 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void setSemanticTypeIdentifier( String[] semanticTypeIdentifiers )
   {
-    semanticTypeIdentifier.clear();
+    m_semanticTypeIdentifier.clear();
 
     if( semanticTypeIdentifiers != null )
     {
       for( int i = 0; i < semanticTypeIdentifiers.length; i++ )
       {
-        semanticTypeIdentifier.add( semanticTypeIdentifiers[i] );
+        m_semanticTypeIdentifier.add( semanticTypeIdentifiers[i] );
       }
     }
   }
@@ -248,7 +248,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void addSemanticTypeIdentifier( String semanticTypeIdentifier )
   {
-    this.semanticTypeIdentifier.add( semanticTypeIdentifier );
+    this.m_semanticTypeIdentifier.add( semanticTypeIdentifier );
   }
 
   /**
@@ -259,7 +259,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    */
   public void removeSemanticTypeIdentifier( String semanticTypeIdentifier )
   {
-    this.semanticTypeIdentifier.remove( this.semanticTypeIdentifier.indexOf( semanticTypeIdentifier ) );
+    this.m_semanticTypeIdentifier.remove( this.m_semanticTypeIdentifier.indexOf( semanticTypeIdentifier ) );
   }
 
   /**
@@ -341,9 +341,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
     {
       sb.append( "<FeatureTypeName>" ).append( featureTypeName ).append( "</FeatureTypeName>" );
     }
-    for( int i = 0; i < semanticTypeIdentifier.size(); i++ )
+    for( int i = 0; i < m_semanticTypeIdentifier.size(); i++ )
     {
-      sb.append( "<SemanticTypeIdentifier>" ).append( semanticTypeIdentifier.get( i ) ).append(
+      sb.append( "<SemanticTypeIdentifier>" ).append( m_semanticTypeIdentifier.get( i ) ).append(
           "</SemanticTypeIdentifier>" );
     }
     for( int i = 0; i < rules.size(); i++ )

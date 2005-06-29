@@ -112,17 +112,17 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 class CssParameter_Impl implements CssParameter, Marshallable
 {
-  private ParameterValueType pvt = null;
+  private ParameterValueType m_pvt = null;
 
-  private String name = null;
+  private String m_name = null;
 
   /**
    * constructor initializing the class with the <CssParameter>
    */
   CssParameter_Impl( String name, ParameterValueType pvt )
   {
-    this.name = name;
-    this.pvt = pvt;
+    this.m_name = name;
+    this.m_pvt = pvt;
   }
 
   /**
@@ -133,7 +133,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    */
   public String getName()
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -145,7 +145,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    */
   public void setName( String name )
   {
-    this.name = name;
+    this.m_name = name;
   }
 
   /**
@@ -156,7 +156,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    */
   public ParameterValueType getValue()
   {
-    return pvt;
+    return m_pvt;
   }
 
   /**
@@ -168,7 +168,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    */
   public void setValue( ParameterValueType value )
   {
-    this.pvt = value;
+    this.m_pvt = value;
   }
 
   /**
@@ -183,7 +183,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    */
   public String getValue( Feature feature ) throws FilterEvaluationException
   {
-    return pvt.evaluate( feature );
+    return m_pvt.evaluate( feature );
   }
 
   /**
@@ -197,7 +197,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + value );
-    this.pvt = pvt;
+    this.m_pvt = pvt;
   }
 
   /**
@@ -210,8 +210,8 @@ class CssParameter_Impl implements CssParameter, Marshallable
     Debug.debugMethodBegin();
 
     StringBuffer sb = new StringBuffer( "<CssParameter name=" );
-    sb.append( "'" + name + "'>" );
-    sb.append( ( (Marshallable)pvt ).exportAsXML() );
+    sb.append( "'" + m_name + "'>" );
+    sb.append( ( (Marshallable)m_pvt ).exportAsXML() );
     sb.append( "</CssParameter>" );
 
     Debug.debugMethodEnd();

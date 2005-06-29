@@ -721,14 +721,8 @@ public class ImportWmsWizardPage extends WizardPage implements
   }
 
   /**
-   * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
-   */
-  public void focusGained( FocusEvent e )
-  {
-    //do nothing
-  }
-
-  /**
+   * Christoph: niemand benutzt diese Methode, ists noch aktuell?
+   * 
    * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
    */
   public void focusLost( FocusEvent e )

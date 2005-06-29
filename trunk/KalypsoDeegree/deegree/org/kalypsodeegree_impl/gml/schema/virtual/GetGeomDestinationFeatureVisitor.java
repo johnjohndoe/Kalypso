@@ -1,17 +1,3 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -52,7 +38,23 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
+
+/**
+ * 
+ * @author doemming
+ */
 public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
 {
 
@@ -64,10 +66,6 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
 
   private final List m_result;
 
-  /*
-   * 
-   * @author doemming
-   */
   public GetGeomDestinationFeatureVisitor( GMLWorkspace workspace, String initialPropName, int maxLevel )
   {
     m_workspace = workspace;

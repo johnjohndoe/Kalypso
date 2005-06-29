@@ -101,11 +101,6 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
     }
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public int getValue()
   {
     return surfaceInterpolation;

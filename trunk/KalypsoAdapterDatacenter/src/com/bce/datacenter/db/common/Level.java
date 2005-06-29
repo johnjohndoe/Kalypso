@@ -15,9 +15,8 @@ import javax.swing.tree.TreeNode;
 import com.bce.datacenter.db.persistent.Persistent;
 
 /**
- * A Level is an abstract element of the tree hierarchy of the datacenter. A
- * Level belongs to exactly one parent, except for the root that has no parent.
- * Thus a given Level may have zero, one or more child Levels.
+ * A Level is an abstract element of the tree hierarchy of the datacenter. A Level belongs to exactly one parent, except
+ * for the root that has no parent. Thus a given Level may have zero, one or more child Levels.
  * 
  * @author Marc Schlienger
  */
@@ -159,8 +158,7 @@ public class Level extends Persistent implements TreeNode
 
       while( rs.next() )
       {
-        Level l = new Level( m_con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs
-            .getInt( 4 ) );
+        Level l = new Level( m_con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs.getInt( 4 ) );
 
         m_children.add( l );
       }
@@ -240,8 +238,7 @@ public class Level extends Persistent implements TreeNode
   }
 
   /**
-   * Returns the path (that is concatenation of path of parent level + this
-   * name)
+   * Returns the path (that is concatenation of path of parent level + this name)
    * 
    * @return path of this level,
    */
@@ -251,9 +248,8 @@ public class Level extends Persistent implements TreeNode
 
     if( parent != null )
       return parent.getPathName() + '/' + m_name;
-    else
 
-      return '/' + m_name;
+    return '/' + m_name;
   }
 
   /**

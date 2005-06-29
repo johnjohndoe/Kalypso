@@ -397,6 +397,9 @@ public class KalypsoStatusUtils
    */
   public static Color getForegroundFor( final int mask )
   {
+    if( ( mask & 0 ) == 0 )
+      return null;
+    
     // currently returns null, but can be customized in the near
     // future
     return null;

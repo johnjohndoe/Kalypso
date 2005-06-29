@@ -101,7 +101,7 @@ public class Projection extends Info
   /**
    * Parameters to use for projection, in metres or degrees.
    */
-  private final ParameterList parameters;
+  private final ParameterList m_parameters;
 
   /**
    * Convenience constructor for a projection using the specified ellipsoid.
@@ -126,7 +126,7 @@ public class Projection extends Info
     super( name );
     ensureNonNull( "classification", classification );
     this.classification = classification;
-    this.parameters = init( getParameterList( classification ), ellipsoid, centre, translation, scaleFactor );
+    this.m_parameters = init( getParameterList( classification ), ellipsoid, centre, translation, scaleFactor );
   }
 
   /**
@@ -149,7 +149,7 @@ public class Projection extends Info
     ensureNonNull( "classification", classification );
     ensureNonNull( "parameters", parameters );
     this.classification = classification;
-    this.parameters = clone( parameters );
+    this.m_parameters = clone( parameters );
   }
 
   /**
@@ -166,7 +166,7 @@ public class Projection extends Info
   {
     super( properties );
     this.classification = classification;
-    this.parameters = parameters;
+    this.m_parameters = parameters;
     // Accept null values.
   }
 
@@ -264,7 +264,7 @@ public class Projection extends Info
    */
   public ParameterList getParameters()
   {
-    return clone( parameters );
+    return clone( m_parameters );
   }
 
   /**
@@ -279,7 +279,7 @@ public class Projection extends Info
    */
   public double getValue( final String name ) throws MissingParameterException
   {
-    return getValue( parameters, name, Double.NaN, true );
+    return getValue( m_parameters, name, Double.NaN, true );
   }
 
   /**
@@ -294,7 +294,7 @@ public class Projection extends Info
    */
   public double getValue( final String name, final double defaultValue )
   {
-    return getValue( parameters, name, defaultValue, false );
+    return getValue( m_parameters, name, defaultValue, false );
   }
 
   /**
@@ -319,7 +319,6 @@ public class Projection extends Info
       final boolean required ) throws MissingParameterException
   {
     name = name.trim();
-    RuntimeException cause = null;
     if( parameters != null )
     {
       try
@@ -330,23 +329,20 @@ public class Projection extends Info
           // Do not require an instance of Double.
           return ( (Number)value ).doubleValue();
         }
-        else
-        {
-          // May require an instance of Double. Will
-          // probably throw ClassCastException since
-          // the last try didn't worked.
-          return parameters.getDoubleParameter( name );
-        }
+        // May require an instance of Double. Will
+        // probably throw ClassCastException since
+        // the last try didn't worked.
+        return parameters.getDoubleParameter( name );
       }
       catch( IllegalArgumentException exception )
       {
         // There is no parameter with the specified name.
-        cause = exception;
+        //        cause = exception;
       }
       catch( IllegalStateException exception )
       {
         // the parameter value is still NO_PARAMETER_DEFAULT
-        cause = exception;
+        //        cause = exception;
       }
     }
     if( !required )
@@ -366,8 +362,8 @@ public class Projection extends Info
     int code = 45896321;
     if( classification != null )
       code = code * 37 + classification.hashCode();
-    if( parameters != null )
-      code = code * 37 + parameters.hashCode();
+    if( m_parameters != null )
+      code = code * 37 + m_parameters.hashCode();
     return code;
   }
 
@@ -380,7 +376,7 @@ public class Projection extends Info
     {
       final Projection that = (Projection)object;
       return Utilities.equals( this.classification, that.classification )
-          && Utilities.equals( this.parameters, that.parameters );
+          && Utilities.equals( this.m_parameters, that.m_parameters );
     }
     return false;
   }
@@ -420,7 +416,7 @@ public class Projection extends Info
     /**
      * The set of parameters. This array is constructed only the first time it is needed.
      */
-    private transient CS_ProjectionParameter[] parameters;
+    private transient CS_ProjectionParameter[] m_exportParameters;
 
     /**
      * Construct a remote object.
@@ -461,11 +457,11 @@ public class Projection extends Info
      */
     private synchronized CS_ProjectionParameter[] getParameters()
     {
-      if( parameters == null )
+      if( m_exportParameters == null )
       {
-        parameters = adapters.export( Projection.this.getParameters() );
+        m_exportParameters = adapters.export( Projection.this.getParameters() );
       }
-      return parameters;
+      return m_exportParameters;
     }
   }
 }

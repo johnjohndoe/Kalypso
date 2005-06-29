@@ -75,7 +75,6 @@ package org.kalypsodeegree.model.feature;
 
 public interface FeatureProperty
 {
-
   /**
    * returns the name of the property
    */
@@ -84,7 +83,7 @@ public interface FeatureProperty
   /**
    * sets the name of the property
    */
-  public void setName( String name );
+  public void setName( final String name );
 
   /**
    * returns the value of the property
@@ -94,16 +93,17 @@ public interface FeatureProperty
   /**
    * sets the value of the property
    */
-  public void setValue( Object value );
-
+  public void setValue( final Object value );
 }
+
 /*
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.6  2005/06/20 14:07:46  belger
- * Formatierung
- * Revision 1.5 2005/03/08 11:01:10 doemming *** empty log message ***
+ * Revision 1.7  2005/06/29 10:41:17  belger
+ * *** empty log message ***
+ * Revision 1.6 2005/06/20 14:07:46 belger Formatierung Revision 1.5 2005/03/08 11:01:10
+ * doemming *** empty log message ***
  * 
  * Revision 1.4 2005/01/18 12:50:43 doemming *** empty log message ***
  * 

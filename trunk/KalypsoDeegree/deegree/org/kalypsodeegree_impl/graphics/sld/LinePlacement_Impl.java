@@ -155,8 +155,6 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * Returns the placement type (one of the constants defined in <tt>LinePlacement</tt>).
    * <p>
    * 
-   * @param feature
-   * @return
    * @throws FilterEvaluationException
    */
   public int getPlacementType( Feature feature ) throws FilterEvaluationException
@@ -221,8 +219,6 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * below the line string).
    * <p>
    * 
-   * @param feature
-   * @return
    * @throws FilterEvaluationException
    */
   public double getLineWidth( Feature feature ) throws FilterEvaluationException
@@ -254,8 +250,6 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * Defines the distance between two captions on the line string. One unit is the width of the label caption.
    * <p>
    * 
-   * @param feature
-   * @return
    * @throws FilterEvaluationException
    */
   public int getGap( Feature feature ) throws FilterEvaluationException

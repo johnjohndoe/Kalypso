@@ -104,10 +104,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     super( null );
 
     for( int i = 0; i < gmc.length; i++ )
-    {
-      aggregate.add( gmc[i] );
-    }
-
+      m_aggregate.add( gmc[i] );
   }
 
   /**
@@ -121,10 +118,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     super( crs );
 
     for( int i = 0; i < gmc.length; i++ )
-    {
-      aggregate.add( gmc[i] );
-    }
-
+      m_aggregate.add( gmc[i] );
   }
 
   /**
@@ -205,7 +199,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   public GM_Curve[] getAllCurves()
   {
-    return (GM_Curve[])aggregate.toArray( new GM_Curve[getSize()] );
+    return (GM_Curve[])m_aggregate.toArray( new GM_Curve[getSize()] );
   }
 
   /**

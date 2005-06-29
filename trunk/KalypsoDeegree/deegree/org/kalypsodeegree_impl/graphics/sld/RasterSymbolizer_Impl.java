@@ -94,8 +94,6 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
   private final int mode_intervalColorMapping = 0;
 
-  private final int mode_valueColorMapping = 1;
-
   private int mode = mode_intervalColorMapping;
 
   public RasterSymbolizer_Impl( TreeMap colorMap )

@@ -55,7 +55,6 @@ import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
 
 import org.kalypso.zml.filters.AbstractFilterType;
-import org.kalypso.zml.filters.Filter;
 import org.kalypso.zml.filters.NOperationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.OperationFilter;

@@ -522,11 +522,6 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    */
   protected abstract void calculateParam();
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = null;

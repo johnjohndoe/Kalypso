@@ -191,16 +191,16 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements 
         maxwidth = titleFontMetrics[0];
       }
 
-      bi = new BufferedImage( maxwidth, maxheight, BufferedImage.TYPE_INT_ARGB );
-      g = bi.getGraphics();
+      m_bi = new BufferedImage( maxwidth, maxheight, BufferedImage.TYPE_INT_ARGB );
+      g = m_bi.getGraphics();
       g.setColor( java.awt.Color.BLACK );
       // DEBUG: g.drawRect(0, 0, maxheight, maxwidth);
       g.drawString( getTitle(), 0, 0 + titleheight );
     }
     else
     {
-      bi = new BufferedImage( maxwidth, maxheight, BufferedImage.TYPE_INT_ARGB );
-      g = bi.getGraphics();
+      m_bi = new BufferedImage( maxwidth, maxheight, BufferedImage.TYPE_INT_ARGB );
+      g = m_bi.getGraphics();
     }
 
     for( int j = 0; j < imagearray.length; j++ )
@@ -211,13 +211,16 @@ public class LegendElementCollection_Impl extends LegendElement_Impl implements 
 
     // bi = le[0].exportAsImage();
     Debug.debugMethodEnd();
-    return bi;
+    return m_bi;
   }
 }
 
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
+ * have been up to: Revision 1.8  2005/06/29 10:41:17  belger
+ * have been up to: *** empty log message ***
+ * have been up to:
  * have been up to: Revision 1.7  2005/06/20 14:07:49  belger
  * have been up to: Formatierung
  * have been up to: Revision 1.7 2004/06/01 15:55:05 poth no message

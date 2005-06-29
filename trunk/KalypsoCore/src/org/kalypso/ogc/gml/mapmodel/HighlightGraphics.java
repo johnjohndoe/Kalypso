@@ -77,6 +77,7 @@ public class HighlightGraphics extends Graphics2D
 
   private final Graphics2D m_graphics;
 
+  // Andreas: was ist admit?
   private final int m_dr;
 
   private final int m_dg;

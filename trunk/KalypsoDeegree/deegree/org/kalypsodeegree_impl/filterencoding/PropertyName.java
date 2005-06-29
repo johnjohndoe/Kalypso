@@ -76,7 +76,7 @@ import org.w3c.dom.Element;
 public class PropertyName extends Expression_Impl
 {
   /** The PropertyName's value (as an XPATH expression). */
-  private String value;
+  private String m_value;
 
   /** Constructs a new PropertyName. */
   public PropertyName( String value )
@@ -107,7 +107,7 @@ public class PropertyName extends Expression_Impl
    */
   public String getSQLFieldQualifier()
   {
-    return value;
+    return m_value;
   }
 
   /**
@@ -115,7 +115,7 @@ public class PropertyName extends Expression_Impl
    */
   public String getValue()
   {
-    return value;
+    return m_value;
   }
 
   /**
@@ -123,11 +123,11 @@ public class PropertyName extends Expression_Impl
    */
   public void setValue( String value )
   {
-    this.value = value;
+    this.m_value = value;
 
     if( value.startsWith( "/" ) )
     {
-      this.value = value.substring( 1 );
+      this.m_value = value.substring( 1 );
     }
   }
 
@@ -135,7 +135,7 @@ public class PropertyName extends Expression_Impl
   public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 200 );
-    sb.append( "<ogc:PropertyName>" ).append( value ).append( "</ogc:PropertyName>" );
+    sb.append( "<ogc:PropertyName>" ).append( m_value ).append( "</ogc:PropertyName>" );
     return sb;
   }
 
@@ -156,7 +156,7 @@ public class PropertyName extends Expression_Impl
   public Object evaluate( Feature feature ) throws FilterEvaluationException
   {
     //        FeatureTypeProperty[] ftp = feature.getFeatureType().getProperties();
-    Object object = getProperty( feature, value );
+    Object object = getProperty( feature, m_value );
 
     //        if (feature.getFeatureType ().getProperty (value) == null) {
     //            throw new FilterEvaluationException (

@@ -104,24 +104,23 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class LegendElement_Impl implements LegendElement
 {
+  protected ArrayList m_ruleslist = null;
 
-  protected ArrayList ruleslist = null;
+  protected String m_label = "";
 
-  protected String label = "";
+  protected double m_orientation = 0;
 
-  protected double orientation = 0;
+  protected int m_labelPosition = -1;
 
-  protected int labelPosition = -1;
+  protected boolean m_active = false;
 
-  protected boolean active = false;
+  protected int m_width = 0;
 
-  protected int width = 0;
+  protected int m_height = 0;
 
-  protected int height = 0;
+  protected int m_bufferBetweenLegendAndLabel = 10;
 
-  protected int bufferBetweenLegendAndLabel = 10;
-
-  protected BufferedImage bi = null;
+  protected BufferedImage m_bi = null;
 
   /**
    * empty constructor
@@ -129,7 +128,7 @@ public class LegendElement_Impl implements LegendElement
    */
   LegendElement_Impl()
   {
-    this.ruleslist = new ArrayList();
+    this.m_ruleslist = new ArrayList();
   }
 
   /**
@@ -139,7 +138,7 @@ public class LegendElement_Impl implements LegendElement
   LegendElement_Impl( BufferedImage legendImage )
   {
     this();
-    bi = legendImage;
+    m_bi = legendImage;
   }
 
   /**
@@ -180,9 +179,9 @@ public class LegendElement_Impl implements LegendElement
    */
   public Rule[] getRules()
   {
-    if( ruleslist != null && ruleslist.size() > 0 )
+    if( m_ruleslist != null && m_ruleslist.size() > 0 )
     {
-      return (Rule[])ruleslist.toArray( new Rule[ruleslist.size()] );
+      return (Rule[])m_ruleslist.toArray( new Rule[m_ruleslist.size()] );
     }
 
     return null;
@@ -196,7 +195,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public void addRule( Rule rule )
   {
-    this.ruleslist.add( rule );
+    this.m_ruleslist.add( rule );
   }
 
   /**
@@ -207,13 +206,13 @@ public class LegendElement_Impl implements LegendElement
    */
   public void setRules( Rule[] rules )
   {
-    this.ruleslist.clear();
+    this.m_ruleslist.clear();
 
     if( rules != null )
     {
       for( int i = 0; i < rules.length; i++ )
       {
-        this.ruleslist.add( rules[i] );
+        this.m_ruleslist.add( rules[i] );
       }
     }
   }
@@ -226,7 +225,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public void setLabel( String label )
   {
-    this.label = label;
+    this.m_label = label;
   }
 
   /**
@@ -236,7 +235,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public String getLabel()
   {
-    return this.label;
+    return this.m_label;
   }
 
   /**
@@ -247,7 +246,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public void setLabelOrientation( double orientation )
   {
-    this.orientation = orientation;
+    this.m_orientation = orientation;
   }
 
   /**
@@ -258,7 +257,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public double getLabelOrientation()
   {
-    return this.orientation;
+    return this.m_orientation;
   }
 
   /**
@@ -290,7 +289,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public void setLabelPlacement( int labelPosition )
   {
-    this.labelPosition = labelPosition;
+    this.m_labelPosition = labelPosition;
   }
 
   /**
@@ -311,7 +310,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public int getLabelPlacement()
   {
-    return this.labelPosition;
+    return this.m_labelPosition;
   }
 
   /**
@@ -321,7 +320,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public void setActive( boolean active )
   {
-    this.active = active;
+    this.m_active = active;
   }
 
   /**
@@ -329,7 +328,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public boolean isActive()
   {
-    return this.active;
+    return this.m_active;
   }
 
   /**
@@ -337,7 +336,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public void setWidth( int width )
   {
-    this.width = width;
+    this.m_width = width;
   }
 
   /**
@@ -345,7 +344,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public int getWidth()
   {
-    return this.width;
+    return this.m_width;
   }
 
   /**
@@ -353,7 +352,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public void setHeight( int height )
   {
-    this.height = height;
+    this.m_height = height;
   }
 
   /**
@@ -361,7 +360,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public int getHeight()
   {
-    return this.height;
+    return this.m_height;
   }
 
   /**
@@ -371,7 +370,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public int getBufferBetweenLegendAndLabel()
   {
-    return this.bufferBetweenLegendAndLabel;
+    return this.m_bufferBetweenLegendAndLabel;
   }
 
   /**
@@ -381,7 +380,7 @@ public class LegendElement_Impl implements LegendElement
    */
   public void setBufferBetweenLegendAndLabel( int i )
   {
-    this.bufferBetweenLegendAndLabel = i;
+    this.m_bufferBetweenLegendAndLabel = i;
   }
 
   /**
@@ -654,7 +653,7 @@ public class LegendElement_Impl implements LegendElement
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
       g.setColor( Color.BLACK );
-      g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
+      g.drawString( getLabel(), m_width + 10, m_height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
     }
@@ -667,7 +666,7 @@ public class LegendElement_Impl implements LegendElement
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
       g.setColor( Color.BLACK );
-      g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
+      g.drawString( getLabel(), m_width + 10, m_height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
     }
@@ -680,7 +679,7 @@ public class LegendElement_Impl implements LegendElement
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
       g.setColor( Color.BLACK );
-      g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
+      g.drawString( getLabel(), m_width + 10, m_height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
     }
@@ -693,7 +692,7 @@ public class LegendElement_Impl implements LegendElement
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
       g.setColor( Color.BLACK );
-      g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
+      g.drawString( getLabel(), m_width + 10, m_height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
 
@@ -705,7 +704,7 @@ public class LegendElement_Impl implements LegendElement
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
       g.setColor( Color.BLACK );
-      g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
+      g.drawString( getLabel(), m_width + 10, m_height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
     }
@@ -718,7 +717,7 @@ public class LegendElement_Impl implements LegendElement
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
       g.setColor( Color.BLACK );
-      g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
+      g.drawString( getLabel(), m_width + 10, m_height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
     }
@@ -731,7 +730,7 @@ public class LegendElement_Impl implements LegendElement
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
       g.setColor( Color.BLACK );
-      g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
+      g.drawString( getLabel(), m_width + 10, m_height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
     }
@@ -744,7 +743,7 @@ public class LegendElement_Impl implements LegendElement
           BufferedImage.TYPE_INT_ARGB );
       Graphics g = bi.getGraphics();
       g.setColor( Color.BLACK );
-      g.drawString( getLabel(), width + 10, height / 2 + ( ( ascent - descent ) / 2 ) );
+      g.drawString( getLabel(), m_width + 10, m_height / 2 + ( ( ascent - descent ) / 2 ) );
       Debug.debugMethodEnd();
       return bi;
     }
@@ -763,7 +762,7 @@ public class LegendElement_Impl implements LegendElement
   public BufferedImage exportAsImage() throws LegendException
   {
     Debug.debugMethodBegin( "LegendElement_Impl", "exportAsImage" );
-    if( bi == null )
+    if( m_bi == null )
     {
       int[] fontmetrics;
 
@@ -772,9 +771,9 @@ public class LegendElement_Impl implements LegendElement
       // calculates the fontmetrics and creates the bufferedimage
       // if getLabel() is null is checked in calculateFontMetrics!
       fontmetrics = calculateFontMetrics( getLabel() );
-      bi = calculateImage( getLabelPlacement(), fontmetrics[0], fontmetrics[1], fontmetrics[2], getWidth(),
+      m_bi = calculateImage( getLabelPlacement(), fontmetrics[0], fontmetrics[1], fontmetrics[2], getWidth(),
           getHeight(), getBufferBetweenLegendAndLabel() );
-      g = bi.getGraphics();
+      g = m_bi.getGraphics();
       g.setColor( Color.WHITE );
       Rule[] myrules = getRules();
       Symbolizer[] symbolizer = null;
@@ -792,11 +791,11 @@ public class LegendElement_Impl implements LegendElement
           }
           if( symbolizer[b] instanceof LineSymbolizer )
           {
-            drawLineStringLegend( (Graphics2D)g, (LineSymbolizer)symbolizer[b], width, height );
+            drawLineStringLegend( (Graphics2D)g, (LineSymbolizer)symbolizer[b], m_width, m_height );
           }
           if( symbolizer[b] instanceof PolygonSymbolizer )
           {
-            drawPolygonLegend( (Graphics2D)g, (PolygonSymbolizer)symbolizer[b], width, height );
+            drawPolygonLegend( (Graphics2D)g, (PolygonSymbolizer)symbolizer[b], m_width, m_height );
           }
           if( symbolizer[b] instanceof RasterSymbolizer )
           {
@@ -817,13 +816,16 @@ public class LegendElement_Impl implements LegendElement
       }
     }
     Debug.debugMethodEnd();
-    return bi;
+    return m_bi;
   }
 }
 
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
+ * have been up to: Revision 1.12  2005/06/29 10:41:17  belger
+ * have been up to: *** empty log message ***
+ * have been up to:
  * have been up to: Revision 1.11  2005/06/20 14:07:49  belger
  * have been up to: Formatierung
  * have been up to: Revision 1.12 2004/07/09 07:17:19 poth no message

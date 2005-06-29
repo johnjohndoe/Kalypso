@@ -147,11 +147,6 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     return true;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = "GM_SurfacePatch: ";
@@ -279,13 +274,6 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     return contain;
   }
 
-  /**
-   * 
-   * 
-   * @param gmo
-   * 
-   * @return
-   */
   private boolean containsMultiObject( GM_Aggregate gmo )
   {
     try

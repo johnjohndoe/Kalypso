@@ -80,14 +80,14 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Marshallable
 {
-  private ArrayList featureTypeConstraint = null;
+  private ArrayList m_featureTypeConstraint = null;
 
   /**
    * constructor initializing the class with the <LayerFeatureConstraints>
    */
   LayerFeatureConstraints_Impl( FeatureTypeConstraint[] featureTypeConstraint )
   {
-    this.featureTypeConstraint = new ArrayList();
+    this.m_featureTypeConstraint = new ArrayList();
     setFeatureTypeConstraint( featureTypeConstraint );
   }
 
@@ -99,7 +99,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    */
   public FeatureTypeConstraint[] getFeatureTypeConstraint()
   {
-    return (FeatureTypeConstraint[])featureTypeConstraint.toArray( new FeatureTypeConstraint[featureTypeConstraint
+    return (FeatureTypeConstraint[])m_featureTypeConstraint.toArray( new FeatureTypeConstraint[m_featureTypeConstraint
         .size()] );
   }
 
@@ -111,13 +111,13 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    */
   public void setFeatureTypeConstraint( FeatureTypeConstraint[] featureTypeConstraint )
   {
-    this.featureTypeConstraint.clear();
+    this.m_featureTypeConstraint.clear();
 
     if( featureTypeConstraint != null )
     {
       for( int i = 0; i < featureTypeConstraint.length; i++ )
       {
-        this.featureTypeConstraint.add( featureTypeConstraint[i] );
+        this.m_featureTypeConstraint.add( featureTypeConstraint[i] );
       }
     }
   }
@@ -130,7 +130,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    */
   public void addFeatureTypeConstraint( FeatureTypeConstraint featureTypeConstraint )
   {
-    this.featureTypeConstraint.add( featureTypeConstraint );
+    this.m_featureTypeConstraint.add( featureTypeConstraint );
   }
 
   /**
@@ -141,7 +141,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    */
   public void removeFeatureTypeConstraint( FeatureTypeConstraint featureTypeConstraint )
   {
-    this.featureTypeConstraint.remove( this.featureTypeConstraint.indexOf( featureTypeConstraint ) );
+    this.m_featureTypeConstraint.remove( this.m_featureTypeConstraint.indexOf( featureTypeConstraint ) );
   }
 
   /**
@@ -152,7 +152,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
   public String toString()
   {
     String ret = getClass().getName() + "\n";
-    ret = "featureTypeConstraint = " + featureTypeConstraint + "\n";
+    ret = "featureTypeConstraint = " + m_featureTypeConstraint + "\n";
 
     return ret;
   }
@@ -168,9 +168,9 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
 
     StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LayerFeatureConstraints>" );
-    for( int i = 0; i < featureTypeConstraint.size(); i++ )
+    for( int i = 0; i < m_featureTypeConstraint.size(); i++ )
     {
-      sb.append( ( (Marshallable)featureTypeConstraint.get( i ) ).exportAsXML() );
+      sb.append( ( (Marshallable)m_featureTypeConstraint.get( i ) ).exportAsXML() );
     }
     sb.append( "</LayerFeatureConstraints>" );
 

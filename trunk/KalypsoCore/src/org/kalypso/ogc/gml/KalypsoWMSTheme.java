@@ -100,11 +100,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private CS_CoordinateSystem m_remoteCSR = null;
 
-  private boolean m_authentification;
-
-  private String m_pass;
-
-  private String m_user;
+//  private boolean m_authentification;
+//
+//  private String m_pass;
+//
+//  private String m_user;
 
   private GM_Envelope m_maxEnv = null;
 
@@ -185,11 +185,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     {
       e.printStackTrace();
     }
-  }
-
-  private void setAuthentification( boolean b )
-  {
-    m_authentification = b;
   }
 
   /**

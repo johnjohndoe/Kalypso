@@ -200,12 +200,9 @@ public class GML_Transformer
   }
 
   /**
-   * 
-   * 
    * @param gmlgeo
    * @param target_srs
    * 
-   * @return
    * @throws Exception
    */
   public GMLMultiPoint transformMultiPoint( GMLMultiPoint gmlgeo, String target_srs ) throws Exception

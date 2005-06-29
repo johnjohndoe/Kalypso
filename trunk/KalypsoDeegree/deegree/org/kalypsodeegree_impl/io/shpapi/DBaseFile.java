@@ -184,7 +184,7 @@ public class DBaseFile
    * constructor <BR>
    * only for writing a dBase file <BR>
    */
-  public DBaseFile( String url, FieldDescriptor[] fieldDesc ) throws DBaseException
+  public DBaseFile( String url, FieldDescriptor[] fieldDesc ) 
   {
     m_defaultFileShapeType = -1;
     fname = url;

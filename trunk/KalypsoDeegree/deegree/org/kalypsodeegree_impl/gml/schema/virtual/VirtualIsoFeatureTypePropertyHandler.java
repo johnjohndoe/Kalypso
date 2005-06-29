@@ -78,7 +78,7 @@ public class VirtualIsoFeatureTypePropertyHandler implements VirtualFeatureTypeP
   public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft )
   {
     return new FeatureTypeProperty[]
-    { new VirtualIsoFeatureTypeProperty( ft ) };
+    { new VirtualIsoFeatureTypeProperty() };
   }
 
   /**

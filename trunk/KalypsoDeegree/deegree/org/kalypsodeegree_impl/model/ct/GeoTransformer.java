@@ -416,7 +416,6 @@ final public class GeoTransformer
    * @param sourceCRS
    *          CRS of the envelope
    * 
-   * @return
    * @throws Exception
    */
   public GM_Envelope transformEnvelope( GM_Envelope envelope, String sourceCRS ) throws Exception
@@ -438,7 +437,6 @@ final public class GeoTransformer
    * @param sourceCRS
    *          CRS of the envelope
    * 
-   * @return
    * @throws Exception
    */
   public GM_Envelope transformEnvelope( GM_Envelope envelope, CoordinateSystem sourceCRS ) throws Exception
@@ -459,7 +457,6 @@ final public class GeoTransformer
    * @param sourceCRS
    *          CRS of the envelope
    * 
-   * @return
    * @throws Exception
    */
   public GM_Envelope transformEnvelope( GM_Envelope envelope, CS_CoordinateSystem sourceCRS ) throws Exception

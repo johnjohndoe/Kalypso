@@ -103,6 +103,9 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_commandManager.getUndoDescription();
   }
 
+  /**
+   * @see org.kalypso.commons.command.ICommandManager#postCommand(org.kalypso.commons.command.ICommand)
+   */
   public void postCommand( ICommand command ) throws Exception
   {
     m_commandManager.postCommand( command );

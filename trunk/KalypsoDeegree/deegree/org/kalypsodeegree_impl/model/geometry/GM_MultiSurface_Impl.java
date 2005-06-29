@@ -107,9 +107,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     super( null );
 
     for( int i = 0; i < surface.length; i++ )
-    {
-      aggregate.add( surface[i] );
-    }
+      m_aggregate.add( surface[i] );
 
     setValid( false );
   }
@@ -125,9 +123,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     super( crs );
 
     for( int i = 0; i < surface.length; i++ )
-    {
-      aggregate.add( surface[i] );
-    }
+      m_aggregate.add( surface[i] );
 
     setValid( false );
   }
@@ -202,7 +198,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    */
   public GM_Surface[] getAllSurfaces()
   {
-    return (GM_Surface[])aggregate.toArray( new GM_Surface[getSize()] );
+    return (GM_Surface[])m_aggregate.toArray( new GM_Surface[getSize()] );
   }
 
   /**

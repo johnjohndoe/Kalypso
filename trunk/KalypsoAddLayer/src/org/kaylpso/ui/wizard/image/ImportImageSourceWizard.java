@@ -38,7 +38,6 @@ import java.net.MalformedURLException;
 
 import javax.xml.bind.JAXBException;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -130,9 +129,10 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
 
   }
 
-  private String getRelativeProjectPath( IPath path )
-  {
-    return "project:/" + path.removeFirstSegments( 1 ).toString();
-  }
+  // @Christoph: wurde nicht benutzt und gibts auch schon in IProjekt.
+//  private String getRelativeProjectPath( IPath path )
+//  {
+//    return "project:/" + path.removeFirstSegments( 1 ).toString();
+//  }
 
 }

@@ -95,7 +95,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
 
   private GM_Position[] points = null;
 
-  private GM_SurfacePatch sp = null;
+  private GM_SurfacePatch m_sp = null;
 
   /**
    * Constructor, with Array and CS_CoordinateSystem
@@ -196,10 +196,8 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
 
       return temp;
     }
-    else
-    {
-      return points;
-    }
+
+    return points;
   }
 
   /**
@@ -362,11 +360,11 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
 
     try
     {
-      if( sp == null )
+      if( m_sp == null )
       {
-        sp = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), points, null, crs );
+        m_sp = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), points, null, crs );
       }
-      return sp.contains( gmo );
+      return m_sp.contains( gmo );
     }
     catch( Exception e )
     {}
@@ -414,11 +412,6 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
     setValid( true );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = null;

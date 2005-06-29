@@ -142,12 +142,6 @@ public class WKTAdapter
     return geo;
   }
 
-  /**
-   * @param geom
-   *          geometry
-   * 
-   * @return
-   */
   public static StringBuffer export( GM_Object geom ) throws GM_Exception
   {
 
@@ -184,12 +178,6 @@ public class WKTAdapter
     return sb;
   }
 
-  /**
-   * @param point
-   *          point geometry
-   * 
-   * @return
-   */
   private static StringBuffer export( GM_Point point )
   {
 
@@ -211,11 +199,6 @@ public class WKTAdapter
   }
 
   /**
-   * 
-   * @param cur
-   *          curve geometry
-   * 
-   * @return
    * @throws GM_Exception
    */
   private static StringBuffer export( GM_Curve cur ) throws GM_Exception
@@ -250,13 +233,6 @@ public class WKTAdapter
     return sb;
   }
 
-  /**
-   * 
-   * 
-   * @param sur
-   * 
-   * @return
-   */
   private static StringBuffer export( GM_Surface sur )
   {
     Debug.debugMethodBegin( "WKTAdapter", "export(GM_Surface)" );
@@ -315,10 +291,6 @@ public class WKTAdapter
     return sb;
   }
 
-  /**
-   * @param mp
-   * @return
-   */
   private static StringBuffer export( GM_MultiPoint mp )
   {
     Debug.debugMethodBegin( "WKTAdapter", "export(GM_MultiPoint)" );
@@ -350,11 +322,6 @@ public class WKTAdapter
   }
 
   /**
-   * 
-   * 
-   * @param mc
-   * 
-   * @return
    * @throws GM_Exception
    */
   private static StringBuffer export( GM_MultiCurve mc ) throws GM_Exception
@@ -379,15 +346,7 @@ public class WKTAdapter
     return sb;
   }
 
-  /**
-   * 
-   * 
-   * @param ms
-   * 
-   * @return
-   * @throws GM_Exception
-   */
-  private static StringBuffer export( GM_MultiSurface ms ) throws GM_Exception
+  private static StringBuffer export( GM_MultiSurface ms ) 
   {
     Debug.debugMethodBegin( "WKTAdapter", "export(GM_MultiSurface)" );
 
@@ -415,7 +374,7 @@ public class WKTAdapter
    * @param wkt
    *          a Point WKT
    */
-  public static GM_Point wrapPoint( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Point wrapPoint( String wkt, CS_CoordinateSystem crs ) 
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapPoint" );
 
@@ -524,7 +483,7 @@ public class WKTAdapter
    * @param wkt
    *          multipoint WKT
    */
-  public static GM_MultiPoint wrapMultiPoint( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_MultiPoint wrapMultiPoint( String wkt, CS_CoordinateSystem crs ) 
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiPoint" );
 

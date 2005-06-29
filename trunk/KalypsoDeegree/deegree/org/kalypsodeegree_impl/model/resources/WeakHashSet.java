@@ -89,7 +89,7 @@ public class WeakHashSet extends AbstractSet
     WeakElement next;
 
     /**
-     * Index for this element in {@link #table}. This index must be updated at every {@link #rehash}call.
+     * Index for this element in {@link #table}. This index must be updated at every rehash call.
      */
     int index;
 
@@ -126,7 +126,7 @@ public class WeakHashSet extends AbstractSet
   /**
    * List of reference collected by the garbage collector. Those elements must be removed from {@link #table}.
    */
-  private static final ReferenceQueue referenceQueue = new ReferenceQueue();
+  protected static final ReferenceQueue referenceQueue = new ReferenceQueue();
 
   /**
    * Background thread removing references collected by the garbage collector.
@@ -174,7 +174,7 @@ public class WeakHashSet extends AbstractSet
   private int count;
 
   /**
-   * The next size value at which to resize. This value should be <code>{@link #table}.length*{@link #loadFactor}</code>.
+   * The next size value at which to resize. This value should be <code>{@link #table}.length* loadFactor</code>.
    */
   private int threshold;
 
@@ -204,7 +204,7 @@ public class WeakHashSet extends AbstractSet
    * Invoked by {@link WeakElement}when an element has been collected by the garbage collector. This method will remove
    * the weak reference from {@link #table}.
    */
-  private synchronized void remove( final WeakElement toRemove )
+  protected synchronized void remove( final WeakElement toRemove )
   {
     /*
      * //----- BEGIN JDK 1.4 DEPENDENCIES ---- // assert valid() : count;
@@ -324,7 +324,7 @@ public class WeakHashSet extends AbstractSet
     {
       final int hash = hashCode( obj ) & 0x7FFFFFFF;
       int index = hash % table.length;
-      for( WeakElement e = table[index], prev = null; e != null; prev = e, e = e.next )
+      for( WeakElement e = table[index]; e != null; e = e.next )
       {
         final Object e_obj = e.get();
         if( e_obj != null )
@@ -383,7 +383,7 @@ public class WeakHashSet extends AbstractSet
        */
       final int hash = hashCode( obj ) & 0x7FFFFFFF;
       int index = hash % table.length;
-      for( WeakElement e = table[index], prev = null; e != null; prev = e, e = e.next )
+      for( WeakElement e = table[index]; e != null; e = e.next )
       {
         final Object e_obj = e.get();
         if( e_obj != null )

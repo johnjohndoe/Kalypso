@@ -78,7 +78,7 @@ public class VirtualVelocityFeatureTypePropertyHandler implements VirtualFeature
   public FeatureTypeProperty[] createVirtualFeatureTypeProperties( FeatureType ft )
   {
     return new FeatureTypeProperty[]
-    { new VirtualVelocityFeatureTypeProperty( ft ) };
+    { new VirtualVelocityFeatureTypeProperty() };
   }
 
   /**

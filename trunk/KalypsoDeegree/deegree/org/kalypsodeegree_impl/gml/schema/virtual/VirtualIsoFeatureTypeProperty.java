@@ -1,22 +1,3 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -57,21 +38,37 @@ import org.opengis.cs.CS_CoordinateSystem;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.opengis.cs.CS_CoordinateSystem;
+
+/**
+ * 
+ * @author doemming
+ */
 public class VirtualIsoFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
-
   private final static String DECORATED_NS = "http://www.opengis.net/gml";
 
   private double m_iso = 0.1d;
 
   private final static String PROP_GEOM = DECORATED_NS + ":polygonProperty";
 
-  /*
-   * 
-   * @author doemming
-   */
-  public VirtualIsoFeatureTypeProperty( FeatureType ft )
+  public VirtualIsoFeatureTypeProperty()
   {
     super( "iso_lines", "virtual", new HashMap() );
   }
@@ -243,5 +240,4 @@ public class VirtualIsoFeatureTypeProperty extends AbstractFeatureType implement
   {
     return true;
   }
-
 }

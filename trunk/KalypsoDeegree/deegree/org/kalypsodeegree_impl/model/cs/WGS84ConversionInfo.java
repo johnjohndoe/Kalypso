@@ -213,8 +213,8 @@ public class WGS84ConversionInfo implements Cloneable, Serializable
           && Double.doubleToLongBits( this.ppm ) == Double.doubleToLongBits( that.ppm )
           && Utilities.equals( this.areaOfUse, that.areaOfUse );
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

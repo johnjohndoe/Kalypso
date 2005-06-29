@@ -119,10 +119,10 @@ public class PersistentPageFile extends PageFile
         }
 
         // Auslesend der Dimension - Initialisierung PageFile
-        this.dimension = file.readInt();
-        this.capacity = file.readInt();
-        this.minimum = file.readInt();
-        this.pageSize = ( ( 4 * ( 5 + this.capacity ) ) + ( ( this.capacity + 1 ) * ( this.dimension * 16 ) ) );
+        m_dimension = file.readInt();
+        m_capacity = file.readInt();
+        m_minimum = file.readInt();
+        this.pageSize = ( ( 4 * ( 5 + m_capacity ) ) + ( ( m_capacity + 1 ) * ( m_dimension * 16 ) ) );
         this.buffer = new byte[pageSize];
 
         // Einlesen leerer Seiten
@@ -158,9 +158,9 @@ public class PersistentPageFile extends PageFile
         // header schreiben (Dimension , Dateiversion)
         file.seek( 0 );
         file.writeInt( PAGEFILE_VERSION );
-        file.writeInt( this.dimension );
-        file.writeInt( this.capacity );
-        file.writeInt( this.minimum );
+        file.writeInt( m_dimension );
+        file.writeInt( m_capacity );
+        file.writeInt( m_minimum );
       }
     }
     catch( IOException e )
@@ -205,18 +205,18 @@ public class PersistentPageFile extends PageFile
 
         if( type == 1 )
         {
-          for( int i = 0; i < capacity; i++ )
+          for( int i = 0; i < m_capacity; i++ )
             ( (LeafNode)node ).data[i] = ds.readInt();
         }
         else
         {
-          for( int i = 0; i < capacity; i++ )
+          for( int i = 0; i < m_capacity; i++ )
             ( (NoneLeafNode)node ).childNodes[i] = ds.readInt();
         }
 
         node.unionMinBB = readNextHyperBoundingBox( ds );
 
-        for( int i = 0; i < capacity; i++ )
+        for( int i = 0; i < m_capacity; i++ )
           node.hyperBBs[i] = readNextHyperBoundingBox( ds );
 
         ds.close();
@@ -236,24 +236,19 @@ public class PersistentPageFile extends PageFile
   }
 
   /**
-   * 
-   * 
-   * @param ds
-   * 
-   * @return
    * @throws IOException
    */
   public HyperBoundingBox readNextHyperBoundingBox( DataInputStream ds ) throws IOException
   {
     double[] point1;
     double[] point2;
-    point1 = new double[dimension];
-    point2 = new double[dimension];
+    point1 = new double[m_dimension];
+    point2 = new double[m_dimension];
 
-    for( int i = 0; i < dimension; i++ )
+    for( int i = 0; i < m_dimension; i++ )
       point1[i] = ds.readDouble();
 
-    for( int i = 0; i < dimension; i++ )
+    for( int i = 0; i < m_dimension; i++ )
       point2[i] = ds.readDouble();
 
     return new HyperBoundingBox( new HyperPoint( point1 ), new HyperPoint( point2 ) );
@@ -306,7 +301,7 @@ public class PersistentPageFile extends PageFile
           ds.writeInt( ( (LeafNode)node ).data[i] );
         }
 
-        for( int i = 0; i < ( capacity - node.counter ); i++ )
+        for( int i = 0; i < ( m_capacity - node.counter ); i++ )
           ds.writeInt( -1 );
       }
       else
@@ -316,28 +311,28 @@ public class PersistentPageFile extends PageFile
           ds.writeInt( ( (NoneLeafNode)node ).childNodes[i] );
         }
 
-        for( int i = 0; i < ( capacity - node.counter ); i++ )
+        for( int i = 0; i < ( m_capacity - node.counter ); i++ )
           ds.writeInt( -1 );
       }
 
-      for( int i = 0; i < dimension; i++ )
+      for( int i = 0; i < m_dimension; i++ )
         ds.writeDouble( node.unionMinBB.getPMin().getCoord( i ) );
 
-      for( int i = 0; i < dimension; i++ )
+      for( int i = 0; i < m_dimension; i++ )
         ds.writeDouble( node.unionMinBB.getPMax().getCoord( i ) );
 
       for( int j = 0; j < node.counter; j++ )
       {
-        for( int i = 0; i < dimension; i++ )
+        for( int i = 0; i < m_dimension; i++ )
           ds.writeDouble( node.hyperBBs[j].getPMin().getCoord( i ) );
 
-        for( int i = 0; i < dimension; i++ )
+        for( int i = 0; i < m_dimension; i++ )
           ds.writeDouble( node.hyperBBs[j].getPMax().getCoord( i ) );
       }
 
-      for( int j = 0; j < ( capacity - node.counter ); j++ )
+      for( int j = 0; j < ( m_capacity - node.counter ); j++ )
       {
-        for( int i = 0; i < ( dimension * 2 ); i++ )
+        for( int i = 0; i < ( m_dimension * 2 ); i++ )
           ds.writeDouble( -1 );
       }
 

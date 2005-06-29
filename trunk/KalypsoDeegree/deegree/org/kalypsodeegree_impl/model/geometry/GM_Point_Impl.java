@@ -259,11 +259,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     position.translate( d );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public GM_Position getPosition()
   {
     return position;
@@ -345,11 +340,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     setValid( true );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = "GM_Point: ";

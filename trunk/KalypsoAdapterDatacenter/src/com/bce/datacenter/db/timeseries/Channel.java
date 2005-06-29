@@ -16,7 +16,9 @@ import com.bce.datacenter.db.common.DataObject;
  */
 public class Channel extends DataObject
 {
-  /** separate identifier used for user own needs */
+  /** separate identifier used for user own needs 
+   * Marc: was ist damit?
+   * */
   private String m_identifier;
 
   /** timeseries belonging to this channel */

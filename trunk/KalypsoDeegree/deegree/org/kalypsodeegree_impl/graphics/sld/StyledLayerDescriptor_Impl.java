@@ -89,7 +89,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   private String abstract_ = null;
 
-  private String name = null;
+  private String m_name = null;
 
   private String title = null;
 
@@ -259,7 +259,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public String getName()
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -268,7 +268,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public void setName( String name )
   {
-    this.name = name;
+    this.m_name = name;
   }
 
   /**
