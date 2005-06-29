@@ -1,17 +1,3 @@
-package org.kalypso.ogc.gml.schema.virtual;
-
-import java.util.HashMap;
-
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -52,6 +38,19 @@ import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.gml.schema.virtual;
+
+import java.util.HashMap;
+
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
 
 /**
  * 
@@ -68,20 +67,17 @@ import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
  *  
  */
 
+/**
+ * 
+ * @author Nadja
+ */
 public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
-  private final FeatureTypeProperty m_ftp;
-
   private GM_Object m_value;
 
-  /*
-   * 
-   * @author Nadja
-   */
   public VirtualRasterFeatureTypeProperty( FeatureTypeProperty ftp )
   {
     super( "RasterBoundary_" + ftp.getName(), "virtual", new HashMap() );
-    m_ftp = ftp;
   }
 
   /**

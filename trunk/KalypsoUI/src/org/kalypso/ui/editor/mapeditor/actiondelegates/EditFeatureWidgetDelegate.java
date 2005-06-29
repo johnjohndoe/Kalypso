@@ -43,15 +43,17 @@ package org.kalypso.ui.editor.mapeditor.actiondelegates;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.map.widgets.EditFeatureWidget;
-import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
 /**
  * @author belger
  */
 public class EditFeatureWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-  private IWidget m_widget = null;
+  public EditFeatureWidgetDelegate()
+  {
+    super( new EditFeatureWidget( "Feature editieren", "Zeigt bei Mausklick ein Feature zum Editieren an." ) );
+
+  }
 
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
@@ -60,53 +62,9 @@ public class EditFeatureWidgetDelegate extends AbstractGisMapEditorActionDelegat
   public void setActiveEditor( IAction action, IEditorPart targetEditor )
   {
     super.setActiveEditor( action, targetEditor );
+
     final EditFeatureWidget featureWidget = (EditFeatureWidget)getWidget();
     if( targetEditor != null )
       featureWidget.setShell( getEditor().getEditorSite().getShell() );
-  }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  public void run( final IAction action )
-  {
-    final GisMapEditor editor = (GisMapEditor)getEditor();
-    editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
-  }
-
-  //  /**
-  //   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshEnabled()
-  //   */
-  //  public void refreshEnabled()
-  //  {
-  //    boolean enabled = false;
-  //    final GisMapEditor editor = (GisMapEditor)getEditor();
-  //    IAction action = getAction();
-  //    if( editor != null )
-  //    {
-  //      final MapPanel mapPanel = editor.getMapPanel();
-  //      IMapModell mapModell = mapPanel.getMapModell();
-  //      if( mapModell != null && mapModell.getThemeSize() > 0 )
-  //        enabled = true;
-  //    }
-  //    action.setEnabled( enabled );
-  //  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
-   */
-  protected void refreshAction( IAction action )
-  {
-  // nothing
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#getWidget()
-   */
-  public IWidget getWidget()
-  {
-    if( m_widget == null )
-      m_widget = new EditFeatureWidget( "edit feature", "" );
-    return m_widget;
   }
 }

@@ -131,7 +131,8 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
   {
@@ -160,14 +161,14 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
     m_loaded = false;
   }
 
-  public void addGMLDocumentListener( final IGMLDocumentListener l )
-  {
-    listenerList.add( IGMLDocumentListener.class, l );
-  }
-
   public void removeGMLDocuentListener( final IGMLDocumentListener l )
   {
     listenerList.remove( IGMLDocumentListener.class, l );
+  }
+
+  public void addGMLDocumentListener( final IGMLDocumentListener l )
+  {
+    listenerList.add( IGMLDocumentListener.class, l );
   }
 
   protected void fire()
@@ -189,7 +190,8 @@ public class GMLReader implements IPoolListener, ICommandTarget, IPooledObject
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
    */
   public void postCommand( ICommand command, Runnable runnable )
   {

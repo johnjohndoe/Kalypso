@@ -80,7 +80,6 @@ import org.kalypso.ui.editor.styleeditor.panels.ComparisonFilterComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LogicalFilterComboPanel;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -807,15 +806,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         {
           arguments.add( ( (ComplexFilter)filter ).getOperation() );
         }
-        try
-        {
-          LogicalOperation operation = new LogicalOperation( OperationDefines.NOT, arguments );
-          return new ComplexFilter( operation );
-        }
-        catch( FilterConstructionException e )
-        {
-          e.printStackTrace();
-        }
+        LogicalOperation operation = new LogicalOperation( OperationDefines.NOT, arguments );
+        return new ComplexFilter( operation );
       }
       else if( child.getSubType() == FilterDialogTreeNode.LOCICAL_AND )
       {
@@ -830,15 +822,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
             arguments.add( ( (ComplexFilter)filter ).getOperation() );
           }
         }
-        try
-        {
-          LogicalOperation operation = new LogicalOperation( OperationDefines.AND, arguments );
-          return new ComplexFilter( operation );
-        }
-        catch( FilterConstructionException e )
-        {
-          e.printStackTrace();
-        }
+        LogicalOperation operation = new LogicalOperation( OperationDefines.AND, arguments );
+        return new ComplexFilter( operation );
       }
       else if( child.getSubType() == FilterDialogTreeNode.LOCICAL_OR )
       {
@@ -853,15 +838,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
             arguments.add( ( (ComplexFilter)filter ).getOperation() );
           }
         }
-        try
-        {
-          LogicalOperation operation = new LogicalOperation( OperationDefines.OR, arguments );
-          return new ComplexFilter( operation );
-        }
-        catch( FilterConstructionException e )
-        {
-          e.printStackTrace();
-        }
+        LogicalOperation operation = new LogicalOperation( OperationDefines.OR, arguments );
+        return new ComplexFilter( operation );
       }
 
     }

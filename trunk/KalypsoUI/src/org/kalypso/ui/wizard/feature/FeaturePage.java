@@ -41,6 +41,7 @@
 package org.kalypso.ui.wizard.feature;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -51,7 +52,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -62,6 +65,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class FeaturePage extends WizardPage
 {
+  private final Collection m_changes = new ArrayList();
+
   private FeatureComposite m_featureComposite;
 
   private boolean m_overrideCanFlipToNextPage;
@@ -92,18 +97,33 @@ public class FeaturePage extends WizardPage
 
     m_featureComposite = new FeatureComposite( m_workspace, null, new URL[] {} );
     m_featureComposite.setFeature( m_workspace, m_feature );
+    final Collection changes = m_changes;
+    m_featureComposite.addChangeListener( new IFeatureChangeListener()
+    {
+      public void featureChanged( final FeatureChange change )
+      {
+        changes.add( change );
+      }
+
+      public void openFeatureRequested( Feature feature )
+      {
+      // TODO: open modal dialog?
+      }
+    } );
+
     final Control control = m_featureComposite.createControl( group, SWT.NONE );
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     setControl( group );
   }
 
-  //  public void setFeature( final GMLWorkspace workspace, final Feature feature )
-  //  {
-  //    m_feature = feature;
-  //    m_featureComposite.setFeature( workspace, feature );
-  //    m_featureComposite.updateControl();
-  //  }
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
+   */
+  public void dispose()
+  {
+    m_featureComposite.dispose();
+  }
 
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
@@ -124,8 +144,8 @@ public class FeaturePage extends WizardPage
     return super.canFlipToNextPage();
   }
 
-  public void collectChanges( final Collection changes )
+  public Collection getChanges()
   {
-    m_featureComposite.collectChanges( changes );
+    return new ArrayList( m_changes );
   }
 }

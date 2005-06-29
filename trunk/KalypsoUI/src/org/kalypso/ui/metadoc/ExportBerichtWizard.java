@@ -182,8 +182,7 @@ public class ExportBerichtWizard extends Wizard
 
   protected Document commitData()
   {
-    final Collection changes = new ArrayList();
-    m_featurePage.collectChanges( changes );
+    final Collection changes = m_featurePage.getChanges(  );
     final Document docBean = m_docBean;
     final Map metadata = docBean.getMetadata();
     for( final Iterator iter = changes.iterator(); iter.hasNext(); )
