@@ -20,7 +20,6 @@
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.kalypso.ui.addlayer"/>
-      <import plugin="org.bce.eclipse.platform.contrib"/>
       <import plugin="org.kalypso.floodrisk"/>
    </requires>
 
