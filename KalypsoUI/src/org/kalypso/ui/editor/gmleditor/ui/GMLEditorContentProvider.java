@@ -2,11 +2,9 @@ package org.kalypso.ui.editor.gmleditor.ui;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ui.editor.gmleditor.util.model.GMLDocumentEvent;
-import org.kalypso.ui.editor.gmleditor.util.model.IGMLDocumentListener;
 import org.kalypso.ui.editor.gmleditor.util.model.IModel;
 
-public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocumentListener
+public class GMLEditorContentProvider implements ITreeContentProvider
 {
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
@@ -50,13 +48,4 @@ public class GMLEditorContentProvider implements ITreeContentProvider, IGMLDocum
   {
     return getChildren( inputElement );
   }
-
-  /**
-   * @see org.kalypso.ui.editor.gmleditor.util.model.IGMLDocumentListener#onChange(org.kalypso.ui.editor.gmleditor.util.model.GMLDocumentEvent)
-   */
-  public void onChange( GMLDocumentEvent event )
-  {
-  //    System.out.println("document has changed, contentprovided!!!");
-  }
-
 }

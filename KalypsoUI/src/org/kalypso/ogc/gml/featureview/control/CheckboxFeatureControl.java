@@ -106,13 +106,13 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
       public void widgetSelected( SelectionEvent e )
       {
-        fireChange( getChange() );
+        fireFeatureChange( getChange() );
         fireModified();
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
       {
-        fireChange( getChange() );
+        fireFeatureChange( getChange() );
         fireModified();
       }
     } );
@@ -154,16 +154,6 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
       if( newvalue.booleanValue() != oldValue )
         m_checkbox.setSelection( newvalue.booleanValue() );
     }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
-   */
-  public void collectChanges( final Collection c )
-  {
-    final FeatureChange change = getChange();
-    if( change != null )
-      c.add( change );
   }
 
   protected FeatureChange getChange()

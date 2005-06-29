@@ -40,59 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget;
-import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
-/**
- */
 public class EditRelationsWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-
-  private IWidget m_widget = null;
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  public void run( final IAction action )
+  public EditRelationsWidgetDelegate()
   {
-    final GisMapEditor editor = (GisMapEditor)getEditor();
-    editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
-    try
-    {
-      // we want the options view to be visible
-      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
-      final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-      activeWorkbenchWindow.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView", null,
-          IWorkbenchPage.VIEW_VISIBLE );
-      activeWorkbenchWindow.setActivePage( activePage );
-    }
-    catch( PartInitException e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(IAction)
-   */
-  protected void refreshAction( IAction action )
-  {
-  // nothing
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#getWidget()
-   */
-  public IWidget getWidget()
-  {
-    if( m_widget == null )
-      m_widget = new EditRelationWidget( "Edit Relation", "Editieren von Relationen" );
-    return m_widget;
+    super( new EditRelationWidget( "Relation editeren ", "Editieren von Relationen" ) );
   }
 }

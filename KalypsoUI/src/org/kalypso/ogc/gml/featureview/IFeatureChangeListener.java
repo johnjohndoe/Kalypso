@@ -40,10 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
+import org.kalypsodeegree.model.feature.Feature;
+
 /**
  * @author belger
  */
 public interface IFeatureChangeListener
 {
   public void featureChanged( final FeatureChange change );
+  
+  public void openFeatureRequested( final Feature feature );
 }

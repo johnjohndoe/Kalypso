@@ -51,11 +51,13 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
@@ -63,14 +65,12 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -231,35 +231,65 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     table.setCapture( false );
 
     final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE );
-    //    final TableCursor tc = new TableCursor(getTable(),SWT.NONE);
     m_tableCursor = tc;
-    getTable().addMouseListener( new MouseAdapter()
+    // better: addSelectionListener on TableCursor
+    tc.addSelectionListener( new SelectionListener()
     {
-      public void mouseUp( MouseEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        // to remember selected row,
-        rememberLastSelectedFTPAndRow( e.x, e.y );
+        cursorChanged();
+      }
+
+      public void widgetDefaultSelected( final SelectionEvent e )
+      {
+        cursorChanged();
       }
     } );
+
+    //    getTable().addMouseListener( new MouseAdapter()
+    //    {
+    //      public void mouseUp( MouseEvent e )
+    //      {
+    //        // to remember selected row,
+    //        rememberLastSelectedFTPAndRow( e.x, e.y );
+    //      }
+    //    } );
   }
 
-  public void rememberLastSelectedFTPAndRow( int xPos, int yPos )
+  protected void cursorChanged()
   {
-    final TableItem item = getTable().getItem( new Point( xPos, yPos ) );
-    if( item == null )
-      return;
-    m_lastSelectedFE = (Feature)item.getData();
-    if( m_tableCursor != null && !m_tableCursor.isDisposed() )
-    {
-      int column = m_tableCursor.getColumn();
-      if( column >= 0 && column < m_modifier.length )
-      {
-        m_lastSelectedFTP = m_modifier[column].getFeatureTypeProperty();
-        return;
-      }
-    }
+    final TableItem row = m_tableCursor.getRow();
+    final int column = m_tableCursor.getColumn();
+
+    m_lastSelectedFE = null;
     m_lastSelectedFTP = null;
+
+    if( row != null )
+      m_lastSelectedFE = (Feature)row.getData();
+
+    if( column >= 0 && column < m_modifier.length )
+      m_lastSelectedFTP = m_modifier[column].getFeatureTypeProperty();
+
+    fireSelectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }
+
+  //  public void rememberLastSelectedFTPAndRow( int xPos, int yPos )
+  //  {
+  //    final TableItem item = getTable().getItem( new Point( xPos, yPos ) );
+  //    if( item == null )
+  //      return;
+  //    m_lastSelectedFE = (Feature)item.getData();
+  //    if( m_tableCursor != null && !m_tableCursor.isDisposed() )
+  //    {
+  //      int column = m_tableCursor.getColumn();
+  //      if( column >= 0 && column < m_modifier.length )
+  //      {
+  //        m_lastSelectedFTP = m_modifier[column].getFeatureTypeProperty();
+  //        return;
+  //      }
+  //    }
+  //    m_lastSelectedFTP = null;
+  //  }
 
   public void dispose()
   {
@@ -295,7 +325,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     m_isApplyTemplate = true;
     clearColumns();
-    
+
     if( getContentProvider() != null )
       setInput( null );
 
@@ -413,7 +443,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     if( featureType == null || table == null || table.isDisposed() )
       return;
-    
+
     final TableColumn[] columns = table.getColumns();
     boolean changed = false;
     for( int i = 0; i < columns.length; i++ )
@@ -606,7 +636,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -830,6 +861,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         return;
 
       final Object object = modifier.parseInput( feature, value );
+      final Object oldValue = modifier.getValue( feature );
+      if( oldValue != null && oldValue.equals( value ) )
+        return;
+
       // dialogs may return FeatureChange objects (doemming)
       final FeatureChange fc;
       final IKalypsoFeatureTheme theme = getTheme();
@@ -882,11 +917,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       return selection;
     return new FeatureThemeSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE, m_selectionID );
   }
-  
+
   protected void inputChanged( final Object input, final Object oldInput )
   {
     super.inputChanged( input, oldInput );
-    
+
     final IKalypsoTheme oldTheme = (IKalypsoTheme)oldInput;
 
     if( oldTheme != null )
@@ -896,9 +931,20 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     }
 
     clearColumns();
-    
+
     final IKalypsoTheme theme = (IKalypsoTheme)input;
     if( theme != null )
       theme.addModellListener( this );
+  }
+
+  /** Registers this MenuManager es context menu on table and table cursor */
+  public void setMenu( final MenuManager menuManager )
+  {
+    final Table table = getTable();
+    final Menu tablemenu = menuManager.createContextMenu( table );
+    table.setMenu( tablemenu );
+
+    final Menu cursormenu = menuManager.createContextMenu( m_tableCursor );
+    m_tableCursor.setMenu( cursormenu );
   }
 }

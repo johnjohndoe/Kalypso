@@ -191,7 +191,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       final Collection c = new LinkedList();
       m_dialog.collectChanges( c );
       for( final Iterator iter = c.iterator(); iter.hasNext(); )
-        fireChange( (FeatureChange)iter.next() );
+        fireFeatureChange( (FeatureChange)iter.next() );
 
       fireModfied();
 
@@ -219,14 +219,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   public boolean isValid()
   {
     return true;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
-   */
-  public void collectChanges( final Collection c )
-  {
-    m_dialog.collectChanges( c );
   }
 
   /**

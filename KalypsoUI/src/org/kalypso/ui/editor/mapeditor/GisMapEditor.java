@@ -78,8 +78,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * </p>
  * 
  * <p>
- * Implementiert {@link org.kalypso.commons.command.ICommandManager}f?r die Undo und Redo Action. Gibt alles an den
- * DefaultCommandManager weiter, es wird zus?tzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
+ * Implementiert {@link org.kalypso.commons.command.ICommandManager}für die Undo und Redo Action. Gibt alles an den
+ * DefaultCommandManager weiter, es wird zusätzlich eine Aktualisierung der View bei jeder Aktion durchgef?hrt
  * </p>
  * 
  * @author belger

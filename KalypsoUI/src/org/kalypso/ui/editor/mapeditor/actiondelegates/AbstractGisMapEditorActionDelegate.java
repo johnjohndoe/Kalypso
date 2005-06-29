@@ -51,11 +51,18 @@ import org.kalypso.ui.editor.mapeditor.GisMapEditor;
  */
 public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEditorActionDelegate
 {
+  private final IWidget m_widget;
+
+  public AbstractGisMapEditorActionDelegate( final IWidget widget )
+  {
+    m_widget = widget;
+  }
+  
   /**
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IEditorPart)
    */
-  public void setActiveEditor( IAction action, IEditorPart targetEditor )
+  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     super.setActiveEditor( action, targetEditor );
     if( action.getStyle() == IAction.AS_RADIO_BUTTON )
@@ -65,8 +72,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
       {
         if( action.isChecked() )
         {
-          // da event evt vom AWT-Thread kommt
-          // ??
+          // da der event evt vom AWT-Thread kommt
           getEditor().getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
           {
             public void run()
@@ -79,42 +85,29 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
     }
   }
 
-  //  /**
-  //   * @see
-  // org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction()
-  //   */
-  //  final protected void refreshAction()
-  //  {
-  //    final GisMapEditor editor = (GisMapEditor)getEditor();
-  //    IAction action = getAction();
-  //    if( editor != null && action != null )
-  //    {
-  //      if( action.isChecked() )
-  //      {
-  //        // da event evt vom AWT-Thread kommt
-  //        getEditor().getEditorSite().getShell().getDisplay().asyncExec( new
-  // Runnable()
-  //        {
-  //          public void run()
-  //          {
-  //            editor.getMapPanel().getWidgetManager().setActualWidget( m_widget );
-  //          }
-  //        } );
-  //      }
-  //    }
-  //  }
+  protected final IWidget getWidget()
+  {
+    return m_widget;
+  }
+  
+  /**
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  public final void run( final IAction action )
+  {
+    // activate my widget
+    final GisMapEditor editor = (GisMapEditor)getEditor();
+    editor.getMapPanel().getWidgetManager().setActualWidget( getWidget() );
+  }
 
-  public abstract IWidget getWidget();
-  //  {
-  //    return m_widget;
-  //  }
-
-  //  /**
-  //   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-  //   */
-  //  public void run( final IAction action )
-  //  {
-  //    final GisMapEditor editor = (GisMapEditor)getEditor();
-  //    editor.getMapPanel().getWidgetManager().setActualWidget( m_widget );
-  //  }
+  
+  /**
+   * The default implementation does nothing
+   * 
+   * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
+   */
+  protected void refreshAction( final IAction action )
+  {
+    // does nothing
+  }
 }

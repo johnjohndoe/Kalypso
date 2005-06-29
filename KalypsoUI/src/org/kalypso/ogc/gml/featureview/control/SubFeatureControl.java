@@ -1,11 +1,10 @@
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.util.Collection;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureControl;
@@ -42,6 +41,19 @@ public class SubFeatureControl extends AbstractFeatureControl
     else
       m_fc = new ButtonFeatureControl( workspace, feature, getFeatureTypeProperty() );
 
+    m_fc.addChangeListener( new IFeatureChangeListener()
+    {
+      public void featureChanged( final FeatureChange change )
+      {
+        fireFeatureChange( change );
+      }
+
+      public void openFeatureRequested( final Feature featureToOpen )
+      {
+        fireOpenFeatureRequested( featureToOpen );
+      }
+    } );
+
     final Control control = m_fc.createControl( parent, SWT.NONE );
     return control;
   }
@@ -60,14 +72,6 @@ public class SubFeatureControl extends AbstractFeatureControl
   public void updateControl()
   {
     m_fc.updateControl();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
-   */
-  public void collectChanges( Collection c )
-  {
-    m_fc.collectChanges( c );
   }
 
   /**
@@ -92,22 +96,6 @@ public class SubFeatureControl extends AbstractFeatureControl
   public void removeModifyListener( ModifyListener l )
   {
     m_fc.removeModifyListener( l );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
-   */
-  public void addChangeListener( IFeatureChangeListener l )
-  {
-    m_fc.addChangeListener( l );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
-   */
-  public void removeChangeListener( IFeatureChangeListener l )
-  {
-    m_fc.removeChangeListener( l );
   }
 
 }

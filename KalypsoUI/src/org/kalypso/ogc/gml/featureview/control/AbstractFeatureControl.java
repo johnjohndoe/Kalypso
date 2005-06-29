@@ -42,8 +42,9 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.util.SafeRunnable;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureControl;
@@ -84,7 +85,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_changelisteners.clear();
   }
 
-  public GMLWorkspace getWorkspace()
+  public final GMLWorkspace getWorkspace()
   {
     return m_workspace;
   }
@@ -111,7 +112,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public void addChangeListener( final IFeatureChangeListener l )
+  public final void addChangeListener( final IFeatureChangeListener l )
   {
     m_changelisteners.add( l );
   }
@@ -119,17 +120,45 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public void removeChangeListener( final IFeatureChangeListener l )
+  public final void removeChangeListener( final IFeatureChangeListener l )
   {
     m_changelisteners.remove( l );
   }
 
-  protected void fireChange( final FeatureChange change )
+  protected final void fireFeatureChange( final FeatureChange change )
   {
     if( change == null )
       return;
 
-    for( Iterator iter = m_changelisteners.iterator(); iter.hasNext(); )
-      ( (IFeatureChangeListener)iter.next() ).featureChanged( change );
+    final IFeatureChangeListener[] listeners = (IFeatureChangeListener[])m_changelisteners
+        .toArray( new IFeatureChangeListener[m_changelisteners.size()] );
+    for( int i = 0; i < listeners.length; i++ )
+    {
+      final IFeatureChangeListener listener = listeners[i];
+      Platform.run( new SafeRunnable()
+      {
+        public void run() throws Exception
+        {
+          listener.featureChanged( change );
+        }
+      } );
+    }
+  }
+
+  protected final void fireOpenFeatureRequested( final Feature feature )
+  {
+    final IFeatureChangeListener[] listeners = (IFeatureChangeListener[])m_changelisteners
+        .toArray( new IFeatureChangeListener[m_changelisteners.size()] );
+    for( int i = 0; i < listeners.length; i++ )
+    {
+      final IFeatureChangeListener listener = listeners[i];
+      Platform.run( new SafeRunnable()
+      {
+        public void run() throws Exception
+        {
+          listener.openFeatureRequested( feature );
+        }
+      } );
+    }
   }
 }

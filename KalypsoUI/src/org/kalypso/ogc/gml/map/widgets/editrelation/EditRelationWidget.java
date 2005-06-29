@@ -93,6 +93,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * TODO use check icons that indicate mixed child status <br>
  * TODO support removing relations <br>
+ * 
+ * @author doemming
  */
 public class EditRelationWidget extends AbstractWidget implements IWidgetWithOptions
 {
@@ -129,14 +131,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   int m_modificationMode = MODE_ADD;
 
-  /*
-   * 
-   * @author doemming
-   */
   public EditRelationWidget( String name, String toolTip )
   {
     super( name, toolTip );
-    setLeftMFunction( "Quelle wählen" );
   }
 
   public void leftPressed( Point p )
@@ -471,23 +468,24 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         }
       } );
     }
-    if( m_srcFE == null )
-    {
-      setLeftMFunction( "Quelle wählen" );
-      setRightMFunction( null );
-    }
-    // src != null && m_targetFE==null
-    else if( m_targetFE == null )
-    {
-      setLeftMFunction( "Ziel wählen" );
-      setRightMFunction( "Auswahl aufheben" );
-    }
-    // src != null && m_targetFE!=null
-    else
-    {
-      setLeftMFunction( "Relation anlegen" );
-      setRightMFunction( "Auswahl aufheben" );
-    }
+    // Andreas: das hatte keine Auswirkungen (mehr). Weg?
+//    if( m_srcFE == null )
+//    {
+//      setLeftMFunction( "Quelle wählen" );
+//      setRightMFunction( null );
+//    }
+//    // src != null && m_targetFE==null
+//    else if( m_targetFE == null )
+//    {
+//      setLeftMFunction( "Ziel wählen" );
+//      setRightMFunction( "Auswahl aufheben" );
+//    }
+//    // src != null && m_targetFE!=null
+//    else
+//    {
+//      setLeftMFunction( "Relation anlegen" );
+//      setRightMFunction( "Auswahl aufheben" );
+//    }
   }
 
   /**

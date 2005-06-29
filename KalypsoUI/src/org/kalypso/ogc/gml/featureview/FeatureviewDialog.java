@@ -46,8 +46,6 @@ import java.util.Collection;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -62,9 +60,11 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * Use this dialog only once, it cannot be redisplayed.
+ * 
  * @author belger
  */
-public class FeatureviewDialog extends Dialog implements ModifyListener
+public class FeatureviewDialog extends Dialog
 {
   private final FeatureComposite m_featureComposite;
 
@@ -85,6 +85,21 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     m_workspace = workspace;
     m_target = target;
     m_featureComposite = featureComposite;
+
+    final Collection changes = m_changes;
+    m_featureComposite.addChangeListener( new IFeatureChangeListener()
+    {
+      public void featureChanged( final FeatureChange change )
+      {
+        changes.add( change );
+        updateButtons();
+      }
+
+      public void openFeatureRequested( Feature feature )
+      {
+      // TODO: stack dialogs
+      }
+    } );
 
     setShellStyle( getShellStyle() | SWT.RESIZE | SWT.MAX );
   }
@@ -115,8 +130,6 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     creator.createControl( panel, SWT.V_SCROLL, SWT.NONE );
     creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    featureComposite.addModifyListener( this );
-
     return creator.getScrolledComposite();
   }
 
@@ -130,7 +143,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
     createButton( parent, APPLY_ID, "Übernehmen", false );
     createButton( parent, RESET_ID, "Zurücksetzen", false );
 
-    updateButtons( false );
+    updateButtons();
   }
 
   /**
@@ -160,20 +173,20 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
 
   private void applyPressed()
   {
+    final FeatureChange[] changesArray = (FeatureChange[])m_changes.toArray( new FeatureChange[m_changes.size()] );
     m_changes.clear();
 
-    m_featureComposite.collectChanges( m_changes );
-
     if( m_workspace != null )
-      m_target.postCommand( new ChangeFeaturesCommand( m_workspace, (FeatureChange[])m_changes
-          .toArray( new FeatureChange[m_changes.size()] ) ), null );
+      m_target.postCommand( new ChangeFeaturesCommand( m_workspace, changesArray ), null );
 
-    updateButtons( false );
+    updateButtons();
   }
 
   private void resetPressed()
   {
+    m_changes.clear();
     m_featureComposite.updateControl();
+    updateButtons();
   }
 
   /**
@@ -183,7 +196,7 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
   {
     applyPressed();
 
-    m_featureComposite.removeModifyListener( this );
+    m_featureComposite.dispose();
 
     super.okPressed();
   }
@@ -193,28 +206,16 @@ public class FeatureviewDialog extends Dialog implements ModifyListener
    */
   protected void cancelPressed()
   {
-    m_featureComposite.removeModifyListener( this );
+    m_featureComposite.dispose();
 
     super.cancelPressed();
   }
 
-  private void updateButtons( final boolean bEnable )
+  protected void updateButtons()
   {
-    getButton( IDialogConstants.OK_ID ).setEnabled( bEnable );
-    getButton( APPLY_ID ).setEnabled( bEnable );
-    getButton( RESET_ID ).setEnabled( bEnable );
-  }
-
-  /**
-   * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-   */
-  public void modifyText( final ModifyEvent e )
-  {
-    final Collection changes = new ArrayList();
-    m_featureComposite.collectChanges( changes );
-
-    final boolean bDirty = changes.size() != 0;
-
-    updateButtons( bDirty );
+    final boolean enable = m_changes.size() != 0;
+    getButton( IDialogConstants.OK_ID ).setEnabled( enable );
+    getButton( APPLY_ID ).setEnabled( enable );
+    getButton( RESET_ID ).setEnabled( enable );
   }
 }

@@ -69,6 +69,7 @@ import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.nature.ModelNature;
 import org.kalypsodeegree.model.feature.Feature;
@@ -84,6 +85,8 @@ public class SteuerparameterWizardPage extends WizardPage
   private final IProjectProvider m_projectProvider;
 
   private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, new URL[] {} );
+  
+  private final Collection m_changes = new ArrayList();
 
   private boolean m_overrideCanFlipToNextPage;
 
@@ -91,7 +94,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private Button m_checkUpdate;
 
-  GMLWorkspace m_workspace;
+  protected GMLWorkspace m_workspace;
 
   private IFolder m_currentCalcCase;
 
@@ -102,6 +105,19 @@ public class SteuerparameterWizardPage extends WizardPage
   {
     super( "EditCalcCaseControlPage", "Steuerparameter", image );
 
+    final Collection changes = m_changes;
+    m_featureComposite.addChangeListener(new IFeatureChangeListener() {
+
+      public void featureChanged( final FeatureChange change )
+      {
+        changes.add( change );
+      }
+
+      public void openFeatureRequested( Feature feature )
+      {
+        // TODO:
+      }});
+    
     m_projectProvider = pp;
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
   }
@@ -125,18 +141,17 @@ public class SteuerparameterWizardPage extends WizardPage
     monitor.beginTask( "Steuerparameter speichern", 2000 );
 
     // COMMITTEN
-    final Collection changes = new ArrayList();
-
-    final FeatureComposite fc = m_featureComposite;
+    final Collection changes = m_changes;
+    final FeatureChange[] featureChanges = (FeatureChange[])changes.toArray( new FeatureChange[changes.size()] );
+    changes.clear();
 
     getControl().getDisplay().syncExec( new CatchRunnable()
     {
       public void runIntern() throws Exception
       {
-        fc.collectChanges( changes );
         // BUG command wird nicht ausgeführt
         // Änderungen committen
-        new ChangeFeaturesCommand( m_workspace, (FeatureChange[])changes.toArray( new FeatureChange[changes.size()] ) )
+        new ChangeFeaturesCommand( m_workspace, featureChanges )
             .process();
       }
     } );

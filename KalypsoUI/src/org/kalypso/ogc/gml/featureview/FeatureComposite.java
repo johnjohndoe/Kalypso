@@ -51,7 +51,10 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -60,6 +63,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.CheckboxFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
@@ -92,7 +96,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author belger
  */
-public class FeatureComposite implements IFeatureControl
+public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
   /** FeatureType -> FeatureView */
   private final Map m_viewMap = new HashMap();
@@ -101,11 +105,9 @@ public class FeatureComposite implements IFeatureControl
 
   private final Collection m_swtControls = new ArrayList();
 
+  private final Collection m_modifyListeners = new ArrayList( 5 );
+
   private Control m_control = null;
-
-  private Feature m_feature;
-
-  private GMLWorkspace m_workspace;
 
   public FeatureComposite( final GMLWorkspace workspace, final Feature feature )
   {
@@ -114,8 +116,7 @@ public class FeatureComposite implements IFeatureControl
 
   public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final URL[] templateURL )
   {
-    m_workspace = workspace;
-    m_feature = feature;
+    super( workspace, feature, null );
 
     for( int i = 0; i < templateURL.length; i++ )
       addView( templateURL[i] );
@@ -123,8 +124,7 @@ public class FeatureComposite implements IFeatureControl
 
   public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final FeatureviewType[] views )
   {
-    m_workspace = workspace;
-    m_feature = feature;
+    super( workspace, feature, null );
 
     for( int i = 0; i < views.length; i++ )
       addView( views[i] );
@@ -143,33 +143,14 @@ public class FeatureComposite implements IFeatureControl
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
-   */
-  public void collectChanges( final Collection c )
-  {
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
-    {
-      final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.collectChanges( c );
-    }
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
    */
   public void dispose()
   {
     disposeControl();
 
+    m_modifyListeners.clear();
     m_viewMap.clear();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
-   */
-  public Feature getFeature()
-  {
-    return m_feature;
   }
 
   /**
@@ -420,6 +401,8 @@ public class FeatureComposite implements IFeatureControl
   private void addFeatureControl( final IFeatureControl fc )
   {
     m_featureControls.add( fc );
+    fc.addChangeListener( this );
+    fc.addModifyListener( this );
   }
 
   /**
@@ -427,11 +410,7 @@ public class FeatureComposite implements IFeatureControl
    */
   public void addModifyListener( final ModifyListener l )
   {
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
-    {
-      final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.addModifyListener( l );
-    }
+    m_modifyListeners.add( l );
   }
 
   /**
@@ -439,18 +418,12 @@ public class FeatureComposite implements IFeatureControl
    */
   public void removeModifyListener( final ModifyListener l )
   {
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
-    {
-      final IFeatureControl fc = (IFeatureControl)iter.next();
-      fc.removeModifyListener( l );
-    }
+    m_modifyListeners.remove( this );
   }
 
   public void setFeature( final GMLWorkspace workspace, final Feature feature )
   {
-    m_feature = feature;
-    m_workspace = workspace;
-
+    super.setFeature( workspace, feature );
     for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
     {
       final IFeatureControl fc = (IFeatureControl)iter.next();
@@ -510,24 +483,6 @@ public class FeatureComposite implements IFeatureControl
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
-   */
-  public void addChangeListener( final IFeatureChangeListener l )
-  {
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
-      ( (IFeatureControl)iter.next() ).addChangeListener( l );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
-   */
-  public void removeChangeListener( final IFeatureChangeListener l )
-  {
-    for( final Iterator iter = m_featureControls.iterator(); iter.hasNext(); )
-      ( (IFeatureControl)iter.next() ).removeChangeListener( l );
-  }
-
   public Control getControl()
   {
     return m_control;
@@ -565,10 +520,38 @@ public class FeatureComposite implements IFeatureControl
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getWorkspace()
+   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#featureChanged(org.kalypso.ogc.gml.featureview.FeatureChange)
    */
-  public GMLWorkspace getWorkspace()
+  public void featureChanged( final FeatureChange change )
   {
-    return m_workspace;
+    fireFeatureChange( change );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature)
+   */
+  public void openFeatureRequested( final Feature feature )
+  {
+    fireOpenFeatureRequested( feature );
+  }
+
+  /**
+   * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+   */
+  public void modifyText( final ModifyEvent e )
+  {
+    final ModifyListener[] listeners = (ModifyListener[])m_modifyListeners
+        .toArray( new ModifyListener[m_modifyListeners.size()] );
+    for( int i = 0; i < listeners.length; i++ )
+    {
+      final ModifyListener listener = listeners[i];
+      Platform.run( new SafeRunnable()
+      {
+        public void run() throws Exception
+        {
+          listener.modifyText( e );
+        }
+      } );
+    }
   }
 }

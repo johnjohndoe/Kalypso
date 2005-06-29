@@ -42,15 +42,14 @@ package org.kalypso.ui.editor.gistableeditor;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -62,7 +61,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -135,6 +133,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     if( m_layerTable == null )
       return;
 
+    ByteArrayOutputStream bos = null;
+    ByteArrayInputStream bis = null;
     try
     {
       final Gistableview tableTemplate = m_layerTable.createTableTemplate();
@@ -143,31 +143,28 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       // serialisieren
       final IFile file = input.getFile();
 
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      bos = new ByteArrayOutputStream();
       final OutputStreamWriter osw = new OutputStreamWriter( bos, file.getCharset() );
       m_marshaller.marshal( tableTemplate, osw );
-
-      // TODO close in finally block?
       bos.close();
 
-      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+      bis = new ByteArrayInputStream( bos.toByteArray() );
       file.setContents( bis, false, true, monitor );
-
-      // TODO close in finally block?
       bis.close();
+
     }
-    catch( final JAXBException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
+
+      // TODO error handling
     }
-    catch( final IOException e )
+    finally
     {
-      e.printStackTrace();
+      IOUtils.closeQuietly( bos );
+      IOUtils.closeQuietly( bis );
     }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
+
   }
 
   /**
@@ -181,7 +178,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
     m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, plugin.getDefaultMapSelectionID() );
 
-    MenuManager menuManager = new MenuManager();
+    final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
@@ -194,10 +191,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       }
     } );
 
-    Menu menu = menuManager.createContextMenu( m_layerTable.getControl() );
-    m_layerTable.getControl().setMenu( menu );
-
     getSite().registerContextMenu( menuManager, m_layerTable );
+    m_layerTable.setMenu( menuManager );
+
     load();
   }
 
@@ -272,40 +268,13 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       return;
 
     final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
-    //    final String lang = Locale.getDefault().getLanguage();
+    // TODO: use platform mechanism instead: 
+    //    Platform.getNL();
     final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
 
     for( int i = 0; i < ftps.length; i++ )
-    {
       manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), ftps[i].getAnnotation( lang ) ) );
-    }
   }
-
-  //  public void createSpaltenMenu( IMenuManager menuManager )
-  //  {
-  //    // menuManager.setRemoveAllWhenShown( true );
-  //    menuManager.addMenuListener( new IMenuListener()
-  //    {
-  //      public void menuAboutToShow( final IMenuManager manager )
-  //      {
-  //        manager.removeAll();
-  //        appendSpaltenActions( manager );
-  //      }
-  //    } );
-  //    
-  //    
-  //    // final MenuManager menuMgr = new MenuManager( "Spalten", id );
-  //    // menuMgr.setRemoveAllWhenShown( true );
-  //    // menuMgr.addMenuListener( new IMenuListener()
-  //    // {
-  //    // public void menuAboutToShow( final IMenuManager manager )
-  //    // {
-  //    // appendSpaltenActions( manager );
-  //    // }
-  //    // } );
-  //    //
-  //    // return menuMgr;
-  //  }
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)

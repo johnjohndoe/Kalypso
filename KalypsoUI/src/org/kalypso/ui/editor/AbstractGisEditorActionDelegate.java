@@ -108,7 +108,6 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
   public void selectionChanged( final IAction action, final ISelection selection )
   {
   //    m_action = action;
-  // ??
   }
 
   /**

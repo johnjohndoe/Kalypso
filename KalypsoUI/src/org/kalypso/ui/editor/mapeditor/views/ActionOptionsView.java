@@ -59,6 +59,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -300,14 +301,15 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidgetChangeListener#widgetChanged(org.kalypso.ogc.gml.widgets.IWidget)
    */
-  public void widgetChanged( IWidget newWidget )
+  public void widgetChanged( final IWidget newWidget )
   {
     if( m_activeWidget == newWidget && !m_modeForce )
       return;
+
     // dispose old
     if( m_activeWidget != null && m_activeWidget instanceof IWidgetWithOptions )
     {
-      IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
+      final IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
       widget.disposeControl();
     }
 
@@ -328,6 +330,18 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
           final IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
           widget.createControl( m_group );
           m_group.layout();
+
+          // the widget changed and there is something to show, so bring this
+          // view to top
+          try
+          {
+            final IWorkbenchPage page = getSite().getPage();
+            page.showView( getViewSite().getId(), null, IWorkbenchPage.VIEW_VISIBLE );
+          }
+          catch( final PartInitException e )
+          {
+            e.printStackTrace();
+          }
         }
       }
     }

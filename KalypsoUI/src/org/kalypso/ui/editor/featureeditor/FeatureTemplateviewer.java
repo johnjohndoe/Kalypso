@@ -114,6 +114,11 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       onFeatureChanged( change );
     }
+
+    public void openFeatureRequested( final Feature feature )
+    {
+      // TODO: open Dialog?
+    }
   };
 
   private final JobExclusiveCommandTarget m_commandtarget;

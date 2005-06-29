@@ -74,8 +74,8 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
     super();
   }
 
-  /*
-   * (non-Javadoc) Method declared on ISelectionProvider.
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
@@ -136,8 +136,8 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
     }
   }
 
-  /*
-   * (non-Javadoc) Method declared on IPage (and Page).
+  /**
+   * @see org.eclipse.ui.part.IPage#getControl()
    */
   public Control getControl()
   {
@@ -146,8 +146,8 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
     return treeViewer.getControl();
   }
 
-  /*
-   * (non-Javadoc) Method declared on ISelectionProvider.
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
   public ISelection getSelection()
   {
@@ -166,9 +166,7 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
     return treeViewer;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
    */
   public void init( IPageSite pageSite )
@@ -177,16 +175,16 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
     pageSite.setSelectionProvider( this );
   }
 
-  /*
-   * (non-Javadoc) Method declared on ISelectionProvider.
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
     selectionChangedListeners.remove( listener );
   }
 
-  /*
-   * (non-Javadoc) Method declared on ISelectionChangeListener. Gives notification that the tree selection has changed.
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
   public void selectionChanged( SelectionChangedEvent event )
   {
@@ -201,8 +199,8 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
     treeViewer.getControl().setFocus();
   }
 
-  /*
-   * (non-Javadoc) Method declared on ISelectionProvider.
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
   public void setSelection( ISelection selection )
   {

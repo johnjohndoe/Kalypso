@@ -13,6 +13,8 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.viewers.IPostSelectionProvider;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -31,11 +33,6 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
   protected GMLEditorTreeView m_viewer = null;
 
   protected GMLReader m_gmlReader = null;
-
-  public GMLEditor()
-  {
-  /**/
-  }
 
   public void dispose()
   {
@@ -95,6 +92,7 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
     try
     {
       final IFile inputFile = ( (IFileEditorInput)input ).getFile();
+      final String extension = inputFile.getFileExtension();
       final URL context = ResourceUtilities.createURL( inputFile );
 
       final String gmlType;
@@ -104,6 +102,11 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
         final GmlEditorInput gmlEditorInput = (GmlEditorInput)input;
         gmlType = gmlEditorInput.getLinktype();
         gmlSource = context.toString();
+      }
+      else if( extension.compareToIgnoreCase( "gml" ) == 0 )
+      {
+        gmlType = "gml";
+        gmlSource = ResourceUtilities.createURL( inputFile ).toString();
       }
       else
       {
@@ -147,5 +150,26 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
     {
       return m_linktype;
     }
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == IPostSelectionProvider.class )
+      return m_viewer;
+    else if( adapter == ISelectionProvider.class )
+      return m_viewer;
+
+    return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
+   */
+  public void setFocus()
+  {
+    m_viewer.getTreeViewer().getControl().setFocus();
   }
 }

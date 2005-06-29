@@ -40,13 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.util.Collection;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -102,7 +102,18 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     {
       public void focusLost( final FocusEvent e )
       {
-        fireChange( getChange() );
+        fireFeatureChange( getChange() );
+      }
+    } );
+
+    m_text.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetDefaultSelected( SelectionEvent e )
+      {
+        fireFeatureChange( getChange() );
       }
     } );
 
@@ -169,16 +180,6 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   public String toString()
   {
     return m_modifier.getValue( getFeature() ).toString();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
-   */
-  public void collectChanges( final Collection c )
-  {
-    final FeatureChange change = getChange();
-    if( change != null )
-      c.add( change );
   }
 
   protected FeatureChange getChange()
