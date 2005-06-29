@@ -1,20 +1,3 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -55,18 +38,33 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+/**
+ * 
+ * @author doemming
+ */
 public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
-
   private final String m_type;
 
   private String m_linkName;
 
-  /*
-   * 
-   * @author doemming
-   */
   public VirtualFeatureAssociationTypeProperty( FeatureAssociationTypeProperty ftp )
   {
     super( "link_" + ftp.getName(), "virtual", new HashMap() );

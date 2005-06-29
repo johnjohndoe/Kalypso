@@ -96,7 +96,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2148069106391096842L;
 
-  protected GM_SurfacePatch patch = null;
+  protected GM_SurfacePatch m_patch = null;
 
   private double area = 0;
 
@@ -121,7 +121,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   {
     super( surfacePatch.getCoordinateSystem(), orientation );
 
-    patch = surfacePatch;
+    m_patch = surfacePatch;
 
     setValid( false );
   }
@@ -157,8 +157,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   private void calculateCentroidArea()
   {
-    centroid = patch.getCentroid();
-    area = patch.getArea();
+    centroid = m_patch.getCentroid();
+    area = m_patch.getArea();
   }
 
   /**
@@ -168,8 +168,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
   {
     try
     {
-      GM_Ring ext = new GM_Ring_Impl( patch.getExteriorRing(), crs );
-      GM_Position[][] inn_ = patch.getInteriorRings();
+      GM_Ring ext = new GM_Ring_Impl( m_patch.getExteriorRing(), crs );
+      GM_Position[][] inn_ = m_patch.getInteriorRings();
       GM_Ring[] inn = null;
 
       if( inn_ != null )
@@ -208,7 +208,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   private void calculateEnvelope()
   {
-    envelope = patch.getEnvelope();
+    envelope = m_patch.getEnvelope();
   }
 
   /**
@@ -263,7 +263,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
       throw new GM_Exception( "invalid index/position to get a patch!" );
     }
 
-    return patch;
+    return m_patch;
   }
 
   /**
@@ -276,7 +276,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
       throw new GM_Exception( "invalid index/position to set a patch!" );
     }
 
-    this.patch = patch;
+    this.m_patch = patch;
 
     setValid( false );
   }
@@ -292,7 +292,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
       throw new GM_Exception( "invalid index/position to insert a patch!" );
     }
 
-    this.patch = patch;
+    this.m_patch = patch;
 
     setValid( false );
   }
@@ -344,7 +344,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
 
     try
     {
-      if( !patch.equals( ( (GM_Surface)other ).getSurfacePatchAt( 0 ) ) )
+      if( !m_patch.equals( ( (GM_Surface)other ).getSurfacePatchAt( 0 ) ) )
       {
         return false;
       }
@@ -374,7 +374,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   public int getCoordinateDimension()
   {
-    return patch.getExteriorRing()[0].getAsArray().length;
+    return m_patch.getExteriorRing()[0].getAsArray().length;
   }
 
   /**
@@ -386,7 +386,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
 
     try
     {
-      s = new GM_Surface_Impl( getOrientation(), patch );
+      s = new GM_Surface_Impl( getOrientation(), m_patch );
     }
     catch( Exception ex )
     {
@@ -401,8 +401,8 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
    */
   public void translate( double[] d )
   {
-    GM_Position[] ext = patch.getExteriorRing();
-    GM_Position[][] inn = patch.getInteriorRings();
+    GM_Position[] ext = m_patch.getExteriorRing();
+    GM_Position[][] inn = m_patch.getInteriorRings();
 
     for( int j = 0; j < ext.length; j++ )
     {
@@ -437,7 +437,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     {
       calculateParam();
     }
-    return patch.contains( gmo ) || boundary.intersects( gmo );
+    return m_patch.contains( gmo ) || boundary.intersects( gmo );
   }
 
   /**
@@ -481,7 +481,7 @@ class GM_Surface_Impl extends GM_OrientableSurface_Impl implements GM_Surface, G
     {
       e.printStackTrace();
     }
-    ret += ( "patch = " + patch + "\n" );
+    ret += ( "patch = " + m_patch + "\n" );
     return ret;
   }
 }

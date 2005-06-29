@@ -121,7 +121,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
 
   /**
    * Transforms an array of floating point coordinates by this matrix. Point coordinates must have a dimension equals to
-   * <code>{@link Matrix#getNumCol}-1</code>. For example, for square matrix of size 4&times;4, coordinate points
+   * <code>Matrix#getNumCol -1</code>. For example, for square matrix of size 4&times;4, coordinate points
    * are three-dimensional and stored in the arrays starting at the specified offset (<code>srcOff</code>) in the
    * order <code>[x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>,
    *        x<sub>1</sub>, y<sub>1</sub>, z<sub>1</sub>...,
@@ -205,7 +205,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
 
   /**
    * Transforms an array of floating point coordinates by this matrix. Point coordinates must have a dimension equals to
-   * <code>{@link Matrix#getNumCol}-1</code>. For example, for square matrix of size 4&times;4, coordinate points
+   * <code>Matrix#getNumCol -1</code>. For example, for square matrix of size 4&times;4, coordinate points
    * are three-dimensional and stored in the arrays starting at the specified offset (<code>srcOff</code>) in the
    * order <code>[x<sub>0</sub>, y<sub>0</sub>, z<sub>0</sub>,
    *        x<sub>1</sub>, y<sub>1</sub>, z<sub>1</sub>...,
@@ -493,7 +493,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
     }
 
     /**
-     * Static version of {@link #create}, for use by {@link MathTransformFactory#createParameterizedTransform}.
+     * Static version of {@link #create}, for use by {@link MathTransformFactory#createParameterizedTransform(String, ParameterList)}.
      */
     public static MathTransform staticCreate( final ParameterList parameters )
     {

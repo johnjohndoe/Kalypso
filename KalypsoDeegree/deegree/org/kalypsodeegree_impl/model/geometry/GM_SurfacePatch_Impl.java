@@ -247,13 +247,6 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     return crs;
   }
 
-  /**
-   * 
-   * 
-   * @param other
-   * 
-   * @return
-   */
   public boolean equals( Object other )
   {
     if( ( other == null ) || !( other instanceof GM_SurfacePatch_Impl ) )
@@ -469,11 +462,6 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     return new GM_Position_Impl( x, y );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = "GM_SurfacePatch: ";

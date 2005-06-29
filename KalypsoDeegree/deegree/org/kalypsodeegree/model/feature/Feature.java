@@ -23,5 +23,8 @@ public interface Feature extends DeegreeFeature
   /** setzt die Selektion komplett */
   public void setSelection( final int selection );
 
-  public Object getVirtuelProperty( String propertyName, GMLWorkspace workspace );
+  public Object getVirtuelProperty( final String propertyName, final GMLWorkspace workspace );
+
+  /** Uses the visitor on each property of this feature. */
+  public void accept( final IFeaturePropertyVisitor visitor );
 }

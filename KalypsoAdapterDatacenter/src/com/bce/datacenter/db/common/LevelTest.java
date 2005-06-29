@@ -1,6 +1,5 @@
 package com.bce.datacenter.db.common;
 
-import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import com.bce.datacenter.AbstractTest;
  */
 public class LevelTest extends AbstractTest
 {
-  public void testGetRoot( ) throws SQLException
+  public void testGetRoot( ) 
   {
     Level root = Level.getRoot( ingres.getConnection() );
 

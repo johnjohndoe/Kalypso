@@ -65,7 +65,6 @@ import java.util.Arrays;
 
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
@@ -91,7 +90,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   /**
    * constructor
    */
-  public GM_SurfaceBoundary_Impl( GM_Ring exterior, GM_Ring[] interior ) throws GM_Exception
+  public GM_SurfaceBoundary_Impl( GM_Ring exterior, GM_Ring[] interior ) 
   {
     super( exterior.getCoordinateSystem() );
     this.exterior = exterior;
@@ -338,11 +337,6 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
     setValid( true );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = null;

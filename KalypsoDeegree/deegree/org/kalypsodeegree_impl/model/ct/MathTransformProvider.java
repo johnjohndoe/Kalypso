@@ -181,7 +181,7 @@ public abstract class MathTransformProvider
    *          descriptions from <code>inherit</code> will be copied into this newly created
    *          <code>MathTransformProvider</code>. For map projections, this argument may be
    *          {@link #DEFAULT_PROJECTION_DESCRIPTOR}. Subclasses may add or change parameters in their constructor by
-   *          invoking {@link #put}.
+   *          invoking {@link #put(String, Class, Object, Range)}.
    */
   protected MathTransformProvider( final String classification, final ParameterListDescriptor inherit )
   {
@@ -200,7 +200,7 @@ public abstract class MathTransformProvider
    *          descriptions from <code>inherit</code> will be copied into this newly created
    *          <code>MathTransformProvider</code>. For map projections, this argument may be
    *          {@link #DEFAULT_PROJECTION_DESCRIPTOR}. Subclasses may add or change parameters in their constructor by
-   *          invoking {@link #put}.
+   *          invoking {@link #put(String, Class, Object, Range)}.
    */
   MathTransformProvider( final String classification, final int nameKey, final ParameterListDescriptor inherit )
   {

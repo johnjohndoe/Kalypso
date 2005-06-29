@@ -183,8 +183,8 @@ final class LambertConformalProjection extends ConicProjection
         throw new TransformException( Resources.format( ResourceKeys.ERROR_POLE_PROJECTION_$1, new Latitude( Math
             .toDegrees( y ) ) ) );
       }
-      else
-        rho = 0;
+
+      rho = 0;
     }
     else
     {
@@ -204,8 +204,8 @@ final class LambertConformalProjection extends ConicProjection
       ptDst.setLocation( x, y );
       return ptDst;
     }
-    else
-      return new Point2D.Double( x, y );
+
+    return new Point2D.Double( x, y );
   }
 
   /**
@@ -246,8 +246,8 @@ final class LambertConformalProjection extends ConicProjection
       ptDst.setLocation( x, y );
       return ptDst;
     }
-    else
-      return new Point2D.Double( x, y );
+
+    return new Point2D.Double( x, y );
   }
 
   /**

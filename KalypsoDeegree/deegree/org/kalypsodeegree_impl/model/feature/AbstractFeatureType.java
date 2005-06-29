@@ -1,10 +1,3 @@
-package org.kalypsodeegree_impl.model.feature;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypsodeegree.model.feature.Annotation;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -45,23 +38,27 @@ import org.kalypsodeegree.model.feature.Annotation;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.model.feature;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypsodeegree.model.feature.Annotation;
+
+/**
+ * 
+ * @author huebsch
+ */
 public abstract class AbstractFeatureType
 {
-
   private final String m_name;
 
   private final String m_namespace;
 
   private final Map m_annotationMap;
 
-  /*
-   * 
-   * @author huebsch
-   */
   public AbstractFeatureType( String name, String namespace, Map annotationMap )
   {
-    super();
     m_name = name;
     m_namespace = namespace;
     m_annotationMap = annotationMap == null ? new HashMap() : annotationMap;

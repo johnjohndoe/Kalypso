@@ -82,10 +82,9 @@ public class FeatureAssociationTypeProperty_Impl extends FeatureTypeProperty_Imp
     return m_associatedFT;
   }
 
-  public void registerSubstitution( FeatureType ft )
+  public void registerSubstitution( final FeatureType ft )
   {
     if( !m_associationFeatureTypes.contains( ft ) )
       m_associationFeatureTypes.add( ft );
   }
-
 }

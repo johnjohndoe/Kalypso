@@ -143,8 +143,8 @@ public final class XMath
     final int ix = (int)x;
     if( ix == x )
       return pow10( ix );
-    else
-      return Math.pow( 10.0, x );
+
+    return Math.pow( 10.0, x );
   }
 
   /**
@@ -191,8 +191,8 @@ public final class XMath
       return +1;
     if( x < 0 )
       return -1;
-    else
-      return 0;
+
+    return 0;
   }
 
   /**
@@ -205,8 +205,8 @@ public final class XMath
       return +1;
     if( x < 0 )
       return -1;
-    else
-      return 0;
+
+    return 0;
   }
 
   /**
@@ -219,8 +219,8 @@ public final class XMath
       return +1;
     if( x < 0 )
       return -1;
-    else
-      return 0;
+
+    return 0;
   }
 
   /**
@@ -233,8 +233,8 @@ public final class XMath
       return +1;
     if( x < 0 )
       return -1;
-    else
-      return 0;
+
+    return 0;
   }
 
   /**
@@ -247,8 +247,8 @@ public final class XMath
       return (short)+1;
     if( x < 0 )
       return (short)-1;
-    else
-      return (short)0;
+
+    return (short)0;
   }
 
   /**
@@ -261,7 +261,7 @@ public final class XMath
       return (byte)+1;
     if( x < 0 )
       return (byte)-1;
-    else
-      return (byte)0;
+
+    return (byte)0;
   }
 }

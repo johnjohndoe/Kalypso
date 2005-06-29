@@ -36,7 +36,7 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_level.getName();
   }
@@ -44,18 +44,18 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     if( m_parent != null )
       return m_parent.getIdentifier() + "." + String.valueOf( m_level.getID() );
-    else
-      return m_rep.getIdentifier() + String.valueOf( m_level.getID() );
+
+    return m_rep.getIdentifier() + String.valueOf( m_level.getID() );
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( ) throws RepositoryException
+  public IRepositoryItem getParent() throws RepositoryException
   {
     return m_parent;
   }
@@ -63,7 +63,7 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public boolean hasChildren() throws RepositoryException
   {
     return m_level.getChildCount() > 0 || m_level.getObjects().size() > 0;
   }
@@ -71,21 +71,20 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public IRepositoryItem[] getChildren() throws RepositoryException
   {
     if( m_children == null )
     {
       final ArrayList list = new ArrayList();
       final Enumeration cs = m_level.children();
       while( cs.hasMoreElements() )
-        list.add( new DataCenterLevelItem( m_rep, this, (Level) cs.nextElement() ) );
-      
+        list.add( new DataCenterLevelItem( m_rep, this, (Level)cs.nextElement() ) );
+
       final Iterator it = m_level.getObjects().iterator();
       while( it.hasNext() )
-        list.add( new DataCenterChannelItem( m_rep, this, (Channel)it.next()) );
+        list.add( new DataCenterChannelItem( m_rep, this, (Channel)it.next() ) );
 
-      m_children = (IRepositoryItem[]) list
-          .toArray( new IRepositoryItem[list.size()] );
+      m_children = (IRepositoryItem[])list.toArray( new IRepositoryItem[list.size()] );
     }
 
     return m_children;
@@ -94,7 +93,7 @@ public class DataCenterLevelItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public IRepository getRepository()
   {
     return m_rep;
   }
@@ -106,11 +105,11 @@ public class DataCenterLevelItem implements IRepositoryItem
   {
     return null;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString( )
+  public String toString()
   {
     return getName();
   }

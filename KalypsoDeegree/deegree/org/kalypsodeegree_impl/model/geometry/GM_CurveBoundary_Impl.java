@@ -64,7 +64,6 @@ import java.io.Serializable;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -94,7 +93,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * constructor of curve_boundary with CS_CoordinateSystem and startpoint and endpoint
    */
-  public GM_CurveBoundary_Impl( CS_CoordinateSystem crs, GM_Position sp, GM_Position ep ) throws GM_Exception
+  public GM_CurveBoundary_Impl( CS_CoordinateSystem crs, GM_Position sp, GM_Position ep )
   {
     super( crs );
 
@@ -283,11 +282,6 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
     setValid( true );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     return "point1: [" + sp + "] - point2: [" + ep + "]";

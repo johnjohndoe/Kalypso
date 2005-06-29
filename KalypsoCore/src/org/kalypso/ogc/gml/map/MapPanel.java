@@ -284,7 +284,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     if( m_model != null )
       m_model.addModellListener( this );
-    //    fireModellEvent(null);
   }
 
   /**

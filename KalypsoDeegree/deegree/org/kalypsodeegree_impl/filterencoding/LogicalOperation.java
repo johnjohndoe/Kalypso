@@ -87,7 +87,7 @@ public class LogicalOperation extends AbstractOperation
    * 
    * @see OperationDefines
    */
-  public LogicalOperation( int operatorId, ArrayList arguments ) throws FilterConstructionException
+  public LogicalOperation( int operatorId, ArrayList arguments ) 
   {
     super( operatorId );
     this.arguments = arguments;

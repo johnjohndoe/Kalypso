@@ -562,8 +562,10 @@ public class GMLFactory
 
   /**
    * creates a GMLFeature from a XML Element
+   * 
+   * Andreas: wird nicht benutzt, kann weg?
    */
-  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature, URL context )
+  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature )
       throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
@@ -688,6 +690,9 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.20  2005/06/29 10:41:17  belger
+ * *** empty log message ***
+ *
  * Revision 1.19  2005/06/23 23:13:27  belger
  * Refaktoring TypeHandler
  * FeatureView Layout noch schöner

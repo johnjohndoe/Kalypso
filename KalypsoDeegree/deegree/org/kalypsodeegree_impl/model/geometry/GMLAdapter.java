@@ -155,7 +155,7 @@ public class GMLAdapter
     return sb.toString();
   }
 
-  public static String export( GM_Envelope envelope ) throws GM_Exception
+  public static String export( GM_Envelope envelope )
   {
     Debug.debugMethodBegin();
     StringBuffer sb = new StringBuffer( "<gml:Box xmlns:gml='http://www.opengis.net/gml'>" );
@@ -275,8 +275,6 @@ public class GMLAdapter
    * 
    * @param o
    *          point geometry
-   * 
-   * @return
    */
   private static StringBuffer createPoint( GM_Point o ) throws RemoteException
   {
@@ -319,7 +317,6 @@ public class GMLAdapter
    * @param o
    *          curve geometry
    * 
-   * @return
    * @throws GM_Exception
    */
   private static StringBuffer createCurve( GM_Curve o ) throws RemoteException, GM_Exception
@@ -375,7 +372,6 @@ public class GMLAdapter
 
   /**
    * @param sur
-   * @return
    * @throws RemoteException
    * @throws GM_Exception
    */
@@ -471,7 +467,6 @@ public class GMLAdapter
 
   /**
    * @param mp
-   * @return
    * @throws RemoteException
    */
   private static StringBuffer createMultiPoint( GM_MultiPoint mp ) throws RemoteException
@@ -519,7 +514,6 @@ public class GMLAdapter
 
   /**
    * @param mp
-   * @return
    * @throws RemoteException
    * @throws GM_Exception
    */
@@ -585,7 +579,6 @@ public class GMLAdapter
 
   /**
    * @param mp
-   * @return
    * @throws RemoteException
    * @throws GM_Exception
    */
@@ -695,7 +688,7 @@ public class GMLAdapter
    * @param gml
    *          a GMLPoint
    */
-  private static GM_Point wrap( GMLPoint gml ) throws GM_Exception
+  private static GM_Point wrap( GMLPoint gml ) 
   {
     Debug.debugMethodBegin( "GMLAdapter", "wrap(GMLPoint)" );
     Debug.debugMethodEnd();
@@ -708,7 +701,7 @@ public class GMLAdapter
    * @param gml
    *          a GMLPoint
    */
-  private static GM_Point wrap( GMLPoint gml, String multipointSRS ) throws GM_Exception
+  private static GM_Point wrap( GMLPoint gml, String multipointSRS )
   {
     Debug.debugMethodBegin( "GMLAdapter", "wrap(GMLPoint)" );
 
@@ -936,7 +929,7 @@ public class GMLAdapter
    * @param multipoint
    *          GMLMultiPoint
    */
-  private static GM_MultiPoint wrap( GMLMultiPoint multipoint ) throws GM_Exception
+  private static GM_MultiPoint wrap( GMLMultiPoint multipoint ) 
   {
     Debug.debugMethodBegin( "GMLAdapter", "wrap(GMLMultiPoint)" );
 
@@ -1046,7 +1039,6 @@ public class GMLAdapter
 
   /**
    * @param gmlBox
-   * @return
    * @throws GM_Exception
    */
   private static GM_Surface wrap( GMLBox gmlBox ) throws GM_Exception

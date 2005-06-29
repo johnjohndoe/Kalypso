@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
 
-import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
@@ -97,9 +96,8 @@ public class ComplexFilter extends AbstractFilter
    * <p>
    * @param operatorId OperationDefines.AND, OperationDefines.OR or
    * 		  OperationDefines.NOT
-   * @throws FilterConstructionException
    */
-  public ComplexFilter( int operatorId ) throws FilterConstructionException
+  public ComplexFilter( int operatorId )
   {
     operation = new LogicalOperation( operatorId, new ArrayList() );
   }
@@ -113,10 +111,8 @@ public class ComplexFilter extends AbstractFilter
    * 	      null, if operatorId == OperationDefines.NOT
    * @param operatorId OperationDefines.AND, OperationDefines.OR or
    * 		  OperationDefines.NOT
-   * @throws FilterConstructionException
    */
   public ComplexFilter( ComplexFilter filter1, ComplexFilter filter2, int operatorId )
-      throws FilterConstructionException
   {
 
     // extract the Operations from the Filters

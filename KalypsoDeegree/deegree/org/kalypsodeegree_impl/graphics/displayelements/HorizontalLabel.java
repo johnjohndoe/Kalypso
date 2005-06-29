@@ -95,13 +95,13 @@ class HorizontalLabel implements Label
   // width and height of the caption
   private int w, h;
 
-  private Color color;
+  private Color m_color;
 
   private Font font;
 
   private int descent, ascent;
 
-  private Halo halo;
+  private Halo m_halo;
 
   private Feature feature;
 
@@ -111,11 +111,11 @@ class HorizontalLabel implements Label
 
     this.caption = caption;
     this.font = font;
-    this.color = color;
+    this.m_color = color;
     this.descent = (int)metrics.getDescent();
     this.ascent = (int)metrics.getAscent();
     this.feature = feature;
-    this.halo = halo;
+    this.m_halo = halo;
 
     this.w = w;
     this.h = h;
@@ -160,11 +160,11 @@ class HorizontalLabel implements Label
   {
 
     // render the halo (only if specified)
-    if( halo != null )
+    if( m_halo != null )
     {
       try
       {
-        paintHalo( g, halo, xpoints[0], ypoints[0] - descent );
+        paintHalo( g, m_halo, xpoints[0], ypoints[0] - descent );
       }
       catch( FilterEvaluationException e )
       {
@@ -173,7 +173,7 @@ class HorizontalLabel implements Label
     }
 
     // render the text
-    setColor( g, color, 1.0 );
+    setColor( g, m_color, 1.0 );
     g.setFont( font );
     g.drawString( caption, xpoints[0], ypoints[0] - descent );
   }

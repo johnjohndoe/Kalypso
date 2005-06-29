@@ -145,38 +145,17 @@ public final class Base64
     lookUpBase64Alphabet[63] = (byte)'/';
   }
 
-  /**
-   * 
-   * 
-   * @param isValidString
-   * 
-   * @return
-   */
   public static boolean isBase64( String isValidString )
   {
     return isArrayByteBase64( isValidString.getBytes() );
   }
 
-  /**
-   * 
-   * 
-   * @param octect
-   * 
-   * @return
-   */
   public static boolean isBase64( byte octect )
   {
     //shall we ignore white space? JEFF??
     return ( octect == PAD || base64Alphabet[octect] != -1 );
   }
 
-  /**
-   * 
-   * 
-   * @param arrayOctect
-   * 
-   * @return
-   */
   public static boolean isArrayByteBase64( byte[] arrayOctect )
   {
     int length = arrayOctect.length;

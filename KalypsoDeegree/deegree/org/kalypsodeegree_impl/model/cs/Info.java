@@ -173,6 +173,8 @@ public class Info implements Serializable
    *          specified locale, an arbitrary locale is used.
    * 
    * @see org.opengis.cs.CS_Info#getName()
+   * 
+   * TODO: use interface to get rid of yellow thingis
    */
   public String getName( final Locale locale )
   {

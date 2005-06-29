@@ -105,8 +105,8 @@ public final class XArray
       System.arraycopy( array, 0, newArray, 0, Math.min( current, length ) );
       return newArray;
     }
-    else
-      return array;
+
+    return array;
   }
 
   /**

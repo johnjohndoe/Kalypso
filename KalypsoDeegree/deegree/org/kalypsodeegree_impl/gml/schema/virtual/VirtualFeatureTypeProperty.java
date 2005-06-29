@@ -47,5 +47,5 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public interface VirtualFeatureTypeProperty extends FeatureTypeProperty
 {
-  public Object getVirtuelValue( Feature feature, GMLWorkspace workspace );
+  public Object getVirtuelValue( final Feature feature, final GMLWorkspace workspace );
 }

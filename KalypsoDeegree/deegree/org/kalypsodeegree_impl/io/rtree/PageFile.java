@@ -32,13 +32,13 @@ package org.kalypsodeegree_impl.io.rtree;
 public abstract class PageFile
 {
   /** Kapazität eines Knotens */
-  protected int capacity;
+  protected int m_capacity;
 
   /** Dimension der Daten */
-  protected int dimension;
+  protected int m_dimension;
 
   /** minimale Beladung eines Knotens */
-  protected int minimum;
+  protected int m_minimum;
 
   /**
    * Dimension der Daten in der PageFile
@@ -47,7 +47,7 @@ public abstract class PageFile
    */
   public int getDimension()
   {
-    return dimension;
+    return m_dimension;
   }
 
   /**
@@ -57,7 +57,7 @@ public abstract class PageFile
    */
   public int getMinimum()
   {
-    return minimum;
+    return m_minimum;
   }
 
   /**
@@ -67,7 +67,7 @@ public abstract class PageFile
    */
   public int getCapacity()
   {
-    return capacity;
+    return m_capacity;
   }
 
   /**
@@ -109,15 +109,15 @@ public abstract class PageFile
    *          Kapazität der Knoten
    * @throws PageFileException
    */
-  public void initialize( int dimension, int capacity ) throws PageFileException
+  public void initialize( int dimension, int capacity ) throws PageFileException 
   {
-    this.dimension = dimension;
-    this.capacity = capacity;
-    this.minimum = (int)Math.round( ( capacity - 1 ) * 0.5 );
+    this.m_dimension = dimension;
+    this.m_capacity = capacity;
+    this.m_minimum = (int)Math.round( ( capacity - 1 ) * 0.5 );
 
-    if( this.minimum < 2 )
+    if( this.m_minimum < 2 )
     {
-      this.minimum = 2;
+      this.m_minimum = 2;
     }
   }
 

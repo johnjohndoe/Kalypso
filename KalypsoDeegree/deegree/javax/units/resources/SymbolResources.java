@@ -35,7 +35,7 @@ public class SymbolResources extends java.util.ResourceBundle
   /**
    * Table des ressources adaptées à la langue de l'utilisateur.
    */
-  private final Object[] map;
+  protected final Object[] map;
 
   /**
    * Construit la table des ressources.
@@ -69,23 +69,23 @@ public class SymbolResources extends java.util.ResourceBundle
   {
     return new Enumeration()
     {
-      private int i = 0;
+      private int m_i = 0;
 
       public boolean hasMoreElements()
       {
-        return i < map.length;
+        return m_i < map.length;
       }
 
       public Object nextElement()
       {
-        if( i < map.length )
+        if( m_i < map.length )
         {
-          final int i = this.i;
-          this.i += 2;
+          final int i = this.m_i;
+          this.m_i += 2;
           return map[i];
         }
-        else
-          throw new NoSuchElementException();
+
+        throw new NoSuchElementException();
       }
     };
   }

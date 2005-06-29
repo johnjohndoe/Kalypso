@@ -89,22 +89,22 @@ class RotatedLabel implements Label
 
   private String caption;
 
-  private int[] xpoints;
+  private int[] m_xpoints;
 
-  private int[] ypoints;
+  private int[] m_ypoints;
 
-  private double rotation;
+  private double m_rotation;
 
   // width and height of the caption
-  private int w, h;
+  private int m_w, m_h;
 
-  private Color color;
+  private Color m_color;
 
-  private Font font;
+  private Font m_font;
 
   private int descent, ascent;
 
-  private Halo halo;
+  private Halo m_halo;
 
   private Feature feature;
 
@@ -113,16 +113,16 @@ class RotatedLabel implements Label
   {
 
     this.caption = caption;
-    this.font = font;
-    this.color = color;
+    this.m_font = font;
+    this.m_color = color;
     this.descent = (int)metrics.getDescent();
     this.ascent = (int)metrics.getAscent();
     this.feature = feature;
-    this.halo = halo;
-    this.rotation = rotation;
+    this.m_halo = halo;
+    this.m_rotation = rotation;
 
-    this.w = w;
-    this.h = h;
+    this.m_w = w;
+    this.m_h = h;
 
     // vertices of label boundary
     int[] xpoints = new int[4];
@@ -137,8 +137,8 @@ class RotatedLabel implements Label
     ypoints[3] = y - h;
 
     // get rotated + translated points
-    this.xpoints = new int[4];
-    this.ypoints = new int[4];
+    this.m_xpoints = new int[4];
+    this.m_ypoints = new int[4];
     int tx = xpoints[0];
     int ty = ypoints[0];
 
@@ -147,8 +147,8 @@ class RotatedLabel implements Label
     {
       int[] point = transformPoint( xpoints[i], ypoints[i], tx, ty, rotation, anchorPoint[0], anchorPoint[1], w, h,
           displacement[0], displacement[1] );
-      this.xpoints[i] = point[0];
-      this.ypoints[i] = point[1];
+      this.m_xpoints[i] = point[0];
+      this.m_ypoints[i] = point[1];
     }
   }
 
@@ -159,13 +159,13 @@ class RotatedLabel implements Label
 
   public double getRotation()
   {
-    return rotation;
+    return m_rotation;
   }
 
   public void paintBoundaries( Graphics2D g )
   {
     setColor( g, new Color( 0x888888 ), 0.5 );
-    g.fillPolygon( xpoints, ypoints, xpoints.length );
+    g.fillPolygon( m_xpoints, m_ypoints, m_xpoints.length );
     g.setColor( Color.BLACK );
 
     // get the current transform
@@ -175,7 +175,7 @@ class RotatedLabel implements Label
     AffineTransform transform = new AffineTransform();
 
     // render the text
-    transform.rotate( rotation, xpoints[0], ypoints[0] );
+    transform.rotate( m_rotation, m_xpoints[0], m_ypoints[0] );
     g.setTransform( transform );
     //g.drawString( caption, xpoints [0], ypoints [0] - descent);
 
@@ -198,15 +198,15 @@ class RotatedLabel implements Label
 
     // perform transformation
     AffineTransform transform = new AffineTransform();
-    transform.rotate( rotation, xpoints[0], ypoints[0] );
+    transform.rotate( m_rotation, m_xpoints[0], m_ypoints[0] );
     g.setTransform( transform );
 
     // render the halo (only if specified)
-    if( halo != null )
+    if( m_halo != null )
     {
       try
       {
-        paintHalo( g, halo, xpoints[0], ypoints[0] - descent );
+        paintHalo( g, m_halo, m_xpoints[0], m_ypoints[0] - descent );
       }
       catch( FilterEvaluationException e )
       {
@@ -215,9 +215,9 @@ class RotatedLabel implements Label
     }
 
     // render the text
-    setColor( g, color, 1.0 );
-    g.setFont( font );
-    g.drawString( caption, xpoints[0], ypoints[0] - descent );
+    setColor( g, m_color, 1.0 );
+    g.setFont( m_font );
+    g.drawString( caption, m_xpoints[0], m_ypoints[0] - descent );
 
     // restore original transform
     g.setTransform( saveAT );
@@ -272,12 +272,12 @@ class RotatedLabel implements Label
     // radius specified -> draw circle
     if( radius > 0 )
     {
-      g.fillOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
+      g.fillOval( ( x + ( m_w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
     }
     // radius unspecified -> draw rectangle
     else
     {
-      g.fillRect( x - 1, y - ascent - 1, w + 2, h + 2 );
+      g.fillRect( x - 1, y - ascent - 1, m_w + 2, m_h + 2 );
     }
 
     // only stroke outline, if Stroke-Element is given
@@ -320,11 +320,11 @@ class RotatedLabel implements Label
         // radius specified -> draw circle
         if( radius > 0 )
         {
-          g.drawOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
+          g.drawOval( ( x + ( m_w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
         }// radius unspecified -> draw rectangle
         else
         {
-          g.drawRect( x - 1, y - ascent - 1, w + 2, h + 2 );
+          g.drawRect( x - 1, y - ascent - 1, m_w + 2, m_h + 2 );
         }
       }
     }
@@ -332,32 +332,32 @@ class RotatedLabel implements Label
 
   public int getX()
   {
-    return xpoints[0];
+    return m_xpoints[0];
   }
 
   public int getY()
   {
-    return ypoints[0];
+    return m_ypoints[0];
   }
 
   public int getMaxX()
   {
-    return xpoints[1];
+    return m_xpoints[1];
   }
 
   public int getMaxY()
   {
-    return ypoints[1];
+    return m_ypoints[1];
   }
 
   public int getMinX()
   {
-    return xpoints[3];
+    return m_xpoints[3];
   }
 
   public int getMinY()
   {
-    return ypoints[3];
+    return m_ypoints[3];
   }
 
   /**

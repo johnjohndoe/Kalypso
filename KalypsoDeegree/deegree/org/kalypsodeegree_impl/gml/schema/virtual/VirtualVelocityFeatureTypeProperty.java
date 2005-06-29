@@ -1,17 +1,3 @@
-package org.kalypsodeegree_impl.gml.schema.virtual;
-
-import java.util.HashMap;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -52,7 +38,23 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.gml.schema.virtual;
 
+import java.util.HashMap;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+/*
+ * 
+ * @author doemming
+ */
 public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType implements VirtualFeatureTypeProperty
 {
 
@@ -64,11 +66,7 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
 
   private final static String PROP_YVELOCITY = DECORATED_NS + ":yVelocity";
 
-  /*
-   * 
-   * @author doemming
-   */
-  public VirtualVelocityFeatureTypeProperty( FeatureType ft )
+  public VirtualVelocityFeatureTypeProperty()
   {
     super( "arrow_velocity", "virtual", new HashMap() );
   }

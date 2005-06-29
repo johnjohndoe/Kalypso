@@ -1,42 +1,3 @@
-package org.kaylpso.ui.wizard.gml;
-
-import java.net.URL;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.java.net.UrlResolver;
-import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider;
-import org.kalypso.ui.editor.gmleditor.util.GMLReader;
-import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
-import org.kalypso.ui.editor.gmleditor.util.model.IModel;
-import org.kalypso.ui.editor.gmleditor.util.model.Model;
-import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -77,15 +38,52 @@ import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
+package org.kaylpso.ui.wizard.gml;
+
+import java.net.URL;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider;
+import org.kalypso.ui.editor.gmleditor.util.GMLReader;
+import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
+import org.kalypso.ui.editor.gmleditor.util.model.IModel;
+import org.kalypso.ui.editor.gmleditor.util.model.Model;
+import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+
 /**
- * 
  * @author Kuepferle
- * 
- * */
+ */
 public class GmlFileImportPage extends WizardPage implements SelectionListener, ModifyListener,
     ISelectionChangedListener
 {
-
   private final static int DEFAULT_EXPANSION_LEVEL = 3;
 
   private IProject m_selectedProject;
@@ -222,9 +220,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     {
       KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null,
           "Auswählen einer GML Datei", new String[]
-          {
-            "gml"
-          }, m_selectedProject );
+          { "gml" }, m_selectedProject );
       dialog.open();
       //get first element, only one element possible
       IPath selection = (IPath)dialog.getResult()[0];
@@ -234,8 +230,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       try
       {
         final URL gmlURL = m_urlResolver.resolveURL( m_activeMapContext, m_source );
-        m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL,
-            m_urlResolver ) );
+        m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
         //        System.out.println( "selection: " + selection + "\tsource:" +
         // m_source );
       }
@@ -261,7 +256,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
    */
   public void widgetDefaultSelected( SelectionEvent e )
   {
-    //nothing to do
+  //nothing to do
   }
 
   /**
@@ -269,7 +264,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
    */
   public void modifyText( ModifyEvent e )
   {
-    //do nothing
+  //do nothing
   }
 
   /**

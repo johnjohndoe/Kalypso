@@ -231,11 +231,6 @@ abstract class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
     throw new NoSuchMethodError( "the contains operation for curve segments " + "isn't supported at the moment." );
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = null;

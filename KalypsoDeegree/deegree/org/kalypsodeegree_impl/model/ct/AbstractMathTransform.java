@@ -487,7 +487,7 @@ public abstract class AbstractMathTransform implements MathTransform
    * Invert the specified matrix in place. If the matrix can't be inverted because of a {@link SingularMatrixException},
    * then the exception is wrapped into a {@link NoninvertibleTransformException}.
    */
-  private static Matrix invert( final Matrix matrix ) throws NoninvertibleTransformException
+  protected static Matrix invert( final Matrix matrix ) throws NoninvertibleTransformException
   {
     try
     {

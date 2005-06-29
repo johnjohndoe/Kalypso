@@ -82,9 +82,9 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSymbolizer, Marshallable
 {
-  private Fill fill = null;
+  private Fill m_fill = null;
 
-  private Stroke stroke = null;
+  private Stroke m_stroke = null;
 
   /**
    * Creates a new PolygonSymbolizer_Impl object.
@@ -119,7 +119,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    */
   public Fill getFill()
   {
-    return fill;
+    return m_fill;
   }
 
   /**
@@ -130,7 +130,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    */
   public void setFill( Fill fill )
   {
-    this.fill = fill;
+    this.m_fill = fill;
   }
 
   /**
@@ -143,7 +143,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    */
   public Stroke getStroke()
   {
-    return stroke;
+    return m_stroke;
   }
 
   /**
@@ -154,7 +154,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    */
   public void setStroke( Stroke stroke )
   {
-    this.stroke = stroke;
+    this.m_stroke = stroke;
   }
 
   /**
@@ -203,13 +203,13 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
     {
       sb.append( ( (Marshallable)geometry ).exportAsXML() );
     }
-    if( fill != null )
+    if( m_fill != null )
     {
-      sb.append( ( (Marshallable)fill ).exportAsXML() );
+      sb.append( ( (Marshallable)m_fill ).exportAsXML() );
     }
-    if( stroke != null )
+    if( m_stroke != null )
     {
-      sb.append( ( (Marshallable)stroke ).exportAsXML() );
+      sb.append( ( (Marshallable)m_stroke ).exportAsXML() );
     }
     sb.append( "</PolygonSymbolizer>" );
 

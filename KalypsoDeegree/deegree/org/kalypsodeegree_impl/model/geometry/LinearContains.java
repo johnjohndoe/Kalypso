@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
- * 
+ * Andreas: This code doesn't seems to be used, doesn't do anything and causes yellow thingis. Delete it?
  * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>

@@ -237,26 +237,23 @@ final class TransverseMercatorProjection extends CylindricalProjection
     if( isSpherical )
     {
       // Spherical model.
-      double b = cosphi * Math.sin( x );
+      double localB = cosphi * Math.sin( x );
 
-      if( Math.abs( Math.abs( b ) - 1.0 ) <= EPS10 )
+      if( Math.abs( Math.abs( localB ) - 1.0 ) <= EPS10 )
       {
         throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
       }
 
-      double yy = ( cosphi * Math.cos( x ) ) / Math.sqrt( 1.0 - ( b * b ) );
-      x = ( 0.5 * ak0 * Math.log( ( 1.0 + b ) / ( 1.0 - b ) ) ) + false_easting;/* 8-1 */
+      double yy = ( cosphi * Math.cos( x ) ) / Math.sqrt( 1.0 - ( localB * localB ) );
+      x = ( 0.5 * ak0 * Math.log( ( 1.0 + localB ) / ( 1.0 - localB ) ) ) + false_easting;/* 8-1 */
 
-      if( ( b = Math.abs( yy ) ) >= 1.0 )
+      if( ( localB = Math.abs( yy ) ) >= 1.0 )
       {
-        if( ( b - 1.0 ) > EPS10 )
+        if( ( localB - 1.0 ) > EPS10 )
         {
           throw new TransformException( Resources.format( ResourceKeys.ERROR_VALUE_TEND_TOWARD_INFINITY ) );
         }
-        else
-        {
-          yy = 0.0;
-        }
+        yy = 0.0;
       }
       else
       {
@@ -310,10 +307,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
       ptDst.setLocation( x, y );
       return ptDst;
     }
-    else
-    {
       return new Point2D.Double( x, y );
-    }
   }
 
   /**
@@ -403,10 +397,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
       ptDst.setLocation( x, y );
       return ptDst;
     }
-    else
-    {
       return new Point2D.Double( x, y );
-    }
   }
 
   /**

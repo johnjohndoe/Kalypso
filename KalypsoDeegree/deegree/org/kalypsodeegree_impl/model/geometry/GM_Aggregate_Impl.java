@@ -83,7 +83,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1161164609227432958L;
 
-  protected ArrayList aggregate = new ArrayList( 500 );
+  protected ArrayList m_aggregate = new ArrayList( 500 );
 
   /**
    * Creates a new GM_Aggregate_Impl object.
@@ -108,7 +108,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public int getSize()
   {
-    return aggregate.size();
+    return m_aggregate.size();
   }
 
   /**
@@ -137,7 +137,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public void add( GM_Object gmo )
   {
-    aggregate.add( gmo );
+    m_aggregate.add( gmo );
 
     setValid( false );
   }
@@ -163,7 +163,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       throw new GM_Exception( "gmo == null. it isn't possible to insert a value" + " that equals null!" );
     }
 
-    aggregate.add( index, gmo );
+    m_aggregate.add( index, gmo );
 
     setValid( false );
   }
@@ -189,7 +189,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       throw new GM_Exception( "gmo == null. it isn't possible to set a value" + " that equals null!" );
     }
 
-    aggregate.set( index, gmo );
+    m_aggregate.set( index, gmo );
 
     setValid( false );
   }
@@ -206,7 +206,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       return null;
     }
 
-    int i = aggregate.indexOf( gmo );
+    int i = m_aggregate.indexOf( gmo );
 
     GM_Object gmo_ = null;
 
@@ -242,7 +242,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       throw new GM_Exception( "invalid index/position: " + index + " to remove a geometry!" );
     }
 
-    GM_Object gmo = (GM_Object)aggregate.remove( index );
+    GM_Object gmo = (GM_Object)m_aggregate.remove( index );
 
     setValid( false );
 
@@ -254,7 +254,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public void removeAll()
   {
-    aggregate.clear();
+    m_aggregate.clear();
     envelope = null;
     setValid( false );
   }
@@ -265,7 +265,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public GM_Object getObjectAt( int index )
   {
-    return (GM_Object)aggregate.get( index );
+    return (GM_Object)m_aggregate.get( index );
   }
 
   /**
@@ -275,7 +275,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   {
     GM_Object[] gmos = new GM_Object[this.getSize()];
 
-    return (GM_Object[])aggregate.toArray( gmos );
+    return (GM_Object[])m_aggregate.toArray( gmos );
   }
 
   /**
@@ -283,7 +283,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public boolean isMember( GM_Object gmo )
   {
-    return aggregate.contains( gmo );
+    return m_aggregate.contains( gmo );
   }
 
   /**
@@ -291,7 +291,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public Iterator getIterator()
   {
-    return aggregate.iterator();
+    return m_aggregate.iterator();
   }
 
   /**
@@ -312,9 +312,9 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   {
     super.setCoordinateSystem( crs );
 
-    if( aggregate != null )
+    if( m_aggregate != null )
     {
-      for( int i = 0; i < aggregate.size(); i++ )
+      for( int i = 0; i < m_aggregate.size(); i++ )
       {
         ( (GM_Object_Impl)getObjectAt( i ) ).setCoordinateSystem( crs );
       }
@@ -343,13 +343,6 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     setValid( false );
   }
 
-  /**
-   * 
-   * 
-   * @param other
-   * 
-   * @return
-   */
   public boolean equals( Object other )
   {
     // envelope was not valid
@@ -392,7 +385,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
     try
     {
-      for( int i = 0; i < aggregate.size(); i++ )
+      for( int i = 0; i < m_aggregate.size(); i++ )
       {
         if( this.getObjectAt( i ).intersects( gmo ) )
         {
@@ -407,15 +400,10 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     return inter;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = null;
-    ret = "aggregate = " + aggregate + "\n";
+    ret = "aggregate = " + m_aggregate + "\n";
     ret += ( "envelope = " + envelope + "\n" );
     return ret;
   }

@@ -125,7 +125,7 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   {
     GM_Primitive[] gmos = new GM_Primitive[this.getSize()];
 
-    return (GM_Primitive[])aggregate.toArray( gmos );
+    return (GM_Primitive[])m_aggregate.toArray( gmos );
   }
 
   protected void calculateParam()

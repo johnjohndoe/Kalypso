@@ -56,14 +56,14 @@ public class GMLSchemaFactory
 
   private static final int ATTRIBUTEGROUP_TYPE = 28;
 
-  private static int getType( GMLSchema schema, Node node ) throws Exception
+  private static int getType( Node node ) throws Exception
   {
     int result = UNSUPPORTED_TYPE;
 
     switch( node.getNodeType() )
     {
     case Node.ELEMENT_NODE:
-      result = getType_ElementNode( schema, node );
+      result = getType_ElementNode( node );
 
     default:
       break;
@@ -89,8 +89,8 @@ public class GMLSchemaFactory
 
       // if( XMLHelper.isAbstractElementDefinition( node ) )
       // continue;
-      if( XMLHelper.isAbstractElementDefinition( node ) )
-        ;// TODO implement abstract flag in FeatureType
+//      if( XMLHelper.isAbstractElementDefinition( node ) )
+//        ;// TODO implement abstract flag in FeatureType
 
       final Node cNode;
       if( XMLHelper.getAttributeNode( node, "type" ) == null )
@@ -184,7 +184,7 @@ public class GMLSchemaFactory
       }
     }
 
-    switch( getType( schema, node ) )
+    switch( getType( node ) )
     {
     case COMPLEX_TYPE:
       // <complexType name="FeatureAssociationType">
@@ -417,7 +417,7 @@ public class GMLSchemaFactory
     map( typeSchema, typeNode, collector );
   }
 
-  private static int getType_ElementNode( GMLSchema schema, Node node ) throws Exception
+  private static int getType_ElementNode( Node node ) throws Exception
   {
     Element element = (Element)node;
     String parentNodeName = element.getParentNode().getLocalName();

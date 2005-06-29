@@ -78,7 +78,6 @@ import java.util.Map;
 
 public interface FeatureTypeProperty
 {
-
   /**
    * returns the name of the property
    */

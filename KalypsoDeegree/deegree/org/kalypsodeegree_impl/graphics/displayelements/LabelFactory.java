@@ -144,10 +144,6 @@ public class LabelFactory
    * Generates <tt>Label</tt> -representations for a given <tt>LabelDisplayElement</tt>.
    * <p>
    * 
-   * @param element
-   * @param projection
-   * @param g
-   * @return
    * @throws Exception
    */
   public static Label[] createLabels( LabelDisplayElement element, GeoTransform projection, Graphics2D g )

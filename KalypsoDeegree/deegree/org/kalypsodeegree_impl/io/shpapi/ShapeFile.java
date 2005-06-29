@@ -589,9 +589,6 @@ public class ShapeFile
   }
 
   /**
-   * 
-   * 
-   * @return
    * @throws HasNoDBaseFileException
    * @throws DBaseException
    */
@@ -744,17 +741,9 @@ public class ShapeFile
       }
     }
 
-    //initialize/create DBaseFile
-    try
-    {
-      // allocate memory for fielddescriptors
-      final FieldDescriptor[] fieldDesc = (FieldDescriptor[])fieldList.toArray( new FieldDescriptor[fieldList.size()] );
-      dbf = new DBaseFile( url, fieldDesc );
-    }
-    catch( DBaseException e )
-    {
-      hasDBaseFile = false;
-    }
+    // allocate memory for fielddescriptors
+    final FieldDescriptor[] fieldDesc = (FieldDescriptor[])fieldList.toArray( new FieldDescriptor[fieldList.size()] );
+    dbf = new DBaseFile( url, fieldDesc );
   }
 
   public void writeShape( final Feature[] features ) throws Exception

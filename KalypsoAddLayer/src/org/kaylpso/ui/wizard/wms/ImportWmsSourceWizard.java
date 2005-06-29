@@ -73,14 +73,6 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   private ArrayList m_catalog;
 
-  private static final String LINK_TYPE = "wms";
-
-  public ImportWmsSourceWizard()
-  {
-    super();
-
-  }
-
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
@@ -106,9 +98,8 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
             layername = "Multi Layer:" + layername;
           layers = layers + layer;
           //          System.out.println( url + "#" + layers );
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell,
-              layername, "wms", null, url + "#" + layers + "#" + authentification, null, null,
-              null, "simple" );
+          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layername, "wms", null, url
+              + "#" + layers + "#" + authentification, null, null, null, "simple" );
           m_outlineviewer.postCommand( command, null );
 
         }
@@ -141,14 +132,13 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     }
     finally
     {
-      IOUtils.closeQuietly(is);
+      IOUtils.closeQuietly( is );
     }
   }
 
   public void addPages()
   {
-    m_page = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden",
-        ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+    m_page = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     addPage( m_page );
   }
 
@@ -178,8 +168,9 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
       line = br.readLine();
     }
+    // Christoph: das ist ne endlosschleife!
     while( line != null );
-    
+
     m_catalog = catalog;
   }
 }

@@ -340,11 +340,11 @@ public class SHP2WKS
     for( int i = 0; i < shppolygon.numRings; i++ )
     {
 
-      GM_Position[] ring = new GM_Position[shppolygon.rings.points[i].length];
+      GM_Position[] ring = new GM_Position[shppolygon.m_rings.points[i].length];
 
-      for( int k = 0; k < shppolygon.rings.points[i].length; k++ )
+      for( int k = 0; k < shppolygon.m_rings.points[i].length; k++ )
       {
-        ring[k] = GeometryFactory.createGM_Position( shppolygon.rings.points[i][k].x, shppolygon.rings.points[i][k].y );
+        ring[k] = GeometryFactory.createGM_Position( shppolygon.m_rings.points[i][k].x, shppolygon.m_rings.points[i][k].y );
       }
       all_rings.add( ring );
     }

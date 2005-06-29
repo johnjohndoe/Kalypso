@@ -96,7 +96,7 @@ public class SHPPolygon extends SHPGeometry
 
   public int numPoints = 0;
 
-  public SHPPolyLine rings = null;
+  public SHPPolyLine m_rings = null;
 
   /**
    * constructor: recieves a stream <BR>
@@ -108,10 +108,10 @@ public class SHPPolygon extends SHPGeometry
 
     envelope = ShapeUtils.readBox( recBuf, 4 );
 
-    rings = new SHPPolyLine( recBuf );
+    m_rings = new SHPPolyLine( recBuf );
 
-    numPoints = rings.numPoints;
-    numRings = rings.numParts;
+    numPoints = m_rings.numPoints;
+    numRings = m_rings.numParts;
 
   }
 
@@ -159,12 +159,12 @@ public class SHPPolygon extends SHPGeometry
         }
       }
 
-      rings = new SHPPolyLine( curves );
+      m_rings = new SHPPolyLine( curves );
 
-      envelope = rings.envelope;
+      envelope = m_rings.envelope;
 
-      numPoints = rings.numPoints;
-      numRings = rings.numParts;
+      numPoints = m_rings.numPoints;
+      numRings = m_rings.numParts;
 
     }
     catch( Exception e )
@@ -183,10 +183,10 @@ public class SHPPolygon extends SHPGeometry
 
     int offset = start;
 
-    double xmin = rings.points[0][0].x;
-    double xmax = rings.points[0][0].x;
-    double ymin = rings.points[0][0].y;
-    double ymax = rings.points[0][0].y;
+    double xmin = m_rings.points[0][0].x;
+    double xmax = m_rings.points[0][0].x;
+    double ymin = m_rings.points[0][0].y;
+    double ymax = m_rings.points[0][0].y;
 
     // write shape type identifier
     ByteUtils.writeLEInt( bytearray, offset, ShapeConst.SHAPE_TYPE_POLYGON );
@@ -212,7 +212,7 @@ public class SHPPolygon extends SHPGeometry
     offset += ( 4 * numRings );
 
     int count = 0;
-    for( int i = 0; i < rings.points.length; i++ )
+    for( int i = 0; i < m_rings.points.length; i++ )
     {
 
       // stores the index of the i'th part
@@ -220,36 +220,36 @@ public class SHPPolygon extends SHPGeometry
       tmp2 += 4;
 
       // write the points of the i'th part and calculate bounding box
-      for( int j = 0; j < rings.points[i].length; j++ )
+      for( int j = 0; j < m_rings.points[i].length; j++ )
       {
         // number of the current point
         count++;
 
         // calculate bounding box
-        if( rings.points[i][j].x > xmax )
+        if( m_rings.points[i][j].x > xmax )
         {
-          xmax = rings.points[i][j].x;
+          xmax = m_rings.points[i][j].x;
         }
-        else if( rings.points[i][j].x < xmin )
+        else if( m_rings.points[i][j].x < xmin )
         {
-          xmin = rings.points[i][j].x;
+          xmin = m_rings.points[i][j].x;
         }
 
-        if( rings.points[i][j].y > ymax )
+        if( m_rings.points[i][j].y > ymax )
         {
-          ymax = rings.points[i][j].y;
+          ymax = m_rings.points[i][j].y;
         }
-        else if( rings.points[i][j].y < ymin )
+        else if( m_rings.points[i][j].y < ymin )
         {
-          ymin = rings.points[i][j].y;
+          ymin = m_rings.points[i][j].y;
         }
 
         // write x-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, rings.points[i][j].x );
+        ByteUtils.writeLEDouble( bytearray, offset, m_rings.points[i][j].x );
         offset += 8;
 
         // write y-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, rings.points[i][j].y );
+        ByteUtils.writeLEDouble( bytearray, offset, m_rings.points[i][j].y );
         offset += 8;
 
       }

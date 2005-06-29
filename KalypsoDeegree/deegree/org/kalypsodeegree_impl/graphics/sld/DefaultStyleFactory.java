@@ -18,7 +18,6 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree_impl.graphics.sld.cache.SLDCache;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -75,11 +74,9 @@ public class DefaultStyleFactory
 
   private final String DEFAULT_STYLE_DRECTORY;
 
-  private static FeatureTypeProperty m_GeomProperty;
+//  private static FeatureTypeProperty m_GeomProperty;
 
   private HashMap m_defalultStyles = new HashMap();
-
-  private SLDCache THE_CACHE = null;
 
   private static final Logger LOGGER = Logger.getLogger( DefaultStyleFactory.class.getName() );
 
@@ -159,7 +156,7 @@ public class DefaultStyleFactory
       FeatureTypeProperty property = properties[i];
       if( property.isGeometryProperty() )
       {
-        m_GeomProperty = property;
+//        m_GeomProperty = property;
         symbolizer.add( createGeometrySymbolizer( property ) );
       }
       //      if( m_GeomProperty == null )
@@ -209,17 +206,17 @@ public class DefaultStyleFactory
     return sld;
   }
 
-  private Symbolizer createTextSymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
-  {
-    String type = property.getType();
-    if( type.equals( String.class.getName() ) )
-    {
-      return StyleFactory.createTextSymbolizer( m_GeomProperty.getType(), property.getName(), StyleFactory
-          .createLabelPlacement( StyleFactory.createPointPlacement() ) );
-    }
-    throw new StyleNotDefinedException( "Error while creating TextSymbolizer from string type. Property name: "
-        + property.getName() );
-  }
+//  private Symbolizer createTextSymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
+//  {
+//    String type = property.getType();
+//    if( type.equals( String.class.getName() ) )
+//    {
+//      return StyleFactory.createTextSymbolizer( m_GeomProperty.getType(), property.getName(), StyleFactory
+//          .createLabelPlacement( StyleFactory.createPointPlacement() ) );
+//    }
+//    throw new StyleNotDefinedException( "Error while creating TextSymbolizer from string type. Property name: "
+//        + property.getName() );
+//  }
 
   private Symbolizer createGeometrySymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
   {

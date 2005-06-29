@@ -78,6 +78,7 @@ import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeaturePropertyVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
@@ -85,7 +86,6 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaUtils;
 import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
-import org.kalypsodeegree_impl.gml.schema.vistors.CollectFeatureTypesSchemaVisitor;
 import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypsodeegree_impl.tools.Debug;
@@ -103,7 +103,6 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class FeatureFactory
 {
-
   private static final String DEFAULTNAMESPACE = "www.generic";
 
   /**
@@ -538,4 +537,23 @@ public class FeatureFactory
     return new GMLWorkspace_Impl( featureTypes, rootFeature, context, schema.getUrl().toExternalForm(), schema
         .getTargetNS(), schema.getNamespaceMap() );
   }
+
+  public static void accept( final IFeaturePropertyVisitor visitor, int position, final FeatureTypeProperty ftp,
+      final Object property )
+  {
+    if( ftp instanceof FeatureAssociationTypeProperty )
+    {
+      if( property instanceof Feature )
+        visitor.visit( position, ftp.getName(), (Feature)property );
+      else if( property instanceof String )
+        visitor.visit( position, ftp.getName(), (String)property );
+      else if( property instanceof List )
+        visitor.visit( position, ftp.getName(), (List)property );
+
+      // Andreas: we dont know anything about associations with null-data; how to solve this?
+    }
+    else
+      visitor.visit( position, ftp.getName(), property );
+  }
+
 }

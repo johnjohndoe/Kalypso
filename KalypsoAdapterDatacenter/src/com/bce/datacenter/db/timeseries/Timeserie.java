@@ -31,10 +31,12 @@ public class Timeserie extends Persistent
 
   private String m_dataTableName;
 
+  /** Marc: was ist damit? */
   private String m_description;
 
   private String m_name;
 
+  /** Marc: was ist damit? */
   private String m_type;
 
   private int m_channelRef;

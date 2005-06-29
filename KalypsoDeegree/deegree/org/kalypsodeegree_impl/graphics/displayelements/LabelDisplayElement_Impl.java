@@ -93,11 +93,11 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -7870967255670858503L;
 
-  private ParameterValueType label = null;
+  private ParameterValueType m_label = null;
 
   // null means that the labels have to be created inside the paint-method
   // (and have not been set externally)
-  private ArrayList labels = null;
+  private ArrayList m_labels = null;
 
   /**
    * Creates a new LabelDisplayElement_Impl object.
@@ -121,7 +121,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    */
   public void setLabel( ParameterValueType label )
   {
-    this.label = label;
+    this.m_label = label;
   }
 
   /**
@@ -129,7 +129,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    */
   public ParameterValueType getLabel()
   {
-    return label;
+    return m_label;
   }
 
   /**
@@ -146,11 +146,11 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   public void paint( Graphics g, GeoTransform projection )
   {
 
-    if( label == null )
+    if( m_label == null )
       return;
     Graphics2D g2D = (Graphics2D)g;
 
-    if( labels == null )
+    if( m_labels == null )
     {
       try
       {
@@ -163,16 +163,16 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
     }
 
     // paint all labels
-    if( labels != null )
+    if( m_labels != null )
     {
-      Iterator it = labels.iterator();
+      Iterator it = m_labels.iterator();
       while( it.hasNext() )
       {
         ( (Label)it.next() ).paint( g2D );
       }
     }
     // mark the labels as unset (for the next paint-call)
-    labels = null;
+    m_labels = null;
   }
 
   /**
@@ -189,7 +189,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    */
   public void clearLabels()
   {
-    labels = null;
+    m_labels = null;
   }
 
   /**
@@ -198,11 +198,11 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    */
   public void addLabel( Label label )
   {
-    if( labels == null )
+    if( m_labels == null )
     {
-      labels = new ArrayList( 100 );
+      m_labels = new ArrayList( 100 );
     }
-    labels.add( label );
+    m_labels.add( label );
   }
 
   /**
@@ -211,13 +211,13 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    */
   public void addLabels( Label[] labels )
   {
-    if( this.labels == null )
+    if( this.m_labels == null )
     {
-      this.labels = new ArrayList( 100 );
+      this.m_labels = new ArrayList( 100 );
     }
     for( int i = 0; i < labels.length; i++ )
     {
-      this.labels.add( labels[i] );
+      this.m_labels.add( labels[i] );
     }
   }
 
@@ -227,10 +227,10 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    */
   public void setLabels( Label[] labels )
   {
-    this.labels = new ArrayList( 100 );
+    this.m_labels = new ArrayList( 100 );
     for( int i = 0; i < labels.length; i++ )
     {
-      this.labels.add( labels[i] );
+      this.m_labels.add( labels[i] );
     }
   }
 }

@@ -220,11 +220,6 @@ class GM_Position_Impl implements GM_Position, Serializable
     return eq;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = "GM_Position: ";

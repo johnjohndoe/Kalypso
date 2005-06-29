@@ -78,8 +78,8 @@ public class IngresDatabase
 
       if( set.getInt( 1 ) > 0 )
         return true;
-      else
-        return false;
+
+      return false;
     }
     catch( SQLException e )
     {

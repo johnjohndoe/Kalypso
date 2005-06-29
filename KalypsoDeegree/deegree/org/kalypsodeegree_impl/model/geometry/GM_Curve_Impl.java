@@ -177,13 +177,8 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    */
   private void calculateBoundary()
   {
-    try
-    {
-      boundary = new GM_CurveBoundary_Impl( getCoordinateSystem(), getStartPoint().getPosition(), getEndPoint()
-          .getPosition() );
-    }
-    catch( GM_Exception e )
-    {}
+    boundary = new GM_CurveBoundary_Impl( getCoordinateSystem(), getStartPoint().getPosition(), getEndPoint()
+        .getPosition() );
   }
 
   /**
@@ -224,39 +219,39 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     }
   }
 
-  /**
-   * calculates the centroid of the Curve
-   * 
-   *  
-   */
-  private void calculateCentroidAsWeight()
-  {
-    //   this is the origininal method calculateCenteroid from deegree
-    //   I (doemming) implemented calculateCenteroid() new, so that the centeroid
-    // is half on the full-point-by-point way from the start to the end of the
-    // curve, in my eyes it is more logical that way when using pointsymbolizers
-    // with curves (they should be on the line)
-    try
-    {
-      GM_Position[] positions = getAsLineString().getPositions();
-
-      double[] cen = new double[positions[0].getAsArray().length];
-      // 
-      for( int i = 0; i < positions.length; i++ )
-      {
-        double[] pos = positions[i].getAsArray();
-
-        for( int j = 0; j < pos.length; j++ )
-        {
-          cen[j] += ( pos[j] / positions.length );
-        }
-      }
-
-      centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
-    }
-    catch( Exception e )
-    {}
-  }
+//  /**
+//   * calculates the centroid of the Curve
+//   * 
+//   *  
+//   */
+//  private void calculateCentroidAsWeight()
+//  {
+//    //   this is the origininal method calculateCenteroid from deegree
+//    //   I (doemming) implemented calculateCenteroid() new, so that the centeroid
+//    // is half on the full-point-by-point way from the start to the end of the
+//    // curve, in my eyes it is more logical that way when using pointsymbolizers
+//    // with curves (they should be on the line)
+//    try
+//    {
+//      GM_Position[] positions = getAsLineString().getPositions();
+//
+//      double[] cen = new double[positions[0].getAsArray().length];
+//      // 
+//      for( int i = 0; i < positions.length; i++ )
+//      {
+//        double[] pos = positions[i].getAsArray();
+//
+//        for( int j = 0; j < pos.length; j++ )
+//        {
+//          cen[j] += ( pos[j] / positions.length );
+//        }
+//      }
+//
+//      centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
+//    }
+//    catch( Exception e )
+//    {}
+//  }
 
   /**
    *  
@@ -782,11 +777,6 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     return c;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = null;
