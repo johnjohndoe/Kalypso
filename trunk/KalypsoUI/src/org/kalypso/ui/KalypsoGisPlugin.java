@@ -85,11 +85,13 @@ import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
 import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
+import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -131,7 +133,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private static final Logger LOGGER = Logger.getLogger( KalypsoGisPlugin.class.getName() );
 
-  private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName() + ".resources.KalypsoGisPluginResources"; //$NON-NLS-N$
+  private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName()
+      + ".resources.KalypsoGisPluginResources"; //$NON-NLS-N$
 
   /** location of the pool properties file */
   private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-N$
@@ -151,12 +154,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private ProxyFactory m_proxyFactory;
 
   /**
-   * Configuration of this client. The configuration is build using the system
-   * properties as well as remote properties defined on the potential
-   * kalypso-servers.
+   * Configuration of this client. The configuration is build using the system properties as well as remote properties
+   * defined on the potential kalypso-servers.
    * <p>
-   * The properties is basically a hashmap mapping string keys to string
-   * representation of URLs or other kind of objects.
+   * The properties is basically a hashmap mapping string keys to string representation of URLs or other kind of
+   * objects.
    */
   private final Properties m_mainConf = new Properties();
 
@@ -174,15 +176,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private static DefaultStyleFactory m_defaultStyleFactory;
 
   /**
-   * The current user that has successfully logged into kalypso. Usually an
-   * application is responsible for initialising the current user using setUser(
-   * user )
+   * The current user that has successfully logged into kalypso. Usually an application is responsible for initialising
+   * the current user using setUser( user )
    */
   private User m_user;
 
   /**
-   * The local CaluclationServices, e.g. the ones createt from the extension
-   * point
+   * The local CaluclationServices, e.g. the ones createt from the extension point
    */
   private Map m_localCalcServices = null;
 
@@ -231,8 +231,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * Loads the client configuration from the various server that were configured
-   * in the kalypso plugin preferences page.
+   * Loads the client configuration from the various server that were configured in the kalypso plugin preferences page.
    * 
    * @param mainConf
    */
@@ -327,8 +326,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * Sets service proxy factory specific properties and creates the proxy
-   * factory object.
+   * Sets service proxy factory specific properties and creates the proxy factory object.
    * 
    * @param mainConf
    */
@@ -355,13 +353,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * Eclipse comes with its own StreamHandler proxy. So we just need to say
-   * which Handler to use for the protocol we can cover.
+   * Eclipse comes with its own StreamHandler proxy. So we just need to say which Handler to use for the protocol we can
+   * cover.
    * <p>
    * Following handlers are registered:
    * <ul>
-   * <li>OcsURLStreamHandler for 'kalypso-ocs' protocol. Handles Observation
-   * WebService urls.</li>
+   * <li>OcsURLStreamHandler for 'kalypso-ocs' protocol. Handles Observation WebService urls.</li>
    * <li>TODO: insert your own handlers here...</li>
    * </ul>
    * 
@@ -374,7 +371,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     registerUrlStreamHandler( context, CalculationSchemaStreamHandler.PROTOCOL, new CalculationSchemaStreamHandler() );
   }
 
-  private void registerUrlStreamHandler( final BundleContext context, final String scheme, final URLStreamHandler handler )
+  private void registerUrlStreamHandler( final BundleContext context, final String scheme,
+      final URLStreamHandler handler )
   {
     final Hashtable properties = new Hashtable( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[]
@@ -383,9 +381,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * Delete a list of temp dirs found in the properties file
-   * 'deletetempdir.properties'. This method is called on plugin-startup to
-   * clean the specified directories.
+   * Delete a list of temp dirs found in the properties file 'deletetempdir.properties'. This method is called on
+   * plugin-startup to clean the specified directories.
    */
   private void deleteTempDirs()
   {
@@ -436,8 +433,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      final Map stubs = m_proxyFactory
-          .getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities.getOnlyClassName( ICalculationService.class ) );
+      final Map stubs = m_proxyFactory.getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities
+          .getOnlyClassName( ICalculationService.class ) );
       proxies.putAll( stubs );
     }
     catch( final ServiceException e )
@@ -459,26 +456,28 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint point = registry.getExtensionPoint( getId(), IKalypsoUIConstants.PL_CALCULATION_SERVICE );
       // ??
-     // System.out.println( "extensionPoint available ?" );
+      // System.out.println( "extensionPoint available ?" );
       if( point == null )
       {
-   //     System.out.println( "extensionPoint == null" );
+        //     System.out.println( "extensionPoint == null" );
         return null;
       }
       final IExtension[] extensions = point.getExtensions();
       for( int i = 0; i < extensions.length; i++ )
       {
-    //    System.out.println( "Extension: >" + extensions[i].getLabel() + "<" );
+        //    System.out.println( "Extension: >" + extensions[i].getLabel() + "<" );
         final IExtension extension = extensions[i];
         final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
         for( int j = 0; j < configurationElements.length; j++ )
         {
-   //       System.out.println( " ConfigElelemnt: >" + configurationElements[j].getName() + "<" );
+          //       System.out.println( " ConfigElelemnt: >" + configurationElements[j].getName() + "<" );
           final IConfigurationElement element = configurationElements[j];
           try
           {
-            final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory)element.createExecutableExtension( "class" );
-            proxies.put( "" + j + "_local_service_" + ClassUtilities.getOnlyClassName( factory.getClass() ), factory.createService() );
+            final ICalculationServiceProxyFactory factory = (ICalculationServiceProxyFactory)element
+                .createExecutableExtension( "class" );
+            proxies.put( "" + j + "_local_service_" + ClassUtilities.getOnlyClassName( factory.getClass() ), factory
+                .createService() );
           }
           catch( final CoreException e )
           {
@@ -503,8 +502,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   public IObservationService getObservationServiceProxy() throws ServiceException
   {
-    return (IObservationService)m_proxyFactory
-        .getAnyProxy( "Kalypso_ObservationService", ClassUtilities.getOnlyClassName( IObservationService.class ) );
+    return (IObservationService)m_proxyFactory.getAnyProxy( "Kalypso_ObservationService", ClassUtilities
+        .getOnlyClassName( IObservationService.class ) );
   }
 
   /**
@@ -516,7 +515,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   public IUserService getUserServiceProxy() throws ServiceException
   {
-    return (IUserService)m_proxyFactory.getAnyProxy( "Kalypso_UserService", ClassUtilities.getOnlyClassName( IUserService.class ) );
+    return (IUserService)m_proxyFactory.getAnyProxy( "Kalypso_UserService", ClassUtilities
+        .getOnlyClassName( IUserService.class ) );
   }
 
   public ILoaderFactory getLoaderFactory()
@@ -615,7 +615,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( final Exception e )
     {
       // exceptions ignorieren: nicht schlimm, Eintrag ist optional
-      LOGGER.info( SCHEMA_CATALOG + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
+      LOGGER
+          .info( SCHEMA_CATALOG + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
     }
     finally
     {
@@ -624,8 +625,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // cache immer initialisieren, zur Not auch leer, sonst geht gar nichts.
       final PropertyUrlCatalog serverUrlCatalog = new PropertyUrlCatalog( url, catalog );
       final IUrlCatalog calcCatalog = new CalcServiceCatalog();
-      
-      // TODO  wohin sonst
+
+      // TODO wohin sonst
       final IUrlCatalog updateObs = new UrlCatalogUpdateObservationMapping();
 
       final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
@@ -633,7 +634,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           // test
           //          naCatalog,
           //          twoDCatalog,
-          
+
           updateObs,
           serverUrlCatalog,
           calcCatalog } );
@@ -728,7 +729,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       if( crsName == null || !csFac.isKnownCS( crsName ) )
       {
         getPluginPreferences().setValue( IKalypsoPreferences.GLOBAL_CRS, DEFAULT_CRS );
-        System.out.println( "CRS \"" + crsName + "\" in preferences is unknown. setting preferences to CRS \"" + DEFAULT_CRS + "\"" );
+        System.out.println( "CRS \"" + crsName + "\" in preferences is unknown. setting preferences to CRS \""
+            + DEFAULT_CRS + "\"" );
         crsName = DEFAULT_CRS;
       }
       myCoordinateSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
@@ -762,14 +764,17 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       registry.registerTypeHandler( new DiagramTypeHandler() );
       registry.registerTypeHandler( new RangeSetTypeHandler() );
       registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+      registry.registerTypeHandler( new ResourceFileTypeHandler() );
 
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
+      guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
+      MessageDialog.openError( getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e
+          .getLocalizedMessage() );
     }
   }
 
@@ -791,8 +796,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
        */
       protected PasswordAuthentication getPasswordAuthentication()
       {
-        return new PasswordAuthentication( getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_USER ), getPluginPreferences().getString(
-            IKalypsoPreferences.HTTP_PROXY_PASS ).toCharArray() );
+        return new PasswordAuthentication( getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_USER ),
+            getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PASS ).toCharArray() );
       }
     } );
   }
@@ -821,8 +826,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       configureServiceProxyFactory( m_mainConf );
       configureSchemaCatalog();
     }
-    if( event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_HOST ) || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PASS )
-        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PORT ) || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_USER )
+    if( event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_HOST )
+        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PASS )
+        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PORT )
+        || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_USER )
         || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_USE ) )
     {
       configureProxy();
@@ -893,10 +900,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * Create a temp file in the subDirName of the plugin's state location (where
-   * files can be created, deleted, etc.). Uses File.createTempFile() so as
-   * written in the File javadoc, you should call .deleteOnExit() on the
-   * returned file instance to make it a real 'temp' file.
+   * Create a temp file in the subDirName of the plugin's state location (where files can be created, deleted, etc.).
+   * Uses File.createTempFile() so as written in the File javadoc, you should call .deleteOnExit() on the returned file
+   * instance to make it a real 'temp' file.
    */
   public File createTempFile( final String subDirName, final String prefix, final String suffix ) throws IOException
   {
@@ -910,9 +916,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * Deletes the given subDir of this plugin's state location. This method can
-   * be called when the plugin starts for instance, in order to clear
-   * non-deleted temp files.
+   * Deletes the given subDir of this plugin's state location. This method can be called when the plugin starts for
+   * instance, in order to clear non-deleted temp files.
    */
   public void deleteTempDir( final String subDirName ) throws IOException
   {
