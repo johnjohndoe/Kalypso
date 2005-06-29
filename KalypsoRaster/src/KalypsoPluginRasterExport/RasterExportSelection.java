@@ -1,11 +1,3 @@
-package KalypsoPluginRasterExport;
-
-import java.io.File;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.viewers.ISelection;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -46,6 +38,22 @@ import org.eclipse.jface.viewers.ISelection;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
+package KalypsoPluginRasterExport;
+
+import java.io.File;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.viewers.ISelection;
+
+/**
+ * 
+ * 
+ * Selection with information needed to export a raster from gml to another format (e.g. ascii)
+ * 
+ * @author Nadja Peiler
+ */
 public class RasterExportSelection implements ISelection
 {
 
@@ -57,10 +65,6 @@ public class RasterExportSelection implements ISelection
 
   private IProject m_selectedProject;
 
-  /*
-   * 
-   * @author doemming
-   */
   public RasterExportSelection( IPath pathSource, IProject selectedProject, File fileTarget, String format )
   {
     m_pathSource = pathSource;

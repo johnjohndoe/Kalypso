@@ -1,11 +1,3 @@
-package KalypsoPluginRasterImport;
-
-import java.io.File;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.viewers.ISelection;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -46,6 +38,22 @@ import org.eclipse.jface.viewers.ISelection;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
+package KalypsoPluginRasterImport;
+
+import java.io.File;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.viewers.ISelection;
+
+/**
+ * 
+ * 
+ * Selection with information needed to import a raster from another format (e.g. ascii) to gml
+ * 
+ * @author Nadja Peiler
+ */
 public class RasterImportSelection implements ISelection
 {
 
@@ -57,10 +65,6 @@ public class RasterImportSelection implements ISelection
 
   private final String m_format;
 
-  /*
-   * 
-   * @author doemming
-   */
   public RasterImportSelection( File fileSource, IPath pathTarget, IProject selectedProject, String format )
   {
     m_fileSource = fileSource;
