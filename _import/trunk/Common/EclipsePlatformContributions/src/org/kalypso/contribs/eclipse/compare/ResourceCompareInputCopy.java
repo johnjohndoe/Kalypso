@@ -70,6 +70,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -177,6 +178,16 @@ public class ResourceCompareInputCopy extends CompareEditorInput
   {
     fDiffViewer = new DiffTreeViewer( parent, getCompareConfiguration() )
     {
+      /**
+       * Overriden to get rid of yellow things
+       * 
+       * @see org.eclipse.jface.viewers.StructuredViewer#handleOpen(org.eclipse.swt.events.SelectionEvent)
+       */
+      protected void handleOpen( SelectionEvent event )
+      {
+        super.handleOpen( event );
+      }
+      
       protected void fillContextMenu( IMenuManager manager )
       {
         if( fOpenAction == null )
@@ -218,7 +229,7 @@ public class ResourceCompareInputCopy extends CompareEditorInput
     };
     return fDiffViewer;
   }
-
+  
   public void setSelection( ISelection s )
   {
 

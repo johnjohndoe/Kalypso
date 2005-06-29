@@ -98,17 +98,17 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
 
   private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
 
-  CS_CoordinateSystem selectedCoordinateSystem;
+  private CS_CoordinateSystem selectedCoordinateSystem;
 
-  String selectedCoordinateSystemName;
+  protected String selectedCoordinateSystemName;
 
-  private Combo landusePropCombo;
+  protected Combo landusePropCombo;
 
   protected String propertyName;
 
-  private boolean check;
+  protected boolean check;
 
-  private Label landusePropLabel;
+  protected Label landusePropLabel;
 
   public SelectLanduseWizardPage()
   {
@@ -253,7 +253,7 @@ public class SelectLanduseWizardPage extends WizardPage implements FocusListener
       }
     } );
 
-    Label dummyLabel2 = new Label( group, SWT.NONE );
+    new Label( group, SWT.NONE );
 
     //line 4: check autogenerateLanduseCollection
     final Button checkButton = new Button( group, SWT.CHECK );

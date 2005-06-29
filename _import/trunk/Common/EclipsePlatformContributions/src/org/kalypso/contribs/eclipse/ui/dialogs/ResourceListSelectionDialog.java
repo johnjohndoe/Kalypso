@@ -43,13 +43,9 @@ import org.eclipse.ui.internal.ide.StringMatcher;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
- * Shows a list of resources to the user with a text entry field for a string pattern used to filter the list of
- * resources.
- * <p>
- * 
- * @since 2.1
+ * Copy of the original {@link org.eclipse.ui.dialogs.ResourceListSelectionDialog}bceause that class is not public.
  */
-public class ResourceListSelectionDialog extends SelectionDialog
+public final class ResourceListSelectionDialog extends SelectionDialog
 {
   Text pattern;
 
@@ -245,7 +241,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
         }
       } );
     }
-  };
+  }
 
   class UpdateGatherThread extends Thread
   {
@@ -382,7 +378,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
         }
       } );
     }
-  };
+  }
 
   /**
    * Creates a new instance of the class.
@@ -405,7 +401,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    * dynamically as the pattern string is specified. Only resources of the given types that match the pattern string
    * will be listed. To further filter the matching resources,
    * 
-   * @see #select(IResource).
+   * @see #select()
    * 
    * @param parentShell
    *          shell to parent the dialog on
@@ -490,18 +486,17 @@ public class ResourceListSelectionDialog extends SelectionDialog
    */
   protected Control createDialogArea( Composite parent )
   {
-
-    Composite dialogArea = (Composite)super.createDialogArea( parent );
-    Label l = new Label( dialogArea, SWT.NONE );
+    Composite dialogArea2 = (Composite)super.createDialogArea( parent );
+    Label l = new Label( dialogArea2, SWT.NONE );
     l.setText( IDEWorkbenchMessages.getString( "ResourceSelectionDialog.label" ) ); //$NON-NLS-1$
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
     l.setLayoutData( data );
 
-    l = new Label( dialogArea, SWT.NONE );
+    l = new Label( dialogArea2, SWT.NONE );
     l.setText( IDEWorkbenchMessages.getString( "ResourceSelectionDialog.pattern" ) ); //$NON-NLS-1$
     data = new GridData( GridData.FILL_HORIZONTAL );
     l.setLayoutData( data );
-    pattern = new Text( dialogArea, SWT.SINGLE | SWT.BORDER );
+    pattern = new Text( dialogArea2, SWT.SINGLE | SWT.BORDER );
     pattern.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     // -------------------------
@@ -511,21 +506,21 @@ public class ResourceListSelectionDialog extends SelectionDialog
     patternString = null;
     // -------------------------
 
-    l = new Label( dialogArea, SWT.NONE );
+    l = new Label( dialogArea2, SWT.NONE );
     l.setText( IDEWorkbenchMessages.getString( "ResourceSelectionDialog.matching" ) ); //$NON-NLS-1$
     data = new GridData( GridData.FILL_HORIZONTAL );
     l.setLayoutData( data );
-    resourceNames = new Table( dialogArea, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL );
+    resourceNames = new Table( dialogArea2, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL );
     data = new GridData( GridData.FILL_BOTH );
     data.heightHint = 12 * resourceNames.getItemHeight();
     resourceNames.setLayoutData( data );
 
-    l = new Label( dialogArea, SWT.NONE );
+    l = new Label( dialogArea2, SWT.NONE );
     l.setText( IDEWorkbenchMessages.getString( "ResourceSelectionDialog.folders" ) ); //$NON-NLS-1$
     data = new GridData( GridData.FILL_HORIZONTAL );
     l.setLayoutData( data );
 
-    folderNames = new Table( dialogArea, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
+    folderNames = new Table( dialogArea2, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
     data = new GridData( GridData.FILL_BOTH );
     data.widthHint = 300;
     data.heightHint = 4 * folderNames.getItemHeight();
@@ -578,13 +573,13 @@ public class ResourceListSelectionDialog extends SelectionDialog
       }
     } );
 
-    applyDialogFont( dialogArea );
+    applyDialogFont( dialogArea2 );
 
     // -------------------------
     // TODO
     textChanged();
     // -------------------------
-    return dialogArea;
+    return dialogArea2;
   }
 
   /**
@@ -631,7 +626,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    * Use a binary search to get the first match for the patternString. This method assumes the patternString does not
    * contain any '?' characters and that it contains only one '*' character at the end of the string.
    */
-  private int getFirstMatch()
+  protected int getFirstMatch()
   {
     int high = descriptorsSize;
     int low = -1;
@@ -662,8 +657,8 @@ public class ResourceListSelectionDialog extends SelectionDialog
     }
     if( match )
       return high;
-    else
-      return -1;
+
+    return -1;
   }
 
   /**
@@ -732,7 +727,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    * Use a binary search to get the last match for the patternString. This method assumes the patternString does not
    * contain any '?' characters and that it contains only one '*' character at the end of the string.
    */
-  private int getLastMatch()
+  protected int getLastMatch()
   {
     int high = descriptorsSize;
     int low = -1;
@@ -763,8 +758,8 @@ public class ResourceListSelectionDialog extends SelectionDialog
     }
     if( match )
       return low;
-    else
-      return -1;
+
+    return -1;
   }
 
   /**
@@ -774,7 +769,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    * @param resources
    *          resources that match
    */
-  private void getMatchingResources( final ArrayList resources )
+  protected void getMatchingResources( final ArrayList resources )
   {
     try
     {
@@ -788,15 +783,13 @@ public class ResourceListSelectionDialog extends SelectionDialog
             if( match( proxy.getName() ) )
             {
               IResource res = proxy.requestResource();
-              if( select( res ) )
+              if( select() )
               {
                 resources.add( res );
                 return true;
               }
-              else
-              {
-                return false;
-              }
+
+              return false;
             }
           }
           if( type == IResource.FILE )
@@ -809,13 +802,13 @@ public class ResourceListSelectionDialog extends SelectionDialog
     {}
   }
 
-  private Image getParentImage( IResource resource )
+  protected Image getParentImage( IResource resource )
   {
     IResource parent = resource.getParent();
     return labelProvider.getImage( parent );
   }
 
-  private String getParentLabel( IResource resource )
+  protected String getParentLabel( IResource resource )
   {
     IResource parent = resource.getParent();
     String text;
@@ -838,7 +831,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    * @param resources
    *          resources to create resource descriptors for
    */
-  private void initDescriptors( final IResource resources[] )
+  protected void initDescriptors( final IResource resources[] )
   {
     BusyIndicator.showWhile( null, new Runnable()
     {
@@ -895,7 +888,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    *          label to match with the current pattern
    * @return true if the label matches the chosen pattern. false otherwise.
    */
-  private boolean match( String label )
+  protected boolean match( String label )
   {
     if( ( patternString == null ) || ( patternString.equals( "" ) ) || ( patternString.equals( "*" ) ) )//$NON-NLS-2$//$NON-NLS-1$
       return true;
@@ -922,7 +915,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    * string, this method will be called. If this method answers false, the resource will not be included in the list of
    * matches and the resource's children will NOT be considered for matching.
    */
-  protected boolean select( IResource resource )
+  protected boolean select()
   {
     return true;
   }
@@ -930,7 +923,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
   /**
    * The text in the pattern text entry has changed. Create a new string matcher and start a new update tread.
    */
-  private void textChanged()
+  protected void textChanged()
   {
     if( gatherResourcesDynamically )
     {
@@ -947,7 +940,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    * 
    * @desc resource descriptor of the selected resource
    */
-  private void updateFolders( final ResourceDescriptor desc )
+  protected void updateFolders( final ResourceDescriptor desc )
   {
     BusyIndicator.showWhile( getShell().getDisplay(), new Runnable()
     {
@@ -992,7 +985,7 @@ public class ResourceListSelectionDialog extends SelectionDialog
    * @param itemCount
    *          number of items in the resources table widget
    */
-  private void updateItem( int index, int itemPos, int itemCount )
+  protected void updateItem( int index, int itemPos, int itemCount )
   {
     ResourceDescriptor desc = descriptors[index];
     TableItem item;

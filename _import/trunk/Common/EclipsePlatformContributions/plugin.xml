@@ -23,13 +23,5 @@
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.kalypso.contribs.eclipsercp" export="true"/>
    </requires>
-   <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.eclipse.ui.internal.editors.text.JavaFileEditorInput"
-            class="org.bce.eclipse.platform.adapter.JavaFileEditorInputAdapter">
-         <adapter type="org.eclipse.core.runtime.IPath"/>
-      </factory>
-   </extension>
 
 </plugin>
