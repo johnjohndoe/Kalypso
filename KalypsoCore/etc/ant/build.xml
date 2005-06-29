@@ -10,6 +10,7 @@
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
 
 		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/EclipsePlatformContributions/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoRepository/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
