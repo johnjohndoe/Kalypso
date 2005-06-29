@@ -527,7 +527,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * This method clears the mapping
    * 
-   * @param TddFcrsf
    */
 
   public void updateSourceList( FeatureType srcFT )
@@ -571,7 +570,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     return true;
   }
 
-  private void validateFileField()
+  protected void validateFileField()
   {
     if( !skipRadioButton.getSelection() )
     {
@@ -615,7 +614,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     skipRadioButton.removeSelectionListener( this );
   }
 
-  private void storeSelectionData( Widget w )
+  protected void storeSelectionData( Widget w )
   {
     StringTokenizer st = new StringTokenizer( w.toString() );
     st.nextToken();

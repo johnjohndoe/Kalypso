@@ -1,9 +1,7 @@
 package test;
 
-import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.swt.SWT;
@@ -52,7 +50,7 @@ public class ImportShapeFile
 
   HashMap m_mapping = new HashMap();
 
-  private static Group m_sourceGroup;
+//  private static Group m_sourceGroup;
 
   static String noElements[] =
   {
@@ -122,28 +120,28 @@ public class ImportShapeFile
 
     //String shpBase = "D://Daten//DataForCK//KalypsoQM//GIS//teilgebiete_qm";
     String shpBase = "D://KalypsoWorkspace//Spree//Grunddaten//Shapes//sachsen";
-    URL modelURL;
+//    URL modelURL;
     URL schemaURL;
 
     CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
     try
     {
 
-      modelURL = ( new File( "D://temp//modell.gml" ) ).toURL();
+//      modelURL = ( new File( "D://temp//modell.gml" ) ).toURL();
       schemaURL = new URL( "file:/D:/KalypsoWorkspace/KalypsoWeisseElster/.model/schema/namodell.xsd" );
-      String schema = schemaURL.getPath();
-      String host = schemaURL.getHost();
+//      String schema = schemaURL.getPath();
+//      String host = schemaURL.getHost();
       GMLWorkspace gmlWS = ShapeSerializer.deserialize( shpBase, cs );
       ShapeSerializer.serialize( gmlWS, "D://Temp//test" );
       Feature rootFeature = gmlWS.getRootFeature();
-      List propertyList = (List)rootFeature.getProperty( "featureMember" );
+//      List propertyList = (List)rootFeature.getProperty( "featureMember" );
 
-      Feature feature = (Feature)propertyList.get( 0 );
-      Object o = feature.getProperty( "TEILGEBNR" );
-      if( o instanceof Integer )
-      {
-        int no = ( (Integer)o ).intValue();
-      }
+//      Feature feature = (Feature)propertyList.get( 0 );
+//      Object o = feature.getProperty( "TEILGEBNR" );
+//      if( o instanceof Integer )
+//      {
+//        int no = ( (Integer)o ).intValue();
+//      }
       System.out.println( "test" );
 
       FeatureType rootFT = rootFeature.getFeatureType();
@@ -328,7 +326,7 @@ public class ImportShapeFile
       }
       while( !shell.isDisposed() )
       {
-        m_sourceGroup = sourceGroup;
+//        m_sourceGroup = sourceGroup;
         if( !display.readAndDispatch() )
           display.sleep();
       }
@@ -380,18 +378,10 @@ public class ImportShapeFile
     }
   }
 
-  private void map()
-  {
-
-  }
-
-  /**
-   * @param e
-   */
-  protected static void handleComboSelection( String name, int j )
-  {
-
-  }
+//  protected static void handleComboSelection( String name, int j )
+//  {
+//
+//  }
 
   protected static void handelOKSelection()
   {
@@ -403,10 +393,10 @@ public class ImportShapeFile
     System.out.println( "RESET wurde gedrückt" );
   }
 
-  public void test()
-  {
-    URL url = getClass().getResource( "lkjfds" );
-    //	  IFile.create...
-
-  }
+//  public void test()
+//  {
+//    URL url = getClass().getResource( "lkjfds" );
+//    //	  IFile.create...
+//
+//  }
 }

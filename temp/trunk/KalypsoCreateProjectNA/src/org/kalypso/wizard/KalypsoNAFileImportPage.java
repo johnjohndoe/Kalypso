@@ -50,9 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 
-import org.deegree.model.geometry.GM_Object;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -64,18 +62,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -87,38 +79,38 @@ public class KalypsoNAFileImportPage extends WizardPage
 {
 
   //constants
-  private static final String NULL_KEY = "-NULL-";
+//  private static final String NULL_KEY = "-NULL-";
 
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
-  private static final String SOURCE_KEY = "source";
+//  private static final String SOURCE_KEY = "source";
 
-  private static final String TARGET_KEY = "target";
+//  private static final String TARGET_KEY = "target";
 
   //widgets
   private Group fileGroup;
 
   private Label fileLabel;
 
-  private Group sourceGroup;
+//  private Group sourceGroup;
 
-  private Group buttonGroup;
+  protected Group buttonGroup;
 
-  private Group targetGroup;
+//  private Group targetGroup;
 
   private Text textField;
 
   private Composite topComposite;
 
-  private ScrolledComposite topSCLMappingComposite;
+  protected ScrolledComposite topSCLMappingComposite;
 
-  private Composite topMappingComposite;
+//  private Composite topMappingComposite;
 
   private Button skipRadioButton;
 
   private Button browseButton;
 
-  private Button okButton;
+//  private Button okButton;
 
   //Geodata
   private CS_CoordinateSystem customCS = null;
@@ -131,7 +123,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   private URL fileURL;
 
   //mapping
-  private HashMap mapping;
+//  private HashMap mapping;
 
   /**
    * @param pageName
@@ -249,7 +241,7 @@ public class KalypsoNAFileImportPage extends WizardPage
           topSCLMappingComposite.setVisible( false );
           buttonGroup.setVisible( false );
           //remove mapping
-          mapping = null;
+//          mapping = null;
         }
         else
         {
@@ -263,38 +255,38 @@ public class KalypsoNAFileImportPage extends WizardPage
     fileGroup.pack();
   }
 
-  private FeatureType getSourceFT()
-  {
-    Feature rootFeature = sourceWorkspace.getRootFeature();
+//  private FeatureType getSourceFT()
+//  {
+//    Feature rootFeature = sourceWorkspace.getRootFeature();
+//
+//    FeatureType rootFT = rootFeature.getFeatureType();
+//    FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)rootFT
+//        .getProperty( "featureMember" );
+//
+//    FeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
+//    FeatureType shapeFT = associationFeatureTypes[0];
+//    return shapeFT;
+//  }
 
-    FeatureType rootFT = rootFeature.getFeatureType();
-    FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)rootFT
-        .getProperty( "featureMember" );
-
-    FeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
-    FeatureType shapeFT = associationFeatureTypes[0];
-    return shapeFT;
-  }
-
-  private void handelResetSelection()
-  {
-    Control[] cArray = sourceGroup.getChildren();
-    for( int i = 0; i < cArray.length; i++ )
-    {
-      Combo combo = (Combo)cArray[i];
-      combo.setData( SOURCE_KEY, NULL_KEY );
-      combo.setRedraw( true );
-    }
-    sourceGroup.redraw();
-    setPageComplete( false );
-  }//handelRestSelection
+//  private void handelResetSelection()
+//  {
+//    Control[] cArray = sourceGroup.getChildren();
+//    for( int i = 0; i < cArray.length; i++ )
+//    {
+//      Combo combo = (Combo)cArray[i];
+//      combo.setData( SOURCE_KEY, NULL_KEY );
+//      combo.setRedraw( true );
+//    }
+//    sourceGroup.redraw();
+//    setPageComplete( false );
+//  }//handelRestSelection
 
   /**
    * Uses the standard container selection dialog to choose the new value for
    * the container field.
    */
 
-  private void handleFileBrowse()
+  protected void handleFileBrowse()
   {
     FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[]
@@ -345,7 +337,7 @@ public class KalypsoNAFileImportPage extends WizardPage
     return true;
   }
 
-  private boolean validateFileField()
+  protected boolean validateFileField()
   {
     //	 checks catchment field entry and file suffix
     if( textField.getText().length() == 0 )
@@ -386,7 +378,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   {
     if( customCS != null )
       return customCS;
-    else
-      return defaultCS;
+
+    return defaultCS;
   }
 }

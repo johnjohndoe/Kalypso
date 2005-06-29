@@ -1,18 +1,7 @@
-/*
- * Created on Feb 10, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package test;
 
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -38,9 +27,9 @@ public class Test {
 		CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters
 				.getDefault().export(csFac.getCSByName("EPSG:31467"));
 
-		GMLWorkspace gmlWS = null;
+//		GMLWorkspace gmlWS = null;
 		try {
-			gmlWS = ShapeSerializer.deserialize(SHP_FILE_BASE, cs);
+			/*gmlWS =*/ ShapeSerializer.deserialize(SHP_FILE_BASE, cs);
 		} catch (GmlSerializeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,15 +45,15 @@ public class Test {
 //			e1.printStackTrace();
 //		}
 		
-		Feature rootFeature = gmlWS.getRootFeature();
+//		Feature rootFeature = gmlWS.getRootFeature();
 
-		FeatureType rootFT = rootFeature.getFeatureType();
-		FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty) rootFT
-				.getProperty("featureMember");
+//		FeatureType rootFT = rootFeature.getFeatureType();
+//		FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty) rootFT
+//				.getProperty("featureMember");
 
-		FeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
-		FeatureType shapeFT = associationFeatureTypes[0];
-		FeatureTypeProperty[] sourceFtp = shapeFT.getProperties();
+//		FeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
+//		FeatureType shapeFT = associationFeatureTypes[0];
+//		FeatureTypeProperty[] sourceFtp = shapeFT.getProperties();
 		
 	}
 }
