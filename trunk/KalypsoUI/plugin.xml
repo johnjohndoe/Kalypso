@@ -45,7 +45,7 @@
       <import plugin="org.eclipse.ui.views" export="true"/>
       <import plugin="org.eclipse.compare" export="true"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
-      <import plugin="org.eclipse.ui.workbench" export="true"/>
+      <import plugin="org.eclipse.ui.workbench" export="true"/>    
       <import plugin="org.eclipse.debug.ui" export="true"/>
       <import plugin="org.kalypso.jwsdp" export="true"/>
       <import plugin="org.eclipse.debug.core"/>
@@ -393,9 +393,9 @@
              <action
                    disabledIcon="icons/map/geoInfo_gray.gif"
                    toolbarPath="karte/tools"
-                   label="Coordinaten Info"
+                   label="Koordinaten Information"
                    class="org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate"
-                   tooltip="Coordinaten-Informationen"
+                   tooltip="Koordinaten Information"
                    icon="icons/map/geoInfo.gif"
                    style="radio"
                    menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
