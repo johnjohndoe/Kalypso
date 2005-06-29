@@ -92,5 +92,11 @@
          point="org.kalypso.ui.calculationService">
       <factory class="org.kalypso.floodrisk.process.impl.LocalCalculationServiceFactory"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.ide.resourceFilters">
+      <filter
+            selected="false"
+            pattern="*.dat"/>
+   </extension>
 
 </plugin>
