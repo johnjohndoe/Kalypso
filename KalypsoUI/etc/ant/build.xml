@@ -15,7 +15,7 @@
 		web service (jaxrpc).
 
 		Some of the service-proxies depend on core-projects such as
-		KalypsoUtil, KalypsoCore, etc. In order to take care of these
+		KalypsoCore, etc. In order to take care of these
 		dependencies there's the target 'build-core' which builds
 		all of them.
 	-->

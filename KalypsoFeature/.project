@@ -4,9 +4,8 @@
 	<comment></comment>
 	<projects>
 		<project>KalypsoDeegree</project>
-		<project>KalypsoPSICompactAdapter</project>
+		<project>KalypsoAdapterPSICompact</project>
 		<project>KalypsoUI</project>
-		<project>KalypsoUtil</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

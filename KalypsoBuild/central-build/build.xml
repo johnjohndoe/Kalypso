@@ -34,11 +34,6 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
 
   <target name="clean-base">
 
-    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUtil/etc/ant/"
-         inheritall="true"
-         target="clean"
-    />
     <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
          dir="${workspace}/KalypsoDeegree/etc/ant/"
          inheritall="true"
@@ -96,7 +91,7 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
   </target>
 
   <target name="fake-psi-compact" depends="prepare">
-    <delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
+    <delete file="${workspace}/KalypsoAdapterPSICompact/lib/PSICompact.jar" />
     <ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml"
          target="deploy"
          inheritall="false"
@@ -105,23 +100,13 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
   </target>
 
   <target name="real-psi-compact" depends="prepare" unless="psi">
-    <delete file="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar" />
+    <delete file="${workspace}/KalypsoAdapterPSICompact/lib/PSICompact.jar" />
     <copy file="${workspace}/KalypsoBuild/echte-psicompact/PSICompact.jar"
-          tofile="${workspace}/KalypsoPSICompactAdapter/lib/PSICompact.jar"
+          tofile="${workspace}/KalypsoAdapterPSICompact/lib/PSICompact.jar"
     />
   </target>
 
   <target name="build-base" depends="prepare">
-
-    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUtil/etc/ant/"
-         inheritall="true"
-         target="deploy"
-    />
-    <copy file="${workspace}/KalypsoUtil/build/deploy/KalypsoUtil.jar"
-          todir="${dist.base}"
-          overwrite="true"
-    />
 
     <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
          dir="${workspace}/KalypsoDeegree/etc/ant/"
@@ -164,26 +149,6 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
   </target>
 
   <target name="build-base-plugin" depends="prepare">
-
-    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUtil/etc/ant/"
-         inheritall="true"
-         target="deploy.plugin"
-    />
-    <copy file="${workspace}/KalypsoUtil/build/org.kalypso.*.zip"
-          todir="${dist.base}"
-          overwrite="true"
-    />
-
-    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
-         dir="${workspace}/KalypsoDeegree/etc/ant/"
-         inheritall="true"
-         target="deploy.plugin"
-    />
-    <copy file="${workspace}/KalypsoUtil/build/org.kalypso.*.zip"
-          todir="${dist.base}"
-          overwrite="true"
-    />
 
     <ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml"
          dir="${workspace}/KalypsoRepository/etc/ant/"
@@ -257,12 +222,6 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
 
   <target name="junit-test-base">
 
-    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUtil/etc/ant/"
-         inheritall="true"
-         target="junit-test"
-    />
-
     <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
          dir="${workspace}/KalypsoDeegree/etc/ant/"
          inheritall="true"
@@ -318,14 +277,6 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
 
   <target name="javadoc" depends="prepare">
     <echo message="Erzeuge Javadoc ..." />
-    <ant antfile="${workspace}/KalypsoUtil/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUtil/etc/ant/"
-         inheritall="true"
-         target="javadoc"
-    />
-    <copy todir="${dist.doc}/KalypsoUtil">
-      <fileset dir="${workspace}/KalypsoUtil/build/doc" includes="**/**" />
-    </copy>
 
     <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
          dir="${workspace}/KalypsoDeegree/etc/ant/"
