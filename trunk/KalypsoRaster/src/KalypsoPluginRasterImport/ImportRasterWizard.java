@@ -1,26 +1,3 @@
-package KalypsoPluginRasterImport;
-
-import java.io.File;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IImportWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.ide.IDE;
-import org.kalypso.floodrisk.tools.GridUtils;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
-import org.opengis.cs.CS_CoordinateSystem;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -62,6 +39,36 @@ import org.opengis.cs.CS_CoordinateSystem;
  *   
  *  ---------------------------------------------------------------------------*/
 
+package KalypsoPluginRasterImport;
+
+import java.io.File;
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IImportWizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.ide.IDE;
+import org.kalypso.floodrisk.tools.GridUtils;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.opengis.cs.CS_CoordinateSystem;
+
+/**
+ * 
+ * 
+ * Wizard to import a raster from another format (e.g. ascii) to gml
+ * 
+ * @author Nadja Peiler
+ */
 public class ImportRasterWizard extends Wizard implements IImportWizard
 {
   private ImportRasterSelectionWizardPage m_page1 = null;
