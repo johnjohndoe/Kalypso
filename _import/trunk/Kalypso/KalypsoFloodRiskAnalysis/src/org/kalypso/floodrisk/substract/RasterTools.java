@@ -1,12 +1,3 @@
-package org.kalypso.floodrisk.substract;
-
-import java.util.Vector;
-
-import org.kalypso.floodrisk.tools.GridGeometryHelper;
-import org.kalypsodeegree_impl.model.cv.RangeSet;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -47,6 +38,14 @@ import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.floodrisk.substract;
+
+import java.util.Vector;
+
+import org.kalypso.floodrisk.tools.GridGeometryHelper;
+import org.kalypsodeegree_impl.model.cv.RangeSet;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /**
  * 

@@ -38,6 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
 package org.kalypso.floodrisk.damageAnalysis.test;
 
 import junit.framework.TestCase;
@@ -49,13 +50,14 @@ import org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob;
 import org.kalypso.floodrisk.process.impl.ProcessDataProvider;
 import org.kalypso.floodrisk.process.impl.ProcessResultEater;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
+import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
-import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
@@ -79,6 +81,7 @@ public class CalculateDamageJobTest extends TestCase
     {
       registry.registerTypeHandler( new RangeSetTypeHandler() );
       registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
+      registry.registerTypeHandler( new ResourceFileTypeHandler() );
     }
     catch( TypeRegistryException e )
     {
@@ -87,6 +90,7 @@ public class CalculateDamageJobTest extends TestCase
 
     CalculateDamageJob job = new CalculateDamageJob();
     testCalculateDamage( job );
+    testGetSpezifikation( job );
   }
 
   private void testCalculateDamage( CalculateDamageJob job )
@@ -127,9 +131,9 @@ public class CalculateDamageJobTest extends TestCase
     }
   }
 
-  public void testGetSpezifikation()
+  public void testGetSpezifikation( CalculateDamageJob job )
   {
-    System.out.println( "testGetSpezifikation" );
+    System.out.println( "Spezifikation: " + job.getSpezifikation() );
   }
 
 }

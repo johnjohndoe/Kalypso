@@ -1,24 +1,3 @@
-package org.kalypso.floodrisk.rasterize;
-
-import java.io.File;
-import java.net.URL;
-import java.util.Hashtable;
-import java.util.List;
-
-import org.kalypso.floodrisk.data.ContextModel;
-import org.kalypso.floodrisk.data.RasterDataModel;
-import org.kalypso.floodrisk.process.IProcessResultEater;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -59,6 +38,26 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.floodrisk.rasterize;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.List;
+
+import org.kalypso.floodrisk.data.ContextModel;
+import org.kalypso.floodrisk.data.RasterDataModel;
+import org.kalypso.floodrisk.process.IProcessResultEater;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.services.calculation.job.ICalcDataProvider;
+import org.kalypso.services.calculation.job.ICalcJob;
+import org.kalypso.services.calculation.job.ICalcMonitor;
+import org.kalypso.services.calculation.job.ICalcResultEater;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * 

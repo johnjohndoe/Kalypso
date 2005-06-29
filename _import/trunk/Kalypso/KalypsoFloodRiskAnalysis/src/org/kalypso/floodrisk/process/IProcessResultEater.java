@@ -1,10 +1,3 @@
-package org.kalypso.floodrisk.process;
-
-import java.io.File;
-import java.util.HashMap;
-
-import org.kalypso.services.calculation.job.ICalcResultEater;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -45,6 +38,12 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.floodrisk.process;
+
+import java.io.File;
+import java.util.HashMap;
+
+import org.kalypso.services.calculation.job.ICalcResultEater;
 
 /**
  * 

@@ -1,28 +1,3 @@
-package org.kalypso.floodrisk.statisticAnalysis;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Vector;
-
-import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
-import org.kalypso.floodrisk.tools.GridGeometryHelper;
-import org.kalypso.floodrisk.tools.Number;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -63,6 +38,31 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.floodrisk.statisticAnalysis;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
+
+import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
+import org.kalypso.floodrisk.tools.GridGeometryHelper;
+import org.kalypso.floodrisk.tools.Number;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+
 /**
  * 
  * StatisticAnalysis

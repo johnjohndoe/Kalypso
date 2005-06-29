@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="KalypsoFloodRiskAnalysis"
+   id="org.kalypso.floodrisk"
    name="KalypsoFloodRiskAnalysis Plug-in"
    version="1.0.0"
    provider-name=""
-   class="KalypsoFloodRiskAnalysis.KalypsoFloodRiskAnalysisPlugin">
+   class="org.kalypso.floodrisk.KalypsoFloodRiskAnalysisPlugin">
 
    <runtime>
       <library name="KalypsoFloodRiskAnalysis.jar">
@@ -19,9 +19,8 @@
       <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.kalypso.ui"/>
-      <import plugin="org.kalypso.ui.addlayer"/>
+      <import plugin="org.kalypso.ui.addlayer"/>>
       <import plugin="org.kalypso.services.calculation.local"/>
-      <import plugin="org.bce.eclipse.platform.contrib"/>
    </requires>
    <extension-point id="AddProcess" name="AddProcess" schema="extpSchema/schema/AddProcess.exsd"/>
    <!--<extension
@@ -53,7 +52,7 @@
       </actionSet>
    </extension>
    <extension
-         point="KalypsoFloodRiskAnalysis.AddProcess">
+         point="org.kalypso.floodrisk.AddProcess">
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
@@ -80,7 +79,7 @@
             name="Templateraster erstellen"
             id="GenerateTemplateRasterJob"/>-->
    </extension>
-   <extension
+   <!--<extension
          point="org.kalypso.ui.mapviewaction">
       <MapviewAction
             title="KalypsoFloodRiskAnalysis.MapviewAction1"
@@ -88,7 +87,7 @@
             icon="icons/sample.gif"
             class="org.kalypso.floodrisk.action.ExportThemeAction"
             tooltip="Export active theme as jpg"/>
-   </extension>
+   </extension>-->
    <extension
          point="org.kalypso.ui.calculationService">
       <factory class="org.kalypso.floodrisk.process.impl.LocalCalculationServiceFactory"/>

@@ -1,15 +1,3 @@
-package org.kalypso.floodrisk.process.impl;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.service.CalcJobClientBean;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -50,6 +38,18 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+
+package org.kalypso.floodrisk.process.impl;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.services.calculation.job.ICalcDataProvider;
+import org.kalypso.services.calculation.service.CalcJobClientBean;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
  * 

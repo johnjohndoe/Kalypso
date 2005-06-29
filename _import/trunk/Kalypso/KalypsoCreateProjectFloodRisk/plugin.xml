@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="KalypsoCreateFloodRiskProject"
+   id="org.kalypso.wizard.CreateFloodRiskProject"
    name="KalypsoCreateFloodRiskProject Plug-in"
    version="1.0.0"
    provider-name=""
@@ -20,7 +20,8 @@
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.kalypso.ui" export="true"/>
       <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="KalypsoFloodRiskAnalysis"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.kalypso.floodrisk"/>
    </requires>
    
    <extension

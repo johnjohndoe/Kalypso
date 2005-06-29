@@ -1,9 +1,3 @@
-package org.kalypso.floodrisk.tools;
-
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.opengis.cs.CS_CoordinateSystem;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -44,6 +38,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.floodrisk.tools;
+
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
