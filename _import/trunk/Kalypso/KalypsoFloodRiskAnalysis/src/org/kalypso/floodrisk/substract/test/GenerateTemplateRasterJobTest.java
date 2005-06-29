@@ -91,7 +91,7 @@ public class GenerateTemplateRasterJobTest extends TestCase
 
   private void testGenerateTemplateRaster( GenerateTemplateRasterJob job )
   {
-    String base = "D://Nadja//eclipse//runtime-workspace//Test//";
+    String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
     //Input
     int numInputBeans = 2;
     CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];

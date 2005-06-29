@@ -91,7 +91,7 @@ public class CalculateFloodRiskJobTest extends TestCase
 
   private void testCalculateFloodRisk( CalculateFloodRiskJob job )
   {
-    String base = "D://Nadja//eclipse//runtime-workspace//Test//";
+    String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
     //Input
     int numInputBeans = 3;
     CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];

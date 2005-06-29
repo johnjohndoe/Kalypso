@@ -95,7 +95,7 @@ public class CalculateDamageJobTest extends TestCase
 
   private void testCalculateDamage( CalculateDamageJob job )
   {
-    String base = "D://Nadja//eclipse//runtime-workspace//Test//";
+    String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
     //Input
     int numInputBeans = 3;
     CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];

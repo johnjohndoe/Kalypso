@@ -94,7 +94,7 @@ public class RasterizeLanduseJobTest extends TestCase
 
   private void testRasterizeLanduse( RasterizeLanduseJob job )
   {
-    String base = "D://Nadja//eclipse//runtime-workspace//Test//";
+    String base = "D://Nadja//eclipse//runtime-workspace//Test_Risikoanalyse//";
     //Input
     int numInputBeans = 3;
     CalcJobClientBean[] input = new CalcJobClientBean[numInputBeans];
