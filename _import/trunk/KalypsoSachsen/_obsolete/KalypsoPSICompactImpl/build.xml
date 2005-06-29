@@ -8,7 +8,6 @@
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
 	</path>
 	
@@ -21,12 +20,12 @@
 		</copy>
 	</target>
 	
-	<!-- deploy overriden in order to copy it to KalypsoPSICompactAdapter -->
+	<!-- deploy overriden in order to copy it to KalypsoAdapterPSICompact -->
 	<target name="deploy" depends="compile">
 
 		<antcall target="commonbuild.deploy"/>
 		
-		<copy todir="${workspace}/KalypsoPSICompactAdapter/lib">
+		<copy todir="${workspace}/KalypsoAdapterPSICompact/lib">
 			<fileset dir="${project.deploy}" includes="${project-name}.jar" />
 		</copy>
 	</target>

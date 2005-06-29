@@ -11,7 +11,6 @@
 	    <fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
 		
-		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar"/>
 	  	<fileset dir="${workspace}/KalypsoServiceCalc/build/deploy" includes="**/*.jar"/>

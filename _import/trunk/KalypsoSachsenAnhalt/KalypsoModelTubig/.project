@@ -3,7 +3,6 @@
 	<name>KalypsoModelTubig</name>
 	<comment></comment>
 	<projects>
-		<project>KalypsoCalcService</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

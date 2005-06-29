@@ -8,7 +8,6 @@
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoUtil/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
 	</path>
