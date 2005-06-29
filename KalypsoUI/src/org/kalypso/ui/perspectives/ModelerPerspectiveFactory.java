@@ -71,6 +71,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     setContentsOfShowViewMenu( layout );
 
     layout.addActionSet( "org.kalypso.actionSet.model" );
+    layout.addActionSet( "KalypsoFloodRiskAnalysis.Start" );
 
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.file" );//$NON-NLS-1$
