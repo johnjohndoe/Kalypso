@@ -120,7 +120,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       return m_propsPage;
     }
 
-    return null;
+    return super.getAdapter( adapter );
   }
 
   /**
