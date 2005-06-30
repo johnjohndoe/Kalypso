@@ -102,7 +102,7 @@
          version="1.0.0"/>
 
    <plugin
-         id="org.bce.eclipse.platform.contrib"
+         id="org.kalypso.contribs.eclipseplatform"
          download-size="0"
          install-size="0"
          version="0.0.1"/>

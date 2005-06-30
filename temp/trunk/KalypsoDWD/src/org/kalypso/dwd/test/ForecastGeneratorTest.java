@@ -42,9 +42,7 @@ package org.kalypso.dwd.test;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -53,10 +51,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.FileUtils;
-import org.kalypso.dwd.DWDRaster;
-import org.kalypso.dwd.DWDRasterGeoLayer;
 import org.kalypso.dwd.ForecastGenerator;
-import org.kalypso.dwd.RasterStorage;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
 
