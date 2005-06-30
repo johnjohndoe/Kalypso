@@ -59,12 +59,16 @@
    <extension-point id="calculationService" name="calculationService" schema="schema/org.kalypso.services.calculation.exsd"/>
 
    <extension
+         id="preferences"
+         name="preferences"
          point="org.eclipse.core.runtime.preferences">
       <initializer
             class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer">
       </initializer>
    </extension>
    <extension
+         id="preferencePages"
+         name="preferencePages"
          point="org.eclipse.ui.preferencePages">
       <page
             name="Kalypso"
@@ -73,6 +77,8 @@
       </page>
    </extension>
    <extension
+         id="editors"
+         name="editors"
          point="org.eclipse.ui.editors">
       <editor
             default="true"
@@ -141,6 +147,8 @@
       </editor>
    </extension>
    <extension
+         id="views"
+         name="views"
          point="org.eclipse.ui.views">
       <category
             name="Kalypso"
@@ -183,6 +191,8 @@
             id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
    </extension>
    <extension
+         id="editorActions"
+         name="editorActions"
          point="org.eclipse.ui.editorActions">
       <editorContribution
             targetID="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
@@ -499,6 +509,8 @@
       </editorContribution>
    </extension>
    <extension
+         id="popupMenus"
+         name="popupMenus"
          point="org.eclipse.ui.popupMenus">
        <objectContribution
             objectClass="org.kalypsodeegree.model.feature.Feature"
@@ -542,6 +554,8 @@
  
    </extension>
    <extension
+         id="resourceFilters"
+         name="resourceFilters"
          point="org.eclipse.ui.ide.resourceFilters">
       <filter
             selected="false"
@@ -562,6 +576,8 @@
       </options>
    </extension>
    <extension
+         id="viewActions"
+         name="viewActions"
          point="org.eclipse.ui.viewActions">
       <viewContribution
             targetID="org.eclipse.ui.views.ResourceNavigator"
@@ -587,6 +603,8 @@
       </viewContribution>
    </extension>
    <extension
+         id="perspectives"
+         name="perspectives"
          point="org.eclipse.ui.perspectives">
       <perspective
             name="Kalypso Zeitreihenbrowser"
@@ -603,6 +621,8 @@
       </perspective>
    </extension>
    <extension
+         id="actionSets"
+         name="actionSets"
          point="org.eclipse.ui.actionSets">
       <actionSet
             label="Kalypso Modell"
@@ -723,6 +743,8 @@
       </actionSet>
    </extension>
    <extension
+         id="exportWizards"
+         name="exportWizards"
          point="org.eclipse.ui.exportWizards">
       <wizard
             name="Export über Kalypso Zeitreihendienst"
@@ -732,8 +754,8 @@
       </wizard>
    </extension>
    <extension
-         id="org.kalypso.repository.factories"
-         name="Kalypso RepositoryFactories"
+         id="repository.factories"
+         name="repository.factories"
          point="org.kalypso.repository.factories">
          <!-- TODO: Marc: Remove 'class' Attribut because of compilation-problems under linux
          check if still everything works -->
@@ -747,6 +769,8 @@
       </repository>
    </extension>
    <extension
+         id="importWizards"
+         name="importWizards"
          point="org.eclipse.ui.importWizards">
       <wizard
             class="org.kalypso.ui.wizard.dataimport.KalypsoImportWizard"
@@ -757,6 +781,8 @@
       </wizard>
    </extension>
    <extension
+         id="antTasks"
+         name="antTasks"
          point="org.eclipse.ant.core.antTasks">
       <antTask
             eclipseRuntime="true"
