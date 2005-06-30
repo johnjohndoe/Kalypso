@@ -36,7 +36,8 @@ public class PlainProfil implements IPlainProfil
 
   private final HashMap<METADATA, Object> m_profilMetaData;
 
-  private IProfil.RAUHEITEN_TYP m_rauheit;
+  /** TODO: Gesezt, damit nie null, sollte aber von aussen auf einen Standardwert gesetzt sein */
+  private IProfil.RAUHEITEN_TYP m_rauheit = RAUHEITEN_TYP.ks;
 
   private final List<Object> m_unknownData;
 
@@ -457,13 +458,8 @@ public class PlainProfil implements IPlainProfil
   public IProfilBuilding removeProfilBuilding( )
   {
     final IProfilBuilding oldBuilding = m_building;
-    // von Kim ganz auskommentiert
-    for( final Iterator<ProfilPointProperty> pbIt = m_building.getProfilPointProperties()
-        .iterator(); pbIt.hasNext(); )
-      removeProfilPointProperty( pbIt.next() );
-
-    // und statdessen diese Zeile eingefügt
-    // removeProfilPointProperty(ProfilPointProperty.OBERKANTEBRUECKE);
+    for( final ProfilPointProperty property : m_building.getProfilPointProperties() )
+      removeProfilPointProperty( property );
 
     m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
 
@@ -569,9 +565,8 @@ public class PlainProfil implements IPlainProfil
     removeProfilBuilding();
     m_building = ProfilBuildingFactory.createProfilBuilding( buildingTyp );
 
-    for( final Iterator<ProfilPointProperty> pbIt = m_building.getProfilPointProperties()
-        .iterator(); pbIt.hasNext(); )
-      addProfilPointProperty( pbIt.next() );
+    for( final ProfilPointProperty property : m_building.getProfilPointProperties() )
+      addProfilPointProperty( property );
 
     if( buildingTyp == IProfil.BUILDING_TYP.BRUECKE )
     {

@@ -5,10 +5,8 @@ package com.bce.eind.core.profil.impl.buildings;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
@@ -23,19 +21,17 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
 {
   private final IProfil.BUILDING_TYP m_buildingTyp;
 
-  protected final List<ProfilPointProperty> m_pointProperties;
+  private final Map<ProfilBuildingProperty, Double> m_buildingValues = new LinkedHashMap<ProfilBuildingProperty, Double>();
 
-  private final HashMap<ProfilBuildingProperty, Double> m_buildingValues = new HashMap<ProfilBuildingProperty, Double>();
+  private final ProfilPointProperty[] m_pointProperties;
 
-  public AbstractProfilBuilding( IProfil.BUILDING_TYP buildingTyp,
-      List<ProfilBuildingProperty> buildingProperties )
+  public AbstractProfilBuilding( final IProfil.BUILDING_TYP buildingTyp, final Collection<ProfilBuildingProperty> properties, final ProfilPointProperty[] pointProperties )
   {
     m_buildingTyp = buildingTyp;
-    m_pointProperties = new LinkedList<ProfilPointProperty>();
-    for( Iterator<ProfilBuildingProperty> vIt = buildingProperties.iterator(); vIt.hasNext(); )
-    {
-      m_buildingValues.put( vIt.next(), new Double( 0.0 ) );
-    }
+    m_pointProperties = pointProperties == null ? new ProfilPointProperty[] {} : pointProperties;
+    
+    for( final ProfilBuildingProperty property : properties )
+      m_buildingValues.put( property, new Double( 0.0 ) );
   }
 
   /**
@@ -47,16 +43,14 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   }
 
   /**
-   * 
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeys()
    */
-  public List<ProfilPointProperty> getProfilPointProperties( )
+  public ProfilPointProperty[] getProfilPointProperties( )
   {
-    return Collections.unmodifiableList( m_pointProperties );
+    return m_pointProperties;
   }
 
   /**
-   * 
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.ProfilBuildingProperty)
    */
   public double getValue( ProfilBuildingProperty buildingValue ) throws ProfilBuildingException
@@ -66,38 +60,28 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
     throw new ProfilBuildingException( "Eigenschaft existiert nicht" );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
+   * @return 
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#setValue(com.bce.eind.core.profilinterface.IProfil.ProfilBuildingProperty,
    *      double)
    */
-  public void setValue( ProfilBuildingProperty buildingValue, double value )
+  public boolean setValue( final ProfilBuildingProperty property, final double value )
       throws ProfilBuildingException
   {
-    if( m_buildingValues.containsKey( buildingValue ) )
-    {
-      m_buildingValues.put( buildingValue, value );
-    }
-
-    else
+    if( !m_buildingValues.containsKey( property ) )
       throw new ProfilBuildingException( "ungültige Eigenschaft für dieses Gebäude" );
 
+      final Double oldValue = m_buildingValues.get( property );
+      if( oldValue.compareTo( value ) != 0 )
+      {
+        m_buildingValues.put( property, value );
+        return true;
+      }
+      
+      return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeyCount()
-   */
-  public int getProfilPointPropertiesCount( )
-  {
-    return m_pointProperties.size();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see com.bce.eind.core.profil.IProfilBuilding#hasProperty(com.bce.eind.core.profil.ProfilBuildingProperty)
    */
   public boolean hasProperty( ProfilBuildingProperty profilBuildingProperty )
@@ -105,9 +89,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
     return m_buildingValues.containsKey( profilBuildingProperty );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see com.bce.eind.core.profil.IProfilBuilding#getProfilBuildingProperties()
    */
   public Collection<ProfilBuildingProperty> getProfilBuildingProperties( )
