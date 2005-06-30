@@ -7,8 +7,10 @@
 	<property name="project-name" value="PSICompact" />
 
 	<path id="compile.classpath">
-		<fileset dir="${project.lib}" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
+		<fileset dir="${project.lib}" includes="**/*.jar" />		
+		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
+        <fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 	</path>
 	
 	<!-- compile overriden in order to also copy the non-java files -->
