@@ -15,6 +15,6 @@ public class TrapezProfilBuilding extends AbstractProfilBuilding
     super( IProfil.BUILDING_TYP.TRAPEZ, Arrays.asList( ProfilBuildingProperty.BEZUGSPUNKT_X,
         ProfilBuildingProperty.BEZUGSPUNKT_Y, ProfilBuildingProperty.BREITE,
         ProfilBuildingProperty.HOEHE, ProfilBuildingProperty.STEIGUNG,
-        ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.RAUHEIT ), null );
+        ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.RAUHEIT ) );
   }
 }

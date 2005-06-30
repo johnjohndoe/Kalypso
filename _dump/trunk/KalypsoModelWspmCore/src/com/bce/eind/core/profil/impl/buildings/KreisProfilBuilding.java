@@ -12,8 +12,8 @@ public class KreisProfilBuilding extends AbstractProfilBuilding
 {
   public KreisProfilBuilding( )
   {
-    super( IProfil.BUILDING_TYP.KREIS, Arrays.asList( ProfilBuildingProperty.BEZUGSPUNKT_X,
-        ProfilBuildingProperty.BEZUGSPUNKT_Y, ProfilBuildingProperty.BREITE,
-        ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.RAUHEIT ), null );
+    super( IProfil.BUILDING_TYP.KREIS, Arrays.asList( ProfilBuildingProperty.BREITE,
+        ProfilBuildingProperty.SOHLGEFAELLE, ProfilBuildingProperty.BEZUGSPUNKT_X,
+        ProfilBuildingProperty.BEZUGSPUNKT_Y, ProfilBuildingProperty.RAUHEIT ) );
   }
 }

@@ -457,8 +457,13 @@ public class PlainProfil implements IPlainProfil
   public IProfilBuilding removeProfilBuilding( )
   {
     final IProfilBuilding oldBuilding = m_building;
-    for( final ProfilPointProperty property : m_building.getProfilPointProperties() )
-      removeProfilPointProperty( property );
+    // von Kim ganz auskommentiert
+    for( final Iterator<ProfilPointProperty> pbIt = m_building.getProfilPointProperties()
+        .iterator(); pbIt.hasNext(); )
+      removeProfilPointProperty( pbIt.next() );
+
+    // und statdessen diese Zeile eingefügt
+    // removeProfilPointProperty(ProfilPointProperty.OBERKANTEBRUECKE);
 
     m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
 
@@ -564,8 +569,9 @@ public class PlainProfil implements IPlainProfil
     removeProfilBuilding();
     m_building = ProfilBuildingFactory.createProfilBuilding( buildingTyp );
 
-    for( final ProfilPointProperty property : m_building.getProfilPointProperties() )
-      addProfilPointProperty( property );
+    for( final Iterator<ProfilPointProperty> pbIt = m_building.getProfilPointProperties()
+        .iterator(); pbIt.hasNext(); )
+      addProfilPointProperty( pbIt.next() );
 
     if( buildingTyp == IProfil.BUILDING_TYP.BRUECKE )
     {
