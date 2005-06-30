@@ -275,10 +275,10 @@ Nadja:
 
 3) Code
 -KalypsoFloodRiskAnalysis
--KalypsoCreateFloodRiskAnalysis
+-KalypsoCreateProjectFloodRisk
 	NewProjektWizard
 	Wasserstands- und Landnutzungsdaten werden aus den ASCII-Raster-Dateien abgefragt
--KalypsoPluginRaster
+-KalypsoRaster
 	Datenkonvertierung
 
 4) Erforderliche Überarbeitung von vorhandenem Code 
