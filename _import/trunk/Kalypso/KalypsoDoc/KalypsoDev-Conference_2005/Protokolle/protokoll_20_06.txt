@@ -29,7 +29,7 @@ Gernot:
 	Baustellen:	Unterstützung von Katastrophentestszenarien
 			Gebietsniederschlagsmodell clientseitig
 
-	Termin Ende Juni (nicht wirklich konkret)
+	Termin Ende Juli (nicht wirklich konkret)
 
 -Sachsen-Anhalt
 	Hochwasserzentrum
@@ -220,8 +220,8 @@ Marc:
 			Kartenexport?
 	-kalypsoUserService
 		Sachsen		Anmeldung auf Basis des am System angemeldeten Users (Betriebssystemuser)
-		Sachsen-Anhalt	ELDAP
-	-KalypsoRobotron - ELDAP Zugriff
+		Sachsen-Anhalt	LDAP
+	-KalypsoRobotron - LDAP Zugriff
 	-kalypsoBuild
 		Einheitliches Build
 	-JWSDPInstallation
