@@ -99,4 +99,40 @@
          install-size="0"
          version="0.0.1"/>
 
+   <plugin
+         id="org.kalypso.contribs.eclipseplatform"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.commons"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.contribs.eclipsercp"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.contribs.java"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.featureview"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.wizard"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
 </feature>

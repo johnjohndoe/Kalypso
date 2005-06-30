@@ -41,7 +41,7 @@
 	
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 	  <classpath>
-		<pathelement location="${workspace}/KalypsoCoreServices/etc/ant/ant-contrib-1.0b2.jar"/>
+		<pathelement location="${coreservicesbuild.basedir}/ant-contrib-1.0b2.jar"/>
 	  </classpath>
 	</taskdef>
 	
