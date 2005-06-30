@@ -282,12 +282,10 @@ public final class Utilities
       }
       return spacesFactory[length];
     }
-    else
-    {
-      char[] blancs = new char[length];
-      Arrays.fill( blancs, ' ' );
-      return new String( blancs );
-    }
+
+    final char[] blancs = new char[length];
+    Arrays.fill( blancs, ' ' );
+    return new String( blancs );
   }
 
   /**

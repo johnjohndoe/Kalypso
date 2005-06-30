@@ -119,9 +119,6 @@ public interface LinePlacement
   /**
    * Returns the placement type (one of the constants defined in <tt>LinePlacement</tt>).
    * <p>
-   * 
-   * @param feature
-   * @return
    * @throws FilterEvaluationException
    */
   int getPlacementType( Feature feature ) throws FilterEvaluationException;
@@ -138,9 +135,6 @@ public interface LinePlacement
    * Provides the thickness of the styled line (needed as information for the correct positioning of labels above and
    * below the line string).
    * <p>
-   * 
-   * @param feature
-   * @return
    * @throws FilterEvaluationException
    */
   double getLineWidth( Feature feature ) throws FilterEvaluationException;
@@ -158,9 +152,6 @@ public interface LinePlacement
   /**
    * Defines the distance between two captions on the line string. One unit is the width of the label caption.
    * <p>
-   * 
-   * @param feature
-   * @return
    * @throws FilterEvaluationException
    */
   int getGap( Feature feature ) throws FilterEvaluationException;

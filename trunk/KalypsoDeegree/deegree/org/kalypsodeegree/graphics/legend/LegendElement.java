@@ -184,8 +184,6 @@ public interface LegendElement
 
   /**
    * exports the <tt>LegendElement</tt> as</tt> BufferedImage</tt>
-   * 
-   * @return
    */
   BufferedImage exportAsImage() throws LegendException;
 }

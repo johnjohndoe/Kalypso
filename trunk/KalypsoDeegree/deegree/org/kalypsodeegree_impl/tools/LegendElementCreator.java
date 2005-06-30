@@ -197,10 +197,6 @@ public class LegendElementCreator
     setVerboseOutput( sb.toString() );
   }
 
-  /**
-   * 
-   * @return
-   */
   public String getVerboseOutput()
   {
     return this.verbose_output;
@@ -388,6 +384,9 @@ public class LegendElementCreator
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
+ * have been up to: Revision 1.7  2005/06/30 07:52:19  belger
+ * have been up to: Yellow thingis down to 250
+ * have been up to:
  * have been up to: Revision 1.6  2005/06/20 14:07:45  belger
  * have been up to: Formatierung
  * have been up to: Revision 1.10 2004/04/07 10:58:29 axel_schaefer bugfix

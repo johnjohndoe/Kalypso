@@ -75,8 +75,8 @@ public final class CV_PaletteInterpretation implements Serializable
     {
       return ( (CV_PaletteInterpretation)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

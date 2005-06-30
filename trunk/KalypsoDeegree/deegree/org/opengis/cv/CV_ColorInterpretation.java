@@ -125,8 +125,8 @@ public final class CV_ColorInterpretation implements Serializable
     {
       return ( (CV_ColorInterpretation)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

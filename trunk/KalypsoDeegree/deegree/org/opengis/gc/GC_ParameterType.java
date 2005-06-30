@@ -107,8 +107,8 @@ public final class GC_ParameterType implements Serializable
     {
       return ( (GC_ParameterType)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

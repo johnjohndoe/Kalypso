@@ -63,8 +63,7 @@ import org.kalypsodeegree.tools.Cache;
 
 public class Cache_Impl extends TimerTask implements Cache
 {
-
-  protected Map data = null;
+  protected Map m_data = null;
 
   protected Map lastCallTime = null;
 
@@ -89,7 +88,7 @@ public class Cache_Impl extends TimerTask implements Cache
 
   public Cache_Impl( int maxEntries, int maxLifeTime )
   {
-    data = Collections.synchronizedMap( new HashMap( maxEntries ) );
+    m_data = Collections.synchronizedMap( new HashMap( maxEntries ) );
     lastCallTime = Collections.synchronizedMap( new HashMap( maxEntries ) );
     maxCacheSize = maxEntries;
     this.maxLifeTime = maxLifeTime;
@@ -108,9 +107,9 @@ public class Cache_Impl extends TimerTask implements Cache
 
     Object o = null;
 
-    synchronized( data )
+    synchronized( m_data )
     {
-      o = data.get( identifier );
+      o = m_data.get( identifier );
       if( o != null )
       {
         lastCallTime.put( identifier, new Long( System.currentTimeMillis() ) );
@@ -129,11 +128,11 @@ public class Cache_Impl extends TimerTask implements Cache
   {
     Debug.debugMethodBegin( this, "put" );
 
-    synchronized( this.data )
+    synchronized( this.m_data )
     {
-      this.data.put( identifier, data );
+      this.m_data.put( identifier, data );
       lastCallTime.put( identifier, new Long( System.currentTimeMillis() ) );
-      if( this.data.size() > maxCacheSize )
+      if( this.m_data.size() > maxCacheSize )
       {
         deleteOldest();
       }
@@ -166,7 +165,7 @@ public class Cache_Impl extends TimerTask implements Cache
     }
 
     lastCallTime.remove( key );
-    Object o = data.remove( key );
+    Object o = m_data.remove( key );
 
     Debug.debugMethodEnd();
     return o;
@@ -178,7 +177,7 @@ public class Cache_Impl extends TimerTask implements Cache
    */
   public int getCurrentSize()
   {
-    return data.size();
+    return m_data.size();
   }
 
   /**
@@ -237,9 +236,9 @@ public class Cache_Impl extends TimerTask implements Cache
    */
   public void clear()
   {
-    synchronized( data )
+    synchronized( m_data )
     {
-      data.clear();
+      m_data.clear();
     }
   }
 
@@ -252,9 +251,9 @@ public class Cache_Impl extends TimerTask implements Cache
   public Object remove( Object identifier )
   {
     Object o = null;
-    synchronized( data )
+    synchronized( m_data )
     {
-      o = data.remove( identifier );
+      o = m_data.remove( identifier );
     }
     return o;
   }
@@ -274,9 +273,9 @@ public class Cache_Impl extends TimerTask implements Cache
     ArrayList list = new ArrayList( 100 );
     try
     {
-      synchronized( data )
+      synchronized( m_data )
       {
-        Iterator iterator = data.keySet().iterator();
+        Iterator iterator = m_data.keySet().iterator();
         long currentTime = System.currentTimeMillis();
 
         while( iterator.hasNext() )
@@ -291,7 +290,7 @@ public class Cache_Impl extends TimerTask implements Cache
         for( int i = list.size() - 1; i >= 0; i-- )
         {
           Object o = list.remove( i );
-          data.remove( o );
+          m_data.remove( o );
           lastCallTime.remove( o );
         }
       }

@@ -249,8 +249,8 @@ public class Adapters
     {
       return new MathTransformAdapter2D( transform );
     }
-    else
-      return new MathTransformAdapter( transform );
+
+    return new MathTransformAdapter( transform );
   }
 
   /**

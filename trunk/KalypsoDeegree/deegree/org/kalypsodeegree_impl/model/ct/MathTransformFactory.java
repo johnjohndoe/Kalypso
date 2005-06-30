@@ -299,14 +299,14 @@ public class MathTransformFactory
     if( tr1 instanceof ConcatenedTransform )
     {
       final ConcatenedTransform ctr = (ConcatenedTransform)tr1;
-      tr1 = ctr.transform1;
-      tr2 = createConcatenatedTransform( ctr.transform2, tr2 );
+      tr1 = ctr.m_transform1;
+      tr2 = createConcatenatedTransform( ctr.m_transform2, tr2 );
     }
     if( tr2 instanceof ConcatenedTransform )
     {
       final ConcatenedTransform ctr = (ConcatenedTransform)tr2;
-      tr1 = createConcatenatedTransform( tr1, ctr.transform1 );
-      tr2 = ctr.transform2;
+      tr1 = createConcatenatedTransform( tr1, ctr.m_transform1 );
+      tr2 = ctr.m_transform2;
     }
     /*
      * The returned transform will implements {@link MathTransform2D}if source and target dimensions are equal to 2.

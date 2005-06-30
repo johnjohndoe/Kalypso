@@ -72,105 +72,27 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  */
 public interface GeoTransform
 {
-  /**
-   * 
-   * 
-   * @param xdest
-   * 
-   * @return
-   */
   public double getSourceX( double xdest );
 
-  /**
-   * 
-   * 
-   * @param xsource
-   * 
-   * @return
-   */
   public double getDestX( double xsource );
 
-  /**
-   * 
-   * 
-   * @param ydest
-   * 
-   * @return
-   */
   public double getSourceY( double ydest );
 
-  /**
-   * 
-   * 
-   * @param ysource
-   * 
-   * @return
-   */
   public double getDestY( double ysource );
 
-  /**
-   * 
-   * 
-   * @param rect
-   */
   public void setSourceRect( GM_Envelope rect );
 
-  /**
-   * 
-   * 
-   * @param xMin
-   * @param yMin
-   * @param xMax
-   * @param yMax
-   */
   public void setSourceRect( double xMin, double yMin, double xMax, double yMax );
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public GM_Envelope getSourceRect();
 
-  /**
-   * 
-   * 
-   * @param rect
-   */
   public void setDestRect( GM_Envelope rect );
 
-  /**
-   * 
-   * 
-   * @param xMin
-   * @param yMin
-   * @param xMax
-   * @param yMax
-   */
   public void setDestRect( double xMin, double yMin, double xMax, double yMax );
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public GM_Envelope getDestRect();
 
-  /**
-   * 
-   * 
-   * @param point
-   * 
-   * @return
-   */
   public GM_Position getSourcePoint( GM_Position point );
 
-  /**
-   * 
-   * 
-   * @param point
-   * 
-   * @return
-   */
   public GM_Position getDestPoint( GM_Position point );
 }

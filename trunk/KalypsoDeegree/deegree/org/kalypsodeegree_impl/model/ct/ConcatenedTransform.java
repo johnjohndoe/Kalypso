@@ -92,12 +92,12 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
   /**
    * The first math transform.
    */
-  protected final MathTransform transform1;
+  protected final MathTransform m_transform1;
 
   /**
    * The second math transform.
    */
-  protected final MathTransform transform2;
+  protected final MathTransform m_transform2;
 
   /**
    * The inverse transform. This field will be computed only when needed.
@@ -111,8 +111,8 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
       final MathTransform transform2 )
   {
     this.provider = provider;
-    this.transform1 = transform1;
-    this.transform2 = transform2;
+    this.m_transform1 = transform1;
+    this.m_transform2 = transform2;
     if( !isValid() )
     {
       throw new IllegalArgumentException( Resources.format( ResourceKeys.ERROR_CANT_CONCATENATE_CS_$2,
@@ -139,7 +139,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
    */
   protected boolean isValid()
   {
-    return transform1.getDimTarget() == transform2.getDimSource();
+    return m_transform1.getDimTarget() == m_transform2.getDimSource();
   }
 
   /**
@@ -147,7 +147,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
    */
   public final int getDimSource()
   {
-    return transform1.getDimSource();
+    return m_transform1.getDimSource();
   }
 
   /**
@@ -155,7 +155,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
    */
   public final int getDimTarget()
   {
-    return transform2.getDimTarget();
+    return m_transform2.getDimTarget();
   }
 
   /**
@@ -166,7 +166,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
     //  Note: If we know that the transfert dimension is the same than source
     //        and target dimension, then we don't need to use an intermediate
     //        point. This optimization is done in ConcatenedTransformDirect.
-    return transform2.transform( transform1.transform( ptSrc, null ), ptDst );
+    return m_transform2.transform( m_transform1.transform( ptSrc, null ), ptDst );
   }
 
   /**
@@ -178,9 +178,9 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
     //  Note: If we know that the transfert dimension is the same than source
     //        and target dimension, then we don't need to use an intermediate
     //        buffer. This optimization is done in ConcatenedTransformDirect.
-    final double[] tmp = new double[numPts * transform1.getDimTarget()];
-    transform1.transform( srcPts, srcOff, tmp, 0, numPts );
-    transform2.transform( tmp, 0, dstPts, dstOff, numPts );
+    final double[] tmp = new double[numPts * m_transform1.getDimTarget()];
+    m_transform1.transform( srcPts, srcOff, tmp, 0, numPts );
+    m_transform2.transform( tmp, 0, dstPts, dstOff, numPts );
   }
 
   /**
@@ -192,9 +192,9 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
     //  Note: If we know that the transfert dimension is the same than source
     //        and target dimension, then we don't need to use an intermediate
     //        buffer. This optimization is done in ConcatenedTransformDirect.
-    final float[] tmp = new float[numPts * transform1.getDimTarget()];
-    transform1.transform( srcPts, srcOff, tmp, 0, numPts );
-    transform2.transform( tmp, 0, dstPts, dstOff, numPts );
+    final float[] tmp = new float[numPts * m_transform1.getDimTarget()];
+    m_transform1.transform( srcPts, srcOff, tmp, 0, numPts );
+    m_transform2.transform( tmp, 0, dstPts, dstOff, numPts );
   }
 
   /**
@@ -208,7 +208,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
       {
         provider = MathTransformFactory.getDefault();
       }
-      inverse = provider.createConcatenatedTransform( transform2.inverse(), transform1.inverse() );
+      inverse = provider.createConcatenatedTransform( m_transform2.inverse(), m_transform1.inverse() );
       if( inverse instanceof ConcatenedTransform )
       {
         ( (ConcatenedTransform)inverse ).inverse = this;
@@ -228,8 +228,8 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
    */
   public Matrix derivative( final CoordinatePoint point ) throws TransformException
   {
-    final Matrix matrix1 = transform1.derivative( point );
-    final Matrix matrix2 = transform2.derivative( transform1.transform( point, null ) );
+    final Matrix matrix1 = m_transform1.derivative( point );
+    final Matrix matrix2 = m_transform2.derivative( m_transform1.transform( point, null ) );
     // Compute "matrix = matrix2 * matrix1". Reuse an existing matrix object
     // if possible, which is always the case when both matrix are square.
     final int numRow = matrix2.getNumRow();
@@ -255,7 +255,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
    */
   public final boolean isIdentity()
   {
-    return transform1.isIdentity() && transform2.isIdentity();
+    return m_transform1.isIdentity() && m_transform2.isIdentity();
   }
 
   /**
@@ -263,7 +263,7 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
    */
   public final int hashCode()
   {
-    return transform1.hashCode() + 37 * transform2.hashCode();
+    return m_transform1.hashCode() + 37 * m_transform2.hashCode();
   }
 
   /**
@@ -276,8 +276,8 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
     if( super.equals( object ) )
     {
       final ConcatenedTransform that = (ConcatenedTransform)object;
-      return Utilities.equals( this.transform1, that.transform1 )
-          && Utilities.equals( this.transform2, that.transform2 );
+      return Utilities.equals( this.m_transform1, that.m_transform1 )
+          && Utilities.equals( this.m_transform2, that.m_transform2 );
     }
     return false;
   }
@@ -301,8 +301,8 @@ class ConcatenedTransform extends AbstractMathTransform implements Serializable
     if( transform instanceof ConcatenedTransform )
     {
       final ConcatenedTransform concat = (ConcatenedTransform)transform;
-      addWKT( buffer, concat.transform1, first );
-      addWKT( buffer, concat.transform2, false );
+      addWKT( buffer, concat.m_transform1, first );
+      addWKT( buffer, concat.m_transform2, false );
     }
     else
     {

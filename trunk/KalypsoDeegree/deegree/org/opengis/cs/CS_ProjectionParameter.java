@@ -99,8 +99,8 @@ public class CS_ProjectionParameter implements Cloneable, Serializable
       return Double.doubleToLongBits( this.value ) == Double.doubleToLongBits( that.value )
           && ( this.name == that.name || ( name != null && name.equals( that.name ) ) );
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

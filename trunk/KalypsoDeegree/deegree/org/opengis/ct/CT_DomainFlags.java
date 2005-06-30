@@ -82,8 +82,8 @@ public class CT_DomainFlags implements Serializable
     {
       return ( (CT_DomainFlags)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

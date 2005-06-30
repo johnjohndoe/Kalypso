@@ -352,8 +352,8 @@ public final class Geometry
     final double d2 = x * x + y * y;
     if( d1 > d2 )
       return new Point2D.Double( x2, y2 );
-    else
-      return new Point2D.Double( x1, y1 );
+
+    return new Point2D.Double( x1, y1 );
   }
 
   /**
@@ -503,8 +503,8 @@ public final class Geometry
       dest.setLocation( x1, y1 );
       return dest;
     }
-    else
-      return new Point2D.Double( x1, y1 );
+
+    return new Point2D.Double( x1, y1 );
   }
 
   /**

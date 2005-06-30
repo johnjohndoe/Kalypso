@@ -80,13 +80,13 @@ final class ConcatenedTransformDirect2D extends ConcatenedTransformDirect implem
   private static final long serialVersionUID = 6009454091075588885L;
 
   /**
-   * The first math transform. This field is identical to {@link ConcatenedTransform#transform1}. Only the type is
+   * The first math transform. This field is identical to {@link ConcatenedTransform#m_transform1}. Only the type is
    * different.
    */
   private final MathTransform2D transform1;
 
   /**
-   * The second math transform. This field is identical to {@link ConcatenedTransform#transform1}. Only the type is
+   * The second math transform. This field is identical to {@link ConcatenedTransform#m_transform1}. Only the type is
    * different.
    */
   private final MathTransform2D transform2;

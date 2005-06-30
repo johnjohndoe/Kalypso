@@ -274,8 +274,6 @@ public interface MapView
 
   /**
    * Returns the <tt>Optimizer</tt>s.
-   * 
-   * @return
    */
   Optimizer[] getOptimizers();
 

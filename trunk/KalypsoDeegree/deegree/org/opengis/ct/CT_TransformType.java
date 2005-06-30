@@ -82,8 +82,8 @@ public class CT_TransformType implements Serializable
     {
       return ( (CT_TransformType)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

@@ -89,11 +89,6 @@ import com.sun.media.jai.codec.SeekableStream;
 public class ImageUtils
 {
   /**
-   * 
-   * 
-   * @param url
-   * 
-   * @return
    * @throws IOException
    */
   public static BufferedImage loadImage( URL url ) throws IOException
@@ -108,11 +103,6 @@ public class ImageUtils
   }
 
   /**
-   * 
-   * 
-   * @param fileName
-   * 
-   * @return
    * @throws IOException
    */
   public static BufferedImage loadImage( String fileName ) throws IOException
@@ -127,10 +117,12 @@ public class ImageUtils
 }
 /***********************************************************************************************************************
  * Changes to this class. What the people have been up to: $Log$
- * Changes to this class. What the people have been up to: Revision 1.4  2005/06/20 14:07:45  belger
- * Changes to this class. What the people have been up to: Formatierung
- * Changes to this class. What the people have been up to: Revision 1.1 2004/04/02 06:41:56
- * poth no message
+ * Changes to this class. What the people have been up to: Revision 1.5  2005/06/30 07:52:19  belger
+ * Changes to this class. What the people have been up to: Yellow thingis down to 250
+ * Changes to this class. What the people have been up to: Changes to this class. What the
+ * people have been up to: Revision 1.4 2005/06/20 14:07:45 belger Changes to this class. What the people have been up
+ * to: Formatierung Changes to this class. What the people have been up to: Revision 1.1 2004/04/02 06:41:56 poth no
+ * message
  * 
  * 
  *  

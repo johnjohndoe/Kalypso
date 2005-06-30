@@ -811,7 +811,7 @@ public class AngleFormat extends Format
   }
 
   /**
-   * Ignore le suffix d'un nombre. Cette méthode est appellée par la méthode {@link #parse}pour savoir quel champs il
+   * Ignore le suffix d'un nombre. Cette méthode est appellée par la méthode {@link #parse(String)}pour savoir quel champs il
    * vient de lire. Par exemple si l'on vient de lire les degrés dans "48°12'", alors cette méthode extraira le "°" et
    * retournera 0 pour indiquer que l'on vient de lire des degrés.
    * 
@@ -1324,7 +1324,7 @@ public class AngleFormat extends Format
   {
     final ParsePosition pos = new ParsePosition( 0 );
     final Angle ang = parse( source, pos, true );
-    checkComplete( source, pos, false );
+    checkComplete( source, pos );
     return ang;
   }
 
@@ -1379,13 +1379,10 @@ public class AngleFormat extends Format
    *          Chaîne de caractères qui était à interpréter.
    * @param pos
    *          Position à laquelle s'est terminée l'interprétation de la chaîne <code>source</code>.
-   * @param isCoordinate
-   *          <code>false</code> si on interprétait un angle, ou <code>true</code> si on interprétait une
-   *          coordonnée.
    * @throws ParseException
    *           Si la chaîne <code>source</code> n'a pas été interprétée dans sa totalité.
    */
-  static void checkComplete( final String source, final ParsePosition pos, final boolean isCoordinate )
+  static void checkComplete( final String source, final ParsePosition pos )
       throws ParseException
   {
     final int length = source.length();
@@ -1452,10 +1449,8 @@ public class AngleFormat extends Format
           && Utilities.equals( suffix1, cast.suffix1 ) && Utilities.equals( suffix2, cast.suffix2 )
           && Utilities.equals( numberFormat.getDecimalFormatSymbols(), cast.numberFormat.getDecimalFormatSymbols() );
     }
-    else
-    {
-      return false;
-    }
+
+    return false;
   }
 
   /**

@@ -75,8 +75,6 @@ public class MimeTypeMapper
    * returns true if the submitted content type is defined by the OGC
    * 
    * @param contentType
-   * 
-   * @return
    */
   public static boolean isOGCType( String contentType )
   {
@@ -87,8 +85,6 @@ public class MimeTypeMapper
    * returns true if the submitted content type is an image type
    * 
    * @param contentType
-   * 
-   * @return
    */
   public static boolean isImageType( String contentType )
   {
@@ -99,8 +95,6 @@ public class MimeTypeMapper
    * returns true if the submitted image content type is known by the deegree implementations
    * 
    * @param contentType
-   * 
-   * @return
    */
   public static boolean isKnownImageType( String contentType )
   {
@@ -115,8 +109,6 @@ public class MimeTypeMapper
    * returns true if the submitted content type is known by the deegree OWS implementations
    * 
    * @param contentType
-   * 
-   * @return
    */
   public static boolean isKnownMimeType( String contentType )
   {
@@ -137,10 +129,6 @@ public class MimeTypeMapper
   /**
    * maps a 'simple' format name like gif, jpg or text to the corresponding mime type --> e.g. image/gif, image/jpeg or
    * text/plain
-   * 
-   * @param contentType
-   * 
-   * @return
    */
   public static String toMimeType( String contentType )
   {

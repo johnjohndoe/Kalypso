@@ -81,22 +81,6 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 class LinearContains
 {
   /**
-   * the operations returns true if two the submitted points contains
-   */
-  public static boolean contains( GM_Position point1, GM_Position point2 ) throws Exception
-  {
-    throw new NoSuchMethodException( "contains(GM_Position, GM_Position)" + " not supported at the moment." );
-  }
-
-  /**
-   * the operations returns true if the submitted point contains the submitted curve segment
-   */
-  public static boolean contains( GM_CurveSegment curve, GM_Position point ) throws Exception
-  {
-    throw new NoSuchMethodException( "contains(GM_CurveSegment, GM_Position)" + " not supported at the moment." );
-  }
-
-  /**
    * the operation returns true if the submitted point contains the submitted surface patch
    */
   public static boolean contains( GM_SurfacePatch surface, GM_Position point )
@@ -123,14 +107,6 @@ class LinearContains
     }
 
     return con;
-  }
-
-  /**
-   * the operation returns true if the two submitted curves segments contains
-   */
-  public static boolean contains( GM_CurveSegment curve1, GM_CurveSegment curve2 ) throws Exception
-  {
-    throw new NoSuchMethodException( "contains(GM_CurveSegment, GM_CurveSegment)" + " not supported at the moment." );
   }
 
   /**
@@ -280,22 +256,6 @@ class LinearContains
   }
 
   /**
-   * the operations returns true if two the submitted points contains
-   */
-  public static boolean contains( GM_Point point1, GM_Point point2 ) throws Exception
-  {
-    throw new NoSuchMethodException( "contains(GM_Point, GM_Point)" + " not supported at the moment." );
-  }
-
-  /**
-   * the operations returns true if the submitted point contains the submitted curve
-   */
-  public static boolean contains( GM_Curve curve, GM_Point point ) throws Exception
-  {
-    throw new NoSuchMethodException( "contains(GM_Curve, GM_Point)" + " not supported at the moment." );
-  }
-
-  /**
    * the operation returns true if the submitted point contains the submitted surface
    */
   public static boolean contains( GM_Surface surface, GM_Point point ) throws Exception
@@ -313,14 +273,6 @@ class LinearContains
     }
 
     return contain;
-  }
-
-  /**
-   * the operation returns true if the two submitted curves contains
-   */
-  public static boolean contains( GM_Curve curve1, GM_Curve curve2 ) throws Exception
-  {
-    throw new NoSuchMethodException( "contains(GM_Curve, GM_Curve)" + " not supported at the moment." );
   }
 
   /**

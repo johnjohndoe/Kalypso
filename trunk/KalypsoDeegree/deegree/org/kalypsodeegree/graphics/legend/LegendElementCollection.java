@@ -89,14 +89,8 @@ public interface LegendElementCollection extends LegendElement
 
   /**
    * returns the title of the <tt>LegendElement</tt>
-   * 
-   * @return
    */
   String getTitle();
 
-  /**
-   * 
-   * @return
-   */
   int getSize();
 }
