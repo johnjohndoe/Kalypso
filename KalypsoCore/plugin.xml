@@ -22,7 +22,7 @@
       <import plugin="org.kalypso.deegree" export="true"/>
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.kalypso.commons" export="true"/>
-      <import plugin="org.kalypso.contribs.java"/>
+      <import plugin="org.kalypso.contribs.java" export="true"/>
    </requires>
 
    <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>
