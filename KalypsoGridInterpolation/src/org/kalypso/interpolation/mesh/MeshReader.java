@@ -46,7 +46,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.xpath.XPathAPI;
 import org.deegree_impl.services.NotSupportedFormatException;
-import org.kalypso.java.io.FileUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -628,7 +628,7 @@ public class MeshReader
       String shapebase = FileUtilities.nameWithoutExtension( file.getPath() );
       try
       {
-        GMLWorkspace gml = ShapeSerializer.deserialize( shapebase, crs, null );
+        GMLWorkspace gml = ShapeSerializer.deserialize( shapebase, crs );
         Feature root = gml.getRootFeature();
         List features = (List)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
         //check geometry type to disdinguish the two diffrent files
@@ -760,7 +760,7 @@ public class MeshReader
 
   private GM_Object readBorder( String shapefile, CS_CoordinateSystem cs ) throws GmlSerializeException
   {
-    GMLWorkspace ws = ShapeSerializer.deserialize( shapefile, cs, null );
+    GMLWorkspace ws = ShapeSerializer.deserialize( shapefile, cs );
     Feature root = ws.getRootFeature();
     FeatureList geoProperty = (FeatureList)root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     Feature features = geoProperty.toFeatures()[0];
