@@ -7,7 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/vecmath.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/junit/junit.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/braju/hb15.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deegree/deegree2004-02-13.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deegreeBinding.jar"/>

@@ -11,7 +11,7 @@ where all the stuff is produced.
 In the meantime developpers should use the build mechanims found in KalypsoConfXXX.
 
 -->
-	
+
 <project name="Kalypso" default="nightly-build">
   <description>
 		Builds KalypsoServices and Runs Junit-Tests
@@ -34,6 +34,31 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
 
   <target name="clean-base">
 
+
+    <ant antfile="${workspace}/EclipsePlatfromContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipsePlatfromContributions/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+
+    <ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipseRPCContributions/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+
+    <ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml"
+         dir="${workspace}/JavaApiContributions/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+
+    <ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCommons/etc/ant/"
+         inheritall="true"
+         target="clean"
+    />
+
     <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
          dir="${workspace}/KalypsoDeegree/etc/ant/"
          inheritall="true"
@@ -54,28 +79,28 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
 
   <target name="clean-server">
 
-    <ant antfile="${workspace}/KalypsoCoreServices/etc/ant/build.xml"
-         dir="${workspace}/KalypsoCoreServices/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceCore/etc/ant/"
          inheritall="true"
          target="clean"
     />
-    <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoCalcService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceCalc/etc/ant/"
          inheritall="true"
          target="clean"
     />
-    <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoObsService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceObs/etc/ant/"
          inheritall="true"
          target="clean"
     />
-    <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUserServices/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceUser/etc/ant/"
          inheritall="true"
          target="clean"
     />
-    <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoMetaDocService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceMetaDoc/etc/ant/"
          inheritall="true"
          target="clean"
     />
@@ -107,6 +132,48 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
   </target>
 
   <target name="build-base" depends="prepare">
+
+
+    <ant antfile="${workspace}/EclipsePlatfromContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipsePlatfromContributions/etc/ant/"
+         inheritall="true"
+         target="deploy"
+    />
+    <copy file="${workspace}/EclipsePlatfromContributions/build/deploy/EclipsePlatfromContributions.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipseRPCContributions/etc/ant/"
+         inheritall="true"
+         target="deploy"
+    />
+    <copy file="${workspace}/EclipseRCPContributions/build/deploy/EclipseRCPContributions.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml"
+         dir="${workspace}/JavaApiContributions/etc/ant/"
+         inheritall="true"
+         target="deploy"
+    />
+    <copy file="${workspace}/JavaApiContributions/build/deploy/JavaApiContributions.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCommons/etc/ant/"
+         inheritall="true"
+         target="deploy"
+    />
+    <copy file="${workspace}/KalypsoCommons/build/deploy/KalypsoCommons.jar"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
 
     <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
          dir="${workspace}/KalypsoDeegree/etc/ant/"
@@ -150,6 +217,47 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
 
   <target name="build-base-plugin" depends="prepare">
 
+
+    <ant antfile="${workspace}/EclipsePlatfromContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipsePlatfromContributions/etc/ant/"
+         inheritall="true"
+         target="deploy.plugin"
+    />
+    <copy file="${workspace}/EclipsePlatfromContributions/build/org.kalypso.*.zip"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipseRPCContributions/etc/ant/"
+         inheritall="true"
+         target="deploy.plugin"
+    />
+    <copy file="${workspace}/EclipseRCPContributions/build/org.kalypso.*.zip"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml"
+         dir="${workspace}/JavaApiContributions/etc/ant/"
+         inheritall="true"
+         target="deploy.plugin"
+    />
+    <copy file="${workspace}/JavaApiContributions/build/org.kalypso.*.zip"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
+    <ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCommons/etc/ant/"
+         inheritall="true"
+         target="deploy.plugin"
+    />
+    <copy file="${workspace}/KalypsoCommons/build/deploy/org.kalypso.*.zip"
+          todir="${dist.base}"
+          overwrite="true"
+    />
+
     <ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml"
          dir="${workspace}/KalypsoRepository/etc/ant/"
          inheritall="true"
@@ -173,14 +281,14 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
 
   <target name="build-server" depends="prepare,real-psi-compact">
 
-    <ant antfile="${workspace}/KalypsoCoreServices/etc/ant/build.xml"
-         dir="${workspace}/KalypsoCoreServices/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceCore/etc/ant/"
          inheritall="true"
          target="compile"
     />
 
-    <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoCalcService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceCalc/etc/ant/"
          inheritall="true"
          target="build"
     />
@@ -188,7 +296,7 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
           src="${dist.server}/jaxrpc-kalypsoservice_calculation.war"
     />
 
-    <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
+    <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
          dir="${workspace}/KalypsoObsService/etc/ant/"
          inheritall="true"
          target="build"
@@ -197,8 +305,8 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
           src="${dist.server}/jaxrpc-kalypsoservice_observation.war"
     />
 
-    <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUserServices/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceUser/etc/ant/"
          inheritall="true"
          target="build"
     />
@@ -206,8 +314,8 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
           src="${dist.server}/jaxrpc-kalypsoservice_user.zip"
     />
 
-    <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoMetaDocService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceMetaDoc/etc/ant/"
          inheritall="true"
          target="build"
     />
@@ -221,6 +329,30 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
   </target>
 
   <target name="junit-test-base">
+
+    <ant antfile="${workspace}/EclipsePlatfromContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipsePlatfromContributions/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+
+    <ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipseRPCContributions/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+
+    <ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml"
+         dir="${workspace}/JavaApiContributions/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
+
+    <ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCommons/etc/ant/"
+         inheritall="true"
+         target="junit-test"
+    />
 
     <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
          dir="${workspace}/KalypsoDeegree/etc/ant/"
@@ -244,28 +376,28 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
 
   <target name="junit-test-server">
 
-    <ant antfile="${workspace}/KalypsoCoreServices/etc/ant/build.xml"
-         dir="${workspace}/KalypsoCoreServices/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceCore/etc/ant/"
          inheritall="true"
          target="junit-test"
     />
-    <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoCalcService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceCalc/etc/ant/"
          inheritall="true"
          target="junit-test"
     />
-    <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoObsService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceObs/etc/ant/"
          inheritall="true"
          target="junit-test"
     />
-    <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUserServices/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceUser/etc/ant/"
          inheritall="true"
          target="junit-test"
     />
-    <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoMetaDocService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceMetaDoc/etc/ant/"
          inheritall="true"
          target="junit-test"
     />
@@ -278,11 +410,54 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
   <target name="javadoc" depends="prepare">
     <echo message="Erzeuge Javadoc ..." />
 
+    <ant antfile="${workspace}/EclipsePlatfromContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipsePlatfromContributions/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/EclipsePlatfromContributions">
+      <fileset dir="${workspace}/EclipsePlatfromContributions/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+    <ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml"
+         dir="${workspace}/EclipseRPCContributions/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/EclipseRCPContributions">
+      <fileset dir="${workspace}/EclipseRCPContributions/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+    <ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml"
+         dir="${workspace}/JavaApiContributions/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/JavaApiContributions">
+      <fileset dir="${workspace}/JavaApiContributions/build/doc"
+               includes="**/**"
+      />
+    </copy>
+
+    <ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml"
+         dir="${workspace}/KalypsoCommons/etc/ant/"
+         inheritall="true"
+         target="javadoc"
+    />
+    <copy todir="${dist.doc}/KalypsoCommons">
+      <fileset dir="${workspace}/KalypsoCommons/build/doc" includes="**/**" />
+    </copy>
+
     <ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml"
          dir="${workspace}/KalypsoDeegree/etc/ant/"
          inheritall="true"
          target="javadoc"
     />
+
     <copy todir="${dist.doc}/KalypsoDeegree">
       <fileset dir="${workspace}/KalypsoDeegree/build/doc" includes="**/**" />
     </copy>
@@ -307,57 +482,57 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
       <fileset dir="${workspace}/KalypsoCore/build/doc" includes="**/**" />
     </copy>
 
-    <ant antfile="${workspace}/KalypsoCoreServices/etc/ant/build.xml"
-         dir="${workspace}/KalypsoCoreServices/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceCore/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceCore/etc/ant/"
          inheritall="true"
          target="javadoc"
     />
-    <copy todir="${dist.doc}/KalypsoCoreServices">
-      <fileset dir="${workspace}/KalypsoCoreServices/build/doc"
+    <copy todir="${dist.doc}/KalypsoServiceCore">
+      <fileset dir="${workspace}/KalypsoServiceCore/build/doc"
                includes="**/**"
       />
     </copy>
 
-    <ant antfile="${workspace}/KalypsoCalcService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoCalcService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceCalc/etc/ant/"
          inheritall="true"
          target="javadoc"
     />
-    <copy todir="${dist.doc}/KalypsoCalcService">
-      <fileset dir="${workspace}/KalypsoCalcService/build/doc"
+    <copy todir="${dist.doc}/KalypsoServiceCalc">
+      <fileset dir="${workspace}/KalypsoServiceCalc/build/doc"
                includes="**/**"
       />
     </copy>
 
-    <ant antfile="${workspace}/KalypsoObsService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoObsService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceObs/etc/ant/"
          inheritall="true"
          target="javadoc"
     />
-    <copy todir="${dist.doc}/KalypsoObsService">
-      <fileset dir="${workspace}/KalypsoObsService/build/doc"
+    <copy todir="${dist.doc}/KalypsoServiceObs">
+      <fileset dir="${workspace}/KalypsoServiceObs/build/doc"
                includes="**/**"
       />
     </copy>
 
-    <ant antfile="${workspace}/KalypsoUserServices/etc/ant/build.xml"
-         dir="${workspace}/KalypsoUserServices/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceUser/etc/ant/"
          inheritall="true"
          target="javadoc"
     />
-    <copy todir="${dist.doc}/KalypsoUserServices">
-      <fileset dir="${workspace}/KalypsoUserServices/build/doc"
+    <copy todir="${dist.doc}/KalypsoServiceUser">
+      <fileset dir="${workspace}/KalypsoServiceUser/build/doc"
                includes="**/**"
       />
     </copy>
 
-    <ant antfile="${workspace}/KalypsoMetaDocService/etc/ant/build.xml"
-         dir="${workspace}/KalypsoMetaDocService/etc/ant/"
+    <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml"
+         dir="${workspace}/KalypsoServiceMetaDoc/etc/ant/"
          inheritall="true"
          target="javadoc"
     />
-    <copy todir="${dist.doc}/KalypsoMetaDocService">
-      <fileset dir="${workspace}/KalypsoMetaDocService/build/doc"
+    <copy todir="${dist.doc}/KalypsoServiceMetaDoc">
+      <fileset dir="${workspace}/KalypsoServiceMetaDoc/build/doc"
                includes="**/**"
       />
     </copy>
@@ -374,4 +549,3 @@ In the meantime developpers should use the build mechanims found in KalypsoConfX
   </target>
 
 </project>
-
