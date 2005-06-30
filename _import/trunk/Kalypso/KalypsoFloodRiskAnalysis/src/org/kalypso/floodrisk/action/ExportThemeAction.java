@@ -160,7 +160,6 @@ public class ExportThemeAction implements PluginMapOutlineAction
    * @param activeTheme
    *          theme with featureTypeName = "RectifiedGridCoverage"
    * @param monitor
-   * @return
    *  
    */
   IStatus createImage( GisTemplateFeatureTheme activeTheme, IProgressMonitor monitor )
@@ -313,13 +312,6 @@ public class ExportThemeAction implements PluginMapOutlineAction
   /**
    * creates a surrogate raster of the given rectifiedGridDomain and rangeSet with the given colorTable in the
    * rasterSymbolizer
-   * 
-   * @param gridDomain
-   * @param rangeSet
-   * @param rasterSym
-   * @param monitor
-   * @return
-   *  
    */
   private Raster getSurrogateRaster( RectifiedGridDomain gridDomain, RangeSet rangeSet, RasterSymbolizer rasterSym,
       IProgressMonitor monitor )

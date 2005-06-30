@@ -14,6 +14,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
 import org.kalypso.commons.conversion.units.IValueConverter;
 
+import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 
 /**
@@ -86,7 +87,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Number.class, true );
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, valueAxis );
 
-    final ArchiveData[] data = constructData( model, dateAxis, valueAxis, statusAxis, vc );
+    final ArchiveData[] data = constructData( model, dateAxis, valueAxis, vc );
 
     return new PSICompactTuppleModel( data, new IAxis[]
     {
@@ -101,7 +102,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * @param model
    * @param dateAxis
    * @param valueAxis
-   * @param statusAxis
    * @param vc
    *          optional converter
    * @return ArchiveData[]
@@ -109,15 +109,14 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
    * @throws SensorException
    */
   private final static ArchiveData[] constructData( final ITuppleModel model, final IAxis dateAxis,
-      final IAxis valueAxis, final IAxis statusAxis, final IValueConverter vc ) throws SensorException
+      final IAxis valueAxis, final IValueConverter vc ) throws SensorException
   {
     final ArchiveData[] data = new ArchiveData[model.getCount()];
 
     for( int i = 0; i < data.length; i++ )
     {
       Date date = (Date)model.getElement( i, dateAxis );
-      int status = PSICompactRepositoryFactory.maskToPsiStatus( ( (Number)model.getElement( i, statusAxis ) )
-          .intValue() );
+      int status = PSICompact.STATUS_AUTO;
       double value = ( (Number)model.getElement( i, valueAxis ) ).doubleValue();
 
       // convert the value if necessary
