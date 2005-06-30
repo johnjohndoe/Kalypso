@@ -95,10 +95,10 @@ $defaultHeader=$headerKalypso;
 &examine("../../KalypsoNA/src");
 &examine("../../KalypsoObsService/src");
 &examine("../../KalypsoOptimizePlugin/src");
-#&examine("../../KalypsoPSICompactAdapter/src");
+#&examine("../../KalypsoAdapterPSICompact/src");
 #&examine("../../KalypsoPSICompactImpl/src");
 &examine("../../KalypsoUserService/src");
-&examine("../../KalypsoUtil/src");
+
 
 die("ready.");
 

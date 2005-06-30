@@ -11,6 +11,9 @@
       <library name="JavaApiContributions.jar">
          <export name="*"/>
       </library>
+      <library name="lib/junit.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>
