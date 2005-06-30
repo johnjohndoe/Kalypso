@@ -16,9 +16,7 @@ import com.bce.datacenter.db.common.DataObject;
  */
 public class Channel extends DataObject
 {
-  /** separate identifier used for user own needs 
-   * Marc: was ist damit?
-   * */
+  /** separate identifier used for user own needs */
   private String m_identifier;
 
   /** timeseries belonging to this channel */
@@ -48,15 +46,6 @@ public class Channel extends DataObject
 
   /**
    * Consructor with parameters
-   * 
-   * @param con
-   * @param id
-   * @param name
-   * @param desc
-   * @param identifier
-   * @param ownerRef
-   * @param typeRef
-   * @param unitRef
    */
   public Channel( final Connection con, int id, String name, String desc,
       String identifier, int ownerRef, int typeRef, int unitRef )
@@ -69,6 +58,11 @@ public class Channel extends DataObject
     m_unitRef = unitRef;
   }
 
+  public String getIdentifier()
+  {
+    return m_identifier;
+  }
+  
   public String getUnit( ) throws SQLException
   {
     if( m_strUnit == null )
@@ -134,8 +128,6 @@ public class Channel extends DataObject
 
   /**
    * Returns the timeseries of that channel
-   * 
-   * @return timeseries
    */
   public List getTimeseries( )
   {
@@ -151,11 +143,6 @@ public class Channel extends DataObject
 
   /**
    * Looks up the database for a channel according to the given identifier
-   * 
-   * @param con
-   * @param identifier
-   * @return channel
-   * @throws SQLException
    */
   public static Channel findChannel( final Connection con,
       final String identifier ) throws SQLException
