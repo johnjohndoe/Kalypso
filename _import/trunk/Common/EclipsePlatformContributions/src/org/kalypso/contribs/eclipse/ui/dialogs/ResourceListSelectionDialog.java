@@ -405,27 +405,27 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    * 
    * @param parentShell
    *          shell to parent the dialog on
-   * @param container
+   * @param cont
    *          container to get resources from
-   * @param typeMask
+   * @param tmask
    *          mask containing IResource types to be considered
    */
-  public ResourceListSelectionDialog( Shell parentShell, IContainer container, int typeMask )
+  public ResourceListSelectionDialog( Shell parentShell, IContainer cont, int tmask )
   {
     super( parentShell );
-    this.container = container;
-    this.typeMask = typeMask;
+    this.container = cont;
+    this.typeMask = tmask;
     setShellStyle( getShellStyle() | SWT.RESIZE );
   }
 
   /**
    * doemming
    */
-  public ResourceListSelectionDialog( Shell shell, IContainer parent, int file, String pattern )
+  public ResourceListSelectionDialog( Shell shell, IContainer parent, int file, String pat )
   {
     // -------------------------
     this( shell, parent, file );
-    patternString = pattern;
+    patternString = pat;
     // -------------------------
   }
 

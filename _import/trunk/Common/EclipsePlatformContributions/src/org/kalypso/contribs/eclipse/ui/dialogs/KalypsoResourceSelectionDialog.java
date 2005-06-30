@@ -153,12 +153,12 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   /**
    * Sets the validator to use.
    * 
-   * @param validator
+   * @param val
    *          A selection validator
    */
-  public void setValidator( ISelectionValidator validator )
+  public void setValidator( ISelectionValidator val )
   {
-    this.validator = validator;
+    this.validator = val;
   }
 
   /**

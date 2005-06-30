@@ -44,9 +44,9 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPartReference;
 
 /**
- * Empty implementation of {@link org.eclipse.ui.IPartListener2}. TODO: insert type comment here
+ * Empty implementation of {@link org.eclipse.ui.IPartListener2}
  * 
- * @author bce
+ * @author belger
  */
 public class PartAdapter2 implements IPartListener2
 {
@@ -113,5 +113,4 @@ public class PartAdapter2 implements IPartListener2
   {
   // does nothing
   }
-
 }
