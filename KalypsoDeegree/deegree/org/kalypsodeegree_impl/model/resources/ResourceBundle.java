@@ -361,7 +361,9 @@ public class ResourceBundle extends java.util.ResourceBundle
       if( !Character.isUnicodeIdentifierPart( text.charAt( break1 ) ) )
       {
         while( --break1 >= lower && !Character.isUnicodeIdentifierPart( text.charAt( break1 ) ) )
-          ;
+        {
+          // empty loop
+        }
         break;
       }
     }
@@ -370,7 +372,9 @@ public class ResourceBundle extends java.util.ResourceBundle
       if( !Character.isUnicodeIdentifierPart( text.charAt( break2 ) ) )
       {
         while( ++break2 < upper && !Character.isUnicodeIdentifierPart( text.charAt( break2 ) ) )
-          ;
+        {
+          // empty loop
+        }
         break;
       }
     }

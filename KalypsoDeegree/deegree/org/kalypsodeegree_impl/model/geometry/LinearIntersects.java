@@ -413,18 +413,6 @@ class LinearIntersects
     return inter;
   }
 
-  /**
-   * 
-   * 
-   * @param X1
-   * @param Y1
-   * @param X2
-   * @param Y2
-   * @param PX
-   * @param PY
-   * 
-   * @return
-   */
   protected static int relativeCCW( double X1, double Y1, double X2, double Y2, double PX, double PY )
   {
     X2 -= X1;

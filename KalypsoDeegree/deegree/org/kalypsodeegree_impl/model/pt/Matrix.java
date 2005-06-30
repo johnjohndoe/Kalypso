@@ -83,7 +83,6 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
  * @see javax.vecmath.GMatrix
  * @see java.awt.geom.AffineTransform
  * @see javax.media.jai.PerspectiveTransform
- * @see javax.media.j3d.Transform3D
  * @see <A HREF="http://math.nist.gov/javanumerics/jama/">Jama matrix </A>
  * @see <A HREF="http://jcp.org/jsr/detail/83.jsp">JSR-83 Multiarray package </A>
  */

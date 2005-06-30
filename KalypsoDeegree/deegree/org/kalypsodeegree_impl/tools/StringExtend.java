@@ -371,11 +371,6 @@ public class StringExtend
 
   /**
    * countString count the occurrences of token into target
-   * 
-   * @param target
-   * @param token
-   * 
-   * @return
    */
   public static int countString( String target, String token )
   {
@@ -393,12 +388,6 @@ public class StringExtend
 
   /**
    * Extract all the string that begin with "start" and end with "end" and store it into an array of String
-   * 
-   * @param target
-   * @param startString
-   * @param end
-   * 
-   * @return
    */
   public static String[] extractString( String target, String startString, String end )
   {
@@ -424,14 +413,6 @@ public class StringExtend
   /**
    * extract a string contained between startDel and endDel, you can remove t he delimiters if set true the parameters
    * delStart and delEnd
-   * 
-   * @param target
-   * @param startDel
-   * @param endDel
-   * @param delStart
-   * @param delEnd
-   * 
-   * @return
    */
   public static String extractArray( String target, String startDel, String endDel, boolean delStart, boolean delEnd )
   {
@@ -467,11 +448,6 @@ public class StringExtend
 
   /**
    * convert the array of string like [(x1,y1),(x2,y2)...] into an array of double [x1,y1,x2,y2...]
-   * 
-   * @param s
-   * @param delimiter
-   * 
-   * @return
    */
   public static double[] toArrayDouble( String s, String delimiter )
   {

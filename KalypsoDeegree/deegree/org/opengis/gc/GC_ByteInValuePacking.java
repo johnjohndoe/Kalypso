@@ -65,8 +65,8 @@ public final class GC_ByteInValuePacking implements Serializable
     {
       return ( (GC_ByteInValuePacking)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

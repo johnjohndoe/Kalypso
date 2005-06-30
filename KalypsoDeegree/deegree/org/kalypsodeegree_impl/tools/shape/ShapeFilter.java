@@ -29,8 +29,8 @@ public class ShapeFilter extends FileFilter
     String name = f.getName();
     if( name.length() > 4 )
       return name.substring( name.length() - 4 ).equalsIgnoreCase( ".shp" );
-    else
-      return false;
+
+    return false;
   }
 
   public String getDescription()

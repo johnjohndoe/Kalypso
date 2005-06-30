@@ -100,8 +100,8 @@ public class CS_AxisInfo implements Cloneable, Serializable
       return ( name == that.name || ( name != null && name.equals( that.name ) ) )
           && ( orientation == that.orientation || ( orientation != null && orientation.equals( that.orientation ) ) );
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

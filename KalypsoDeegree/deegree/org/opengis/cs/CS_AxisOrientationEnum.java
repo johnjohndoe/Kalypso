@@ -99,8 +99,8 @@ public class CS_AxisOrientationEnum implements Serializable
     {
       return ( (CS_AxisOrientationEnum)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

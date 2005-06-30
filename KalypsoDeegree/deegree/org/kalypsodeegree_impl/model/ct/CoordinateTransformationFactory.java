@@ -329,7 +329,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between two temporal coordinate systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation checks if both
+   * {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}. The default implementation checks if both
    * coordinate systems use the same datum, and then adjusts for axis orientation, units and epoch.
    * 
    * @param sourceCS
@@ -366,7 +366,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between two vertical coordinate systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation checks if both
+   * {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}. The default implementation checks if both
    * coordinate systems use the same datum, and then adjusts for axis orientation and units.
    * 
    * @param sourceCS
@@ -391,7 +391,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between two geographic coordinate systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation can adjust axis
+   * {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}. The default implementation can adjust axis
    * order and orientation (e.g. transforming from <code>(NORTH,WEST)</code> to <code>(EAST,NORTH)</code>),
    * performs units conversion and apply Bursa Wolf transformation if needed.
    * 
@@ -417,7 +417,7 @@ public class CoordinateTransformationFactory
          * If the two geographic coordinate systems use differents ellipsoid, convert from the source to target
          * ellipsoid through the geocentric coordinate system.
          */
-        final String name = getTemporaryName( sourceCS );
+        final String name = getTemporaryName(  );
         final GeocentricCoordinateSystem gcs1 = new GeocentricCoordinateSystem( name, sourceDatum );
         final GeocentricCoordinateSystem gcs3 = new GeocentricCoordinateSystem( name, targetDatum );
         final CoordinateTransformation step1 = createTransformationStep( sourceCS, gcs1 );
@@ -444,7 +444,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between two projected coordinate systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation can adjust axis
+   * {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}. The default implementation can adjust axis
    * order and orientation. It also performs units conversion if it is the only extra change needed. Otherwise, it
    * performs three steps:
    * 
@@ -488,7 +488,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between a geographic and a projected coordinate systems. This method is automatically
-   * invoked by {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}.
+   * invoked by {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}.
    * 
    * @param sourceCS
    *          Input coordinate system.
@@ -518,7 +518,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between a projected and a geographic coordinate systems. This method is automatically
-   * invoked by {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation
+   * invoked by {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}. The default implementation
    * returns <code>{@link #createTransformationStep(GeographicCoordinateSystem, ProjectedCoordinateSystem)
    * createTransformationStep}(targetCS, sourceCS).{@link MathTransform#inverse() inverse()}</code>.
    * 
@@ -549,7 +549,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between two geocentric coordinate systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. The default implementation can adjust for
+   * {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}. The default implementation can adjust for
    * axis order and orientation, adjust for prime meridian, performs units conversion and apply Bursa Wolf
    * transformation if needed.
    * 
@@ -643,7 +643,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between a projected and a geocentric coordinate systems. This method is automatically
-   * invoked by {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}. This method doesn't need to be
+   * invoked by {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}. This method doesn't need to be
    * public since its decomposition in two step should be general enough.
    * 
    * @param sourceCS
@@ -672,7 +672,7 @@ public class CoordinateTransformationFactory
    * <li>The tail must be an instance of {@link VerticalCoordinateSystem}</li>
    * </ul>
    * 
-   * This method is automatically invoked by {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}.
+   * This method is automatically invoked by {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}.
    * 
    * @param sourceCS
    *          Input compound coordinate system.
@@ -690,7 +690,7 @@ public class CoordinateTransformationFactory
      * geographic and a vertical coordinate system. The horizontal datum is preserved, but other properties (vertical
      * datum, axis order, units, prime meridian...) are "standardized".
      */
-    final String name = getTemporaryName( sourceCS );
+    final String name = getTemporaryName(  );
     final HorizontalDatum datum = OpenGIS.getHorizontalDatum( sourceCS );
     final CompoundCoordinateSystem stdCS = new CompoundCoordinateSystem( name, new GeographicCoordinateSystem( name,
         datum ), new VerticalCoordinateSystem( name, VerticalDatum.ELLIPSOIDAL ) );
@@ -710,7 +710,7 @@ public class CoordinateTransformationFactory
 
   /**
    * Creates a transformation between two compound coordinate systems. This method is automatically invoked by
-   * {@link #createFromCoordinateSystemscreateFromCoordinateSystems(...)}.
+   * {@link #createFromCoordinateSystems(CoordinateSystem, CoordinateSystem)}.
    * 
    * @param sourceCS
    *          Input coordinate system.
@@ -1033,7 +1033,7 @@ public class CoordinateTransformationFactory
   {
     HorizontalDatum datum = cs.getHorizontalDatum();
     Ellipsoid ellipsoid = datum.getEllipsoid();
-    final String name = getTemporaryName( cs );
+    final String name = getTemporaryName(  );
     final double semiMajorEll = ellipsoid.getSemiMajorAxis();
     final double semiMinorEll = ellipsoid.getSemiMinorAxis();
     final double semiMajorPrj = projection.getValue( "semi_major", semiMajorEll );
@@ -1074,7 +1074,7 @@ public class CoordinateTransformationFactory
     {
       return cs;
     }
-    return new ProjectedCoordinateSystem( getTemporaryName( cs ), normalizedGeoCS, projection );
+    return new ProjectedCoordinateSystem( getTemporaryName(  ), normalizedGeoCS, projection );
   }
 
   /**
@@ -1094,11 +1094,8 @@ public class CoordinateTransformationFactory
   /**
    * Returns a temporary name for generated objects. The first object has a name like "Temporary-1", the second is
    * "Temporary-2", etc.
-   * 
-   * @param source
-   *          The coordinate system to base name on, or <code>null</code> if none.
    */
-  private static String getTemporaryName( final CoordinateSystem source )
+  private static String getTemporaryName(  )
   {
     return "Temporary-" + ( ++temporaryID );
   }

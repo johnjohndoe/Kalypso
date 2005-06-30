@@ -160,8 +160,8 @@ public class CS_DatumType implements Serializable
     {
       return ( (CS_DatumType)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

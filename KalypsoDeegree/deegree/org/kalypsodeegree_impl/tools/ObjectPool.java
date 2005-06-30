@@ -178,11 +178,6 @@ public abstract class ObjectPool extends TimerTask
    */
   public abstract void onObjectKill( Object o );
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public int getMaxLifeTime()
   {
     return ( this.maxLifeTime );
@@ -198,11 +193,6 @@ public abstract class ObjectPool extends TimerTask
     this.maxLifeTime = maxLifeTime;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public int getMaxUsageTime()
   {
     return ( this.maxUsageTime );
@@ -218,11 +208,6 @@ public abstract class ObjectPool extends TimerTask
     this.maxUsageTime = maxUsageTime;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public int getUpdateInterval()
   {
     return ( this.updateInterval );
@@ -238,11 +223,6 @@ public abstract class ObjectPool extends TimerTask
     this.updateInterval = updateInterval;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public int getMaxInstances()
   {
     return ( this.maxInstances );
@@ -258,11 +238,6 @@ public abstract class ObjectPool extends TimerTask
     this.maxInstances = maxInstances;
   }
 
-  /**
-   * 
-   * 
-   * @return
-   */
   public String toString()
   {
     String ret = getClass().getName() + "\n";

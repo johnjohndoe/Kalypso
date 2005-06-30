@@ -104,47 +104,35 @@ public interface Label
    * Returns the x-coordinate of the label.
    * <p>
    * 
-   * @return
    */
   public int getX();
 
   /**
    * Returns the y-coordinate of the label.
    * <p>
-   * 
-   * @return
    */
   public int getY();
 
   /**
    * Returns the rightmost x-coordinate of the label's bounding box.
    * <p>
-   * 
-   * @return
    */
   public int getMaxX();
 
   /**
    * Returns the lowermost y-coordinate of the label's bounding box.
    * <p>
-   * 
-   * @return
    */
   public int getMaxY();
 
   /**
    * Returns the leftmost x-coordinate of the label's bounding box.
    * <p>
-   * 
-   * @return
    */
   public int getMinX();
 
   /**
    * Returns the uppermost x-coordinate of the label's bounding box.
-   * <p>
-   * 
-   * @return
    */
   public int getMinY();
 }

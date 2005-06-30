@@ -94,7 +94,7 @@ public interface CV_Coverage extends Remote
    * component. In this case, a new instance of a grid coverage is created. <br>
    * <br>
    * Note: If a coverage does not have an associated coordinate system, the returned value will be <code>null</code>.
-   * The {@link org.opengis.gc.GC_GridGeometry#getGridToCoordinateSystemgridToCoordinateSystem}) attribute should also
+   * The {@link org.opengis.gc.GC_GridGeometry#getGridToCoordinateSystem()}) attribute should also
    * be <code>null</code> if the coordinate system is <code>null</code>.
    * 
    * @return the coordinate system used when accessing a coverage or grid coverage with the <code>evaluate</code>

@@ -93,19 +93,16 @@ public class PT_CoordinatePoint implements Cloneable, Serializable
          * is wanted, use the code below instead.
          */
       }
-      else
+      if( this.ord == that.ord )
+        return true;
+      if( this.ord != null && that.ord != null )
       {
-        if( this.ord == that.ord )
-          return true;
-        if( this.ord != null && that.ord != null )
+        if( this.ord.length == that.ord.length )
         {
-          if( this.ord.length == that.ord.length )
-          {
-            for( int i = ord.length; --i >= 0; )
-              if( Double.doubleToLongBits( this.ord[i] ) != Double.doubleToLongBits( that.ord[i] ) )
-                return false;
-            return true;
-          }
+          for( int i = ord.length; --i >= 0; )
+            if( Double.doubleToLongBits( this.ord[i] ) != Double.doubleToLongBits( that.ord[i] ) )
+              return false;
+          return true;
         }
       }
     }

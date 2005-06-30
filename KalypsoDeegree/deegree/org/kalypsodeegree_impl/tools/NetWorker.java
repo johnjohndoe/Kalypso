@@ -285,7 +285,7 @@ public class NetWorker
 
     if( authentication != null )
     {
-      final String pw = authentication.getUserName() + ":" + authentication.getPassword();
+      final String pw = authentication.getUserName() + ":" + new String( authentication.getPassword() );
       final String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
 
       connection.addRequestProperty( "Proxy-Authorization", epw );

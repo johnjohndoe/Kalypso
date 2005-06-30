@@ -90,8 +90,8 @@ class ConcatenedTransformDirect extends ConcatenedTransform
    */
   protected boolean isValid()
   {
-    return super.isValid() && ( transform1.getDimSource() == transform1.getDimTarget() )
-        && ( transform2.getDimSource() == transform2.getDimTarget() );
+    return super.isValid() && ( m_transform1.getDimSource() == m_transform1.getDimTarget() )
+        && ( m_transform2.getDimSource() == m_transform2.getDimTarget() );
   }
 
   /**
@@ -99,8 +99,8 @@ class ConcatenedTransformDirect extends ConcatenedTransform
    */
   public CoordinatePoint transform( final CoordinatePoint ptSrc, CoordinatePoint ptDst ) throws TransformException
   {
-    ptDst = transform1.transform( ptSrc, ptDst );
-    return transform2.transform( ptDst, ptDst );
+    ptDst = m_transform1.transform( ptSrc, ptDst );
+    return m_transform2.transform( ptDst, ptDst );
   }
 
   /**
@@ -110,8 +110,8 @@ class ConcatenedTransformDirect extends ConcatenedTransform
       final int numPts ) throws TransformException
   {
 
-    transform1.transform( srcPts, srcOff, dstPts, dstOff, numPts );
-    transform2.transform( dstPts, dstOff, dstPts, dstOff, numPts );
+    m_transform1.transform( srcPts, srcOff, dstPts, dstOff, numPts );
+    m_transform2.transform( dstPts, dstOff, dstPts, dstOff, numPts );
   }
 
   /**
@@ -121,7 +121,7 @@ class ConcatenedTransformDirect extends ConcatenedTransform
       final int numPts ) throws TransformException
   {
 
-    transform1.transform( srcPts, srcOff, dstPts, dstOff, numPts );
-    transform2.transform( dstPts, dstOff, dstPts, dstOff, numPts );
+    m_transform1.transform( srcPts, srcOff, dstPts, dstOff, numPts );
+    m_transform2.transform( dstPts, dstOff, dstPts, dstOff, numPts );
   }
 }

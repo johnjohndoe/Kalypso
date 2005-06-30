@@ -104,8 +104,8 @@ public class CS_WGS84ConversionInfo implements Cloneable, Serializable
           && Double.doubleToLongBits( this.ppm ) == Double.doubleToLongBits( that.ppm )
           && ( areaOfUse == that.areaOfUse || ( areaOfUse != null && areaOfUse.equals( that.areaOfUse ) ) );
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

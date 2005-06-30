@@ -230,11 +230,8 @@ public final class OpenGIS
   public static Envelope transform( final MathTransform transform, final Envelope envelope ) throws TransformException
   {
     final int sourceDim = transform.getDimSource();
-    final int targetDim = transform.getDimTarget();
     if( envelope.getDimension() != sourceDim )
-    {
       throw new MismatchedDimensionException( sourceDim, envelope.getDimension() );
-    }
     int coordinateNumber = 0;
     Envelope transformed = null;
     CoordinatePoint targetPt = null;

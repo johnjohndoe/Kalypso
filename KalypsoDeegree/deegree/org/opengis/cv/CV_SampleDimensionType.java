@@ -88,8 +88,8 @@ public final class CV_SampleDimensionType implements Serializable
     {
       return ( (CV_SampleDimensionType)object ).value == value;
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**

@@ -426,7 +426,7 @@ public class XMLTools
    *          current element
    * @return the textual contents of the attribute or null
    */
-  public static String getAttrValue( String name, Node node ) throws XMLParsingException
+  public static String getAttrValue( String name, Node node )
   {
     String value = null;
     NamedNodeMap atts = node.getAttributes();
@@ -555,12 +555,6 @@ public class XMLTools
 
   /**
    * Returns the attribute value of the given node.
-   * 
-   * 
-   * @param node
-   * @param attrName
-   * 
-   * @return
    */
   public static String getAttrValue( Node node, String attrName )
   {
@@ -584,12 +578,6 @@ public class XMLTools
 
   /**
    * Returns the attribute value of the given node.
-   * 
-   * 
-   * @param node
-   * @param attrName
-   * 
-   * @return
    */
   public static String getAttrValue( Node node, String namespace, String attrName )
   {
@@ -711,48 +699,45 @@ public class XMLTools
     if( source.getNodeType() == Node.TEXT_NODE )
     {
       Text tn = dest.getOwnerDocument().createTextNode( source.getNodeValue() );
-
       return tn;
     }
-    else
+
+    NamedNodeMap attr = source.getAttributes();
+
+    if( attr != null )
     {
-      NamedNodeMap attr = source.getAttributes();
-
-      if( attr != null )
+      for( int i = 0; i < attr.getLength(); i++ )
       {
-        for( int i = 0; i < attr.getLength(); i++ )
-        {
-          ( (Element)dest ).setAttribute( attr.item( i ).getNodeName(), attr.item( i ).getNodeValue() );
-        }
+        ( (Element)dest ).setAttribute( attr.item( i ).getNodeName(), attr.item( i ).getNodeValue() );
       }
+    }
 
-      NodeList list = source.getChildNodes();
+    NodeList list = source.getChildNodes();
 
-      for( int i = 0; i < list.getLength(); i++ )
+    for( int i = 0; i < list.getLength(); i++ )
+    {
+      if( !( list.item( i ) instanceof Text ) )
       {
-        if( !( list.item( i ) instanceof Text ) )
-        {
-          Element en = dest.getOwnerDocument().createElementNS( list.item( i ).getNamespaceURI(),
-              list.item( i ).getNodeName() );
+        Element en = dest.getOwnerDocument().createElementNS( list.item( i ).getNamespaceURI(),
+            list.item( i ).getNodeName() );
 
-          if( list.item( i ).getNodeValue() != null )
-          {
-            en.setNodeValue( list.item( i ).getNodeValue() );
-          }
+        if( list.item( i ).getNodeValue() != null )
+        {
+          en.setNodeValue( list.item( i ).getNodeValue() );
+        }
 
-          Node n = copyNode( list.item( i ), en );
-          dest.appendChild( n );
-        }
-        else if( ( list.item( i ) instanceof CDATASection ) )
-        {
-          CDATASection cd = dest.getOwnerDocument().createCDATASection( list.item( i ).getNodeValue() );
-          dest.appendChild( cd );
-        }
-        else
-        {
-          Text tn = dest.getOwnerDocument().createTextNode( list.item( i ).getNodeValue() );
-          dest.appendChild( tn );
-        }
+        Node n = copyNode( list.item( i ), en );
+        dest.appendChild( n );
+      }
+      else if( ( list.item( i ) instanceof CDATASection ) )
+      {
+        CDATASection cd = dest.getOwnerDocument().createCDATASection( list.item( i ).getNodeValue() );
+        dest.appendChild( cd );
+      }
+      else
+      {
+        Text tn = dest.getOwnerDocument().createTextNode( list.item( i ).getNodeValue() );
+        dest.appendChild( tn );
       }
     }
 
