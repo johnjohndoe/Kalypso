@@ -16,9 +16,8 @@ import java.util.Vector;
 import com.bce.datacenter.db.persistent.Persistent;
 
 /**
- * Wraps all kind of timeseries that can be owned by a channel or a computation.
- * Channels own work, original, and computed timeseries. NOTE: TimeserieWrapper
- * are not stored as is into the database, they just represent some common
+ * Wraps all kind of timeseries that can be owned by a channel or a computation. Channels own work, original, and
+ * computed timeseries. NOTE: TimeserieWrapper are not stored as is into the database, they just represent some common
  * business logic upon timeseries.
  * 
  * @author Marc Schlienger
@@ -31,12 +30,10 @@ public class Timeserie extends Persistent
 
   private String m_dataTableName;
 
-  /** Marc: was ist damit? */
   private String m_description;
 
   private String m_name;
 
-  /** Marc: was ist damit? */
   private String m_type;
 
   private int m_channelRef;
@@ -52,7 +49,6 @@ public class Timeserie extends Persistent
   /**
    * Constructor
    * 
-   * @param con
    * @param id
    *          internal db identifier
    */
@@ -63,17 +59,9 @@ public class Timeserie extends Persistent
 
   /**
    * Constructor with parameters
-   * 
-   * @param con
-   * @param id
-   * @param name
-   * @param desc
-   * @param type
-   * @param tableName
-   * @param channelRef
    */
-  public Timeserie( final Connection con, int id, String name, String desc, String type,
-      String tableName, int channelRef )
+  public Timeserie( final Connection con, int id, String name, String desc, String type, String tableName,
+      int channelRef )
   {
     super( con, id, false );
 
@@ -82,6 +70,16 @@ public class Timeserie extends Persistent
     m_type = type;
     m_dataTableName = tableName;
     m_channelRef = channelRef;
+  }
+
+  public String getType()
+  {
+    return m_type;
+  }
+  
+  public String getDescription()
+  {
+    return m_description;
   }
 
   public String getDataTableName()
@@ -177,16 +175,9 @@ public class Timeserie extends Persistent
   }
 
   /**
-   * Looks up for a timeserie in the database according to the given
-   * dataTableName.
-   * 
-   * @param con
-   * @param dataTableName
-   * @return @throws
-   *         SQLException
+   * Looks up for a timeserie in the database according to the given dataTableName.
    */
-  public static Timeserie findTimeserie( final Connection con, final String dataTableName )
-      throws SQLException
+  public static Timeserie findTimeserie( final Connection con, final String dataTableName ) throws SQLException
   {
     final String sql = "SELECT TSID FROM TS_TIMESERIES WHERE DATATABLENAME = ?";
 
@@ -230,16 +221,13 @@ public class Timeserie extends Persistent
    * @param to
    *          date up to export (if null export until end)
    * @param separator
-   *          string representing the separator between the tokens: date, value,
-   *          and flag. (if null default is comma)
+   *          string representing the separator between the tokens: date, value, and flag. (if null default is comma)
    * @param dateFormatPattern
-   *          string such as in SimpleDateFormat representing the format of the
-   *          date. (if null uses the locale default)
+   *          string such as in SimpleDateFormat representing the format of the date. (if null uses the locale default)
    * 
    * @return amount of lines written if successfull, otherwise -1
    */
-  public int ExportToFile( String filename, Date from, Date to, String separator,
-      String dateFormatPattern )
+  public int ExportToFile( String filename, Date from, Date to, String separator, String dateFormatPattern )
   {
     try
     {
@@ -322,8 +310,7 @@ public class Timeserie extends Persistent
     final String tabname = m_dataTableName;
 
     /*
-     * prepare statement for extracting desired timeseries and create a temp
-     * table with these timeseries
+     * prepare statement for extracting desired timeseries and create a temp table with these timeseries
      */
     String str = "SELECT TSTIME, VALUE, FLAG FROM " + tabname;
 
@@ -369,8 +356,7 @@ public class Timeserie extends Persistent
    * Returns values in the form of an array of TimeserieTupples
    *  
    */
-  public TimeserieTupple[] getValues( final java.util.Date from, final java.util.Date to )
-      throws SQLException
+  public TimeserieTupple[] getValues( final java.util.Date from, final java.util.Date to ) throws SQLException
   {
     try
     {
@@ -408,8 +394,6 @@ public class Timeserie extends Persistent
 
   /**
    * Sets the values in the db
-   * 
-   * @param tupples
    */
   public void setValues( final TimeserieTupple[] tupples )
   {
@@ -417,9 +401,6 @@ public class Timeserie extends Persistent
     throw new UnsupportedOperationException( "setValues() tupples= " + tupples );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   public String toString()
   {
     return m_name + " (" + m_dataTableName + ")";
@@ -470,8 +451,6 @@ public class Timeserie extends Persistent
   /**
    * Fast load of all timeseries for a channel
    * 
-   * @param con
-   * @param channelRef
    * @return list of all timeseries for a channel
    */
   protected static List dbReadAll( final Connection con, int channelRef )
@@ -489,8 +468,8 @@ public class Timeserie extends Persistent
 
       while( rs.next() )
       {
-        Timeserie c = new Timeserie( con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs
-            .getString( 4 ), rs.getString( 5 ), channelRef );
+        Timeserie c = new Timeserie( con, rs.getInt( 1 ), rs.getString( 2 ), rs.getString( 3 ), rs.getString( 4 ), rs
+            .getString( 5 ), channelRef );
 
         v.add( c );
       }
