@@ -103,7 +103,7 @@ public class DataCenterTuppleModel implements ITuppleModel
       case 1:
         m_tupples[index].setValue( (Double) element );
       case 2:
-        m_tupples[index].setStatus( "x" ); // TODO
+        m_tupples[index].setStatus( "x" ); // TODO richtigen Status ermitteln
       default:
         throw new SensorException( "Invalid axis position. Must be 0, 1 or 2." );
     }
@@ -127,10 +127,6 @@ public class DataCenterTuppleModel implements ITuppleModel
 
   /**
    * Creates tupples according to the model
-   * 
-   * @param model
-   * @return tupples
-   * @throws SensorException
    */
   public static TimeserieTupple[] toTupples( final ITuppleModel model ) throws SensorException
   {

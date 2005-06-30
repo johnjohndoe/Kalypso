@@ -45,16 +45,18 @@ import java.net.URL;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * 
+ * ILoader is intended to be subclassed by clients who wish to integrate a loading solution for specific file types into
+ * the ResourcePool mechanism.
  * 
  * @author schlienger
  */
 public interface ILoader
 {
+  /** Return a description for this loader */
   public String getDescription();
 
   /**
-   * Loads an object from somewhere.
+   * Load an object from somewhere
    * 
    * @param location
    *          information about the location of the resource to load
@@ -67,13 +69,14 @@ public interface ILoader
    */
   public Object load( final String location, final URL context, final IProgressMonitor monitor ) throws LoaderException;
 
+  /**
+   * Save an object to the given location
+   */
   public void save( final String location, final URL context, final IProgressMonitor monitor, final Object data )
       throws LoaderException;
 
   /**
-   * TODO: document this
-   * 
-   * @param object
+   * Release resources or whatsoever is associated to the given object
    */
   public void release( final Object object );
 

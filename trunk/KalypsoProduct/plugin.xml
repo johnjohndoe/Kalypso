@@ -71,14 +71,10 @@
 
    <extension
          point="org.eclipse.ui.views">
-      <category
-            name="Kalypso"
-            id="Kalypso">
-      </category>
       <view
             name="Hochwasser Vorhersage"
             icon="etc/kalypso16.gif"
-            category="Kalypso"
+            category="org.kalypso.ui.kalypso"
             class="org.kalypso.ui.view.PrognoseView"
             id="org.kalypso.view.prognose">
       </view>
