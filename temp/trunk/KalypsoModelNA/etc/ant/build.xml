@@ -10,13 +10,15 @@
 		<fileset dir="${project.lib}" includes="**/*.jar" />
 		
 		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
-		
+				
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoServiceCalc/build/deploy" includes="**/*.jar"/>
 
-		<fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoOptimize/build/deploy" includes="**/*.jar"/>
 		<fileset dir="${workspace}/KalypsoDWD/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar"/>
 	</path>
 
 	<!-- overriden to also copy non-java files -->
