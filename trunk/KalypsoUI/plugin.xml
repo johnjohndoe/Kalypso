@@ -624,6 +624,12 @@
             </groupMarker>
          </menu>
          <action
+               label="Vorhersagen organisieren"
+               class="org.kalypso.ui.action.ManagePrognosesAction"
+               style="push"
+               menubarPath="org.kalypso.menu.model/prognoseStart"
+               id="org.kalypso.action.model.manageCalcCases"/>
+         <action
                label="Vorhersage durchführen"
                icon="icons/kalypso16.gif"
                class="org.kalypso.ui.action.StartCalcWizardAction"

@@ -69,13 +69,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -90,7 +85,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -119,6 +113,8 @@ import org.kalypso.ui.calcwizard.Arguments;
 import org.kalypso.ui.calcwizard.bericht.ExportWizardBerichtWizard;
 import org.kalypso.ui.calcwizard.bericht.IBerichtExporter;
 import org.kalypso.ui.metadoc.util.MultiDocumentServiceWrapper;
+import org.kalypso.ui.nature.ModelNature;
+import org.kalypso.ui.nature.prognose.CalcCaseTableTreeViewer;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -169,9 +165,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
   protected ObsdiagviewType m_obsdiagviewType;
 
-  private List m_calcCaseFolder = new ArrayList();
-
-  private CheckboxTableViewer m_checklist;
+  private CalcCaseTableTreeViewer m_calcCaseViewer;
 
   private IBerichtExporter[] m_berichtExporters;
 
@@ -288,21 +282,21 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final Composite topPanel = new Composite( parent, SWT.NONE );
     topPanel.setLayout( new GridLayout( 2, false ) );
 
-    m_checklist = CheckboxTableViewer.newCheckList( topPanel, SWT.BORDER );
-    m_checklist.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    m_checklist.setContentProvider( new ArrayContentProvider() );
-    m_checklist.setLabelProvider( new WorkbenchLabelProvider() );
-    m_checklist.setInput( m_calcCaseFolder );
-    m_checklist.setSelection( new StructuredSelection( getCalcFolder() ), true );
-    m_checklist.setChecked( getCalcFolder(), true );
+    m_calcCaseViewer = new CalcCaseTableTreeViewer( getCalcFolder(), topPanel, SWT.BORDER | SWT.SINGLE | SWT.CHECK );
+    m_calcCaseViewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_calcCaseViewer.setInput( getProject().getFolder( ModelNature.PROGNOSE_FOLDER ) );
+    m_calcCaseViewer.setSelection( new StructuredSelection( getCalcFolder() ), true );
+    m_calcCaseViewer.setChecked( getCalcFolder(), true );
+    
+//    m_calcCaseViewer.setChecked( getCalcFolder(), true );
 
-    m_checklist.addCheckStateListener( new ICheckStateListener()
-    {
-      public void checkStateChanged( CheckStateChangedEvent event )
-      {
-        refreshDiagram();
-      }
-    } );
+//    m_checklist.addCheckStateListener( new ICheckStateListener()
+//    {
+//      public void checkStateChanged( CheckStateChangedEvent event )
+//      {
+//        refreshDiagram();
+//      }
+//    } );
 
     final Composite buttonPanel = new Composite( topPanel, SWT.NONE );
     buttonPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -755,17 +749,20 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
   private IFolder getSelectedCalcCase()
   {
-    if( m_checklist == null )
+    // TODO: listen so selection and merks dir!
+    if( m_calcCaseViewer == null )
       return null;
 
-    final CheckboxTableViewer checklist = m_checklist;
-    final Control checkControl = checklist.getControl();
-    if( checkControl == null || checkControl.isDisposed() )
-      return null;
-
-    final CheckListGetter getter = new CheckListGetter( m_checklist );
-    checkControl.getDisplay().syncExec( getter );
-    return getter.getSelected();
+    return null;
+    
+//    final CheckboxTableViewer checklist = m_checklist;
+//    final Control checkControl = checklist.getControl();
+//    if( checkControl == null || checkControl.isDisposed() )
+//      return null;
+//
+//    final CheckListGetter getter = new CheckListGetter( m_checklist );
+//    checkControl.getDisplay().syncExec( getter );
+//    return getter.getSelected();
   }
 
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
@@ -830,7 +827,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     // erstmal leer, damit das Diagramm gelöscht wird
     refreshDiagramForContext( new TSLinkWithName[] {}, getContext() );
 
-    final Object[] checkedCalcCases = getCheckedCalcCases();
+    final Object[] checkedCalcCases = getCheckedElements();
     if( checkedCalcCases == null || checkedCalcCases.length == 0 )
       return;
 
@@ -855,19 +852,9 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     }
   }
 
-  private Object[] getCheckedCalcCases()
+  private Object[] getCheckedElements()
   {
-    if( m_checklist == null )
-      return new Object[] {};
-
-    final CheckboxTableViewer checklist = m_checklist;
-    final Control checkControl = checklist.getControl();
-    if( checkControl == null || checkControl.isDisposed() )
-      return new Object[] {};
-
-    final CheckListGetter getter = new CheckListGetter( m_checklist );
-    checkControl.getDisplay().syncExec( getter );
-    return getter.getResults();
+    return m_calcCaseViewer.getCheckedElements();
   }
 
   /**
@@ -876,62 +863,5 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   protected TSLinkWithName[] getObservationsToShow( final boolean onlySelected )
   {
     return getObservations( onlySelected );
-  }
-
-  public void setCalcCaseFolder( final Collection folders )
-  {
-    m_calcCaseFolder.clear();
-    m_calcCaseFolder.addAll( folders );
-
-    final Viewer viewer = m_checklist;
-    if( viewer != null )
-    {
-      final Control control = m_checklist.getControl();
-      if( control != null && !control.isDisposed() )
-      {
-        control.getDisplay().asyncExec( new Runnable()
-        {
-          public void run()
-          {
-            viewer.refresh();
-          }
-        } );
-      }
-    }
-  }
-
-  private class CheckListGetter implements Runnable
-  {
-    private Object[] m_results;
-
-    private CheckboxTableViewer m_cl;
-
-    private IFolder m_selected;
-
-    public CheckListGetter( final CheckboxTableViewer ctv )
-    {
-      m_cl = ctv;
-    }
-
-    /**
-     * @return Returns the selected.
-     */
-    public IFolder getSelected()
-    {
-      return m_selected;
-    }
-
-    public Object[] getResults()
-    {
-      return m_results;
-    }
-
-    public void run()
-    {
-      m_results = m_cl.getCheckedElements();
-      final IStructuredSelection selection = (IStructuredSelection)m_cl.getSelection();
-
-      m_selected = (IFolder)( selection.isEmpty() ? null : selection.getFirstElement() );
-    }
   }
 }

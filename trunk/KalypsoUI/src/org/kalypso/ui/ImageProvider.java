@@ -58,6 +58,8 @@ public class ImageProvider
     return id( "org.kalypso.ui", location );
   }
 
+  public static final ImageDescriptor IMAGE_CALCCASE_COPY2SERVER = id( "icons/util/copy_r_co.gif" );
+
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
 
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
@@ -141,6 +143,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
+
+  public static final ImageDescriptor ID_REMOVE = IMAGE_STYLEEDITOR_REMOVE;
 
   // features:
   public static final ImageDescriptor IMAGE_FEATURE = id( "icons/feature/gis_feature.gif" );

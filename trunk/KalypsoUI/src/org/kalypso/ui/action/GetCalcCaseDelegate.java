@@ -103,7 +103,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 
       final IProject project = ModelActionHelper.chooseOneProject( m_window );
 
-      final File serverProject = ModelActionHelper.checkIsSeverMirrored( serverRoot, project );
+      final File serverProject = ModelActionHelper.checkIsServerMirrored( serverRoot, project );
 
       final File[] remoteCalcCases = getRemoteCalcCases( serverProject );
 

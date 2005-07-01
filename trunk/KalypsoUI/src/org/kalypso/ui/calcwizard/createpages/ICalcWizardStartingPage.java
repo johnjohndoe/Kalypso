@@ -71,9 +71,11 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.ui.calcwizard.ICalcWizardPage;
 
 /**
+ * @deprecated Der Wizard soll nur noch eine Rechenvariante enthalten, das Konzept der 'aktuellen Rechenvarianten' soll weg.
+ * 
  * @author belger
  */
-public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
+public class ICalcWizardStartingPage extends WizardPage implements ICalcWizardPage
 {
   private final List m_choices = new LinkedList();
 
@@ -89,7 +91,7 @@ public class AddCalcCasePage extends WizardPage implements ICalcWizardPage
 
   private Collection m_choiceListener = new LinkedList();
 
-  public AddCalcCasePage( final String pagename, final String title, final ImageDescriptor image )
+  public ICalcWizardStartingPage( final String pagename, final String title, final ImageDescriptor image )
   {
     super( pagename, title, image );
   }

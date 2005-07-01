@@ -91,7 +91,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
   private Collection m_serverDirs = new LinkedList();
 
-  private final AddCalcCasePage m_page;
+  private final CreateCalcCasePage m_page;
 
   private String m_name;
 
@@ -99,7 +99,7 @@ public class CopyServerCalcCaseChoice implements IAddCalcCaseChoice
 
   private final ModelSynchronizer m_synchronizer;
 
-  public CopyServerCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page,
+  public CopyServerCalcCaseChoice( final String label, final IProject project, final CreateCalcCasePage page,
       final ModelSynchronizer synchronizer )
   {
     m_label = label;

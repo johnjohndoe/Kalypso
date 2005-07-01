@@ -69,7 +69,7 @@ public class ProjectUtilities
    * @param selection
    * @return list of projects (not null)
    */
-  public static IProject[] findeProjectsFromSelection( final ISelection selection )
+  public static IProject[] findProjectsFromSelection( final ISelection selection )
   {
     // gleiche Projekte sollen nur einen Eintrag gebens
     final Collection projects = new HashSet();
@@ -105,7 +105,7 @@ public class ProjectUtilities
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-    final IProject[] projects = findeProjectsFromSelection( selection );
+    final IProject[] projects = findProjectsFromSelection( selection );
 
     return projects;
   }
