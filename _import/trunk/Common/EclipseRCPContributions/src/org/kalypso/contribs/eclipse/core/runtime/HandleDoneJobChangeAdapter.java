@@ -47,9 +47,8 @@ public final class HandleDoneJobChangeAdapter extends JobChangeAdapter
       public void run()
       {
         final IStatus status = event.getResult();
-        // error wird schon immer vom framework angezeigt
-        final ErrorDialog dialog = new ErrorDialog( m_shell, m_messageTitle, m_messageFirstline + "\n"
-            + status.getMessage(), status, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING );
+        // error wird sowieso schon vom framework angezeigt
+        final ErrorDialog dialog = new ErrorDialog( m_shell, m_messageTitle, m_messageFirstline, status, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING );
         dialog.open();
       }
     };
