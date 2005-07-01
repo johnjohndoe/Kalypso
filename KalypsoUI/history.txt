@@ -7,7 +7,8 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 ###############################################################################
 
 
-- TODO: hier fehlt doch bestimmt ganz viel! :-(
+- neue View: FeatureView: zeigt aktuelle selektiertes Feature als 'Formular' an
+- neuer Menüpunkt 'Modell / Vorhersagen organisieren'
 
 - Implementierung vom LDAP-Zugriff (KalypsoSachsenAnhalt)
 - Implementierung vom WISKI Adapter (KalypsoSachsenAnhalt)

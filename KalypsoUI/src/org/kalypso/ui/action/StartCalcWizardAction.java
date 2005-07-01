@@ -88,7 +88,7 @@ public class StartCalcWizardAction implements IWorkbenchWindowActionDelegate
   {
     final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-    final IProject[] projects = ProjectUtilities.findeProjectsFromSelection( selection );
+    final IProject[] projects = ProjectUtilities.findProjectsFromSelection( selection );
 
     if( projects == null || projects.length != 1 )
     {

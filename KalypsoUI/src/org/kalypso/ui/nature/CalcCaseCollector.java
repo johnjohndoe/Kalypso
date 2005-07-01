@@ -70,6 +70,13 @@ public class CalcCaseCollector implements IResourceVisitor
     return true;
   }
 
+  /** Clears the collector, so it can be reused. */
+  public void clear()
+  {
+    m_calcCases.clear();
+  }
+
+  /** Returns the visited calc cases since the last {@link #clear()}. */
   public IFolder[] getCalcCases()
   {
     return (IFolder[])m_calcCases.toArray( new IFolder[m_calcCases.size()] );

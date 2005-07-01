@@ -83,7 +83,7 @@ public class ModelActionHelper
   {
     final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-    final IProject[] projects = ProjectUtilities.findeProjectsFromSelection( selection );
+    final IProject[] projects = ProjectUtilities.findProjectsFromSelection( selection );
 
     if( projects == null || projects.length == 0 )
       throw new CoreException( new StatusInfo( IStatus.WARNING, "Kein Projekt im Navigator selektiert." ) );
@@ -94,7 +94,7 @@ public class ModelActionHelper
     return projects[0];
   }
 
-  public static File checkIsSeverMirrored( final File serverRoot, final IProject project ) throws CoreException
+  public static File checkIsServerMirrored( final File serverRoot, final IProject project ) throws CoreException
   {
     final File serverProject = new File( serverRoot, project.getName() );
     if( !serverProject.exists() )

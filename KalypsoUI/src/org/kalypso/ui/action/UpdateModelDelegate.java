@@ -89,7 +89,7 @@ public class UpdateModelDelegate implements IWorkbenchWindowActionDelegate
     {
       final File serverRoot = ModelActionHelper.getServerRoot();
       final IProject project = ModelActionHelper.chooseOneProject( m_window );
-      final File serverProject = ModelActionHelper.checkIsSeverMirrored( serverRoot, project );
+      final File serverProject = ModelActionHelper.checkIsServerMirrored( serverRoot, project );
 
       if( !MessageDialog.openConfirm( m_window.getShell(), "Modell aktualisieren", "Soll das Projekt '"
           + project.getName() + "' aktualisiert werden?\nLokale Änderungen gehen dadurch verloren." ) )

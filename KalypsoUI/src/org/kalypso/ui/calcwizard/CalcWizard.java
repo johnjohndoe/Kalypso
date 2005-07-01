@@ -57,8 +57,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -66,8 +64,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.dialogs.ListSelectionDialog;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
 import org.kalypso.model.xml.ArgListType;
@@ -77,11 +73,11 @@ import org.kalypso.model.xml.CalcwizardType;
 import org.kalypso.model.xml.ObjectFactory;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.calcwizard.createpages.AddCalcCasePage;
 import org.kalypso.ui.calcwizard.createpages.AddNewCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.ContinueOldCalcCaseChoice;
+import org.kalypso.ui.calcwizard.createpages.CopyCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.CopyServerCalcCaseChoice;
-import org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage;
+import org.kalypso.ui.calcwizard.createpages.CreateCalcCasePage;
 import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.ui.wizard.calccase.SteuerparameterWizardPage;
@@ -92,7 +88,7 @@ public class CalcWizard implements IWizard, IProjectProvider
 {
   private final IProject m_project;
 
-  protected AddCalcCasePage m_addCalcCasePage;
+  protected CreateCalcCasePage m_createCalcCasePage;
 
   protected SteuerparameterWizardPage m_controlPage;
 
@@ -121,20 +117,20 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public void addPages()
   {
-    m_addCalcCasePage = new AddCalcCasePage( "addCalcCasePage", "Vorhersagen erzeugen",
+    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersagen erzeugen",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG );
 
     m_controlPage = new SteuerparameterWizardPage( this, true, ImageProvider.IMAGE_KALYPSO_ICON_BIG );
 
-    m_addCalcCasePage.addChoice( new AddNewCalcCaseChoice( "eine neue Rechenvariante erzeugen", m_project,
-        m_addCalcCasePage ) );
-    m_addCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "eine bereits vorhandene Rechenvariante fortführen",
-        m_project, m_addCalcCasePage ) );
-    //    m_addCalcCasePage.addChoice( new CopyCalcCaseChoice(
-    //        "einen bereits vorhandenen Rechenfall kopieren", m_project, m_addCalcCasePage ) );
-    m_addCalcCasePage.addChoice( new CopyServerCalcCaseChoice(
-        "eine auf dem Server archivierte Rechenvariante kopieren", m_project, m_addCalcCasePage, m_synchronizer ) );
-    addPage( m_addCalcCasePage );
+    m_createCalcCasePage.addChoice( new AddNewCalcCaseChoice( "neue Rechenvariante erzeugen", m_project,
+        m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante fortführen",
+        m_project, m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice(
+           "vorhandenen Rechenfall kopieren", m_project, m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new CopyServerCalcCaseChoice(
+        "auf dem Server archivierte Rechenvariante kopieren", m_project, m_createCalcCasePage, m_synchronizer ) );
+    addPage( m_createCalcCasePage );
     addPage( m_controlPage );
   }
 
@@ -220,54 +216,51 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public boolean performFinish()
   {
-    final List calcCases = m_addCalcCasePage.getCalcCases();
-
-    // auswählen lasen, welche man speichern möchte
-
-    final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), calcCases,
-        new ArrayContentProvider(), new WorkbenchLabelProvider(),
-        "Wählen Sie die Rechenvarianten,\nwelche auf dem Server archiviert werden sollen:" );
-    dialog.setInitialElementSelections( calcCases );
-    if( dialog.open() != Window.OK )
-      return false;
-
-    final ModelSynchronizer synchronizer = m_synchronizer;
-
-    final Object[] saveCases = dialog.getResult();
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
-    {
-      protected void execute( final IProgressMonitor monitor ) throws CoreException
-      {
-        monitor.beginTask( "Rechenvarianten werden archiviert", calcCases.size() * 1000 );
-        for( int i = 0; i < saveCases.length; i++ )
-        {
-          final IFolder calcCase = (IFolder)saveCases[i];
-
-          synchronizer.commitFolder( calcCase, new SubProgressMonitor( monitor, 1000 ) );
-        }
-
-        monitor.done();
-      }
-    };
-
-    try
-    {
-      getContainer().run( false, false, op );
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-
-      final CoreException ce = (CoreException)e.getCause();
-      ErrorDialog.openError( getContainer().getShell(), "Rechenfälle archivieren",
-          "Rechenfälle konnten nicht arhciviert werden", ce.getStatus() );
-
-      // trotzdem mit true zurück, sonst kommt man gar nicht mehr raus
-    }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-    }
+    // TODO: vielleicht nur eine frage, ob archiviert werden soll? und nur, wenns noch nicht geschehen war?
+//    final ListSelectionDialog dialog = new ListSelectionDialog( getContainer().getShell(), calcCases,
+//        new ArrayContentProvider(), new WorkbenchLabelProvider(),
+//        "Wählen Sie die Rechenvarianten,\nwelche auf dem Server archiviert werden sollen:" );
+//    dialog.setInitialElementSelections( calcCases );
+//    if( dialog.open() != Window.OK )
+//      return false;
+//
+//    final ModelSynchronizer synchronizer = m_synchronizer;
+//
+//    final Object[] saveCases = dialog.getResult();
+//    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
+//    {
+//      protected void execute( final IProgressMonitor monitor ) throws CoreException
+//      {
+//        monitor.beginTask( "Rechenvarianten werden archiviert", calcCases.size() * 1000 );
+//        for( int i = 0; i < saveCases.length; i++ )
+//        {
+//          final IFolder calcCase = (IFolder)saveCases[i];
+//
+//          synchronizer.commitFolder( calcCase, new SubProgressMonitor( monitor, 1000 ) );
+//        }
+//
+//        monitor.done();
+//      }
+//    };
+//
+//    try
+//    {
+//      getContainer().run( false, false, op );
+//    }
+//    catch( final InvocationTargetException e )
+//    {
+//      e.printStackTrace();
+//
+//      final CoreException ce = (CoreException)e.getCause();
+//      ErrorDialog.openError( getContainer().getShell(), "Rechenfälle archivieren",
+//          "Rechenfälle konnten nicht arhciviert werden", ce.getStatus() );
+//
+//      // trotzdem mit true zurück, sonst kommt man gar nicht mehr raus
+//    }
+//    catch( final InterruptedException e )
+//    {
+//      e.printStackTrace();
+//    }
 
     return true;
   }
@@ -277,45 +270,6 @@ public class CalcWizard implements IWizard, IProjectProvider
    */
   public boolean performCancel()
   {
-    if( !MessageDialog.openConfirm( getContainer().getShell(), "Abbrechen",
-        "Sind Sie sicher? Alle in dieser Sitzung bearbeiteten Rechenfälle werden verworfen (lokal gelöscht)." ) )
-      return false;
-
-    final List calcCases = m_addCalcCasePage.getCalcCases();
-    final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
-    {
-      protected void execute( final IProgressMonitor monitor ) throws CoreException
-      {
-        monitor.beginTask( "Lösche Rechenvarianten", calcCases.size() );
-        for( final Iterator iter = calcCases.iterator(); iter.hasNext(); )
-        {
-          final IFolder calcCase = (IFolder)iter.next();
-          calcCase.delete( true, new SubProgressMonitor( monitor, 1 ) );
-        }
-
-        monitor.done();
-      }
-    };
-
-    try
-    {
-      getContainer().run( false, false, op );
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-
-      final CoreException ce = (CoreException)e.getCause();
-      ErrorDialog.openError( getContainer().getShell(), "Rechenfälle löschen",
-          "Rechenfälle konnten nicht gelöscht werden", ce.getStatus() );
-
-      // trotzdem mit true zurück, sonst kommt man gar nicht mehr raus
-    }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-    }
-
     return true;
   }
 
@@ -325,10 +279,7 @@ public class CalcWizard implements IWizard, IProjectProvider
   public boolean canFinish()
   {
     final IWizardPage currentPage = getContainer().getCurrentPage();
-    //    final IWizardPage nextPage = getNextPage( currentPage );
-
     return ( currentPage instanceof IModelWizardPage );
-    //    && nextPage == null );
   }
 
   /**
@@ -338,9 +289,7 @@ public class CalcWizard implements IWizard, IProjectProvider
   {
     // notify pages
     for( int i = 0; i < m_pages.size(); i++ )
-    {
       ( (IWizardPage)m_pages.get( i ) ).dispose();
-    }
   }
 
   /**
@@ -373,14 +322,14 @@ public class CalcWizard implements IWizard, IProjectProvider
     {
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        if( page == m_addCalcCasePage )
+        if( page == m_createCalcCasePage )
         {
           // vielleicht sollte das hier auch erst nach den Steuerparametern
           // passieren?
-          m_addCalcCasePage.doNext( monitor );
+          m_createCalcCasePage.doNext( monitor );
 
-          m_controlPage.setUpdate( m_addCalcCasePage.shouldUpdate() );
-          m_controlPage.setFolder( m_addCalcCasePage.getCurrentCalcCase() );
+          m_controlPage.setUpdate( m_createCalcCasePage.shouldUpdate() );
+          m_controlPage.setFolder( m_createCalcCasePage.getCurrentCalcCase() );
         }
         else if( page == m_controlPage )
         {
@@ -390,7 +339,7 @@ public class CalcWizard implements IWizard, IProjectProvider
           {
             IStatus status = null;
 
-            final IFolder currentCalcCase = m_addCalcCasePage.getCurrentCalcCase();
+            final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
             m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
             if( m_controlPage.isUpdate() )
             {
@@ -402,8 +351,6 @@ public class CalcWizard implements IWizard, IProjectProvider
               monitor.worked( 1000 );
 
             addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
-
-            resetResultPage( m_addCalcCasePage.getCalcCases() );
 
             if( status != null && status != org.eclipse.core.runtime.Status.OK_STATUS )
               throw new CoreException( status );
@@ -463,16 +410,6 @@ public class CalcWizard implements IWizard, IProjectProvider
     return true;
   }
 
-  protected void resetResultPage( final List list )
-  {
-    for( final Iterator iter = m_pages.iterator(); iter.hasNext(); )
-    {
-      final Object object = iter.next();
-      if( object instanceof ExportResultsWizardPage )
-        ( (ExportResultsWizardPage)object ).setCalcCaseFolder( list );
-    }
-  }
-
   /**
    * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
    */
@@ -483,14 +420,7 @@ public class CalcWizard implements IWizard, IProjectProvider
       // last page or page not found
       return null;
 
-    final IWizardPage wizardPage = (IWizardPage)m_pages.get( index + 1 );
-    //    if( wizardPage instanceof AbstractCalcWizardPage )
-    //    {
-    //      ((AbstractCalcWizardPage)wizardPage).refreshDiagram();
-    //      ((AbstractCalcWizardPage)wizardPage).refreshZMLTable();
-    //    }
-
-    return wizardPage;
+    return (IWizardPage)m_pages.get( index + 1 );
   }
 
   /**

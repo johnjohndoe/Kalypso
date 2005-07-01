@@ -40,32 +40,23 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.createpages;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.nature.CalcCaseCollector;
 import org.kalypso.ui.nature.ModelNature;
+import org.kalypso.ui.nature.prognose.CalcCaseTableTreeViewer;
 
 /**
  * Die Implementierung erzeugt eine völlig neue Rechenvariante im Prognoseverzeichnis
@@ -82,18 +73,17 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
   private final IProject m_project;
 
-  private ListViewer m_viewer;
+  private CalcCaseTableTreeViewer m_viewer;
 
-  private Collection m_oldCalcCases = new LinkedList();
+  private final CreateCalcCasePage m_page;
 
-  private final AddCalcCasePage m_page;
-
-  public ContinueOldCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
+  public ContinueOldCalcCaseChoice( final String label, final IProject project, final CreateCalcCasePage page )
   {
     m_label = label;
     m_project = project;
     m_page = page;
   }
+
 
   /**
    * @see org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice#createControl(org.eclipse.swt.widgets.Composite)
@@ -106,11 +96,10 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "wählen Sie eine der vorhandenen Hochwasser-Vorhersagen:" );
 
-    final ListViewer viewer = new ListViewer( panel, SWT.BORDER );
-    viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new WorkbenchLabelProvider() );
-    viewer.setInput( m_oldCalcCases );
+    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    
+    viewer.setInput( m_project.getFolder( ModelNature.PROGNOSE_FOLDER ) );
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -120,7 +109,13 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
         if( selection.isEmpty() )
           setFolder( null );
         else
-          setFolder( (IFolder)selection.getFirstElement() );
+        {
+          final IFolder folder = (IFolder)selection.getFirstElement();
+          if( ModelNature.isCalcCalseFolder( folder ) )
+            setFolder( folder );
+          else
+            setFolder( null );
+        }
       }
     } );
     m_viewer = viewer;
@@ -146,54 +141,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
 
   public void refresh( final IProgressMonitor monitor ) throws CoreException
   {
-    final ModelNature nature = (ModelNature)m_project.getNature( ModelNature.ID );
-    final IFolder prognoseFolder = nature.getPrognoseFolder();
-
-    // alle Prognosen finden
-    final CalcCaseCollector calcCaseCollector = new CalcCaseCollector();
-    if( prognoseFolder.exists() )
-      prognoseFolder.accept( calcCaseCollector );
-    final IFolder[] calcCases = calcCaseCollector.getCalcCases();
-
-    final List usedCalcCases = m_page.getCalcCases();
-
-    m_oldCalcCases.clear();
-
-    IFolder newSelect = null;
-    if( usedCalcCases != null )
-    {
-      for( int i = 0; i < calcCases.length; i++ )
-      {
-        final IFolder folder = calcCases[i];
-
-        if( !usedCalcCases.contains( folder ) )
-        {
-          m_oldCalcCases.add( folder );
-          if( newSelect == null )
-            newSelect = folder;
-        }
-      }
-    }
-
-    final IFolder newSelectFinal = newSelect;
-    final Viewer viewer = m_viewer;
-    if( viewer != null )
-    {
-      viewer.getControl().getDisplay().syncExec( new Runnable()
-      {
-        public void run()
-        {
-          viewer.refresh();
-
-          if( newSelectFinal == null )
-            viewer.setSelection( StructuredSelection.EMPTY );
-          else
-            viewer.setSelection( new StructuredSelection( newSelectFinal ) );
-        }
-      } );
-    }
-
-    //    m_page.getWizard().getContainer().updateButtons();
+    m_viewer.refresh();
   }
 
   /**

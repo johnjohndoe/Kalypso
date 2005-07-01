@@ -59,6 +59,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 
@@ -67,6 +68,69 @@ import org.kalypso.util.synchronize.ModelSynchronizer;
  */
 public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 {
+  public static final String RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_ = "Rechenvarianten können nicht archiviert werden.";
+
+  private static final String RECHENVARIANTEN_ARCHIVIEREN = "Rechenvarianten archivieren";
+
+  public static final class CommitCalcCaseJob extends Job
+  {
+    private final IFolder[] m_calcCases;
+
+    private final IProject m_project;
+
+    /**
+     * A job to commit the lokal calc cases to the server. Add a {@link HandleDoneJobChangeAdapter}, because it it
+     * probable, that we get a warning-status
+     */
+    public CommitCalcCaseJob( final IProject project, final IFolder[] calcCases )
+    {
+      super( RECHENVARIANTEN_ARCHIVIEREN );
+
+      m_project = project;
+      m_calcCases = calcCases;
+    }
+
+    protected IStatus run( final IProgressMonitor monitor )
+    {
+      monitor.beginTask( RECHENVARIANTEN_ARCHIVIEREN, m_calcCases.length * 1000 );
+
+      final ModelSynchronizer synchronizer;
+      try
+      {
+        final File serverRoot = ModelActionHelper.getServerRoot();
+        final File serverProject = ModelActionHelper.checkIsServerMirrored( serverRoot, m_project );
+        synchronizer = new ModelSynchronizer( m_project, serverProject );
+      }
+      catch( final CoreException ce )
+      {
+        return ce.getStatus();
+      }
+
+      final Collection errorStati = new LinkedList();
+      for( int i = 0; i < m_calcCases.length; i++ )
+      {
+        final IFolder folder = m_calcCases[i];
+
+        try
+        {
+          synchronizer.commitFolder( folder, new SubProgressMonitor( monitor, 1000 ) );
+        }
+        catch( CoreException e )
+        {
+          errorStati.add( e.getStatus() );
+          e.printStackTrace();
+        }
+      }
+
+      if( errorStati.isEmpty() )
+        return Status.OK_STATUS;
+
+      final IStatus[] stati = (IStatus[])errorStati.toArray( new IStatus[errorStati.size()] );
+      return new MultiStatus( KalypsoGisPlugin.getId(), 0, stati,
+          "Nicht alle Rechenvarianten konnten archiviert werden.", null );
+    }
+  }
+
   private IWorkbenchWindow m_window;
 
   /**
@@ -92,59 +156,25 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
   {
     try
     {
-      final File serverRoot = ModelActionHelper.getServerRoot();
-
       final IProject project = ModelActionHelper.chooseOneProject( m_window );
-
-      final File serverProject = ModelActionHelper.checkIsSeverMirrored( serverRoot, project );
-
-      final ModelSynchronizer synchronizer = new ModelSynchronizer( project, serverProject );
-
       final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
       final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection,
-          "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
-
+          RECHENVARIANTEN_ARCHIVIEREN, "Folgende Rechenvarianten werden archiviert:" );
       if( calcCases == null )
         return;
 
-      final Job job = new Job( "Rechenvarianten archivieren" )
-      {
-        protected IStatus run( final IProgressMonitor monitor )
-        {
-          monitor.beginTask( "Rechenvarianten archivieren", calcCases.length * 1000 );
+      final Job job = new CommitCalcCaseJob( project, calcCases );
 
-          final Collection errorStati = new LinkedList();
-          for( int i = 0; i < calcCases.length; i++ )
-          {
-            final IFolder folder = calcCases[i];
-
-            try
-            {
-              synchronizer.commitFolder( folder, new SubProgressMonitor( monitor, 1000 ) );
-            }
-            catch( CoreException e )
-            {
-              errorStati.add( e.getStatus() );
-              e.printStackTrace();
-            }
-          }
-
-          if( errorStati.isEmpty() )
-            return Status.OK_STATUS;
-
-          final IStatus[] stati = (IStatus[])errorStati.toArray( new IStatus[errorStati.size()] );
-          return new MultiStatus( KalypsoGisPlugin.getId(), 0, stati,
-              "Nicht alle Rechenvarianten konnten archiviert werden.", null );
-        }
-      };
+      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), RECHENVARIANTEN_ARCHIVIEREN,
+          RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_ ) );
 
       job.setUser( true );
       job.schedule();
     }
     catch( final CoreException ce )
     {
-      ErrorDialog.openError( m_window.getShell(), "Rechvarianten archivieren",
-          "Rechenvarianten können nicht archiviert werden.", ce.getStatus() );
+      ErrorDialog.openError( m_window.getShell(), RECHENVARIANTEN_ARCHIVIEREN,
+          RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, ce.getStatus() );
     }
   }
 

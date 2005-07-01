@@ -76,7 +76,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   private final IProject m_project;
 
-  private final AddCalcCasePage m_page;
+  private final CreateCalcCasePage m_page;
 
   public static final String TOOLTIP = "Geben Sie hier die Bezeichnung der Rechenvariante ein";
 
@@ -86,7 +86,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   private Text m_edit;
 
-  public AddNewCalcCaseChoice( final String label, final IProject project, final AddCalcCasePage page )
+  public AddNewCalcCaseChoice( final String label, final IProject project, final CreateCalcCasePage page )
   {
     m_label = label;
     m_project = project;
