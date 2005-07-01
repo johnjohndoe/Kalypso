@@ -1,4 +1,4 @@
-/*
+/**
  * ---------------- FILE HEADER KALYPSO ------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004 by:
@@ -27,6 +27,7 @@
  * 
  * ---------------------------------------------------------------------------
  */
+
 package org.kalypso.lhwsachsenanhalt.tubig;
 
 /**

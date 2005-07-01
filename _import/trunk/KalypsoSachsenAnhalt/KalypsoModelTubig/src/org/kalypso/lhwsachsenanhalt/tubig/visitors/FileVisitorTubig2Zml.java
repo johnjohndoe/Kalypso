@@ -1,5 +1,5 @@
-/*
- * ---------------- FILE HEADER KALYPSO ---------------------------------------
+/**
+ * ---------------- FILE HEADER KALYPSO ------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004 by:
  * 
@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------
  */
-package org.kalypso.lhwsachsenanhalt.tubig;
+package org.kalypso.lhwsachsenanhalt.tubig.visitors;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,6 +39,11 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.FileVisitor;
+import org.kalypso.lhwsachsenanhalt.tubig.TubigConst;
+import org.kalypso.lhwsachsenanhalt.tubig.TubigConverter;
+import org.kalypso.lhwsachsenanhalt.tubig.ZmlInfo;
+import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigException;
+import org.kalypso.lhwsachsenanhalt.tubig.utils.TubigUtils;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -52,7 +57,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Thül
  */
-public class TubigFileVisitorTubig2Zml implements FileVisitor
+public class FileVisitorTubig2Zml implements FileVisitor
 {
   private final File m_dirOut;
 
@@ -73,7 +78,7 @@ public class TubigFileVisitorTubig2Zml implements FileVisitor
    * 
    * @throws TubigException
    */
-  public TubigFileVisitorTubig2Zml( final File dirOut, final String sFeatTyp, final URL urlGml, final Map metaMap )
+  public FileVisitorTubig2Zml( final File dirOut, final String sFeatTyp, final URL urlGml, final Map metaMap )
       throws TubigException
   {
     m_dirOut = dirOut;
@@ -103,8 +108,8 @@ public class TubigFileVisitorTubig2Zml implements FileVisitor
   public static void writeZml( final File dirIn, final File dirOut, final String sFeatTyp, final URL urlGml,
       final Map metaMap ) throws TubigException
   {
-    final TubigFileVisitorTubig2Zml fleVisitor;
-    fleVisitor = new TubigFileVisitorTubig2Zml( dirOut, sFeatTyp, urlGml, metaMap );
+    final FileVisitorTubig2Zml fleVisitor;
+    fleVisitor = new FileVisitorTubig2Zml( dirOut, sFeatTyp, urlGml, metaMap );
 
     {
       try

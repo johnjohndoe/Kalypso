@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------
  */
-package org.kalypso.lhwsachsenanhalt.tubig;
+package org.kalypso.lhwsachsenanhalt.tubig.exceptions;
 
 import org.kalypso.services.calculation.job.ICalcMonitor;
 

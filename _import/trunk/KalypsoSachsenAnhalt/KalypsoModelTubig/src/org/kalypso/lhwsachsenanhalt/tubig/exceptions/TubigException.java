@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------
  */
-package org.kalypso.lhwsachsenanhalt.tubig;
+package org.kalypso.lhwsachsenanhalt.tubig.exceptions;
 
 /**
  * @author thuel2

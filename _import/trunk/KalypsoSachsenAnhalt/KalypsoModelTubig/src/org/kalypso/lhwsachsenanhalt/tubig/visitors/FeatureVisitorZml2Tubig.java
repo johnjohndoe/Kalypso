@@ -1,5 +1,5 @@
-/*
- * ---------------- FILE HEADER KALYPSO ----------------------------------------
+/**
+ * ---------------- FILE HEADER KALYPSO ------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004 by:
  * 
@@ -23,11 +23,11 @@
  * 
  * Contact:
  * 
- * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
+ * E-Mail: g.belger@bjoernsen.de m.schlienger@bjoernsen.de v.doemming@tuhh.de
  * 
  * ---------------------------------------------------------------------------
  */
-package org.kalypso.lhwsachsenanhalt.tubig;
+package org.kalypso.lhwsachsenanhalt.tubig.visitors;
 
 import java.io.File;
 import java.net.URL;
@@ -38,6 +38,11 @@ import java.util.Date;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.lhwsachsenanhalt.tubig.TubigConst;
+import org.kalypso.lhwsachsenanhalt.tubig.TubigConverter;
+import org.kalypso.lhwsachsenanhalt.tubig.ZmlInfo;
+import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigException;
+import org.kalypso.lhwsachsenanhalt.tubig.utils.TubigUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -50,15 +55,15 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Thül
  */
-public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
+public class FeatureVisitorZml2Tubig implements FeatureVisitor
 {
   public static void writeTimeseries( final GMLWorkspace workspace, final String featurePath, final URL context,
       final File outdir, final String tubigProperty, final String linkProperty, final int step, final String ext,
       Date dtStartForecast, final Map metaMap, final String sFeatTyp ) throws TubigException
   {
     final FeatureList features = (FeatureList)workspace.getFeatureFromPath( featurePath );
-    final TubigFeatureVisitorZml2Tubig speicherVisitor = new TubigFeatureVisitorZml2Tubig( context, outdir,
-        tubigProperty, linkProperty, step, ext, dtStartForecast, metaMap, sFeatTyp );
+    final FeatureVisitorZml2Tubig speicherVisitor = new FeatureVisitorZml2Tubig( context, outdir, tubigProperty,
+        linkProperty, step, ext, dtStartForecast, metaMap, sFeatTyp );
     features.accept( speicherVisitor );
 
     if( speicherVisitor.hasException() )
@@ -95,7 +100,7 @@ public class TubigFeatureVisitorZml2Tubig implements FeatureVisitor
    * @param metaMap
    * @param sFeatTyp
    */
-  public TubigFeatureVisitorZml2Tubig( final URL context, final File outdir, final String tubigProperty,
+  public FeatureVisitorZml2Tubig( final URL context, final File outdir, final String tubigProperty,
       final String linkProperty, final int step, final String ext, final Date dtStartForecast, final Map metaMap,
       final String sFeatTyp )
   {
