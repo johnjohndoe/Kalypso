@@ -2,8 +2,8 @@
 <modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="spree">
     <input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
     <input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
+
     <input id="ZML" path="Zeitreihen" relativeToCalcCase="true"/>
-    <input id="schemas" path=".model/schema" relativeToCalcCase="false"/>
     
     <output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
     <output id="NATIVE_IN_DIR" path="Ergebnisse/.native/in" relativeToCalcCase="true"/>

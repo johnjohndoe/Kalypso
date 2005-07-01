@@ -32,10 +32,10 @@
 		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
 
 		<gmlProperty gmlURL="${calc.url}/.calculation">
-			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
-			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
+			<property name="startsim" featurepath="" featureProperty="startsimulation" />
+			<property name="startforecast" featurepath="" featureProperty="startforecast"/>
 			<!-- stopsim = startforecast + 48h -->
-			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
+			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
 		</gmlProperty>
 
 		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" context="${calc.url}" targetObservation="Niederschlag_rechnung" forecastFrom="${startforecast}" forecastTo="${stopsim}">

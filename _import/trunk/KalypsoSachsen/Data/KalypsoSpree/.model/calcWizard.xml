@@ -40,9 +40,13 @@
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
-        <arg name="ignoreType1" value="Q"/>
 
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
@@ -55,7 +59,11 @@
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
-		<arg name="ignoreType1" value="Q"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 		
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         
