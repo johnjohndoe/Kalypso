@@ -107,10 +107,9 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
   //  private final FeatureTypeProperty m_ftp;
 
-  public TextSymbolizerLayout( Composite composite, Symbolizer symbolizer, KalypsoUserStyle userStyle,
-      FeatureType featureType )
+  public TextSymbolizerLayout( Composite comp, Symbolizer symb, KalypsoUserStyle style, FeatureType featureType )
   {
-    super( composite, symbolizer, userStyle );
+    super( comp, symb, style );
     m_featureTyped = featureType;
     //    m_ftp = ftp;
   }

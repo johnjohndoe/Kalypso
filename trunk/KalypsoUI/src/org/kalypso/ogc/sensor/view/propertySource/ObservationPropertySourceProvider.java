@@ -40,9 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.propertySource;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.kalypso.commons.adapter.IAdaptable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 

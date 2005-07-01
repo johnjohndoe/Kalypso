@@ -101,9 +101,6 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     return m_rep;
   }
 
-  /**
-   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
-   */
   public Object getAdapter( Class anotherClass )
   {
     if( anotherClass == IObservation.class )

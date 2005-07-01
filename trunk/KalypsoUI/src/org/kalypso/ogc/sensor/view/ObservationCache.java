@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view;
 
-import org.kalypso.commons.adapter.IAdaptable;
+import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.shiftone.cache.Cache;

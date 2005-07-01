@@ -123,7 +123,7 @@ public class FileItem implements IRepositoryItem
   }
 
   /**
-   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   public Object getAdapter( Class anotherClass )
   {

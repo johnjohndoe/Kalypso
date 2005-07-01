@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
-import org.kalypso.commons.adapter.IAdaptable;
+import org.eclipse.core.runtime.IAdaptable;
 
 /**
  * Ein Item innerhalb des Repository. Die Items sind hierarchisch organisiert.

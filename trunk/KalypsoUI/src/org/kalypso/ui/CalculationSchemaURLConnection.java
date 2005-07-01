@@ -63,9 +63,9 @@ public class CalculationSchemaURLConnection extends URLConnection
 
   private long m_lastModified;
 
-  public CalculationSchemaURLConnection( final URL url )
+  public CalculationSchemaURLConnection( final URL theUrl )
   {
-    super( url );
+    super( theUrl );
   }
 
   /**

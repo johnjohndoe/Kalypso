@@ -154,9 +154,6 @@ public class VirtualRepositoryItem implements IRepositoryItem
     m_filterType = filterType;
   }
 
-  /**
-   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
-   */
   public Object getAdapter( Class anotherClass )
   {
     if( m_filterType != null && anotherClass == IObservation.class )

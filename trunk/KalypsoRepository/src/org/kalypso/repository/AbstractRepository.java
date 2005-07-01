@@ -200,8 +200,6 @@ public abstract class AbstractRepository implements IRepository
 
   /**
    * This default implementation always returns null.
-   * 
-   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
   public Object getAdapter( final Class anotherClass )
   {

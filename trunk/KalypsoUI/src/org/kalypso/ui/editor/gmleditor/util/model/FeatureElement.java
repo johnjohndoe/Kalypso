@@ -4,7 +4,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class FeatureElement extends Model
 {
@@ -27,8 +26,8 @@ public class FeatureElement extends Model
     return m_feature;
   }
 
-  public void setFeature( final Feature m_feature )
+  public void setFeature( final Feature feature )
   {
-    this.m_feature = m_feature;
+    this.m_feature = feature;
   }
 }

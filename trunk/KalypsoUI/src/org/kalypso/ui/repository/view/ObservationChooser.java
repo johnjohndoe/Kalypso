@@ -30,6 +30,7 @@
 package org.kalypso.ui.repository.view;
 
 import org.eclipse.compare.internal.AbstractViewer;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -48,7 +49,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.kalypso.commons.adapter.IAdaptable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
