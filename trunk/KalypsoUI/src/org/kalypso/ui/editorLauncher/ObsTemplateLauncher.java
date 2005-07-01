@@ -52,7 +52,6 @@ import org.eclipse.ui.IEditorLauncher;
  */
 public class ObsTemplateLauncher implements IEditorLauncher
 {
-
   /**
    * @see org.eclipse.ui.IEditorLauncher#open(org.eclipse.core.runtime.IPath)
    */
@@ -60,6 +59,7 @@ public class ObsTemplateLauncher implements IEditorLauncher
   {
     final IOFileFilter ottFilter = FileFilterUtils.suffixFileFilter( ".ott" );
     final IOFileFilter odtFilter = FileFilterUtils.suffixFileFilter( ".odt" );
+
     final FileFilter filter = FileFilterUtils.orFileFilter( odtFilter, ottFilter );
 
     final IDefaultTemplateLauncher dlTable = new DefaultObservationEditorLauncher( "<Standard Tabellen Editor>.ott",

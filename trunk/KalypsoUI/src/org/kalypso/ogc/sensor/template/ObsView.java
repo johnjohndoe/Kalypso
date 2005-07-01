@@ -48,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -58,6 +59,8 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
  */
 public abstract class ObsView implements IObsViewEventProvider
 {
+  public static final ItemData DEFAULT_ITEM_DATA = new ItemData( true, null );
+
   /** Additional hints for new items */
   public static class ItemData
   {
@@ -197,18 +200,28 @@ public abstract class ObsView implements IObsViewEventProvider
     }
   }
 
-  /** Laods an observation into this view and sets default values */
-  public void loadObservation( final URL context, final String href, final boolean ignoreExceptions,
+  public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
       final String ignoreType, final String tokenizedName, final ItemData data )
+  {
+    return loadObservation( context, href, ignoreExceptions, ignoreType, tokenizedName, data, false );
+  }
+
+  /** 
+   * Loads an observation into this view and sets default values 
+   * 
+   * 
+   */
+  public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
+      final String ignoreType, final String tokenizedName, final ItemData data, final boolean synchron )
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
-    new PoolableObjectWaiter( k, new Object[]
+    final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
     {
         this,
         data,
         ignoreType,
-        tokenizedName }, false )
+        tokenizedName }, synchron )
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
@@ -224,6 +237,8 @@ public abstract class ObsView implements IObsViewEventProvider
         }
       }
     };
+
+    return waiter.getResult();
   }
 
   /**

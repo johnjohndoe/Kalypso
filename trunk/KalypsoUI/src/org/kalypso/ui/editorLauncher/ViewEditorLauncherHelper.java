@@ -54,6 +54,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
@@ -176,6 +177,8 @@ public class ViewEditorLauncherHelper
           catch( final PartInitException e1 )
           {
             e1.printStackTrace();
+            
+            MessageDialog.openError( activePage.getActivePart().getSite().getShell(), "Fehler für Datei öffnen", e1.getLocalizedMessage() );
           }
         }
       }
