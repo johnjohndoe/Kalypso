@@ -55,6 +55,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaNodeResultProvider;
 import org.kalypso.convert.namodel.net.NetElement;
@@ -65,8 +67,6 @@ import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
 import org.kalypso.convert.namodel.net.visitors.SimulationVisitor;
 import org.kalypso.convert.namodel.net.visitors.WriteAsciiVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -101,7 +101,7 @@ public class NetFileManager extends AbstractManager
 
   final public NAConfiguration m_conf;
 
-  private static final String BranchingPropName = "BranchingMember";
+  //private static final String BranchingPropName = "BranchingMember";
 
   private final UrlUtilities m_urlUtilities;
 
@@ -119,10 +119,9 @@ public class NetFileManager extends AbstractManager
   }
 
   /**
-   * 
    * importing ascii file to gml-modell
    * 
-   * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.net.URL)
+   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
   public Feature[] parseFile( URL url ) throws Exception
   {

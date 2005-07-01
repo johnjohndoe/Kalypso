@@ -92,8 +92,7 @@ public class ChannelManager extends AbstractManager
   }
 
   /**
-   * 
-   * @see org.kalypso.convert.namodel.AbstractManager#parseFile(java.net.URL)
+   * @see org.kalypso.convert.namodel.manager.AbstractManager#parseFile(java.net.URL)
    */
   public Feature[] parseFile( URL url ) throws Exception
   {

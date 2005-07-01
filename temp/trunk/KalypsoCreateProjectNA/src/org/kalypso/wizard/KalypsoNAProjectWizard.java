@@ -92,11 +92,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author kuepfer
- *  
  */
 public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 {
-
   //Constants
   static final String CATCHMENT_PAGE = "page_type:catchment";
 
@@ -110,19 +108,26 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private final String m_resourceBase = "resources/.projecttemplate.zip";
 
-  static final FeatureType dummyFeatureType = FeatureFactory.createFeatureType( "Gewässer", "wizard.kalypso.na", new FeatureTypeProperty[]
-  {
-      FeatureFactory.createFeatureTypeProperty( "Ort", "wizard.kalypso.na", GM_LineString.class.getName(), false, null ),
-      FeatureFactory.createFeatureTypeProperty( "name", "wizard.kalypso.na", String.class.getName(), false, null ),
-      FeatureFactory.createFeatureTypeProperty( "description", "wizard.kalypso.na", String.class.getName(), false, null ),
-      FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class.getName(), false, null ),
-      FeatureFactory.createFeatureTypeProperty( "StrangArt", "wizard.kalypso.na", Integer.class.getName(), false, null ) }, new int[]
-  {
-      1,
-      1 }, new int[]
-  {
-      1,
-      1 }, null, null );
+  static final FeatureType dummyFeatureType = FeatureFactory
+      .createFeatureType( "Gewässer", "wizard.kalypso.na",
+          new FeatureTypeProperty[]
+          {
+              FeatureFactory.createFeatureTypeProperty( "Ort", "wizard.kalypso.na", GM_LineString.class.getName(),
+                  false, null ),
+              FeatureFactory.createFeatureTypeProperty( "name", "wizard.kalypso.na", String.class.getName(), false,
+                  null ),
+              FeatureFactory.createFeatureTypeProperty( "description", "wizard.kalypso.na", String.class.getName(),
+                  false, null ),
+              FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class.getName(), false,
+                  null ),
+              FeatureFactory.createFeatureTypeProperty( "StrangArt", "wizard.kalypso.na", Integer.class.getName(),
+                  false, null ) }, new int[]
+          {
+              1,
+              1 }, new int[]
+          {
+              1,
+              1 }, null, null );
 
   private KalypsoNAProjectWizardPage createMappingCatchmentPage;
 
@@ -136,10 +141,13 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private GMLSchema m_modelSchema;
 
+  // Christoph: field never read locally
   private URL sourceURL;
 
+  //Christoph: field never read locally
   private URL m_modelSchemaURL = getClass().getResource( "resources/.model/schema/namodell.xsd" );
 
+  //Christoph: field never read locally
   private URL m_hydrotopSchemaURL = getClass().getResource( "resources/.model/schema/hydrotop.xsd" );
 
   private GMLWorkspace modelWS;
@@ -162,9 +170,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   //	IStructuredSelection structSelection;
 
-  /**
-   *  
-   */
   public KalypsoNAProjectWizard()
   {
     super();
@@ -198,22 +203,23 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       e.printStackTrace();
     }
 
-    createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, "Teilgebiete einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG,
-        getFeatureType( "Catchment" ) );
+    createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, "Teilgebiete einlesen",
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) );
 
     addPage( createMappingCatchmentPage );
 
-    createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, "Stränge einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG, dummyFeatureType );
+    createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, "Stränge einlesen",
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, dummyFeatureType );
     addPage( createMappingRiverPage );
 
-    createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, "Knoten einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG,
-        getFeatureType( "Node" ) );
+    createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, "Knoten einlesen",
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) );
     addPage( createMappingNodePage );
     //    createMappingHydrotopPage = new KalypsoNAFileImportPage( HYDROTOP_PAGE,
     //        "Hydrotopdatei in den Workspace importieren",
     // ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-    createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, "Hydrotope einlesen", ImageProvider.IMAGE_KALYPSO_ICON_BIG,
-        getFeatureType( "Hydrotop" ) );
+    createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, "Hydrotope einlesen",
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) );
     addPage( createMappingHydrotopPage );
   }
 
@@ -228,8 +234,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   }
 
   /**
-   * We will accept the selection in the workbench to see if we can initialize
-   * from it.
+   * We will accept the selection in the workbench to see if we can initialize from it.
    * 
    * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
    */
@@ -239,8 +244,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   }
 
   /**
-   * This method creates the new Project and all the necessary , performs the
-   * mapping and writes the new modell.gml file .
+   * This method creates the new Project and all the necessary , performs the mapping and writes the new modell.gml file .
    * 
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
@@ -583,12 +587,14 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       int channelType = 0;
       try
       {
-        channelType = ( (Integer)SpecialPropertyMapper.map( o.getClass().getName(), Integer.class.getName(), o ) ).intValue();
+        channelType = ( (Integer)SpecialPropertyMapper.map( o.getClass().getName(), Integer.class.getName(), o ) )
+            .intValue();
       }
       catch( Exception e )
       {
         e.printStackTrace();
-        throw new NumberFormatException( "StrangArt konnte nicht eingelesen werden, überprüfe Zuordnung, Werte und Wertearten" );
+        throw new NumberFormatException(
+            "StrangArt konnte nicht eingelesen werden, überprüfe Zuordnung, Werte und Wertearten" );
       }
       //      if( o instanceof String )
       //        channelType = ( new Integer( (String)o ) ).intValue();
