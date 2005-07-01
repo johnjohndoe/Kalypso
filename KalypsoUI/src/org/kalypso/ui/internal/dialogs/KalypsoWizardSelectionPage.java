@@ -62,9 +62,9 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
   protected GisMapOutlineViewer m_outline;
 
   public KalypsoWizardSelectionPage( IWorkbench aWorkbench, IStructuredSelection currentSelection,
-      AdaptableList wizardElements, String message, GisMapOutlineViewer outlineview )
+      AdaptableList wizardElts, String message, GisMapOutlineViewer outlineview )
   {
-    super( aWorkbench, currentSelection, wizardElements, message );
+    super( aWorkbench, currentSelection, wizardElts, message );
     m_outline = outlineview;
 
   }

@@ -101,9 +101,6 @@ public class DataCenterChannelItem implements IRepositoryItem
     return m_rep;
   }
 
-  /**
-   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
-   */
   public Object getAdapter( Class anotherClass )
   {
     return null;

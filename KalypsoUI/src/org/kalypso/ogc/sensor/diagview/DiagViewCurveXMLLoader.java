@@ -79,8 +79,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
   }
 
   /**
-   * @see org.kalypso.commons.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.commons.pool.IPoolableObjectType,
-   *      java.lang.Object)
+   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {

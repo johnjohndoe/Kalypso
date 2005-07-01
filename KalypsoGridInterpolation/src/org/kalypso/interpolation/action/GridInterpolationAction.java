@@ -32,7 +32,7 @@ public class GridInterpolationAction implements IWorkbenchWindowActionDelegate
   /**
    * The action has been activated. The argument of the method represents the 'real' action sitting in the workbench UI.
    * 
-   * @see IWorkbenchWindowActionDelegate#run
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( IAction action )
   {
@@ -44,7 +44,7 @@ public class GridInterpolationAction implements IWorkbenchWindowActionDelegate
     try
     {
       grid = GridFactory.getInstance().createGrid( null, wizard.getCoordinateSystem(), wizard.getSize(), mesh );
-      String target = "";
+      //String target = "";
       mesh.interpolateGrid( wizard.getTarget(), wizard.getBorderLine(), grid );
     }
     catch( Exception e )
@@ -58,7 +58,8 @@ public class GridInterpolationAction implements IWorkbenchWindowActionDelegate
    * Selection in the workbench has been changed. We can change the state of the 'real' action here if we want, but this
    * can only happen after the delegate has been created.
    * 
-   * @see IWorkbenchWindowActionDelegate#selectionChanged
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( IAction action, ISelection selection )
   {}
@@ -76,8 +77,8 @@ public class GridInterpolationAction implements IWorkbenchWindowActionDelegate
    * 
    * @see IWorkbenchWindowActionDelegate#init
    */
-  public void init( IWorkbenchWindow window )
+  public void init( IWorkbenchWindow wnd )
   {
-    this.window = window;
+    this.window = wnd;
   }
 }

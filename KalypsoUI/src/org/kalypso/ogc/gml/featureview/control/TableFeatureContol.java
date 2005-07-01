@@ -168,14 +168,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
-   */
-  public void collectChanges( final Collection c )
-  {
-  // TODO!
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   public boolean isValid()

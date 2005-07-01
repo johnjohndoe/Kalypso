@@ -42,11 +42,11 @@ public final class CsvFeatureReader
 
     public final boolean ignoreFormatExceptions;
 
-    public CSVInfo( final String format, final int[] columns, final boolean ignoreFormatExceptions )
+    public CSVInfo( final String frmt, final int[] cols, final boolean ignoreFrmtExceptions )
     {
-      this.format = format;
-      this.columns = columns;
-      this.ignoreFormatExceptions = ignoreFormatExceptions;
+      this.format = frmt;
+      this.columns = cols;
+      this.ignoreFormatExceptions = ignoreFrmtExceptions;
     }
   }
 

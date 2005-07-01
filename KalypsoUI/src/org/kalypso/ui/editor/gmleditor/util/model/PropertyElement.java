@@ -4,7 +4,6 @@ import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class PropertyElement extends Model
 {
@@ -22,8 +21,8 @@ public class PropertyElement extends Model
     return m_property;
   }
 
-  public void setProperty( final FeatureAssociationTypeProperty m_property )
+  public void setProperty( final FeatureAssociationTypeProperty property )
   {
-    this.m_property = m_property;
+    this.m_property = property;
   }
 }
