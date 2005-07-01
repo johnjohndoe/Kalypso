@@ -95,9 +95,6 @@ public class TsInfoItem implements IRepositoryItem
     return m_rep;
   }
 
-  /**
-   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
-   */
   public Object getAdapter( final Class anotherClass )
   {
     if( anotherClass == IObservation.class )

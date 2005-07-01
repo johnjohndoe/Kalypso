@@ -98,7 +98,7 @@ public class LocalCalculationService implements ICalculationService
 
   /**
    * @see org.kalypso.services.calculation.service.impl.QueuedCalcJobService#QueuedCalcJobService(org.kalypso.services.calculation.service.impl.ICalcJobFactory,
-   *      org.kalypso.java.net.IUrlCatalog, int, long)
+   *      IUrlCatalog, int, long)
    * @param factory
    *          LocalCalcJobFactory
    * @param catalog

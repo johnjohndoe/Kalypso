@@ -101,9 +101,6 @@ public class PSICompactItem implements IRepositoryItem
     return (IRepositoryItem[])m_children.toArray( new IRepositoryItem[m_children.size()] );
   }
 
-  /**
-   * @see org.kalypso.commons.adapter.IAdaptable#getAdapter(java.lang.Class)
-   */
   public Object getAdapter( final Class anotherClass )
   {
     try

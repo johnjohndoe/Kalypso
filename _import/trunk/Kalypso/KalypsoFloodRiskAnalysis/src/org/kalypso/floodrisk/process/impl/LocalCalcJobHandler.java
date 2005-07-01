@@ -43,6 +43,7 @@ package org.kalypso.floodrisk.process.impl;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -98,10 +99,6 @@ public class LocalCalcJobHandler
    * 
    * @param project
    *          project to calculate, instead of calculationFolder
-   * @param monitor
-   * @return
-   * @throws CoreException
-   *  
    */
   public IStatus runJob( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
@@ -204,12 +201,6 @@ public class LocalCalcJobHandler
   /**
    * get input and output, then start the calcJob by calling the startJob(typeID, description, dataHandler, input,
    * output)-method of localCalculationService
-   * 
-   * @param project
-   * @param monitor
-   * @return
-   * @throws CoreException
-   *  
    */
   private String startCalcJob( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
@@ -243,11 +234,6 @@ public class LocalCalcJobHandler
 
   /**
    * create the inputdata-beans from ModelDataType (modeldata.xml)
-   * 
-   * @param project
-   * @return
-   * @throws CoreException
-   *  
    */
   private CalcJobClientBean[] getInput( IProject project ) throws CoreException
   {
@@ -276,13 +262,8 @@ public class LocalCalcJobHandler
 
   /**
    * create the outputdata-beans from ModelDataType (modeldata.xml)
-   * 
-   * @param project
-   * @return
-   * @throws CoreException
-   *  
    */
-  private CalcJobClientBean[] getOutput( IProject project ) throws CoreException
+  private CalcJobClientBean[] getOutput( IProject project )
   {
     List outputList = m_modelData.getOutput();
     CalcJobClientBean[] output = new CalcJobClientBean[outputList.size()];
