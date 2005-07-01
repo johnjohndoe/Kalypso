@@ -72,8 +72,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.io.ProcessWraper;
 import org.kalypso.commons.java.net.UrlResolver;
@@ -87,8 +85,11 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -129,14 +130,11 @@ public class GrafikLauncher
    * Opens the grafik tool using an observation template file. Note: this method should be called using a
    * WorkspaceModifyOperation.
    * 
-   * @param odtFile
-   * @param dest
-   * @param monitor
    * @return the created tpl file
    * 
    * @throws SensorException
    */
-  public static IFile startGrafikODT( final IFile odtFile, final IFolder dest, final IProgressMonitor monitor )
+  public static IStatus startGrafikODT( final IFile odtFile, final IFolder dest, final IProgressMonitor monitor )
       throws SensorException
   {
     final ObsdiagviewType odt;
@@ -154,6 +152,38 @@ public class GrafikLauncher
   }
 
   /**
+   * Open the grafik tool using a zml file.
+   */
+  public static IStatus startGrafikZML( final IFile zmlFile, final IFolder dest, final IProgressMonitor monitor )
+      throws SensorException
+  {
+    final DiagView diag = new DiagView( zmlFile.getName(), "Legende", true );
+
+    try
+    {
+      final URL context = ResourceUtilities.createURL( zmlFile );
+
+      // TODO Marc: scheint noch buggy zu sein... aus irgendeiner Grund wird die ODT beim
+      // ersten Aufruf auf eine Zml nicht vollständig gesetzt (keine Observations drin).
+      // Debug!!!
+      
+      final IStatus status = diag.loadObservation( context, context.toExternalForm(), false, "",
+          NameUtils.DEFAULT_ITEM_NAME, ObsView.DEFAULT_ITEM_DATA, true );
+
+      if( !status.isOK() )
+        return status;
+
+      final ObsdiagviewType odt = DiagViewUtils.buildDiagramTemplateXML( diag );
+      return startGrafikODT( zmlFile.getName(), odt, dest, monitor );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new SensorException( e );
+    }
+  }
+
+  /**
    * Opens the grafik tool using an observation template xml object. Note: this method should be called using a
    * WorkspaceModifyOperation.
    * 
@@ -161,13 +191,10 @@ public class GrafikLauncher
    *          the filename to use for the grafik template file
    * @param odt
    *          the xml binding object
-   * @param dest
-   * @param monitor
-   * @return the created tpl file
    * 
    * @throws SensorException
    */
-  public static IFile startGrafikODT( final String fileName, final ObsdiagviewType odt, final IFolder dest,
+  public static IStatus startGrafikODT( final String fileName, final ObsdiagviewType odt, final IFolder dest,
       final IProgressMonitor monitor ) throws SensorException
   {
     List sync = new Vector();
@@ -180,24 +207,13 @@ public class GrafikLauncher
       final IFile tplFile = dest.getFile( FileUtilities.nameWithoutExtension( fileName ) + ".tpl" );
 
       strWriter = new StringWriter();
-
       final IStatus status = odt2tpl( odt, dest, strWriter, monitor, sync );
+      strWriter.close();
 
       // status might not be ok but we still want to start the grafik tool
       // so inform the use here with the current info
       if( !status.isOK() )
-      {
-        final Display disp = KalypsoGisPlugin.getDefault().getWorkbench().getDisplay();
-
-        disp.syncExec( new Runnable()
-        {
-          public void run()
-          {
-            ErrorDialog.openError( disp.getActiveShell(), "Warnung", "Fehler sind während der für das Grafikprogramm "
-                + "benötigten Datenkonvertierung aufgetaucht.", status );
-          }
-        } );
-      }
+        return status;
 
       // redeclared final for being used in SetContentHelper
       final StringWriter schWriter = strWriter;
@@ -216,7 +232,7 @@ public class GrafikLauncher
 
       startGrafikTPL( tplFile, sync );
 
-      return tplFile;
+      return Status.OK_STATUS;
     }
     catch( Throwable e ) // generic exception caught
     {
@@ -239,47 +255,26 @@ public class GrafikLauncher
    * 
    * @throws SensorException
    */
-  public static void startGrafikTPL( final IFile tplFile, final List sync ) throws SensorException
+  public static IStatus startGrafikTPL( final IFile tplFile, final List sync ) throws SensorException
   {
     final File file = ResourceUtilities.makeFileFromPath( tplFile.getFullPath() );
 
-    startGrafikTPL( file, sync );
+    return startGrafikTPL( file, sync );
   }
 
   /**
    * Starts the grafik with a java.lang.File tpl-File.
-   * 
-   * @param tplFile
-   * @throws SensorException
    */
-  private static void startGrafikTPL( final File tplFile, final List sync ) throws SensorException
+  private static IStatus startGrafikTPL( final File tplFile, final List sync ) throws SensorException
   {
     try
     {
-      // create the grafik exe
-      // TODO: check if version has changed an then try to delete old file
-      // TODO: always use file name 'grafik.exe'
-      final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", DiagViewUtils.class
-          .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true );
-      grafikExe.deleteOnExit();
-
-      // also create the help file if not already existing
-      final File grafikHelp = new File( grafikExe.getParentFile(), FileUtilities.nameWithoutExtension( grafikExe
-          .getName() )
-          + ".hlp" );
-      grafikHelp.deleteOnExit();
-      if( !grafikHelp.exists() )
-      {
-        final File tmp = FileUtilities.makeFileFromStream( false, "grafik", ".hlp", DiagViewUtils.class
-            .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true );
-
-        // the help must have the same name as the exe (except file-extension)
-        FileUtils.copyFile( tmp, grafikHelp );
-        tmp.delete();
-      }
+      final File grafikExe = getGrafikProgramPath();
 
       final Process proc = Runtime.getRuntime().exec(
           grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"' );
+
+      final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Grafik kann nicht gestartet werden" );
 
       final ProcessWraper wraper = new ProcessWraper( proc, null )
       {
@@ -303,9 +298,12 @@ public class GrafikLauncher
             {
               rfs.synchronizeZml();
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               e.printStackTrace();
+
+              ms.addMessage( "Synchronisation von " + rfs.getDatFile().getName() + " in " + rfs.getZmlFile().getName(),
+                  e );
             }
           }
         }
@@ -313,11 +311,44 @@ public class GrafikLauncher
 
       // wait for grafik to finish and eventually synchronise data
       wraper.waitForProcess();
+      
+      return ms;
     }
     catch( Exception e )
     {
       throw new SensorException( e );
     }
+  }
+
+  /**
+   * Return the file representing the Grafik Program. Since the Grafik.exe is located in the resources of this plugin,
+   * it must first be extracted into a temp file in the local file system.
+   */
+  public static File getGrafikProgramPath() throws IOException
+  {
+    // create the grafik exe
+    // TODO: check if version has changed an then try to delete old file
+    // TODO: always use file name 'grafik.exe'
+    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikLauncher.class
+        .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true );
+    grafikExe.deleteOnExit();
+
+    // also create the help file if not already existing
+    final File grafikHelp = new File( grafikExe.getParentFile(), FileUtilities.nameWithoutExtension( grafikExe
+        .getName() )
+        + ".hlp" );
+    grafikHelp.deleteOnExit();
+    if( !grafikHelp.exists() )
+    {
+      final File tmp = FileUtilities.makeFileFromStream( false, "grafik", ".hlp", GrafikLauncher.class
+          .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true );
+
+      // the help must have the same name as the exe (except file-extension)
+      FileUtils.copyFile( tmp, grafikHelp );
+      tmp.delete();
+    }
+
+    return grafikExe;
   }
 
   /**
@@ -327,14 +358,6 @@ public class GrafikLauncher
    * observation, then all curves of that observation should be displayed. This is not possible here using the grafik
    * tool. As a conclusion: when a template file is meant to be used with the grafik tool, then curves need to be
    * explicitely specified in the xml.
-   * 
-   * @param odt
-   * @param dest
-   * @param writer
-   * @param monitor
-   * 
-   * @throws CoreException
-   * @throws IOException
    */
   private static IStatus odt2tpl( final ObsdiagviewType odt, final IFolder dest, final Writer writer,
       final IProgressMonitor monitor, final List sync ) throws CoreException, IOException
@@ -481,13 +504,6 @@ public class GrafikLauncher
 
   /**
    * Converts a zml file to a dat file that the grafik tool can load.
-   * 
-   * @param obs
-   * @param datFile
-   * @param dateAxis
-   * @param axis
-   * @param monitor
-   * @throws CoreException
    */
   private static IStatus zml2dat( final IObservation obs, final IFile datFile, final IAxis dateAxis, final IAxis axis,
       final IProgressMonitor monitor ) throws CoreException

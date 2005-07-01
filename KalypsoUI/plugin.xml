@@ -99,6 +99,22 @@
       </editor>
       <editor
             default="true"
+            name="Feature Editor"
+            icon="icons/kalypso_gtt.gif"
+            extensions="gft"
+            class="org.kalypso.ui.editor.featureeditor.FeatureEditor"
+            id="org.kalypso.ui.editor.FeatureEditor">
+      </editor>
+      <editor
+            name="GMLEditor"
+            default="true"
+            extensions="gmv"
+            icon="icons/kalypso_gtt.gif"
+            class="org.kalypso.ui.editor.gmleditor.ui.GMLEditor"
+            id="org.kalypso.ui.editor.GMLEditor">
+      </editor>
+      <editor
+            default="true"
             name="Diagramm Editor"
             icon="icons/kalypso_odt.gif"
             extensions="odt"
@@ -130,21 +146,12 @@
             extensions="zml">
       </editor>
       <editor
-            default="true"
-            name="Feature Editor"
-            icon="icons/kalypso_gtt.gif"
-            extensions="gft"
-            class="org.kalypso.ui.editor.featureeditor.FeatureEditor"
-            id="org.kalypso.ui.editor.FeatureEditor">
-      </editor>
-      <editor
-            name="GMLEditor"
-            default="true"
-            extensions="gmv"
-            icon="icons/kalypso_gtt.gif"
-            class="org.kalypso.ui.editor.gmleditor.ui.GMLEditor"
-            id="org.kalypso.ui.editor.GMLEditor">
-      </editor>
+            launcher="org.kalypso.ui.editorLauncher.GrafikEditorLauncher"
+            icon="icons/observation/grafik-icon.gif"
+            default="false"
+            name="Grafik Programm"
+            id="org.kalypso.zml.grafik"
+            extensions="zml,tpl"/>
    </extension>
    <extension
          id="views"
@@ -574,33 +581,6 @@
       <options
             allowLinking="true">
       </options>
-   </extension>
-   <extension
-         id="viewActions"
-         name="viewActions"
-         point="org.eclipse.ui.viewActions">
-      <viewContribution
-            targetID="org.eclipse.ui.views.ResourceNavigator"
-            id="org.kalypso.ui.resource.vc1">
-         <action
-               label="Grafik starten (mit Vorlage)"
-               icon="icons/observation/grafik-icon.gif"
-               tooltip="Grafik-Tool anhand einer Vorlage starten"
-               class="org.kalypso.ui.navigator.GrafikViewActionDelegate"
-               menubarPath="additions"
-               toolbarPath="additions"
-               enablesFor="1"
-               id="org.kalypso.ui.navigator.GrafikViewActionDelegate">
-            <selection
-                  name="*.odt"
-                  class="org.eclipse.core.resources.IFile">
-            </selection>
-            <selection
-                  name="*.tpl"
-                  class="org.eclipse.core.resources.IFile">
-            </selection>
-         </action>
-      </viewContribution>
    </extension>
    <extension
          id="perspectives"

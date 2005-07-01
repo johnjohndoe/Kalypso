@@ -63,27 +63,12 @@ public abstract class SetContentHelper
 {
   private String m_newCharset;
 
-  /**
-   * @param file
-   * @param force
-   * @param keepHistory
-   * @param monitor
-   * @throws CoreException
-   */
   public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
       final IProgressMonitor monitor ) throws CoreException
   {
     setFileContents( file, force, keepHistory, monitor, null );
   }
 
-  /**
-   * @param file
-   * @param force
-   * @param keepHistory
-   * @param monitor
-   * @param charset
-   * @throws CoreException
-   */
   public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
       final IProgressMonitor monitor, final String charset ) throws CoreException
   {
@@ -100,16 +85,13 @@ public abstract class SetContentHelper
     PipedInputStream m_pis = null;
     try
     {
-      monitor.beginTask( "Schreibe Datei", 2000 );
+      monitor.beginTask( "Schreibe in Datei", 2000 );
 
       final PipedOutputStream m_pos = new PipedOutputStream();
       m_pis = new PipedInputStream( m_pos );
 
       final CatchRunnable innerRunnable = new CatchRunnable()
       {
-        /**
-         * @see org.kalypso.contribs.java.lang.CatchRunnable#runIntern()
-         */
         protected void runIntern() throws Throwable
         {
           OutputStreamWriter outputStreamWriter = null;
@@ -117,6 +99,7 @@ public abstract class SetContentHelper
           {
             outputStreamWriter = new OutputStreamWriter( m_pos, getCharset() );
             write( outputStreamWriter );
+            outputStreamWriter.close();
           }
           finally
           {
@@ -132,15 +115,17 @@ public abstract class SetContentHelper
         file.setContents( m_pis, force, keepHistory, new SubProgressMonitor( monitor, 1000 ) );
       else
         file.create( m_pis, force, new SubProgressMonitor( monitor, 1000 ) );
+      
+      m_pis.close();
 
       final Throwable thrown = innerRunnable.getThrown();
       if( thrown != null )
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "", thrown ) );
+        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler", thrown ) );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "", e ) );
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler", e ) );
     }
     finally
     {
@@ -155,9 +140,6 @@ public abstract class SetContentHelper
 
   /**
    * Override this method to provide your business. The writer is closed once write returns.
-   * 
-   * @param writer
-   * @throws Throwable
    */
   protected abstract void write( final OutputStreamWriter writer ) throws Throwable;
 

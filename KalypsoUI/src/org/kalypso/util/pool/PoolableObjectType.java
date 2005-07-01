@@ -59,8 +59,11 @@ public class PoolableObjectType implements IPoolableObjectType
    * Constructor. Defaults ignoreExceptions to false.
    * 
    * @param type
+   *          type of object to load
    * @param source
+   *          location of the object
    * @param context
+   *          context into which object is loaded
    */
   public PoolableObjectType( final String type, final String source, final URL context )
   {
