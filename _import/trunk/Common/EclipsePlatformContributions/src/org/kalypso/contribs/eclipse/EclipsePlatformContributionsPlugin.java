@@ -17,9 +17,11 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   // Resource bundle.
   private ResourceBundle resourceBundle;
 
-  /**
-   * The constructor.
-   */
+  public static String getID()
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
+  
   public EclipsePlatformContributionsPlugin()
   {
     super();
