@@ -67,8 +67,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -82,6 +83,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
@@ -165,8 +167,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
 
   protected ObsdiagviewType m_obsdiagviewType;
 
-  private CalcCaseTableTreeViewer m_calcCaseViewer;
-
   private IBerichtExporter[] m_berichtExporters;
 
   private static final String PROP_RESULT_TS_NAME = "resultProperty";
@@ -174,6 +174,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
   private static final String PROP_PROGNOSE_TS_NAME = "prognoseProperty";
 
   private static final String PROP_PEGEL_NAME = "pegelNameProperty";
+
+  protected Object[] m_checkedElements;
 
   public ExportResultsWizardPage()
   {
@@ -199,7 +201,11 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       createMapPanel( sashForm );
       final SashForm rightSash = new SashForm( sashForm, SWT.VERTICAL );
 
-      createExportPanel( rightSash );
+      final Composite rightTopPanel = new Composite( rightSash, SWT.NONE );
+      rightTopPanel.setLayout( new GridLayout( 2, false ) );
+      createDataButtonsPanel( rightTopPanel ).setLayoutData( new GridData( GridData.FILL_VERTICAL ) );
+      createCalccasesGroup( rightTopPanel ).setLayoutData( new GridData( GridData.FILL_BOTH ) );
+      
       createDiagramPanel( rightSash );
 
       final int mainWeight = Integer.parseInt( getArguments().getProperty( PROP_MAINSASH, "50" ) );
@@ -274,37 +280,43 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     } );
   }
 
-  private void createExportPanel( final Composite parent )
+  private Control createCalccasesGroup( final Composite parent )
+  {
+    final Group treeGroup = new Group( parent, SWT.NONE );
+    treeGroup.setText( "Rechenvarianten im Diagram" );
+    treeGroup.setLayout( new GridLayout() );
+
+    final CalcCaseTableTreeViewer calcCaseViewer = new CalcCaseTableTreeViewer( getCalcFolder(), treeGroup, SWT.BORDER | SWT.SINGLE | SWT.CHECK | SWT.HIDE_SELECTION | SWT.FULL_SELECTION );
+    calcCaseViewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    calcCaseViewer.setInput( getProject().getFolder( ModelNature.PROGNOSE_FOLDER ) );
+    calcCaseViewer.setSelection( new StructuredSelection( getCalcFolder() ), true );
+    calcCaseViewer.addCheckStateListener( new ICheckStateListener()
+    {
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        m_checkedElements = calcCaseViewer.getCheckedElements();
+        
+        refreshDiagram();
+      }
+    } );
+    calcCaseViewer.setChecked( getCalcFolder(), true );
+    // the last line will not notify the listeners, so do it myself
+    m_checkedElements = new Object[] { getCalcFolder() };
+    
+    return treeGroup;
+  }
+  
+  private Control createDataButtonsPanel( final Composite parent )
   {
     m_berichtExporters = createExporters();
 
-    // noch einen ListViewer einfügen!
-    final Composite topPanel = new Composite( parent, SWT.NONE );
-    topPanel.setLayout( new GridLayout( 2, false ) );
+    final Group buttonGroup = new Group( parent, SWT.NONE );
+    buttonGroup.setText( "Datenablagen" );
+    buttonGroup.setLayout( new GridLayout() );
 
-    m_calcCaseViewer = new CalcCaseTableTreeViewer( getCalcFolder(), topPanel, SWT.BORDER | SWT.SINGLE | SWT.CHECK );
-    m_calcCaseViewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    m_calcCaseViewer.setInput( getProject().getFolder( ModelNature.PROGNOSE_FOLDER ) );
-    m_calcCaseViewer.setSelection( new StructuredSelection( getCalcFolder() ), true );
-    m_calcCaseViewer.setChecked( getCalcFolder(), true );
-    
-//    m_calcCaseViewer.setChecked( getCalcFolder(), true );
-
-//    m_checklist.addCheckStateListener( new ICheckStateListener()
-//    {
-//      public void checkStateChanged( CheckStateChangedEvent event )
-//      {
-//        refreshDiagram();
-//      }
-//    } );
-
-    final Composite buttonPanel = new Composite( topPanel, SWT.NONE );
-    buttonPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    buttonPanel.setLayout( new GridLayout() );
-
-    final Button exportPrognoseTS = new Button( buttonPanel, SWT.PUSH );
+    final Button exportPrognoseTS = new Button( buttonGroup, SWT.PUSH );
     exportPrognoseTS.setText( "Export Prognosen" );
-    exportPrognoseTS.setToolTipText( "Exportiert die Prognosen der selektierten Rechenvariante" );
+    exportPrognoseTS.setToolTipText( "Exportiert die Prognosen der aktuellen Rechenvariante" );
     exportPrognoseTS.setLayoutData( new GridData() );
     exportPrognoseTS.addSelectionListener( new SelectionAdapter()
     {
@@ -317,10 +329,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       }
     } );
 
-    final Button doItButton = new Button( buttonPanel, SWT.PUSH );
+    final Button doItButton = new Button( buttonGroup, SWT.PUSH );
     doItButton.setLayoutData( new GridData() );
     doItButton.setText( "Bericht(e) ablegen" );
-    doItButton.setToolTipText( "Legt für alle aktivierten Rechenfälle Dokumente im Berichtswesen ab." );
+    doItButton.setToolTipText( "Legt für die aktuelle Rechenvariante Dokumente im Berichtswesen ab." );
     doItButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -333,6 +345,8 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     } );
 
     doItButton.setEnabled( !( m_berichtExporters == null || m_berichtExporters.length == 0 ) );
+    
+    return buttonGroup;
   }
 
   /**
@@ -340,14 +354,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    */
   protected void exportSelectedDocuments()
   {
-    final IFolder selectedCalcCase = getSelectedCalcCase();
-
     final Shell shell = getContainer().getShell();
-    if( selectedCalcCase == null )
-    {
-      MessageDialog.openWarning( shell, "Berichte exportieren", "Keine Rechenvariante selektiert" );
-      return;
-    }
 
     FeatureList features = getFeatures();
     List selectedFeatures = getSelectedFeatures();
@@ -356,7 +363,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     final URL context;
     try
     {
-      context = ResourceUtilities.createURL( selectedCalcCase );
+      context = ResourceUtilities.createURL( getCalcFolder() );
       features = FeatureFactory.createFeatureList( null, null, filterForValidTimeseriesLinks( features, resultProperty,
           context ) );
       selectedFeatures = filterForValidTimeseriesLinks( selectedFeatures, resultProperty, context );
@@ -594,16 +601,10 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
    */
   protected void exportPrognoseTimeseries()
   {
-    final IFolder selectedCalcCase = getSelectedCalcCase();
-
     final Shell shell = getContainer().getShell();
-    if( selectedCalcCase == null )
-    {
-      MessageDialog.openWarning( shell, "Prognose Zeitreihen exportieren", "Keine Rechenvariante selektiert" );
-      return;
-    }
 
-    final List featureList = chooseSelectedFeatures( selectedCalcCase );
+    final IFolder calcFolder = getCalcFolder();
+    final List featureList = chooseSelectedFeatures( calcFolder );
     if( featureList == null )
       return;
 
@@ -619,7 +620,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
       {
         try
         {
-          final IStatus status = performPrognoseExport( resultTss, prognoseTss, selectedCalcCase, monitor );
+          final IStatus status = performPrognoseExport( resultTss, prognoseTss, calcFolder, monitor );
 
           if( !status.isOK() )
             throw new CoreException( status );
@@ -747,24 +748,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     }
   }
 
-  private IFolder getSelectedCalcCase()
-  {
-    // TODO: listen so selection and merks dir!
-    if( m_calcCaseViewer == null )
-      return null;
-
-    return null;
-    
-//    final CheckboxTableViewer checklist = m_checklist;
-//    final Control checkControl = checklist.getControl();
-//    if( checkControl == null || checkControl.isDisposed() )
-//      return null;
-//
-//    final CheckListGetter getter = new CheckListGetter( m_checklist );
-//    checkControl.getDisplay().syncExec( getter );
-//    return getter.getSelected();
-  }
-
   private void createMapPanel( final Composite parent ) throws Exception, CoreException
   {
     final Composite mapPanel = new Composite( parent, SWT.NONE );
@@ -827,21 +810,20 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
     // erstmal leer, damit das Diagramm gelöscht wird
     refreshDiagramForContext( new TSLinkWithName[] {}, getContext() );
 
-    final Object[] checkedCalcCases = getCheckedElements();
-    if( checkedCalcCases == null || checkedCalcCases.length == 0 )
+    if( m_checkedElements == null || m_checkedElements.length == 0 )
       return;
 
-    // TODO ist ein kleiner hack, der davon ausgeht, dass das modell sich nie
+    // Ist ein Hack, der davon ausgeht, dass das modell sich nie
     // ändern wird
     // es werden einfach die links vom aktuellen Modell gegen alle
     // selektierten Rechenfälle aufgelöst
     final TSLinkWithName[] obs = getObservationsToShow( true );
 
-    for( int i = 0; i < checkedCalcCases.length; i++ )
+    for( int i = 0; i < m_checkedElements.length; i++ )
     {
       try
       {
-        final IFolder calcCase = (IFolder)checkedCalcCases[i];
+        final IFolder calcCase = (IFolder)m_checkedElements[i];
         final URL context = ResourceUtilities.createURL( calcCase );
         refreshDiagramForContext( obs, context );
       }
@@ -850,11 +832,6 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage implements M
         e.printStackTrace();
       }
     }
-  }
-
-  private Object[] getCheckedElements()
-  {
-    return m_calcCaseViewer.getCheckedElements();
   }
 
   /**

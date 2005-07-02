@@ -50,14 +50,14 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.ui.nature.ModelNature;
 
 /**
- *
- * TODO: insert type comment here
+ * Label provider used by {@link org.kalypso.ui.nature.prognose.CalcCaseTableTreeViewer}.
  *
  * @author belger
  */
-public class CalcCaseTreeLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider
+public class CalcCaseTableLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider
 {
   private WorkbenchLabelProvider m_provider;
   
@@ -67,7 +67,7 @@ public class CalcCaseTreeLabelProvider extends LabelProvider implements ITableLa
 
   private final Color m_markedColor;
 
-  public CalcCaseTreeLabelProvider( final IFolder markedCalcCase, final Color markedColor )
+  public CalcCaseTableLabelProvider( final IFolder markedCalcCase, final Color markedColor )
   {
     m_markedCalcCase = markedCalcCase;
     m_markedColor = markedColor;
@@ -92,9 +92,16 @@ public class CalcCaseTreeLabelProvider extends LabelProvider implements ITableLa
   public String getColumnText( final Object element, final int columnIndex )
   {
     if( columnIndex == 0 )
+    {
+      if( element instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder)element ) )
+        return "";
+      return m_provider.getText( element );
+    }
+    
+    if( columnIndex == 1 && element instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder)element ) )
       return m_provider.getText( element );
 
-    if( columnIndex == 1 && element instanceof IFolder )
+    if( columnIndex == 2 && element instanceof IFolder )
     {
       final IFolder folder = (IFolder)element;
       return m_df.format( lastModifiedFromFolder(folder) );

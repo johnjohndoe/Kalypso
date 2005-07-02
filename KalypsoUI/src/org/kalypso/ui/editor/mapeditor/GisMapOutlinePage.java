@@ -198,8 +198,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
       PluginMapOutlineActionDelegate actionDelegate;
       try
       {
-        actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, m_modellView, configurationElement,
-            this );
+        actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, m_modellView, configurationElement );
         m_actionDelegates.add( actionDelegate );
       }
       catch( CoreException e )

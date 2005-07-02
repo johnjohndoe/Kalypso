@@ -69,9 +69,9 @@ public class MeshFactory
   }
 
   public Mesh readMesh( File[] files, CS_CoordinateSystem cs,
-      GM_Surface wishbox, String type, String shapeBase )
+      GM_Surface wishbox, String shapeBase )
   {
     
-    return m_reader.importMesh( getMesh(cs), files, cs, wishbox, type, shapeBase ); 
+    return m_reader.importMesh( getMesh(cs), files, cs, wishbox, shapeBase ); 
   }
 }//class MeshFactory

@@ -105,6 +105,7 @@ public class CalcWizardDialog extends WizardDialog
     super.updateButtons();
 
     final Button backButton = getButton( IDialogConstants.BACK_ID );
+    final Button nextButton = getButton( IDialogConstants.NEXT_ID );
     final Button newPrognoseButton = getButton( NEW_PROGNOSE_ID );
     final Button finishedButton = getButton( IDialogConstants.FINISH_ID );
     final Button cancelButton = getButton( IDialogConstants.CANCEL_ID );
@@ -134,6 +135,10 @@ public class CalcWizardDialog extends WizardDialog
 
     backButton.setEnabled( previousPage != null && previousPage instanceof IModelWizardPage );
     newPrognoseButton.setEnabled( currentPage instanceof IModelWizardPage );
+
+    // allways set the next button as default-button
+	if( nextButton != null && currentPage.canFlipToNextPage() ) 
+		  getShell().setDefaultButton( nextButton );
   }
 
 }

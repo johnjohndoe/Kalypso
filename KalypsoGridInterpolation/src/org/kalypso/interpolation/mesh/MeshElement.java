@@ -369,8 +369,6 @@ public class MeshElement
    * <P>
    * Returns type of polygon from given vertices in the form of Point[]
    * 
-   * @param tVertices
-   *          Point[] point array of vertices of parallelogram
    * @return int CONVEX_POLYGON or CONCAVE_POLYGON based on type of it
    */
   public int getPolygonType() throws Exception
@@ -418,8 +416,8 @@ public class MeshElement
     if( bSignChanged )
       return CONCAVE_POLYGON;//if sign differs second time: its not
     // supported
-    else
-      return CONVEX_POLYGON;//if same sign both times: its supported
+
+    return CONVEX_POLYGON;//if same sign both times: its supported
 
   }
 
@@ -448,7 +446,6 @@ public class MeshElement
   }
 
   /**
-   * @return
    * @throws GM_Exception
    */
   public MeshElement invertOrientation() throws GM_Exception

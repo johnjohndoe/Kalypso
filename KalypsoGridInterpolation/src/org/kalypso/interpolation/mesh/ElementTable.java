@@ -31,7 +31,7 @@ public class ElementTable extends HashMap
    */
   public ElementTable()
   {
-  };
+  }
 
   public ElementTable( String name )
   {
@@ -56,8 +56,8 @@ public class ElementTable extends HashMap
       remove( id );
       return 1;
     }
-    else
-      return -1;
+
+    return -1;
   }//removePoint
 
   public Element getElement( String id )

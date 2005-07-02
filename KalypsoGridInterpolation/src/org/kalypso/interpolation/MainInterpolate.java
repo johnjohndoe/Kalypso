@@ -225,7 +225,7 @@ public class MainInterpolate
       GM_Surface surfaceBBox = null;
       if( bbox != null )
         surfaceBBox = GeometryFactory.createGM_Surface( bbox, cs );
-      Mesh mesh = mf.readMesh( inputFiles, cs, surfaceBBox, type, borderPath );
+      Mesh mesh = mf.readMesh( inputFiles, cs, surfaceBBox, borderPath );
 
       System.out.println( "\n"
           + "total importing duration (in milliseconds) : "

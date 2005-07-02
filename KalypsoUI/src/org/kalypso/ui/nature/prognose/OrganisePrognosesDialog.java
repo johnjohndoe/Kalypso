@@ -147,7 +147,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     bar.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     // Tabelle einbauen, die die Vorhersagevarianten zeigt
-    m_viewer = new CalcCaseTableTreeViewer( null, parent, SWT.BORDER | SWT.MULTI );
+    m_viewer = new CalcCaseTableTreeViewer( null, parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_viewer.addSelectionChangedListener( this );
 
