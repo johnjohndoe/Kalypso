@@ -57,13 +57,13 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.eclipse.core.resources.IProjectProvider;
 import org.kalypso.model.xml.ArgListType;
@@ -84,7 +84,7 @@ import org.kalypso.ui.wizard.calccase.SteuerparameterWizardPage;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 import org.xml.sax.InputSource;
 
-public class CalcWizard implements IWizard, IProjectProvider
+public class CalcWizard implements IWizard2, IProjectProvider
 {
   private final IProject m_project;
 
@@ -311,12 +311,11 @@ public class CalcWizard implements IWizard, IProjectProvider
   }
 
   /**
-   * @param page
    * @return true if can go to next page
    * 
    * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
    */
-  public boolean doNext( final IWizardPage page )
+  public boolean finishPage( final IWizardPage page )
   {
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {

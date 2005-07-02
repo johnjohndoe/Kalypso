@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -317,13 +316,4 @@ public class SteuerparameterWizardPage extends WizardPage
       featureComposite.updateControl();
     }
   }
-
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#getPreviousPage()
-   */
-  public IWizardPage getPreviousPage()
-  {
-    return null;
-  }
-
 }
