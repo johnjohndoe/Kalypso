@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.modelpages;
 
+import java.awt.Color;
 import java.awt.Frame;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -458,7 +459,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_diagFrame.setVisible( true );
 
       m_obsChart = new ObservationChart( m_diagView );
-
+      m_obsChart.setBackgroundPaint( Color.WHITE );
       // chart panel without any popup menu
       final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
       chartPanel.setMouseZoomable( true, false );

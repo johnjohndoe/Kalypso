@@ -370,7 +370,6 @@ public class CalcWizard implements IWizard, IProjectProvider
     catch( final InterruptedException e )
     {
       // canceled
-      // TODO error message?
       return false;
     }
     catch( final InvocationTargetException e )

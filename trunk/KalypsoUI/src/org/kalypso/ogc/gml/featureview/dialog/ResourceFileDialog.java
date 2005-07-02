@@ -95,11 +95,9 @@ public class ResourceFileDialog implements IFeatureDialog
   private IFile getResourceFile()
   {
     if( m_change != null )
-    {
       return (IFile)m_change.newValue;
-    }
-    else
-      return (IFile)m_feature.getProperty( m_ftp.getName() );
+
+    return (IFile)m_feature.getProperty( m_ftp.getName() );
   }
 
   public void collectChanges( Collection c )

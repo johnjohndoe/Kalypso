@@ -87,15 +87,13 @@ public class MeshReader
 
   private boolean m_initialise = false;
 
-  protected Mesh importMesh( Mesh mesh, File[] files, CS_CoordinateSystem cs, GM_Surface wishbox, String type,
-      String shapeBase )
+  protected Mesh importMesh( Mesh mesh, File[] files, CS_CoordinateSystem cs, GM_Surface wishbox, String shapeBase )
   {
     File nodefile = null;
     File elementfile = null;
     File attributefile = null;
     File gmlfile = null;
     Vector shapefile = new Vector();
-    int counter = 0;
     GM_Surface finalWishbox = null;
     try
     {
@@ -186,13 +184,13 @@ public class MeshReader
     return mesh;
   }
 
-  private PointTable createNodes( File nodefile, File attributefile, CS_CoordinateSystem crs ) throws IOException
+  private PointTable createNodes( File nodefile, File attributefile, CS_CoordinateSystem crs )
   {
     PointTable pt = new PointTable();
-//    double xmin = 0;
-//    double xmax = 0;
-//    double ymin = 0;
-//    double ymax = 0;
+    //    double xmin = 0;
+    //    double xmax = 0;
+    //    double ymin = 0;
+    //    double ymax = 0;
 
     System.out.println( "Reading Nodes.." );
     try
@@ -204,7 +202,6 @@ public class MeshReader
       st.nextToken();
       st.nextToken();
       st.nextToken();
-      boolean firstLine = true;
       //till endoffile
       while( st.nextToken() != StreamTokenizer.TT_EOF )
       {
@@ -214,26 +211,26 @@ public class MeshReader
         st.nextToken();
         double ycor = st.nval;
         st.nextToken();
-//        if( firstLine == true )
-//        {
-//          xmin = xcor;
-//          xmax = xcor;
-//          ymin = ycor;
-//          ymax = ycor;
-//          firstLine = false;
-//        }
-//        else
-//        {
-//          if( xcor < xmin )
-//            xmin = xcor;
-//          else if( xcor > xmax )
-//            xmax = xcor;
-//
-//          if( ycor < ymin )
-//            ymin = ycor;
-//          else if( ycor > ymax )
-//            ymax = ycor;
-//        }
+        //        if( firstLine == true )
+        //        {
+        //          xmin = xcor;
+        //          xmax = xcor;
+        //          ymin = ycor;
+        //          ymax = ycor;
+        //          firstLine = false;
+        //        }
+        //        else
+        //        {
+        //          if( xcor < xmin )
+        //            xmin = xcor;
+        //          else if( xcor > xmax )
+        //            xmax = xcor;
+        //
+        //          if( ycor < ymin )
+        //            ymin = ycor;
+        //          else if( ycor > ymax )
+        //            ymax = ycor;
+        //        }
         //create a point from x,y coordinate and with dummy initial
         // elevation attribute
         Point p = new Point( pointID, xcor, ycor, crs );
@@ -247,7 +244,8 @@ public class MeshReader
     //assigning BoundigBox of Mesh
     try
     {
-//      m_meshEnv = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax ), crs );
+      //      m_meshEnv = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax ), crs
+      // );
 
       System.out.print( pt.size() + " points created." );
       System.out.println( "Bounding Box of the Net: " + m_meshEnv );
@@ -256,12 +254,12 @@ public class MeshReader
       StreamTokenizer st = new StreamTokenizer( new InputStreamReader( new FileInputStream( attributefile ) ) );
       st.parseNumbers(); // sets the tonenizer to parse for numbers
       st.nextToken();
-      int nrOfRows = (int)st.nval;
+      //      int nrOfRows = (int)st.nval;
       //till endoffile
       while( st.nextToken() != StreamTokenizer.TT_EOF )
       {
         //reads the ID
-        String pointID = String.valueOf( (int)( st.nval                                                                                                   ) );
+        String pointID = String.valueOf( (int)( st.nval                                                                                                     ) );
         st.nextToken();
         //reads elevation value
         Double elevation = new Double( st.nval );
@@ -299,17 +297,13 @@ public class MeshReader
     {
       throw new Exception( "Element file not well formatted." );
     }
-    else
-    {
-      st = new StringTokenizer( eleLine );
-    }
+
+    st = new StringTokenizer( eleLine );
 
     String elementID = null;
-    Element e = null, e1 = null, e2 = null;
     Point p = null;
     for( eleLine = bEleFReader.readLine(); eleLine != null; eleLine = bEleFReader.readLine() )
     {
-      String vertList = null;
       st = new StringTokenizer( eleLine );
       //st.parseNumbers(); // sets the tonenizer to parse for numbers
       int totalNodes = st.countTokens() - 1;//-1 was not there, but
@@ -364,19 +358,18 @@ public class MeshReader
             // not supported
             throw new Exception( "Concave polygon import is not supported yet." );
           }
-          else
-          {//otherwise if its Convex then split it based on
-            // diagonal slope and keep it least
-            MeshElement[] splitElements = me.splitElement();
 
-            for( int i = 0; i < splitElements.length; i++ )
-            {
-              MeshElement element = splitElements[i];
-              if( wishbox == null )
-                mesh.addElement( element );
-              else if( wishbox.contains( element.getGeometry() ) )
-                mesh.addElement( element );
-            }
+          //otherwise if its Convex then split it based on
+          // diagonal slope and keep it least
+          MeshElement[] splitElements = me.splitElement();
+
+          for( int i = 0; i < splitElements.length; i++ )
+          {
+            MeshElement element = splitElements[i];
+            if( wishbox == null )
+              mesh.addElement( element );
+            else if( wishbox.contains( element.getGeometry() ) )
+              mesh.addElement( element );
           }
         }
       }//if 3 || 4
@@ -514,7 +507,7 @@ public class MeshReader
     {
 
       Node n;
-      String pNr, eNr;
+      String eNr;
       //      Element e, e1, e2;
       MeshElement me;
       //      Point p;
@@ -534,14 +527,11 @@ public class MeshReader
           outerBoundry = XPathAPI.selectSingleNode( n, ".//outerBoundaryIs/LinearRing/coordinates/text()" )
               .getNodeValue();
           coordinates = outerBoundry.split( " " );
-          Point[] nodes = new Point[coordinates.length];
-          Double a = null;
 
           int totalNodes = coordinates.length;
           int nodeCounter = 0;
           GM_Position[] verticies = new GM_Position[totalNodes];
           double[] values = new double[totalNodes];
-          String vertIDs = null;
           if( totalNodes == 4 || totalNodes == 5 )
           {//check element is
             // triangle or
@@ -557,7 +547,7 @@ public class MeshReader
               // and .//Y/text()=pnt[1]]/text()").getNodeValue();
               curPoint = XPathAPI.selectSingleNode( root, ".//featurePoint[.//X/text()='" + pnt[0]
                   + "' and .//Y/text()= '" + pnt[1] + "']" );
-              pNr = XPathAPI.selectSingleNode( curPoint, ".//@fid" ).getNodeValue();
+              /* pNr = */XPathAPI.selectSingleNode( curPoint, ".//@fid" ).getNodeValue();
               //Node attr =
               // XPathAPI.selectSingleNode(curPoint,".//riverDepth/text()");
 
@@ -590,18 +580,15 @@ public class MeshReader
                 // not supported
                 throw new Exception( "Concave polygon import is not supported yet." );
               }
-              else
-              {//otherwise if its Convex then split it based on
-                // diagonal slope and keep it least
-                MeshElement[] splitElements = me.splitElement();
-                for( int j = 0; j < splitElements.length; j++ )
-                {
-                  MeshElement element = splitElements[j];
-                  mesh.addElement( element );
 
-                }
+              //otherwise if its Convex then split it based on
+              // diagonal slope and keep it least
+              MeshElement[] splitElements = me.splitElement();
+              for( int j = 0; j < splitElements.length; j++ )
+              {
+                MeshElement element = splitElements[j];
+                mesh.addElement( element );
               }
-
             }
           }//if 3 || 4
           else
@@ -659,7 +646,7 @@ public class MeshReader
       Feature feature = pointFeature[i];
       GM_Point geom = (GM_Point)feature.getProperty( geometryPropertyPoint );
       Object value = feature.getProperty( valueProperty );
-      String key = String.valueOf( geom.getX() ) + "#" +String.valueOf( geom.getY() );
+      String key = String.valueOf( geom.getX() ) + "#" + String.valueOf( geom.getY() );
       m_hasMapPoints.put( key, value );
     }
   }
@@ -688,7 +675,7 @@ public class MeshReader
       for( int j = 0; j < positions.length; j++ )
       {
         GM_Position pos = positions[j];
-        Object value = m_hasMapPoints.get( String.valueOf( pos.getX() ) + "#" +String.valueOf( pos.getY() ) );
+        Object value = m_hasMapPoints.get( String.valueOf( pos.getX() ) + "#" + String.valueOf( pos.getY() ) );
         if( value != null )
         {
           if( value instanceof Double )
@@ -700,7 +687,7 @@ public class MeshReader
                 + " instead of Float or Double.\n" + "Change type in shape file!" );
         }
         else
-          throw new GM_Exception("Point: " + pos + " has no value assigned. Mesh import aborted");
+          throw new GM_Exception( "Point: " + pos + " has no value assigned. Mesh import aborted" );
       }
 
       try

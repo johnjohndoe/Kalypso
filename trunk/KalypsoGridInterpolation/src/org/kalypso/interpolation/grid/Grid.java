@@ -72,7 +72,7 @@ public class Grid implements IGrid
    * <P>
    * Constructor
    * 
-   * @param refPoint
+   * @param llc
    *          Point lowerleft corner as a reference
    * @param r
    *          Integer number of rows in grid
@@ -128,7 +128,7 @@ public class Grid implements IGrid
     GM_Position urcGrid = GeometryFactory.createGM_Position( llcGrid.getX() + m_cols * cellsize, llcGrid.getY()
         + m_rows * cellsize );
 
-    GM_Envelope gridenv = GeometryFactory.createGM_Envelope( llcGrid, urcGrid );
+    /* GM_Envelope gridenv = */GeometryFactory.createGM_Envelope( llcGrid, urcGrid );
     m_env = GeometryFactory.createGM_Surface( gridSize, crs );
     File file = new File( rafPath );
     if( file.exists() )
@@ -185,7 +185,7 @@ public class Grid implements IGrid
 
   private long getPosInFile( int row, int col )
   {
-    return (long)( row * ( getCols() - 1 ) * 8 + col * 8 );
+    return ( row * ( getCols() - 1 ) * 8 + col * 8 );
     //    return Long.parseLong( String.valueOf( row * ( getCols() - 1 ) * 8 + col * 8 ) );
 
   }
@@ -229,11 +229,9 @@ public class Grid implements IGrid
   {
     if( !isPointOnGrid( pos ) || pos.getY() >= getEnvelope().getMax().getY() )
       return NOT_ON_GRID;
-    else
-    {
-      double c = ( pos.getX() - getEnvelope().getMin().getX() - m_cellsize / 2 ) / m_cellsize;
-      return (int)Math.round( c );
-    }//else
+
+    double c = ( pos.getX() - getEnvelope().getMin().getX() - m_cellsize / 2 ) / m_cellsize;
+    return (int)Math.round( c );
   }//getColIndex
 
   /**
@@ -248,13 +246,11 @@ public class Grid implements IGrid
   {
     if( !isPointOnGrid( pos ) || pos.getX() <= getEnvelope().getMin().getX() )
       return NOT_ON_GRID;
-    else
-    {
-      //      double r = ( pos.getY() - env.getMin().getY() - cellsize / 2 ) /
-      // cellsize;
-      double r = ( getEnvelope().getMax().getY() - pos.getY() - m_cellsize / 2 ) / m_cellsize;
-      return (int)Math.round( r );
-    }//else
+
+    //      double r = ( pos.getY() - env.getMin().getY() - cellsize / 2 ) /
+    // cellsize;
+    double r = ( getEnvelope().getMax().getY() - pos.getY() - m_cellsize / 2 ) / m_cellsize;
+    return (int)Math.round( r );
   }//getRowIndex
 
   /**
@@ -327,8 +323,8 @@ public class Grid implements IGrid
     GM_Position p = GeometryFactory.createGM_Position( xcor, ycor );
     if( isPointOnGrid( p ) )
       return p;
-    else
-      return null;
+
+    return null;
   }//getCoordinateOfCell
 
   /**
@@ -348,14 +344,12 @@ public class Grid implements IGrid
   {
     if( !isPointOnGrid( centerOfCell ) )
       throw new Exception( "GM_Position is not on the Grid!" );
-    else
-    {//gets row and col value for grid
-      //set given elevation value at particular row and col in grid
-      m_gridValues.seek( getPosInFile( centerOfCell ) );
-      m_gridValues.writeDouble( value );
-      //System.out.println("value: " + value);
 
-    }
+    //gets row and col value for grid
+    //set given elevation value at particular row and col in grid
+    m_gridValues.seek( getPosInFile( centerOfCell ) );
+    m_gridValues.writeDouble( value );
+    //System.out.println("value: " + value);
 
   }//setGridValue
 
@@ -372,18 +366,16 @@ public class Grid implements IGrid
     {
       return getNeighborCellsOnGrid( p );
     }//if
-    else
-    {
-      //      double dy = ( p.getY() - env.getMin().getY() ) - cellsize / 2;
-      //      double dx = ( p.getX() - env.getMax().getX() ) - cellsize / 2;
-      double dx = ( p.getX() - getEnvelope().getMin().getX() ) - m_cellsize / 2;
-      double dy = ( getEnvelope().getMax().getY() - p.getY() ) - m_cellsize / 2;
-      // -0.01 to assure if dx is exactly XX.5 that the lower c resp. r number
-      // is taken
-      double c = Math.round( ( dx ) / m_cellsize );
-      double r = Math.round( ( dy ) / m_cellsize );
-      return getNeighborCellsOnGrid( getPosition( (int)r, (int)c ) );
-    }
+
+    //      double dy = ( p.getY() - env.getMin().getY() ) - cellsize / 2;
+    //      double dx = ( p.getX() - env.getMax().getX() ) - cellsize / 2;
+    double dx = ( p.getX() - getEnvelope().getMin().getX() ) - m_cellsize / 2;
+    double dy = ( getEnvelope().getMax().getY() - p.getY() ) - m_cellsize / 2;
+    // -0.01 to assure if dx is exactly XX.5 that the lower c resp. r number
+    // is taken
+    double c = Math.round( ( dx ) / m_cellsize );
+    double r = Math.round( ( dy ) / m_cellsize );
+    return getNeighborCellsOnGrid( getPosition( (int)r, (int)c ) );
   }
 
   /**
@@ -594,7 +586,7 @@ public class Grid implements IGrid
     GM_Object intersection = getExtend().intersection( GeometryFactory.createGM_Surface( envelope, cs ) );
     Vector cells = new Vector();
     int[][] range = getRowColIndexFromEnv( ( (GM_Surface)intersection ).getEnvelope() );
-    GM_Position[] pos;
+
     for( int r = range[1][1]; r < range[0][1]; r++ )
       for( int c = range[0][0]; c < range[1][0]; c++ )
         cells.addElement( getPosition( r, c ) );
@@ -626,7 +618,7 @@ public class Grid implements IGrid
    */
   public IGrid merge( IGrid grid1, IGrid grid2 )
   {
-    // TODO Auto-generated method stub
+    // Auto-generated method stub
     return null;
   }
 
@@ -674,7 +666,7 @@ public class Grid implements IGrid
   {
     if( out == null )
       out = File.createTempFile( m_id, Grid.DEFAULT_SUFFIX );
-    int[][] newRange = null;
+
     GM_Object intersection = null;
     BufferedWriter bw = new BufferedWriter( new FileWriter( out ) );
     System.out.print( "\n" + "Exporting Grid..." );

@@ -64,7 +64,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
 import org.kalypso.contribs.eclipse.jface.viewers.IViewerSorterFactory;
 import org.kalypso.contribs.eclipse.swt.widgets.TableSorter;
@@ -120,11 +119,14 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
     final Table table = tableTree.getTable();
     table.setHeaderVisible( true );
 
+    final TableColumn column = new TableColumn( table, SWT.NONE );
+    column.setText( "" );
+    column.setWidth( 0 );
     m_tableSorter.createSortedColumn( table, "Vorhersage", this );
     m_tableSorter.createSortedColumn( table, "zuletzt geändert", this );
 
     final Color markedColor = tableTree.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
-    setLabelProvider( new CalcCaseTreeLabelProvider( markedCalcCase, markedColor ) );
+    setLabelProvider( new CalcCaseTableLabelProvider( markedCalcCase, markedColor ) );
     setContentProvider( new CalcCaseTreeContentProvider() );
   }
 
@@ -153,14 +155,14 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
 
         switch( m_columnIndex )
         {
-        case 0:
+        case 1:
           final String n1 = f1.getName();
           final String n2 = f2.getName();
           return n1.compareToIgnoreCase( n2 ) * m_sign;
 
-        case 1:
-          final Date m1 = CalcCaseTreeLabelProvider.lastModifiedFromFolder( f1 );
-          final Date m2 = CalcCaseTreeLabelProvider.lastModifiedFromFolder( f2 );
+        case 2:
+          final Date m1 = CalcCaseTableLabelProvider.lastModifiedFromFolder( f1 );
+          final Date m2 = CalcCaseTableLabelProvider.lastModifiedFromFolder( f2 );
           return m1.compareTo( m2 ) * m_sign;
 
         default:
@@ -294,8 +296,8 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
     {
       super.handleSelect( event ); // this will change the current selection
 
-      TableItem item = (TableItem)event.item;
-      Object data = item.getData();
+      final TableTreeItem item = (TableTreeItem)event.item;
+      final Object data = item.getData();
       if( data != null )
         fireCheckStateChanged( new CheckStateChangedEvent( this, data, item.getChecked() ) );
     }

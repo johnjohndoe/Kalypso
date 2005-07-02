@@ -123,7 +123,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "wählen Sie eine der vorhandenen Hochwasser-Vorhersagen:" );
 
-    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE );
+    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
     final GridData viewerData = new GridData( GridData.FILL_BOTH );
     viewerData.horizontalSpan = 2;
     viewer.getControl().setLayoutData( viewerData );

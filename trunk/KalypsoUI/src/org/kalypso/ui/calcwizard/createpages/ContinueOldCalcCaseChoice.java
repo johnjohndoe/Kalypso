@@ -96,7 +96,7 @@ public class ContinueOldCalcCaseChoice implements IAddCalcCaseChoice
     final Label label = new Label( panel, SWT.NONE );
     label.setText( "wählen Sie eine der vorhandenen Hochwasser-Vorhersagen:" );
 
-    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE );
+    final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
     
     viewer.setInput( m_project.getFolder( ModelNature.PROGNOSE_FOLDER ) );
