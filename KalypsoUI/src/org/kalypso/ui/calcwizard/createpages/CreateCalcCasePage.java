@@ -115,7 +115,7 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
     final Composite radioPanel = new Composite( panel, SWT.NONE );
     radioPanel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     radioPanel.setLayout( new GridLayout() );
-    
+
     final Group choiceGroup = new Group( panel, SWT.NONE );
     choiceGroup.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     final StackLayout choiceLayout = new StackLayout();
@@ -127,13 +127,17 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
       final IAddCalcCaseChoice choice = (IAddCalcCaseChoice)cIt.next();
 
       choice.createControl( choiceGroup );
-      
+
       final Button choiceRadio = new Button( radioPanel, SWT.RADIO );
       choiceRadio.setText( choice.toString() );
 
       if( choiceToSelect == null )
+      {
         choiceToSelect = choiceRadio;
-      
+        choiceRadio.setSelection( true );
+        choiceSelected( choiceGroup, choiceLayout, choice, choiceRadio );
+      }
+
       choiceRadio.addSelectionListener( new SelectionAdapter()
       {
         /**
@@ -141,31 +145,24 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
          */
         public void widgetSelected( final SelectionEvent e )
         {
-          if( choiceRadio.getSelection() )
-          {
-            setChoice( choice );
-            choiceLayout.topControl = choice.getControl();
-            choiceGroup.setText( choice.toString() );
-
-            choiceGroup.layout( true );
-          }
+          choiceSelected( choiceGroup, choiceLayout, choice, choiceRadio );
         }
       } );
     }
 
     setControl( panel );
-    
-    if( choiceToSelect != null )
-    {
-      final Button button = choiceToSelect;
-      choiceToSelect.getDisplay().asyncExec( new Runnable()
-      {
-        public void run()
-        {
-          button.setSelection( true );
-        }
-      } );
-    }
+
+//    if( choiceToSelect != null )
+//    {
+//      final Button button = choiceToSelect;
+//      choiceToSelect.getDisplay().asyncExec( new Runnable()
+//      {
+//        public void run()
+//        {
+//          button.setSelection( true );
+//        }
+//      } );
+//    }
   }
 
   protected void setChoice( final IAddCalcCaseChoice choice )
@@ -242,5 +239,18 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
   public void setPreviousPage( IWizardPage page )
   {
     super.setPreviousPage( page );
+  }
+
+  protected void choiceSelected( final Group choiceGroup, final StackLayout choiceLayout,
+      final IAddCalcCaseChoice choice, final Button choiceRadio )
+  {
+    if( choiceRadio.getSelection() )
+    {
+      setChoice( choice );
+      choiceLayout.topControl = choice.getControl();
+      choiceGroup.setText( choice.toString() );
+
+      choiceGroup.layout( true );
+    }
   }
 }

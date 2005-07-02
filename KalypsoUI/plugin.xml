@@ -634,7 +634,7 @@
                icon="icons/kalypso16.gif"
                class="org.kalypso.ui.action.StartCalcWizardAction"
                menubarPath="org.kalypso.menu.model/prognoseStart"
-               id="org.kalypso.action.model.checkoutModel">
+               id="org.kalypso.action.model.startPrognose">
          </action>
          <action
                label="Berechnung(en) durchführen"

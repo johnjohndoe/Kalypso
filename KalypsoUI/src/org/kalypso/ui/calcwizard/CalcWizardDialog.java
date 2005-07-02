@@ -48,6 +48,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 
 /**
@@ -67,8 +68,12 @@ public class CalcWizardDialog extends WizardDialog
 
   protected void nextPressed()
   {
-    if( !( (CalcWizard)getWizard() ).doNext( getCurrentPage() ) )
-      return;
+    final IWizard wizard = getWizard();
+    if( wizard instanceof IWizard2 )
+    {
+      if( !( (IWizard2)wizard ).finishPage( getCurrentPage() ) )
+        return;
+    }
 
     super.nextPressed();
   }
@@ -137,8 +142,8 @@ public class CalcWizardDialog extends WizardDialog
     newPrognoseButton.setEnabled( currentPage instanceof IModelWizardPage );
 
     // allways set the next button as default-button
-	if( nextButton != null && currentPage.canFlipToNextPage() ) 
-		  getShell().setDefaultButton( nextButton );
+    if( nextButton != null && currentPage.canFlipToNextPage() )
+      getShell().setDefaultButton( nextButton );
   }
 
 }
