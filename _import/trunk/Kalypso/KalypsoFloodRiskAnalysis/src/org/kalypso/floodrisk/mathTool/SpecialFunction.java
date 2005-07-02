@@ -184,8 +184,8 @@ public final class SpecialFunction extends Object
     a = Math.exp( a );
     if( x < 0.0 )
       return -0.5 * ( a - 1 / a );
-    else
-      return 0.5 * ( a - 1 / a );
+
+    return 0.5 * ( a - 1 / a );
   }
 
   /**
@@ -204,8 +204,8 @@ public final class SpecialFunction extends Object
     a = Math.exp( 2.0 * a );
     if( x < 0.0 )
       return -( 1.0 - 2.0 / ( a + 1.0 ) );
-    else
-      return ( 1.0 - 2.0 / ( a + 1.0 ) );
+
+    return ( 1.0 - 2.0 / ( a + 1.0 ) );
   }
 
   /**
@@ -276,20 +276,17 @@ public final class SpecialFunction extends Object
           * ( 1029532985.0 + y * ( 9494680.718 + y * ( 59272.64853 + y * ( 267.8532712 + y * 1.0 ) ) ) );
 
       return ans1 / ans2;
-
     }
-    else
-    {
-      double z = 8.0 / ax;
-      double y = z * z;
-      double xx = ax - 0.785398164;
-      double ans1 = 1.0 + y
-          * ( -0.1098628627e-2 + y * ( 0.2734510407e-4 + y * ( -0.2073370639e-5 + y * 0.2093887211e-6 ) ) );
-      double ans2 = -0.1562499995e-1 + y
-          * ( 0.1430488765e-3 + y * ( -0.6911147651e-5 + y * ( 0.7621095161e-6 - y * 0.934935152e-7 ) ) );
 
-      return Math.sqrt( 0.636619772 / ax ) * ( Math.cos( xx ) * ans1 - z * Math.sin( xx ) * ans2 );
-    }
+    double z = 8.0 / ax;
+    double y = z * z;
+    double xx = ax - 0.785398164;
+    double ans1 = 1.0 + y
+        * ( -0.1098628627e-2 + y * ( 0.2734510407e-4 + y * ( -0.2073370639e-5 + y * 0.2093887211e-6 ) ) );
+    double ans2 = -0.1562499995e-1 + y
+        * ( 0.1430488765e-3 + y * ( -0.6911147651e-5 + y * ( 0.7621095161e-6 - y * 0.934935152e-7 ) ) );
+
+    return Math.sqrt( 0.636619772 / ax ) * ( Math.cos( xx ) * ans1 - z * Math.sin( xx ) * ans2 );
   }
 
   /**
@@ -316,9 +313,8 @@ public final class SpecialFunction extends Object
           * ( 2300535178.0 + y * ( 18583304.74 + y * ( 99447.43394 + y * ( 376.9991397 + y * 1.0 ) ) ) );
       return ans1 / ans2;
     }
-    else
-    {
-      double z = 8.0 / ax;
+
+    double z = 8.0 / ax;
       double xx = ax - 2.356194491;
       y = z * z;
 
@@ -329,7 +325,6 @@ public final class SpecialFunction extends Object
       if( x < 0.0 )
         ans = -ans;
       return ans;
-    }
   }
 
   /**
@@ -357,7 +352,7 @@ public final class SpecialFunction extends Object
     ax = Math.abs( x );
     if( ax == 0.0 )
       return 0.0;
-    else if( ax > (double)n )
+    else if( ax > n )
     {
       tox = 2.0 / ax;
       bjm = j0( ax );
@@ -421,9 +416,8 @@ public final class SpecialFunction extends Object
 
       return ( ans1 / ans2 ) + 0.636619772 * j0( x ) * Math.log( x );
     }
-    else
-    {
-      double z = 8.0 / x;
+
+    double z = 8.0 / x;
       double y = z * z;
       double xx = x - 0.785398164;
 
@@ -432,7 +426,6 @@ public final class SpecialFunction extends Object
       double ans2 = -0.1562499995e-1 + y
           * ( 0.1430488765e-3 + y * ( -0.6911147651e-5 + y * ( 0.7621095161e-6 + y * ( -0.934945152e-7 ) ) ) );
       return Math.sqrt( 0.636619772 / x ) * ( Math.sin( xx ) * ans1 + z * Math.cos( xx ) * ans2 );
-    }
   }
 
   /**
@@ -456,9 +449,8 @@ public final class SpecialFunction extends Object
               * ( 0.3733650367e10 + y * ( 0.2245904002e8 + y * ( 0.1020426050e6 + y * ( 0.3549632885e3 + y ) ) ) ) );
       return ( ans1 / ans2 ) + 0.636619772 * ( j1( x ) * Math.log( x ) - 1.0 / x );
     }
-    else
-    {
-      double z = 8.0 / x;
+
+    double z = 8.0 / x;
       double y = z * z;
       double xx = x - 2.356194491;
       double ans1 = 1.0 + y
@@ -466,7 +458,6 @@ public final class SpecialFunction extends Object
       double ans2 = 0.04687499995 + y
           * ( -0.2002690873e-3 + y * ( 0.8449199096e-5 + y * ( -0.88228987e-6 + y * 0.105787412e-6 ) ) );
       return Math.sqrt( 0.636619772 / x ) * ( Math.sin( xx ) * ans1 + z * Math.cos( xx ) * ans2 );
-    }
   }
 
   /**
@@ -506,9 +497,9 @@ public final class SpecialFunction extends Object
   {
     double d = Math.abs( x );
     if( Math.floor( d ) == d )
-      return (double)fac( (int)x );
-    else
-      return gamma( x + 1.0 );
+      return fac( (int)x );
+
+    return gamma( x + 1.0 );
   }
 
   /**
@@ -528,8 +519,8 @@ public final class SpecialFunction extends Object
     }
     if( j < 0 )
       return -d;
-    else
-      return d;
+
+    return d;
   }
 
   /**
@@ -564,11 +555,11 @@ public final class SpecialFunction extends Object
         -2.34591795718243348568E-1,
         7.14304917030273074085E-2,
         1.00000000000000000320E0 };
-    double MAXGAM = 171.624376956302725;
-    double LOGPI = 1.14472988584940017414;
+//    double MAXGAM = 171.624376956302725;
+//    double LOGPI = 1.14472988584940017414;
 
     double p, z;
-    int i;
+//    int i;
 
     double q = Math.abs( x );
 
@@ -579,7 +570,7 @@ public final class SpecialFunction extends Object
         p = Math.floor( q );
         if( p == q )
           throw new ArithmeticException( "gamma: overflow" );
-        i = (int)p;
+//        i = (int)p;
         z = q - p;
         if( z > 0.5 )
         {
@@ -594,10 +585,8 @@ public final class SpecialFunction extends Object
 
         return -z;
       }
-      else
-      {
-        return stirf( x );
-      }
+
+      return stirf( x );
     }
 
     z = 1.0;
@@ -862,7 +851,7 @@ public final class SpecialFunction extends Object
     if( k < 0 || x < 0 )
       return 0.0;
 
-    return igamc( (double)( k + 1 ), x );
+    return igamc( ( k + 1 ), x );
   }
 
   /**
@@ -880,7 +869,7 @@ public final class SpecialFunction extends Object
     if( k < 0 || x < 0 )
       return 0.0;
 
-    return igam( (double)( k + 1 ), x );
+    return igam( ( k + 1 ), x );
   }
 
   /**
@@ -978,8 +967,8 @@ public final class SpecialFunction extends Object
     {
       if( a < 0 )
         return ( 2.0 );
-      else
-        return ( 0.0 );
+
+      return ( 0.0 );
     }
 
     z = Math.exp( z );
@@ -1004,8 +993,8 @@ public final class SpecialFunction extends Object
     {
       if( a < 0 )
         return 2.0;
-      else
-        return ( 0.0 );
+
+      return ( 0.0 );
     }
 
     return y;
@@ -1381,10 +1370,9 @@ public final class SpecialFunction extends Object
     return ans;
   }
 
-  /*
+  /**
    * Continued fraction expansion #2 for incomplete beta integral
    */
-
   static private double incbd( double a, double b, double x ) throws ArithmeticException
   {
     double xk, pk, pkm1, pkm2, qk, qkm1, qkm2;
@@ -1401,7 +1389,6 @@ public final class SpecialFunction extends Object
     k5 = 1.0;
     k6 = a + b;
     k7 = a + 1.0;
-    ;
     k8 = a + 2.0;
 
     pkm2 = 0.0;
