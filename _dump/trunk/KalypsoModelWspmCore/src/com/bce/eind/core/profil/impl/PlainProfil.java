@@ -168,7 +168,7 @@ public class PlainProfil implements IPlainProfil
       }
       catch( ProfilDataException e )
       {
-        e.printStackTrace();
+       // e.printStackTrace();
       }
 
     }

@@ -64,7 +64,7 @@ public class ProfilPoint implements IProfilPoint
       throws ProfilDataException
   {
     if( !(m_pointProperties.containsKey( pointProperty )) )
-      throw new ProfilDataException( "Profileigenschaft existiert nicht" );
+      throw new ProfilDataException( "Profileigenschaft existiert nicht: " + pointProperty.getLabel() );
 
     return m_pointProperties.get( pointProperty ).doubleValue();
   }

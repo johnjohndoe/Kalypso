@@ -1,5 +1,0 @@
-doppelte Profilpunkte
-Trenner vorhanden
-übereinanderliegende Trenner
-rechts/links Trenner eindeutig
-Bewuchs muß an allen Stellen 0 sein, wenn ein Wert auf 0 gesetzt wird

@@ -20,8 +20,14 @@
       <import plugin="org.eclipse.core.resources" export="true"/>
    </requires>
    
-   <extension-point id="profilvalidator" name="profilvalidator" schema="schema/validator.exsd"/>
    <extension-point id="validatorrule" name="validatorrule" schema="schema/validatorrule.exsd"/>
    <extension-point id="validatortype" name="validatortype" schema="schema/validatortype.exsd"/>
+   <extension
+         id="profilemarker"
+         name="Profil Validierung"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <persistent value="true"/>
+   </extension>
    
 </plugin>
