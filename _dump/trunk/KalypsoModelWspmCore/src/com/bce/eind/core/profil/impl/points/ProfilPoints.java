@@ -19,7 +19,8 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
 {
   private final LinkedList<ProfilPointProperty> m_pointProperties = new LinkedList<ProfilPointProperty>();
 
-  private List<IProfilPoint> m_unmodifiable = Collections.synchronizedList(Collections.unmodifiableList( this ));
+  private List<IProfilPoint> m_unmodifiable = Collections.synchronizedList( Collections
+      .unmodifiableList( this ) );
 
   public List<IProfilPoint> unmodifiable( )
   {
@@ -112,7 +113,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       final ProfilPoint point = (ProfilPoint)ptIt.next();
       try
       {
-        if(point.isPosition( breite,hoehe))
+        if( point.isPosition( breite, hoehe ) )
           return point;
       }
       catch( ProfilDataException e )
@@ -123,20 +124,22 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return null;
   }
 
-  
   public final boolean removePoint( final IProfilPoint point )
   {
     return this.remove( point );
   }
-  public final boolean insertPoint(final IProfilPoint thePointBefore, final IProfilPoint point ) throws ProfilDataException
+
+  public final boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
+      throws ProfilDataException
   {
-    if (m_pointProperties.size()!= point.getProperties().size())
-      throw new ProfilDataException("ungültiger Punkt");
-    for (final Iterator<ProfilPointProperty> ppIt = point.getProperties().iterator();ppIt.hasNext();)
+    if( m_pointProperties.size() != point.getProperties().size() )
+      throw new ProfilDataException( "ungültiger Punkt" );
+    for( final Iterator<ProfilPointProperty> ppIt = point.getProperties().iterator(); ppIt
+        .hasNext(); )
     {
-      if(!m_pointProperties.contains(ppIt.next()))
+      if( !m_pointProperties.contains( ppIt.next() ) )
       {
-        throw new ProfilDataException("ungültiger Punkt");
+        throw new ProfilDataException( "ungültiger Punkt" );
       }
     }
     final int pktIndex = indexOf( thePointBefore ) + 1;

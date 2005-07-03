@@ -280,9 +280,10 @@ public class Profil implements IProfil
   }
 
   /**
+   * @throws ProfilDataException 
    * @see com.bce.eind.core.profilinterface.IProfil#removePoint(com.bce.eind.core.profilinterface.IPoint)
    */
-  public void removePoint( final IProfilPoint point )
+  public void removePoint( final IProfilPoint point ) throws ProfilDataException
   {
     m_profil.removePoint( point );
 

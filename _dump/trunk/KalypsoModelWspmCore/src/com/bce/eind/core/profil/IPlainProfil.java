@@ -106,7 +106,7 @@ public interface IPlainProfil
   public boolean moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
       throws ProfilDataException;
 
-  public void removePoint( final IProfilPoint point );
+  public void removePoint( final IProfilPoint point ) throws ProfilDataException;
 
   public IProfilBuilding removeProfilBuilding( );
 

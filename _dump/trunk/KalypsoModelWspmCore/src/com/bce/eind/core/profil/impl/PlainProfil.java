@@ -444,11 +444,14 @@ public class PlainProfil implements IPlainProfil
   }
 
   /**
+   * @throws ProfilDataException 
    * @see com.bce.eind.core.profilinterface.IProfil#removePoint(com.bce.eind.core.profilinterface.IPoint)
    */
-  public void removePoint( final IProfilPoint point )
+  public void removePoint( final IProfilPoint point ) throws ProfilDataException
   {
-    // TODO: sollte exception werfen, wenn der punkt nicht existiert
+    if( !m_points.contains( point ) )
+      throw new ProfilDataException( "Punkt exisitert nicht: " + point );
+
     m_points.removePoint( point );
   }
 
@@ -591,9 +594,8 @@ public class PlainProfil implements IPlainProfil
    * @see com.bce.eind.core.profil.IProfil#setProfilMetaData(com.bce.eind.core.profil.IProfil.METADATA,
    *      java.lang.Object)
    */
-  public void setProfilMetaData( METADATA metaDataKey, Object data )
+  public void setProfilMetaData( final METADATA metaDataKey, final Object data )
   {
-    // TODO: exception, wenn key nicht existiert
     m_profilMetaData.put( metaDataKey, data );
   }
 
@@ -611,7 +613,6 @@ public class PlainProfil implements IPlainProfil
   private void setValueFor( final IProfilPoint point, final ProfilPointProperty pointProperty,
       final double value ) throws ProfilDataException
   {
-    // TODO: exception wenn, der punkt nicht existiert!
     setValues( new ProfilChange[]
     { new ProfilChange( point, pointProperty, value ) } );
   }
@@ -640,7 +641,9 @@ public class PlainProfil implements IPlainProfil
   public void editBuilding( final ProfilBuildingProperty buildingProperty, final double value )
       throws ProfilBuildingException
   {
-    // TODO: exception, wenn die property nicht existiert
+    if( !m_building.hasProperty(buildingProperty) )
+      throw new ProfilBuildingException( "Eigenschaft exisitert nicht: " + buildingProperty );
+
     m_building.setValue( buildingProperty, value );
   }
 
