@@ -40,12 +40,19 @@ public class ProfilCorePlugin extends Plugin
     plugin = null;
   }
 
-  public ValidatorRuleSet getValidatorFactory( final String type )
+  public static ValidatorRuleSet getValidatorSet( final String type )
+  {
+    final ValidatorFactory vf = getDefault().getValidatorFactory();
+    
+    final IValidatorRule[] rules = vf.createValidatorRules( type );
+    return new ValidatorRuleSet( rules );
+  }
+
+  public ValidatorFactory getValidatorFactory( )
   {
     if( m_validatorFactory == null )
       m_validatorFactory = new ValidatorFactory();
     
-    final IValidatorRule[] rules = m_validatorFactory.createValidatorRules( type );
-    return new ValidatorRuleSet( rules );
+    return m_validatorFactory;
   }
 }

@@ -13,21 +13,31 @@ import com.bce.eind.core.ProfilCorePlugin;
 public class ValidatorFactory
 {
   private IConfigurationElement[] m_ruleElements;
+  private IConfigurationElement[] m_typeElements;
+  private final String[] m_types;
+  private final IValidatorRule[] m_rules;
 
   public ValidatorFactory( )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     m_ruleElements = registry.getConfigurationElementsFor( "com.bce.eind.core.validatorrule" );
-  }
+    m_typeElements = registry.getConfigurationElementsFor( "com.bce.eind.core.validatortype" );
 
-  public IValidatorRule[] createValidatorRules( final String type )
-  {
-    final Collection<IValidatorRule> rules = new ArrayList<IValidatorRule>();
+    final Collection<String> types = new ArrayList<String>();
     
+    for( final IConfigurationElement element : m_typeElements )
+    {
+        final String type = element.getAttribute( "name" );
+        if( type != null )
+          types.add( type );
+    }
+    
+    m_types = new String[types.size()];
+
+    // create all rules
+    final Collection<IValidatorRule> rules = new ArrayList<IValidatorRule>();
     for( final IConfigurationElement element : m_ruleElements )
     {
-      if( element.getAttribute( "type" ).equals( type ) )
-      {
         try
         {
           final Object protoRule = element.createExecutableExtension( "class" );
@@ -38,7 +48,29 @@ public class ValidatorFactory
         {
           ProfilCorePlugin.getDefault().getLog().log( e.getStatus() );
         }
-      }
+    }
+    
+    m_rules = rules.toArray( new IValidatorRule[rules.size()] );
+  }
+  
+  public IValidatorRule[] getAllRules()
+  {
+    return m_rules;
+  }
+
+  public String[] getValidatorTypes()
+  {
+    return m_types;
+  }
+  
+  public IValidatorRule[] createValidatorRules( final String type )
+  {
+    final Collection<IValidatorRule> rules = new ArrayList<IValidatorRule>();
+    
+    for( final IValidatorRule rule : m_rules )
+    {
+      if( rule.getType().equals( type ) )
+        rules.add( rule );
     }
     
     return rules.toArray( new IValidatorRule[rules.size()] );

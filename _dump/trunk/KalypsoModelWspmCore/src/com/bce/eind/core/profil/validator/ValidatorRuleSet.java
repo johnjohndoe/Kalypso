@@ -1,5 +1,7 @@
 package com.bce.eind.core.profil.validator;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -18,6 +20,8 @@ import com.bce.eind.core.profil.IProfil;
  */
 public class ValidatorRuleSet
 {
+  public static final String MARKER_ID = ProfilCorePlugin.getID() + ".profilemarker";
+
   private final IValidatorRule[] m_rules;
 
   public ValidatorRuleSet( final IValidatorRule[] rules )
@@ -25,23 +29,28 @@ public class ValidatorRuleSet
     m_rules = rules;
   }
 
-  public void validateProfile( final IProfil profil, final IResource resource )
+  public void validateProfile( final IProfil profil, final IResource resource, final boolean validate, final String[] excludeIDs )
   {
     final IValidatorRule[] rules = m_rules;
 
     final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( resource );
+    
+    final List<String> excludeRules = java.util.Arrays.asList( excludeIDs );
     
     final WorkspaceJob job = new WorkspaceJob( "Profil wird validiert" )
     {
       @Override
       public IStatus runInWorkspace( IProgressMonitor monitor ) throws CoreException
       {
-        resource.deleteMarkers( IMarker.PROBLEM, false, IResource.DEPTH_ZERO );
+        resource.deleteMarkers( MARKER_ID, true, IResource.DEPTH_ZERO );
 
-        if( rules != null )
+        if( validate && rules != null )
         {
           for( final IValidatorRule r : rules )
-            r.validate( profil, collector );
+          {
+            if( !excludeRules.contains( r.getID() ) ) 
+                r.validate( profil, collector );
+          }
         }
 
         return Status.OK_STATUS;
@@ -71,12 +80,17 @@ public class ValidatorRuleSet
     public void createProfilMarker( boolean isSevere,
         final String message, final String location, final Object data ) throws CoreException
     {
-      final IMarker marker = m_resource.createMarker( ProfilCorePlugin.getID() + ".profilemarker" );
+      final IMarker marker = m_resource.createMarker( MARKER_ID );
 
       final Object[] values = new Object[]
       { message, location, isSevere ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING, data };
 
       marker.setAttributes( USED_ATTRIBUTES, values );
     }
+  }
+
+  public IValidatorRule[] getRules( )
+  {
+    return m_rules;
   }
 }
