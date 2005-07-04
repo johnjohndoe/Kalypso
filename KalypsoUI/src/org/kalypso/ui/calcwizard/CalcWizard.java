@@ -78,13 +78,15 @@ import org.kalypso.ui.calcwizard.createpages.ContinueOldCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.CopyCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.CopyServerCalcCaseChoice;
 import org.kalypso.ui.calcwizard.createpages.CreateCalcCasePage;
+import org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice;
+import org.kalypso.ui.calcwizard.createpages.IChoiceListener;
 import org.kalypso.ui.calcwizard.modelpages.IModelWizardPage;
 import org.kalypso.ui.nature.ModelNature;
 import org.kalypso.ui.wizard.calccase.SteuerparameterWizardPage;
 import org.kalypso.util.synchronize.ModelSynchronizer;
 import org.xml.sax.InputSource;
 
-public class CalcWizard implements IWizard2, IProjectProvider
+public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 {
   private final IProject m_project;
 
@@ -119,6 +121,7 @@ public class CalcWizard implements IWizard2, IProjectProvider
   {
     m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersagen erzeugen",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    m_createCalcCasePage.addChoiceListener( this );
 
     m_controlPage = new SteuerparameterWizardPage( this, true, ImageProvider.IMAGE_KALYPSO_ICON_BIG );
 
@@ -579,6 +582,14 @@ public class CalcWizard implements IWizard2, IProjectProvider
   public void setButtonsLocked( final boolean buttonsLocked )
   {
     m_buttonsLocked = buttonsLocked;
+    getContainer().updateButtons();
+  }
+
+  /**
+   * @see org.kalypso.ui.calcwizard.createpages.IChoiceListener#onChoiceChanged(org.kalypso.ui.calcwizard.createpages.IAddCalcCaseChoice)
+   */
+  public void onChoiceChanged( final IAddCalcCaseChoice newChoice )
+  {
     getContainer().updateButtons();
   }
 }

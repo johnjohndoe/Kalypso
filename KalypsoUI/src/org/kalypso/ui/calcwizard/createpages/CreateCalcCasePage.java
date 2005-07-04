@@ -151,18 +151,6 @@ public class CreateCalcCasePage extends WizardPage implements ICalcWizardPage
     }
 
     setControl( panel );
-
-//    if( choiceToSelect != null )
-//    {
-//      final Button button = choiceToSelect;
-//      choiceToSelect.getDisplay().asyncExec( new Runnable()
-//      {
-//        public void run()
-//        {
-//          button.setSelection( true );
-//        }
-//      } );
-//    }
   }
 
   protected void setChoice( final IAddCalcCaseChoice choice )
