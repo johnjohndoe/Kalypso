@@ -49,6 +49,8 @@ import org.eclipse.core.runtime.IAdaptable;
  */
 public interface IRepositoryItem extends IAdaptable
 {
+  public final static IRepositoryItem[] EMPTY_ARRAY = new IRepositoryItem[0];
+
   /**
    * Returns the item's name. The name is used to display the item in the repository for instance.
    * 

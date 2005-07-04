@@ -232,8 +232,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Loads the client configuration from the various server that were configured in the kalypso plugin preferences page.
-   * 
-   * @param mainConf
    */
   private void configure( final Properties mainConf )
   {
@@ -249,7 +247,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       return;
     }
 
-    // try to laod conf file
+    // try to load conf file
     final String[] locs = confUrls.split( "," );
 
     // for each of the locations, fetch configuration and merge them with main
@@ -359,7 +357,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    * Following handlers are registered:
    * <ul>
    * <li>OcsURLStreamHandler for 'kalypso-ocs' protocol. Handles Observation WebService urls.</li>
-   * <li>TODO: insert your own handlers here...</li>
+   * <li>XXX: insert your own handlers here...</li>
    * </ul>
    */
   private void configureURLStreamHandler( final BundleContext context )
@@ -540,9 +538,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * This method is called upon plug-in activation
-   * 
-   * @param context
-   * @throws Exception
    */
   public void start( final BundleContext context ) throws Exception
   {
@@ -550,19 +545,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      m_mainConf.clear();
-
-      configure( m_mainConf );
-      configureProxy();
-      configurePool();
-      configureServiceProxyFactory( m_mainConf );
       configureURLStreamHandler( context );
 
-      // muss NACH dem proxy und dem streamHandler konfiguriert werden!
-      configureSchemaCatalog();
-      configureDefaultStyleFactory();
-
-      deleteTempDirs();
+      reconfigure();
 
       getPreferenceStore().addPropertyChangeListener( this );
     }
@@ -570,6 +555,25 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Reconfigure the plugin according to server properties and more.
+   */
+  private void reconfigure() throws IOException
+  {
+    m_mainConf.clear();
+
+    configure( m_mainConf );
+    configureProxy();
+    configurePool();
+    configureServiceProxyFactory( m_mainConf );
+
+    // muss NACH dem proxy und dem streamHandler konfiguriert werden!
+    configureSchemaCatalog();
+    configureDefaultStyleFactory();
+
+    deleteTempDirs();
   }
 
   private void configureDefaultStyleFactory()
@@ -814,15 +818,16 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   public void propertyChange( final PropertyChangeEvent event )
   {
-    // reconfigure plugin
-    // TODO: change of proxy etc. is not handled
-    // maybe do some refactoring with start() and this method
     if( event.getProperty().equals( IKalypsoPreferences.CLIENT_CONF_URLS ) )
     {
-      m_mainConf.clear();
-      configure( m_mainConf );
-      configureServiceProxyFactory( m_mainConf );
-      configureSchemaCatalog();
+      try
+      {
+        reconfigure();
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
     }
     if( event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_HOST )
         || event.getProperty().equals( IKalypsoPreferences.HTTP_PROXY_PASS )

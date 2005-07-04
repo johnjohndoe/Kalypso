@@ -90,7 +90,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
    */
   public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
-    return null;
+    return IRepositoryItem.EMPTY_ARRAY;
   }
 
   /**

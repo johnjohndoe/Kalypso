@@ -53,8 +53,6 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public class FileItem implements IRepositoryItem
 {
-  private final static IRepositoryItem[] EMPTY_ITEMS = new IRepositoryItem[0];
-
   private final FileRepository m_rep;
 
   private final File m_file;
@@ -89,7 +87,7 @@ public class FileItem implements IRepositoryItem
     final File[] files = m_file.listFiles( m_rep.getFilter() );
 
     if( files == null )
-      return EMPTY_ITEMS;
+      return IRepositoryItem.EMPTY_ARRAY;
 
     final IRepositoryItem[] items = new IRepositoryItem[files.length];
 
