@@ -200,16 +200,17 @@ public abstract class ObsView implements IObsViewEventProvider
     }
   }
 
+  /**
+   * Load an observation asynchronuously.
+   */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
       final String ignoreType, final String tokenizedName, final ItemData data )
   {
     return loadObservation( context, href, ignoreExceptions, ignoreType, tokenizedName, data, false );
   }
 
-  /** 
-   * Loads an observation into this view and sets default values 
-   * 
-   * 
+  /**
+   * Loads an observation, if synchro is true, the load is performed synchronuously.
    */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
       final String ignoreType, final String tokenizedName, final ItemData data, final boolean synchron )
@@ -225,16 +226,8 @@ public abstract class ObsView implements IObsViewEventProvider
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
-        final IObsProvider provider = new PooledObsProvider( key, null );
-        try
-        {
-          ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[3], (String)m_data[2],
-              (ObsView.ItemData)m_data[1] );
-        }
-        finally
-        {
-          provider.dispose();
-        }
+        ( (ObsView)m_data[0] ).addObservation( new PlainObsProvider( (IObservation)newValue, null ), (String)m_data[3],
+            (String)m_data[2], (ObsView.ItemData)m_data[1] );
       }
     };
 
