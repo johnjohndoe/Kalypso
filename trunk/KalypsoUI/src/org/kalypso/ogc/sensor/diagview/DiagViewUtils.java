@@ -91,10 +91,6 @@ public class DiagViewUtils
 
   /**
    * Saves the given template (binding). Closes the stream.
-   * 
-   * @param xml
-   * @param outs
-   * @throws JAXBException
    */
   public static void saveDiagramTemplateXML( final ObsdiagviewType xml, final OutputStream outs ) throws JAXBException
   {
@@ -112,10 +108,6 @@ public class DiagViewUtils
 
   /**
    * Saves the given template (binding). Closes the writer.
-   * 
-   * @param tpl
-   * @param writer
-   * @throws JAXBException
    */
   public static void saveDiagramTemplateXML( final ObsdiagviewType tpl, final Writer writer ) throws JAXBException
   {
@@ -134,9 +126,7 @@ public class DiagViewUtils
   /**
    * Loads a binding template. Closes the stream.
    * 
-   * @param ins
    * @return diagram template object parsed from the file
-   * @throws JAXBException
    */
   public static ObsdiagviewType loadDiagramTemplateXML( final InputStream ins ) throws JAXBException
   {
@@ -153,9 +143,7 @@ public class DiagViewUtils
   /**
    * Loads a binding template. Closes the stream.
    * 
-   * @param reader
    * @return diagram template object parsed from the file
-   * @throws JAXBException
    */
   public static ObsdiagviewType loadDiagramTemplateXML( final Reader reader ) throws JAXBException
   {
@@ -172,9 +160,7 @@ public class DiagViewUtils
   /**
    * Loads a binding template. Closes the stream.
    * 
-   * @param ins
    * @return diagram template object parsed from the file
-   * @throws JAXBException
    */
   private static ObsdiagviewType loadDiagramTemplateXML( final InputSource ins ) throws JAXBException
   {
@@ -186,9 +172,7 @@ public class DiagViewUtils
   /**
    * Builds the xml binding object using the given diagram view template
    * 
-   * @param view
    * @return xml binding object (ready for marshalling for instance)
-   * @throws JAXBException
    */
   public static ObsdiagviewType buildDiagramTemplateXML( final DiagView view ) throws JAXBException
   {

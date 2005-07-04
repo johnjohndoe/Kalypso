@@ -361,8 +361,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    * <li>OcsURLStreamHandler for 'kalypso-ocs' protocol. Handles Observation WebService urls.</li>
    * <li>TODO: insert your own handlers here...</li>
    * </ul>
-   * 
-   * @param context
    */
   private void configureURLStreamHandler( final BundleContext context )
   {
@@ -817,7 +815,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public void propertyChange( final PropertyChangeEvent event )
   {
     // reconfigure plugin
-    // TOOD: change of proxy etc. is not handled
+    // TODO: change of proxy etc. is not handled
     // maybe do some refactoring with start() and this method
     if( event.getProperty().equals( IKalypsoPreferences.CLIENT_CONF_URLS ) )
     {

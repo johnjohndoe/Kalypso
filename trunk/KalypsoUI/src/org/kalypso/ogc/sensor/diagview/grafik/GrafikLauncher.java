@@ -163,10 +163,6 @@ public class GrafikLauncher
     {
       final URL context = ResourceUtilities.createURL( zmlFile );
 
-      // TODO Marc: scheint noch buggy zu sein... aus irgendeiner Grund wird die ODT beim
-      // ersten Aufruf auf eine Zml nicht vollständig gesetzt (keine Observations drin).
-      // Debug!!!
-      
       final IStatus status = diag.loadObservation( context, context.toExternalForm(), false, "",
           NameUtils.DEFAULT_ITEM_NAME, ObsView.DEFAULT_ITEM_DATA, true );
 
@@ -327,8 +323,6 @@ public class GrafikLauncher
   public static File getGrafikProgramPath() throws IOException
   {
     // create the grafik exe
-    // TODO: check if version has changed an then try to delete old file
-    // TODO: always use file name 'grafik.exe'
     final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikLauncher.class
         .getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true );
     grafikExe.deleteOnExit();

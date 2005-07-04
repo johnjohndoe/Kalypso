@@ -234,5 +234,4 @@ public class ResourcePool
         info2.dispose();
     }
   }
-
 }

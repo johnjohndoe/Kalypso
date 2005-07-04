@@ -35,6 +35,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       try
       {
         value = m_pool.getObject( key );
+        
         objectLoaded( key, value, m_result );
       }
       catch( final CoreException ce )

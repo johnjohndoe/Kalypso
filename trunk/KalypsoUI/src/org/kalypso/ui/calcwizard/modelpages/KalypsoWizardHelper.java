@@ -66,13 +66,10 @@ public class KalypsoWizardHelper
    * to element). A TimeserieFeatureProps is created for each of these elements.
    * 
    * <pre>
-   * 
    *  &lt;arg name=&quot;timeserie1&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
    *  &lt;arg name=&quot;timeserie2&quot; value=&quot;type=...#typeName=...#nameColumn=...#linkColumn=...&quot;/&gt;
-   *  
    * </pre>
    * 
-   * @param props
    * @return array of TimeserieFeatureProps
    */
   public static TimeserieFeatureProps[] parseTimeserieFeatureProps( final Arguments props )
@@ -92,12 +89,6 @@ public class KalypsoWizardHelper
 
   /**
    * Updates the diagram template for the given TimeserieFeatureProps and features
-   * 
-   * @param view
-   * @param links
-   * @param context
-   * @param ignoreExceptions
-   * @param ignoreType
    */
   public static void updateZMLView( final ObsView view, final TSLinkWithName[] links, final URL context,
       final boolean ignoreExceptions, final String ignoreType )
