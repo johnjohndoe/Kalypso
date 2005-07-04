@@ -123,7 +123,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
      */
     protected Control createDialogArea( Composite parent )
     {
-      final Composite panel = new Composite( parent, SWT.NONE );
+      final Composite panel = new Composite( parent, SWT.FILL );
       panel.setLayout( new GridLayout( 2, false ) );
       panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
@@ -133,6 +133,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
       final Text txtUrl = new Text( panel, SWT.BORDER );
       txtUrl.setText( m_url );
+      txtUrl.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       txtUrl.addModifyListener( new ModifyListener()
       {
         public void modifyText( ModifyEvent e )
@@ -148,6 +149,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
 
       final Text txtName = new Text( panel, SWT.BORDER );
       txtName.setText( m_username );
+      txtName.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       txtName.addModifyListener( new ModifyListener()
       {
         public void modifyText( ModifyEvent e )
@@ -162,6 +164,7 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
       lblPw.setText( "Password:" );
 
       final Text txtPw = new Text( panel, SWT.BORDER | SWT.PASSWORD );
+      txtPw.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       txtPw.addModifyListener( new ModifyListener()
       {
         public void modifyText( ModifyEvent e )

@@ -151,7 +151,7 @@
             default="false"
             name="Grafik Programm"
             id="org.kalypso.zml.grafik"
-            extensions="zml,tpl"/>
+            extensions="zml,tpl,odt"/>
    </extension>
    <extension
          id="views"
@@ -496,10 +496,20 @@
          </menu>
          <action
                toolbarPath="diagramm"
+               label="Diagramm Eigenschaften"
+               tooltip="Öffnet das Dialog um die Diagramm-Eigenschaften setzen zu können"
+               icon="icons/util/settings.gif"
+               class="org.kalypso.ui.editor.diagrameditor.actions.DiagramPropertiesAction"
+               style="push"
+               menubarPath="org.kalypso.ui.editor.obsdiageditor.menu/tools"
+               id="org.kalypso.ui.editor.diagrameditor.actions.DiagramPropertiesAction"/>
+         <action
+               toolbarPath="diagramm"
                label="Im Grafikprogramm öffnen"
-               class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
-               tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
                icon="icons/observation/grafik-icon.gif"
+               tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
+               class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
+               style="push"
                menubarPath="org.kalypso.ui.editor.obsdiageditor.menu/tools"
                id="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction">
          </action>

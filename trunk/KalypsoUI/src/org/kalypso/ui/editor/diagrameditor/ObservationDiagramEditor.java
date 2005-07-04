@@ -80,7 +80,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
   public void createPartControl( Composite parent )
   {
     super.createPartControl( parent );
-
+    
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     m_diagFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
 

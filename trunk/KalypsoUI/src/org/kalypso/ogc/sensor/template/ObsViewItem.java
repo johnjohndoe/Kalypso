@@ -85,9 +85,6 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     return m_name;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   public String toString()
   {
     return getName();
