@@ -32,15 +32,6 @@ public class PSICompactItem implements IRepositoryItem
 
   private final int m_valueType;
 
-  /**
-   * Constructor
-   * 
-   * @param parent
-   * @param name
-   * @param identifier
-   * @param info
-   * @param valueType
-   */
   public PSICompactItem( final PSICompactItem parent, final String name, final String identifier,
       final PSICompact.ObjectInfo info, final int valueType )
   {

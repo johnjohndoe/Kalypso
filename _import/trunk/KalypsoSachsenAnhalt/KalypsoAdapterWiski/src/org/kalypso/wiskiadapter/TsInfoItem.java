@@ -84,7 +84,7 @@ public class TsInfoItem implements IRepositoryItem
    */
   public IRepositoryItem[] getChildren() throws RepositoryException
   {
-    return null;
+    return IRepositoryItem.EMPTY_ARRAY;
   }
 
   /**
