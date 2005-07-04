@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+     <extension
+           point="com.bce.eind.core.validatortype">
+        <validatortype
+              description="Pasche"
+              id="pasche"/>
+     </extension>
+   <extension
+         point="com.bce.eind.core.validatorrule">
+      <rule
+            class="org.bce.eind.kalypso1d.rules.RuecksprungRule"
+            description="Rücksprung"
+            id="pasche.ruecksprung"
+            type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.TFRule"
+              description="Trennflaechen"
+              id="trenner.tf"
+              type="Pasche"/>
+   </extension>
+</plugin>
