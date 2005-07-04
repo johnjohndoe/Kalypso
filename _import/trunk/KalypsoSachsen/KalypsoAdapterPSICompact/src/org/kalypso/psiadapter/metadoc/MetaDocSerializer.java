@@ -110,7 +110,7 @@ public class MetaDocSerializer
       writer.write( "<" + TAG_VERSENDEN + ">" + valueOfProperty( serviceProps.getProperty( TAG_VERSENDEN, "0" ) )
           + "</" + TAG_VERSENDEN + ">" );
 
-      writer.write( "<LHWZ-intern>1</LHWZ-intern>" );
+      writer.write( "<LHWZIntern>1</LHWZIntern>" );
 
       writer.write( "<" + TAG_APPFILES + ">" + fileName + "</" + TAG_APPFILES + ">" );
 
