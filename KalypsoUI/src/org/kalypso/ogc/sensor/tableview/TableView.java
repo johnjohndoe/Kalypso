@@ -59,6 +59,14 @@ import org.kalypso.ogc.sensor.template.ObsView;
 public class TableView extends ObsView
 {
   private final ITableViewRules m_rules = RulesFactory.getDefaultRules();
+  
+  /**
+   * @see org.kalypso.ogc.sensor.template.ObsView#toString()
+   */
+  public String toString()
+  {
+    return "Tabelle";
+  }
 
   public ITableViewRules getRules()
   {

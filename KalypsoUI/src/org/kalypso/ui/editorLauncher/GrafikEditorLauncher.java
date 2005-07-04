@@ -89,7 +89,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
         {
           final IContainer parent = file.getParent();
 
-          final IFolder folder = parent.getFolder( new Path( "grafik" ) );
+          final IFolder folder = parent.getFolder( new Path( "Grafik" ) );
 
           if( path.getFileExtension().equalsIgnoreCase( DiagViewUtils.ODT_FILE_EXTENSION ) )
             status = GrafikLauncher.startGrafikODT( file, folder, monitor );

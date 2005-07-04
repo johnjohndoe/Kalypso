@@ -62,32 +62,34 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 public class ObservationChart extends JFreeChart implements IObsViewEventListener
 {
   protected static final Logger LOGGER = Logger.getLogger( ObservationChart.class.getName() );
-
+  
+  private final StandardLegend m_legend = new StandardLegend();
+  
   private final DiagView m_view;
 
   /**
    * Creates an ObservationChart
-   * 
-   * @param template
-   * @throws SensorException
    */
   public ObservationChart( final DiagView template ) throws SensorException
   {
-    super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory.createObservationPlot( template ), template
-        .isShowLegend() );
+    super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory.createObservationPlot( template ), false );
 
     m_view = template;
 
-    if( template.isShowLegend() )
-    {
-      final StandardLegend leg = new StandardLegend();
-      leg.setTitle( template.getLegendName() );
-
-      setLegend( leg );
-    }
+    setLegendProperties( template.getLegendName(), template.isShowLegend() );
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
+  }
+
+  private void setLegendProperties( String legendName, boolean showLegend )
+  {
+    m_legend.setTitle( legendName );
+    
+    if( showLegend )
+      setLegend( m_legend );
+    else
+      setLegend( null );
   }
 
   /**
@@ -127,23 +129,28 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
       {
         final ObservationPlot obsPlot = getObservationPlot();
 
-        clearChart();
-
         DiagView view = null;
         if( evt.getObject() instanceof DiagView )
           view = (DiagView)evt.getObject();
         else if( evt.getObject() instanceof DiagViewCurve )
           view = (DiagView)( (DiagViewCurve)evt.getObject() ).getView();
 
-        if( evt.getType() == ObsViewEvent.TYPE_ADD || evt.getType() == ObsViewEvent.TYPE_REFRESH
+        if( evt.getType() == ObsViewEvent.TYPE_ADD || evt.getType() == ObsViewEvent.TYPE_REFRESH_ITEMS
             || evt.getType() == ObsViewEvent.TYPE_REMOVE )
         {
+          clearChart();
+          
           final ObsViewItem[] items = view.getItems();
           for( int i = 0; i < items.length; i++ )
           {
             final DiagViewCurve curve = (DiagViewCurve)items[i];
             obsPlot.addCurve( curve );
           }
+        }
+        else if( evt.getType() == ObsViewEvent.TYPE_REFRESH )
+        {
+          setTitle( view.getTitle() );
+          setLegendProperties( view.getLegendName(), view.isShowLegend() );
         }
       }
     };

@@ -84,6 +84,8 @@ public abstract class ObsView implements IObsViewEventProvider
     removeAllItems();
   }
 
+  public abstract String toString();
+
   public boolean waitUntilLoaded( final int sleepTime, final int maxLoops )
   {
     for( int i = 0; i < maxLoops; i++ )
@@ -164,7 +166,7 @@ public abstract class ObsView implements IObsViewEventProvider
 
   public final void refresh( final ObsViewItem item )
   {
-    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_REFRESH ) );
+    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_REFRESH_ITEMS ) );
   }
 
   public final void refresh()

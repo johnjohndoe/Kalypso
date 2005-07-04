@@ -198,7 +198,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   {
     return m_view;
   }
-
+  
   /**
    * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
    */
@@ -206,6 +206,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   {
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     toolBarManager.add( m_removeThemeAction );
+    
     actionBars.updateActionBars();
   }
 

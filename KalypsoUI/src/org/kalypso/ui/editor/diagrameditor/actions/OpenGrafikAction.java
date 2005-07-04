@@ -40,8 +40,25 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.diagrameditor.actions;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.dialogs.ResourceSelectionDialog;
+import org.kalypso.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
+import org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor;
 
 /**
  * OpenGrafikAction
@@ -55,9 +72,56 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
    */
   public void run( IAction action )
   {
-  //    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
-  //    final LinkedDiagramTemplate template = editor.getTemplate();
+    final ObservationDiagramEditor editor = (ObservationDiagramEditor)getEditor();
+    final DiagView diag = (DiagView)editor.getView();
 
-  // TODO
+    try
+    {
+      final ObsdiagviewType xml = DiagViewUtils.buildDiagramTemplateXML( diag );
+
+      final IEditorInput input = editor.getEditorInput();
+      final IFolder dest;
+      if( input instanceof IFileEditorInput )
+      {
+        final IContainer parent = ( (IFileEditorInput)input ).getFile().getParent();
+        dest = parent.getFolder( new Path( "Grafik" ) );
+      }
+      else
+      {
+        final IProject[] projects = ProjectUtilities.getSelectedProjects();
+        if( projects.length > 0 )
+          dest = projects[0].getFolder( "Grafik" );
+        else
+        {
+          final ResourceSelectionDialog dlg = new ResourceSelectionDialog( getShell(), ResourcesPlugin.getWorkspace()
+              .getRoot(), "Selektieren Sie bitte einen Verzeichnis wo das temporäre Grafik-Verzeichnis erzeugt wird" );
+
+          if( dlg.open() != Window.OK )
+            return;
+
+          final Object[] results = dlg.getResult();
+          if( results.length == 0 )
+            return;
+
+          if( results[0] instanceof IFolder )
+            dest = ( (IFolder)results[0] ).getFolder( "Grafik" );
+          else
+          {
+            MessageDialog.openInformation( getShell(), "Grafik öffnen",
+                "Das temporäre Grafik-Verzeichnis kann nicht erzeugt werden weil "
+                    + "Sie keinen Basisverzeichnis angegeben haben. Bitte prüfen Sie Ihre " + "Eingabe." );
+            return;
+          }
+        }
+      }
+
+      GrafikLauncher.startGrafikODT( diag.getTitle(), xml, dest, new NullProgressMonitor() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      
+      MessageDialog.openError( getShell(), "Grafik öffnen", "Eine Fehler ist aufgetreten: " + e.getLocalizedMessage() );
+    }
   }
 }
