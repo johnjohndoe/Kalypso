@@ -299,12 +299,18 @@ Nadja:
 Andreas:
 
 1) für welche Anwendung (welche Projekte)?
-			
+   Landeshochwasserzentrum Sachsen
+   TUHH: alle Projekte Unterstützung:
+	   	- Ing.-Büros und Übung: sehen dass Kalypso-NA läuft
+   		- Flows:  bisher Unterstützung Konzeption, demnächst: mehr
+   		- Risiko: bisher Unterstützung bei Integration in Kalypso
 
 2) Welche Modelle werden verwendet?
 	KalypsoNA
-		Visualisierung von Vernetzungen
-
+		Optimierung
+		Zeitreihenmanagement
+			- Gebietsniederschlagsmodell aus Ombromterdaten
+			- Vorhersage aus DWD-Rasterdaten
 3) Code
 -Visualisierung von (geometrischen) Vernetzungen
 	VirtualFeatureTypeProperty (nur lesbar nicht in GML geschrieben, wird auf Anfrage erstellt)
@@ -315,7 +321,7 @@ Andreas:
 	Es gibt als Input: Ombrometermessstation und DWDRaster->Vorhersagezeitreihe
 	vorher serverseitiges virtuelles ZML Repository zur Generierung von Gebietsniederschlagszeitreihen
 	(über Filter - Kringing-Gewichtung)
-	Jetzt mapping.gml als Konfigurationsdatei clientseitig
+ 	Jetzt mapping.gml als Konfigurationsdatei clientseitig
 
 -KalypsoDWD
 	Rasterdateien liegen als (Mittel)Punktwolke vor (Rechtwert/Hochwert)
@@ -343,6 +349,7 @@ Interface IOptimizingJob Refaktoring
 GML Geometrien um Editierfunktion erweitern
 GML Durchgängigkeit testen
 Tabellen editieren erweitern
+Tests schreiben
 
 5) Anwender
 	Sachsen-Anhalt
@@ -351,11 +358,12 @@ Tabellen editieren erweitern
 	Gehad Ujel - Anwender NA-Modell, GML-Schema, Dokbook - Manual	
 
 6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
-	Gernot - Niederschlagsraster
-	Marc, Jessica, Christoph, Nadja
+	Marc und Gernot: allgemeine Konzeption, bzw. ZML-stuff
+	Jessica: NA-Modell
+	Christoph: Flows	
 
 7) Anregungen/FeatureRequests
-	OptimizingJob Clientseitig
+	OptimizingJob Clientseitig (Anmerkung: wer das braucht bitte an Andreas wenden).
 
 --------------------------------------------------------------------------------------------------------
 Jessica:
