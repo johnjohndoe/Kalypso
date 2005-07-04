@@ -32,13 +32,19 @@ package org.kalypso.ui.repository.actions;
 import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.repository.IRepository;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
@@ -70,26 +76,43 @@ public class DumpStructureAction extends AbstractRepositoryExplorerAction implem
     if( rep == null )
       return;
 
-    final StringWriter writer = new StringWriter();
-    try
+    final Job job = new Job("Struktur exportieren für " + rep.getName() )
     {
-      rep.dumpStructure( writer );
-      writer.close();
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        monitor.beginTask( "Struktur exportieren", IProgressMonitor.UNKNOWN );
+        
+        final StringWriter writer = new StringWriter();
+        try
+        {
+          rep.dumpStructure( writer );
+          writer.close();
 
-      final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-      clipboard.setContents( new Object[]
-      { writer.toString() }, new Transfer[]
-      { TextTransfer.getInstance() } );
-      clipboard.dispose();
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
+          final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
+          clipboard.setContents( new Object[]
+          { writer.toString() }, new Transfer[]
+          { TextTransfer.getInstance() } );
+          clipboard.dispose();
+          
+          return Status.OK_STATUS;
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+          
+          return KalypsoGisPlugin.createErrorStatus( "Fehler: Struktur exportieren", e );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( writer );
+          
+          monitor.done();
+        }
+      }
+    };
+    
+    Workbench.getInstance().getProgressService().showInDialog( getShell(), job );
+    //job.schedule();
   }
 
   public void selectionChanged( final SelectionChangedEvent event )

@@ -81,6 +81,7 @@ import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.service.ItemBean;
+import org.kalypso.repository.service.RepositoryBean;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.sensor.DataBean;
 import org.kalypso.services.sensor.IObservationService;
@@ -471,7 +472,7 @@ public class KalypsoObservationService implements IObservationService
         {
           final IRepository rep = (IRepository)m_repositories.get( i );
 
-          m_repositoryBeans[i] = new ItemBean( rep.getIdentifier(), rep.getName() );
+          m_repositoryBeans[i] = new RepositoryBean( rep.getIdentifier(), rep.getName() );
           m_mapBeanId2Item.put( m_repositoryBeans[i].getId(), rep );
         }
       }
@@ -491,9 +492,7 @@ public class KalypsoObservationService implements IObservationService
 
       final IRepositoryItem[] children = item.getChildren();
 
-      // TODO null pointer exception on children. sometimes
       final ItemBean[] beans = new ItemBean[children.length];
-
       for( int i = 0; i < beans.length; i++ )
       {
         beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName() );

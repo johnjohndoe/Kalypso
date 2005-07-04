@@ -192,7 +192,7 @@ public abstract class AbstractRepository implements IRepository
   public String toString()
   {
     final String desc = getDescription();
-    if( desc != null )
+    if( desc != null && desc.length() > 0 )
       return getName() + " (" + desc + ")";
 
     return getName();
@@ -228,6 +228,9 @@ public abstract class AbstractRepository implements IRepository
   private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent )
       throws RepositoryException
   {
+    if( item == null )
+      return;
+    
     try
     {
       writer.write( indent + item.toString() );

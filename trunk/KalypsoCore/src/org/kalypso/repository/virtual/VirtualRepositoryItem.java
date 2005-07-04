@@ -66,18 +66,10 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   private IRepositoryItem m_parent = null;
 
-  private IRepositoryItem[] m_children = null;
+  private IRepositoryItem[] m_children = IRepositoryItem.EMPTY_ARRAY;
 
   private AbstractFilterType m_filterType = null;
 
-  /**
-   * Constructor
-   * 
-   * @param rep
-   * @param name
-   * @param itemId
-   * @param parent
-   */
   public VirtualRepositoryItem( final IRepository rep, final String name, final String itemId,
       final VirtualRepositoryItem parent )
   {

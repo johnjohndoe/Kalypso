@@ -66,10 +66,6 @@ public class ObservationServiceRepository extends AbstractRepository
   /**
    * Constructor
    * 
-   * @param name
-   * @param factory
-   * @param readOnly
-   * 
    * @throws ServiceException
    *           when the underlying service is not available
    */
@@ -78,6 +74,23 @@ public class ObservationServiceRepository extends AbstractRepository
     super( name, factory, "", readOnly );
 
     m_srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
+  }
+
+  /**
+   * @see org.kalypso.repository.AbstractRepository#getDescription()
+   */
+  public String getDescription()
+  {
+    try
+    {
+      return m_srv.getDescription();
+    }
+    catch( final RemoteException e )
+    {
+      e.printStackTrace();
+
+      return "<Fehler...>";
+    }
   }
 
   /**
@@ -151,11 +164,10 @@ public class ObservationServiceRepository extends AbstractRepository
   }
 
   /**
-   * Helper: finds item using recursion TODO: better performance by caching items that were already found? do not forget
-   * to clear the cache in reload()
+   * Helper: finds item using recursion
+   * <p>
+   * TODO: better performance by caching items that were already found? do not forget to clear the cache in reload()
    * 
-   * @param id
-   * @param item
    * @return item if found, otherwise null.
    * @throws RepositoryException
    */
