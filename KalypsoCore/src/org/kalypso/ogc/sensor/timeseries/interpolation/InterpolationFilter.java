@@ -257,12 +257,6 @@ public class InterpolationFilter extends AbstractObservationFilter
 
   /**
    * Fills the model with default values
-   * 
-   * @param dateAxis
-   * @param valueAxes
-   * @param intModel
-   * @param cal
-   * @throws SensorException
    */
   private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final SimpleTuppleModel intModel,
       final Calendar cal ) throws SensorException
