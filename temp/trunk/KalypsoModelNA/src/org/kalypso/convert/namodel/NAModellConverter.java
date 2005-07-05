@@ -78,7 +78,6 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaUtils;
 import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
-import org.kalypsodeegree_impl.gml.schema.vistors.CollectFeatureTypesSchemaVisitor;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
