@@ -38,24 +38,22 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.wizard.view;
+package org.kalypso.contribs.eclipse.jface.action;
 
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
- * Adds some additional methods to the {@link IWizard}
+ * Action with full Constructor.
  * 
- * @author belger
+ * @author gernot
  */
-public interface IWizard2 extends IWizard
+public class FullAction extends Action
 {
-  /**
-   * Finishes a single page
-   * 
-   * @return false, if something went wrong. Don't change the page now.
-   */
-  public boolean finishPage( final IWizardPage page );
-  
-  public boolean hasCancelButton();
+  public FullAction( String text, ImageDescriptor image, String tooltipText )
+  {
+    super( text, image );
+
+    setToolTipText( tooltipText );
+  }
 }

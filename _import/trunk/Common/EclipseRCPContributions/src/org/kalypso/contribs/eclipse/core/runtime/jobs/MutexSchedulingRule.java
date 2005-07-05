@@ -38,24 +38,33 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.wizard.view;
+package org.kalypso.contribs.eclipse.core.runtime.jobs;
 
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 /**
- * Adds some additional methods to the {@link IWizard}
+ * MutexSchedulingRule. Schliesst alle anderen Rules aus.
  * 
- * @author belger
+ * @author schlienger
  */
-public interface IWizard2 extends IWizard
+public class MutexSchedulingRule implements ISchedulingRule
 {
   /**
-   * Finishes a single page
-   * 
-   * @return false, if something went wrong. Don't change the page now.
+   * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
    */
-  public boolean finishPage( final IWizardPage page );
-  
-  public boolean hasCancelButton();
+  public boolean contains( final ISchedulingRule rule )
+  {
+    if( rule instanceof MutexSchedulingRule )
+      return this == rule;
+
+    return true;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
+   */
+  public boolean isConflicting( ISchedulingRule rule )
+  {
+    return this == rule;
+  }
 }

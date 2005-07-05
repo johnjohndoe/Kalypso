@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.dialog;
+package org.kalypso.contribs.eclipse.jface.dialogs;
 
 import java.util.Date;
 

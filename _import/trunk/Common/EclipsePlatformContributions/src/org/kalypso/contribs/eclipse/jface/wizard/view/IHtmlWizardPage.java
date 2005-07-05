@@ -40,22 +40,15 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 
 /**
- * Adds some additional methods to the {@link IWizard}
- * 
+ * A wizard page wich provides an additional html page for navigation.
+ *
  * @author belger
  */
-public interface IWizard2 extends IWizard
+public interface IHtmlWizardPage extends IWizardPage
 {
-  /**
-   * Finishes a single page
-   * 
-   * @return false, if something went wrong. Don't change the page now.
-   */
-  public boolean finishPage( final IWizardPage page );
-  
-  public boolean hasCancelButton();
+  /** A html document in form of a string */
+  public String getHtml();
 }

@@ -30,11 +30,6 @@
             class="org.kalypso.contribs.eclipse.jface.wizard.view.WizardView"
             name="WizardView"
             id="org.kalypso.contribs.eclipse.jface.wizard.view.WizardView"/>
-      <view
-            allowMultiple="false"
-            class="org.kalypso.contribs.eclipse.jface.wizard.view.WizardNavigationView"
-            name="WizardNavigationView"
-            id="org.kalypso.contribs.eclipse.jface.wizard.view.WizardNavigationView"/>
    </extension>
 
 </plugin>

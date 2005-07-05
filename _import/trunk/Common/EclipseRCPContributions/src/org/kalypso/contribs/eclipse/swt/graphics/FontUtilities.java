@@ -38,24 +38,44 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.wizard.view;
+package org.kalypso.contribs.eclipse.swt.graphics;
 
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 
 /**
- * Adds some additional methods to the {@link IWizard}
+ * <p>
+ * Helper class for deriving fonts from other fonts.
+ * </p>
+ * <p>
+ * Keeps track of created fonts and disposes theses if this class is disposed
+ * </p>
  * 
  * @author belger
  */
-public interface IWizard2 extends IWizard
+public class FontUtilities
 {
-  /**
-   * Finishes a single page
-   * 
-   * @return false, if something went wrong. Don't change the page now.
-   */
-  public boolean finishPage( final IWizardPage page );
-  
-  public boolean hasCancelButton();
+  private final Collection m_disposeFonts = new LinkedList();
+
+  public void dispose()
+  {
+    for( final Iterator iter = m_disposeFonts.iterator(); iter.hasNext(); )
+      ( (Font)iter.next() ).dispose();
+  }
+
+  public Font createChangedFontData( final FontData[] fontData, final int heightOffset, final int styleOffset,
+      final Device device )
+  {
+    for( int i = 0; i < fontData.length; i++ )
+    {
+      fontData[i].setHeight( fontData[i].getHeight() + heightOffset );
+      fontData[i].setStyle( fontData[i].getStyle() | styleOffset );
+    }
+    return new Font( device, fontData );
+  }
 }

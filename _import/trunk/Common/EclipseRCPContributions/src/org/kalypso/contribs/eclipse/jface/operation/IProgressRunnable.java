@@ -38,24 +38,15 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.wizard.view;
+package org.kalypso.contribs.eclipse.jface.operation;
 
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 
 /**
- * Adds some additional methods to the {@link IWizard}
- * 
  * @author belger
  */
-public interface IWizard2 extends IWizard
+public interface IProgressRunnable
 {
-  /**
-   * Finishes a single page
-   * 
-   * @return false, if something went wrong. Don't change the page now.
-   */
-  public boolean finishPage( final IWizardPage page );
-  
-  public boolean hasCancelButton();
+  public IStatus run( final IProgressMonitor monitor );
 }

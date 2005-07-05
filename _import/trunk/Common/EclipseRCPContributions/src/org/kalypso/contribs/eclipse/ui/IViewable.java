@@ -38,24 +38,17 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.wizard.view;
-
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
+package org.kalypso.contribs.eclipse.ui;
 
 /**
- * Adds some additional methods to the {@link IWizard}
+ * IViewable defines common methods for objects that can be 'viewed'
  * 
- * @author belger
+ * @author schlienger
  */
-public interface IWizard2 extends IWizard
+public interface IViewable
 {
   /**
-   * Finishes a single page
-   * 
-   * @return false, if something went wrong. Don't change the page now.
+   * @return true when object is shown
    */
-  public boolean finishPage( final IWizardPage page );
-  
-  public boolean hasCancelButton();
+  public boolean isShown();
 }

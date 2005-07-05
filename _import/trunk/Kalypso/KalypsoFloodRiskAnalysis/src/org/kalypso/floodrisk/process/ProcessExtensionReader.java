@@ -78,7 +78,6 @@ public class ProcessExtensionReader
    * <p>
    * For each extension, a ProcessExtension is created
    * 
-   * @return
    * @throws CoreException
    */
   public static ProcessExtension[] retrieveExtensions() throws CoreException
@@ -90,7 +89,6 @@ public class ProcessExtensionReader
      * 
      * for (int i = 0;i <extPoints.length;i++){ System.out.println(extPoints[i].getUniqueIdentifier()); }
      */
-
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( ADDPROCESS_EXTENSION_POINT );
 
     if( extensionPoint == null )

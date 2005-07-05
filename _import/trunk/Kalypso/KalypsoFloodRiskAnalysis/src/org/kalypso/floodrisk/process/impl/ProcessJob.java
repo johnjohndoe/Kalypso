@@ -55,10 +55,9 @@ import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.model.xml.ModeldataType;
-import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.proxy.ICalculationService;
+import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.nature.calcjob.CalcJobHandler;
 
 /**
  * ProcessJob
@@ -70,10 +69,7 @@ import org.kalypso.ui.nature.calcjob.CalcJobHandler;
  */
 public class ProcessJob extends Job
 {
-
   private ModeldataType m_modelData;
-
-  private ICalcJob m_calcJob;
 
   private IProject m_project;
 

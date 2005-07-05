@@ -49,7 +49,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.kalypso.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.floodrisk.process.ProcessExtension;
 import org.kalypso.floodrisk.process.ProcessExtensionReader;
 import org.kalypso.floodrisk.wizard.ChooseProcessDialog;

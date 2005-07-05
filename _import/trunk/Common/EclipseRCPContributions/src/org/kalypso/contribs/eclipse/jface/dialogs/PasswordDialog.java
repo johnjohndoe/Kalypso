@@ -38,24 +38,45 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.wizard.view;
+package org.kalypso.contribs.eclipse.jface.dialogs;
 
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
 /**
- * Adds some additional methods to the {@link IWizard}
- * 
  * @author belger
  */
-public interface IWizard2 extends IWizard
+public class PasswordDialog extends InputDialog
 {
-  /**
-   * Finishes a single page
-   * 
-   * @return false, if something went wrong. Don't change the page now.
-   */
-  public boolean finishPage( final IWizardPage page );
-  
-  public boolean hasCancelButton();
+  public PasswordDialog( final Shell parentShell, final String dialogTitle, final String dialogMessage )
+  {
+    super( parentShell, dialogTitle, dialogMessage, "", new PasswordValidator() );
+  }
+
+  protected Control createDialogArea( Composite parent )
+  {
+    final Control composite = super.createDialogArea( parent );
+
+    getText().setEchoChar( '*' );
+
+    return composite;
+  }
+
+  private static class PasswordValidator implements IInputValidator
+  {
+    /**
+     * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
+     */
+    public String isValid( final String newText )
+    {
+      if( newText == null || newText.length() == 0 )
+        return "Passwort darf nicht leer sein";
+
+      return null;
+    }
+  }
+
 }

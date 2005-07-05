@@ -56,7 +56,7 @@ import org.kalypso.services.common.ServiceConfig;
  * <p>
  * Thread to run the local calcJob
  * 
- * @see org.kalypso.services.calculation.service.impl.CalcJobThread
+ * @see LocalCalcJobThread
  * 
  * created by
  * @author Nadja Peiler (19.05.2005)
@@ -73,7 +73,7 @@ public class LocalCalcJobThread extends Thread
   private ProcessDataProvider m_inputProvider;
 
   /**
-   * @see org.kalypso.services.calculation.service.impl.CalcJobThread#CalcJobThread(java.lang.String, java.lang.String,
+   * siehe org.kalypso.services.calculation.service.impl.CalcJobThread#CalcJobThread(java.lang.String, java.lang.String,
    *      java.lang.String, org.kalypso.services.calculation.job.ICalcJob,
    *      org.kalypso.services.calculation.service.impl.ModelspecData, javax.activation.DataHandler,
    *      org.kalypso.services.calculation.service.CalcJobClientBean[],

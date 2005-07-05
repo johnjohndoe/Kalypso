@@ -17,6 +17,11 @@ public class EclipseRCPContributionsPlugin extends Plugin
   //Resource bundle.
   private ResourceBundle resourceBundle;
 
+  public static String getID()
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
+  
   /**
    * The constructor.
    */

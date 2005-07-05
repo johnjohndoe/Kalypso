@@ -754,8 +754,6 @@ public class CreateFloodRiskProjectJob extends Job
 
   /**
    * deletes the project, when job is canceled
-   * 
-   * @return
    *  
    */
   public boolean performCancle()

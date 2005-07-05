@@ -64,7 +64,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * <p>
  * Handler for local calculation jobs
  * 
- * @see org.kalypso.ui.nature.calcjob.CalcJobHandler
+ * @see org.kalypso.simulation.ui.calccase.CalcJobHandler
  * 
  * created by
  * 
@@ -82,7 +82,7 @@ public class LocalCalcJobHandler
   private ICalculationService m_calcService;
 
   /**
-   * @see org.kalypso.ui.nature.calcjob.CalcJobHandler#CalcJobHandler(ModeldataType, ICalculationService)
+   * @see org.kalypso.simulation.ui.calccase.CalcJobHandler#CalcJobHandler(ModeldataType, ICalculationService)
    * 
    * @param modelData
    * @param calcService
@@ -95,7 +95,7 @@ public class LocalCalcJobHandler
   }
 
   /**
-   * @see org.kalypso.ui.nature.calcjob.CalcJobHandler#runJob(IFolder, IProgressMonitor)
+   * @see org.kalypso.simulation.ui.calccase.CalcJobHandler#runJob(IFolder, IProgressMonitor)
    * 
    * @param project
    *          project to calculate, instead of calculationFolder
