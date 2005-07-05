@@ -55,10 +55,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.resources.FileUtilities;
+import org.kalypso.commons.runtime.LogStatusWrapper;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
-import org.kalypso.eclipse.core.resources.FileUtilities;
-import org.kalypso.eclipse.core.runtime.LogStatusWrapper;
 import org.kalypso.model.xml.TransformationList;
 import org.kalypso.model.xml.TransformationType;
 

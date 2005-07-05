@@ -55,7 +55,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
-import org.kalypso.eclipse.core.runtime.MultiStatus;
+import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.services.ocs.repository.ServiceRepositoryObservation;
 import org.kalypso.services.proxy.IObservationService;

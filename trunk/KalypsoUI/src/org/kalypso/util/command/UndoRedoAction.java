@@ -43,7 +43,7 @@ package org.kalypso.util.command;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
-import org.kalypso.eclipse.jface.action.FullAction;
+import org.kalypso.contribs.eclipse.jface.action.FullAction;
 
 /**
  * @author belger

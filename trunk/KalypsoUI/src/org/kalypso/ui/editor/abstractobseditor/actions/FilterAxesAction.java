@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.abstractobseditor.actions;
 
-import org.kalypso.eclipse.jface.action.FullAction;
+import org.kalypso.contribs.eclipse.jface.action.FullAction;
 import org.kalypso.ui.ImageProvider;
 
 /**

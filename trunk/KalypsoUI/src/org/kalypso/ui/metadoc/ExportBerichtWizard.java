@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.internal.UIPlugin;
-import org.kalypso.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.metadoc.Document;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ui.ImageProvider;

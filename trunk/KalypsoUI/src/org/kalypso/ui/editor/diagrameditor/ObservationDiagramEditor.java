@@ -50,7 +50,7 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.jfree.chart.ChartPanel;
-import org.kalypso.eclipse.util.SetContentHelper;
+import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;

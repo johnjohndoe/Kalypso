@@ -10,7 +10,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -54,7 +53,7 @@ public class Point
   private Feature feature = null;
 
   public Point( String pointID, Double val, double x, double y,
-      CS_CoordinateSystem crs ) throws GM_Exception
+      CS_CoordinateSystem crs )
   {
     GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
     Feature f = FeatureFactory.createFeature( pointID, this.featureType );
@@ -69,7 +68,6 @@ public class Point
   }//constructor}
 
   public Point( String pointID, double x, double y, CS_CoordinateSystem crs )
-      throws GM_Exception
   {
     if( crs == null )
     {
@@ -87,7 +85,6 @@ public class Point
   }//constructor}
 
   public Point( String pointID, GM_Position pos, CS_CoordinateSystem crs )
-      throws GM_Exception
   {
     if( crs == null )
     {
@@ -202,9 +199,6 @@ public class Point
    * <B>public double distanceDy(Point p2) </B>
    * <P>
    * Returns the distance of y value with given point
-   * 
-   * @param p2 Point
-   * @return double
    */
 //  public double distanceDy( Point p2 )
 //  {

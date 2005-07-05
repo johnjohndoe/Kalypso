@@ -59,17 +59,30 @@ public class KalypsoApplication implements IPlatformRunnable
    */
   public Object run( final Object args ) throws Exception
   {
-    final User user = KalypsoLoginManager.startLoginProcedure();
+    // Important: onlay once create the display and set it from the outside
+    // for both login and the workbench
+    // Reason: some resources (e.g. the dialog images) are (only once) registered statically on the display
+    // If the display gets disposed, all resources are disposed as well and will never be found
+    // again
+    final Display display = PlatformUI.createDisplay();
 
-    if( user == null )
-      return IPlatformRunnable.EXIT_OK;
+    try
+    {
+      final User user = KalypsoLoginManager.startLoginProcedure( display );
 
-    return startWorkbench( new KalypsoWorkbenchAdvisor( user ) );
+      if( user == null )
+        return IPlatformRunnable.EXIT_OK;
+
+      return startWorkbench( display, new KalypsoWorkbenchAdvisor( user ) );
+    }
+    finally
+    {
+      display.dispose();
+    }
   }
 
-  private Object startWorkbench( final WorkbenchAdvisor advisor )
+  private Object startWorkbench( final Display display, final WorkbenchAdvisor advisor )
   {
-    final Display display = PlatformUI.createDisplay();
     final int returnCode = PlatformUI.createAndRunWorkbench( display, advisor );
 
     return returnCode == PlatformUI.RETURN_RESTART ? IPlatformRunnable.EXIT_RESTART : IPlatformRunnable.EXIT_OK;

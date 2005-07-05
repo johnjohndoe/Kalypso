@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.factory.FactoryException;
-import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;

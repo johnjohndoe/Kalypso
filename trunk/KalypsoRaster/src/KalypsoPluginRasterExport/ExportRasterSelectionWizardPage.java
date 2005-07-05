@@ -68,8 +68,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
-import org.kalypso.eclipse.core.resources.ProjectUtilities;
 
 /**
  * ExportRasterSelectionWizardPage, Selection: source(*.gml) and target(*.asc) file

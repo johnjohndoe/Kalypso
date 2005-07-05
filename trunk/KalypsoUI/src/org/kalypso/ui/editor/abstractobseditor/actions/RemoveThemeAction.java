@@ -41,7 +41,7 @@
 package org.kalypso.ui.editor.abstractobseditor.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.kalypso.eclipse.jface.action.FullAction;
+import org.kalypso.contribs.eclipse.jface.action.FullAction;
 import org.kalypso.ogc.sensor.commands.RemoveThemeCommand;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.ImageProvider;
