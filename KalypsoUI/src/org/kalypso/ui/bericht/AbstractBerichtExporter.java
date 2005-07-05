@@ -38,63 +38,53 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ui.bericht;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.ui.repository.view.ObservationChooser;
+import java.net.URL;
+
+import org.kalypso.commons.arguments.Arguments;
 
 /**
- * Superclass of all actions provided by the ObservationChooser
- * 
- * @author schlienger
+ * @author belger
  */
-public abstract class AbstractRepositoryExplorerAction extends org.kalypso.contribs.eclipse.jface.action.FullAction
+public abstract class AbstractBerichtExporter implements IBerichtExporter
 {
-  private final ObservationChooser m_explorer;
+  private Arguments m_arguments = new Arguments();
+
+  private static final String ARG_NAME = "name";
+
+  private URL m_context = null;
 
   /**
-   * Creates a new instance of the class.
+   * @see org.kalypso.ui.bericht.IBerichtExporter#init(URL, Arguments)
    */
-  public AbstractRepositoryExplorerAction( final ObservationChooser explorer, final String text,
-      final ImageDescriptor image, final String tooltipText )
+  public void init( final URL context, final Arguments arguments )
   {
-    super( text, image, tooltipText );
-
-    m_explorer = explorer;
+    m_context = context;
+    m_arguments.putAll( arguments );
   }
 
   /**
-   * @return repository explorer
+   * @return Returns the context.
    */
-  public ObservationChooser getExplorer()
+  protected URL getContext()
   {
-    return m_explorer;
+    return m_context;
   }
 
   /**
-   * @return the resource viewer
+   * @return Returns the arguments.
    */
-  protected TreeViewer getViewer()
+  protected Arguments getArguments()
   {
-    return m_explorer.getViewer();
+    return m_arguments;
   }
 
   /**
-   * @return the shell to use within actions.
+   * @see org.kalypso.ui.bericht.IBerichtExporter#toString()
    */
-  protected Shell getShell()
+  public String toString()
   {
-    return m_explorer.getShell();
-  }
-
-  /**
-   * @return the repository container
-   */
-  protected IRepositoryContainer getRepositoryContainer()
-  {
-    return m_explorer.getRepositoryContainer();
+    return m_arguments.getProperty( ARG_NAME, "<unbekannt>" );
   }
 }

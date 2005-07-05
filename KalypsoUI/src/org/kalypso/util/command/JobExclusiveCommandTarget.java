@@ -45,7 +45,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.eclipse.core.runtime.jobs.MutexSchedulingRule;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 
 /**
  * <p>

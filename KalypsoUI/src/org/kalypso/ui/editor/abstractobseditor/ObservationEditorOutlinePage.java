@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2;
+import org.kalypso.contribs.eclipse.ui.views.contentoutline.ContentOutlinePage2;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
@@ -79,7 +79,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   }
 
   /**
-   * @see org.kalypso.eclipse.ui.views.contentouline.ContentOutlinePage2#createTreeViewer(org.eclipse.swt.widgets.Composite)
+   * @see org.kalypso.contribs.eclipse.ui.views.contentoutline.ContentOutlinePage2#createTreeViewer(org.eclipse.swt.widgets.Composite)
    */
   protected TreeViewer createTreeViewer( final Composite parent )
   {

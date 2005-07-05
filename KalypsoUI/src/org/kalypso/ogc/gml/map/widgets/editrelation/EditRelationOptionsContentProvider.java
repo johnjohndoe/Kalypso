@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.eclipse.jface.ITreeVisitor;
+import org.kalypso.contribs.eclipse.jface.ITreeVisitor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;

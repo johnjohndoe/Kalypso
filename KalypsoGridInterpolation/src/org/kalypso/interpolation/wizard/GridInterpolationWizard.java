@@ -31,9 +31,7 @@ package org.kalypso.interpolation.wizard;
 
 import java.io.File;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.interpolation.mesh.Mesh;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -62,13 +60,7 @@ public class GridInterpolationWizard extends Wizard
    */
   public boolean performFinish()
   {
-    // TODO Auto-generated method stub
     return false;
-  }
-
-  public void init( IWorkbench workbench, IStructuredSelection selection )
-  {
-
   }
 
   public void addPages()
@@ -86,25 +78,16 @@ public class GridInterpolationWizard extends Wizard
     return m_page.getCoordinateSystem();
   }
 
-  /**
-   * @return
-   */
   public double getSize()
   {
     return m_page.getCellSize();
   }
 
-  /**
-   * @return
-   */
   public File getTarget()
   {
     return m_page.getTargetFile();
   }
 
-  /**
-   * @return
-   */
   public GM_Surface getBorderLine()
   {
     return m_page.getMesh().getBorderLine();

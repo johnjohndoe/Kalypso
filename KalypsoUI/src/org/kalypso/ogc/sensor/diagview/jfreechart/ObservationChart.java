@@ -82,7 +82,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
     m_view.addObsViewEventListener( this );
   }
 
-  private void setLegendProperties( String legendName, boolean showLegend )
+  protected void setLegendProperties( String legendName, boolean showLegend )
   {
     m_legend.setTitle( legendName );
     

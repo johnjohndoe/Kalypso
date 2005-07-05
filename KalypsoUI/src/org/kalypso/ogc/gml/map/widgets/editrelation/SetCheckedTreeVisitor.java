@@ -1,7 +1,7 @@
 package org.kalypso.ogc.gml.map.widgets.editrelation;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.kalypso.eclipse.jface.ITreeVisitor;
+import org.kalypso.contribs.eclipse.jface.ITreeVisitor;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *

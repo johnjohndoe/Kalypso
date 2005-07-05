@@ -79,7 +79,7 @@ public final class KalypsoLoginManager
    * <li>if the UserService is down, then it uses the default AppLoginValidator
    * </ul>
    */
-  public static User startLoginProcedure()
+  public static User startLoginProcedure( final Display display )
   {
     IUserService srv = null;
 
@@ -141,7 +141,6 @@ public final class KalypsoLoginManager
       lv = new AppLoginValidator();
     }
 
-    Display display = null;
     Shell shell = null;
 
     String username = lv.getDefaultUserName();
@@ -156,12 +155,8 @@ public final class KalypsoLoginManager
       if( useLogin || useScenario )
       {
         // make sure to have a display
-        if( display == null )
-        {
-          display = new Display();
-          shell = new Shell( display, SWT.SYSTEM_MODAL );
-          shell.setImage( KPImageProvider.IMAGE_KALYPSO_ICON.createImage() );
-        }
+        shell = new Shell( display, SWT.SYSTEM_MODAL );
+        shell.setImage( KPImageProvider.IMAGE_KALYPSO_ICON.createImage() );
 
         final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell, "Kalypso - Login", lv.getMessage(), username, lv
             .userNameChangeable(), lv.passwordEnabled(), useScenario, scenarios, scenarioDescriptions );
@@ -190,7 +185,7 @@ public final class KalypsoLoginManager
           break; // user successfully authenticated
         if( trials == 0 )
           throw new IllegalStateException( "Benutzer " + username
-              + " kann sich nicht einlogger. Seine Berechtigung sollte " + "geprüft werden." );
+              + " kann sich nicht einloggen. Seine Berechtigung sollte " + "geprüft werden." );
       }
       catch( final Exception e )
       {
@@ -208,8 +203,6 @@ public final class KalypsoLoginManager
 
     if( shell != null )
       shell.dispose();
-    if( display != null )
-      display.dispose();
 
     return user;
   }

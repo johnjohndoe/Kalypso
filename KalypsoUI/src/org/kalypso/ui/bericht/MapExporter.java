@@ -38,63 +38,33 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ui.bericht;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.ui.repository.view.ObservationChooser;
+import java.io.OutputStream;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Superclass of all actions provided by the ObservationChooser
- * 
- * @author schlienger
+ * @author belger
  */
-public abstract class AbstractRepositoryExplorerAction extends org.kalypso.contribs.eclipse.jface.action.FullAction
+public class MapExporter extends AbstractBerichtExporter
 {
-  private final ObservationChooser m_explorer;
-
   /**
-   * Creates a new instance of the class.
+   * @see org.kalypso.ui.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature,
+   *      java.io.OutputStream)
    */
-  public AbstractRepositoryExplorerAction( final ObservationChooser explorer, final String text,
-      final ImageDescriptor image, final String tooltipText )
+  public IStatus export( final Feature feature, final OutputStream os )
   {
-    super( text, image, tooltipText );
-
-    m_explorer = explorer;
+    return Status.OK_STATUS;
   }
 
   /**
-   * @return repository explorer
+   * @see org.kalypso.ui.bericht.IBerichtExporter#getExtension()
    */
-  public ObservationChooser getExplorer()
+  public String getExtension()
   {
-    return m_explorer;
-  }
-
-  /**
-   * @return the resource viewer
-   */
-  protected TreeViewer getViewer()
-  {
-    return m_explorer.getViewer();
-  }
-
-  /**
-   * @return the shell to use within actions.
-   */
-  protected Shell getShell()
-  {
-    return m_explorer.getShell();
-  }
-
-  /**
-   * @return the repository container
-   */
-  protected IRepositoryContainer getRepositoryContainer()
-  {
-    return m_explorer.getRepositoryContainer();
+    return ".jpg";
   }
 }

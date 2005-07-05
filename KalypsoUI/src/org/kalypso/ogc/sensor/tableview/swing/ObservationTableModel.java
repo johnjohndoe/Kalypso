@@ -54,7 +54,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.eclipse.core.runtime.MultiStatus;
+import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;

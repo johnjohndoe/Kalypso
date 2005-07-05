@@ -125,13 +125,13 @@ public class Mesh
     if( m_meshElements.size() == 0 )
       return;
     int progress = 1;
-    int noElements = m_meshElements.size();
+//    int noElements = m_meshElements.size();
     try
     {
       Iterator it = m_meshElements.keySet().iterator();
       while( it.hasNext() )
       {
-        MeshElement me = (MeshElement)m_meshElements.get( (String)it.next() );
+        MeshElement me = (MeshElement)m_meshElements.get( it.next() );
         Vector cells = ( (Grid)grid ).getCellsFromGrid( me.getEnvelope(), me.getCoordinateSystem() );
         //System.out.println( progress + " of " + noElements );
         me.interpolateMeshElement( (GM_Position[])cells.toArray( new GM_Position[cells.size()] ), (Grid)grid );

@@ -67,7 +67,7 @@ import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
-import org.kalypso.ui.calcwizard.bericht.ExporterHelper;
+import org.kalypso.ui.bericht.ExporterHelper;
 import org.xml.sax.InputSource;
 
 /**

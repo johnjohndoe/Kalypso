@@ -22,14 +22,13 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  */
 public class PointTable extends HashMap
 {
-
   private String name = null;
 
   // TODO ?? how to implement the geo-search
   //private SplitSort geoList = null;
   public PointTable()
   {
-  };
+  }
 
   public PointTable( String name )
   {
@@ -55,8 +54,8 @@ public class PointTable extends HashMap
       remove( id );
       return 1;
     }
-    else
-      return -1;
+
+    return -1;
   }//removePoint
 
   public Point getPoint( String id )
@@ -98,7 +97,7 @@ public class PointTable extends HashMap
     Iterator it = pt.keySet().iterator();
     while( it.hasNext() )
     {
-      Point p = (Point)pt.getPoint( (String)it.next() );
+      Point p = pt.getPoint( (String)it.next() );
       addPoint( p );
     }
   }//addPoints
@@ -106,12 +105,12 @@ public class PointTable extends HashMap
   public PointTable getPoints( Element e )
   {
     PointTable pt = new PointTable();
-    ;
+    
     Vector points = e.getVertList();
     Iterator it = points.iterator();
     while( it.hasNext() )
     {
-      Point p = (Point)getPoint( (String)it.next() );
+      Point p = getPoint( (String)it.next() );
       if( p != null )
         pt.addPoint( p );
     }

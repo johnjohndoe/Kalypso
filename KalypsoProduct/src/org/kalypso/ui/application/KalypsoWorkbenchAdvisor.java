@@ -45,19 +45,25 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
+import org.eclipse.ui.internal.ClosePerspectiveAction;
+import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
-import org.kalypso.product.IKalypsoProductConstants;
+import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
+import org.kalypso.simulation.ui.wizards.calculation.CalcWizardPerspective;
 import org.kalypso.users.User;
 import org.kalypso.users.UserServiceConstants;
 
@@ -98,7 +104,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
    */
   public String getInitialWindowPerspectiveId()
   {
-    return IKalypsoProductConstants.PROGNOSE_PERSPECTIVE;
+    return IKalypsoSimulationUIConstants.PROGNOSE_PERSPECTIVE;
   }
 
   /**
@@ -160,7 +166,34 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       windowConfigurer.setShowStatusLine( false );
     }
   }
+  
 
+  /**
+   * @see org.eclipse.ui.application.WorkbenchAdvisor#postWindowOpen(org.eclipse.ui.application.IWorkbenchWindowConfigurer)
+   */
+  public void postWindowOpen( final IWorkbenchWindowConfigurer configurer )
+  {
+    super.postWindowOpen( configurer );
+
+    // HACK: close the WizardPerspective if it is still open
+    final IWorkbenchWindow window = configurer.getWindow();
+    final IPerspectiveRegistry perspectiveRegistry = window.getWorkbench().getPerspectiveRegistry();
+    final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
+        .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
+    
+    final IWorkbenchPage activePage = window.getActivePage();
+    
+    // DOUBLE-HACK: ther is no public API to access the perspectives in the page :-(
+    if( ((WorkbenchPage)activePage).findPerspective( wizardPerspective ) != null )
+    {
+      // activate perspective, to it can be closed
+      activePage.setPerspective( wizardPerspective );
+      activePage.setPerspective( wizardPerspective );
+      final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( window );
+      closePerspAction.run();
+    }
+  }
+  
   /**
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#postStartup()
    */
@@ -187,7 +220,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final IWorkbench workbench = PlatformUI.getWorkbench();
     try
     {
-      workbench.showPerspective( IKalypsoProductConstants.PROGNOSE_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
+      workbench.showPerspective( IKalypsoSimulationUIConstants.PROGNOSE_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
     }
     catch( final WorkbenchException e )
     {

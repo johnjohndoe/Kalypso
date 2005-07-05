@@ -48,10 +48,6 @@
       <import plugin="org.eclipse.ui.workbench" export="true"/>    
       <import plugin="org.eclipse.debug.ui" export="true"/>
       <import plugin="org.kalypso.jwsdp" export="true"/>
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.ant.core"/>
-      <import plugin="org.eclipse.core.variables"/>
-      <import plugin="org.eclipse.ui.externaltools"/>
       <import plugin="org.kalypso.contribs.eclipseplatform"/>
    </requires>
    <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
@@ -580,19 +576,6 @@
       </filter>
    </extension>
    <extension
-         id="ModelNature"
-         name="ModelNature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="org.kalypso.ui.nature.ModelNature">
-         </run>
-      </runtime>
-      <options
-            allowLinking="true">
-      </options>
-   </extension>
-   <extension
          id="perspectives"
          name="perspectives"
          point="org.eclipse.ui.perspectives">
@@ -609,134 +592,6 @@
             class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
             id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory">
       </perspective>
-   </extension>
-   <extension
-         id="actionSets"
-         name="actionSets"
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="Kalypso Modell"
-            description="Kalypso Modell Kommandos"
-            visible="false"
-            id="org.kalypso.actionSet.model">
-         <menu
-               label="Modell"
-               path="additions"
-               id="org.kalypso.menu.model">
-            <groupMarker
-                  name="modelStart">
-            </groupMarker>
-            <separator
-                  name="modelSep">
-            </separator>
-            <groupMarker
-                  name="prognoseStart">
-            </groupMarker>
-         </menu>
-         <action
-               label="Vorhersagen organisieren"
-               class="org.kalypso.ui.action.ManagePrognosesAction"
-               style="push"
-               menubarPath="org.kalypso.menu.model/prognoseStart"
-               id="org.kalypso.action.model.manageCalcCases"/>
-         <action
-               label="Vorhersage durchführen"
-               icon="icons/kalypso16.gif"
-               class="org.kalypso.ui.action.StartCalcWizardAction"
-               menubarPath="org.kalypso.menu.model/prognoseStart"
-               id="org.kalypso.action.model.startPrognose">
-         </action>
-         <action
-               label="Berechnung(en) durchführen"
-               icon="icons/rechne.gif"
-               class="org.kalypso.ui.action.StartCalculationActionDelegate"
-               tooltip="Führt die Berechnung der selektierten Rechenvarianten aus, bereits vorhandene Ergebnisdaten werden überschrieben"
-               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.runCalcCase">
-         </action>
-         <action
-               label="Zurückspeichern"
-               icon="icons/util/copy_r_co.gif"
-               class="org.kalypso.ui.action.CommitModelDelegate"
-               tooltip="Speichert die Änderungen am Modell auf den Server zurück"
-               menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.commitModel">
-         </action>
-         <action
-               label="Modell aktualisieren"
-               icon="icons/util/copy_l_co.gif"
-               class="org.kalypso.ui.action.UpdateModelDelegate"
-               tooltip="aktualisiert ein bereits vorhandenes Modell mit Daten vom Server"
-               menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.updateModel">
-         </action>
-         <action
-               label="Vom Server laden..."
-               icon="icons/util/copy_l_co.gif"
-               helpContextId="org.kalypso.manual.menu_modell"
-               tooltip="lädt ein Modell vom Sever, falls es nicht bereits vorhanden ist"
-               class="org.kalypso.ui.action.GetModelDelegate"
-               menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.checkoutModel">
-         </action>
-         <action
-               label="Kopieren..."
-               icon="icons/util/copy_edit.gif"
-               class="org.kalypso.ui.action.CopyModelDelegate"
-               tooltip="legt eine Variante vom aktuelle gewählten Modell an"
-               retarget="false"
-               menubarPath="org.kalypso.menu.model/modelStart"
-               id="org.kalypso.action.model.copyModel">
-         </action>
-         <menu
-               label="Rechenvariante"
-               path="org.kalypso.menu.model"
-               id="org.kalypso.menu.calcCase">
-            <groupMarker
-                  name="calcCaseStart">
-            </groupMarker>
-         </menu>
-         <action
-               label="Archivieren"
-               icon="icons/util/copy_r_co.gif"
-               class="org.kalypso.ui.action.CommitCalcCaseDelegate"
-               tooltip="legt eine Rechenvariante auf dem Server ab"
-               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.commitCalcCase">
-         </action>
-         <action
-               label="Vom Server laden..."
-               icon="icons/util/copy_l_co.gif"
-               class="org.kalypso.ui.action.GetCalcCaseDelegate"
-               tooltip="lädt eine vorhandene Rechenvariante vom Server"
-               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.getCalcCase">
-         </action>
-         <action
-               label="Zeitreihen aktualisieren"
-               icon="icons/util/update.gif"
-               tooltip="aktualisiert die Zeitreihen anhand der in den Steuerparametern definierten Zeiträume"
-               class="org.kalypso.ui.action.UpdateCalcCaseTimeseries"
-               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.updateCalcCaseTimeseries">
-         </action>
-         <action
-               label="Kopieren..."
-               icon="icons/util/copy_edit.gif"
-               class="org.kalypso.ui.action.CopyCalcCase"
-               tooltip="legt eine Kopie der selektierten Rechenvariante an"
-               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.copyCalcCase">
-         </action>
-         <action
-               label="Neu..."
-               icon="icons/util/new_wiz.gif"
-               tooltip="Erzeugt eine neue Rechenvariante"
-               class="org.kalypso.ui.action.NewCalcCaseAction"
-               menubarPath="org.kalypso.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.newCalcCase">
-         </action>
-      </actionSet>
    </extension>
    <extension
          id="exportWizards"

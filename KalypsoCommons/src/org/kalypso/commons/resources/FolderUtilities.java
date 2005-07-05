@@ -38,63 +38,51 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.commons.resources;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.ui.repository.view.ObservationChooser;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 
 /**
- * Superclass of all actions provided by the ObservationChooser
- * 
- * @author schlienger
+ * @author belger
  */
-public abstract class AbstractRepositoryExplorerAction extends org.kalypso.contribs.eclipse.jface.action.FullAction
+public class FolderUtilities
 {
-  private final ObservationChooser m_explorer;
-
-  /**
-   * Creates a new instance of the class.
-   */
-  public AbstractRepositoryExplorerAction( final ObservationChooser explorer, final String text,
-      final ImageDescriptor image, final String tooltipText )
+  /** Do not instantiate */
+  private FolderUtilities()
   {
-    super( text, image, tooltipText );
-
-    m_explorer = explorer;
+  // 
   }
 
-  /**
-   * @return repository explorer
-   */
-  public ObservationChooser getExplorer()
+  public static void mkdirs( final IContainer folder ) throws CoreException
   {
-    return m_explorer;
+    if( folder == null || folder.exists() )
+      return;
+
+    if( !( folder instanceof IFolder ) )
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Cannot mkdirs project or workspace", null ) );
+
+    // create parents
+    mkdirs( folder.getParent() );
+
+    ( (IFolder)folder ).create( false, true, new NullProgressMonitor() );
   }
 
-  /**
-   * @return the resource viewer
-   */
-  protected TreeViewer getViewer()
+  public static IFolder createUnusedFolder( final IFolder parentFolder, final String prefix )
   {
-    return m_explorer.getViewer();
-  }
+    int i = 0;
+    while( true )
+    {
+      final IFolder f = parentFolder.getFolder( prefix + i );
+      if( !f.exists() )
+        return f;
 
-  /**
-   * @return the shell to use within actions.
-   */
-  protected Shell getShell()
-  {
-    return m_explorer.getShell();
-  }
-
-  /**
-   * @return the repository container
-   */
-  protected IRepositoryContainer getRepositoryContainer()
-  {
-    return m_explorer.getRepositoryContainer();
+      i++;
+    }
   }
 }

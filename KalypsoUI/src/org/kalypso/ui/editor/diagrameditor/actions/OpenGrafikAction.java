@@ -52,7 +52,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
-import org.kalypso.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;

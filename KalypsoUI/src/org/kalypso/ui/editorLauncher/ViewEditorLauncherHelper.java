@@ -67,7 +67,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.eclipse.core.resources.FileFilterVisitor;
+import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
 
 /**
  * Helper-Klasse für die Template-Auswahl
