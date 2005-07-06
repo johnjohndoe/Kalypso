@@ -762,6 +762,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
     String html = "";
     if( page instanceof IHtmlWizardPage )
       html = ( (IHtmlWizardPage)page ).getHtml();
+    if( html == null )
+      html = "";
+    
     return html;
   }
 
@@ -1429,7 +1432,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
       s = ""; //$NON-NLS-1$
     setWizardTitle( s );
     if( m_currentPage != null )
-      setTitleImage( m_currentPage.getImage() );
+      setWizardTitleImage( m_currentPage.getImage() );
     updateDescriptionMessage();
     updateMessage();
   }
