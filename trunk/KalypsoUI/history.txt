@@ -66,6 +66,10 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
   wenn W plus RatingTable vorhanden sind.
 - Im Repository-Browser ist es möglich die WQ-Beziehung als Tabelle und Diagramm darzustellen
 
+- Vorhersage-Wizard jetzt eingebettet und nicht mehr als modaler Dialog
+- Vorhersage-Wizard unterstützt HTML-Navigation
+- Knopf für beliebige Ant Aufrufe im Vorhersage-Wizard
+
 - WidgetActions nach KaylspoUI verschoben + refactorisiert, so daß man nun in einer extension neue widgets hinzufügen kann
 
 -------------------------------------
