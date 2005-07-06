@@ -5,7 +5,10 @@
 	<!-- Phase 1: KONTROLLE DER ZEITREIHEN -->
 
 	<!-- Kontrolle Niederschlag -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif" >
+	
+	org.kalypso.simulation.ui.wizards.calculation.modelpages
+	
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
 
         <arg name="mainSash" value="40"/>
@@ -16,10 +19,12 @@
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung"/>
         
        	<arg name="maximizeMap" value="true"/>
+       	
+       	<arg name="htmlURL" value=".model/wizardhtml/test.html"/>
     </page>
 
 	<!-- Kontrolle Talsperrenabgaben -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
 
         <arg name="mainSash" value="40"/>
@@ -33,7 +38,7 @@
     </page>
 
 	<!-- Kontrolle W-Eingabepegel -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
 
         <arg name="mainSash" value="40"/>
@@ -52,7 +57,7 @@
     </page>
 
 	<!-- Kontrolle W-Eingabepegel -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
 
         <arg name="mainSash" value="40"/>
@@ -71,7 +76,7 @@
     </page>
 
 	<!-- Kontrolle Flutungen und Zuflüsse -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Flutungen und Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Flutungen und Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/vorgabepegel.gmt"/>
 
         <arg name="mainSash" value="40"/>
@@ -88,7 +93,7 @@
 	<!-- Phase 2: Berechnung und Anpassen der Anfangsbedingungen -->
 
 	<!-- Eingabe Anfangsbodenfeuchten der N-A Modelle -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/ezg.odt"/>
@@ -111,7 +116,7 @@
     </page>
 
 	<!-- Eingabe Anfangsvolumina der Talsperren -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
@@ -134,7 +139,7 @@
     </page>
 
 	<!-- Eingabe Parameter der Flusslaufmodelle -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
         <arg name="tableTemplate" value=".templates/calcCase/flusslauf.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/flusslauf.odt"/>
@@ -157,7 +162,7 @@
 
 	<!-- Phase 3: Ergebnisdarstellung und Ablage -->
 
-	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage"
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage"
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
 	   
