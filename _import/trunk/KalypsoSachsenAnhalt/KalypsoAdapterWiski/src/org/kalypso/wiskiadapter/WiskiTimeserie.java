@@ -230,9 +230,9 @@ public class WiskiTimeserie implements IObservation
       try
       {
         final String useType;
-        if( Arrays.binarySearch( req.getAxisTypes(), TimeserieConstants.TYPE_WATERLEVEL ) >= 0 )
+        if( req != null && Arrays.binarySearch( req.getAxisTypes(), TimeserieConstants.TYPE_WATERLEVEL ) >= 0 )
           useType = TimeserieConstants.TYPE_WATERLEVEL;
-        else if( Arrays.binarySearch( req.getAxisTypes(), TimeserieConstants.TYPE_VOLUME ) >= 0 )
+        else if( req != null && Arrays.binarySearch( req.getAxisTypes(), TimeserieConstants.TYPE_VOLUME ) >= 0 )
           useType = TimeserieConstants.TYPE_VOLUME;
         else
           useType = TimeserieConstants.TYPE_RUNOFF;

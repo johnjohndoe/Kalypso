@@ -110,12 +110,12 @@ public class TsInfoItem implements IRepositoryItem
 
   String getWiskiUnit()
   {
-    return m_map.getProperty( "tsinfo_unitname" );
+    return m_map.getProperty( "tsinfo_unitname", "<?>" );
   }
 
   String getWiskiType()
   {
-    return m_map.getProperty( "parametertype_name" );
+    return m_map.getProperty( "parametertype_name", "<?>" );
   }
 
   /**
@@ -123,17 +123,17 @@ public class TsInfoItem implements IRepositoryItem
    */
   Long getWiskiId()
   {
-    return Long.valueOf( m_map.getProperty( "tsinfo_id" ) );
+    return Long.valueOf( m_map.getProperty( "tsinfo_id", "<?>" ) );
   }
 
   String getWiskiIdAsString()
   {
-    return m_map.getProperty( "tsinfo_id" );
+    return m_map.getProperty( "tsinfo_id", "<?>" );
   }
 
   String getWiskiName()
   {
-    return m_map.getProperty( "stationparameter_longname" );
+    return m_map.getProperty( "stationparameter_longname", "<?>" );
   }
 
   /**
@@ -142,7 +142,7 @@ public class TsInfoItem implements IRepositoryItem
    */
   String getWiskiCustomId()
   {
-    return m_map.getProperty( "tsinfo_name" );
+    return m_map.getProperty( "tsinfo_name", "<?>" );
   }
 
   String getWiskiDescription()
@@ -158,7 +158,7 @@ public class TsInfoItem implements IRepositoryItem
 
   String getWiskiStationId()
   {
-    return m_map.getProperty( "station_id" );
+    return m_map.getProperty( "station_id", "<?>" );
   }
 
   /**
