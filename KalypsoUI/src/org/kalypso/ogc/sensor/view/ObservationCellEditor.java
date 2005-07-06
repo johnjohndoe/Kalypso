@@ -38,63 +38,46 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ogc.sensor.view;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.ui.repository.view.ObservationChooser;
+import org.eclipse.jface.viewers.DialogCellEditor;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
- * Superclass of all actions provided by the ObservationChooser
+ * ObservationCellEditor
  * 
  * @author schlienger
  */
-public abstract class AbstractRepositoryExplorerAction extends org.kalypso.contribs.eclipse.jface.action.FullAction
+public class ObservationCellEditor extends DialogCellEditor
 {
-  private final ObservationChooser m_explorer;
-
-  /**
-   * Creates a new instance of the class.
-   */
-  public AbstractRepositoryExplorerAction( final ObservationChooser explorer, final String text,
-      final ImageDescriptor image, final String tooltipText )
+  public ObservationCellEditor( final Composite parent )
   {
-    super( text, image, tooltipText );
-
-    m_explorer = explorer;
+    this( parent, SWT.NONE, null );
   }
 
-  /**
-   * @return repository explorer
-   */
-  public ObservationChooser getExplorer()
+  public ObservationCellEditor( final Composite parent, final int style, final String id )
   {
-    return m_explorer;
+    super( parent, style );
+    setValue( id );
   }
 
-  /**
-   * @return the resource viewer
-   */
-  protected TreeViewer getViewer()
+  protected Object openDialogBox( final Control cellEditorWindow )
   {
-    return m_explorer.getViewer();
-  }
+    final ObservationChooserDialog dlg = new ObservationChooserDialog( cellEditorWindow.getShell() );
+    final String id = (String)getValue();
+    if( id != null )
+      dlg.setSelectedObservation( id );
 
-  /**
-   * @return the shell to use within actions.
-   */
-  protected Shell getShell()
-  {
-    return m_explorer.getShell();
-  }
+    int ret = dlg.open();
+    if( ret == Window.OK )
+    {
+      setValue( dlg.getSelectedObservation() );
+      return getValue();
+    }
 
-  /**
-   * @return the repository container
-   */
-  protected IRepositoryContainer getRepositoryContainer()
-  {
-    return m_explorer.getRepositoryContainer();
+    return null;
   }
 }

@@ -38,27 +38,63 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.diagview.jfreechart;
+package org.kalypso.ogc.sensor.view.actions;
 
-import org.jfree.chart.plot.Plot;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
+import org.kalypso.repository.container.IRepositoryContainer;
 
 /**
+ * Superclass of all actions provided by the ObservationChooser
+ * 
  * @author schlienger
  */
-public final class ChartFactory
+public abstract class AbstractRepositoryExplorerAction extends org.kalypso.contribs.eclipse.jface.action.FullAction
 {
-  /**
-   * Creates and returns an observation chart.
-   */
-  static Plot createObservationPlot( final DiagView template ) throws SensorException
-  {
-    synchronized( template )
-    {
-      final ObservationPlot plot = new ObservationPlot( template );
+  private final ObservationChooser m_explorer;
 
-      return plot;
-    }
+  /**
+   * Creates a new instance of the class.
+   */
+  public AbstractRepositoryExplorerAction( final ObservationChooser explorer, final String text,
+      final ImageDescriptor image, final String tooltipText )
+  {
+    super( text, image, tooltipText );
+
+    m_explorer = explorer;
+  }
+
+  /**
+   * @return repository explorer
+   */
+  public ObservationChooser getExplorer()
+  {
+    return m_explorer;
+  }
+
+  /**
+   * @return the resource viewer
+   */
+  protected TreeViewer getViewer()
+  {
+    return m_explorer.getViewer();
+  }
+
+  /**
+   * @return the shell to use within actions.
+   */
+  protected Shell getShell()
+  {
+    return m_explorer.getShell();
+  }
+
+  /**
+   * @return the repository container
+   */
+  protected IRepositoryContainer getRepositoryContainer()
+  {
+    return m_explorer.getRepositoryContainer();
   }
 }

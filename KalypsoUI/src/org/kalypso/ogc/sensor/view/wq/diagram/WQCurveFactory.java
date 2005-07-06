@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/*--------------- Kalypso-Header ------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,29 +36,33 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.diagview.jfreechart;
 
-import org.jfree.chart.plot.Plot;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagView;
+ --------------------------------------------------------------------------*/
+
+package org.kalypso.ogc.sensor.view.wq.diagram;
+
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 
 /**
  * @author schlienger
  */
-public final class ChartFactory
+public class WQCurveFactory
 {
-  /**
-   * Creates and returns an observation chart.
-   */
-  static Plot createObservationPlot( final DiagView template ) throws SensorException
+  private WQCurveFactory()
   {
-    synchronized( template )
-    {
-      final ObservationPlot plot = new ObservationPlot( template );
+  // empty
+  }
 
-      return plot;
-    }
+  public static IObservation createObservation( final WQTable table )
+  {
+    final WQPairTuppleModel model = new WQPairTuppleModel( table.getPairs() );
+
+    final SimpleObservation obs = new SimpleObservation( "", "", table.toString(), false, null, new MetadataList(),
+        model.getAxisList(), model );
+
+    return obs;
   }
 }

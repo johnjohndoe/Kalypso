@@ -304,6 +304,14 @@ public class TimeserieUtils
   }
 
   /**
+   * Create a default axis for the given type and the key flag.
+   */
+  public static IAxis createDefaulAxis( final String type, final boolean isKey )
+  {
+    return new DefaultAxis( getName( type ), type, getUnit( type ), getDataClass( type ), isKey );
+  }
+
+  /**
    * Returns a NumberFormat instance according to the given timeserie type. If there is no specific instance for the
    * given type, then a default number format is returned.
    * 

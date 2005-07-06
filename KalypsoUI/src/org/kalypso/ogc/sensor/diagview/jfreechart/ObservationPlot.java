@@ -90,13 +90,6 @@ public class ObservationPlot extends XYPlot
 {
   private static final ConfigurableCachableObjectFactory OF;
 
-  //  /** default line renderer */
-  //  private final XYItemRenderer LINE_RENDERER = new StandardXYItemRenderer(
-  //      StandardXYItemRenderer.LINES );
-  //
-  //  /** default bar renderer */
-  //  private final XYItemRenderer BAR_RENDERER = new XYBarRenderer();
-
   static
   {
     final Properties props = new Properties();
@@ -133,9 +126,6 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Constructor.
-   * 
-   * @param view
-   * @throws SensorException
    */
   public ObservationPlot( final DiagView view ) throws SensorException
   {

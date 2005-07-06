@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.timeseries.wq.wqtable;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -201,8 +202,9 @@ public class WQTable
   {
     final StringBuffer sb = new StringBuffer();
 
-    sb.append( "Validity: " ).append( m_validity ).append( " Offset: " ).append( m_offset ).append( "\n" ).append(
-        m_wSortedPairs ).append( "\n" );
+    final DateFormat df = DateFormat.getDateTimeInstance();
+    sb.append( "Gültigkeit: " ).append( df.format( m_validity ) ).append( " Offset: " ).append( m_offset );//.append( "\n" ).append(
+    //    m_wSortedPairs ).append( "\n" );
 
     return sb.toString();
   }

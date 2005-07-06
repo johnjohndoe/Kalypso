@@ -94,9 +94,6 @@ public abstract class AbstractTuppleModel implements ITuppleModel
 
   /**
    * Maps an axis to its position in this model
-   * 
-   * @param axis
-   * @param pos
    */
   protected void mapAxisToPos( final IAxis axis, final int pos )
   {

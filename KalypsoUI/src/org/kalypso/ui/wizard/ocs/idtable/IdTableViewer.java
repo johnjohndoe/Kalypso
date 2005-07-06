@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.ui.repository.view.ObservationCellEditor;
+import org.kalypso.ogc.sensor.view.ObservationCellEditor;
 
 /**
  * IdTableViewer

@@ -38,24 +38,30 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ogc.sensor.view.actions;
 
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
+import java.io.StringReader;
+
+import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
+import org.kalypso.ogc.sensor.view.wq.WQRelationDialog;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.ObservationChooser;
+import org.xml.sax.InputSource;
 
 /**
  * @author schlienger
  */
-public class CopyLinkAction extends AbstractRepositoryExplorerAction
+public class ViewWQRelationAction extends AbstractRepositoryExplorerAction
 {
-  public CopyLinkAction( final ObservationChooser explorer )
+  public ViewWQRelationAction( final ObservationChooser explorer )
   {
-    super( explorer, "Link kopieren", ImageProvider.IMAGE_OBSERVATION_LINK,
-        "Kopiert den Link in der Zwischenablage für die ausgewählte Zeitreihe" );
+    super( explorer, "WQ-Beziehung visualisieren", ImageProvider.IMAGE_UTIL_FILTER,
+        "Öffnet ein Dialog zur Visualisierung der WQ-Beziehung" );
   }
 
   /**
@@ -67,10 +73,26 @@ public class CopyLinkAction extends AbstractRepositoryExplorerAction
     if( obs == null )
       return;
 
-    final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-    clipboard.setContents( new Object[]
-    { obs.getIdentifier() }, new Transfer[]
-    { TextTransfer.getInstance() } );
-    clipboard.dispose();
+    final String propTable = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
+    if( propTable == null )
+      return;
+    
+    final StringReader reader = new StringReader( propTable );
+    try
+    {
+      final WQTableSet set = WQTableFactory.parse( new InputSource( reader ) );
+      reader.close();
+      
+      final WQRelationDialog dlg = new WQRelationDialog( getShell(), "WQ-Beziehung für " + obs.getName(), set );
+      dlg.open();
+    }
+    catch( final WQException e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
   }
 }

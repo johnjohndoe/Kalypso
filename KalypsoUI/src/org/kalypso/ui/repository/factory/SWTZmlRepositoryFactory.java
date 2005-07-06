@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.dialogs.FileRepositoryConfigDialog;
 
 /**
  * A GUI oriented File- <code>RepositoryFactory</code>. Please note that this factory currently creates a
