@@ -18,7 +18,7 @@
       <import plugin="org.eclipse.jface" export="true"/>
       <import plugin="org.eclipse.swt" export="true"/>
       <import plugin="org.eclipse.ui" export="true"/>
-      <import plugin="org.kalypso.contribs.java"/>
+      <import plugin="org.kalypso.contribs.java" export="true"/>
    </requires>
 
 </plugin>

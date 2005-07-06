@@ -58,4 +58,7 @@ public interface IWizard2 extends IWizard
   public boolean finishPage( final IWizardPage page );
   
   public boolean hasCancelButton();
+  
+  /** The initial browser size in percent of the whole area */
+  public int getInitialBrowserSize();
 }

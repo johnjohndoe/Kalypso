@@ -48,31 +48,52 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationAdapter;
+import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.contribs.java.lang.CatchRunnable;
 
 /**
  * A {@link org.eclipse.ui.IViewPart}which is a wizard container.
@@ -97,43 +118,40 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   private static final StackLayout m_stackLayout = new StackLayout();
 
-  private Composite m_panel;
+  /** Alles ausser title */
+  private Composite m_workArea;
+
+  /** Right side of sash form, will be recreated on every {@link #setWizard(IWizard, int)} */
+  private Composite m_pageAndButtonArea;
 
   private final Map m_buttons = new HashMap( 10 );
 
   private FontMetrics m_fontMetrics;
 
+  private Browser m_browser;
+
+  private SashForm m_mainSash;
+
+  private boolean m_isMovingToPreviousPage = false;
+
+  private boolean m_useNormalBackground = false;
+
+  /** If set to true, the background color of error messages is the same as normal messages. */
+  public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
+  {
+    m_useNormalBackground = useNormalBackground;
+  }
+
   /** Sets an new wizard and immediately displays its first page */
   public void setWizard( final IWizard wizard )
   {
-    disposeWizard();
-
-    m_wizard = wizard;
-    m_wizard.setContainer( this );
-    wizard.addPages();
-
-    updateControl();
-
-    fireWizardChanged( wizard, IWizardContainerListener.REASON_NONE );
-
-    showStartingPage();
+    setWizard( wizard, IWizardContainerListener.REASON_NONE );
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#dispose()
-   */
-  public void dispose()
+  /** Sets an new wizard and immediately displays its first page */
+  private void setWizard( final IWizard wizard, final int reason )
   {
-    disposeWizard();
-
-    m_listeners.clear();
-  }
-
-  /**
-   * Disposed off the current wizard
-   */
-  private void disposeWizard()
-  {
+    // clean wizard
     if( m_wizard != null )
     {
       //  todo: maybe ask for unsaved data?
@@ -141,6 +159,57 @@ public class WizardView extends ViewPart implements IWizardContainer3
       m_wizard.dispose();
       m_wizard = null;
     }
+
+    // clean components
+    if( m_pageAndButtonArea != null && !m_pageAndButtonArea.isDisposed() )
+    {
+      final Control[] children = m_pageAndButtonArea.getChildren();
+      for( int i = 0; i < children.length; i++ )
+        children[i].dispose();
+    }
+
+    // first time set this wizard
+    if( wizard != null && wizard != m_wizard )
+    {
+      wizard.setContainer( this );
+      wizard.addPages();
+    }
+
+    m_wizard = wizard;
+
+    if( m_wizard == null )
+      setErrorMessage( "Kein Wizard gesetzt" );
+    else
+    {
+      createRightPanel( m_pageAndButtonArea );
+
+      int initialBrowserSize = 25;
+      if( m_wizard instanceof IWizard2 )
+      {
+        final int wizardInitialBrowserSize = ( (IWizard2)m_wizard ).getInitialBrowserSize();
+        // force into [5, 95]
+        initialBrowserSize = Math.min( 95, Math.max( 5, wizardInitialBrowserSize ) );
+      }
+      m_mainSash.setWeights( new int[]
+      {
+          initialBrowserSize,
+          100 - initialBrowserSize } );
+    }
+
+    fireWizardChanged( wizard, reason );
+
+    if( m_wizard != null )
+      showStartingPage();
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchPart#dispose()
+   */
+  public void dispose()
+  {
+    setWizard( null );
+
+    m_listeners.clear();
   }
 
   /**
@@ -148,47 +217,82 @@ public class WizardView extends ViewPart implements IWizardContainer3
    */
   public void createPartControl( final Composite parent )
   {
-    m_panel = new Composite( parent, SWT.NONE );
-    m_panel.setLayout( new GridLayout() );
-    m_panel.setFont( parent.getFont() );
+    // initialize the dialog units
+    initializeDialogUnits( parent );
 
-    initializeDialogUnits( m_panel );
+    final FormLayout layout = new FormLayout();
+    parent.setLayout( layout );
+    final FormData data = new FormData();
+    data.top = new FormAttachment( 0, 0 );
+    data.bottom = new FormAttachment( 100, 0 );
+    parent.setLayoutData( data );
 
-    updateControl();
+    //Now create a work area for the rest of the dialog
+    m_workArea = new Composite( parent, SWT.NULL );
+    final GridLayout workLayout = new GridLayout();
+    workLayout.marginHeight = 0;
+    workLayout.marginWidth = 0;
+    workLayout.verticalSpacing = 0;
+    m_workArea.setLayout( workLayout );
+
+    final Control top = createTitleArea( parent );
+    resetWorkAreaAttachments( top );
+
+    m_workArea.setFont( JFaceResources.getDialogFont() );
+
+    // initialize the dialog units
+    initializeDialogUnits( m_workArea );
+
+    m_mainSash = new SashForm( m_workArea, SWT.HORIZONTAL );
+    m_mainSash.setFont( m_workArea.getFont() );
+    m_mainSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    // Browser: to the left
+    // Register a context menu on it, so we suppress the ugly explorer menu
+    m_browser = new Browser( m_mainSash, SWT.NONE );
+    final MenuManager menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
+    menuManager.setRemoveAllWhenShown( true );
+    //    menuManager.addMenuListener( this );
+    final Menu contextMenu = menuManager.createContextMenu( m_browser );
+    m_browser.setMenu( contextMenu );
+    getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
+    m_browser.addLocationListener( new LocationAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.browser.LocationAdapter#changed(org.eclipse.swt.browser.LocationEvent)
+       */
+      public void changed( final LocationEvent event )
+      {
+        changeLocation( event.location );
+      }
+    } );
+
+    m_pageAndButtonArea = new Composite( m_mainSash, SWT.NONE );
+    m_pageAndButtonArea.setLayout( new GridLayout() );
+    m_pageAndButtonArea.setFont( m_mainSash.getFont() );
+
+    setWizard( m_wizard );
   }
 
-  private void updateControl()
+  private void createRightPanel( final Composite parent )
   {
-    if( m_panel == null || m_panel.isDisposed() )
-      return;
+    final Label titleBarSeparator = new Label( parent, SWT.HORIZONTAL | SWT.SEPARATOR );
+    titleBarSeparator.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    final Control[] children = m_panel.getChildren();
-    for( int i = 0; i < children.length; i++ )
-      children[i].dispose();
+    m_pageContainer = new Composite( parent, SWT.NONE );
+    m_pageContainer.setLayout( m_stackLayout );
+    m_pageContainer.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_pageContainer.setFont( parent.getFont() );
 
-    if( m_wizard == null )
-    {
-      final Label label = new Label( m_panel, SWT.NONE );
-      label.setText( "<wizard not set>" );
-      label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    }
-    else
-    {
-      m_pageContainer = new Composite( m_panel, SWT.NONE );
-      m_pageContainer.setLayout( m_stackLayout );
+    //    // Allow the wizard pages to precreate their page controls
+    //    createPageControls();
 
-      m_pageContainer.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      m_pageContainer.setFont( m_panel.getFont() );
-      //    // Allow the wizard pages to precreate their page controls
-      //    createPageControls();
+    final Label label = new Label( parent, SWT.HORIZONTAL | SWT.SEPARATOR );
+    label.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-      final Label label = new Label( m_panel, SWT.HORIZONTAL | SWT.SEPARATOR );
-      label.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    createButtonBar( parent );
 
-      createButtonBar( m_panel );
-    }
-
-    m_panel.layout();
+    m_workArea.layout();
   }
 
   /**
@@ -232,9 +336,6 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected void createButtonsForButtonBar( final Composite parent )
   {
-    if( m_wizard == null )
-      return;
-
     if( m_wizard.isHelpAvailable() )
       createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false );
 
@@ -242,7 +343,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
       createPreviousAndNextButtons( parent );
 
     createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", true );
-    createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false );
+
+    if( !( m_wizard instanceof IWizard2 ) || ( (IWizard2)m_wizard ).hasCancelButton() )
+      createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false );
   }
 
   /**
@@ -419,7 +522,10 @@ public class WizardView extends ViewPart implements IWizardContainer3
    */
   public void setFocus()
   {
-    m_panel.setFocus();
+    if( m_pageContainer == null )
+      m_workArea.setFocus();
+    else
+      m_pageContainer.setFocus();
   }
 
   /**
@@ -451,24 +557,33 @@ public class WizardView extends ViewPart implements IWizardContainer3
    */
   public void showPage( final IWizardPage page )
   {
-    if( page == null || page == m_currentPage )
-      return;
+    showPageInternal( page );
+  }
 
-    // TODO: use this, when we implement back-pressed
-    //    if( !isMovingToPreviousPage )
-    // remember my previous page.
-    page.setPreviousPage( m_currentPage );
-    //    else
-    //      isMovingToPreviousPage = false;
+  private boolean showPageInternal( final IWizardPage page )
+  {
+    if( page == null || page == m_currentPage )
+      return false;
+
+    if( !m_isMovingToPreviousPage )
+      //    remember my previous page.
+      page.setPreviousPage( m_currentPage );
+    else
+      m_isMovingToPreviousPage = false;
     //Update for the new page ina busy cursor if possible
 
-    BusyIndicator.showWhile( m_panel.getDisplay(), new Runnable()
+    final CatchRunnable runnable = new CatchRunnable()
     {
-      public void run()
+      protected void runIntern() throws Throwable
       {
         updateForPage( page );
       }
-    } );
+    };
+
+    BusyIndicator.showWhile( m_pageContainer.getDisplay(), runnable );
+
+    // only if no exception was thrown, it is marked as succesful
+    return runnable.getThrown() == null;
   }
 
   /**
@@ -493,7 +608,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
       canFlipToNextPage = m_currentPage.canFlipToNextPage();
       nextButton.setEnabled( canFlipToNextPage );
     }
-    finishButton.setEnabled( canFinish );
+
+    if( finishButton != null )
+      finishButton.setEnabled( canFinish );
 
     // finish is default unless it is diabled and next is enabled
     if( canFlipToNextPage && !canFinish )
@@ -520,29 +637,41 @@ public class WizardView extends ViewPart implements IWizardContainer3
     return (Button)m_buttons.get( new Integer( id ) );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizardContainer#updateMessage()
-   */
-  public void updateMessage()
+  protected void changeLocation( final String location )
   {
-  // we have no message area, do nothing
-  }
+    if( m_wizard == null )
+      return;
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizardContainer#updateTitleBar()
-   */
-  public void updateTitleBar()
-  {
-  // we have no title bar, do nothing
-  }
+    final String link;
+    if( location.startsWith( "about:blank" ) )
+      link = location.substring( "about:blank".length() );
+    else
+      link = location;
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizardContainer#updateWindowTitle()
-   */
-  public void updateWindowTitle()
-  {
-    final String title = m_wizard.getWindowTitle();
-    setPartName( title );
+    if( link.length() == 0 )
+      return;
+
+    boolean pageChanged = false;
+    if( "prev".compareToIgnoreCase( link ) == 0 )
+      pageChanged = doPrev();
+    else if( "next".compareToIgnoreCase( link ) == 0 )
+      pageChanged = doNext();
+    else if( "finish".compareToIgnoreCase( link ) == 0 )
+      pageChanged = doFinish();
+    else if( "cancel".compareToIgnoreCase( link ) == 0 )
+      pageChanged = doCancel();
+    else
+    {
+      final IWizardPage page = m_wizard.getPage( link );
+      if( page != null )
+        pageChanged = showPageInternal( page );
+    }
+
+    if( !pageChanged )
+    {
+      // we dont need to layout, because the page has not changed
+      m_browser.setText( getHtmlForPage( getCurrentPage() ) );
+    }
   }
 
   /**
@@ -612,17 +741,28 @@ public class WizardView extends ViewPart implements IWizardContainer3
     // make the new page visible
     //    final IWizardPage oldPage = m_currentPage;
     m_currentPage = page;
-
     m_stackLayout.topControl = m_currentPage.getControl();
-    //    m_currentPage.setVisible( true );
-    //    if( oldPage != null )
-    //      oldPage.setVisible( false );
+
+    final String html = getHtmlForPage( page );
+    m_browser.setText( html );
+    if( html.length() > 0 )
+      m_mainSash.setMaximizedControl( null );
+    else
+      m_mainSash.setMaximizedControl( m_pageAndButtonArea );
 
     // update the dialog controls
     m_pageContainer.layout();
     update();
 
     firePageChanged( page );
+  }
+
+  private String getHtmlForPage( final IWizardPage page )
+  {
+    String html = "";
+    if( page instanceof IHtmlWizardPage )
+      html = ( (IHtmlWizardPage)page ).getHtml();
+    return html;
   }
 
   /**
@@ -680,65 +820,644 @@ public class WizardView extends ViewPart implements IWizardContainer3
     return m_wizard;
   }
 
-  public void doNext()
+  public boolean doNext()
   {
     final IWizardPage currentPage = getCurrentPage();
     final IWizard wizard = getWizard();
 
     if( wizard == null || currentPage == null )
-      return;
+      return false;
 
     if( wizard instanceof IWizard2 )
     {
       if( !( (IWizard2)wizard ).finishPage( currentPage ) )
-        return;
+        return false;
     }
 
     final IWizardPage nextPage = currentPage.getNextPage();
     if( nextPage == null )
-      return;
+      return false;
 
-    showPage( nextPage );
+    return showPageInternal( nextPage );
   }
 
-  public void doPrev()
+  public boolean doPrev()
   {
     final IWizardPage currentPage = getCurrentPage();
     if( currentPage == null )
-      return;
+      return false;
 
     final IWizardPage previousPage = currentPage.getPreviousPage();
     if( previousPage == null )
-      return;
+      return false;
 
-    showPage( previousPage );
+    // set flag to indicate that we are moving back
+    m_isMovingToPreviousPage = true;
+
+    return showPageInternal( previousPage );
   }
 
-  public void doFinish()
+  public boolean doFinish()
   {
     final IWizard wizard = getWizard();
 
     if( wizard == null )
-      return;
+      return false;
 
     if( wizard.performFinish() )
     {
-      disposeWizard();
-      fireWizardChanged( null, IWizardContainerListener.REASON_FINISHED );
+      setWizard( null, IWizardContainerListener.REASON_FINISHED );
+      return true;
     }
+
+    return false;
   }
 
-  public void doCancel()
+  public boolean doCancel()
   {
     final IWizard wizard = getWizard();
 
     if( wizard == null )
-      return;
+      return false;
 
     if( wizard.performCancel() )
     {
-      disposeWizard();
-      fireWizardChanged( null, IWizardContainerListener.REASON_CANCELED );
+      setWizard( null, IWizardContainerListener.REASON_CANCELED );
+      return true;
     }
+
+    return false;
+  }
+
+  ///////////////////////
+  // TITLE AREA DIALOG //
+  ///////////////////////
+
+  // Space between an image and a label
+  private static final int H_GAP_IMAGE = 5;
+
+  private Label titleLabel;
+  private Label titleImage;
+  private Label bottomFillerLabel;
+  private Label leftFillerLabel;
+  private RGB titleAreaRGB;
+  protected Color titleAreaColor;
+  private String message = ""; //$NON-NLS-1$
+  private String errorMessage;
+  private Text messageLabel;
+  private Label messageImageLabel;
+  private Image messageImage;
+  private Color normalMsgAreaBackground;
+  private Color errorMsgAreaBackground;
+  private Image errorMsgImage;
+  private boolean showingError = false;
+  private boolean titleImageLargest = true;
+
+  /**
+   * Creates the dialog's title area.
+   * 
+   * @param parent
+   *          the SWT parent for the title area widgets
+   * @return Control with the highest x axis value.
+   */
+  private Control createTitleArea( Composite parent )
+  {
+    // add a dispose listener
+    parent.addDisposeListener( new DisposeListener()
+    {
+      public void widgetDisposed( DisposeEvent e )
+      {
+        if( titleAreaColor != null )
+          titleAreaColor.dispose();
+      }
+    } );
+    // Determine the background color of the title bar
+    Display display = parent.getDisplay();
+    Color background;
+    Color foreground;
+    if( titleAreaRGB != null )
+    {
+      titleAreaColor = new Color( display, titleAreaRGB );
+      background = titleAreaColor;
+      foreground = null;
+    }
+    else
+    {
+      background = JFaceColors.getBannerBackground( display );
+      foreground = JFaceColors.getBannerForeground( display );
+    }
+    int verticalSpacing = convertVerticalDLUsToPixels( IDialogConstants.VERTICAL_SPACING );
+    int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    parent.setBackground( background );
+    // Dialog image @ right
+    titleImage = new Label( parent, SWT.CENTER );
+    titleImage.setBackground( background );
+    titleImage.setImage( JFaceResources.getImage( TitleAreaDialog.DLG_IMG_TITLE_BANNER ) );
+    FormData imageData = new FormData();
+    imageData.top = new FormAttachment( 0, verticalSpacing );
+    // Note: do not use horizontalSpacing on the right as that would be a
+    // regression from
+    // the R2.x style where there was no margin on the right and images are
+    // flush to the right
+    // hand side. see reopened comments in 41172
+    imageData.right = new FormAttachment( 100, 0 ); // horizontalSpacing
+    titleImage.setLayoutData( imageData );
+    // Title label @ top, left
+    titleLabel = new Label( parent, SWT.LEFT );
+    JFaceColors.setColors( titleLabel, foreground, background );
+    titleLabel.setFont( JFaceResources.getBannerFont() );
+    titleLabel.setText( " " );//$NON-NLS-1$
+    FormData titleData = new FormData();
+    titleData.top = new FormAttachment( 0, verticalSpacing );
+    titleData.right = new FormAttachment( titleImage );
+    titleData.left = new FormAttachment( 0, horizontalSpacing );
+    titleLabel.setLayoutData( titleData );
+    // Message image @ bottom, left
+    messageImageLabel = new Label( parent, SWT.CENTER );
+    messageImageLabel.setBackground( background );
+    // Message label @ bottom, center
+    messageLabel = new Text( parent, SWT.WRAP | SWT.READ_ONLY );
+    JFaceColors.setColors( messageLabel, foreground, background );
+    messageLabel.setText( " \n " ); // two lines//$NON-NLS-1$
+    messageLabel.setFont( JFaceResources.getDialogFont() );
+    // Filler labels
+    leftFillerLabel = new Label( parent, SWT.CENTER );
+    leftFillerLabel.setBackground( background );
+    bottomFillerLabel = new Label( parent, SWT.CENTER );
+    bottomFillerLabel.setBackground( background );
+    setLayoutsForNormalMessage( verticalSpacing, horizontalSpacing );
+    determineTitleImageLargest();
+    if( titleImageLargest )
+      return titleImage;
+    return messageLabel;
+  }
+
+  /**
+   * Determine if the title image is larger than the title message and message area. This is used for layout decisions.
+   */
+  private void determineTitleImageLargest()
+  {
+    int titleY = titleImage.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
+    int labelY = titleLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
+    labelY += messageLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
+    FontData[] data = messageLabel.getFont().getFontData();
+    labelY += data[0].getHeight();
+    titleImageLargest = titleY > labelY;
+  }
+
+  /**
+   * Set the layout values for the messageLabel, messageImageLabel and fillerLabel for the case where there is a normal
+   * message.
+   * 
+   * @param verticalSpacing
+   *          int The spacing between widgets on the vertical axis.
+   * @param horizontalSpacing
+   *          int The spacing between widgets on the horizontal axis.
+   */
+  private void setLayoutsForNormalMessage( int verticalSpacing, int horizontalSpacing )
+  {
+    FormData messageImageData = new FormData();
+    messageImageData.top = new FormAttachment( titleLabel, verticalSpacing );
+    messageImageData.left = new FormAttachment( 0, H_GAP_IMAGE );
+    messageImageLabel.setLayoutData( messageImageData );
+    FormData messageLabelData = new FormData();
+    messageLabelData.top = new FormAttachment( titleLabel, verticalSpacing );
+    messageLabelData.right = new FormAttachment( titleImage );
+    messageLabelData.left = new FormAttachment( messageImageLabel, horizontalSpacing );
+    if( titleImageLargest )
+      messageLabelData.bottom = new FormAttachment( titleImage, 0, SWT.BOTTOM );
+    messageLabel.setLayoutData( messageLabelData );
+    FormData fillerData = new FormData();
+    fillerData.left = new FormAttachment( 0, horizontalSpacing );
+    fillerData.top = new FormAttachment( messageImageLabel, 0 );
+    fillerData.bottom = new FormAttachment( messageLabel, 0, SWT.BOTTOM );
+    bottomFillerLabel.setLayoutData( fillerData );
+    FormData data = new FormData();
+    data.top = new FormAttachment( messageImageLabel, 0, SWT.TOP );
+    data.left = new FormAttachment( 0, 0 );
+    data.bottom = new FormAttachment( messageImageLabel, 0, SWT.BOTTOM );
+    data.right = new FormAttachment( messageImageLabel, 0 );
+    leftFillerLabel.setLayoutData( data );
+  }
+
+  //	/**
+  //	 * The <code>TitleAreaDialog</code> implementation of this
+  //	 * <code>Window</code> methods returns an initial size which is at least
+  //	 * some reasonable minimum.
+  //	 *
+  //	 * @return the initial size of the dialog
+  //	 */
+  //	protected Point getInitialSize() {
+  //		Point shellSize = super.getInitialSize();
+  //		return new Point(Math.max(
+  //				convertHorizontalDLUsToPixels(MIN_DIALOG_WIDTH), shellSize.x),
+  //				Math.max(convertVerticalDLUsToPixels(MIN_DIALOG_HEIGHT),
+  //						shellSize.y));
+  //	}
+  /**
+   * Retained for backward compatibility.
+   * 
+   * Returns the title area composite. There is no composite in this implementation so the shell is returned.
+   * 
+   * @return Composite
+   * @deprecated
+   */
+  protected Composite getTitleArea()
+  {
+    return getShell();
+  }
+
+  /**
+   * Returns the title image label.
+   * 
+   * @return the title image label
+   */
+  protected Label getTitleImageLabel()
+  {
+    return titleImage;
+  }
+
+  /**
+   * Display the given error message. The currently displayed message is saved and will be redisplayed when the error
+   * message is set to <code>null</code>.
+   * 
+   * @param newErrorMessage
+   *          the newErrorMessage to display or <code>null</code>
+   */
+  public void setErrorMessage( String newErrorMessage )
+  {
+    // Any change?
+    if( errorMessage == null ? newErrorMessage == null : errorMessage.equals( newErrorMessage ) )
+      return;
+    errorMessage = newErrorMessage;
+    if( errorMessage == null )
+    {
+      if( showingError )
+      {
+        // we were previously showing an error
+        showingError = false;
+        setMessageBackgrounds( false );
+      }
+      // show the message
+      // avoid calling setMessage in case it is overridden to call
+      // setErrorMessage,
+      // which would result in a recursive infinite loop
+      if( message == null ) //this should probably never happen since
+        // setMessage does this conversion....
+        message = ""; //$NON-NLS-1$
+      updateMessage( message );
+      messageImageLabel.setImage( messageImage );
+      setImageLabelVisible( messageImage != null );
+      messageLabel.setToolTipText( message );
+    }
+    else
+    {
+      //Add in a space for layout purposes but do not
+      //change the instance variable
+      String displayedErrorMessage = " " + errorMessage; //$NON-NLS-1$
+      updateMessage( displayedErrorMessage );
+      messageLabel.setToolTipText( errorMessage );
+      if( !showingError )
+      {
+        // we were not previously showing an error
+        showingError = true;
+        // lazy initialize the error background color and image
+        if( errorMsgAreaBackground == null )
+        {
+          errorMsgAreaBackground = JFaceColors.getErrorBackground( messageLabel.getDisplay() );
+          errorMsgImage = JFaceResources.getImage( TitleAreaDialog.DLG_IMG_TITLE_ERROR );
+        }
+        // show the error
+        normalMsgAreaBackground = messageLabel.getBackground();
+
+        setMessageBackgrounds( !m_useNormalBackground );
+
+        messageImageLabel.setImage( errorMsgImage );
+        setImageLabelVisible( true );
+      }
+    }
+    layoutForNewMessage();
+  }
+
+  /**
+   * Re-layout the labels for the new message.
+   */
+  private void layoutForNewMessage()
+  {
+    int verticalSpacing = convertVerticalDLUsToPixels( IDialogConstants.VERTICAL_SPACING );
+    int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    //If there are no images then layout as normal
+    if( errorMessage == null && messageImage == null )
+    {
+      setImageLabelVisible( false );
+      setLayoutsForNormalMessage( verticalSpacing, horizontalSpacing );
+    }
+    else
+    {
+      messageImageLabel.setVisible( true );
+      bottomFillerLabel.setVisible( true );
+      leftFillerLabel.setVisible( true );
+      /**
+       * Note that we do not use horizontalSpacing here as when the background of the messages changes there will be
+       * gaps between the icon label and the message that are the background color of the shell. We add a leading space
+       * elsewhere to compendate for this.
+       */
+      FormData data = new FormData();
+      data.left = new FormAttachment( 0, H_GAP_IMAGE );
+      data.top = new FormAttachment( titleLabel, verticalSpacing );
+      messageImageLabel.setLayoutData( data );
+      data = new FormData();
+      data.top = new FormAttachment( messageImageLabel, 0 );
+      data.left = new FormAttachment( 0, 0 );
+      data.bottom = new FormAttachment( messageLabel, 0, SWT.BOTTOM );
+      data.right = new FormAttachment( messageImageLabel, 0, SWT.RIGHT );
+      bottomFillerLabel.setLayoutData( data );
+      data = new FormData();
+      data.top = new FormAttachment( messageImageLabel, 0, SWT.TOP );
+      data.left = new FormAttachment( 0, 0 );
+      data.bottom = new FormAttachment( messageImageLabel, 0, SWT.BOTTOM );
+      data.right = new FormAttachment( messageImageLabel, 0 );
+      leftFillerLabel.setLayoutData( data );
+      FormData messageLabelData = new FormData();
+      messageLabelData.top = new FormAttachment( titleLabel, verticalSpacing );
+      messageLabelData.right = new FormAttachment( titleImage );
+      messageLabelData.left = new FormAttachment( messageImageLabel, 0 );
+      if( titleImageLargest )
+        messageLabelData.bottom = new FormAttachment( titleImage, 0, SWT.BOTTOM );
+      messageLabel.setLayoutData( messageLabelData );
+    }
+    //Do not layout before the dialog area has been created
+    //to avoid incomplete calculations.
+    if( m_pageContainer != null && !m_pageContainer.isDisposed() )
+      getShell().layout( true );
+  }
+
+  /**
+   * Set the message text. If the message line currently displays an error, the message is saved and will be redisplayed
+   * when the error message is set to <code>null</code>.
+   * <p>
+   * Shortcut for <code>setMessage(newMessage, IMessageProvider.NONE)</code>
+   * </p>
+   * This method should be called after the dialog has been opened as it updates the message label immediately.
+   * 
+   * @param newMessage
+   *          the message, or <code>null</code> to clear the message
+   */
+  public void setMessage( String newMessage )
+  {
+    setMessage( newMessage, IMessageProvider.NONE );
+  }
+
+  /**
+   * Sets the message for this dialog with an indication of what type of message it is.
+   * <p>
+   * The valid message types are one of <code>NONE</code>,<code>INFORMATION</code>,<code>WARNING</code>, or
+   * <code>ERROR</code>.
+   * </p>
+   * <p>
+   * Note that for backward compatibility, a message of type <code>ERROR</code> is different than an error message
+   * (set using <code>setErrorMessage</code>). An error message overrides the current message until the error message
+   * is cleared. This method replaces the current message and does not affect the error message.
+   * </p>
+   * 
+   * @param newMessage
+   *          the message, or <code>null</code> to clear the message
+   * @param newType
+   *          the message type
+   * @since 2.0
+   */
+  public void setMessage( String newMessage, int newType )
+  {
+    Image newImage = null;
+    if( newMessage != null )
+    {
+      switch( newType )
+      {
+      case IMessageProvider.NONE:
+        break;
+      case IMessageProvider.INFORMATION:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_INFO );
+        break;
+      case IMessageProvider.WARNING:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING );
+        break;
+      case IMessageProvider.ERROR:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_ERROR );
+        break;
+      }
+    }
+    showMessage( newMessage, newImage );
+  }
+
+  /**
+   * Show the new message and image.
+   * 
+   * @param newMessage
+   * @param newImage
+   */
+  private void showMessage( String newMessage, Image newImage )
+  {
+    // Any change?
+    if( message.equals( newMessage ) && messageImage == newImage )
+      return;
+    message = newMessage;
+    if( message == null )
+      message = "";//$NON-NLS-1$
+    // Message string to be shown - if there is an image then add in
+    // a space to the message for layout purposes
+    String shownMessage = ( newImage == null ) ? message : " " + message; //$NON-NLS-1$  
+    messageImage = newImage;
+    if( !showingError )
+    {
+      // we are not showing an error
+      updateMessage( shownMessage );
+      messageImageLabel.setImage( messageImage );
+      setImageLabelVisible( messageImage != null );
+      messageLabel.setToolTipText( message );
+      layoutForNewMessage();
+    }
+  }
+
+  /**
+   * Update the contents of the messageLabel.
+   * 
+   * @param newMessage
+   *          the message to use
+   */
+  private void updateMessage( String newMessage )
+  {
+    //Be sure there are always 2 lines for layout purposes
+    if( newMessage != null && newMessage.indexOf( '\n' ) == -1 )
+      newMessage = newMessage + "\n "; //$NON-NLS-1$
+    messageLabel.setText( newMessage );
+  }
+
+  /**
+   * Sets the title to be shown in the title area of this dialog.
+   * 
+   * @param newTitle
+   *          the title show
+   */
+  public void setWizardTitle( String newTitle )
+  {
+    if( titleLabel == null )
+      return;
+    String title = newTitle;
+    if( title == null )
+      title = "";//$NON-NLS-1$
+    titleLabel.setText( title );
+  }
+
+  /**
+   * Sets the title bar color for this dialog.
+   * 
+   * @param color
+   *          the title bar color
+   */
+  public void setTitleAreaColor( RGB color )
+  {
+    titleAreaRGB = color;
+  }
+
+  /**
+   * Sets the title image to be shown in the title area of this dialog.
+   * 
+   * @param newTitleImage
+   *          the title image show
+   */
+  public void setWizardTitleImage( Image newTitleImage )
+  {
+    titleImage.setImage( newTitleImage );
+    titleImage.setVisible( newTitleImage != null );
+    if( newTitleImage != null )
+    {
+      determineTitleImageLargest();
+      Control top;
+      if( titleImageLargest )
+        top = titleImage;
+      else
+        top = messageLabel;
+      resetWorkAreaAttachments( top );
+    }
+  }
+
+  /**
+   * Make the label used for displaying error images visible depending on boolean.
+   * 
+   * @param visible.
+   *          If <code>true</code> make the image visible, if not then make it not visible.
+   */
+  private void setImageLabelVisible( boolean visible )
+  {
+    messageImageLabel.setVisible( visible );
+    bottomFillerLabel.setVisible( visible );
+    leftFillerLabel.setVisible( visible );
+  }
+
+  /**
+   * Set the message backgrounds to be the error or normal color depending on whether or not showingError is true.
+   * 
+   * @param showingError
+   *          If <code>true</code> use a different Color to indicate the error.
+   */
+  private void setMessageBackgrounds( boolean showingError )
+  {
+    Color color;
+    if( showingError )
+      color = errorMsgAreaBackground;
+    else
+      color = normalMsgAreaBackground;
+    messageLabel.setBackground( color );
+    messageImageLabel.setBackground( color );
+    bottomFillerLabel.setBackground( color );
+    leftFillerLabel.setBackground( color );
+  }
+
+  /**
+   * Reset the attachment of the workArea to now attach to top as the top control.
+   * 
+   * @param top
+   */
+  private void resetWorkAreaAttachments( Control top )
+  {
+    final FormData childData = new FormData();
+    childData.top = new FormAttachment( top );
+    childData.right = new FormAttachment( 100, 0 );
+    childData.left = new FormAttachment( 0, 0 );
+    childData.bottom = new FormAttachment( 100, 0 );
+    m_workArea.setLayoutData( childData );
+  }
+
+  //////////////////
+  // WizardDialog //
+  //////////////////
+
+  // The current page message and description
+  private String pageMessage;
+  private int pageMessageType = IMessageProvider.NONE;
+  private String pageDescription;
+
+  /**
+   * @see org.eclipse.jface.wizard.IWizardContainer#updateMessage()
+   */
+  public void updateMessage()
+  {
+    if( m_currentPage == null )
+      return;
+
+    pageMessage = m_currentPage.getMessage();
+    if( pageMessage != null && m_currentPage instanceof IMessageProvider )
+      pageMessageType = ( (IMessageProvider)m_currentPage ).getMessageType();
+    else
+      pageMessageType = IMessageProvider.NONE;
+    if( pageMessage == null )
+      setMessage( pageDescription );
+    else
+      setMessage( pageMessage, pageMessageType );
+    setErrorMessage( m_currentPage.getErrorMessage() );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.IWizardContainer#updateTitleBar()
+   */
+  public void updateTitleBar()
+  {
+    String s = null;
+    if( m_currentPage != null )
+      s = m_currentPage.getTitle();
+    if( s == null )
+      s = ""; //$NON-NLS-1$
+    setWizardTitle( s );
+    if( m_currentPage != null )
+      setTitleImage( m_currentPage.getImage() );
+    updateDescriptionMessage();
+    updateMessage();
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.IWizardContainer#updateWindowTitle()
+   */
+  public void updateWindowTitle()
+  {
+    if( m_wizard == null )
+      return;
+
+    String title = m_wizard.getWindowTitle();
+    if( title == null )
+      title = ""; //$NON-NLS-1$
+    setPartName( title );
+  }
+
+  /**
+   * Update the message line with the page's description.
+   * <p>
+   * A discription is shown only if there is no message or error message.
+   * </p>
+   */
+  private void updateDescriptionMessage()
+  {
+    pageDescription = m_currentPage.getDescription();
+    if( pageMessage == null )
+      setMessage( m_currentPage.getDescription() );
   }
 }
