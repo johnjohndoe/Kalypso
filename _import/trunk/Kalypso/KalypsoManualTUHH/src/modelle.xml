@@ -574,7 +574,7 @@
         <table>
           <title>ModellparameterTeilgebiete</title>
 
-          <tgroup cols="5">
+          <tgroup cols="6">
             <tbody>
               <row>
                 <entry>Parameter</entry>
@@ -586,6 +586,8 @@
                 <entry>Beispielwert</entry>
 
                 <entry>Bedeutung</entry>
+
+                <entry>Datentyp</entry>
               </row>
 
               <row>
@@ -598,6 +600,8 @@
                 <entry></entry>
 
                 <entry>Teilgebiets-, Strang-, Knotennummer</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -610,6 +614,8 @@
                 <entry></entry>
 
                 <entry>Teilgebietsfläche</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -622,6 +628,8 @@
                 <entry></entry>
 
                 <entry>minimale Stauhöhe GW-Speicher</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -634,6 +642,8 @@
                 <entry></entry>
 
                 <entry>maximale Stauhöhe GW-Speicher</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -647,6 +657,8 @@
 
                 <entry>Versiegelungsgrad (nur zur Übersicht, wird zur
                 Berechnung aus den Hydrotopen übernommen).</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -660,6 +672,8 @@
 
                 <entry>Aufteilungsfaktor GW-Speicher und
                 Tiefengrundwasser</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -672,10 +686,14 @@
                 <entry></entry>
 
                 <entry>Porosität des GW-Leiters</entry>
+
+                <entry></entry>
               </row>
 
               <row>
                 <entry>Korrekturfaktoren</entry>
+
+                <entry></entry>
 
                 <entry></entry>
 
@@ -696,6 +714,8 @@
                 <entry>1</entry>
 
                 <entry>Korrekturfaktor Verdunstung (multiplikativ)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -708,6 +728,8 @@
                 <entry>1</entry>
 
                 <entry>Faktor Interzeptionsspeicher Winterhalbjahr</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -720,6 +742,8 @@
                 <entry>1</entry>
 
                 <entry>Faktor Verdunstung Winterhalbjahr</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -732,6 +756,8 @@
                 <entry>1</entry>
 
                 <entry>Niederschlagsfaktor (multipilkativ)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -745,6 +771,8 @@
 
                 <entry>Korrekturfaktor max. Inhalt
                 Interzeptionsspeicher</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -758,6 +786,8 @@
 
                 <entry>Korrekturfaktor Anfangsinhalt
                 Interzeptionsspeicher</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -770,6 +800,8 @@
                 <entry>0</entry>
 
                 <entry>Korrekturfaktor Temperatur (additiv</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -782,9 +814,13 @@
                 <entry></entry>
 
                 <entry>Vegetationsabhängige Verdunstungskorrektur</entry>
+
+                <entry></entry>
               </row>
 
               <row>
+                <entry></entry>
+
                 <entry></entry>
 
                 <entry></entry>
@@ -806,6 +842,8 @@
                 <entry></entry>
 
                 <entry>Anstiegsrate Interflow</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -818,10 +856,14 @@
                 <entry></entry>
 
                 <entry>maximaler Interflow</entry>
+
+                <entry></entry>
               </row>
 
               <row>
                 <entry>Anfangswerte</entry>
+
+                <entry></entry>
 
                 <entry></entry>
 
@@ -842,6 +884,8 @@
                 <entry></entry>
 
                 <entry>Anfangsinhalt Interzeptionsspeicher</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -854,10 +898,14 @@
                 <entry></entry>
 
                 <entry>Anfangsinhalt Grundwasserspeicher</entry>
+
+                <entry></entry>
               </row>
 
               <row>
                 <entry>Optimierungsfaktoren</entry>
+
+                <entry></entry>
 
                 <entry></entry>
 
@@ -880,6 +928,8 @@
                 <entry>Faktor Anfangsinhalt Grundwasserspeicher. Parameter der
                 Modelloptimierung im Vorhersagefall - anderenfalls
                 unbesetzt.</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -894,6 +944,8 @@
                 <entry>Korrekturfaktor Anfangsbodenfeuchte (max: 1,0).
                 Parameter der Modelloptimierung im Vorhersagefall -
                 anderenfalls unbesetzt.</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -908,10 +960,14 @@
                 <entry>Faktor Retention Oberflächenabfluss und Interflow.
                 Parameter der Modelloptimierung im Vorhersagefall -
                 anderenfalls unbesetzt.</entry>
+
+                <entry></entry>
               </row>
 
               <row>
                 <entry>Retentionskonstanten</entry>
+
+                <entry></entry>
 
                 <entry></entry>
 
@@ -932,6 +988,8 @@
                 <entry></entry>
 
                 <entry>Retentionskonstante versiegelter Abfluss</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -944,6 +1002,8 @@
                 <entry></entry>
 
                 <entry>Retentionskonstante Oberflächenabfluss</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -956,6 +1016,8 @@
                 <entry></entry>
 
                 <entry>Retentionskonstante Interflow</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -968,6 +1030,8 @@
                 <entry></entry>
 
                 <entry>Retentionskonstante Basisabfluss</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -980,6 +1044,8 @@
                 <entry></entry>
 
                 <entry>Retentionskonstante Grundwasserabfluss</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -992,9 +1058,13 @@
                 <entry></entry>
 
                 <entry>Retentionskonstante Tiefengrundwasser</entry>
+
+                <entry></entry>
               </row>
 
               <row>
+                <entry></entry>
+
                 <entry></entry>
 
                 <entry></entry>
@@ -1016,6 +1086,8 @@
                 <entry></entry>
 
                 <entry>Schneetyp - Zur Zuordnung der Schneeparameter</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1028,6 +1100,8 @@
                 <entry></entry>
 
                 <entry>Zielknoten versiegelter Abfluss</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1041,6 +1115,8 @@
 
                 <entry>Link auf Korrekturparameter der einzelnen
                 Bodenhorizonte</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1054,6 +1130,8 @@
 
                 <entry>Teilgebietsnummer für den GW-Abfluss in
                 Nachbargebiete.</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1067,6 +1145,8 @@
 
                 <entry>Wichtung der GW-Abflüsse in Nachbarteilgebiete (Summe =
                 1)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1079,6 +1159,8 @@
                 <entry></entry>
 
                 <entry>Entnahme aus dem GW-Speicher</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1091,6 +1173,8 @@
                 <entry></entry>
 
                 <entry>Zuflussrate Tiefengrundwasserleiter</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1103,6 +1187,8 @@
                 <entry></entry>
 
                 <entry>Zielknoten des Tiefengrundwassers</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1115,6 +1201,8 @@
                 <entry></entry>
 
                 <entry>Link zu Temperaturzeitreihen auf dem Server</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1127,6 +1215,8 @@
                 <entry></entry>
 
                 <entry>Link zu Verdunstungszeitreihen auf dem Server</entry>
+
+                <entry></entry>
               </row>
             </tbody>
           </tgroup>
@@ -1135,7 +1225,7 @@
         <table>
           <title>Modellparameter Knoten</title>
 
-          <tgroup cols="5">
+          <tgroup cols="6">
             <tbody>
               <row>
                 <entry>Parameter</entry>
@@ -1147,6 +1237,8 @@
                 <entry>Beispielwert</entry>
 
                 <entry>Bedeutung</entry>
+
+                <entry>Datentyp</entry>
               </row>
 
               <row>
@@ -1159,6 +1251,8 @@
                 <entry></entry>
 
                 <entry>Geometrie des Objektes</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1172,6 +1266,8 @@
 
                 <entry>Jedem Knoten ist eine Knotennummer zugewiesen. Diese
                 ist eindeutig und sollte nicht veraendert werden</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1185,6 +1281,8 @@
 
                 <entry>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis
                 für diesen Knoten erzeugt wird.</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1198,6 +1296,8 @@
 
                 <entry>Gewaesserstrang, welcher im weiteren Fliessverlauf
                 Unterwasser anschliesst</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1210,6 +1310,8 @@
                 <entry></entry>
 
                 <entry>Zeitreihe Pegel (Repository)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1222,6 +1324,8 @@
                 <entry></entry>
 
                 <entry>Zeitreihe Pegel (lokal)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1234,6 +1338,8 @@
                 <entry></entry>
 
                 <entry>Berechneter Pegel</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1246,6 +1352,8 @@
                 <entry></entry>
 
                 <entry>Berechneter Pegel</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1258,6 +1366,8 @@
                 <entry></entry>
 
                 <entry>Zufluss Zeitreihe (Repository)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1270,6 +1380,8 @@
                 <entry></entry>
 
                 <entry>Zufluss Zeitreihe (Vorhersage)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1282,6 +1394,8 @@
                 <entry></entry>
 
                 <entry>Zufluss Zeitreihe (lokal)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1295,6 +1409,8 @@
 
                 <entry>Anteil des Abflusses, der dem Verzweigungsknoten
                 zugefuehrt wird (0-1)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1308,6 +1424,8 @@
 
                 <entry>Zielknoten, dem der angegebene Verzweigungsanteil des
                 Abflusses zugefuehrt wird</entry>
+
+                <entry></entry>
               </row>
             </tbody>
           </tgroup>
@@ -1316,7 +1434,7 @@
         <table>
           <title>Modellparameter der Gerinneelemente</title>
 
-          <tgroup cols="5">
+          <tgroup cols="6">
             <tbody>
               <row>
                 <entry>Parameter</entry>
@@ -1328,10 +1446,14 @@
                 <entry>Beispielwert</entry>
 
                 <entry>Bedeutung</entry>
+
+                <entry>Datentyp</entry>
               </row>
 
               <row>
                 <entry>KM Stränge</entry>
+
+                <entry></entry>
 
                 <entry></entry>
 
@@ -1352,6 +1474,8 @@
                 <entry></entry>
 
                 <entry>bordvoller Abfluss eines Gerinneabschnittes</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1364,6 +1488,8 @@
                 <entry></entry>
 
                 <entry>Aufteilungsfaktor Gerinne - Vorland</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1377,10 +1503,14 @@
 
                 <entry>Link zu Datensatz mit Kalinin-Miljukov-Parametern (n
                 und k)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
                 <entry>Optimierungsfaktoren</entry>
+
+                <entry></entry>
 
                 <entry></entry>
 
@@ -1403,6 +1533,8 @@
                 <entry>Korrekturfaktor Speicherkonstante. Parameter der
                 Modelloptimierung im Vorhersagefall - anderenfalls
                 unbesetzt.</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1417,10 +1549,14 @@
                 <entry>Korrekturfaktor Anzahl der Speicher. Parameter der
                 Modelloptimierung im Vorhersagefall - anderenfalls
                 unbesetzt.</entry>
+
+                <entry></entry>
               </row>
 
               <row>
                 <entry>Kalinin-Miljukov-Parameter</entry>
+
+                <entry></entry>
 
                 <entry></entry>
 
@@ -1442,6 +1578,8 @@
 
                 <entry>Es sollten mindestens 5 verschiedene Abfluessfaelle
                 angegeben werden</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1455,6 +1593,8 @@
 
                 <entry>peicherkonstante K des Flusses
                 (Kalinin-Muljukov)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1468,6 +1608,8 @@
 
                 <entry>Anzahl n der Speicher des Flusses
                 (Kalinin-Miljukov)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1481,6 +1623,8 @@
 
                 <entry>Speicherkonstante K des Vorlandes
                 (Kalinin-Muljukov)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1494,10 +1638,14 @@
 
                 <entry>Anzahl n der Speicher des Vorlandes
                 (Kalinin-Miljukov)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
                 <entry>RHB Stränge</entry>
+
+                <entry></entry>
 
                 <entry></entry>
 
@@ -1521,6 +1669,8 @@
                 abschlägt (Falls 0 gewählt wird, wird der Überlauf zum
                 Grundabfluss addiert und dem Endknoten des Speicherstranges
                 zugeschlagen)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1534,6 +1684,8 @@
 
                 <entry>Aufteilungsfaktor zwischen den Stationsgrößen QAA und
                 QAN im Konvergenzkriterium (normal: 0.0)</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1546,6 +1698,8 @@
                 <entry></entry>
 
                 <entry>Beckeninhalt zu Beginn der Simulation</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1558,6 +1712,8 @@
                 <entry></entry>
 
                 <entry>maximaler Beckeninhalt</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1570,6 +1726,8 @@
                 <entry></entry>
 
                 <entry>minimaler Beckeninhalt</entry>
+
+                <entry></entry>
               </row>
 
               <row>
@@ -1584,6 +1742,108 @@
                 <entry>Beziehung zwischen Wasserstand [mNN], Volumen/ Inhalt
                 [hm^3] und Abgabe/ Abfluss [m^3/s] aus dem Speicher (max. 24
                 Wertetripel)</entry>
+
+                <entry></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Parameter der Hydrotope</title>
+
+          <tgroup cols="6">
+            <tbody>
+              <row>
+                <entry>Parameter</entry>
+
+                <entry>Label</entry>
+
+                <entry>Einheit</entry>
+
+                <entry>Beispielwert</entry>
+
+                <entry>Bedeutung</entry>
+
+                <entry>Datentyp</entry>
+              </row>
+
+              <row>
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>natürliche Parameter</title>
+
+          <tgroup cols="6">
+            <tbody>
+              <row>
+                <entry>Parameter</entry>
+
+                <entry>Label</entry>
+
+                <entry>Einheit</entry>
+
+                <entry>Beispielwert</entry>
+
+                <entry>Bedeutung</entry>
+
+                <entry>Datentyp</entry>
+              </row>
+
+              <row>
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
               </row>
             </tbody>
           </tgroup>
