@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ogc.sensor.view.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -51,13 +51,13 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * Ein Repository hinzufügen.

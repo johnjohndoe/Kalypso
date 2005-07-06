@@ -38,46 +38,39 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.view;
+package org.kalypso.ogc.sensor.view.actions;
 
-import org.eclipse.jface.viewers.DialogCellEditor;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
+import org.kalypso.ui.ImageProvider;
 
 /**
- * ObservationCellEditor
- * 
  * @author schlienger
  */
-public class ObservationCellEditor extends DialogCellEditor
+public class CopyLinkAction extends AbstractRepositoryExplorerAction
 {
-  public ObservationCellEditor( final Composite parent )
+  public CopyLinkAction( final ObservationChooser explorer )
   {
-    this( parent, SWT.NONE, null );
+    super( explorer, "Link kopieren", ImageProvider.IMAGE_OBSERVATION_LINK,
+        "Kopiert den Link in der Zwischenablage für die ausgewählte Zeitreihe" );
   }
 
-  public ObservationCellEditor( final Composite parent, final int style, final String id )
+  /**
+   * @see org.eclipse.jface.action.Action#run()
+   */
+  public void run()
   {
-    super( parent, style );
-    setValue( id );
-  }
+    final IObservation obs = getExplorer().isObservationSelected( getExplorer().getSelection() );
+    if( obs == null )
+      return;
 
-  protected Object openDialogBox( final Control cellEditorWindow )
-  {
-    final ObservationChooserDialog dlg = new ObservationChooserDialog( cellEditorWindow.getShell() );
-    final String id = (String)getValue();
-    if( id != null )
-      dlg.setSelectedObservation( id );
-
-    int ret = dlg.open();
-    if( ret == Window.OK )
-    {
-      setValue( dlg.getSelectedObservation() );
-      return getValue();
-    }
-
-    return null;
+    final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
+    clipboard.setContents( new Object[]
+    { obs.getIdentifier() }, new Transfer[]
+    { TextTransfer.getInstance() } );
+    clipboard.dispose();
   }
 }

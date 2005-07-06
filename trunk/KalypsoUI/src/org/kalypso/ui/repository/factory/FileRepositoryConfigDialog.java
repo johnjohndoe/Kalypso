@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.dialogs;
+package org.kalypso.ui.repository.factory;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;

@@ -59,6 +59,12 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
   zu entfernen (wurde vergessen im letzten großen Refactoring bzgl. ObsView Sachen).
 - GrafikEditorLauncher: neue Extension, mit 'Open With...', 'Grafikprogramm' lässt sich
   jetzt eine Odt, eine Tpl, oder direkt eine Zml öffnen.
+- IRequest Refactoring für IObservation: statt IVariableArguments wird jetzt der
+  Parameter IRequest benutzt. Ermöglicht die Einheitliche Übergabe von Request-Information
+  wie Datum Von-Bis, oder Default Achsen für die Zeitreihe.
+  Zum Beispiel kann die WiskiTimeserie jetzt entscheiden ob ein V oder ein Q gewünscht ist
+  wenn W plus RatingTable vorhanden sind.
+- Im Repository-Browser ist es möglich die WQ-Beziehung als Tabelle und Diagramm darzustellen
 
 - WidgetActions nach KaylspoUI verschoben + refactorisiert, so daß man nun in einer extension neue widgets hinzufügen kann
 

@@ -151,16 +151,6 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
-    //    for( final Iterator tIt = m_template.getThemes().iterator();
-    // tIt.hasNext(); )
-    //      m_template.fireTemplateChanged( new ObsViewEvent( m_template, tIt.next(),
-    // ObsViewEvent.TYPE_ADD ) );
-    //    for( final Iterator tIt = m_template.getThemes().iterator();
-    // tIt.hasNext(); )
-    //    {
-    //      TableViewColumnXMLLoader theme = (TableViewColumnXMLLoader)tIt.next();
-    //      
-    //    }
   }
 
   public void dispose()
@@ -289,5 +279,10 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       m_popup.show( this, e.getX(), e.getY() );
     else
       super.processMouseEvent( e );
+  }
+
+  public Object getObservationTableModel()
+  {
+    return m_model;
   }
 }

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.wizard;
+package org.kalypso.ogc.sensor.view.wizard;
 
 import java.text.DateFormat;
 

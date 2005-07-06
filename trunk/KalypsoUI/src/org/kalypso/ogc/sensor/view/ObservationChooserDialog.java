@@ -27,69 +27,76 @@
  * 
  * ------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.repository.view;
-
-import java.net.URL;
+package org.kalypso.ogc.sensor.view;
 
 import org.eclipse.compare.internal.ResizableDialog;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ogc.sensor.IObservation;
 
 /**
- * ObservationViewerDialog
- * <p>
+ * A dialog for choosing an observation among the tree of repositories
  * 
- * @author schlienger (24.05.2005)
+ * @author schlienger (23.05.2005)
  */
-public class ObservationViewerDialog extends ResizableDialog
+public class ObservationChooserDialog extends ResizableDialog
 {
-  private ObservationViewer m_viewer;
+  private ObservationChooser m_chooser;
 
-  private String m_href;
-
-  private URL m_context;
-
-  public ObservationViewerDialog( final Shell parent )
+  public ObservationChooserDialog( final Shell parent )
   {
     super( parent, null );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite)super.createDialogArea( parent );
+
     composite.setLayout( new FillLayout() );
-
-    m_viewer = new ObservationViewer( composite, SWT.NONE );
-    if( m_href != null )
-      m_viewer.setHref( m_context, m_href );
-
-    getShell().setText( "Zeitreihenlink-Editor" );
+    m_chooser = new ObservationChooser( composite );
 
     return composite;
   }
 
-  public void setObservationHref( final URL context, final String href )
+  /**
+   * Check if an observation is selected before quitting the dialog with OK
+   * 
+   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+   */
+  protected void okPressed()
   {
-    if( m_viewer != null )
-      m_viewer.setHref( context, href );
-    else
-    {
-      m_context = context;
-      m_href = href;
-    }
+    if( getSelectedObservation() == null )
+      return;
+
+    super.okPressed();
   }
 
-  public String getObservationHref()
+  /**
+   * @return the idenfitier of the selected observation or null if no observation is selected
+   */
+  public String getSelectedObservation()
   {
-    if( m_viewer == null )
-      return m_href;
+    if( m_chooser != null )
+    {
+      final Object sel = ( (StructuredSelection)m_chooser.getSelection() ).getFirstElement();
 
-    return m_viewer.getHref();
+      if( sel instanceof IObservation )
+      {
+        final IObservation obs = (IObservation)sel;
+        return obs.getIdentifier();
+      }
+    }
+    return null;
+  }
+
+  public void setSelectedObservation( final String id )
+  {
+    if( m_chooser != null )
+    {
+      // TODO select the observation in the tree
+    }
   }
 }

@@ -38,15 +38,15 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ogc.sensor.view.actions;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
+import org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.ObservationChooser;
-import org.kalypso.ui.repository.wizard.ExportAsFileWizard;
 
 /**
  * @author schlienger

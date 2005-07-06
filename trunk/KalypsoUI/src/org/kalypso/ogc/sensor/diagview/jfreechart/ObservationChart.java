@@ -105,7 +105,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   /**
    * Clears the curves in the chart
    */
-  protected void clearChart()
+  public void clearChart()
   {
     getObservationPlot().clearCurves();
   }

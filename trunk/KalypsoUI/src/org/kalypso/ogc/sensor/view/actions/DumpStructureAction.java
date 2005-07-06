@@ -27,7 +27,7 @@
  * 
  * ------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ogc.sensor.view.actions;
 
 import java.io.StringWriter;
 
@@ -42,10 +42,10 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.internal.Workbench;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * DumpStructureAction

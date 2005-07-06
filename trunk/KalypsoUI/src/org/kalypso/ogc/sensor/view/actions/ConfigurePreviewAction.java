@@ -38,57 +38,70 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ogc.sensor.view.actions;
 
-import org.eclipse.jface.dialogs.MessageDialog;
+import java.text.DateFormat;
+
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.window.Window;
+import org.kalypso.contribs.eclipse.jface.dialogs.DateRangeInputDialog;
+import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
+import org.kalypso.ogc.sensor.view.ObservationCache;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.ObservationChooser;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * Ein Repository hinzufügen.
+ * Configure preview daterange for current <code>IRepository</code>.
  * 
  * @author schlienger
  */
-public class RemoveRepositoryAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
+public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
 {
-  public RemoveRepositoryAction( final ObservationChooser explorer )
+  public ConfigurePreviewAction( final ObservationChooser explorer )
   {
-    super( explorer, "Repository entfernen", ImageProvider.IMAGE_ZML_REPOSITORY_REMOVE, "Entfernt ein Repository..." );
+    super( explorer, "Einstellungen", ImageProvider.IMAGE_ZML_REPOSITORY_CONF,
+        "Einstellungen der Zeitreihen-Vorschau setzen" );
 
     explorer.addSelectionChangedListener( this );
 
     setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
   }
 
-  public void dispose()
-  {
-    getExplorer().removeSelectionChangedListener( this );
-  }
-
-  /**
-   * @see org.eclipse.jface.action.IAction#run()
-   */
   public void run()
   {
     final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )
       return;
 
-    if( !MessageDialog.openConfirm( getShell(), "Repository entfernen", "Repository '" + rep.toString()
-        + "' wirklich entfernen?" ) )
-      return;
+    final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "Zeitraum-Eingabe",
+        "Bitte geben Sie einen Zeitraum ein.", DateRangeInputControlStuct.create( rep.getProperties(), DateFormat
+            .getDateTimeInstance() ) );
 
-    getExplorer().getRepositoryContainer().removeRepository( rep );
+    if( dlg.open() == Window.OK )
+    {
+      // save dialog settings for next dialog call
+      final DateRangeInputControlStuct struct = dlg.getStruct();
+      struct.save( KalypsoGisPlugin.getDefault().getDialogSettings() );
+
+      // save properties of the repository
+      struct.save( rep.getProperties() );
+
+      // clear cache in order to refetch values from server in case date range
+      // changed
+      ObservationCache.clearCache();
+    }
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
   public void selectionChanged( final SelectionChangedEvent event )
   {
     setEnabled( getExplorer().isRepository( event.getSelection() ) != null );
+  }
+
+  public void dispose()
+  {
+    getExplorer().removeSelectionChangedListener( this );
   }
 }

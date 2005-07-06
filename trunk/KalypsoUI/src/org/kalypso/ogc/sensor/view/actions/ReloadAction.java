@@ -38,64 +38,85 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ogc.sensor.view.actions;
 
-import java.text.DateFormat;
-
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.window.Window;
-import org.kalypso.contribs.eclipse.jface.dialogs.DateRangeInputDialog;
-import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.ogc.sensor.view.ObservationCache;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
- * Configure preview daterange for current <code>IRepository</code>.
- * 
  * @author schlienger
  */
-public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
+public class ReloadAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
 {
-  public ConfigurePreviewAction( final ObservationChooser explorer )
+  public ReloadAction( final ObservationChooser explorer )
   {
-    super( explorer, "Einstellungen", ImageProvider.IMAGE_ZML_REPOSITORY_CONF,
-        "Einstellungen der Zeitreihen-Vorschau setzen" );
+    super( explorer, "Aktualisieren", ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD,
+        "Aktualisiert den aktuellen Repository" );
 
     explorer.addSelectionChangedListener( this );
 
     setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
   }
 
+  /**
+   * @see org.eclipse.jface.action.Action#run()
+   */
   public void run()
   {
     final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
     if( rep == null )
       return;
 
-    final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "Zeitraum-Eingabe",
-        "Bitte geben Sie einen Zeitraum ein.", DateRangeInputControlStuct.create( rep.getProperties(), DateFormat
-            .getDateTimeInstance() ) );
-
-    if( dlg.open() == Window.OK )
+    final Job reloadJob = new Job( "Aktualisieren" )
     {
-      // save dialog settings for next dialog call
-      final DateRangeInputControlStuct struct = dlg.getStruct();
-      struct.save( KalypsoGisPlugin.getDefault().getDialogSettings() );
+      protected IStatus run( IProgressMonitor monitor )
+      {
+        monitor.beginTask( "Repository aktualisieren", 2 );
 
-      // save properties of the repository
-      struct.save( rep.getProperties() );
+        // Important: clear the cache
+        ObservationCache.clearCache();
 
-      // clear cache in order to refetch values from server in case date range
-      // changed
-      ObservationCache.clearCache();
-    }
+        try
+        {
+          rep.reload();
+
+          monitor.worked( 1 );
+
+          // trick: direct call to update view
+          getExplorer().onRepositoryContainerChanged();
+
+          monitor.worked( 1 );
+
+          return Status.OK_STATUS;
+        }
+        catch( RepositoryException e )
+        {
+          return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Fehler während der Aktualisierung", e );
+        }
+        finally
+        {
+          monitor.done();
+        }
+      }
+    };
+
+    reloadJob.schedule();
   }
 
-  public void selectionChanged( final SelectionChangedEvent event )
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( SelectionChangedEvent event )
   {
     setEnabled( getExplorer().isRepository( event.getSelection() ) != null );
   }

@@ -27,7 +27,7 @@
  * 
  * ------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.repository.view;
+package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
 import java.net.MalformedURLException;
@@ -129,6 +129,7 @@ public class ObservationViewer extends Composite
     super( parent, style );
 
     m_dr = DateRange.createFromPastDays( 5 );
+    
     createControl();
   }
 

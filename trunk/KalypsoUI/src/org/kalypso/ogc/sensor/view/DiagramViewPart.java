@@ -88,7 +88,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     {
       m_chart = new ObservationChart( m_diagView );
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
       return;

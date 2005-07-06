@@ -38,10 +38,10 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.repository.actions;
+package org.kalypso.ogc.sensor.view.actions;
 
+import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.repository.view.ObservationChooser;
 
 /**
  * @author schlienger

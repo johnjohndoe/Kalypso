@@ -27,10 +27,11 @@
  * 
  * ------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.repository.view;
+package org.kalypso.ogc.sensor.view;
 
 import org.eclipse.compare.internal.AbstractViewer;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -50,18 +51,22 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.view.actions.AddRepositoryAction;
+import org.kalypso.ogc.sensor.view.actions.CollapseAllAction;
+import org.kalypso.ogc.sensor.view.actions.ConfigurePreviewAction;
+import org.kalypso.ogc.sensor.view.actions.CopyLinkAction;
+import org.kalypso.ogc.sensor.view.actions.DumpStructureAction;
+import org.kalypso.ogc.sensor.view.actions.ExportAsFileAction;
+import org.kalypso.ogc.sensor.view.actions.ReloadAction;
+import org.kalypso.ogc.sensor.view.actions.RemoveRepositoryAction;
+import org.kalypso.ogc.sensor.view.actions.ViewWQRelationAction;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainerListener;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.repository.actions.AddRepositoryAction;
-import org.kalypso.ui.repository.actions.CollapseAllAction;
-import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
-import org.kalypso.ui.repository.actions.CopyLinkAction;
-import org.kalypso.ui.repository.actions.DumpStructureAction;
-import org.kalypso.ui.repository.actions.ExportAsFileAction;
-import org.kalypso.ui.repository.actions.ReloadAction;
-import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
+import org.kalypso.ui.repository.view.RepositoryLabelProvider;
+import org.kalypso.ui.repository.view.RepositoryTreeContentProvider;
 
 /**
  * A view that allows the user to choose an observation within a tree of repositories
@@ -93,6 +98,8 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   private CopyLinkAction m_copyLinkAction;
 
   private DumpStructureAction m_dumpAction;
+
+  private IAction m_viewWQRelationAction;
 
   public ObservationChooser( final Composite parent )
   {
@@ -143,10 +150,12 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     m_removeAction = new RemoveRepositoryAction( this );
     m_confAction = new ConfigurePreviewAction( this );
     m_reloadAction = new ReloadAction( this );
+    m_dumpAction = new DumpStructureAction( this );
     m_collapseAction = new CollapseAllAction( this );
     m_exportAsFileAction = new ExportAsFileAction( this );
     m_copyLinkAction = new CopyLinkAction( this );
-    m_dumpAction = new DumpStructureAction( this );
+    
+    m_viewWQRelationAction = new ViewWQRelationAction( this );
   }
 
   private void initContextMenu()
@@ -170,8 +179,6 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
 
   /**
    * Called when the context menu is about to open.
-   * 
-   * @param menu
    */
   protected void fillContextMenu( final IMenuManager menu )
   {
@@ -180,15 +187,21 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     menu.add( new Separator() );
     menu.add( m_confAction );
     menu.add( m_reloadAction );
+    menu.add( m_dumpAction );
     menu.add( new Separator() );
     menu.add( m_collapseAction );
     menu.add( new Separator() );
     menu.add( m_exportAsFileAction );
-    menu.add( m_dumpAction );
 
-    if( isObservationSelected( m_repViewer.getSelection() ) != null )
+    final IObservation obs = isObservationSelected( m_repViewer.getSelection() );
+    if( obs != null )
     {
       menu.add( m_copyLinkAction );
+
+      final String pTable = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
+      if( pTable != null )
+        menu.add( m_viewWQRelationAction );
+
       menu.add( new Separator() );
     }
 
@@ -209,11 +222,11 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     toolBarManager.add( new Separator() );
     toolBarManager.add( m_confAction );
     toolBarManager.add( m_reloadAction );
+    toolBarManager.add( m_dumpAction );
     toolBarManager.add( new Separator() );
     toolBarManager.add( m_collapseAction );
     toolBarManager.add( new Separator() );
     toolBarManager.add( m_exportAsFileAction );
-    toolBarManager.add( m_dumpAction );
 
     if( m_site != null )
       m_site.getActionBars().updateActionBars();

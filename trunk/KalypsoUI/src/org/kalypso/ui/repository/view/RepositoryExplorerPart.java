@@ -59,6 +59,7 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.kalypso.contribs.eclipse.ui.MementoUtils;
+import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
