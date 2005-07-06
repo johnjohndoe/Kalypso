@@ -1,4 +1,4 @@
-#Fri Jun 03 13:48:17 CEST 2005
+#Wed Jul 06 18:11:50 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -182,6 +182,7 @@ encoding//.prognose/Vorhersage-03-11-2004_20h39/steuerparameter.gft=UTF-8
 encoding//.prognose/prognose13/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_LIESKE.zml=UTF-8
+encoding//.templates/Modell/modell_versuch.gml=UTF-8
 encoding//.prognose/prognose3/results.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SPWITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/zeitreihen/Diagramm.odt=UTF-8
@@ -202,8 +203,8 @@ encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-2005-06-03_11h17/Zeitreihen/Pegel/Messung/B\u00FChne_Hoppenstedt.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gmv=Cp1252
@@ -220,7 +221,6 @@ encoding//Rechenvarianten/test1/bodemodell.gml=Cp1252
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_BAUTZWB.zml=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_14h45/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_17h24/Anfangsvolumen.gtt=UTF-8
-encoding//.templates/Modell/modell.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/.calculation=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_GROEDI.zml=UTF-8
 encoding//Rechenvarianten/20041125_15_07/zeitreihen/Diagramm.odt=UTF-8
