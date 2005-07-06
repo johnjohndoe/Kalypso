@@ -51,6 +51,8 @@ import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.internal.UIPlugin;
@@ -154,7 +156,7 @@ public class ExportBerichtWizard extends Wizard
 
     final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
     {
-      public void run( IProgressMonitor monitor ) throws InvocationTargetException
+      public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
       {
         FileOutputStream outs = null;
         try
@@ -162,6 +164,7 @@ public class ExportBerichtWizard extends Wizard
           // export
           outs = new FileOutputStream( docBean.getFile() );
           m_document2export.exportDocument( outs );
+          return Status.OK_STATUS;
         }
         catch( final Exception e )
         {

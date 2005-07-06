@@ -6,7 +6,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				<pr>Konvertiert eine GML-Datenquelle in ein GML-Datenziel.</pr>
-				<pr>Dabei können sowohl während des Lesens oder während des Schreibens verschiedenen Konvertierungen durchgeführt werden.</pr>
+				<pr>Dabei k�n sowohl w㧲end des Lesens oder w㧲end des Schreibens verschiedenen Konvertierungen durchgef�erden.</pr>
 				<pr>Wie, was, warum etwas konvertiert wird, wird in der jeweiligen Quelle bzw. im jeweiligen Ziel definiert.</pr>
 				<pr>Auf Codeseite ist es die Klasse org.kalypso.ogc.gml.convert.GmlConvertFactory um die sich alles dreht.</pr>
 				<pr>Intern werden die Daten in einen GMlWorkspace gelesen, alle Operationen basieren dann tatäschlich auf Operationen auf diesen Workspace.</pr>

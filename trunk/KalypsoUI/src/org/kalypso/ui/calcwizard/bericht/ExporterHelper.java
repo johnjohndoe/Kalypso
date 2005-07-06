@@ -1,4 +1,4 @@
-package org.kalypso.ui.bericht;
+package org.kalypso.ui.calcwizard.bericht;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -38,8 +38,9 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.bericht;
+package org.kalypso.ui.calcwizard.bericht;
 
+import java.awt.Color;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -52,30 +53,29 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
-import org.kalypso.ogc.sensor.tableview.TableView;
-import org.kalypso.ogc.sensor.tableview.TableViewUtils;
-import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
  */
-public class ZmlTableExporter extends AbstractBerichtExporter
+public class DiagrammExporter extends AbstractBerichtExporter
 {
-  private static final String EXT = ".csv";
+  private static final String EXT = ".png";
 
   /**
-   * @see org.kalypso.ui.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature,
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature,
    *      java.io.OutputStream)
    */
   public IStatus export( final Feature feature, final OutputStream os )
   {
-    ObservationTable table = null;
-    TableView view = null;
-
+    DiagView tpl = null;
+    ObservationChart chart = null;
     try
     {
       // parse arguments:
@@ -85,6 +85,11 @@ public class ZmlTableExporter extends AbstractBerichtExporter
       final String templateurl = arguments.getProperty( "template", null );
 
       final String featurename = arguments.getProperty( "nameproperty", "Name" );
+      final Object nameProp = feature.getProperty( featurename );
+      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString();
+
+      final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
+      final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
 
       // - replacetokens / featureprops
       final Arguments tokens = arguments.getArguments( "tokens" );
@@ -95,18 +100,21 @@ public class ZmlTableExporter extends AbstractBerichtExporter
       final Reader reader = new InputStreamReader( connection.getInputStream(), "UTF-8" );
       final Reader reader2 = ReaderUtilities.createTokenReplaceReader( reader, replacetokens, '%', '%' );
 
-      final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader2 );
-      view = new TableView();
-      table = new ObservationTable( view, true, false );
+      final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader2 );
 
-      final Object nameProp = feature.getProperty( featurename );
-      final String name = nameProp == null ? "<unbekannt>" : nameProp.toString();
+      tpl = new DiagView();
 
       final MultiStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, this.toString() + " - " + name + ": ",
           null );
-      TableViewUtils.applyXMLTemplate( view, xml, getContext(), true, result );
+      DiagViewUtils.applyXMLTemplate( tpl, xml, getContext(), true, result );
 
-      new ExportableObservationTable( table ).exportDocument( os );
+      // diagramm refresh may take a while
+      //      Thread.sleep( 1000 );
+
+      chart = new ObservationChart( tpl );
+      chart.setBackgroundPaint( Color.WHITE );
+
+      new ExportableChart( chart, EXT, width, height ).exportDocument( os );
 
       return result;
     }
@@ -116,15 +124,16 @@ public class ZmlTableExporter extends AbstractBerichtExporter
     }
     finally
     {
-      if( table != null )
-        table.dispose();
-      if( view != null )
-        view.dispose();
+      if( chart != null )
+        chart.dispose();
+
+      if( tpl != null )
+        tpl.dispose();
     }
   }
 
   /**
-   * @see org.kalypso.ui.bericht.IBerichtExporter#getExtension()
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#getExtension()
    */
   public String getExtension()
   {
