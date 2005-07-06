@@ -83,12 +83,12 @@
         <echo message="Checkout the models for Sachsen" />
 
         <antcall target="co-model">
-            <param name="pPackage" value="KalypsoData/KalypsoSpree" />
+            <param name="pPackage" value="KalypsoSachsen/Data/KalypsoSpree" />
             <param name="pName" value="Spree" />
         </antcall>
 
         <antcall target="co-model">
-            <param name="pPackage" value="KalypsoData/KalypsoWeisseElster" />
+            <param name="pPackage" value="KalypsoSachsen/Data/KalypsoWeisseElster" />
             <param name="pName" value="WeisseElster" />
         </antcall>
 
@@ -105,10 +105,10 @@
         </pathconvert>
 
         <exec executable="cmd.exe" dir="${project.path}/deployable-server">
-            <arg line="/C start ${project.path}/deployable-server/cvs-co.bat ${user.name} ${copath} ${pPackage}" />
+            <arg line="/C start cvs-co.bat ${user.name} ${copath} ${pPackage}" />
         </exec>
 
-        <delete includeemptydirs="true">
+        <delete includeemptydirs="true" failonerror="false">
             <!-- empty '.prognose' and 'Rechenvariante' dirs -->
             <fileset dir="${dist.webdav}/prognose/${pName}/.prognose" includes="**/*" />
             <fileset dir="${dist.webdav}/prognose/${pName}/Rechenvarianten" includes="**/*" />

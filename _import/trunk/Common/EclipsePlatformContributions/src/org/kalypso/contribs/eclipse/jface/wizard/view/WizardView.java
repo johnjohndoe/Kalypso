@@ -154,6 +154,10 @@ public class WizardView extends ViewPart implements IWizardContainer3
     // clean wizard
     if( m_wizard != null )
     {
+      // IMPORTANT: set the image to null, because it probably gets disposed
+      // by m_wizard.dispose();
+      setWizardTitleImage( null );
+      
       //  todo: maybe ask for unsaved data?
       m_wizard.setContainer( null );
       m_wizard.dispose();
@@ -169,10 +173,12 @@ public class WizardView extends ViewPart implements IWizardContainer3
     }
 
     // first time set this wizard
+    boolean doLayout = false;
     if( wizard != null && wizard != m_wizard )
     {
       wizard.setContainer( this );
       wizard.addPages();
+      doLayout = true;
     }
 
     m_wizard = wizard;
@@ -200,6 +206,16 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
     if( m_wizard != null )
       showStartingPage();
+
+    if( m_workArea != null && !m_workArea.isDisposed() && doLayout )
+    {
+      // WORKAROUND: no layout() or redraw() on any of the involved composites
+      // causes a real repaint -> panel stays empty after wizard is newly set.
+      // So we minimize maximize the sashform (backdraw, it flickers!)
+      final Control maximizedControl = m_mainSash.getMaximizedControl();
+      m_mainSash.setMaximizedControl( null );
+      m_mainSash.setMaximizedControl( maximizedControl );
+    }
   }
 
   /**
@@ -522,9 +538,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
    */
   public void setFocus()
   {
-    if( m_pageContainer == null )
+    if( m_pageContainer == null && !m_workArea.isDisposed() )
       m_workArea.setFocus();
-    else
+    else if( !m_pageContainer.isDisposed() )
       m_pageContainer.setFocus();
   }
 
@@ -764,7 +780,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
       html = ( (IHtmlWizardPage)page ).getHtml();
     if( html == null )
       html = "";
-    
+
     return html;
   }
 
@@ -1087,12 +1103,16 @@ public class WizardView extends ViewPart implements IWizardContainer3
    * @param newErrorMessage
    *          the newErrorMessage to display or <code>null</code>
    */
-  public void setErrorMessage( String newErrorMessage )
+  public void setErrorMessage( final String newErrorMessage )
   {
     // Any change?
     if( errorMessage == null ? newErrorMessage == null : errorMessage.equals( newErrorMessage ) )
       return;
     errorMessage = newErrorMessage;
+
+    if( messageLabel.isDisposed() )
+      return;
+
     if( errorMessage == null )
     {
       if( showingError )
@@ -1108,6 +1128,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
       if( message == null ) //this should probably never happen since
         // setMessage does this conversion....
         message = ""; //$NON-NLS-1$
+
       updateMessage( message );
       messageImageLabel.setImage( messageImage );
       setImageLabelVisible( messageImage != null );
@@ -1292,7 +1313,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
     //Be sure there are always 2 lines for layout purposes
     if( newMessage != null && newMessage.indexOf( '\n' ) == -1 )
       newMessage = newMessage + "\n "; //$NON-NLS-1$
-    messageLabel.setText( newMessage );
+
+    if( !messageLabel.isDisposed() )
+      messageLabel.setText( newMessage );
   }
 
   /**
@@ -1328,7 +1351,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
    * @param newTitleImage
    *          the title image show
    */
-  public void setWizardTitleImage( Image newTitleImage )
+  public void setWizardTitleImage( final Image newTitleImage )
   {
     titleImage.setImage( newTitleImage );
     titleImage.setVisible( newTitleImage != null );
