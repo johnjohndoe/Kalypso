@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.TimeZone;
 
-import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.ogc.sensor.DateRange;
 
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 import de.kisters.wiski.webdataprovider.common.util.KiWWException;
@@ -20,7 +20,7 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
  */
 public class GetTsData implements IWiskiCall
 {
-  private final DateRangeArgument m_dr;
+  private final DateRange m_dr;
 
   private final Long m_id;
 
@@ -28,7 +28,7 @@ public class GetTsData implements IWiskiCall
 
   private Integer utcOffset = null;
 
-  public GetTsData( final Long id, final DateRangeArgument dr )
+  public GetTsData( final Long id, final DateRange dr )
   {
     m_id = id;
     m_dr = dr;

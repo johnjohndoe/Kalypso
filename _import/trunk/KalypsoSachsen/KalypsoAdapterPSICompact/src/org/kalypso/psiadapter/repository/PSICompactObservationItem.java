@@ -2,6 +2,7 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Date;
 
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -11,6 +12,7 @@ import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -18,8 +20,6 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.commons.conversion.units.IValueConverter;
-import org.kalypso.commons.runtime.IVariableArguments;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.commons.xml.xlink.IXlink;
 
 import de.psi.go.lhwz.ECommException;
@@ -266,19 +266,19 @@ public class PSICompactObservationItem implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
-    final DateRangeArgument dr;
+    final DateRange dr;
 
     // tricky: when no date range specified, we create a default one
     // according to the config delivered by our PSICompactFactory
-    if( args == null || !( args instanceof DateRangeArgument ) )
-      dr = DateRangeArgument.createFromPastDays( Integer.valueOf(
+    if( request == null || request.getDateRange() == null )
+      dr = DateRange.createFromPastDays( Integer.valueOf(
           PSICompactFactory.getProperties().getProperty( "NUMBER_OF_DAYS", "100" ) ).intValue() );
     else
-      dr = (DateRangeArgument)args;
+      dr = request.getDateRange();
 
     if( m_values != null && dr.getFrom().compareTo( m_from ) == 0 && dr.getTo().compareTo( m_to ) == 0 )
       return m_values;

@@ -2,6 +2,7 @@ package org.kalypso.wiskiadapter;
 
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -21,6 +23,7 @@ import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -32,8 +35,6 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.commons.conversion.units.SIConverter;
-import org.kalypso.commons.runtime.IVariableArguments;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.wiskiadapter.wiskicall.GetAlarmLevelList;
 import org.kalypso.wiskiadapter.wiskicall.GetRatingTables;
@@ -66,7 +67,7 @@ public class WiskiTimeserie implements IObservation
 
   private ITuppleModel m_cachedValues = SimpleTuppleModel.EMPTY_TUPPLEMODEL;
 
-  private DateRangeArgument m_cachedDr = null;
+  private DateRange m_cachedDr = null;
 
   public WiskiTimeserie( final TsInfoItem tsinfo )
   {
@@ -202,24 +203,24 @@ public class WiskiTimeserie implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( final IRequest req ) throws SensorException
   {
-    final DateRangeArgument dr;
+    final DateRange dr;
 
     final WiskiRepository rep = (WiskiRepository)m_tsinfo.getRepository();
 
     try
     {
       // tricky: when no date range specified, we create a default one
-      if( args == null || !( args instanceof DateRangeArgument ) )
+      if( req == null || req.getDateRange() == null )
       {
-        dr = DateRangeArgument.createFromPastDays( Integer.valueOf(
+        dr = DateRange.createFromPastDays( Integer.valueOf(
             WiskiUtils.getProperties().getProperty( WiskiUtils.PROP_NUMBER_OF_DAYS, "7" ) ).intValue() );
       }
       else
-        dr = (DateRangeArgument)args;
+        dr = req.getDateRange();
 
       if( dr.equals( m_cachedDr ) )
         return m_cachedValues;
@@ -228,8 +229,16 @@ public class WiskiTimeserie implements IObservation
 
       try
       {
+        final String useType;
+        if( Arrays.binarySearch( req.getAxisTypes(), TimeserieConstants.TYPE_WATERLEVEL ) >= 0 )
+          useType = TimeserieConstants.TYPE_WATERLEVEL;
+        else if( Arrays.binarySearch( req.getAxisTypes(), TimeserieConstants.TYPE_VOLUME ) >= 0 )
+          useType = TimeserieConstants.TYPE_VOLUME;
+        else
+          useType = TimeserieConstants.TYPE_RUNOFF;
+        
         // fetch WQTable now since we know the time-range
-        fetchWQTable( getMetadataList(), dr.getFrom(), dr.getTo() );
+        fetchWQTable( getMetadataList(), dr.getFrom(), dr.getTo(), useType );
       }
       catch( Exception e )
       {
@@ -369,19 +378,16 @@ public class WiskiTimeserie implements IObservation
   /**
    * Helper for translating Wiski Rating-Tables into Kalypso Metadata
    */
-  private void fetchWQTable( final MetadataList metadata, final Date from, final Date to )
+  private void fetchWQTable( final MetadataList metadata, final Date from, final Date to, String useType )
   {
     final String sourceType = m_axes[1].getType();
     final String destType;
     if( sourceType.equals( TimeserieConstants.TYPE_RUNOFF ) )
-      destType = TimeserieConstants.TYPE_WATERLEVEL;
+      destType = TimeserieConstants.TYPE_WATERLEVEL; // force to W
     else if( sourceType.equals( TimeserieConstants.TYPE_VOLUME ) )
-      destType = TimeserieConstants.TYPE_WATERLEVEL;
+      destType = TimeserieConstants.TYPE_WATERLEVEL; // force to W
     else if( sourceType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-      destType = TimeserieConstants.TYPE_RUNOFF; // here we could have also said
-    // TYPE_VOLUME but since we don't know what the client
-    // wants at this time we leave TYPE_RUNOFF as default
-    // TODO: find a solution for this problem (not knowing which type...)
+      destType = useType; // here use the Type found in the request
     else
       return;
 
@@ -396,11 +402,15 @@ public class WiskiTimeserie implements IObservation
       // 2. this failed, so next try is using sibling of other type
       // which might also contain a usable rating table
 
-      // try with sibling of other type: W or Q depending on our type
-      // TODO: how to handle type V (Volume)???
+      // try with sibling of other type: W or Q/V depending on our type
       String otherType = null;
       if( m_tsinfo.getWiskiType().equals( "W" ) )
-        otherType = "Q";
+      {
+        if( useType.equals( TimeserieConstants.TYPE_RUNOFF ) )
+          otherType = "Q";
+        else
+          otherType = "V";
+      }
       else
         otherType = "W";
 

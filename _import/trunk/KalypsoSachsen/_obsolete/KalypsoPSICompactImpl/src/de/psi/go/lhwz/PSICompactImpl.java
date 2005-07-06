@@ -18,12 +18,14 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
+import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
@@ -32,7 +34,6 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.xml.sax.InputSource;
 
 /**
@@ -232,8 +233,6 @@ public class PSICompactImpl implements PSICompact
 
   /**
    * Helper for lazy loading the zml observation
-   * 
-   * @throws ECommException
    */
   private IObservation getZmlObs( final String id ) throws ECommException
   {
@@ -269,18 +268,13 @@ public class PSICompactImpl implements PSICompact
 
   /**
    * Reads the data from the underlying zml
-   * 
-   * @param id
-   * @param from
-   * @param to
-   * @return data
-   * @throws ECommException
    */
   private ArchiveData[] readFromZml( String id, Date from, Date to ) throws ECommException
   {
     try
     {
-      final ArgsObservationProxy obs = new ArgsObservationProxy( new DateRangeArgument( from, to ), getZmlObs( id ) );
+      final RequestObservationProxy obs = new RequestObservationProxy( new ObservationRequest( new DateRange( from, to ) ),
+          getZmlObs( id ) );
 
       final ITuppleModel values = obs.getValues( null );
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Date.class );
