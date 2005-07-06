@@ -42,10 +42,10 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.filters.OperationFilterType;
 
 /**
@@ -91,7 +91,7 @@ public class OperationFilter extends AbstractObservationFilter
     super.initFilter( dummy, baseObs, context );
   }
 
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     return new OperationTupplemodel( m_operand, m_operation, m_baseobservation.getValues( args ) );
 

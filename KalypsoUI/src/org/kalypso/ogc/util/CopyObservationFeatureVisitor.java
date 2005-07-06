@@ -52,11 +52,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.resources.FolderUtilities;
 import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
@@ -209,7 +209,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     // keine Zeitreihe verlink, z.B. kein Pegel am
     // Knoten in KalypsoNA
     String href = sourcelink.getHref();
-    final String sourceref = ZmlURL.insertDateRange( href, new DateRangeArgument( from, to ) );
+    final String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
 
     final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
 

@@ -46,8 +46,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.kalypso.commons.runtime.IVariableArguments;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -57,6 +55,7 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * Default implementation of the <code>IObservation</code> interface.
@@ -151,15 +150,15 @@ public class SimpleObservation implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     if( m_tupples == null )
       throw new SensorException( "Keine Werte vorhanden." );
 
-    if( args instanceof DateRangeArgument )
-      return new SimpleTuppleModel( m_tupples, (DateRangeArgument)args );
+    if( request != null && request.getDateRange() != null )
+      return new SimpleTuppleModel( m_tupples, request.getDateRange() );
 
     return m_tupples;
   }

@@ -55,6 +55,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.template.NameUtils;
@@ -135,7 +136,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
     if( obs != null )
     {
-      m_tableView.addObservation( new PlainObsProvider( obs, ObservationViewHelper.makeDateRange( item ) ),
+      m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper.makeDateRange( item ) ) ),
           NameUtils.DEFAULT_ITEM_NAME, null, new ObsView.ItemData( false, null ) );
     }
   }

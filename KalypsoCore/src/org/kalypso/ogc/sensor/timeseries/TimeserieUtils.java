@@ -54,8 +54,8 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.util.StringUtilities;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -186,7 +186,7 @@ public class TimeserieUtils
    * @param obs
    * @return date range of the forecast or null if obs isn't a forecast.
    */
-  public final static DateRangeArgument isForecast( final IObservation obs )
+  public final static DateRange isForecast( final IObservation obs )
   {
     if( obs == null )
       return null;
@@ -203,7 +203,7 @@ public class TimeserieUtils
           final Date from = TimeserieConstants.DEFAULT_DF.parse( splits[0] );
           final Date to = TimeserieConstants.DEFAULT_DF.parse( splits[1] );
 
-          return new DateRangeArgument( from, to );
+          return new DateRange( from, to );
         }
         catch( Exception e )
         {

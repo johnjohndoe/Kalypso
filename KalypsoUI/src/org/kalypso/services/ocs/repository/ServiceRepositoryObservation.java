@@ -53,9 +53,8 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
-import org.kalypso.commons.runtime.IVariableArguments;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.commons.xml.xlink.IXlink;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -63,6 +62,8 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -96,12 +97,9 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * Lazy loading.
    * 
-   * @param args
    * @return IObservation loaded from the server
-   * 
-   * @throws SensorException
    */
-  private IObservation getRemote( final IVariableArguments args ) throws SensorException
+  private IObservation getRemote( final IRequest args ) throws SensorException
   {
     if( args == null && m_obs != null )
       return m_obs;
@@ -116,11 +114,11 @@ public class ServiceRepositoryObservation implements IObservation
    * 
    * @return IObservation loaded from the server
    */
-  private IObservation loadFromServer( final IVariableArguments args ) throws SensorException
+  private IObservation loadFromServer( final IRequest args ) throws SensorException
   {
     String href = m_ob.getId();
-    if( args instanceof DateRangeArgument )
-      href = ZmlURL.insertDateRange( href, (DateRangeArgument)args );
+    if( args != null )
+      href = ZmlURL.insertRequest( href, args );
 
     InputStream ins = null;
 
@@ -212,9 +210,9 @@ public class ServiceRepositoryObservation implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public synchronized ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public synchronized ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     ITuppleModel values = ObservationCache.getInstance().getValues( this );
 
@@ -234,7 +232,7 @@ public class ServiceRepositoryObservation implements IObservation
   public void setValues( final ITuppleModel values ) throws SensorException
   {
     // sets values
-    final IObservation obs = getRemote( new DateRangeArgument() );
+    final IObservation obs = getRemote( new ObservationRequest( new DateRange() ) );
     obs.setValues( values );
 
     Writer fw = null;

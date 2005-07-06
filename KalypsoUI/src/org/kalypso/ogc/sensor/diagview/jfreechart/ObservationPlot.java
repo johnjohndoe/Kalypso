@@ -68,7 +68,7 @@ import org.jfree.ui.Spacer;
 import org.jfree.ui.TextAnchor;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -348,7 +348,7 @@ public class ObservationPlot extends XYPlot
     final IObservation obs = curve.getObservation();
 
     // add a marker if the obs is a forecast
-    final DateRangeArgument fr = TimeserieUtils.isForecast( obs );
+    final DateRange fr = TimeserieUtils.isForecast( obs );
     if( fr != null )
     {
       final Long begin = new Long( fr.getFrom().getTime() );

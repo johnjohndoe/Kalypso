@@ -53,8 +53,8 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -366,7 +366,7 @@ public class ObservationUtilities
    *           when compatibility is wished but could not be guaranteed
    */
   public static ITuppleModel optimisticValuesCopy( final IObservation source, final IObservation dest,
-      final IVariableArguments args, boolean fullCompatibilityExpected ) throws SensorException, IllegalStateException
+      final IRequest args, boolean fullCompatibilityExpected ) throws SensorException, IllegalStateException
   {
     final IAxis[] srcAxes = source.getAxisList();
     final IAxis[] destAxes = dest.getAxisList();

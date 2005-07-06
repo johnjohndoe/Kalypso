@@ -56,11 +56,12 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileSelectWizardPage;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.zml.ObservationType;
@@ -137,13 +138,13 @@ public class ExportAsFileWizard extends Wizard
    */
   public boolean performFinish()
   {
-    final DateRangeArgument dateRange = m_page1.getDateRange();
+    final DateRange dateRange = m_page1.getDateRange();
     final String filePath = m_page2.getFilePath();
 
     FileOutputStream outs = null;
     try
     {
-      final ObservationType ot = ZmlFactory.createXML( m_obs, dateRange );
+      final ObservationType ot = ZmlFactory.createXML( m_obs, new ObservationRequest( dateRange ) );
 
       outs = new FileOutputStream( new File( filePath ) );
       ZmlFactory.getMarshaller().marshal( ot, outs );

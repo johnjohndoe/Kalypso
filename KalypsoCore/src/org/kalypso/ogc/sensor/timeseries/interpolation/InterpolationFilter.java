@@ -45,14 +45,14 @@ import java.util.Date;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
-import org.kalypso.commons.runtime.IVariableArguments;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
@@ -102,15 +102,15 @@ public class InterpolationFilter extends AbstractObservationFilter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.commons.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
-    final ITuppleModel values = super.getValues( args );
+    final ITuppleModel values = super.getValues( request );
 
-    DateRangeArgument dr = null;
-    if( args instanceof DateRangeArgument )
-      dr = (DateRangeArgument)args;
+    DateRange dr = null;
+    if( request != null )
+      dr = request.getDateRange();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values.getAxisList(), Date.class );
     final IAxis[] valueAxes = ObservationUtilities.findAxesByClass( values.getAxisList(), Number.class );

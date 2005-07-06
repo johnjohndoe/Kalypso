@@ -44,8 +44,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.repository.IRepositoryItem;
 
 /**
@@ -67,7 +67,7 @@ public final class ObservationViewHelper
    * @param item
    * @return new instance of DateRangeArgument
    */
-  public static DateRangeArgument makeDateRange( final IRepositoryItem item )
+  public static DateRange makeDateRange( final IRepositoryItem item )
   {
     final DateFormat df = DateFormat.getDateTimeInstance();
 
@@ -84,19 +84,19 @@ public final class ObservationViewHelper
 
           final Date dateTo = df.parse( item.getRepository().getProperty( DateRangeInputControl.DATE_TO ) );
 
-          return new DateRangeArgument( dateFrom, dateTo );
+          return new DateRange( dateFrom, dateTo );
         }
         catch( ParseException e )
         {
-          return new DateRangeArgument();
+          return new DateRange();
         }
       }
 
       final String strDays = item.getRepository().getProperty( DateRangeInputControl.NUMBER_OF_DAYS );
 
-      return DateRangeArgument.createFromPastDays( Integer.valueOf( strDays ).intValue() );
+      return DateRange.createFromPastDays( Integer.valueOf( strDays ).intValue() );
     }
 
-    return DateRangeArgument.createFromPastDays( 7 );
+    return DateRange.createFromPastDays( 7 );
   }
 }

@@ -42,11 +42,11 @@ package org.kalypso.ogc.sensor.timeseries.forecast;
 
 import java.net.URL;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * MergeFilter
@@ -64,7 +64,7 @@ public class ForecastFilter extends AbstractObservationFilter
     m_obsArray = (IObservation[])conf;
   }
 
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     final ITuppleModel models[] = new ITuppleModel[m_obsArray.length];
 

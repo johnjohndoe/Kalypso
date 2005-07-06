@@ -43,12 +43,11 @@ package org.kalypso.ogc.sensor.filter.filters;
 import java.net.URL;
 import java.util.Date;
 
-import org.kalypso.commons.runtime.IVariableArguments;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.filters.IntervallFilterType;
 
 /**
@@ -87,14 +86,14 @@ public class IntervallFilter extends AbstractObservationFilter
     super.initFilter( dummy, baseObs, context );
   }
 
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     final Date from;
     final Date to;
-    if( args instanceof DateRangeArgument )
+    if( request != null && request.getDateRange() != null )
     {
-      from = ( (DateRangeArgument)args ).getFrom();
-      to = ( (DateRangeArgument)args ).getTo();
+      from = request.getDateRange().getFrom();
+      to = request.getDateRange().getTo();
     }
     else
     {
@@ -102,18 +101,12 @@ public class IntervallFilter extends AbstractObservationFilter
       to = null;
     }
 
-    return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_baseobservation.getValues( args ), from, to );
+    return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_baseobservation.getValues( request ), from, to );
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
-   */
   public void setValues( ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );
   }
-
 }

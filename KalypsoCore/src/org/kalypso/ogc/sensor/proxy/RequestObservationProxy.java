@@ -40,22 +40,22 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.proxy;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * ArgsObservationProxy
  * 
  * @author schlienger
  */
-public class ArgsObservationProxy extends AbstractObservationDecorator implements IObservationProxy
+public class RequestObservationProxy extends AbstractObservationDecorator implements IObservationProxy
 {
-  private IVariableArguments m_args;
+  private IRequest m_args;
 
-  public ArgsObservationProxy( final IVariableArguments args, final IObservation obs )
+  public RequestObservationProxy( final IRequest args, final IObservation obs )
   {
     super( obs );
 
@@ -63,9 +63,9 @@ public class ArgsObservationProxy extends AbstractObservationDecorator implement
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     if( args == null )
       args = m_args;

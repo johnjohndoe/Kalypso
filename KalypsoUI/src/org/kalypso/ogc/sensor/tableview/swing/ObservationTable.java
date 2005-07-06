@@ -54,10 +54,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
@@ -269,7 +269,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     // check if observation is a vorhersage
     if( obs != null )
     {
-      final DateRangeArgument dr = TimeserieUtils.isForecast( obs );
+      final DateRange dr = TimeserieUtils.isForecast( obs );
       if( dr != null )
       {
         if( adding )

@@ -3,6 +3,7 @@ package org.kalypso.dcadapter;
 import java.sql.SQLException;
 import java.util.Date;
 
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -12,12 +13,11 @@ import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.commons.runtime.IVariableArguments;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.commons.xml.xlink.IXlink;
 
 import com.bce.datacenter.db.timeseries.Timeserie;
@@ -190,17 +190,17 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.commons.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     final TimeserieTupple[] tupples;
     
     try
     {
-      if( args instanceof DateRangeArgument )
+      if( request.getDateRange() != null )
       {
-        final DateRangeArgument dra = (DateRangeArgument) args;
+        final DateRange dra = request.getDateRange();
         tupples = m_ts.getValues( dra.getFrom(), dra.getTo() );
       }
       else

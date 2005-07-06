@@ -61,7 +61,6 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -69,10 +68,12 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
 import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
-import org.kalypso.ogc.sensor.zml.request.RequestFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -87,6 +88,7 @@ import org.kalypso.services.sensor.DataBean;
 import org.kalypso.services.sensor.IObservationService;
 import org.kalypso.services.sensor.ObservationBean;
 import org.kalypso.zml.ObservationType;
+import org.kalypso.zml.request.RequestType;
 import org.xml.sax.InputSource;
 
 /**
@@ -297,19 +299,25 @@ public class KalypsoObservationService implements IObservationService
         }
       }
 
-      /*
-       * The query part of the URL (after the ?...) contains some additional specification: from-to, filter, etc.
-       */
-      final DateRangeArgument dra = ZmlURL.checkDateRange( hereHref );
-
-      m_logger.info( "Reading data for observation: " + obs.getName() + " Date-Range: " + dra );
-
+      // request part specified?
+      IRequest request = null;
+      
+      final RequestType requestType = RequestFactory.parseRequest( hereHref );
+      if( requestType != null)
+      {
+        request = ObservationRequest.createWith( requestType );
+      	
+        m_logger.info( "Reading data for observation: " + obs.getName() + " Request: " + request );
+      }
+      else
+        m_logger.info( "Reading data for observation: " + obs.getName() );
+        
       updateObservation( obs, obean.getId() );
 
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( hereHref, obs, null );
 
-      final ObservationType obsType = ZmlFactory.createXML( obs, dra, m_timezone );
+      final ObservationType obsType = ZmlFactory.createXML( obs, request, m_timezone );
 
       final File f = File.createTempFile( "___" + obs.getName(), ".zml", m_tmpDir );
 

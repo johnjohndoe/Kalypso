@@ -76,9 +76,9 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.io.ProcessWraper;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -442,7 +442,7 @@ public class GrafikLauncher
       }
 
       // is this obs a forecast?
-      final DateRangeArgument fr = TimeserieUtils.isForecast( obs );
+      final DateRange fr = TimeserieUtils.isForecast( obs );
       if( fr != null )
         xLines.add( GRAFIK_DF.format( fr.getFrom() ) );
 

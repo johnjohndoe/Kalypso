@@ -40,10 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.contribs.eclipse.ui.IViewable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface
@@ -152,7 +152,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
    */
-  public IVariableArguments getArguments()
+  public IRequest getArguments()
   {
     return m_obsProvider.getArguments();
   }

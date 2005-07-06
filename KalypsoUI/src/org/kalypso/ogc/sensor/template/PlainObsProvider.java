@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * A Theme for an IObservation
@@ -52,9 +52,9 @@ public final class PlainObsProvider implements IObsProvider
 {
   private final IObservation m_obs;
 
-  private final IVariableArguments m_args;
+  private final IRequest m_args;
 
-  public PlainObsProvider( final IObservation obs, final IVariableArguments args )
+  public PlainObsProvider( final IObservation obs, final IRequest args )
   {
     m_args = args;
     m_obs = obs;
@@ -73,7 +73,7 @@ public final class PlainObsProvider implements IObsProvider
   /**
    * @return [optional] variable arguments that can be used when values are fetched from the observation
    */
-  public IVariableArguments getArguments()
+  public IRequest getArguments()
   {
     return m_args;
   }

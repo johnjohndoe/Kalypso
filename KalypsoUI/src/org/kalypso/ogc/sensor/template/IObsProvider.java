@@ -1,7 +1,7 @@
 package org.kalypso.ogc.sensor.template;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * @author belger
@@ -10,7 +10,7 @@ public interface IObsProvider
 {
   public IObservation getObservation();
 
-  public IVariableArguments getArguments();
+  public IRequest getArguments();
 
   public void addListener( final IObsProviderListener l );
 

@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.io.StringReader;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -50,6 +49,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -133,9 +133,9 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.commons.runtime.IVariableArguments)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_destAxis, m_destStatusAxis,
         getWQConverter() );
@@ -143,8 +143,6 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
 
   /**
    * Lazy loading of WQ-Relation
-   * 
-   * @throws SensorException
    */
   private IWQConverter getWQConverter() throws SensorException
   {
