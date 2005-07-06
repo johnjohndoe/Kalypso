@@ -379,7 +379,7 @@ Vorstellung NA-Modell
 - NA-Modell: AB-Wasserbau intern
 
 2) Welche Modelle werden verwendet?
-diverse NA-Modelle, ObereKollau, ...
+diverse NA-Modelle, ObereKollau, Falkengraben, BasisTestModell, AdvancedTestModell...
  
 3) Code
 KalypsoNA: komplettieren der Unterstützung des kompletten NA-Modells
@@ -388,7 +388,7 @@ Kalypso-TUHH-Manual
 4) Erforderliche Überarbeitung von vorhandenem Code 
  - I18n komplettieren
  - GUI (Beispiele: 2 x Save-Diskette)
- - 
+ - Ergebnissvisualisierung (Performance)
  
 5) Anwender
 Ingenieurbüros:
@@ -397,9 +397,9 @@ Ingenieurbüros:
  	- Datenerhebung, Kalibrierung
  Zukunft: Pflege der NA-Modelle
 Studenten:
- Übung Surface-Hydrology, NA-Modell Aufstellung, Kalibrierung
- (seit letztem Monat)
-AB-Wasserbau, die Kollegen
+ Übung Surface-Hydrology, NA-Modell Aufstellung, Kalibrierung (seit letztem Monat)
+ AB-Wasserbau, die Kollegen (als Poweruser)
+ 2 "Hiwis" zur Unterstützung des Testbetriebes an den beiden Testmodellen
 
 Kooperation mit Montenegro/Serbien: Summer-School (NA-Modell)
 
@@ -407,6 +407,7 @@ Kooperation mit Montenegro/Serbien: Summer-School (NA-Modell)
 Marc,Christoph, Gernot, Andreas
 
 7) Anregungen/FeatureRequests
+Handhabung von Diagrammen (außer Timeseries) in Kalypso
 
 --------------------------------------------------------------------------------------------------------
 Christoph:

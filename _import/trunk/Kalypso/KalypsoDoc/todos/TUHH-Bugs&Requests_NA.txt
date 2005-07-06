@@ -1,4 +1,64 @@
 -----------------
+TODO´s:
+-----------------
+1) CreateNA überarbeiten
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Vergabe der ID´s, Links teilweise gesetzt
+	Bearbeiter:
+
+2) Editor Zeitreihenanbindung überarbeiten
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:
+
+3) Anfangswerte/ Restart
+	Wer: 		Pasche, Schröder
+	Wann: 		04.07.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	huebsch
+	
+4) Zeitflächenfunktion integrieren in Schema & import über Excel
+	Wer: 		Ingenieurbüros
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:
+	
+5) Versionsverwaltung
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
+6) naControl.xsd überarbeiten
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+	
+7) Schema um Knoten zu Knoten erweitern
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+	
+
+-----------------
 Feature Requests:
 -----------------
 
@@ -34,7 +94,7 @@ Feature Requests:
 	Kommentar:
 	Bearbeiter:
 
-5) Tabellen in den Tabellen - Werte übernehemen ermöglichen. Z.B. Kalinin-miljukov oder Bodenkorrekturwerte von einem Strang/ Teilgebiet in ein anderes übernehmen.
+5) Tabellen in den Tabellen - Werte übernehemen ermöglichen. Z.B. Kalinin-Miljukov oder Bodenkorrekturwerte von einem Strang/ Teilgebiet in ein anderes übernehmen.
 	Wer: 		Ingenieurbüros, Claudia
 	Wann: 		09.06.2005
 	Termin:		?
@@ -84,7 +144,7 @@ Feature Requests:
 	Kommentar:	
 	Bearbeiter:	
 	
-11) Anfnagswerte in Schema übernehmen
+11) Anfangswerte in Schema übernehmen
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
