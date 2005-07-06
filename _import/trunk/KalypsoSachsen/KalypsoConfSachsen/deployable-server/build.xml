@@ -54,9 +54,9 @@
         <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="clean" inheritAll="false" />
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml" target="clean" inheritAll="false" />
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml" target="clean" inheritAll="false" />
-        <ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
-        <ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="clean" inheritAll="false" />
-        <ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoOptimize/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoModelSpree/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoModelNA/etc/ant/build.xml" target="clean" inheritAll="false" />
         <ant antfile="${workspace}/KalypsoAdapterPSICompact/etc/ant/build.xml" target="clean" inheritall="false" />
         <ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="clean" inheritall="false" />
     </target>
@@ -168,19 +168,19 @@
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml" target="build-client" inheritAll="false" />
 
         <!-- Build the plugins -->
-        <ant antfile="${workspace}/KalypsoOptimizePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
-        <ant antfile="${workspace}/KalypsoSpreePlugin/etc/ant/build.xml" target="deploy" inheritAll="false" />
-        <ant antfile="${workspace}/KalypsoNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoOptimize/etc/ant/build.xml" target="deploy" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoModelSpree/etc/ant/build.xml" target="deploy" inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoModelNA/etc/ant/build.xml" target="deploy" inheritAll="false" />
 
         <!-- Copy plugins in CalcService -->
         <copy todir="${workspace}/KalypsoServiceCalc/build/build-war/WEB-INF/lib">
-            <fileset dir="${workspace}/KalypsoSpreePlugin/build/deploy" includes="**/*.jar" />
+            <fileset dir="${workspace}/KalypsoModelSpree/build/deploy" includes="**/*.jar" />
         </copy>
         <copy todir="${workspace}/KalypsoServiceCalc/build/build-war/WEB-INF/lib">
-            <fileset dir="${workspace}/KalypsoNA/build/deploy" includes="**/*.jar" />
+            <fileset dir="${workspace}/KalypsoModelNA/build/deploy" includes="**/*.jar" />
         </copy>
         <copy todir="${workspace}/KalypsoServiceCalc/build/build-war/WEB-INF/lib">
-            <fileset dir="${workspace}/KalypsoOptimizePlugin/build/deploy" includes="**/*.jar" />
+            <fileset dir="${workspace}/KalypsoOptimize/build/deploy" includes="**/*.jar" />
         </copy>
 
         <!-- Finally build CalcService War -->

@@ -8,12 +8,12 @@
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
-		<fileset dir="${workspace}/KalypsoRepository/build/deploy" includes="**/*.jar"/>
-		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoBuild/common-project/compile-libs" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
-		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoRepository/build/deploy" includes="**/*.jar"/>
 	</path>
 	
 	<!-- overriden to also copy non-java files -->
