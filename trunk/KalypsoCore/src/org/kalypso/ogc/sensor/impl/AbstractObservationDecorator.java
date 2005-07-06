@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -48,6 +47,7 @@ import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * AbstractObservationDecorator decorates an IObservation. Decorates all the methods of IObservation and delegates the
@@ -106,7 +106,7 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.getTarget();
   }
 
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
+  public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     return m_obs.getValues( args );
   }

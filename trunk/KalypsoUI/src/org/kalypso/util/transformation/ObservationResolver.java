@@ -61,11 +61,12 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.resources.FolderUtilities;
 import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
@@ -112,7 +113,8 @@ public class ObservationResolver extends AbstractTransformation
   private static final String PROP_STARTFORECAST = "startforecast";
 
   /**
-   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
+   *      java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   protected void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
@@ -353,7 +355,8 @@ public class ObservationResolver extends AbstractTransformation
     if( sourcelink == null ) // keine Zeitreihe verlink, z.B. kein Pegel am
       // Knoten in KalypsoNA
       return null;
-    final String sourceref = ZmlURL.insertDateRange( sourcelink.getHref(), new DateRangeArgument( from, to ) );
+    final String sourceref = ZmlURL.insertRequest( sourcelink.getHref(), new ObservationRequest( new DateRange( from,
+        to ) ) );
 
     final URL sourceURL = new UrlResolver().resolveURL( baseURL, sourceref );
 

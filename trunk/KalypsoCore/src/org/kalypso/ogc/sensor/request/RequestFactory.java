@@ -27,9 +27,11 @@
  * 
  * ------------------------------------------------------------------------------------
  */
-package org.kalypso.ogc.sensor.zml.request;
+package org.kalypso.ogc.sensor.request;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -57,7 +59,7 @@ import org.xml.sax.InputSource;
  */
 public class RequestFactory
 {
-  private static ObjectFactory OF = new ObjectFactory();
+  public static ObjectFactory OF = new ObjectFactory();
 
   private RequestFactory()
   {
@@ -73,11 +75,11 @@ public class RequestFactory
   public static RequestType parseRequest( final String href ) throws SensorException
   {
     if( href == null || href.length() == 0 )
-      throw new SensorException( "No request definition" );
+      return null;
 
     final int i1 = href.indexOf( ZmlURLConstants.TAG_REQUEST1 );
     if( i1 == -1 )
-      throw new SensorException( "No request definition. URL: " + href );
+      return null;
 
     final int i2 = href.indexOf( ZmlURLConstants.TAG_REQUEST2, i1 );
     if( i2 == -1 )
@@ -112,17 +114,9 @@ public class RequestFactory
    */
   public static IObservation createDefaultObservation( final RequestType xmlReq )
   {
-    final String[] axesTypes;
-    if( xmlReq.getAxes() != null )
-      axesTypes = xmlReq.getAxes().split( "," );
-    else
-      axesTypes = new String[0];
-
-    final String[] statusAxes;
-    if( xmlReq.getStatusAxes() != null )
-      statusAxes = xmlReq.getStatusAxes().split( "," );
-    else
-      statusAxes = new String[0];
+    final ObservationRequest request = ObservationRequest.createWith( xmlReq );
+    final String[] axesTypes = request.getAxisTypes();
+    final String[] statusAxes = request.getAxisTypesWithStatus();
 
     final List axes = new Vector();
     for( int i = 0; i < axesTypes.length; i++ )
@@ -135,12 +129,12 @@ public class RequestFactory
     }
 
     // create observation instance
-    final SimpleObservation obs = new SimpleObservation( "", "", xmlReq.getName(), false, null, new MetadataList(),
+    final SimpleObservation obs = new SimpleObservation( "", "", request.getName(), false, null, new MetadataList(),
         (IAxis[])axes.toArray( new IAxis[axes.size()] ) );
 
     // update metadata
     final MetadataList mdl = obs.getMetadataList();
-    mdl.setProperty( ObservationConstants.MD_NAME, xmlReq.getName() );
+    mdl.setProperty( ObservationConstants.MD_NAME, request.getName() );
     mdl.setProperty( ObservationConstants.MD_ORIGIN, "Request-Mechanismus" );
 
     return obs;
@@ -153,6 +147,26 @@ public class RequestFactory
   {
     final RequestType xmlReq = parseRequest( href );
 
+    if( xmlReq == null )
+      throw new SensorException( "No valid Request specified, cannot create a default Observation" );
+
     return createDefaultObservation( xmlReq );
+  }
+  
+  public static String buildXmlString( final RequestType requestType ) throws JAXBException, IOException
+  {
+    StringWriter writer = null;
+    try
+    {
+      writer = new StringWriter();
+      new ObjectFactory().createMarshaller().marshal( requestType, writer );
+      writer.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+
+    return writer.toString();
   }
 }

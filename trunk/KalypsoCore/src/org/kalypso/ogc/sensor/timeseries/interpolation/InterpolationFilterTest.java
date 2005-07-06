@@ -46,7 +46,7 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
-import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -54,6 +54,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 
 /**
  * InterpolationFilterTest
@@ -110,7 +111,7 @@ public class InterpolationFilterTest extends TestCase
     CAL.setTime( m_to );
     CAL.add( Calendar.DAY_OF_MONTH, 5 );
 
-    final ITuppleModel values = filter.getValues( new DateRangeArgument( m_from, CAL.getTime() ) );
+    final ITuppleModel values = filter.getValues( new ObservationRequest( new DateRange( m_from, CAL.getTime() ) ) );
 
     System.out.println( ObservationUtilities.dump( values, "\t" ) );
   }

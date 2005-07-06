@@ -54,11 +54,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.title.TextTitle;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
@@ -152,9 +153,9 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 
     if( obs != null )
     {
-      final DateRangeArgument dra = ObservationViewHelper.makeDateRange( item );
+      final DateRange dra = ObservationViewHelper.makeDateRange( item );
 
-      m_diagView.addObservation( new PlainObsProvider( obs, dra ), NameUtils.DEFAULT_ITEM_NAME, null,
+      m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ), NameUtils.DEFAULT_ITEM_NAME, null,
           new ObsView.ItemData( false, null ) );
 
       // sub title of diagram contains date-range info

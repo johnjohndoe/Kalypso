@@ -38,16 +38,24 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.commons.runtime;
+package org.kalypso.ogc.sensor.request;
+
+import org.kalypso.ogc.sensor.DateRange;
 
 /**
- * Eine interface um variable Argumente einer Methode zu übergeben.
- * <p>
- * Clients must implement this interface to represent their own specific arguments.
+ * This interface denotes request parameters that can be specified when retrieving the values of an IObservation.
  * 
  * @author schlienger
  */
-public interface IVariableArguments
+public interface IRequest
 {
-  // Interface ist leer. Die clients müssen es implementieren.
+  public DateRange getDateRange();
+
+  public String getName();
+
+  public String[] getAxisTypes();
+
+  public String[] getAxisTypesWithStatus();
+  
+  public String toString();
 }

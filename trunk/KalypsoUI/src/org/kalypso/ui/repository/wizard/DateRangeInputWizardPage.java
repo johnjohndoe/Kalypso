@@ -48,9 +48,9 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -91,14 +91,14 @@ public class DateRangeInputWizardPage extends WizardPage
     setDescription( "Geben Sie bitte die Zeitraum-Information ein für welche die Zeitreihe exportiert werden soll." );
   }
 
-  public DateRangeArgument getDateRange()
+  public DateRange getDateRange()
   {
     if( m_control != null )
     {
       if( m_control.isUseRange() )
-        return new DateRangeArgument( m_control.getDateFrom(), m_control.getDateTo() );
+        return new DateRange( m_control.getDateFrom(), m_control.getDateTo() );
 
-      return DateRangeArgument.createFromPastDays( m_control.getNumberOfDays() );
+      return DateRange.createFromPastDays( m_control.getNumberOfDays() );
     }
 
     return null;

@@ -1,26 +1,3 @@
-package org.kalypso.ogc.sensor.filter.test;
-
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.xml.bind.Marshaller;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
-import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ObservationUtilities;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.filters.IntervallFilter;
-import org.kalypso.zml.filters.ObjectFactory;
-import org.kalypso.zml.filters.ZmlFilter;
-import org.w3._1999.xlinkext.SimpleLinkType;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -61,6 +38,29 @@ import org.w3._1999.xlinkext.SimpleLinkType;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ogc.sensor.filter.test;
+
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.xml.bind.Marshaller;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.zml.filters.IntervallFilter;
+import org.kalypso.zml.filters.ObjectFactory;
+import org.kalypso.zml.filters.ZmlFilter;
+import org.w3._1999.xlinkext.SimpleLinkType;
 
 public class IntervallFilterTest extends TestCase
 {
@@ -97,7 +97,8 @@ public class IntervallFilterTest extends TestCase
       final IObservation observation = ZmlFactory.parseXML( zmlURL, "id" );
       final Date from = XML_DATETIME_FORMAT.parse( "2005-02-16T17:00:00" );
       final Date to = XML_DATETIME_FORMAT.parse( "2005-02-16T17:36:00" );
-      String dump = ObservationUtilities.dump( observation.getValues( new DateRangeArgument( from, to ) ), "," );
+      String dump = ObservationUtilities.dump( observation
+          .getValues( new ObservationRequest( new DateRange( from, to ) ) ), "," );
       System.out.println( dump );
     }
     catch( Exception e )

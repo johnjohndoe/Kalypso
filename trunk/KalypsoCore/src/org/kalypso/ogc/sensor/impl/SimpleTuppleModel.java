@@ -47,7 +47,7 @@ import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -107,7 +107,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param dra
    * @throws SensorException
    */
-  public SimpleTuppleModel( final ITuppleModel tupples, final DateRangeArgument dra ) throws SensorException
+  public SimpleTuppleModel( final ITuppleModel tupples, final DateRange dra ) throws SensorException
   {
     this( tupples.getAxisList() );
 
@@ -162,7 +162,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    * @param dra
    * @throws SensorException
    */
-  public final void setFrom( final ITuppleModel copyTupples, final DateRangeArgument dra ) throws SensorException
+  public final void setFrom( final ITuppleModel copyTupples, final DateRange dra ) throws SensorException
   {
     IAxis[] axes = getAxisList();
 

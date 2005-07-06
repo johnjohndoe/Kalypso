@@ -46,7 +46,7 @@ import java.util.Date;
 import javax.swing.JLabel;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
@@ -64,14 +64,14 @@ public class ForecastLabelMarker implements ILabelMarker
   //  private final static Icon FORECAST_ICON = new ImageIcon(
   //      ObservationTable.class.getResource( "resource/warning_small.gif" ) );
 
-  private final DateRangeArgument m_dra;
+  private final DateRange m_dra;
 
   /**
    * Constructor
    * 
    * @param dra
    */
-  public ForecastLabelMarker( DateRangeArgument dra )
+  public ForecastLabelMarker( DateRange dra )
   {
     m_dra = dra;
   }

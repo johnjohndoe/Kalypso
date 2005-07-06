@@ -45,8 +45,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -77,9 +77,9 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
 
   private final IPoolableObjectType m_key;
 
-  private final IVariableArguments m_args;
+  private final IRequest m_args;
 
-  public PooledObsProvider( final IPoolableObjectType key, final IVariableArguments args )
+  public PooledObsProvider( final IPoolableObjectType key, final IRequest args )
   {
     m_args = args;
     m_loadedStatus = STATUS_LOADING;
@@ -164,7 +164,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
    */
-  public IVariableArguments getArguments()
+  public IRequest getArguments()
   {
     return m_args;
   }

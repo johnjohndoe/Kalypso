@@ -30,11 +30,13 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.net.URL;
-import java.util.Date;
+import java.util.Calendar;
 
-import org.kalypso.commons.parser.ParserException;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
-import org.kalypso.commons.xml.XmlTypes;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.RequestFactory;
+import org.kalypso.zml.request.RequestType;
 
 /**
  * Provides utility methods for manipulating the URLs designed to be used as Zml-Identifiers between kalypso client and
@@ -155,117 +157,117 @@ public final class ZmlURL
     return strUrl;
   }
 
-  /**
-   * Inserts the date range or replaces the one if existing. The date range is inserted in the from-to specification in
-   * the query part of the url.
-   * 
-   * @return string containing the given date range
-   */
-  public static String insertDateRange( final String str, final DateRangeArgument dra )
-  {
-    // first replace the date range spec (does nothing if not present)
-    String tmpUrl = str.replaceFirst( ZmlURLConstants.TAG_FROM1 + ".*" + ZmlURLConstants.TAG_FROM2, "" );
-    tmpUrl = tmpUrl.replaceFirst( ZmlURLConstants.TAG_TO1 + ".*" + ZmlURLConstants.TAG_TO2, "" );
+//  /**
+//   * Inserts the date range or replaces the one if existing. The date range is inserted in the from-to specification in
+//   * the query part of the url.
+//   * 
+//   * @return string containing the given date range
+//   */
+//  public static String insertDateRange( final String str, final DateRange dra )
+//  {
+//    // first replace the date range spec (does nothing if not present)
+//    String tmpUrl = str.replaceFirst( ZmlURLConstants.TAG_FROM1 + ".*" + ZmlURLConstants.TAG_FROM2, "" );
+//    tmpUrl = tmpUrl.replaceFirst( ZmlURLConstants.TAG_TO1 + ".*" + ZmlURLConstants.TAG_TO2, "" );
+//
+//    String[] strs = tmpUrl.split( "\\?", 2 );
+//
+//    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
+//      tmpUrl = "?" + strs[0] + buildDateRangeSpec( dra );
+//    else
+//      tmpUrl = strs[0] + '?' + buildDateRangeSpec( dra );
+//
+//    if( strs.length >= 2 )
+//      tmpUrl += strs[1];
+//
+//    return tmpUrl;
+//  }
+//
+//  /**
+//   * Builds the String representation of the given date range. Constructs a simple XML representation in the format:
+//   * 
+//   * <pre>
+//   *   	&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;
+//   * </pre>
+//   */
+//  public static String buildDateRangeSpec( final DateRange dra )
+//  {
+//    final StringBuffer bf = new StringBuffer();
+//
+//    bf.append( ZmlURLConstants.TAG_FROM1 ).append( XmlTypes.PDATE.toString( dra.getFrom() ) ).append(
+//        ZmlURLConstants.TAG_FROM2 );
+//    bf.append( ZmlURLConstants.TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) ).append(
+//        ZmlURLConstants.TAG_TO2 );
+//
+//    return bf.toString();
+//  }
 
-    String[] strs = tmpUrl.split( "\\?", 2 );
-
-    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
-      tmpUrl = "?" + strs[0] + buildDateRangeSpec( dra );
-    else
-      tmpUrl = strs[0] + '?' + buildDateRangeSpec( dra );
-
-    if( strs.length >= 2 )
-      tmpUrl += strs[1];
-
-    return tmpUrl;
-  }
-
-  /**
-   * Builds the String representation of the given date range. Constructs a simple XML representation in the format:
-   * 
-   * <pre>
-   *   	&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;
-   * </pre>
-   */
-  public static String buildDateRangeSpec( final DateRangeArgument dra )
-  {
-    final StringBuffer bf = new StringBuffer();
-
-    bf.append( ZmlURLConstants.TAG_FROM1 ).append( XmlTypes.PDATE.toString( dra.getFrom() ) ).append(
-        ZmlURLConstants.TAG_FROM2 );
-    bf.append( ZmlURLConstants.TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) ).append(
-        ZmlURLConstants.TAG_TO2 );
-
-    return bf.toString();
-  }
-
-  /**
-   * Checks if the string contains the from-to specification and eventually creates the corresponding DateRangeArgument.
-   * 
-   * <pre>
-   *       The format of the from-to specification should be as follows:
-   *       
-   *       ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
-   * </pre>
-   */
-  public static DateRangeArgument checkDateRange( final String str )
-  {
-    String from = null;
-
-    int f1 = str.indexOf( ZmlURLConstants.TAG_FROM1 );
-    if( f1 != -1 )
-    {
-      int f2 = str.indexOf( ZmlURLConstants.TAG_FROM2 );
-
-      if( f2 != -1 )
-        from = str.substring( f1 + ZmlURLConstants.TAG_FROM1.length(), f2 );
-    }
-
-    String to = null;
-
-    int t1 = str.indexOf( ZmlURLConstants.TAG_TO1 );
-    if( t1 != -1 )
-    {
-      int t2 = str.indexOf( ZmlURLConstants.TAG_TO2 );
-
-      if( t2 != -1 )
-        to = str.substring( t1 + ZmlURLConstants.TAG_TO1.length(), t2 );
-    }
-
-    Date dFrom = null;
-    Date dTo = null;
-
-    if( from != null )
-    {
-      try
-      {
-        dFrom = (Date)XmlTypes.PDATE.parse( from );
-      }
-      catch( final ParserException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    if( to != null )
-    {
-      try
-      {
-        dTo = (Date)XmlTypes.PDATE.parse( to );
-      }
-      catch( final ParserException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    // no date found, return null
-    if( dFrom == null && dTo == null )
-      return null;
-
-    // at least from, to or both found, return new arg
-    return new DateRangeArgument( dFrom, dTo );
-  }
+//  /**
+//   * Checks if the string contains the from-to specification and eventually creates the corresponding DateRangeArgument.
+//   * 
+//   * <pre>
+//   *       The format of the from-to specification should be as follows:
+//   *       
+//   *       ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
+//   * </pre>
+//   */
+//  public static DateRange checkDateRange( final String str )
+//  {
+//    String from = null;
+//
+//    int f1 = str.indexOf( ZmlURLConstants.TAG_FROM1 );
+//    if( f1 != -1 )
+//    {
+//      int f2 = str.indexOf( ZmlURLConstants.TAG_FROM2 );
+//
+//      if( f2 != -1 )
+//        from = str.substring( f1 + ZmlURLConstants.TAG_FROM1.length(), f2 );
+//    }
+//
+//    String to = null;
+//
+//    int t1 = str.indexOf( ZmlURLConstants.TAG_TO1 );
+//    if( t1 != -1 )
+//    {
+//      int t2 = str.indexOf( ZmlURLConstants.TAG_TO2 );
+//
+//      if( t2 != -1 )
+//        to = str.substring( t1 + ZmlURLConstants.TAG_TO1.length(), t2 );
+//    }
+//
+//    Date dFrom = null;
+//    Date dTo = null;
+//
+//    if( from != null )
+//    {
+//      try
+//      {
+//        dFrom = (Date)XmlTypes.PDATE.parse( from );
+//      }
+//      catch( final ParserException e )
+//      {
+//        e.printStackTrace();
+//      }
+//    }
+//
+//    if( to != null )
+//    {
+//      try
+//      {
+//        dTo = (Date)XmlTypes.PDATE.parse( to );
+//      }
+//      catch( final ParserException e )
+//      {
+//        e.printStackTrace();
+//      }
+//    }
+//
+//    // no date found, return null
+//    if( dFrom == null && dTo == null )
+//      return null;
+//
+//    // at least from, to or both found, return new arg
+//    return new DateRange( dFrom, dTo );
+//  }
 
   /**
    * Insert the filter spec into the zml url. Return the newly build url string. The filter string should not contain
@@ -295,5 +297,49 @@ public final class ZmlURL
       tmp += strs[1];
 
     return tmp;
+  }
+
+  public static String insertRequest( final String str, final IRequest request ) throws SensorException
+  {
+    try
+    {
+      RequestType requestType = RequestFactory.parseRequest( str );
+      if( requestType == null )
+        requestType = RequestFactory.OF.createRequestType();
+      
+      requestType.setName( request.getName() );
+      requestType.setAxes( StringUtils.join( request.getAxisTypes(), "," ) );
+      requestType.setStatusAxes( StringUtils.join( request.getAxisTypesWithStatus(), "," ) );
+  
+      if( request.getDateRange() != null )
+      {
+        final Calendar from = Calendar.getInstance();
+        from.setTime( request.getDateRange().getFrom() );
+        requestType.setDateFrom( from );
+  
+        final Calendar to = Calendar.getInstance();
+        from.setTime( request.getDateRange().getTo() );
+        requestType.setDateFrom( to );
+      }
+      
+      // first replace the date range spec (does nothing if not present)
+      String tmpUrl = str.replaceFirst( ZmlURLConstants.TAG_REQUEST1 + ".*" + ZmlURLConstants.TAG_REQUEST2, "" );
+  
+      String[] strs = tmpUrl.split( "\\?", 2 );
+  
+      if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
+        tmpUrl = "?" + strs[0] + RequestFactory.buildXmlString( requestType );
+      else
+        tmpUrl = strs[0] + '?' + RequestFactory.buildXmlString( requestType );
+  
+      if( strs.length >= 2 )
+        tmpUrl += strs[1];
+  
+      return tmpUrl;
+    }
+    catch( final Exception e )
+    {
+      throw new SensorException( e );
+    }
   }
 }

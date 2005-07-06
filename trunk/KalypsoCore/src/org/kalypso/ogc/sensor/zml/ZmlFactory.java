@@ -67,7 +67,6 @@ import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.ParserFactory;
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.contribs.java.xml.XMLUtilities;
@@ -80,8 +79,11 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.proxy.ArgsObservationProxy;
+import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
@@ -95,6 +97,7 @@ import org.kalypso.zml.Observation;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.AxisType.ValueArrayType;
 import org.kalypso.zml.AxisType.ValueLinkType;
+import org.kalypso.zml.request.RequestType;
 import org.xml.sax.InputSource;
 
 /**
@@ -388,17 +391,15 @@ public class ZmlFactory
    * 
    * @return proxy or original observation
    */
-  private static IObservation createProxyFrom( final String href, final IObservation baseObs )
+  private static IObservation createProxyFrom( final String href, final IObservation baseObs ) throws SensorException
   {
     if( href == null || href.length() == 0 )
       return baseObs;
 
-    IVariableArguments args = null;
-
-    // check if a DateRange proxy can be created
-    args = ZmlURL.checkDateRange( href );
-    if( args != null )
-      return new ArgsObservationProxy( args, baseObs );
+    // check if a request based proxy can be created
+    final RequestType requestType = RequestFactory.parseRequest( href );
+    if( requestType != null )
+      return new RequestObservationProxy( ObservationRequest.createWith( requestType ), baseObs );
 
     return baseObs;
   }
@@ -438,26 +439,21 @@ public class ZmlFactory
   /**
    * Cover method of createXML( IObservation, IVariableArguments, TimeZone )
    */
-  public static ObservationType createXML( final IObservation obs, final IVariableArguments args )
+  public static ObservationType createXML( final IObservation obs, final IRequest args )
       throws FactoryException
   {
     return createXML( obs, args, null );
   }
 
   /**
-   * Creates an XML-Observation ready for marshalling.
+   * Create an XML-Observation ready for marshalling.
    * 
-   * TODO: complete for target property, etc..
+   * TODO: complete for target property
    * 
-   * @param obs
-   * @param args
    * @param timezone
    *          the timezone into which dates should be converted before serialized
-   * @return an ObservationType object, ready for marshalling.
-   * 
-   * @throws FactoryException
    */
-  public static ObservationType createXML( final IObservation obs, final IVariableArguments args,
+  public static ObservationType createXML( final IObservation obs, final IRequest args,
       final TimeZone timezone ) throws FactoryException
   {
     try
@@ -538,8 +534,6 @@ public class ZmlFactory
   }
 
   /**
-   * TODO: verbessern: kein If-statement mehr und anderen datentypen?
-   * 
    * @return string that contains the serialized values
    */
   private static String buildValueString( final ITuppleModel model, final IAxis axis, final TimeZone timezone )
@@ -583,7 +577,7 @@ public class ZmlFactory
   }
 
   /**
-   * Uses the default toString() method of the elements. TODO: check if this always works fine for XML-Schema types
+   * Uses the default toString() method of the elements
    */
   private static void buildStringNumberAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb )
       throws SensorException

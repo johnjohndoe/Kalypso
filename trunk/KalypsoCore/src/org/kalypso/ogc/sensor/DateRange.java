@@ -38,21 +38,20 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.commons.runtime.args;
+package org.kalypso.ogc.sensor;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.commons.runtime.IVariableArguments;
 
 /**
- * Simple Date Range. Can be used as argument where IVariableArguments is required.
+ * Simple Date Range
  * 
  * @author schlienger
  */
-public class DateRangeArgument implements IVariableArguments, Comparable
+public class DateRange implements Comparable
 {
   private final Date m_from;
 
@@ -61,18 +60,15 @@ public class DateRangeArgument implements IVariableArguments, Comparable
   /**
    * Simple constructor. Uses current date as from and to.
    */
-  public DateRangeArgument()
+  public DateRange()
   {
     this( null, null );
   }
 
   /**
    * Consructor with longs
-   * 
-   * @param from
-   * @param to
    */
-  public DateRangeArgument( final long from, final long to )
+  public DateRange( final long from, final long to )
   {
     this( new Date( from ), new Date( to ) );
   }
@@ -85,7 +81,7 @@ public class DateRangeArgument implements IVariableArguments, Comparable
    * @param to
    *          if null, current date is used.
    */
-  public DateRangeArgument( final Date from, final Date to )
+  public DateRange( final Date from, final Date to )
   {
     if( from == null )
       m_from = new Date();
@@ -136,17 +132,14 @@ public class DateRangeArgument implements IVariableArguments, Comparable
    * Creates a <code>DateRangeArgument</code> containing the range:
    * 
    * <pre>
-   * 
    *  [now - pastDays, now]
-   *  
    * </pre>.
    * 
    * If pastDays == 0, then the range is null.
    * 
-   * @param pastDays
    * @return new argument or null if pastDays is 0
    */
-  public static DateRangeArgument createFromPastDays( final int pastDays )
+  public static DateRange createFromPastDays( final int pastDays )
   {
     if( pastDays == 0 )
       return null;
@@ -159,7 +152,7 @@ public class DateRangeArgument implements IVariableArguments, Comparable
 
     final Date d1 = cal.getTime();
 
-    return new DateRangeArgument( d1, d2 );
+    return new DateRange( d1, d2 );
   }
 
   /**
@@ -170,10 +163,10 @@ public class DateRangeArgument implements IVariableArguments, Comparable
     if( other == null )
       return 1;
 
-    if( !( other instanceof DateRangeArgument ) )
+    if( !( other instanceof DateRange ) )
       throw new IllegalArgumentException( "Not comparing with a DateRangeArgument" );
 
-    final DateRangeArgument dra = (DateRangeArgument)other;
+    final DateRange dra = (DateRange)other;
 
     int cmp = this.m_from.compareTo( dra.m_from );
     if( cmp != 0 )

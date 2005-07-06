@@ -60,16 +60,17 @@ import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
-import org.kalypso.commons.runtime.args.DateRangeArgument;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.dialogs.DateRangeInputDialog;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.template.NameUtils;
@@ -121,13 +122,13 @@ public class ObservationViewer extends Composite
 
   String m_href;
 
-  protected DateRangeArgument m_dr;
+  protected DateRange m_dr;
 
   public ObservationViewer( final Composite parent, final int style )
   {
     super( parent, style );
 
-    m_dr = DateRangeArgument.createFromPastDays( 5 );
+    m_dr = DateRange.createFromPastDays( 5 );
     createControl();
   }
 
@@ -427,29 +428,29 @@ public class ObservationViewer extends Composite
 
   protected void setHref( final String href, final String filter )
   {
-    // 1. basic href
-    String hereHref = href;
-
-    // 2. plus filter stuff
-    if( href.length() > 0 )
-      hereHref = ZmlURL.insertFilter( hereHref, filter );
-
-    // 3. always insert date-range info
-    if( href.length() > 0 )
-      hereHref = ZmlURL.insertDateRange( hereHref, m_dr );
-
-    final URL url;
     try
     {
-      url = UrlResolverSingleton.resolveUrl( m_context, hereHref );
-    }
-    catch( final MalformedURLException e )
-    {
-      return;
-    }
+      // 1. basic href
+      String hereHref = href;
 
-    try
-    {
+      // 2. plus filter stuff
+      if( href.length() > 0 )
+        hereHref = ZmlURL.insertFilter( hereHref, filter );
+
+      // 3. always insert date-range info
+      if( href.length() > 0 )
+        hereHref = ZmlURL.insertRequest( hereHref, new ObservationRequest( m_dr ) );
+
+      final URL url;
+      try
+      {
+        url = UrlResolverSingleton.resolveUrl( m_context, hereHref );
+      }
+      catch( final MalformedURLException e )
+      {
+        return;
+      }
+
       if( href.length() > 0 )
       {
         final IObservation obs = ZmlFactory.parseXML( url, hereHref );
@@ -485,7 +486,7 @@ public class ObservationViewer extends Composite
   {
     m_mdViewer.setInput( new ObservationPropertySource( obs ) );
 
-    final PlainObsProvider pop = new PlainObsProvider( obs, m_dr );
+    final PlainObsProvider pop = new PlainObsProvider( obs, new ObservationRequest( m_dr ) );
     final ItemData itd = new ObsView.ItemData( false, null );
 
     m_diagView.removeAllItems();
@@ -495,11 +496,11 @@ public class ObservationViewer extends Composite
     m_tableView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, null, itd );
   }
 
-  protected static DateRangeArgument createFrom( final DateRangeInputControlStuct struct )
+  protected static DateRange createFrom( final DateRangeInputControlStuct struct )
   {
     if( struct.useRange )
-      return new DateRangeArgument( struct.from, struct.to );
+      return new DateRange( struct.from, struct.to );
 
-    return DateRangeArgument.createFromPastDays( struct.days );
+    return DateRange.createFromPastDays( struct.days );
   }
 }

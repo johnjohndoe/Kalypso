@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
-import org.kalypso.commons.runtime.IVariableArguments;
 import org.kalypso.commons.xml.xlink.IXlink;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle oder menschlische Wert-Erfassung.
@@ -102,7 +102,7 @@ public interface IObservation extends IObservationEventProvider
    * @return model
    * @throws SensorException
    */
-  public ITuppleModel getValues( IVariableArguments args ) throws SensorException;
+  public ITuppleModel getValues( final IRequest args ) throws SensorException;
 
   /**
    * Sets the given values.
@@ -110,7 +110,7 @@ public interface IObservation extends IObservationEventProvider
    * @param values
    * @throws SensorException
    */
-  public void setValues( ITuppleModel values ) throws SensorException;
+  public void setValues( final ITuppleModel values ) throws SensorException;
 
   /**
    * Returns the localisation of the base file behind this observation
