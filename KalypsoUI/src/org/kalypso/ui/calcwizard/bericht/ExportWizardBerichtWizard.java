@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.bericht;
+package org.kalypso.ui.calcwizard.bericht;
 
 import java.util.List;
 

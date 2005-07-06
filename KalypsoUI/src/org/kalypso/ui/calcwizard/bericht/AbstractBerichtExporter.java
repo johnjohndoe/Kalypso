@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.bericht;
+package org.kalypso.ui.calcwizard.bericht;
 
 import java.net.URL;
 
@@ -56,7 +56,7 @@ public abstract class AbstractBerichtExporter implements IBerichtExporter
   private URL m_context = null;
 
   /**
-   * @see org.kalypso.ui.bericht.IBerichtExporter#init(URL, Arguments)
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#init(URL, Arguments)
    */
   public void init( final URL context, final Arguments arguments )
   {
@@ -81,7 +81,7 @@ public abstract class AbstractBerichtExporter implements IBerichtExporter
   }
 
   /**
-   * @see org.kalypso.ui.bericht.IBerichtExporter#toString()
+   * @see org.kalypso.ui.calcwizard.bericht.IBerichtExporter#toString()
    */
   public String toString()
   {

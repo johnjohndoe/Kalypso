@@ -20,6 +20,7 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
+			<xs:attribute name="browserInitialSize" type="xs:int" use="optional" default="25"/>
 		</xs:complexType>
 	</xs:element>
 	

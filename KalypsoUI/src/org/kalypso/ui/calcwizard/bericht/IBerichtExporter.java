@@ -38,33 +38,39 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.bericht;
+package org.kalypso.ui.calcwizard.bericht;
 
 import java.io.OutputStream;
+import java.net.URL;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.arguments.Arguments;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
  */
-public class MapExporter extends AbstractBerichtExporter
+public interface IBerichtExporter
 {
   /**
-   * @see org.kalypso.ui.bericht.IBerichtExporter#export(org.kalypsodeegree.model.feature.Feature,
-   *      java.io.OutputStream)
+   * Initialize this exporter with the given arguments
+   * 
+   * @param context
+   * @param arguments
    */
-  public IStatus export( final Feature feature, final OutputStream os )
-  {
-    return Status.OK_STATUS;
-  }
+  public void init( final URL context, final Arguments arguments );
+
+  public String toString();
 
   /**
-   * @see org.kalypso.ui.bericht.IBerichtExporter#getExtension()
+   * Export feature to Stream
+   * 
+   * @param os
+   * 
+   * @throws CoreException
    */
-  public String getExtension()
-  {
-    return ".jpg";
-  }
+  public IStatus export( final Feature feature, final OutputStream os ) throws CoreException;
+
+  public String getExtension();
 }
