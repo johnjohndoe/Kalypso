@@ -4,7 +4,7 @@
 
 <!-- KONTROLLE DER ZEITREIHEN -->
 	<!-- Niederschlag an Stationen (Messung) -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="false"/>
 		
@@ -17,7 +17,7 @@
     </page>
  
 	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="false"/>
 		
@@ -30,7 +30,7 @@
     </page>
     
     <!-- Wasserstand / Abfluss (Messung) -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="false"/>
 		
@@ -45,7 +45,7 @@
 
  <!-- BERECHNUNG -->
  
-    <page className="org.kalypso.ui.calcwizard.modelpages.MapAndTableWizardPage" pageTitle="Berechnung" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="false"/>
 <!--
@@ -70,7 +70,7 @@
 
  <!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
  
- 	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage"
+ 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage"
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
 	   
