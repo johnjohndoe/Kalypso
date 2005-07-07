@@ -33,11 +33,6 @@ public class PSICompactRepository extends AbstractRepository
 
   /**
    * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur umzuwandeln.
-   * 
-   * @param nodes
-   * @param valueType
-   * @return item
-   * @throws ECommException
    */
   private final PSICompactItem buildStructure( Map nodes, int valueType ) throws ECommException
   {
@@ -114,9 +109,7 @@ public class PSICompactRepository extends AbstractRepository
    * Always returns
    * 
    * <pre>
-   * 
    *  psicompact://
-   *  
    * </pre>
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()

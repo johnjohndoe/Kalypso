@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.psicompactadapter"
+   name="KalypsoPSICompactAdapter"
+   version="1.0.0"
+   provider-name="org.kalypso">
+
+   <runtime>
+      <library name="KalypsoPSICompactAdapter.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/PSICompact.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/OB.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.kalypso.core"/>
+      <import plugin="org.kalypso.repository"/>
+      <import plugin="org.kalypso.commons"/>
+   </requires>
+   <extension
+         id="org.kalypso.repository.factories"
+         name="PSICompact Repository Factory"
+         point="org.kalypso.repository.factories">
+      <repository
+            conf=""
+            name="PSICompact"
+            factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"/>
+   </extension>
+   
+</plugin>

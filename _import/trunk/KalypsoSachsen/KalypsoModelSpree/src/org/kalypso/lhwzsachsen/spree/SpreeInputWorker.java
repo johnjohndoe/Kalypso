@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.commons.java.io.FileUtilities;
@@ -306,8 +307,6 @@ public class SpreeInputWorker
 
   /**
    * Liest die Zeitreihen und erzeugt daraus eine Tabelle (Map)
-   * 
-   * @throws IOException
    */
   public static TSMap readZML( final ICalcDataProvider inputProvider, final TSMap tsmap ) throws IOException
   {
@@ -343,13 +342,13 @@ public class SpreeInputWorker
           }
           catch( final Exception e )
           {
-            LOGGER.info( "WQ-Umrechnung klappt nicht für: " + obsURL );
+            LOGGER.log( Level.INFO, "WQ-Umrechnung klappt nicht für: " + obsURL, e );
           }
         }
       }
       catch( final SensorException se )
       {
-        LOGGER.info( "ZML wurde nicht geladen: " + obsURL );
+        LOGGER.log( Level.INFO, "ZML wurde nicht geladen: " + obsURL, se );
       }
     }
 
