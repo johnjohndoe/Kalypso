@@ -8,6 +8,7 @@
   	<path id="compile.classpath">
 		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
 		<fileset dir="${workspace}/EclipseRCPContributions/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
 	</path>
 
 	<property name="project-name" value="EclipsePlatformContributions" />
