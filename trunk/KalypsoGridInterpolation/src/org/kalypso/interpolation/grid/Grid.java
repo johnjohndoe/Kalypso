@@ -59,7 +59,7 @@ public class Grid implements IGrid
 
   private final String rafPath = "d://temp//array.raf";
 
-  private static String nodata = "-9999";
+  private static String m_nodata = "-9999";
 
   public static final String DEFAULT_SUFFIX = "asc";
 
@@ -158,7 +158,7 @@ public class Grid implements IGrid
     long index = 0;
     while( index < m_gridValues.length() )
     {
-      m_gridValues.writeDouble( Double.parseDouble( nodata ) );
+      m_gridValues.writeDouble( Double.parseDouble( m_nodata ) );
       index = index + 8;
     }//while
     System.out.print( "..finished" );
@@ -299,7 +299,7 @@ public class Grid implements IGrid
    */
   public void setNodata( String str )
   {
-    nodata = str;
+    m_nodata = str;
   }
 
   /**
@@ -697,20 +697,21 @@ public class Grid implements IGrid
       bw.write( "\ncellsize " );
       bw.write( String.valueOf( m_cellsize ) );
       bw.write( "\nnodata_value " );
-      bw.write( nodata );
+      bw.write( m_nodata );
       bw.write( "\n" );
-
+      double nodata = Double.parseDouble( m_nodata );
       for( int row = 0; row < m_rows; row++ )
       {
         for( int col = 0; col < m_cols; col++ )
         {
           double value = readGridValue( row, col );
-          if( intersection.contains( getPosition( row, col ) ) )
+          if( value != nodata && intersection.contains( getPosition( row, col ) ) )
             bw.write( String.valueOf( value ) );
           else
-            bw.write( nodata );
+            bw.write( m_nodata );
           bw.write( ' ' );
         }//for j
+        bw.newLine();
       }//for i
     }
     catch( Exception e )
