@@ -56,7 +56,7 @@ import org.xml.sax.InputSource;
 /**
  * @author schlienger
  */
-public class ViewWQRelationAction extends AbstractRepositoryExplorerAction
+public class ViewWQRelationAction extends AbstractObservationChooserAction
 {
   public ViewWQRelationAction( final ObservationChooser explorer )
   {

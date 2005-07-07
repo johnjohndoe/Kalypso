@@ -46,7 +46,7 @@ import org.kalypso.ui.ImageProvider;
 /**
  * @author schlienger
  */
-public class CollapseAllAction extends AbstractRepositoryExplorerAction
+public class CollapseAllAction extends AbstractObservationChooserAction
 {
   public CollapseAllAction( final ObservationChooser explorer )
   {

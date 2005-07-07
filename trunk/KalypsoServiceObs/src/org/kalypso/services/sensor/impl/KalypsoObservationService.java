@@ -590,7 +590,7 @@ public class KalypsoObservationService implements IObservationService
    */
   public String getDescription()
   {
-    return "Kalypso Zeitreihendienst";
+    return "";
   }
 
   /**

@@ -52,7 +52,7 @@ import org.kalypso.ui.ImageProvider;
  * 
  * @author schlienger
  */
-public class RemoveRepositoryAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
+public class RemoveRepositoryAction extends AbstractObservationChooserAction implements ISelectionChangedListener
 {
   public RemoveRepositoryAction( final ObservationChooser explorer )
   {

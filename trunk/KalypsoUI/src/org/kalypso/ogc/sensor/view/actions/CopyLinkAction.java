@@ -50,7 +50,7 @@ import org.kalypso.ui.ImageProvider;
 /**
  * @author schlienger
  */
-public class CopyLinkAction extends AbstractRepositoryExplorerAction
+public class CopyLinkAction extends AbstractObservationChooserAction
 {
   public CopyLinkAction( final ObservationChooser explorer )
   {

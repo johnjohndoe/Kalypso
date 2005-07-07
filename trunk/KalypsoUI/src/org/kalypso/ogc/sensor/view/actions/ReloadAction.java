@@ -40,23 +40,24 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author schlienger
  */
-public class ReloadAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
+public class ReloadAction extends AbstractObservationChooserAction implements ISelectionChangedListener
 {
   public ReloadAction( final ObservationChooser explorer )
   {
@@ -77,11 +78,11 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements IS
     if( rep == null )
       return;
 
-    final Job reloadJob = new Job( "Aktualisieren" )
+    final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
-      protected IStatus run( IProgressMonitor monitor )
+      public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
-        monitor.beginTask( "Repository aktualisieren", 2 );
+        monitor.beginTask( "Ansicht aktualisieren", 2 );
 
         // Important: clear the cache
         ObservationCache.clearCache();
@@ -96,12 +97,10 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements IS
           getExplorer().onRepositoryContainerChanged();
 
           monitor.worked( 1 );
-
-          return Status.OK_STATUS;
         }
-        catch( RepositoryException e )
+        catch( final RepositoryException e )
         {
-          return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Fehler während der Aktualisierung", e );
+          throw new InvocationTargetException( e );
         }
         finally
         {
@@ -110,7 +109,20 @@ public class ReloadAction extends AbstractRepositoryExplorerAction implements IS
       }
     };
 
-    reloadJob.schedule();
+    try
+    {
+      Workbench.getInstance().getProgressService().busyCursorWhile( runnable );
+    }
+    catch( final InvocationTargetException e )
+    {
+      e.printStackTrace();
+      
+      MessageDialog.openWarning( getShell(), "Ansicht aktualisieren", e.getLocalizedMessage() );
+    }
+    catch( final InterruptedException ignored )
+    {
+      // empty
+    }
   }
 
   /**

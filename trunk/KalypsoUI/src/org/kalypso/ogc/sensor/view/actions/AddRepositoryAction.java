@@ -48,6 +48,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.progress.IProgressService;
@@ -64,7 +65,7 @@ import org.kalypso.ui.ImageProvider;
  * 
  * @author schlienger
  */
-public class AddRepositoryAction extends AbstractRepositoryExplorerAction
+public class AddRepositoryAction extends AbstractObservationChooserAction
 {
   public AddRepositoryAction( final ObservationChooser explorer )
   {
@@ -77,7 +78,7 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
   public void run()
   {
     final ListDialog dlg = new ListDialog( getShell() );
-    dlg.setLabelProvider( new LabelProvider() );
+    dlg.setLabelProvider( new ChooseRepositoryLabelProvider() );
     dlg.setContentProvider( new ArrayContentProvider() );
     dlg.setTitle( "Repository Typ auswählen" );
 
@@ -134,6 +135,37 @@ public class AddRepositoryAction extends AbstractRepositoryExplorerAction
     {
       e.printStackTrace();
       MessageDialog.openError( getShell(), "Repository hinzufügen", e.getLocalizedMessage() );
+    }
+  }
+
+  /**
+   * @author schlienger
+   */
+  public static class ChooseRepositoryLabelProvider extends LabelProvider
+  {
+    private Image m_image;
+
+    public ChooseRepositoryLabelProvider()
+    {
+      m_image = ImageProvider.IMAGE_ZML_REPOSITORY.createImage();
+    }
+    
+    /**
+     * @see org.eclipse.jface.viewers.LabelProvider#dispose()
+     */
+    public void dispose()
+    {
+      m_image.dispose();
+      
+      super.dispose();
+    }
+    
+    /**
+     * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+     */
+    public Image getImage( Object element )
+    {
+      return m_image;
     }
   }
 }

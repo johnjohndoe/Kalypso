@@ -29,13 +29,14 @@
  */
 package org.kalypso.ogc.sensor.view.actions;
 
+import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.dnd.Clipboard;
@@ -44,8 +45,8 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * DumpStructureAction
@@ -53,7 +54,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * 
  * @author schlienger (16.06.2005)
  */
-public class DumpStructureAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
+public class DumpStructureAction extends AbstractObservationChooserAction implements ISelectionChangedListener
 {
   public DumpStructureAction( final ObservationChooser explorer )
   {
@@ -76,31 +77,26 @@ public class DumpStructureAction extends AbstractRepositoryExplorerAction implem
     if( rep == null )
       return;
 
-    final Job job = new Job("Struktur exportieren für " + rep.getName() )
+    final StringWriter writer = new StringWriter();
+    
+    final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
-      protected IStatus run( final IProgressMonitor monitor )
+      public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
-        monitor.beginTask( "Struktur exportieren", IProgressMonitor.UNKNOWN );
-        
-        final StringWriter writer = new StringWriter();
+        monitor.beginTask( "Struktur exportieren", 1000 );
+
         try
         {
-          rep.dumpStructure( writer );
+          rep.dumpStructure( writer, monitor );
           writer.close();
-
-          final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-          clipboard.setContents( new Object[]
-          { writer.toString() }, new Transfer[]
-          { TextTransfer.getInstance() } );
-          clipboard.dispose();
-          
-          return Status.OK_STATUS;
         }
-        catch( final Exception e )
+        catch( final IOException e )
         {
-          e.printStackTrace();
-          
-          return KalypsoGisPlugin.createErrorStatus( "Fehler: Struktur exportieren", e );
+          throw new InvocationTargetException( e );
+        }
+        catch( final RepositoryException e )
+        {
+          throw new InvocationTargetException( e );
         }
         finally
         {
@@ -110,9 +106,27 @@ public class DumpStructureAction extends AbstractRepositoryExplorerAction implem
         }
       }
     };
-    
-    Workbench.getInstance().getProgressService().showInDialog( getShell(), job );
-    //job.schedule();
+
+    try
+    {
+      Workbench.getInstance().getProgressService().busyCursorWhile( runnable );
+      
+      final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
+      clipboard.setContents( new Object[]
+      { writer.toString() }, new Transfer[]
+      { TextTransfer.getInstance() } );
+      clipboard.dispose();
+    }
+    catch( final InvocationTargetException e )
+    {
+      e.printStackTrace();
+      
+      MessageDialog.openWarning( getShell(), "Struktur exportieren", e.getLocalizedMessage() );
+    }
+    catch( final InterruptedException ignored )
+    {
+      // empty
+    }
   }
 
   public void selectionChanged( final SelectionChangedEvent event )

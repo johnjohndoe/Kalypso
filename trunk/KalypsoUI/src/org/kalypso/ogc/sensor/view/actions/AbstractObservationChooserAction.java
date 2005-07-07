@@ -51,14 +51,14 @@ import org.kalypso.repository.container.IRepositoryContainer;
  * 
  * @author schlienger
  */
-public abstract class AbstractRepositoryExplorerAction extends org.kalypso.contribs.eclipse.jface.action.FullAction
+public abstract class AbstractObservationChooserAction extends org.kalypso.contribs.eclipse.jface.action.FullAction
 {
   private final ObservationChooser m_explorer;
 
   /**
    * Creates a new instance of the class.
    */
-  public AbstractRepositoryExplorerAction( final ObservationChooser explorer, final String text,
+  public AbstractObservationChooserAction( final ObservationChooser explorer, final String text,
       final ImageDescriptor image, final String tooltipText )
   {
     super( text, image, tooltipText );

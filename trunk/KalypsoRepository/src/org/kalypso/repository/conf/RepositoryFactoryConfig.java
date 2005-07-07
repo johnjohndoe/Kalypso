@@ -90,8 +90,6 @@ public class RepositoryFactoryConfig
 
   /**
    * Constructor with repository
-   * 
-   * @param rep
    */
   public RepositoryFactoryConfig( final IRepository rep )
   {
@@ -101,11 +99,6 @@ public class RepositoryFactoryConfig
   /**
    * Shortcut constructor with factory. if createFactory() is called, it will return this given factory configured with
    * the given arguments.
-   * 
-   * @param rf
-   * @param name
-   * @param conf
-   * @param ro
    */
   public RepositoryFactoryConfig( IRepositoryFactory rf, String name, String conf, boolean ro )
   {
@@ -116,10 +109,6 @@ public class RepositoryFactoryConfig
 
   /**
    * Creates the underlying factory.
-   * 
-   * @param cl
-   * @return factory
-   * @throws ClassUtilityException
    */
   public IRepositoryFactory createFactory( final ClassLoader cl ) throws ClassUtilityException
   {
@@ -158,9 +147,7 @@ public class RepositoryFactoryConfig
    * Restores a <code>RepositoryConfigItem</code> from the state provided as a string. This is the pendant to the
    * saveState() method.
    * 
-   * @param state
    * @return a repository config item
-   * @throws CoreException
    */
   public static RepositoryFactoryConfig restore( final String state ) throws CoreException
   {
@@ -184,7 +171,7 @@ public class RepositoryFactoryConfig
    */
   public String toString()
   {
-    if( m_conf != null )
+    if( m_conf != null && m_conf.length() > 0 )
       return m_name + " (" + m_conf + ")";
 
     return m_name;
