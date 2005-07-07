@@ -183,28 +183,29 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     for( int i = 0; i < extensions.length; i++ )
     {
       IExtension extension = extensions[i];
-      IConfigurationElement configurationElement = extension.getConfigurationElements()[0];
-      String title = configurationElement.getAttribute( "title" );
-      String resource = configurationElement.getAttribute( "icon" );
-      //TODO handle custom icon from the extension point
-      //the icon is not available from the kalypso ui icon resources
-      //get it from the running class and create it after the class has been
-      // initiated.
-      ImageDescriptor icon = ImageProvider.id( resource );//try to get it from
-      // kalypso ui icon
-      // resources
-      String tooltip = configurationElement.getAttribute( "tooltip" );
-      //create action delegate
-      PluginMapOutlineActionDelegate actionDelegate;
-      try
+      IConfigurationElement[] configurationElements = extension.getConfigurationElements();
+      for( int j = 0; j < configurationElements.length; j++ )
       {
-        actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, m_modellView, configurationElement );
-        m_actionDelegates.add( actionDelegate );
-      }
-      catch( CoreException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        IConfigurationElement configurationElement = configurationElements[j];
+        String title = configurationElement.getAttribute( "title" );
+        String resource = configurationElement.getAttribute( "icon" );
+        //gets the parent of this element (the plugin which implements this extension)
+        IExtension parent = (IExtension)configurationElement.getParent();
+        //gets the plugin id of the parent plugin
+        String ns = parent.getNamespace();
+        ImageDescriptor icon = ImageProvider.id( ns, resource );
+        String tooltip = configurationElement.getAttribute( "tooltip" );
+        //create action delegate
+        PluginMapOutlineActionDelegate actionDelegate;
+        try
+        {
+          actionDelegate = new PluginMapOutlineActionDelegate( title, icon, tooltip, m_modellView, configurationElement );
+          m_actionDelegates.add( actionDelegate );
+        }
+        catch( CoreException e )
+        {
+          e.printStackTrace();
+        }
       }
     }
   }
