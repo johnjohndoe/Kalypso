@@ -63,7 +63,7 @@
 					<!-- lokal;   -->
 					<element name="Niederschlag" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<!-- hier kommen ggf. noch die Parameter aus der *.par hin -->
-					<element name="gewichtung" type="tubigpegel:GewichtungsAssociationType"  maxOccurs="unbounded"/>
+					<element name="gewichtung" type="tubigpegel:GewichtungsAssociationType" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -84,8 +84,24 @@
 		<complexContent>
 			<extension base="tubigcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="faktor" type="double"/>
-					<element name="ombrometerMember" type="tubigombrometer:OmbrometerAssociationType" />
+					<element name="faktor" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewichtung</label>
+								<tooltip>Gewichtung</tooltip>
+								<description>Kommentar</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="ombrometerMember" type="tubigombrometer:OmbrometerAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Niederschlagsstation</label>
+								<tooltip>Niederschlagsstation</tooltip>
+								<description>Niederschlagsstation</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
