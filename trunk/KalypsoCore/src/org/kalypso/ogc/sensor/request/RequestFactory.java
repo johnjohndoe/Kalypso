@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IAxis;
@@ -153,13 +154,15 @@ public class RequestFactory
     return createDefaultObservation( xmlReq );
   }
   
-  public static String buildXmlString( final RequestType requestType ) throws JAXBException, IOException
+  public static String buildXmlString( final RequestType requestType, final boolean includeXmlHeader ) throws JAXBException, IOException
   {
     StringWriter writer = null;
     try
     {
       writer = new StringWriter();
-      new ObjectFactory().createMarshaller().marshal( requestType, writer );
+      final Marshaller marshaller = new ObjectFactory().createMarshaller();
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT , Boolean.FALSE );
+      marshaller.marshal( requestType, writer );
       writer.close();
     }
     finally
@@ -167,6 +170,10 @@ public class RequestFactory
       IOUtils.closeQuietly( writer );
     }
 
-    return writer.toString();
+    final String xmlStr = writer.toString();
+    if( !includeXmlHeader )
+      return xmlStr.replaceAll( "<\\?xml.*>" , "" );
+    
+    return xmlStr;
   }
 }

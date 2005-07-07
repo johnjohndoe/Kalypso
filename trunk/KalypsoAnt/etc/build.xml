@@ -18,7 +18,7 @@
   </target>
   
   <target name="jar" depends="init">
-    <jar destfile="${dist.dir}/${jar.name}" basedir="${build.dir}/bin" />
+    <jar destfile="${dist.dir}/${jar.name}" basedir="${build.dir}/bin"/>
   </target>
 
   <target name="deploy" depends="jar">

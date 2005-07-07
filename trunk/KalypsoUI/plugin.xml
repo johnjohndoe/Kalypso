@@ -641,12 +641,14 @@
             library="lib/kalypsoAnt.jar"
             name="copyObservation"/>
       <antTask
+            eclipseRuntime="true"
             class="org.kalypso.ant.GmlPropertyTask"
             library="lib/kalypsoAnt.jar"
             name="gmlProperty"/>
      <antTask
-            class="org.kalypso.ant.KrigingTask"
-            library="lib/kalypsoAnt.jar"
-            name="kriging"/>
+           eclipseRuntime="true"
+           class="org.kalypso.ant.KrigingTask"
+           library="lib/kalypsoAnt.jar"
+           name="kriging"/>
    </extension>
  </plugin>
