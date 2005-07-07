@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <observation editable="false" xmlns="zml.kalypso.org">
-    <name>Hasselfelde</name>
+    <name>Ditfurt</name>
     <metadataList>
         <metadata name="tubig_kommentar" value="hass.vns"/>
         <metadata name="StartZeit" value="10.12.2004 07:00"/>
-        <metadata name="Name" value="Hasselfelde"/>
+        <metadata name="Name" value="Ditfurt"/>
         <metadata name="Vorhersage" value="15.12.2004 08:00:00;17.12.2004 08:00:00"/>
     </metadataList>
     <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
