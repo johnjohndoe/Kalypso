@@ -89,6 +89,9 @@ public class DefaultAxis implements IAxis
   public DefaultAxis( final String label, final String type, final String unit, final Class dataClass,
       final boolean isKey, final boolean persistable )
   {
+    if( dataClass == null )
+      throw new IllegalArgumentException("Argument dataClass is null");
+    
     m_label = label;
     m_type = type;
     m_unit = unit;

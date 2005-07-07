@@ -67,8 +67,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
   /**
    * Constructor with axes, empty data
-   * 
-   * @param axes
    */
   public SimpleTuppleModel( final List axes )
   {
@@ -77,8 +75,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
   /**
    * Constructor with axes, empty data
-   * 
-   * @param axes
    */
   public SimpleTuppleModel( final IAxis[] axes )
   {
@@ -88,9 +84,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   /**
    * Constructor with model. A <code>DefaultTableModel</code> is used to back the values which are taken from the
    * given model.
-   * 
-   * @param copyTupples
-   * @throws SensorException
    */
   public SimpleTuppleModel( final ITuppleModel copyTupples ) throws SensorException
   {
@@ -102,10 +95,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   /**
    * Constructor with model. A <code>DefaultTableModel</code> is used to back the values which are taken from the
    * given model. The additional DateRangeArgument is used to limit the values that are returned by this model.
-   * 
-   * @param tupples
-   * @param dra
-   * @throws SensorException
    */
   public SimpleTuppleModel( final ITuppleModel tupples, final DateRange dra ) throws SensorException
   {
@@ -116,9 +105,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
   /**
    * Constructor with data
-   * 
-   * @param axes
-   * @param values
    */
   public SimpleTuppleModel( final IAxis[] axes, final Object[][] values )
   {
@@ -129,9 +115,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
   /**
    * A <code>DefaultTableModel</code> is used to back the values which are taken from the given model.
-   * 
-   * @param copyTupples
-   * @throws SensorException
    */
   public final void setFrom( final ITuppleModel copyTupples ) throws SensorException
   {

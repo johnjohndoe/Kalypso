@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.request;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.zml.request.RequestType;
 
@@ -56,9 +57,17 @@ public class ObservationRequest implements IRequest
   private final static String[] EMPTY_STRING_ARRAY = new String[0];
 
   private final DateRange m_dateRange;
+
   private final String m_name;
+
   private final String[] m_axisTypes;
+
   private final String[] m_axisTypesWithStatus;
+
+  public ObservationRequest()
+  {
+    this( null );
+  }
 
   public ObservationRequest( final Date from, final Date to )
   {
@@ -130,32 +139,38 @@ public class ObservationRequest implements IRequest
       bf.append( "Name: " ).append( m_name ).append( "\n" );
 
     if( m_axisTypes.length > 0 )
-      bf.append( "Axis-Types: " ).append( m_axisTypes ).append( "\n" );
+      bf.append( "Axis-Types: " ).append( StringUtils.join( m_axisTypes, ',') ).append( "\n" );
 
     if( m_axisTypesWithStatus.length > 0 )
-      bf.append( "Status for: " ).append( m_axisTypesWithStatus ).append( "\n" );
+      bf.append( "Status for: " ).append( StringUtils.join( m_axisTypesWithStatus, ',') ).append( "\n" );
 
     return bf.toString();
   }
 
   public static ObservationRequest createWith( final RequestType requestType )
   {
+    if( requestType == null )
+      return new ObservationRequest();
+
     final DateRange dr;
-    if( requestType.getDateFrom() == null && requestType.getDateTo() == null )
+    final Date from = requestType.getDateFrom() == null ? null : requestType.getDateFrom().getTime();
+    final Date to = requestType.getDateTo() == null ? null : requestType.getDateTo().getTime();
+    if( from == null && to == null )
       dr = null;
     else
-      dr = new DateRange( requestType.getDateFrom().getTime(), requestType.getDateTo().getTime() );
+      dr = new DateRange( from, to );
 
     final String[] axisTypes;
     if( requestType.getAxes() == null )
       axisTypes = EMPTY_STRING_ARRAY;
     else
-      axisTypes = requestType.getAxes().split( "," );
+      axisTypes = StringUtils.split( requestType.getAxes(), ',' );
+
     final String[] axisTypesWithStatus;
     if( requestType.getStatusAxes() == null )
       axisTypesWithStatus = new String[0];
     else
-      axisTypesWithStatus = requestType.getStatusAxes().split( "," );
+      axisTypesWithStatus = StringUtils.split( requestType.getStatusAxes(), ',' );
 
     return new ObservationRequest( dr, requestType.getName(), axisTypes, axisTypesWithStatus );
   }

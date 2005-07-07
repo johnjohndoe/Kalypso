@@ -318,20 +318,22 @@ public final class ZmlURL
         requestType.setDateFrom( from );
   
         final Calendar to = Calendar.getInstance();
-        from.setTime( request.getDateRange().getTo() );
-        requestType.setDateFrom( to );
+        to.setTime( request.getDateRange().getTo() );
+        requestType.setDateTo( to );
       }
       
       // first replace the date range spec (does nothing if not present)
       String tmpUrl = str.replaceFirst( ZmlURLConstants.TAG_REQUEST1 + ".*" + ZmlURLConstants.TAG_REQUEST2, "" );
   
-      String[] strs = tmpUrl.split( "\\?", 2 );
-  
+      final String[] strs = tmpUrl.split( "\\?", 2 );
       if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
-        tmpUrl = "?" + strs[0] + RequestFactory.buildXmlString( requestType );
+        tmpUrl = "?" + strs[0];
       else
-        tmpUrl = strs[0] + '?' + RequestFactory.buildXmlString( requestType );
-  
+        tmpUrl = strs[0] + '?'; 
+
+      final String xmlStr = RequestFactory.buildXmlString( requestType, false );
+      tmpUrl += xmlStr;
+      
       if( strs.length >= 2 )
         tmpUrl += strs[1];
   
