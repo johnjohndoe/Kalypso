@@ -58,7 +58,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * 
  * @author schlienger
  */
-public class ConfigurePreviewAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
+public class ConfigurePreviewAction extends AbstractObservationChooserAction implements ISelectionChangedListener
 {
   public ConfigurePreviewAction( final ObservationChooser explorer )
   {

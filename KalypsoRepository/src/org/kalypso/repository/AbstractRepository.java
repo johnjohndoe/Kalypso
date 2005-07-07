@@ -47,6 +47,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 /**
  * Abstract implementation of <code>IRepository</code> to provide basic functionality.
  * 
@@ -215,21 +217,26 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
-   * @see org.kalypso.repository.IRepository#dumpStructure(java.io.Writer)
+   * @see org.kalypso.repository.IRepository#dumpStructure(java.io.Writer, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void dumpStructure( final Writer writer ) throws RepositoryException
+  public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
   {
-    dumpRecursive( writer, this, "" );
+    dumpRecursive( writer, this, "", monitor );
   }
 
   /**
    * Dumps the contents of this item and all its children using recursion
    */
-  private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent )
-      throws RepositoryException
+  private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent, final IProgressMonitor monitor )
+      throws RepositoryException, InterruptedException
   {
+    if( monitor.isCanceled() )
+      throw new InterruptedException();
+    
     if( item == null )
       return;
+    
+    monitor.subTask( item.getIdentifier() );
     
     try
     {
@@ -248,7 +255,9 @@ public abstract class AbstractRepository implements IRepository
       return;
 
     for( int i = 0; i < items.length; i++ )
-      dumpRecursive( writer, items[i], recIndent );
+      dumpRecursive( writer, items[i], recIndent, monitor );
+    
+    monitor.worked( 1 );
   }
 
   /**

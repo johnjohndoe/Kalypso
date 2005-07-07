@@ -51,7 +51,7 @@ import org.kalypso.ui.ImageProvider;
 /**
  * @author schlienger
  */
-public class ExportAsFileAction extends AbstractRepositoryExplorerAction implements ISelectionChangedListener
+public class ExportAsFileAction extends AbstractObservationChooserAction implements ISelectionChangedListener
 {
   public ExportAsFileAction( final ObservationChooser explorer )
   {

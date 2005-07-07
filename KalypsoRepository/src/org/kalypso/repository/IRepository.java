@@ -43,6 +43,8 @@ package org.kalypso.repository;
 import java.io.Writer;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 /**
  * Eingangspunkt zu einem Repository. Es liefert z.B. die ersten Items. Damit kann eine Struktur aufgebaut werden.
  * 
@@ -134,7 +136,7 @@ public interface IRepository extends IRepositoryItem
   /**
    * Dumps the contents (structure and summary of items)
    */
-  public void dumpStructure( final Writer writer ) throws RepositoryException;
+  public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException;
 
   /**
    * Clears potential resources
