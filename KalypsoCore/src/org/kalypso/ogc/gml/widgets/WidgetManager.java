@@ -238,7 +238,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener
 
   private void fireWidgetChangeEvent( IWidget newWidget )
   {
-    IWidgetChangeListener[] listener = (IWidgetChangeListener[])m_widgetChangeListener
+    final IWidgetChangeListener[] listener = (IWidgetChangeListener[])m_widgetChangeListener
         .toArray( new IWidgetChangeListener[m_widgetChangeListener.size()] );
     for( int i = 0; i < listener.length; i++ )
       listener[i].widgetChanged( newWidget );

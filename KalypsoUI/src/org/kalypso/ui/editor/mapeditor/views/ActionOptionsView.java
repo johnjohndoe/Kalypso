@@ -330,18 +330,6 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
           final IWidgetWithOptions widget = (IWidgetWithOptions)m_activeWidget;
           widget.createControl( m_group );
           m_group.layout();
-
-          // the widget changed and there is something to show, so bring this
-          // view to top
-          try
-          {
-            final IWorkbenchPage page = getSite().getPage();
-            page.showView( getViewSite().getId(), null, IWorkbenchPage.VIEW_VISIBLE );
-          }
-          catch( final PartInitException e )
-          {
-            e.printStackTrace();
-          }
         }
       }
     }
