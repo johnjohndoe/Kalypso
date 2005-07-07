@@ -56,7 +56,7 @@ public class TFRule extends AbstractValidatorRule
         // should never happen, ignore
       }
       
-      collector.createProfilMarker( true, message, location, new Integer( tfPos ) );
+      collector.createProfilMarker( true, message, location,tfPos );
     }
   }
 }

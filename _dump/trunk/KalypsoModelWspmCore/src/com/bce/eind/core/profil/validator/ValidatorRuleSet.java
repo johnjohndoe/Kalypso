@@ -64,7 +64,7 @@ public class ValidatorRuleSet
     private final IResource m_resource;
 
     private final static String[] USED_ATTRIBUTES = new String[]
-                                                         { IMarker.MESSAGE, IMarker.LOCATION, IMarker.SEVERITY, IValidatorMarkerCollector.MARKER_ATTRIBUTE_DATA };
+                                                         { IMarker.MESSAGE, IMarker.LOCATION, IMarker.SEVERITY, IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS };
     
     public ResourceValidatorMarkerCollector( final IResource resource )
     {
@@ -78,12 +78,12 @@ public class ValidatorRuleSet
      * @throws CoreException
      */
     public void createProfilMarker( boolean isSevere,
-        final String message, final String location, final Object data ) throws CoreException
+        final String message, final String location, final int pointPos ) throws CoreException
     {
       final IMarker marker = m_resource.createMarker( MARKER_ID );
 
       final Object[] values = new Object[]
-      { message, location, isSevere ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING, data };
+      { message, location, isSevere ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING, pointPos };
 
       marker.setAttributes( USED_ATTRIBUTES, values );
     }
