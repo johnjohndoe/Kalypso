@@ -135,7 +135,7 @@ public class RequestFactory
 
     // update metadata
     final MetadataList mdl = obs.getMetadataList();
-    mdl.setProperty( ObservationConstants.MD_NAME, request.getName() );
+    mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" );
     mdl.setProperty( ObservationConstants.MD_ORIGIN, "Request-Mechanismus" );
 
     return obs;
