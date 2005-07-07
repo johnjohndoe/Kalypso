@@ -55,6 +55,8 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -62,10 +64,14 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
+import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -96,6 +102,26 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     myMapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), plugin.getDefaultMapSelectionID() );
+    myMapPanel.getWidgetManager().addWidgetChangeListener( new IWidgetChangeListener()
+    {
+      public void widgetChanged( final IWidget newWidget )
+      {
+        // the widget changed and there is something to show, so bring this
+        // view to top
+        try
+        {
+          if( newWidget instanceof IWidgetWithOptions )
+          {
+            final IWorkbenchPage page = getSite().getPage();
+            page.showView( ActionOptionsView.class.getName(), null, IWorkbenchPage.VIEW_VISIBLE );
+          }
+        }
+        catch( final PartInitException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    } );
   }
 
   /**
@@ -252,6 +278,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     if( m_mapModell != null )
       m_mapModell.dispose();
+
+    myMapPanel.dispose();
 
     setMapModell( null );
 
