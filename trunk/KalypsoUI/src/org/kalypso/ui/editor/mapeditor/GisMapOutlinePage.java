@@ -192,8 +192,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
         //gets the parent of this element (the plugin which implements this extension)
         IExtension parent = (IExtension)configurationElement.getParent();
         //gets the plugin id of the parent plugin
-        String ns = parent.getNamespace();
-        ImageDescriptor icon = ImageProvider.id( ns, resource );
+        String pluginID = parent.getNamespace();
+        ImageDescriptor icon = ImageProvider.id( pluginID, resource );
         String tooltip = configurationElement.getAttribute( "tooltip" );
         //create action delegate
         PluginMapOutlineActionDelegate actionDelegate;
