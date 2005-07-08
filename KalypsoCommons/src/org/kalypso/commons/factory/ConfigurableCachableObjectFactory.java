@@ -121,12 +121,6 @@ public class ConfigurableCachableObjectFactory
    * aus dem Cache.
    * <p>
    * WICHTIG: Dies bedeutet dass man also Argumente benutzen sollte nur wenn der Cache nicht aktiviert ist.
-   * 
-   * @param type
-   * @param expected
-   * @param arguments
-   * @return object instance
-   * @throws FactoryException
    */
   public Object getObjectInstance( final String type, final Class expected, final Object[] arguments )
       throws FactoryException

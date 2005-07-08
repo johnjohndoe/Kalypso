@@ -47,7 +47,7 @@ import junit.framework.TestCase;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
-import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
+import org.kalypso.ogc.sensor.filter.filters.DataHoleFilter;
 
 /**
  * FilterFactoryTest
@@ -62,7 +62,7 @@ public class FilterFactoryTest extends TestCase
   {
     super.setUp();
 
-    m_ins = getClass().getResourceAsStream( "wqfilter.xml" );
+    m_ins = getClass().getResourceAsStream( "filter.xml" );
   }
 
   protected void tearDown() throws Exception
@@ -73,8 +73,7 @@ public class FilterFactoryTest extends TestCase
 
   public void testCreateFilter() throws SensorException
   {
-    IObservation obs = FilterFactory.createFilter( m_ins, null );
-    assertTrue( obs instanceof WQTimeserieProxy );
+    IObservation obs = FilterFactory.createFilter( m_ins, getClass().getResource("filter.xml") );
+    assertTrue( obs instanceof DataHoleFilter );
   }
-
 }
