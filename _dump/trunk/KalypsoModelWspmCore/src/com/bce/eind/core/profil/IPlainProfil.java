@@ -133,6 +133,6 @@ public interface IPlainProfil
 
   public void editBuilding( final ProfilBuildingProperty buildingProperty, final double value )
       throws ProfilBuildingException;
-
+  public IProfilPoint getPointNearBy( final double breite ) throws ProfilDataException;
   public IProfilPoint getPointCloseTo( final double breite ) throws ProfilDataException;
 }

@@ -87,7 +87,7 @@ public class PlainProfil implements IPlainProfil
       final ProfilPoint leftPoint = (lpkt == null ? firstPoint : lpkt);
       final ProfilPoint rightPoint = (rpkt == null ? lastPoint : rpkt);
 
-      setDevider(leftPoint, rightPoint, property );
+      setDevider( leftPoint, rightPoint, property );
     }
     else if( property == ProfilPointProperty.TRENNFLAECHE )
       setDevider( firstPoint, lastPoint, property );
@@ -168,7 +168,7 @@ public class PlainProfil implements IPlainProfil
       }
       catch( ProfilDataException e )
       {
-       // e.printStackTrace();
+        // e.printStackTrace();
       }
 
     }
@@ -430,7 +430,7 @@ public class PlainProfil implements IPlainProfil
     final double deviderValue = oldPosition.getValueFor( deviderKey.getProfilPointProperty() );
     ((ProfilPoint)newPosition).setValueFor( deviderKey.getProfilPointProperty(), deviderValue );
     oldPosition.setValueFor( deviderKey.getProfilPointProperty(), 0.0 );
-    
+
     return true;
   }
 
@@ -444,7 +444,7 @@ public class PlainProfil implements IPlainProfil
   }
 
   /**
-   * @throws ProfilDataException 
+   * @throws ProfilDataException
    * @see com.bce.eind.core.profilinterface.IProfil#removePoint(com.bce.eind.core.profilinterface.IPoint)
    */
   public void removePoint( final IProfilPoint point ) throws ProfilDataException
@@ -530,7 +530,7 @@ public class PlainProfil implements IPlainProfil
   public void setDevider( final IProfilPoint leftPoint, final IProfilPoint rightPoint,
       final ProfilPointProperty pointProperty ) throws ProfilDataException
   {
-    if( !( profilPointExists( leftPoint ) & (profilPointExists( rightPoint ) ) ) )
+    if( !(profilPointExists( leftPoint ) & (profilPointExists( rightPoint ))) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
 
     setValuesFor( pointProperty, 0.0 );
@@ -641,12 +641,22 @@ public class PlainProfil implements IPlainProfil
   public void editBuilding( final ProfilBuildingProperty buildingProperty, final double value )
       throws ProfilBuildingException
   {
-    if( !m_building.hasProperty(buildingProperty) )
+    if( !m_building.hasProperty( buildingProperty ) )
       throw new ProfilBuildingException( "Eigenschaft exisitert nicht: " + buildingProperty );
 
     m_building.setValue( buildingProperty, value );
   }
+  
+  /**
+   * sucht den nächsten Punkt dessen x-position näher als (2*Breite.getPrecision) an breite ist,
+   * ansonsten Null
+   */
+  public IProfilPoint getPointNearBy( final double breite ) throws ProfilDataException
+  {
+    final IProfilPoint pkt = getPointCloseTo(breite);
+    return ((Math.abs(breite - pkt.getValueFor(ProfilPointProperty.BREITE)))<(2*Math.exp(-ProfilPointProperty.BREITE.getPrecision()))) ? pkt :  null;
 
+  }
   public IProfilPoint getPointCloseTo( final double breite ) throws ProfilDataException
   {
     IProfilPoint pkt = getPoint( 0 );
@@ -654,12 +664,13 @@ public class PlainProfil implements IPlainProfil
     for( final Iterator<IProfilPoint> ptIt = m_points.iterator(); ptIt.hasNext(); )
     {
       IProfilPoint p = ptIt.next();
-      final double distance = Math.abs( breite - p.getValueFor( ProfilPointProperty.BREITE ) );
-      if( Math.abs( pkt.getValueFor( ProfilPointProperty.BREITE ) - breite ) > distance )
+      if( Math.abs( pkt.getValueFor( ProfilPointProperty.BREITE ) - breite ) > Math.abs( p
+          .getValueFor( ProfilPointProperty.BREITE )
+          - breite ) )
         pkt = p;
     }
-    return pkt;
-  }
+   return pkt;
+   }
 
   public void setValues( final ProfilChange[] changes ) throws ProfilDataException
   {
