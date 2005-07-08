@@ -38,4 +38,31 @@
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoServiceCore/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
 	</target>
+	
+	<target name="test">
+		<echo message="Test most common projects to all installations" />
+		
+		<ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml" target="test" inheritAll="false" />
+		<ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml" target="test" inheritAll="false" />
+		<ant antfile="${workspace}/EclipsePlatformContributions/etc/ant/build.xml" target="test" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml" target="test" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="test" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="test" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="test" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoServiceCore/etc/ant/project-build.xml" target="test" inheritAll="false" />
+	</target>
+
+	<target name="javadoc">
+		<echo message="Javadoc most common projects to all installations" />
+		
+		<ant antfile="${workspace}/JavaApiContributions/etc/ant/build.xml" target="javadoc" inheritAll="false" />
+		<ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml" target="javadoc" inheritAll="false" />
+		<ant antfile="${workspace}/EclipsePlatformContributions/etc/ant/build.xml" target="javadoc" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml" target="javadoc" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="javadoc" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="javadoc" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="javadoc" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoServiceCore/etc/ant/project-build.xml" target="javadoc" inheritAll="false" />
+	</target>
+
 </project>

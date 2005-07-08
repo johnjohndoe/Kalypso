@@ -4,7 +4,7 @@
 		erzeugt eine zip-Datei mit allen Kalypso Sourcen
     </description>
 
-  <property name="cvsRoot" value=":ext:weckbecker@ibpm:/usr/local/cvsroot" />
+  <property name="cvsRoot" value=":ext:@ibpm:/usr/local/cvsroot" />
 
 
   <property name="temp" value="./tmpSource" />
