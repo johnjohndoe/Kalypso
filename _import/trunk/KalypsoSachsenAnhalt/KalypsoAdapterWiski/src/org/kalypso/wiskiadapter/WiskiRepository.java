@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.wiskiadapter.wiskicall.GetTsInfoList;
 import org.kalypso.wiskiadapter.wiskicall.IWiskiCall;
 
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
@@ -137,7 +138,32 @@ public class WiskiRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    return findItemRecursive( this, id );
+    /*
+     * The wiski repository can directly find an item using the GetTsInfoList call. Once found, a TsInfoItem is created
+     * without a group since we do not want to load the whole hierarchy here.
+     * 
+     * Be aware that this could lead to unexpected results (since TsInfoItem.getParent() would return null)
+     */
+    final GetTsInfoList call = new GetTsInfoList( null, id );
+
+    try
+    {
+      call.execute( m_wiski, m_userData );
+
+      if( call.getResultList().size() > 0 )
+      {
+        final HashMap map = (HashMap)call.getResultList().get( 0 );
+        return new TsInfoItem( this, map );
+      }
+
+      return null;
+    }
+    catch( final Exception e )
+    {
+      throw new RepositoryException( e );
+    }
+
+    //return findItemRecursive( this, id );
   }
 
   /**

@@ -82,19 +82,19 @@
         <echo message="Checkout the models for Sachsen-Anhalt" />
 
         <antcall target="co-model">
-            <param name="pPackage" value="KalypsoData/KalypsoBode" />
+            <param name="pPackage" value="KalypsoSachsenAnhalt/Data/KalypsoBode" />
             <param name="pName" value="Bode" />
         </antcall>
 
-        <antcall target="co-model">
-            <param name="pPackage" value="KalypsoSachsenAnhalt/KalypsoIlse" />
+    	<antcall target="co-model">
+            <param name="pPackage" value="KalypsoSachsenAnhalt/Data/KalypsoIlse" />
             <param name="pName" value="Ilse" />
         </antcall>
 
-        <!--antcall target="co-model">
-			<param name="pPackage" value="KalypsoData/KalypsoSaale" />
-			<param name="pName" value="Saale" />
-		</antcall-->
+        <antcall target="co-model">
+            <param name="pPackage" value="KalypsoSachsenAnhalt/Data/KalypsoSaale" />
+            <param name="pName" value="Saale" />
+        </antcall>
 
     </target>
 
@@ -109,10 +109,10 @@
         </pathconvert>
 
         <exec executable="cmd.exe" dir="${project.path}/deployable-server">
-            <arg line="/C start ${project.path}/deployable-server/cvs-co.bat ${user.name} ${copath} ${pPackage}" />
+            <arg line="/C start cvs-co.bat ${user.name} ${copath} ${pPackage}" />
         </exec>
 
-        <delete includeemptydirs="true">
+        <delete includeemptydirs="true" failonerror="false">
             <!-- empty '.prognose' and 'Rechenvariante' dirs -->
             <fileset dir="${dist.webdav}/prognose/${pName}/.prognose" includes="**/*" />
             <fileset dir="${dist.webdav}/prognose/${pName}/Rechenvarianten" includes="**/*" />

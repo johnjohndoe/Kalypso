@@ -12,12 +12,15 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.wiskiadapter.wiskicall.GetTsInfoList;
 
 /**
- * TsItem
+ * This item is adaptable into a wiski timeserie.
  * 
  * @author schlienger
  */
 public class TsInfoItem implements IRepositoryItem
 {
+  /**
+   * Optional, group can be null. In that case calling getParent() will obvisouly return null
+   */
   private final GroupItem m_group;
 
   private final WiskiRepository m_rep;
@@ -27,6 +30,9 @@ public class TsInfoItem implements IRepositoryItem
 
   private WiskiTimeserie m_ts = null;
 
+  /**
+   * Constructor with group and map. The repository to which this item belongs is delivered by the group.
+   */
   public TsInfoItem( final GroupItem item, final Map map )
   {
     m_group = item;
@@ -34,6 +40,20 @@ public class TsInfoItem implements IRepositoryItem
     m_map.putAll( map );
 
     m_rep = (WiskiRepository)m_group.getRepository();
+  }
+
+  /**
+   * Constructor without group. Be aware that the group is null here. This constructor is provided for simplifying the
+   * process of retrieving items using WiskiRepository.findItem(). The group in that case is not relevant.
+   */
+  public TsInfoItem( final WiskiRepository rep, final Map map )
+  {
+    m_group = null;
+
+    m_map = new Properties();
+    m_map.putAll( map );
+
+    m_rep = rep;
   }
 
   /**
