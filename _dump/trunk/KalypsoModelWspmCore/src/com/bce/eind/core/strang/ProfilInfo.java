@@ -7,15 +7,15 @@ public class ProfilInfo
 {
   private final String m_name;
 
-  private final String m_path;
+  private final String m_filename;
 
   private final double m_station;
 
-  public ProfilInfo( final double station, final String path )
+  public ProfilInfo( final double station, final String filename )
   {
     m_station = station;
     m_name = String.format( "%.4f", station );
-    m_path = path;
+    m_filename = filename;
   }
 
   public double getStation( )
@@ -28,9 +28,9 @@ public class ProfilInfo
     return m_name;
   }
 
-  public String getPath( )
+  public String getFilename( )
   {
-    return m_path;
+    return m_filename;
   }
 
   /**
