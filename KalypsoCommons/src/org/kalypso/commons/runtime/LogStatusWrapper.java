@@ -52,6 +52,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
@@ -70,12 +71,14 @@ public class LogStatusWrapper
 
   private final IFile m_logFile;
 
-  public LogStatusWrapper( final String logFile )
+  public LogStatusWrapper( final String logFile ) throws CoreException
   {
     final IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation( new Path( logFile ) );
     if( files.length != 0 && files[0].exists() )
     {
       m_logFile = files[0];
+      if( ! m_logFile.isSynchronized( 0 ) )
+        m_logFile.refreshLocal(0, new NullProgressMonitor() );
 
       final StringWriter sw = new StringWriter();
       final PrintWriter pw = new PrintWriter( sw );
