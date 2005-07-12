@@ -1353,6 +1353,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
    */
   public void setWizardTitleImage( final Image newTitleImage )
   {
+    if( titleImage == null || titleImage.isDisposed() )
+      return;
+    
     titleImage.setImage( newTitleImage );
     titleImage.setVisible( newTitleImage != null );
     if( newTitleImage != null )

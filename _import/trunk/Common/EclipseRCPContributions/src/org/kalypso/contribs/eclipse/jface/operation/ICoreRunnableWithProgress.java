@@ -40,13 +40,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.operation;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author belger
  */
-public interface IProgressRunnable
+public interface ICoreRunnableWithProgress
 {
-  public IStatus run( final IProgressMonitor monitor );
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
 }

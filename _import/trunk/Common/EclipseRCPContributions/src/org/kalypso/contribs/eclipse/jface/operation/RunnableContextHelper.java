@@ -46,10 +46,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
@@ -57,64 +55,103 @@ import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
  * 
  * @author belger
  */
-public abstract class RunnableContextHelper implements IRunnableWithProgress
+public final class RunnableContextHelper
 {
   private final IRunnableContext m_context;
-  private IStatus m_status = Status.OK_STATUS;
+  
+  protected IStatus m_status = Status.OK_STATUS;
 
-  public RunnableContextHelper( final IRunnableContext context )
+  private RunnableContextHelper( final IRunnableContext context )
   {
     m_context = context;
   }
 
-  public IStatus runAndHandleOperation( final Shell shell, final boolean fork, final boolean cancelable,
-      final String title, final String message )
+  /**
+   * Transforms any exception into an {@link IStatus}object.
+   * <p>
+   * If the exception is an {@link InvocationTargetException}the inner exception is wrapped instead.
+   * </p>
+   * <p>
+   * If the exception is a {@link CoreException}its status is returned.
+   * </p>
+   * 
+   * 
+   * @throws NullPointerException
+   *           If <code>t</code> is null.
+   */
+  public static IStatus statusFromThrowable( final Throwable t )
+  {
+    if( t instanceof InvocationTargetException )
+      return statusFromThrowable( ( (InvocationTargetException)t ).getTargetException() );
+    if( t instanceof CoreException )
+      return ( (CoreException)t ).getStatus();
+
+    final String locmsg = t.getLocalizedMessage();
+    final String msg = locmsg == null ? "" : locmsg;
+    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
+  }
+
+  /**
+   * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
+   * {@Link IStatus}object.
+   */
+  public IStatus execute( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
   {
     try
     {
-      m_context.run( fork, cancelable, this );
+      m_context.run( fork, cancelable, runnable );
     }
-    catch( final InvocationTargetException e )
+    catch( final Throwable t )
     {
-      e.printStackTrace();
-
-      final Throwable targetException = e.getTargetException();
-
-      if( targetException instanceof CoreException )
-        m_status = ( (CoreException)targetException ).getStatus();
-      else
-      {
-        final String locmsg = targetException.getLocalizedMessage();
-        final String msg = locmsg == null ? "" : locmsg;
-        m_status = new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, targetException );
-      }
+      return statusFromThrowable( t );
     }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-      
-      return Status.CANCEL_STATUS;
-    }
-    
-    ErrorDialog.openError( shell, title, message, m_status );
-    
+
     return m_status;
   }
   
   /**
-   * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+   * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
+   * {@Link IStatus}object.
    */
-  public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+  public IStatus execute( final boolean fork,
+      final boolean cancelable, final ICoreRunnableWithProgress runnable )
   {
-    try
+    final IRunnableWithProgress innerRunnable = new IRunnableWithProgress()
     {
-      m_status = execute( monitor );
-    }
-    catch( final CoreException e )
-    {
-      throw new InvocationTargetException( e );
-    }
+      public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+      {
+        try
+        {
+          m_status = runnable.execute( monitor );
+        }
+        catch( final CoreException e )
+        {
+          throw new InvocationTargetException( e );
+        }
+      }
+    };
+
+    return execute( fork, cancelable, innerRunnable );
   }
 
-  protected abstract IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
+  /**
+   * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
+   * {@Link IStatus}object.
+   */
+  public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
+  {
+      final RunnableContextHelper helper = new RunnableContextHelper( context );
+      return helper.execute( fork, cancelable, runnable );
+  }
+
+  /**
+   * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
+   * {@Link IStatus}object.
+   */
+  public static IStatus execute( final IRunnableContext context, final boolean fork,
+      final boolean cancelable, final ICoreRunnableWithProgress runnable )
+  {
+    final RunnableContextHelper helper = new RunnableContextHelper( context );
+    return helper.execute( fork, cancelable, runnable );
+  }
 }

@@ -364,7 +364,6 @@ public class ParseFunction extends ScanString
    */
   public double getResult( double x, double y, double z ) throws Exception
   {
-
     this.x = x;
     this.y = y;
     this.z = z;
