@@ -48,15 +48,34 @@ public class RepositoryUtils
    *         convention (as defined in the IRepositoryItem interface) specifies that an Item's identifier should be
    *         build using the repository id + item specific id (follows URL specification): repository-id://item-id-part
    */
-  public static String getRepositoryId( final String itemId )
+  public static String getRepositoryId( final String fullId )
   {
-    if( itemId == null )
+    if( fullId == null )
       return null;
 
-    final int ix = itemId.indexOf( "://" );
+    final int ix = fullId.indexOf( "://" );
     if( ix == -1 )
-      throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + itemId );
+      throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + fullId );
 
-    return itemId.substring( 0, ix + 3 );
+    return fullId.substring( 0, ix + 3 );
+  }
+
+  /**
+   * Return only the item-id part of the full id. If id is null, it returns null.
+   * 
+   * @return the id part of the item. This is pretty much straightforward since the
+   *         convention (as defined in the IRepositoryItem interface) specifies that an Item's identifier should be
+   *         build using the repository id + item specific id (follows URL specification): repository-id://item-id-part
+   */
+  public static String getItemId( final String fullId )
+  {
+    if( fullId == null )
+      return null;
+    
+    final int ix = fullId.indexOf( "://" );
+    if( ix == -1 )
+      throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + fullId );
+
+    return fullId.substring( ix + 3 );    
   }
 }

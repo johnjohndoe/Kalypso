@@ -149,7 +149,7 @@ public class RequestFactory
     final RequestType xmlReq = parseRequest( href );
 
     if( xmlReq == null )
-      throw new SensorException( "No valid Request specified, cannot create a default Observation" );
+      throw new SensorException( "Request ungültig, kann keine Default-Observation erzeugen" );
 
     return createDefaultObservation( xmlReq );
   }
