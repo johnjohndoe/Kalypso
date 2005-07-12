@@ -134,14 +134,14 @@
         <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="deploy" inheritAll="false" />
     </target>
 
-    <target name="psicompact-fake" depends="build-basic">
+    <target name="psicompact-fake" depends="build-basic,build-UserService">
         <echo message="Integrating the fake implementation of PSICompact" />
         <delete file="${workspace}/KalypsoAdapterPSICompact/lib/PSICompact.jar" />
         <ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml" target="deploy" inheritall="false" />
         <ant antfile="${workspace}/KalypsoAdapterPSICompact/etc/ant/build.xml" target="deploy" inheritall="false" />
     </target>
 
-    <target name="psicompact-echte" depends="build-basic">
+    <target name="psicompact-echte" depends="build-basic,build-UserService">
         <echo message="Integrating the real implementation of PSICompact" />
         <copy file="${project.path}/deployable-server/echte-psicompact/PSICompact.jar"
               tofile="${workspace}/KalypsoAdapterPSICompact/lib/PSICompact.jar"
@@ -149,21 +149,25 @@
         <ant antfile="${workspace}/KalypsoAdapterPSICompact/etc/ant/build.xml" target="deploy" inheritall="false" />
     </target>
 
-    <target name="build-UserService">
+	<target name="build-UserService">
+        <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/project-build.xml" target="deploy" inheritAll="false"/>
+	</target>
+	
+    <target name="buildwar-UserService">
         <copy todir="${workspace}/KalypsoServiceUser/build/build-war/WEB-INF/lib">
             <fileset dir="${workspace}/KalypsoAdapterPSICompact/build/deploy" includes="**/*.jar" />
         </copy>
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml" target="build-war" inheritAll="false"/>
     </target>
 
-    <target name="build-ObsService">
+    <target name="buildwar-ObsService">
         <copy todir="${workspace}/KalypsoServiceObs/build/build-war/WEB-INF/lib">
             <fileset dir="${workspace}/KalypsoAdapterPSICompact/build/deploy" includes="**/*.jar" />
         </copy>
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml" target="build-war" inheritAll="false"/>
     </target>
 
-    <target name="build-CalcService" depends="build-basic">
+    <target name="buildwar-CalcService" depends="build-basic">
         <!-- Build calc-service client in order to resolve dependencies to model plugins -->
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml" target="build-client" inheritAll="false" />
 
@@ -187,7 +191,7 @@
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml" target="build-war" inheritAll="false" />
     </target>
 
-    <target name="build-MetaDocService">
+    <target name="buildwar-MetaDocService">
         <copy todir="${workspace}/KalypsoServiceMetaDoc/build/build-war/WEB-INF/lib">
             <fileset dir="${workspace}/KalypsoAdapterPSICompact/build/deploy" includes="**/*.jar" />
         </copy>
@@ -195,7 +199,7 @@
     </target>
 
     <target name="build-services-dev"
-            depends="psicompact-fake,build-CalcService,build-MetaDocService,build-ObsService,build-UserService">
+            depends="psicompact-fake,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService">
         <echo message="Building all services" />
     </target>
 
@@ -249,7 +253,7 @@
     </target>
 
     <target name="redeploy-UserService"
-            depends="psicompact-fake,build-UserService,deploy-allconf"
+            depends="psicompact-fake,buildwar-UserService,deploy-allconf"
             description="Redeploy service and configuration">
         <echo message="Redeploying User Service" />
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml" target="redeploy" inheritAll="false">
@@ -258,7 +262,7 @@
     </target>
 
     <target name="redeploy-ObsService"
-            depends="psicompact-fake,build-ObsService,deploy-allconf"
+            depends="psicompact-fake,buildwar-ObsService,deploy-allconf"
             description="Redeploy service and configuration">
         <echo message="Redeploying Observation Service" />
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml" target="redeploy" inheritAll="false">
@@ -267,7 +271,7 @@
     </target>
 
     <target name="redeploy-MetaDocService"
-            depends="psicompact-fake,build-MetaDocService,deploy-allconf"
+            depends="psicompact-fake,buildwar-MetaDocService,deploy-allconf"
             description="Redeploy service and configuration">
         <echo message="Redeploying MetaDoc Service" />
         <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="redeploy" inheritAll="false">
@@ -276,7 +280,7 @@
     </target>
 
     <target name="redeploy-CalcService"
-            depends="psicompact-fake,build-CalcService,deploy-allconf"
+            depends="psicompact-fake,buildwar-CalcService,deploy-allconf"
             description="Redeploy service and configuration">
         <echo message="Redeploying Calculation Service" />
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml" target="redeploy" inheritAll="false">
@@ -291,7 +295,7 @@
     </target>
 
     <target name="build-services-lfug"
-            depends="psicompact-echte,build-CalcService,build-MetaDocService,build-ObsService,build-UserService">
+            depends="psicompact-echte,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService">
         <echo message="Build for LFUG (using real PSICompact)" />
     </target>
 
