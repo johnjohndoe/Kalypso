@@ -6,7 +6,6 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
-
 - neue View: FeatureView: zeigt aktuelle selektiertes Feature als 'Formular' an
 - neuer Menüpunkt 'Modell / Vorhersagen organisieren'
 
@@ -69,6 +68,7 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 - Vorhersage-Wizard jetzt eingebettet und nicht mehr als modaler Dialog
 - Vorhersage-Wizard unterstützt HTML-Navigation
 - Knopf für beliebige Ant Aufrufe im Vorhersage-Wizard
+- WizardView: wird jetzt Fullscreen (d.h. ohne Menüs und Toolbar) gezeigt
 
 - WidgetActions nach KaylspoUI verschoben + refactorisiert, so daß man nun in einer extension neue widgets hinzufügen kann
 
