@@ -48,8 +48,9 @@ import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
+import org.kalypso.core.client.ProxyFactory;
 import org.kalypso.metadoc.Document;
-import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.proxy.IMetaDocService;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -69,7 +70,7 @@ public class MetadocServiceWrapper
   {
     try
     {
-      final ProxyFactory serviceProxyFactory = KalypsoGisPlugin.getDefault().getServiceProxyFactory();
+      final ProxyFactory serviceProxyFactory = KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory();
       m_service = (IMetaDocService)serviceProxyFactory.getAnyProxy( "Kalypso_MetaDocService", ClassUtilities
           .getOnlyClassName( IMetaDocService.class ) );
     }

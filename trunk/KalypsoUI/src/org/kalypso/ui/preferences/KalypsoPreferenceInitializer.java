@@ -57,7 +57,7 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
   {
     // location of the server configuration for the clients
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS,
-        "http://SERVER_NAME:8080/KalypsoConf/kalypso-client.ini" );
+        "http://SERVER_NAME:8080/webdav/kalypso-client.ini" );
 
     // size of the image export for the observation chart
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_WIDTH, 600 );
