@@ -253,42 +253,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Meisdorf.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMeisdorf_Elend">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMeisdorf_Ditfurt">
-              <tubigpegel:faktor>0.2</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMeisdorf_Hasselfelde">
-              <tubigpegel:faktor>0.1</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMeisdorf_Mahndorf">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMeisdorf_Silberhütte">
-              <tubigpegel:faktor>0.7</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMeisdorf_Weferlingen">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>
@@ -313,42 +277,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Elend.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewElend_Elend">
-              <tubigpegel:faktor>1.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewElend_Ditfurt">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewElend_Hasselfelde">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewElend_Mahndorf">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewElend_Silberhütte">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewElend_Weferlingen">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>
@@ -373,42 +301,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Hasselfelde.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewHasselfelde_Elend">
-              <tubigpegel:faktor>0.1</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewHasselfelde_Ditfurt">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewHasselfelde_Hasselfelde">
-              <tubigpegel:faktor>0.8</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewHasselfelde_Mahndorf">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewHasselfelde_Silberhütte">
-              <tubigpegel:faktor>0.1</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewHasselfelde_Weferlingen">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>
@@ -433,42 +325,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Mahndorf.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMahndorf_Elend">
-              <tubigpegel:faktor>0.2</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMahndorf_Ditfurt">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMahndorf_Hasselfelde">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMahndorf_Mahndorf">
-              <tubigpegel:faktor>0.8</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMahndorf_Silberhütte">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewMahndorf_Weferlingen">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>
@@ -493,42 +349,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Silberhütte.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewSilberhütte_Elend">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewSilberhütte_Ditfurt">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewSilberhütte_Hasselfelde">
-              <tubigpegel:faktor>0.3</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewSilberhütte_Mahndorf">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewSilberhütte_Silberhütte">
-              <tubigpegel:faktor>0.7</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewSilberhütte_Weferlingen">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>
@@ -553,42 +373,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Königshütte.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewKönigshütteWB_Elend">
-              <tubigpegel:faktor>0.8</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewKönigshütteWB_Ditfurt">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewKönigshütteWB_Hasselfelde">
-              <tubigpegel:faktor>0.2</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewKönigshütteWB_Mahndorf">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewKönigshütteWB_Silberhütte">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewKönigshütteWB_Weferlingen">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>
@@ -613,42 +397,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Steinerne_Renne.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewStRenne_Elend">
-              <tubigpegel:faktor>0.8</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewStRenne_Ditfurt">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewStRenne_Hasselfelde">
-              <tubigpegel:faktor>0.2</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewStRenne_Mahndorf">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewStRenne_Silberhütte">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewStRenne_Weferlingen">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>
@@ -673,42 +421,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Oschersleben.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewOschersleben_Elend">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewOschersleben_Ditfurt">
-              <tubigpegel:faktor>0.2</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewOschersleben_Hasselfelde">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewOschersleben_Mahndorf">
-              <tubigpegel:faktor>0.1</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewOschersleben_Silberhütte">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewOschersleben_Weferlingen">
-              <tubigpegel:faktor>0.7</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>
@@ -733,42 +445,6 @@
           <tubigpegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Trautenstein.zml" linktype="zml"/>
           </tubigpegel:Niederschlag>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewTrautenstein_Elend">
-              <tubigpegel:faktor>0.4</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Elend"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewTrautenstein_Ditfurt">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Ditfurt"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewTrautenstein_Hasselfelde">
-              <tubigpegel:faktor>0.6</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Hasselfelde"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewTrautenstein_Mahndorf">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Mahndorf"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewTrautenstein_Silberhütte">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Silberhütte"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
-          <tubigpegel:gewichtung>
-            <tubigpegel:GewichtungsElement fid="GewTrautenstein_Weferlingen">
-              <tubigpegel:faktor>0.0</tubigpegel:faktor>
-              <tubigpegel:ombrometerMember xlink:href="#Ombro_Weferlingen"/>
-            </tubigpegel:GewichtungsElement>
-          </tubigpegel:gewichtung>
         </tubigpegel:Niederschlagsgebiet>
       </tubigpegel:PegelMember>
       <tubigpegel:PegelMember>

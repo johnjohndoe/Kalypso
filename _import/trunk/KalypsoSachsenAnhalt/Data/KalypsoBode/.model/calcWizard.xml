@@ -2,152 +2,379 @@
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-<!-- KONTROLLE DER ZEITREIHEN -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
-
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="1"/>
-        <arg name="zmlTableShow" value="all"/>
-
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
-    </page>
-
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgaben" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
-
+<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
+	<!-- Niederschlag an Stationen (Messung) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="4"/>
         <arg name="zmlTableShow" value="all"/>
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Name#linkColumn=Abgabe"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
+         <arg name="maximizeMap" value="true"/>
+         
+         <arg name="buttonText" value="NS -> NG, uh. Wendefurth"/>
+         <arg name="buttonTooltip" value="Gebietsniederschlagsmodell uh. Wendefurth berechnen"/>
+         <arg name="buttonLaunch" value="niederschlagsmodell_uh_wend"/>
     </page>
-
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
-
+ 
+	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete uh. Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete_uh_Wendefurth.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="8"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+        <arg name="maximizeMap" value="true"/>
+    </page>
+    
+    <!-- Wasserstand / Abfluss (Messung) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel uh. Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel_uh_Wendefurth.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
-    </page>
-
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
-
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="2"/>
-        <arg name="zmlTableShow" value="all"/>
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Wasserstand_gemessen"/>
-    </page>
-
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Flutungen und Zuflüsse" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/vorgabepegel.gmt"/>
-
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="16"/>
-        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+        <arg name="maximizeMap" value="true"/>
         
-        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=z#nameColumn=Name#linkColumn=Abfluss"/>
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+   </page>
+
+   <!-- Abgabe Speicher (Messung und Prognose) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+        <arg name="maximizeMap" value="true"/>
     </page>
+    
 
-<!-- KALIBRIERUNG -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe NA-Modelle" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
-        <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
-        <arg name="diagTemplate" value=".templates/calcCase/ezg.odt"/>
-
+ <!-- BERECHNUNG - Q-PROGNOSE UNTERHALB WENDEFURTH -->
+ 
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose unterhalb Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Vorhersagepegel_uh_Wendefurth.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
         <arg name="mainSash" value="40"/>
-        <arg name="rightSash" value="30"/>
-        <arg name="selectionID" value="32"/>
+        <arg name="rightSash" value="0"/>
+        <arg name="selectionID" value="16"/>
         
         <arg name="ignoreType1" value="W"/>
         <arg name="ignoreType2" value="Q"/>
         <arg name="ignoreLabel1" value="Abfluss"/>
         <arg name="ignoreLabel2" value="Wasserstand"/>
-        
-        <arg name="timeserie1" 
-        	value="nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
-        <arg name="timeserie2" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_gemessen#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
-        <arg name="timeserie3" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
-        <arg name="timeserie4" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
+
+        <arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+        <arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+         
+       	<arg name="maximizeMap" value="true"/>
     </page>
-
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Talsperren" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>
-        <arg name="tableTemplate" value=".templates/calcCase/talsperren.gtt"/>
-        <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
-
+    
+    <!-- ??? Seite auf der die gerechneten Speicherzuflüsse dargestellt werden (=2. Ergebnisseite)-->
+    <!-- Zufluss Speicher (Prognose / gerechnet) -->
+     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ergebnisse Zufluss - Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
         <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="40"/>
-        <arg name="selectionID" value="64"/>
-
-        <arg name="ignoreType1" value="V"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel2" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Volumen"/>
-
-        <arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
-        <arg name="timeserie2" value="nameColumn=Name#linkColumn=Abgabe_plausibilisiert"/>
-        <arg name="timeserie3" value="nameColumn=Name#linkColumn=Zufluss_berechnet"/>
-        <arg name="timeserie4" value="nameColumn=Name#linkColumn=Stauinhalt"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+        <arg name="maximizeMap" value="true"/>
     </page>
 
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Eingabe Flusslaufmodelle" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/flusslauf.gmt"/>
-        <arg name="tableTemplate" value=".templates/calcCase/flusslauf.gtt"/>
-        <arg name="diagTemplate" value=".templates/calcCase/flusslauf.odt"/>
 
+<!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
+	<!-- Niederschlag an Stationen (Messung) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="4"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
+         <arg name="maximizeMap" value="true"/>
+         
+         <arg name="buttonText" value="NS -> NG, oh. Speicher"/>
+         <arg name="buttonTooltip" value="Gebietsniederschlagsmodell oh. Speicher berechnen"/>
+         <arg name="buttonLaunch" value="niederschlagsmodell_oh_speicher"/>
+    </page>
+ 
+	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="8"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+        <arg name="maximizeMap" value="true"/>
+    </page>
+    
+    <!-- Wasserstand / Abfluss (Messung) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+        <arg name="maximizeMap" value="true"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+   </page>
+   
+    
+    <!-- BERECHNUNG - Q-PROGNOSE OBERHALB SPEICHER -->
+ 
+     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose oberhalb Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Vorhersagepegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="0"/>
+        <arg name="selectionID" value="16"/>
+        
         <arg name="ignoreType1" value="W"/>
         <arg name="ignoreType2" value="Q"/>
         <arg name="ignoreLabel1" value="Abfluss"/>
         <arg name="ignoreLabel2" value="Wasserstand"/>
 
-        <arg name="timeserie1" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_gemessen#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
-        <arg name="timeserie2" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
-        <arg name="timeserie3" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
-
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="40"/>
-        <arg name="selectionID" value="128"/>
+        <arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+        <arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+         
+       	<arg name="maximizeMap" value="true"/>
     </page>
 
-	<!-- Ergebnisablage -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage"
+<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG ALLGEMEIN -->
+    <!-- ??? Ist es richtig, dass Messung und Prognose oberhalb Speicher angezeigt wird?-->
+    <!-- Wasserstand / Abfluss (Messung und Prognose) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gerechnet"/>
+        <arg name="maximizeMap" value="true"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+   </page>
+   
+      <!-- Inhalt Speicher (Messung) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Inhalte - Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+        <arg name="maximizeMap" value="true"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="V"/>
+        <arg name="ignoreLabel1" value="Inhalt"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+   </page>
+
+<!-- ??? ggf. wieder Titel anpassen -->
+   <!-- ??? nur Messung!!! Abgabe Speicher (Messung) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+        <arg name="maximizeMap" value="true"/>
+    </page>
+
+<!-- SPEICHERRECHNUNG BAT 3  -->
+<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG  BAT 3 -->
+   <!-- ??? nur Prognose!!! Abgabe Speicher (Messung) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+        <arg name="maximizeMap" value="true"/>
+    </page>
+    
+   <!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
+   <!--???? hier weitermachen: zwei Ergebnisseiten: mal mit mal ohne ÜL: mit welcher soll begonne werden?-->
+   <!-- diese Seiten gelten auch für Bat4/5 abgesehen von der Überschrift-->
+      <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Speicherrechnung bei Vorgabe der Abgabenr" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="0"/>
+        <arg name="selectionID" value="16"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="V"/>
+        <arg name="ignoreLabel1" value="Inhalt"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+
+        <arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+        <arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+         
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+<!-- SPEICHERRECHNUNG BAT 4  -->
+   <!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 4 -->
+      <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - TS-Steuerung ohne Optimierung" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Vorhersagepegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="0"/>
+        <arg name="selectionID" value="16"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+
+        <arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+        <arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+         
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+    
+<!-- SPEICHERRECHNUNG BAT 5  -->
+      <!-- BERECHNUNG - SPEICHERRECHNUNG  BAT5 -->
+      <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - TS-Steuerung ohne Optimierung" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Vorhersagepegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+        <arg name="mainSash" value="40"/>
+        <arg name="rightSash" value="0"/>
+        <arg name="selectionID" value="16"/>
+        
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
+
+        <arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+        <arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+         
+       	<arg name="maximizeMap" value="true"/>
+    </page>
+
+   
+ <!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
+ 
+ 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage"
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
-	   	<arg name="mapTemplate" value="project:.templates/calcCase/pegel.gmt"/>
-	   	<arg name="tableTemplate"  value="project:.templates/calcCase/pegel.gtt"/>
-		<arg name="diagTemplate" value=".templates/calcCase/results.odt"/>
+	   
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Vorhersagepegel.gmt"/>
+   		<arg name="mapTemplateContextIsCalcCase" value="false"/>
 	
-		<arg name="exportDiagram" value="template=.templates/export/pegelVorhersage.odt#timeseries=Wasserstand_gemessen;Wasserstand_vorhersage"/>
-	
-        <arg name="timeserie1" 
-        	value="nameColumn=Name#linkColumn=Niederschlag_rechnung"/>
-        <arg name="timeserie2" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_gemessen#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;"/>
-        <arg name="timeserie3" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_gerechnet#filter=&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;"/>
-        <arg name="timeserie4" 
-        	value="nameColumn=Name#linkColumn=Wasserstand_vorhersage"/>
+       <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag"/>
+        <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+        <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		
+		<arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
 		
 		<arg name="pegelNameProperty" value="Name"/>
-		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
+		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
+		<!--Wiski-Id müsste hierhin -->
 		<arg name="prognoseProperty" value="Wasserstand_vorhersageAblage"/>
 
-	   	<arg name="mainSash" value="50"/>
-	   	<arg name="rightSash" value="40"/>
-	   	<arg name="selectionID" value="256"/>
-	</page>
+	   	<arg name="mainSash" value="40"/>
+	   	<arg name="rightSash" value="25"/>
+	   	<arg name="selectionID" value="32"/>
 
+	   	<arg name="exporter2">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
+	   		<arg name="name" value="Tabelle"/>
+	   		<arg name="nameproperty" value="Name"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_vorhersage"/>
+			</arg>
+	   	</arg>
+	   	<arg name="exporter3">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Abflussgrafik"/>
+	   		<arg name="nameproperty" value="Name"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_gemessen"/>
+    			<arg name="href2" value="Wasserstand_gerechnet"/>
+				<arg name="href3" value="Wasserstand_vorhersage"/>
+    			<arg name="href4" value="Niederschlag_rechnung"/>
+			</arg>
+	   	</arg>
+	   	
+	   	<arg name="exporter4">
+			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+	   		<arg name="name" value="Wasserstandsgrafik"/>
+	   		<arg name="nameproperty" value="Name"/>
+	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+	   		<arg name="width" value="1024"/>
+	   		<arg name="height" value ="768"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Wasserstand_gemessen"/>
+    			<arg name="href2" value="Wasserstand_gerechnet"/>
+				<arg name="href3" value="Wasserstand_vorhersage"/>
+    			<arg name="href4" value="Niederschlag_rechnung"/>
+			</arg>
+	   	</arg>
+        
+   		<arg name="maximizeMap" value="true"/>
+	</page>
+	
 </calcwizard>

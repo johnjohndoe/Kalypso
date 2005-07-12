@@ -14,10 +14,6 @@
         <arg name="zmlTableShow" value="all"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
          <arg name="maximizeMap" value="true"/>
-         
-         <arg name="buttonText" value="NS -> NG"/>
-         <arg name="buttonTooltip" value="Gebietsniederschlagsmodell berechnen"/>
-         <arg name="buttonLaunch" value="niederschlagsmodell"/>
     </page>
  
 	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
@@ -34,7 +30,7 @@
     </page>
     
     <!-- Wasserstand / Abfluss (Messung) -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="false"/>
 		
@@ -44,12 +40,6 @@
         <arg name="zmlTableShow" value="all"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
         <arg name="maximizeMap" value="true"/>
-        
-        <arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
-
    </page>
     
 

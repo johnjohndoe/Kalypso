@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+	<extent bottom="5721767.238838751" left="5196050.364086669" right="5272854.967313059" top="5785214.519764898"/>
+	<layers active="ID_1">
+		<layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Pegel]" id="ID_1" linktype="gml" ns1:href="../modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
+ 			<ns2:style linktype="sld" style="Pegel" ns1:href="project:/.styles/pegel.sld" xmlns:ns2="types.template.kalypso.org"/>
+       </layer>
+        <layer name="Niederschlagsstationen" visible="true" featurePath="OmbrometerCollectionAssociation/OmbrometerMember[Ombrometer]" id="ID_3" linktype="gml" ns1:href="../modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Niederschlagsstationen" ns1:href="project:/.styles/niederschlagsstationen.sld" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+		<layer name="Niederschlagsgebiete" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Niederschlagsgebiet]" id="ID_4" linktype="gml" ns1:href="../modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
+			<ns2:style linktype="sld" style="Niederschlagsgebiete" ns1:href="project:/.styles/niederschlagsgebiete_mit_relationen.sld" xmlns:ns2="types.template.kalypso.org"/>
+		</layer>
+		<layer name="Speicher" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember[Speicher]" id="ID_5" linktype="gml" ns1:href="../modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
+			<ns2:style linktype="sld" style="Speicher" ns1:href="project:/.styles/speicher.sld" xmlns:ns2="types.template.kalypso.org"/>
+		</layer>
+		<layer name="Überleitung" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember[Überleitung]" id="ID_6" linktype="gml" ns1:href="../modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
+			<ns2:style linktype="sld" style="Ueberleitung" ns1:href="project:/.styles/speicher.sld" xmlns:ns2="types.template.kalypso.org"/>
+		</layer>
+		<layer name="Gewässer" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns3:href="project:/.shapes/Gewässer#EPSG:31468" xmlns:ns3="http://www.w3.org/1999/xlink">
+			<ns4:style linktype="sld" style="sachsenrivers"  ns3:href="project:/.styles/styles.sld"  xmlns:ns4="types.template.kalypso.org"/>
+		</layer>
+	</layers>
+</gismapview>
