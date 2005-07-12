@@ -11,7 +11,7 @@
         <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns5:href="project:/.shapes/gewässer#EPSG:31468" xmlns:ns5="http://www.w3.org/1999/xlink">
             <ns6:style linktype="sld" style="sachsenrivers" ns5:href="project:/.styles/styles.sld" xmlns:ns6="types.template.kalypso.org"/>
         </layer>
-        <layer name="Niederschlagsgebiete_Flächen" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:href="project:/.shapes/Einzugsgebiete_NS_Gebiete#EPSG:31468" xmlns:ns7="http://www.w3.org/1999/xlink">
+        <layer name="Niederschlagsgebiete_Flächen" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:href="project:/.shapes/Einzugsgebiete_NS_Gebiete_uh_Wendefurth#EPSG:31468" xmlns:ns7="http://www.w3.org/1999/xlink">
             <ns8:style linktype="sld" style="niederschlagsgebiete_poly" ns7:href="project:/.styles/niederschlagsgebiete_poly.sld" xmlns:ns8="types.template.kalypso.org"/>
         </layer>
     </layers>

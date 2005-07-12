@@ -45,7 +45,10 @@
 		-->
 	</target>
 
-	<target name="gebietsniederschlag" description="umrechnung in gebietsniederschlag">
+	<!-- ================================= 
+          target: gebietsniederschlag              
+         ================================= -->
+	<target name="gebietsniederschlag" description="Umrechnung in Gebietsniederschlag">
 		<property name="HOURS_OF_DAY" value="11" />
 		<gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
@@ -56,29 +59,20 @@
 
 		<gmlWeight modelurl="${calc.url}/modell.gml" featurepathtarget="PegelCollectionAssociation/PegelMember" propzmltarget="Niederschlag" proprelationweightmember="gewichtung" propweight="faktor" proprelationsourcefeature="ombrometerMember" propzmlsource="Niederschlag_gemessen" targetcontext="${calc.url}" from="${startsim}" forecastfrom="${startforecast}" to="${stopsim_48}" />
 		<!--
-		@Monika: Falls Du Dir die Filter anschauen möchtest um zu kontrollieren, dann folgendes Attribut 
-		in die gmlweight-Task einfügen:
-
-		targetmapping="C:\\TMP\\testMapping.gml"
-		
-		wenn dieser parameter angegeben ist wird das mapping auch als GML-Datei rausgeschrieben.
+		Das Argument targetmapping="C:\\TMP\\testMapping.gml" in der 
+		gmlweight-Task bewirkt, dass der Filter als GML an die angegebene Stelle
+		geschrieben wird.
 		-->
-
-
 	</target>
+	
 	<!-- ================================= 
           target: update              
          ================================= -->
 
-	<target name="update" description="Holt die Zeitreihen vom Zeitreihendienst" depends="gebietsniederschlag">
+	<target name="update" description="Holt die Zeitreihen vom Zeitreihendienst">
 
-		<echo message="Rechenvariante aktualisieren: ${calc.dir}" />
+		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
 
-		<!--
-	@Monika: habe den depends auf die gebietsniederschlag task gesetzt, damit ich es ausprobieren kann.
-		Test bitte ob es klappt, nur den gemessenen Zeitraum zu aktualisieren.
-		den Rest hab' ich auskommentiert.
-		
 		<property name="HOURS_OF_DAY" value="11"/>
 		
 		<gmlProperty gmlURL="${calc.url}/.calculation">
@@ -105,7 +99,7 @@
 		<copyObservation gml="${calc.url}/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
 			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim_48}"/>
 		</copyObservation>
--->
+
 	</target>
 
 	<!-- ================================= 
