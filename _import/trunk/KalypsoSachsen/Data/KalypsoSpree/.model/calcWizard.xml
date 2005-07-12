@@ -19,8 +19,6 @@
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung"/>
         
        	<arg name="maximizeMap" value="true"/>
-       	
-       	<arg name="htmlURL" value=".model/wizardhtml/test.html"/>
     </page>
 
 	<!-- Kontrolle Talsperrenabgaben -->
