@@ -53,9 +53,11 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.internal.UIPlugin;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.metadoc.Document;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
@@ -154,7 +156,7 @@ public class ExportBerichtWizard extends Wizard
   {
     final Document docBean = commitData();
 
-    final RunnableContextHelper op = new RunnableContextHelper( getContainer() )
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress(  )
     {
       public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
       {
@@ -178,7 +180,9 @@ public class ExportBerichtWizard extends Wizard
       }
     };
 
-    op.runAndHandleOperation( getShell(), true, false, "Berichtsablage", "" );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+    if( !status.isOK() )
+      ErrorDialog.openError( getShell(), "Berichtsablage", "Dokument konnte nicht abgelegt werden", status );
 
     return true;
   }
