@@ -95,8 +95,6 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
 
   protected GM_Envelope envelope = null;
 
-  protected GM_Object convexHull = null;
-
   protected GM_Point centroid = null;
 
   protected boolean empty = true;
@@ -246,14 +244,21 @@ public abstract class GM_Object_Impl implements GM_Object, Serializable
    * <p>
    * </p>
    * dummy implementation
+   * 
+   * @throws GM_Exception
    */
-  public GM_Object getConvexHull()
+  public GM_Object getConvexHull() throws GM_Exception
   {
     if( !isValid() )
     {
       calculateParam();
     }
-    return null;
+    // let JTS do this stuff (doemming)
+    final Geometry geometry = JTSAdapter.export( this );
+    final Geometry convexHull = geometry.convexHull();
+    final GM_Object result = JTSAdapter.wrap( convexHull );
+    ( (GM_Object_Impl)result ).setCoordinateSystem( getCoordinateSystem() );
+    return result;
   }
 
   /**

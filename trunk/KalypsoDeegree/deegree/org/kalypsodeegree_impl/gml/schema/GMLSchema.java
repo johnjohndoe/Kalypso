@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author doemming
  */
-public class GMLSchema
+public class GMLSchema implements IGMLSchema
 {
   private Document m_schemaDoc;
 

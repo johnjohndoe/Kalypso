@@ -101,7 +101,6 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   public GM_MultiPoint_Impl( GM_Point[] gmp )
   {
     super( null );
-
     for( int i = 0; i < gmp.length; i++ )
       m_aggregate.add( gmp[i] );
 
@@ -248,7 +247,9 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
       centroid = new GM_Point_Impl( new GM_Position_Impl( cen ), null );
     }
     catch( Exception ex )
-    {}
+    {
+      // nothing
+    }
   }
 
   /**
@@ -285,7 +286,9 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
       sp = getPointAt( 0 );
     }
     catch( Exception ex )
-    {}
+    {
+      // nothing
+    }
 
     return sp.getAsArray().length;
   }

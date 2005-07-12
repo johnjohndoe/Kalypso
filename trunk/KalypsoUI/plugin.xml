@@ -650,5 +650,10 @@
            class="org.kalypso.ant.KrigingTask"
            library="lib/kalypsoAnt.jar"
            name="kriging"/>
+     <antTask
+           eclipseRuntime="true"
+           class="org.kalypso.ant.GMLWeightingTask"
+           library="lib/kalypsoAnt.jar"
+           name="gmlWeight"/>
    </extension>
  </plugin>

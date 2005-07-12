@@ -145,8 +145,9 @@ public interface GM_Object
 
   /**
    * The operation "convexHull" shall return a GM_Object that represents the convex hull of this GM_Object.
+   * @throws GM_Exception
    */
-  GM_Object getConvexHull();
+  GM_Object getConvexHull() throws GM_Exception;
 
   /**
    * The operation "buffer" shall return a GM_Object containing all points whose distance from this GM_Object is less

@@ -64,15 +64,13 @@ package org.kalypsodeegree.model.geometry;
 public class GM_Exception extends Exception
 {
 
-  private String message = "org.kalypsodeegree.model.geometry.GM_Exception: ";
+  public GM_Exception( String message, Exception e )
+  {
+    super( message, e );
+  }
 
   public GM_Exception( String message )
   {
-    this.message = this.message + message;
-  }
-
-  public String toString()
-  {
-    return message + "\n" + getLocalizedMessage();
+    super( message );
   }
 }

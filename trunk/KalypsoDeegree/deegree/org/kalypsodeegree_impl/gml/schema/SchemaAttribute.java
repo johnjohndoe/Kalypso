@@ -13,7 +13,7 @@ public class SchemaAttribute
 {
   protected final static Logger LOGGER = Logger.getLogger( SchemaAttribute.class.getName() );
 
-  GMLSchema m_Schema = null;
+  IGMLSchema m_Schema = null;
 
   String m_NS = null;
 
@@ -23,7 +23,7 @@ public class SchemaAttribute
 
   String m_ValueNS = null;
 
-  public SchemaAttribute( GMLSchema schema, Node atributeNode )
+  public SchemaAttribute( IGMLSchema schema, Node atributeNode )
   {
     m_Schema = schema;
 

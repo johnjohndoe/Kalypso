@@ -57,24 +57,19 @@ import org.apache.tools.ant.Task;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.transformation.CopyObservationMappingHelper;
 import org.kalypso.transformation.dwd.KrigingReader;
 import org.kalypso.transformation.dwd.SourceObservationProvider;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -93,11 +88,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 public class KrigingTask extends Task
 {
-  private static final String RESULT_LIST_PROP = "mappingMember";
-
-  private static final String RESULT_TS_IN_PROP = "inObservationLink";
-
-  private static final String RESULT_TS_OUT_PROP = "outObservationLink";
 
   /** context used for non qualified hrefs */
   private URL m_context;
@@ -218,18 +208,8 @@ public class KrigingTask extends Task
     {
       Logger logger = Logger.getAnonymousLogger();
       logger.info( "load mapping schema NS=" + UrlCatalogUpdateObservationMapping.NS );
-      final GMLSchema schema = GMLSchemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS );
-      if( schema == null )
-        throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
-      final FeatureType mapColFT = schema.getFeatureType( "MappingCollection" );
-      final FeatureType mapFT = schema.getFeatureType( "MappingObservation" );
 
-      final Feature rootFE = FeatureFactory.createFeature( "1", mapColFT );
-      
-      
-      final GMLWorkspace resultWorkspace = new GMLWorkspace_Impl( schema.getFeatureTypes(), rootFE, m_context, null,
-          schema.getTargetNS(), schema.getNamespaceMap() );
-
+      final GMLWorkspace resultWorkspace = CopyObservationMappingHelper.createMappingWorkspace( m_context );
       logger.info( "check coordinatessystem" );
       // crs stuff
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
@@ -292,7 +272,6 @@ public class KrigingTask extends Task
 
       final KrigingReader kReader = new KrigingReader( Logger.global, inputStreamReader, provider, targetCRS );
 
-      final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
       final ObjectFactory o = new ObjectFactory();
       final Marshaller marshaller = o.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -303,26 +282,11 @@ public class KrigingTask extends Task
 
         final Writer writer = new StringWriter();
         marshaller.marshal( inFilter, writer );
-        // TODO close writer
         final String string = XMLUtilities.removeXMLHeader( writer.toString() );
-        final String filterInline = XMLUtilities.prepareInLine( string )+"#useascontext";
-        
-        //        final URL zmlURL = new URL( href + "?" + filterInline );
-        final Feature mapFE = resultWorkspace.createFeature( mapFT );
-        // in
-        final TimeseriesLink inLink = obsLinkFac.createTimeseriesLink();
-        //        inLink.setHref( writer.toString() );
-        inLink.setHref( filterInline );
-        final FeatureProperty inProp = FeatureFactory.createFeatureProperty( RESULT_TS_IN_PROP, inLink );
-        mapFE.setProperty( inProp );
+        final String filterInline = XMLUtilities.prepareInLine( string ) + "#useascontext";
 
-        // out
         final TimeseriesLink copyLink = (TimeseriesLink)feature.getProperty( m_modellGMLTargetObservationlinkPropname );
-        final TimeseriesLink outLink = obsLinkFac.createTimeseriesLink();
-        outLink.setHref( copyLink.getHref() );
-        final FeatureProperty outProp = FeatureFactory.createFeatureProperty( RESULT_TS_OUT_PROP, outLink );
-        mapFE.setProperty( outProp );
-        resultWorkspace.addFeatureAsComposition( rootFE, RESULT_LIST_PROP, 0, mapFE );
+        CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, copyLink.getHref() );
       }
       final File result = new File( m_hrefGeneratesGml );
       final Writer resultWriter = new FileWriter( result );

@@ -16,6 +16,8 @@ public class Annotation
 
   public static final String UNSUPPORTED_LANG_KEY = "unsupportedLanuage";
 
+  public static final String NO_LANG_KEY = "nolangkey";
+
   public Annotation( String lang, String label, String tooltip, String description )
   {
     m_lang = lang;
@@ -46,6 +48,13 @@ public class Annotation
 
   public String toString()
   {
-    return "label:" + m_label + " tooltip:" + m_tooltip + " description:" + m_description;
+    final StringBuffer b = new StringBuffer( "[" + m_lang + "]" );
+    b.append( "\n label:" );
+    b.append( m_label );
+    b.append( "\n tooltip:" );
+    b.append( m_tooltip );
+    b.append( "\n description:" );
+    b.append( m_description );
+    return b.toString();
   }
 }
