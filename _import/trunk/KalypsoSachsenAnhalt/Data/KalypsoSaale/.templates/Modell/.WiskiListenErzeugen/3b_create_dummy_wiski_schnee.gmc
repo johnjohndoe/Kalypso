@@ -1,0 +1,11 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../wiskiimport_schnee.gml"/>
+	<changesource>
+		<gmlsource xlink:href="../wiskiimport_niederschlag.gml"/>
+		<visitor featurePath="WiskiMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="wiski_vergangenheit"/>
+			<argument name="href" value="kalypso-ocs:wiski://blubb.S.15?&lt;request xmlns=&quot;request.zml.kalypso.org&quot;>&lt;name&gt;Test&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
+		</visitor>
+	</changesource>
+</gmlconvert>
