@@ -8,8 +8,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.users.IUserRightsProvider;
-import org.kalypso.users.UserRightsException;
+import org.kalypso.services.user.IUserRightsProvider;
+import org.kalypso.services.user.UserRightsException;
 
 /**
  * Delivers the rights from a simple property file
@@ -23,7 +23,7 @@ public class DefaultRightsProvider implements IUserRightsProvider
   private final Properties m_rights = new Properties();
 
   /**
-   * @see org.kalypso.users.IUserRightsProvider#init(java.util.Properties)
+   * @see org.kalypso.services.user.IUserRightsProvider#init(java.util.Properties)
    */
   public void init( final Properties props ) throws UserRightsException
   {
@@ -49,7 +49,7 @@ public class DefaultRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.users.IUserRightsProvider#dispose()
+   * @see org.kalypso.services.user.IUserRightsProvider#dispose()
    */
   public void dispose()
   {
@@ -57,7 +57,7 @@ public class DefaultRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.users.IUserRightsProvider#getRights(java.lang.String)
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String)
    */
   public String[] getRights( final String username )
   {
@@ -65,7 +65,7 @@ public class DefaultRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.users.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
    */
   public String[] getRights( String username, String password )
   {
