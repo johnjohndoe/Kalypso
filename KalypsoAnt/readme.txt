@@ -7,3 +7,5 @@ Das Projekt ist ein Plugin-Projekt, um möglichst einfach die Abhängigkeiten zu K
 Das Projekt ist NICHT dazu gedacht als Plugin mitauszuliefern.
 
 Alle Klassen werden als eine separate jar in das Kalypso-UI Projekt kopiert.
+
+Es 

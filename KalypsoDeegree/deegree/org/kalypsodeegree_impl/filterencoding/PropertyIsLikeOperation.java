@@ -219,12 +219,13 @@ public class PropertyIsLikeOperation extends ComparisonOperation
       value2 = literal.getValue();
       if( value1 == null || value2 == null )
         return false;
+      return matches( value2.toString(), value1.toString() );
     }
     catch( Exception e )
     {
-      System.out.println( e );
+      // nothing
     }
-    return matches( value2.toString(), value1.toString() );
+    return false;
   }
 
   /**

@@ -113,7 +113,7 @@ public class XMLHelper
     // sollte nichte benutzt werden, wenn das charset nicht bekannt ist,
     // da sonst Mist rauskommt
     if( charset == null )
-      throw new NullPointerException();
+      throw new NullPointerException( "charset is null" );
 
     writeDOM( xmlDOM, charset, new StreamResult( writer ) );
   }

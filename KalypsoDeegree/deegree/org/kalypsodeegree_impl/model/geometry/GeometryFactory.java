@@ -649,6 +649,11 @@ final public class GeometryFactory
     return new GM_MultiPoint_Impl( points );
   }
 
+  public static GM_MultiPoint createGM_MultiPoint( GM_Point[] points, CS_CoordinateSystem crs )
+  {
+    return new GM_MultiPoint_Impl( points, crs );
+  }
+
   /**
    * creates a GM_MultiPoint from a wkb.
    * 

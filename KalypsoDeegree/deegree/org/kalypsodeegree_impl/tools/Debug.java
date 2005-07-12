@@ -222,7 +222,9 @@ public class Debug
       time = System.currentTimeMillis() - time;
     }
     catch( Exception ex )
-    {}
+    {
+      //  
+    }
     blank();
     out.println( "Method: " + name + "  -  time: " + time );
     blank();
@@ -320,5 +322,12 @@ public class Debug
       return;
     blank();
     out.println( "double: " + name + " = " + value );
+  }
+
+  public static void print( Object caller, String message )
+  {
+    System.out.println( "_\n" + caller.getClass().getName() );
+    System.out.println( message );
+
   }
 }
