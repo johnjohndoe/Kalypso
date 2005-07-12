@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.kalypso.psiadapter.PSICompactFactory;
-import org.kalypso.users.IUserRightsProvider;
-import org.kalypso.users.UserRightsException;
-import org.kalypso.users.UserServiceConstants;
+import org.kalypso.services.user.IUserRightsProvider;
+import org.kalypso.services.user.UserRightsException;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
@@ -29,7 +28,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.users.IUserRightsProvider#init(java.util.Properties)
+   * @see org.kalypso.services.user.IUserRightsProvider#init(java.util.Properties)
    */
   public void init( Properties props ) throws UserRightsException
   {
@@ -37,7 +36,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.users.IUserRightsProvider#dispose()
+   * @see org.kalypso.services.user.IUserRightsProvider#dispose()
    */
   public void dispose()
   {
@@ -45,7 +44,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.users.IUserRightsProvider#getRights(java.lang.String)
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String)
    */
   public String[] getRights( final String username ) throws UserRightsException
   {
@@ -65,7 +64,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
         {
           right = right.trim();
 
-          if( right.length() != 0 && UserServiceConstants.isValidUserRight( right ) )
+          if( right.length() != 0 )
             rights.add( right.trim() );
         }
       }
@@ -81,7 +80,7 @@ public class PSICompactRightsProvider implements IUserRightsProvider
   }
 
   /**
-   * @see org.kalypso.users.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
    */
   public String[] getRights( String username, String password ) throws UserRightsException
   {

@@ -41,9 +41,9 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
-import org.kalypso.users.IUserRightsProvider;
-import org.kalypso.users.UserRightsException;
-import org.kalypso.users.UserServiceConstants;
+import org.kalypso.auth.user.UserRights;
+import org.kalypso.services.user.IUserRightsProvider;
+import org.kalypso.services.user.UserRightsException;
 
 /**
  * RobotronRightsProvider
@@ -76,7 +76,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
    * "LDAP_PRINCIPAL=cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
    * <li>LDAP_CRENDENTIALS: the password to use along the principal. Example: "LDAP_CREDENTIALS=geheim"
    * 
-   * @see org.kalypso.users.IUserRightsProvider#init(java.util.Properties)
+   * @see IUserRightsProvider#init(java.util.Properties)
    */
   public void init( Properties props ) throws UserRightsException
   {
@@ -111,9 +111,6 @@ public class RobotronRightsProvider implements IUserRightsProvider
     return m_dirCtxt;
   }
 
-  /**
-   * @see org.kalypso.users.IUserRightsProvider#dispose()
-   */
   public void dispose()
   {
     if( m_dirCtxt != null )
@@ -129,18 +126,12 @@ public class RobotronRightsProvider implements IUserRightsProvider
     }
   }
 
-  /**
-   * @see org.kalypso.users.IUserRightsProvider#getRights(java.lang.String)
-   */
   public String[] getRights( String username ) throws UserRightsException
   {
     // this method doesn't make sense for the Sachsen-Anhalt project
     throw new UserRightsException( "Method not implemented" );
   }
 
-  /**
-   * @see org.kalypso.users.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
-   */
   public String[] getRights( final String username, final String password ) throws UserRightsException
   {
     try
@@ -157,7 +148,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
       if( !Arrays.equals( pw1, pw2 ) )
       {
         logger.info( "Passwords do not match for user: " + username );
-        return UserServiceConstants.NO_RIGHTS;
+        return UserRights.NO_RIGHTS;
       }
 
       final String groupName = (String)userAtts.get( "gruppe" ).get();
@@ -173,16 +164,16 @@ public class RobotronRightsProvider implements IUserRightsProvider
         // in Kalypso Sachsen-Anhalt the "Modellierung"-Right specifies whether
         // a user is allowed to use Kalypso or not
         if( "Modellierung".equalsIgnoreCase( right ) )
-          return UserServiceConstants.FULL_RIGHTS;
+          return UserRights.FULL_RIGHTS;
       }
 
-      return UserServiceConstants.NO_RIGHTS;
+      return UserRights.NO_RIGHTS;
     }
     catch( final NamingException e )
     {
       e.printStackTrace();
 
-      return UserServiceConstants.NO_RIGHTS;
+      return UserRights.NO_RIGHTS;
     }
   }
 }

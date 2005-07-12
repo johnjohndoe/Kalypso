@@ -8,17 +8,9 @@
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
-		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
+		
+		<fileset dir="${workspace}/KalypsoAuth/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceUser/build/deploy" includes="**/*.jar" />
 	</path>
-	
-	<!-- overriden to also copy non-java files -->
-	<!--target name="compile" depends="prepare">
-		<antcall target="commonbuild.compile" />
-	
-		<copy todir="${project.bin}">
-			<fileset dir="${project.src}" excludes="**/*.java"/>
-		</copy>
-	</target-->
 	
 </project>

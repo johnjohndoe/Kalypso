@@ -21,6 +21,7 @@
       <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.repository"/>
       <import plugin="org.kalypso.commons"/>
+      <import plugin="org.kalypso.services.user"/>
    </requires>
    <extension
          id="org.kalypso.repository.factories"

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/KalypsoCore"/>
-	<classpathentry exported="true" sourcepath="/KalypsoPSICompactImpl/src" kind="lib" path="lib/PSICompact.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/PSICompact.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/OB.jar"/>
-	<classpathentry kind="src" path="/KalypsoRepository"/>
-	<classpathentry kind="src" path="/JWSDPInstallation"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
