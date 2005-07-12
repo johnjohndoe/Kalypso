@@ -44,7 +44,9 @@ import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
-import org.kalypso.users.User;
+import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.auth.user.IKalypsoUser;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author belger
@@ -59,7 +61,7 @@ public class KalypsoApplication implements IPlatformRunnable
    */
   public Object run( final Object args ) throws Exception
   {
-    // Important: onlay once create the display and set it from the outside
+    // Important: only once create the display and set it from the outside
     // for both login and the workbench
     // Reason: some resources (e.g. the dialog images) are (only once) registered statically on the display
     // If the display gets disposed, all resources are disposed as well and will never be found
@@ -68,12 +70,21 @@ public class KalypsoApplication implements IPlatformRunnable
 
     try
     {
-      final User user = KalypsoLoginManager.startLoginProcedure( display );
+      // TODO: HACK TO BE REMOVED when separation client/server is ok
+      KalypsoGisPlugin.getDefault();
+      
+      final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
+      authPlugin.startLoginProcedure( display );
+      final IKalypsoUser user = authPlugin.getCurrentUser();
 
       if( user == null )
         return IPlatformRunnable.EXIT_OK;
 
       return startWorkbench( display, new KalypsoWorkbenchAdvisor( user ) );
+    }
+    catch( InterruptedException e )
+    {
+      return IPlatformRunnable.EXIT_OK;
     }
     finally
     {

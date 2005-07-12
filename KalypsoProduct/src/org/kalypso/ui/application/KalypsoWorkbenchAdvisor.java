@@ -62,19 +62,19 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
+import org.kalypso.auth.user.IKalypsoUser;
+import org.kalypso.auth.user.UserRights;
 import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 import org.kalypso.simulation.ui.wizards.calculation.CalcWizardPerspective;
-import org.kalypso.users.User;
-import org.kalypso.users.UserServiceConstants;
 
 /**
  * @author belger
  */
 public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
 {
-  private final User m_user;
+  private final IKalypsoUser m_user;
 
-  public KalypsoWorkbenchAdvisor( final User user )
+  public KalypsoWorkbenchAdvisor( final IKalypsoUser user )
   {
     super();
 
@@ -116,7 +116,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     super.fillActionBars( window, actionConfigurer, flags );
 
-    if( !m_user.hasRight( UserServiceConstants.RIGHT_ADMIN ) )
+    if( !m_user.hasRight( UserRights.RIGHT_ADMIN ) )
     {
       final IMenuManager menuManager = actionConfigurer.getMenuManager();
 
@@ -156,7 +156,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     super.preWindowOpen( windowConfigurer );
 
-    if( !m_user.hasRight( UserServiceConstants.RIGHT_EXPERT ) && !m_user.hasRight( UserServiceConstants.RIGHT_ADMIN ) )
+    if( !m_user.hasRight( UserRights.RIGHT_EXPERT ) && !m_user.hasRight( UserRights.RIGHT_ADMIN ) )
     {
       windowConfigurer.setShowCoolBar( false );
       windowConfigurer.setShowFastViewBars( false );

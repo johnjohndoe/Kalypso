@@ -55,9 +55,9 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.services.common.ServiceConfig;
+import org.kalypso.services.user.IUserRightsProvider;
 import org.kalypso.services.user.IUserService;
-import org.kalypso.users.IUserRightsProvider;
-import org.kalypso.users.UserRightsException;
+import org.kalypso.services.user.UserRightsException;
 
 /**
  * User Rights Service.

@@ -417,7 +417,8 @@ public class KalypsoObservationService implements IObservationService
     {
       final IRepository rep = (IRepository)m_mapRepId2Rep.get( repId );
 
-      final IRepositoryItem item = rep.findItem( obean.getId() );
+      final String itemId = RepositoryUtils.getItemId( obean.getId() );
+      final IRepositoryItem item = rep.findItem( itemId );
 
       if( item == null )
         throw new RepositoryException( "Item does not exist or could not be found: " + obean.getId() );

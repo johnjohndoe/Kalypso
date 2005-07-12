@@ -99,14 +99,18 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
       return file.toURL().openConnection();
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
+      String exceptionMessage = e.getLocalizedMessage();
+      
       final Logger log = Logger.getLogger( getClass().getName() );
-      log.info( "Href konnte nicht aufgelöst werden: " + href
-          + "\nZeitreihendienst steht möglicherweise nicht zur Verfügung." );
+      log.info( "Link konnte nicht aufgelöst werden: " + href +
+          "\nFehler: " + exceptionMessage );
 
       try
       {
+        log.info( "Es wird versucht, eine Default-Zeitreihe zu erzeugen" );
+        
         // we might be here because the server is down. If the href contains
         // a request, let create a default observation according to it.
         final IObservation obs = RequestFactory.createDefaultObservation( href );
@@ -117,13 +121,10 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       }
       catch( final Exception se )
       {
-        se.printStackTrace();
-
-        // tricky, re-assign exception in order to use the throw new call
-        e = se;
+        exceptionMessage += "\n" + se.getLocalizedMessage();
       }
 
-      throw new IOException( "URL could not be resolved: " + e.getLocalizedMessage() );
+      throw new IOException( "URL konnte nicht gelöst werden, Grund: " + exceptionMessage );
     }
     finally
     {

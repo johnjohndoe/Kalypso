@@ -20,6 +20,7 @@
 		<ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/EclipsePlatformContributions/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml" target="clean" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoAuth/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="clean" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="clean" inheritAll="false" />
@@ -33,6 +34,7 @@
 		<ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/EclipsePlatformContributions/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml" target="deploy" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoAuth/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
@@ -46,6 +48,7 @@
 		<ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml" target="test" inheritAll="false" />
 		<ant antfile="${workspace}/EclipsePlatformContributions/etc/ant/build.xml" target="test" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml" target="test" inheritAll="false" />
+		<ant antfile="${workspace}/EclipseAuth/etc/ant/build.xml" target="test" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="test" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="test" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="test" inheritAll="false" />
@@ -59,6 +62,7 @@
 		<ant antfile="${workspace}/EclipseRCPContributions/etc/ant/build.xml" target="javadoc" inheritAll="false" />
 		<ant antfile="${workspace}/EclipsePlatformContributions/etc/ant/build.xml" target="javadoc" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCommons/etc/ant/build.xml" target="javadoc" inheritAll="false" />
+		<ant antfile="${workspace}/KalypsoAuth/etc/ant/build.xml" target="javadoc" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoRepository/etc/ant/build.xml" target="javadoc" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoDeegree/etc/ant/build.xml" target="javadoc" inheritAll="false" />
 		<ant antfile="${workspace}/KalypsoCore/etc/ant/build.xml" target="javadoc" inheritAll="false" />

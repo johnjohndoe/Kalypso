@@ -82,6 +82,7 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
+import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
@@ -97,14 +98,11 @@ import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.services.ProxyFactory;
 import org.kalypso.services.calculation.ICalculationServiceProxyFactory;
 import org.kalypso.services.ocs.OcsURLStreamHandler;
 import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.services.proxy.IUserService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
-import org.kalypso.users.User;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
@@ -150,9 +148,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private final SelectionIdProvider mySelectionIdProvider = new SelectionIdProvider();
 
-  /** factory for webservice proxy for the kalypso client */
-  private ProxyFactory m_proxyFactory;
-
   /**
    * Configuration of this client. The configuration is build using the system properties as well as remote properties
    * defined on the potential kalypso-servers.
@@ -174,12 +169,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private static final String DEFAULT_CRS = "EPSG:31469";
 
   private static DefaultStyleFactory m_defaultStyleFactory;
-
-  /**
-   * The current user that has successfully logged into kalypso. Usually an application is responsible for initialising
-   * the current user using setUser( user )
-   */
-  private User m_user;
 
   /**
    * The local CaluclationServices, e.g. the ones createt from the extension point
@@ -330,11 +319,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   private void configureServiceProxyFactory( final Properties mainConf )
   {
-    // this is the base classname (actually just package name) of all the
-    // kalypso service proxies
-    mainConf.setProperty( ProxyFactory.KALYPSO_PROXY_BASE, "org.kalypso.services.proxy" );
-
-    m_proxyFactory = new ProxyFactory( mainConf );
+    KalypsoServiceCoreClientPlugin.getDefault().configureProxies( mainConf );
   }
 
   private void configureLogger()
@@ -406,14 +391,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * @return Kalypso WebService ProxyFactory
-   */
-  public ProxyFactory getServiceProxyFactory()
-  {
-    return m_proxyFactory;
-  }
-
-  /**
    * Convenience method that returns the calculation service proxies.
    * 
    * @return A map name (e.g. url) to {@link ICalculationService}
@@ -429,8 +406,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      final Map stubs = m_proxyFactory.getAllProxiesAsMap( "Kalypso_CalculationService", ClassUtilities
-          .getOnlyClassName( ICalculationService.class ) );
+      final Map stubs = KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory().getAllProxiesAsMap(
+          "Kalypso_CalculationService", ClassUtilities.getOnlyClassName( ICalculationService.class ) );
       proxies.putAll( stubs );
     }
     catch( final ServiceException e )
@@ -498,21 +475,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   public IObservationService getObservationServiceProxy() throws ServiceException
   {
-    return (IObservationService)m_proxyFactory.getAnyProxy( "Kalypso_ObservationService", ClassUtilities
-        .getOnlyClassName( IObservationService.class ) );
-  }
-
-  /**
-   * Convenience method that returns the user service proxy
-   * 
-   * @return WebService proxy for the IUserService
-   * 
-   * @throws ServiceException
-   */
-  public IUserService getUserServiceProxy() throws ServiceException
-  {
-    return (IUserService)m_proxyFactory.getAnyProxy( "Kalypso_UserService", ClassUtilities
-        .getOnlyClassName( IUserService.class ) );
+    return (IObservationService)KalypsoServiceCoreClientPlugin.getDefault().getProxyFactory().getAnyProxy(
+        "Kalypso_ObservationService", ClassUtilities.getOnlyClassName( IObservationService.class ) );
   }
 
   public ILoaderFactory getLoaderFactory()
@@ -887,19 +851,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       e.printStackTrace();
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
-  }
-
-  public User getUser()
-  {
-    if( m_user == null )
-      throw new IllegalStateException();
-
-    return m_user;
-  }
-
-  public void setUser( final User user )
-  {
-    m_user = user;
   }
 
   /**
