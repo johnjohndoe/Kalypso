@@ -45,34 +45,57 @@ import java.util.Vector;
 
 /**
  * @author doemming
+ *         <p>
+ *         Raster DWD Reader
  * 
- * Raster DWD Reader
  * 
+ * Aufbau Kennsatz :<br>
  * 
- * Aufbau Kennsatz : -----------------
+ * Spalte 1- 11: Datum der Daten YYMMDDHHhh (1X,I10) 12-15 : Elementkennung der Daten (i4) hier :<br>
  * 
- * Spalte 1- 11: Datum der Daten YYMMDDHHhh (1X,I10)
+ * <li>114 : geogr. Breite in Grad*100000 des Gittermittelpunktes <br>
+ * </li>
+ * <li>115 : geogr. Laenge in Grad*100000 des Gittermittelpunktes <br>
+ * </li>
+ * <li>8 : geogr. Hoehe in m des Gittermittelpunktes</li>
  * 
- * 12-15 : Elementkennung der Daten (i4) hier : 114 : geogr. Breite in
- * Grad*100000 des Gittermittelpunktes 115 : geogr. Laenge in Grad*100000 des
- * Gittermittelpunktes 8 : geogr. Hoehe in m des Gittermittelpunktes
+ * <li>424 : Niederschlag</li>
+ * <li>425 : Schnee</li>
+ * <li>11 : Temperatur</li>
  * 
- * Aufbau Daten : --------------
- * 
- * Die Werte der im Kennsatz definierten Elemente an den Gitterpunkten in der
- * angegebenen Dimension. Die Gitterwerte sind hintereinander zeilenweise von
- * West nach Ost und von Sued nach Nord angeordnet .
+ * <p>
+ * Die Werte der im Kennsatz definierten Elemente an den Gitterpunkten in der angegebenen Dimension. Die Gitterwerte
+ * sind hintereinander zeilenweise von West nach Ost und von Sued nach Nord angeordnet .
  * 
  * Jeweils 13 Werte pro Zeile (13i8):
  * 
- * Spalte 1- 8 : Gitterwert 1 z.B. 4908634 bedeutet 49.08634 Grad geogr. Breite
- * 9-16 : Gitterwert 2 4908878 49.08878 Aufbau_LMFiles.txt
+ * Spalte 1- 8 : Gitterwert 1 z.B. 4908634 bedeutet 49.08634 Grad geogr. Breite 9-16 : Gitterwert 2 4908878 49.08878
+ * Aufbau_LMFiles.txt
  */
 
 public class DWDRaster
 {
+  /**
+   * Temperatur in 2m Hoehe [GradC*100]
+   */
+  public static final int KEY_TEMP = 11;
+
+  /** Taupunkt in 2m Hoehe [GradC*10] (lt. HerrSchmitt, DWD) */
+  public static final int KEY_TAU = 17;
+
+  /** zonaler Wind (Modellgitter) [m/s*100] (lt. HerrSchmitt, DWD) */
+  public static final int KEY_WINDZ = 33;
+
+  /** meridionaler Wind (Modellgitter) [m/s*100] (lt. HerrSchmitt, DWD) */
+  public static final int KEY_WINDM = 34;
+
+  /** Gesamtbedeckungsgrad [%] (lt. HerrSchmitt, DWD) */
+  public static final int KEY_BEDECKUNG = 71;
+
+  /** fluessiger Niederschlag gesamt [mm*100] (lt. HerrSchmitt, DWD) */
   public static final int KEY_RAIN = 424;
 
+  /** fester Niederschlag gesamt [mm*100] (lt. HerrSchmitt, DWD) */
   public static final int KEY_SNOW = 425;
 
   public static final int KEY_HEIGHT = 8;
@@ -87,20 +110,6 @@ public class DWDRaster
 
   final Vector m_data;
 
-  public static final double SCALE = 100000d;
-
-  public boolean equals( Object obj )
-  {
-    if( !( obj instanceof DWDRaster ) )
-      return false;
-    return ( (DWDRaster)obj ).getKey() == getKey();
-  }
-
-  public int hashCode()
-  {
-    return getKey();
-  }
-
   public DWDRaster( final Date date, final int key )
   {
     m_key = key;
@@ -113,15 +122,9 @@ public class DWDRaster
     return m_key;
   }
 
-  public void addValues( Object[] values )
+  public void addValue( double value )
   {
-    for( int i = 0; i < values.length; i++ )
-      m_data.add( values[i] );
-  }
-
-  public void addValue( Object value )
-  {
-    m_data.add( value );
+    m_data.add( new Double( value ) );
   }
 
   public int size()
@@ -129,14 +132,14 @@ public class DWDRaster
     return m_data.size();
   }
 
-  public Object getElementAt( int index )
-  {
-    return m_data.elementAt( index );
-  }
+  //  public double getElementAt( int index )
+  //  {
+  //    return m_data.elementAt( index );
+  //  }
 
   public double getValueAt( int index )
   {
-    return Double.parseDouble( (String)m_data.elementAt( index ) );
+    return ( (Double)m_data.elementAt( index ) ).doubleValue();
   }
 
   public Date getDate()
@@ -144,63 +147,63 @@ public class DWDRaster
     return m_date;
   }
 
-  public double getSum( int ids[] )
-  {
-    double result = 0;
-    for( int i = 0; i < ids.length; i++ )
-      result += getValueAt( ids[i] );
-    return result;
-  }
+  //  public double getSum( int ids[] )
+  //  {
+  //    double result = 0;
+  //    for( int i = 0; i < ids.length; i++ )
+  //      result += getValueAt( ids[i] );
+  //    return result;
+  //  }
 
-  public double getAverage( int ids[] )
-  {
-    if( ids.length == 0 )
-      return 0;
-    double result = 0;
-    for( int i = 0; i < ids.length; i++ )
-      result += getValueAt( ids[i] );
-    return result / ids.length;
-  }
+  //  public double getAverage( int ids[] )
+  //  {
+  //    if( ids.length == 0 )
+  //      return 0;
+  //    double result = 0;
+  //    for( int i = 0; i < ids.length; i++ )
+  //      result += getValueAt( ids[i] );
+  //    return result / ids.length;
+  //  }
 
-  public double getMin()
-  {
-    boolean found = false;
-    double result = 0;
-    for( int i = 0, j = size(); i < j; i++ )
-    {
-      double value = getValueAt( i );
-      if( !found )
-      {
-        result = value;
-        found = true;
-      }
-      else
-      {
-        if( value < result )
-          result = value;
-      }
-    }
-    return result;
-  }
-
-  public double getMax()
-  {
-    boolean found = false;
-    double result = 0;
-    for( int i = 0, j = size(); i < j; i++ )
-    {
-      double value = getValueAt( i );
-      if( !found )
-      {
-        result = value;
-        found = true;
-      }
-      else
-      {
-        if( value > result )
-          result = value;
-      }
-    }
-    return result;
-  }
+  //  public double getMin()
+  //  {
+  //    boolean found = false;
+  //    double result = 0;
+  //    for( int i = 0, j = size(); i < j; i++ )
+  //    {
+  //      double value = getValueAt( i );
+  //      if( !found )
+  //      {
+  //        result = value;
+  //        found = true;
+  //      }
+  //      else
+  //      {
+  //        if( value < result )
+  //          result = value;
+  //      }
+  //    }
+  //    return result;
+  //  }
+  //
+  //  public double getMax()
+  //  {
+  //    boolean found = false;
+  //    double result = 0;
+  //    for( int i = 0, j = size(); i < j; i++ )
+  //    {
+  //      double value = getValueAt( i );
+  //      if( !found )
+  //      {
+  //        result = value;
+  //        found = true;
+  //      }
+  //      else
+  //      {
+  //        if( value > result )
+  //          result = value;
+  //      }
+  //    }
+  //    return result;
+  //  }
 }

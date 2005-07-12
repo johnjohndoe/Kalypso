@@ -2,23 +2,28 @@
 <xs:schema targetNamespace="dwdzml.dwd.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="dwdzmlConf">
 		<xs:complexType>           
-			<xs:sequence>
-              <xs:element name="inputFolder" type="xs:string"/>
-              <xs:element name="outputFolder" type="xs:string"/>
-              <xs:element name="createZMLFile" type="xs:boolean"/>
-              <xs:element name="defaultStatusValue" type="xs:string"/>
-              <xs:element name="processedRasterDir" type="xs:string">
-              <!-- -->
-              </xs:element>
-                <xs:element name="catchment" minOccurs="0" maxOccurs="unbounded">
+            <xs:sequence>
+                <!-- code des Datensatzes der DWD-Raterdaten -->
+                <xs:element name="dwdKey" type="xs:int"/>
+                <xs:element name="numberOfCells" type="xs:int"/>
+                <!--  -->
+                <xs:element name="defaultStatusValue" type="xs:int"/>
+                <xs:element name="target" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="rasterPos" type="xs:int" maxOccurs="unbounded"/>
+                            <xs:element name="targetZR" type="xs:string"/>
+                            <xs:element name="map" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="cellPos" type="xs:int"/>
+                                        <xs:element name="factor" type="xs:double"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:sequence>
-                        <xs:attribute name="fid" type="xs:string" use="required"/>
                     </xs:complexType>
                 </xs:element>
-			</xs:sequence>		
+            </xs:sequence>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

@@ -64,7 +64,7 @@ public interface NaModelConstants
   public final static String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT";
 
   public static final String NS_NAMETA = "org.kalypso.na.control";
-
+  
   public static final String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA";
 
   public static final String NS_NACONTROL = "org.kalypso.namodell.control";

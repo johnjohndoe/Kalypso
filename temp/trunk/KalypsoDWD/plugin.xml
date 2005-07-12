@@ -5,10 +5,10 @@
    name="KalypsoDWD"
    version="1.0.0">
    <runtime>
-      <library name="kalypsoDWD.jar">
+      <library name="lib/dwdBinding.jar">
          <export name="*"/>
       </library>
-      <library name="lib/dwdBinding.jar">
+      <library name="lib/kalypsoDWD.jar">
          <export name="*"/>
       </library>
    </runtime>
@@ -17,6 +17,17 @@
       <import plugin="org.kalypso.commons" export="true"/>
       <import plugin="org.kalypso.jwsdp" export="true"/>
       <import plugin="org.kalypso.core"/>
+      <import plugin="org.eclipse.ant.core"/>
    </requires>
+ <extension
+         id="antTasks"
+         name="antTasks"
+         point="org.eclipse.ant.core.antTasks">
+     
+     	  <antTask
+           class="org.kalypso.dwd.DWDTask"
+            library="lib/kalypsoDWD.jar"
+           name="dwdTask"/>
+   </extension>
 
 </plugin>
