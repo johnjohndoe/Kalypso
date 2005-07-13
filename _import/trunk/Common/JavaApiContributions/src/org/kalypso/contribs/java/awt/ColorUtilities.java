@@ -43,8 +43,8 @@ package org.kalypso.contribs.java.awt;
 import java.awt.Color;
 
 /**
- * Some useful method dealing with java.awt.Color. See also org.kalypso.contribs.java.util.StringUtilities for some other methods
- * using Colors and Strings.
+ * Some useful method dealing with java.awt.Color. See also org.kalypso.contribs.java.util.StringUtilities for some
+ * other methods using Colors and Strings.
  * 
  * @author schlienger
  */
@@ -78,12 +78,38 @@ public class ColorUtilities
   /**
    * Create a random color with the given alpha value
    * 
-   * @param alpha
-   * 
    * @return a new Color which components have been given by Math.random().
    */
   public static Color random( final float alpha )
   {
     return new Color( (float)Math.random(), (float)Math.random(), (float)Math.random(), alpha );
+  }
+
+  /**
+   * Create a color similar to the given one, but distant of the given distance. The color components from the original
+   * color are derived as many times as distance. Thus, if distance is 0, the original color is returned. The same alpha
+   * value is kept between the original color and the newly created one.
+   * 
+   * TODO: ameliorate the algorithm for finding derivate color
+   */
+  public static Color derivateColor( final Color c, int distance )
+  {
+    final int a = c.getAlpha();
+    int r = c.getRed();
+    int g = c.getGreen();
+    int b = c.getBlue();
+
+    for( int i = 0; i < distance; i++ )
+    {
+      if( r == 0 && g == 0 && b == 0 ||  r == 255 && g == 255 && b == 255 )
+        r = (int)( Math.random() * 255 );
+      
+      int tmp = b - g;
+      b = g;
+      g = r;
+      r = Math.abs(r - tmp) % 255;
+    }
+    
+    return new Color( r, g, b, a );
   }
 }
