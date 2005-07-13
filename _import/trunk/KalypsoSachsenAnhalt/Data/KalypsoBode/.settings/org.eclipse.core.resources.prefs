@@ -1,4 +1,4 @@
-#Wed Jul 13 10:28:47 CEST 2005
+#Wed Jul 13 11:21:34 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -25,8 +25,8 @@ encoding//Rechenl\u00E4ufe/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/040427/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_LIESKE.zml=UTF-8
 encoding//.prognose/prognose4/results.gml=UTF-8
-encoding//.prognose/Vorhersage-2005-07-11_13h51/Zeitreihen/Pegel/Messung/Trautenstein.zml=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_14h45/Gesamtansicht.gmt=UTF-8
+encoding//.prognose/Vorhersage-2005-07-11_13h51/Zeitreihen/Pegel/Messung/Trautenstein.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QV_LOHSA.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_SPWITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Flusslaufparameter.gtt=UTF-8
@@ -192,11 +192,13 @@ encoding//.prognose/Vorhersage-03-11-2004_20h59/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h39/steuerparameter.gft=UTF-8
 encoding//.prognose/prognose13/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QP_BURGNEU.zml=UTF-8
+encoding//.model/wizardhtml/test.html=Cp1252
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_LIESKE.zml=UTF-8
 encoding//.prognose/prognose3/results.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SPWITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/zeitreihen/Diagramm.odt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_LIESKE.zml=UTF-8
+encoding//.prognose/Vorhersage-2005-07-13_11h15/.calculation=UTF-8
 encoding//Rechenvarianten/test1/Zeitreihen/Abfluss_Pegel/Hadmersleben.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-07-11_13h51/Zeitreihen/Speicherabgabe/Wendefurth.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/PA_GROEDI.zml=UTF-8

@@ -8,6 +8,8 @@
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+
+		<arg name="htmlURL" value=".model/wizardhtml/test.html"/>
 		
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
@@ -218,6 +220,9 @@
    <!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
    <!-- dies Seite gilt auch für Bat4/5, abgesehen von der Überschrift-->
       <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Speicherrechnung bei Vorgabe der Abgaben" imageLocation="icons/calcwizard/kalypso32.gif" >
+      
+      	<arg name="pageID" value="Berechnung_bat3"/>
+      
         <arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="false"/>
         <arg name="mainSash" value="40"/>
@@ -235,6 +240,8 @@
         <arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Zufluss_gerechnet"/>
  
        	<arg name="maximizeMap" value="true"/>
+       	
+       	<arg name="nextPage" value="Berichtsablage_Pegel"/>
     </page>
 
 <!-- SPEICHERRECHNUNG BAT 4  -->
@@ -285,6 +292,7 @@
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
 	   
+	   <arg name="pageID" value="Berichtsablage_Pegel"/>
         <arg name="mapTemplate" value=".templates/Modell/Karten/Vorhersagepegel.gmt"/>
    		<arg name="mapTemplateContextIsCalcCase" value="false"/>
 	
