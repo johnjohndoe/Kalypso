@@ -104,9 +104,6 @@ public class ResourcePool
   /**
    * Fügt einen neuen Listener zum Pool für eine bestimmten Key hinzu Ist das Objekt für den key vorhanden, wird der
    * Listener sofort informiert
-   * 
-   * @param l
-   * @param key
    */
   public void addPoolListener( final IPoolListener l, final IPoolableObjectType key )
   {

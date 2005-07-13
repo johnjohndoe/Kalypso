@@ -327,6 +327,11 @@ public class ServiceRepositoryObservation implements IObservation
   {
     m_evtPrv.clearListeners();
   }
+  
+  public void fireChangedEvent()
+  {
+    m_evtPrv.fireChangedEvent();
+  }
 
   public String getHref()
   {

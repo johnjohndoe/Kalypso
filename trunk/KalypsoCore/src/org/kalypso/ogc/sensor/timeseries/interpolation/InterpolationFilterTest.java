@@ -40,21 +40,23 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.interpolation;
 
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Vector;
 
 import junit.framework.TestCase;
 
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
  * InterpolationFilterTest
@@ -63,56 +65,66 @@ import org.kalypso.ogc.sensor.request.ObservationRequest;
  */
 public class InterpolationFilterTest extends TestCase
 {
-  private final static Calendar CAL = Calendar.getInstance();
+  private final static SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+  private IObservation m_obs;
+  private IAxis m_dateAxis;
+  private IAxis m_valueAxis;
 
-  private SimpleObservation m_obs;
-
-  private Date m_from;
-
-  private Date m_to;
-
-  /*
-   * @see TestCase#setUp()
-   */
   protected void setUp() throws Exception
   {
     super.setUp();
 
-    IAxis[] axes = new IAxis[2];
-    axes[0] = new DefaultAxis( "date", "date", "", Date.class, true );
-    axes[1] = new DefaultAxis( "value", "W", "cm", Double.class, false );
+    final URL url = InterpolationFilterTest.class.getResource( "InterpolationFilterTest.zml" );
+    m_obs = ZmlFactory.parseXML( url, "" );
+    assertNotNull( m_obs );
 
-    m_from = CAL.getTime();
-
-    SimpleTuppleModel model = new SimpleTuppleModel( axes );
-    for( int i = 0; i < 10 * 24 * 4; i++ )
-    {
-      Vector tupple = new Vector();
-      tupple.add( CAL.getTime() );
-      tupple.add( new Double( Math.random() * 10 ) );
-
-      model.addTupple( tupple );
-
-      CAL.add( Calendar.MINUTE, 15 );
-    }
-
-    m_to = CAL.getTime();
-
-    m_obs = new SimpleObservation( "", "", "", true, null, null, axes );
-    m_obs.setValues( model );
+    m_dateAxis = ObservationUtilities.findAxisByClass( m_obs.getAxisList(), Date.class );
+    assertNotNull( m_dateAxis );
+    m_valueAxis = KalypsoStatusUtils.findAxisByClass( m_obs.getAxisList(), Double.class, true );
+    assertNotNull( m_valueAxis );
   }
 
-  public void testGetValues() throws SensorException
+  public void testGetValues() throws SensorException, ParseException
   {
-    InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, -1, 0 );
-
+    final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0 );
     filter.initFilter( null, m_obs, null );
 
-    CAL.setTime( m_to );
-    CAL.add( Calendar.DAY_OF_MONTH, 5 );
+    // test with same date-range
+    final ITuppleModel m1 = filter.getValues( null );
+    verifyTuppleModel( m1, sdf.parse( "2004-11-23 13:00:00" ), sdf.parse( "2004-11-25 13:00:00" ), new Double( 60.0 ),
+        new Double( 37.0 ) );
 
-    final ITuppleModel values = filter.getValues( new ObservationRequest( new DateRange( m_from, CAL.getTime() ) ) );
+    // test with bigger date-range
+    final Date from2 = sdf.parse( "2004-11-23 10:00:00" );
+    final Date to2 = sdf.parse( "2004-11-25 17:00:00" );
+    final ITuppleModel m2 = filter.getValues( new ObservationRequest( new DateRange( from2, to2 ) ) );
+    verifyTuppleModel( m2, from2, to2, new Double( 0 ), new Double( 0 ) );
 
-    System.out.println( ObservationUtilities.dump( values, "\t" ) );
+    // test with smaller date-range
+    final Date from3 = sdf.parse( "2004-11-23 19:00:00" );
+    final Date to3 = sdf.parse( "2004-11-25 11:00:00" );
+    final ITuppleModel m3 = filter.getValues( new ObservationRequest( new DateRange( from3, to3 ) ) );
+    verifyTuppleModel( m3, from3, to3, new Double( 55 ), new Double( 0 ) );
+  }
+
+  private void verifyTuppleModel( final ITuppleModel m, final Date from, final Date to, final Double firstValue,
+      final Double lastValue ) throws SensorException
+  {
+    final Calendar cal = Calendar.getInstance();
+    cal.setTime( from );
+    int i=0;
+    while( cal.getTime().before( to ) )
+    {
+      i++;
+      cal.add( Calendar.HOUR_OF_DAY, 1 );
+    }
+    i++;
+    
+    assertEquals( m.getCount(), i );
+    
+    assertEquals( m.getElement( 0, m_dateAxis ), from );
+    assertEquals( ((Number)m.getElement( 0, m_valueAxis )).doubleValue(), firstValue.doubleValue(), 0.001 );
+    assertEquals( m.getElement( m.getCount() - 1, m_dateAxis ), to );
+    assertEquals( ((Number)m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), lastValue.doubleValue(), 0.001 );
   }
 }

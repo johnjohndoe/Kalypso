@@ -305,7 +305,7 @@ public final class ZmlURL
     {
       RequestType requestType = RequestFactory.parseRequest( str );
       if( requestType == null )
-        requestType = RequestFactory.OF.createRequestType();
+        requestType = RequestFactory.OF.createRequest();
       
       requestType.setName( request.getName() );
       requestType.setAxes( StringUtils.join( request.getAxisTypes(), "," ) );

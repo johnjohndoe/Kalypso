@@ -125,6 +125,11 @@ public class AbstractObservationDecorator implements IObservation
   {
     m_obs.removeListener( listener );
   }
+  
+  public void fireChangedEvent()
+  {
+    m_obs.fireChangedEvent();
+  }
 
   public void setValues( ITuppleModel values ) throws SensorException
   {
@@ -141,9 +146,6 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.getHref();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
-   */
   public void clearListeners()
   {
     m_obs.clearListeners();

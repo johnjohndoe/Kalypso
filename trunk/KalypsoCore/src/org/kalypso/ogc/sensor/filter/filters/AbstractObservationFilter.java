@@ -188,6 +188,14 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     m_obs.clearListeners();
   }
 
+  public void fireChangedEvent()
+  {
+    if( m_obs == null )
+      throw new IllegalStateException( "Internal observation is null" );
+
+    m_obs.fireChangedEvent();
+  }
+  
   public String getHref()
   {
     if( m_obs == null )

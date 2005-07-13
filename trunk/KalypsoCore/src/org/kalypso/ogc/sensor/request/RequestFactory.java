@@ -172,7 +172,7 @@ public class RequestFactory
 
     final String xmlStr = writer.toString();
     if( !includeXmlHeader )
-      return xmlStr.replaceAll( "<\\?xml.*>" , "" );
+      return xmlStr.replaceAll( "<\\?xml.*>" , "" ).replaceAll("\n", "");
     
     return xmlStr;
   }

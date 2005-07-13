@@ -181,14 +181,6 @@ public class SimpleObservation implements IObservation
     }
 
     final IAxis[] otherAxes = values.getAxisList();
-
-    // TODO: commented this test out because the gui might add the status axis when not
-    // already available, thus leading to one more axis.
-    // even if this is the case, this additional axis won't be added to this observation
-    // since we only take the axes that are already present in this observation.
-    //    if( m_axes.length != otherAxes.length )
-    // throw new SensorException( "Not same amount of Axes" );
-
     final Map map = new HashMap( m_axes.length );
 
     for( int i = 0; i < m_axes.length; i++ )
@@ -312,6 +304,14 @@ public class SimpleObservation implements IObservation
   public void clearListeners()
   {
     m_evtPrv.clearListeners();
+  }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent()
+   */
+  public void fireChangedEvent()
+  {
+    m_evtPrv.fireChangedEvent();
   }
 
   /**
