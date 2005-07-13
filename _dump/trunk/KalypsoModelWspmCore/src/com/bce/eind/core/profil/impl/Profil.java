@@ -419,9 +419,9 @@ public class Profil implements IProfil
   {
     return m_profil.getPointCloseTo( breite );
   }
-  public IProfilPoint getPointNearBy( final double breite ) throws ProfilDataException
+  public IProfilPoint getPointNearBy( final double breite,final double delta ) throws ProfilDataException
   {
-    return m_profil.getPointNearBy( breite );
+    return m_profil.getPointNearBy( breite,delta );
   }
   /** Interne Methode die wirklich die Daten ändert. Schickt KEINEN event ! */
   public void setValues( final ProfilChange[] changes ) throws ProfilDataException

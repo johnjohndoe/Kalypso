@@ -441,6 +441,7 @@ public class PlainProfil implements IPlainProfil
   private boolean profilPointExists( final IProfilPoint point )
   {
     return m_points.indexOf( point ) > -1;
+   
   }
 
   /**
@@ -646,18 +647,25 @@ public class PlainProfil implements IPlainProfil
 
     m_building.setValue( buildingProperty, value );
   }
-  
+
   /**
    * sucht den nächsten Punkt dessen x-position näher als (2*Breite.getPrecision) an breite ist,
    * ansonsten Null
+   * @throws ProfilDataException 
    */
-  public IProfilPoint getPointNearBy( final double breite ) throws ProfilDataException
-  {
-    final IProfilPoint pkt = getPointCloseTo(breite);
-    return ((Math.abs(breite - pkt.getValueFor(ProfilPointProperty.BREITE)))<(2*Math.exp(-ProfilPointProperty.BREITE.getPrecision()))) ? pkt :  null;
-
+  public IProfilPoint getPointNearBy( final double breite, final double delta ) throws ProfilDataException
+    {
+    final List<IProfilPoint> pktLst = getPointsAtPos( breite );
+    if( pktLst.size() > 0 )
+      return pktLst.get( 0 );
+    final IProfilPoint pkt = getPointCloseTo( breite );
+    if( (pkt.getValueFor( ProfilPointProperty.BREITE ) > (breite - delta))
+        & (pkt.getValueFor( ProfilPointProperty.BREITE ) < (breite + delta)) )
+      return pkt;
+    return null;
   }
-  public IProfilPoint getPointCloseTo( final double breite ) throws ProfilDataException
+
+  public IProfilPoint getPointCloseTo( final double breite ) throws ProfilDataException 
   {
     IProfilPoint pkt = getPoint( 0 );
 
@@ -669,8 +677,8 @@ public class PlainProfil implements IPlainProfil
           - breite ) )
         pkt = p;
     }
-   return pkt;
-   }
+    return pkt;
+  }
 
   public void setValues( final ProfilChange[] changes ) throws ProfilDataException
   {
