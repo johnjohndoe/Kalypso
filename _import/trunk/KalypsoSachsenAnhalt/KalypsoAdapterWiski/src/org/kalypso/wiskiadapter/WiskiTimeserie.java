@@ -340,6 +340,8 @@ public class WiskiTimeserie implements IObservation
 
     if( !call.isSuccess() )
       throw new SensorException( "Konnte Daten nicht zurückschreiben." );
+    
+    m_evtPrv.fireChangedEvent();
   }
 
   /**
@@ -373,6 +375,14 @@ public class WiskiTimeserie implements IObservation
   public void clearListeners()
   {
     m_evtPrv.clearListeners();
+  }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent()
+   */
+  public void fireChangedEvent()
+  {
+    m_evtPrv.fireChangedEvent();
   }
 
   /**

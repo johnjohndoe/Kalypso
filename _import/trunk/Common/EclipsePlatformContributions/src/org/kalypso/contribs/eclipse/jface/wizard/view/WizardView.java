@@ -1386,13 +1386,13 @@ public class WizardView extends ViewPart implements IWizardContainer3
   /**
    * Set the message backgrounds to be the error or normal color depending on whether or not showingError is true.
    * 
-   * @param showingError
+   * @param showingErr
    *          If <code>true</code> use a different Color to indicate the error.
    */
-  private void setMessageBackgrounds( boolean showingError )
+  private void setMessageBackgrounds( boolean showingErr )
   {
     Color color;
-    if( showingError )
+    if( showingErr )
       color = errorMsgAreaBackground;
     else
       color = normalMsgAreaBackground;

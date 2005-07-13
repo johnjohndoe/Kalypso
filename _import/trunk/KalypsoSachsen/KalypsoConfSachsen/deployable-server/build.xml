@@ -161,7 +161,7 @@
     </target>
 
     <target name="buildwar-ObsService">
-        <copy todir="${workspace}/KalypsoServiceObs/build/build-war/WEB-INF/lib">
+        <copy todir="${workspace}/KalypsoServiceObs/build/build-war/WEB-INF/lib" overwrite="true">
             <fileset dir="${workspace}/KalypsoAdapterPSICompact/build/deploy" includes="**/*.jar" />
         </copy>
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml" target="build-war" inheritAll="false"/>

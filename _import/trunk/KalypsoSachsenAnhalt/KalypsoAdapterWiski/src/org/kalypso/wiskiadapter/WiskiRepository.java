@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.RepositoryUtils;
 import org.kalypso.wiskiadapter.wiskicall.GetTsInfoList;
 import org.kalypso.wiskiadapter.wiskicall.IWiskiCall;
 
@@ -144,7 +145,8 @@ public class WiskiRepository extends AbstractRepository
      * 
      * Be aware that this could lead to unexpected results (since TsInfoItem.getParent() would return null)
      */
-    final GetTsInfoList call = new GetTsInfoList( null, id );
+    final String wiskiId = RepositoryUtils.getItemId( id );
+    final GetTsInfoList call = new GetTsInfoList( null, wiskiId );
 
     try
     {
