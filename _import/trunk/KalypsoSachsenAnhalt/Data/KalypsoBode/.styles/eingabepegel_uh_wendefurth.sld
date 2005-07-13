@@ -11,20 +11,71 @@
         <Rule>
           <Name>Eingabepegel</Name>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-            <ogc:Or>
+              <ogc:And>
               <ogc:PropertyIsEqualTo>
-                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
-                <ogc:Literal>wend</ogc:Literal>
+                <ogc:PropertyName>istEingabePegel</ogc:PropertyName>
+                <ogc:Literal>true</ogc:Literal>
               </ogc:PropertyIsEqualTo>
-              <ogc:PropertyIsEqualTo>
-                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
-                <ogc:Literal>ditf</ogc:Literal>
-              </ogc:PropertyIsEqualTo>
-              <ogc:PropertyIsEqualTo>
-                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
-                <ogc:Literal>elen</ogc:Literal>
-              </ogc:PropertyIsEqualTo>
-            </ogc:Or>
+          
+	          <ogc:Or>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>wend</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>thal</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>silb</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>meis</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>haus</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>ditf</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>wege</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>mahn</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>nien</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>osch</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>hadm</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>stas</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>neug</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>stei</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	            </ogc:Or>
+            </ogc:And>
           </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
           <MaxScaleDenominator>9.0E99</MaxScaleDenominator>

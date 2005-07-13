@@ -11,20 +11,32 @@
         <Rule>
           <Name>Eingabepegel</Name>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-            <ogc:Or>
+              <ogc:And>
               <ogc:PropertyIsEqualTo>
-                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
-                <ogc:Literal>wend</ogc:Literal>
+                <ogc:PropertyName>istEingabePegel</ogc:PropertyName>
+                <ogc:Literal>true</ogc:Literal>
               </ogc:PropertyIsEqualTo>
-              <ogc:PropertyIsEqualTo>
-                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
-                <ogc:Literal>ditf</ogc:Literal>
-              </ogc:PropertyIsEqualTo>
-              <ogc:PropertyIsEqualTo>
-                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
-                <ogc:Literal>elen</ogc:Literal>
-              </ogc:PropertyIsEqualTo>
-            </ogc:Or>
+          
+	          <ogc:Or>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>elen</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>koen</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>trau</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+	              <ogc:PropertyIsEqualTo>
+	                <ogc:PropertyName>Kurz_Name</ogc:PropertyName>
+	                <ogc:Literal>hass</ogc:Literal>
+	              </ogc:PropertyIsEqualTo>
+
+	            </ogc:Or>
+            </ogc:And>
           </ogc:Filter>
 <MinScaleDenominator>0.0</MinScaleDenominator>
           <MaxScaleDenominator>9.0E99</MaxScaleDenominator>
@@ -63,8 +75,8 @@
             <LabelPlacement>
               <PointPlacement auto="true">
                 <Displacement>
-                  <DisplacementX>0.0</DisplacementX>
-                  <DisplacementY>0.5</DisplacementY>
+                  <DisplacementX>10.0</DisplacementX>
+                  <DisplacementY>10.0</DisplacementY>
                 </Displacement>
               </PointPlacement>
             </LabelPlacement>

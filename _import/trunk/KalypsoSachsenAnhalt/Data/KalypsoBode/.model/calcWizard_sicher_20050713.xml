@@ -2,8 +2,7 @@
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-<!-- KONTROLLE UND UMRECHNUNG DER ZEITREIHEN - NIEDERSCHLAG -->
-
+<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
 	<!-- Niederschlag an Stationen (Messung) -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
@@ -34,8 +33,6 @@
         <arg name="maximizeMap" value="true"/>
     </page>
     
-<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
-
     <!-- Wasserstand / Abfluss (Messung) -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel uh. Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel_uh_Wendefurth.gmt"/>
@@ -106,7 +103,36 @@
 
 
 <!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
-
+	<!-- Niederschlag an Stationen (Messung) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="4"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
+         <arg name="maximizeMap" value="true"/>
+         
+         <arg name="buttonText" value="NS -> NG oh. Speicher"/>
+         <arg name="buttonTooltip" value="Gebietsniederschlagsmodell oh. Speicher berechnen"/>
+         <arg name="buttonLaunch" value="niederschlagsmodell_oh_speicher"/>
+    </page>
+ 
+	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="false"/>
+		
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="8"/>
+        <arg name="zmlTableShow" value="all"/>
+        <arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+        <arg name="maximizeMap" value="true"/>
+    </page>
+    
     <!-- Wasserstand / Abfluss (Messung) -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel_oh_Speicher.gmt"/>
