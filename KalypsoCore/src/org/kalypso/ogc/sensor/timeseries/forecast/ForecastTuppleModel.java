@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 
 import org.kalypso.contribs.java.util.DateUtilities;
@@ -65,6 +67,9 @@ public class ForecastTuppleModel extends AbstractTuppleModel
    * @param models
    * 
    * @throws SensorException
+   *           exception
+   * 
+   * TODO marc: change class name to MultiTuppleModel, as this is not only for forecast
    */
   public ForecastTuppleModel( final ITuppleModel[] models ) throws SensorException
   {
@@ -74,8 +79,56 @@ public class ForecastTuppleModel extends AbstractTuppleModel
 
     m_model = new SimpleTuppleModel( models[0].getAxisList() );
 
+    // let them sort, so order does not matter
+    Arrays.sort( models, new Comparator()
+    {
+      public boolean equals( Object obj )
+      {
+        return false;
+      }
+
+      public int compare( Object o1, Object o2 )
+      {
+        ITuppleModel t1 = (ITuppleModel)o1;
+        ITuppleModel t2 = (ITuppleModel)o2;
+        IAxis t1axis = ObservationUtilities.findAxisByClass( t1.getAxisList(), Date.class );
+        IAxis t2axis = ObservationUtilities.findAxisByClass( t2.getAxisList(), Date.class );
+        Date d1 = null, d2 = null;
+        boolean statusD1 = false, statusD2 = false;
+        try
+        {
+          d1 = (Date)t1.getElement( 0, t1axis );
+          if( d1 != null )
+            statusD1 = true;
+        }
+        catch( Exception e )
+        {
+          // nothing
+        }
+        try
+        {
+          d2 = (Date)t2.getElement( 0, t2axis );
+          if( d2 != null )
+            statusD2 = true;
+        }
+        catch( Exception e )
+        {
+          // nothing
+        }
+        if( !statusD1 && statusD2 )
+          return -1;
+        if( !statusD1 && !statusD2 )
+          return 0;
+        if( statusD1 && !statusD2 )
+          return 1;
+        return d1.compareTo( d2 );
+      }
+    } );
+
     for( int i = 0; i < models.length; i++ )
     {
+      if( models[i] == null )
+        continue;
       final IAxis[] axes = models[i].getAxisList();
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 
@@ -83,7 +136,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
       {
         final Date date = (Date)models[i].getElement( rowIx, dateAxis );
 
-        if( date.compareTo( lastDate ) > 0 )
+        if( date.after( lastDate ) )
         {
           final Object[] tupple = new Object[axes.length];
 
@@ -91,9 +144,8 @@ public class ForecastTuppleModel extends AbstractTuppleModel
             tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
 
           m_model.addTupple( tupple );
+          lastDate = date;
         }
-
-        lastDate = date;
       }
     }
   }
