@@ -255,4 +255,12 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   {
     m_evtPrv.clearListeners();
   }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent()
+   */
+  public void fireChangedEvent()
+  {
+    m_evtPrv.fireChangedEvent();
+  }
 }
