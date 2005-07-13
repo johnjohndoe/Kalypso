@@ -370,7 +370,7 @@ public class ZmlFactory
    * <li>an auto-proxy possibility (for example: WQ-Metadata)
    * </ol>
    */
-  private static IObservation decorateObservation( final IObservation zmlObs, final String href, final URL context )
+  public static IObservation decorateObservation( final IObservation zmlObs, final String href, final URL context )
       throws SensorException
   {
     // tricky: maybe make a filtered observation out of this one
