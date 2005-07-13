@@ -228,8 +228,16 @@ public abstract class ObsView implements IObsViewEventProvider
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
-        ( (ObsView)m_data[0] ).addObservation( new PlainObsProvider( (IObservation)newValue, null ), (String)m_data[3],
-            (String)m_data[2], (ObsView.ItemData)m_data[1] );
+        final IObsProvider provider = new PooledObsProvider( key, null );
+        try
+        {
+          ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[3], (String)m_data[2],
+              (ObsView.ItemData)m_data[1] );
+        }
+        finally
+        {
+          provider.dispose();
+        }
       }
     };
 

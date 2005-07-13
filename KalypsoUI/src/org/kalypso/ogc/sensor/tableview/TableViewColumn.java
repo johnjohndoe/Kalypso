@@ -93,6 +93,17 @@ public class TableViewColumn extends ObsViewItem
   public void setDirty( boolean dirty )
   {
     m_dirty = dirty;
+
+    // TODO: A ITuppleModel has currently no way to tell its IObservation
+    // that the model has changed. The only way is using IObservation.setValues()
+    // but since the refactoring in ObservationTableModel, the ITuppleModel is
+    // diretly updated and setValues() isn't called any more. So for the meantime,
+    // until the whole IObservation stuff is refactored, we use this TableViewColumn
+    // to call the fireChangedEvent on the underlying observation.
+    // Another solution could have been to give a reference of its IObservation to a
+    // ITuppleModel... but I decided not to use that one.
+    if( dirty )
+      getObservation().fireChangedEvent();
   }
 
   public Class getColumnClass()

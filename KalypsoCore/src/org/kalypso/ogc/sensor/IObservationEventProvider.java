@@ -51,5 +51,7 @@ public interface IObservationEventProvider
 
   public void removeListener( final IObservationListener listener );
 
+  public void fireChangedEvent();
+  
   public void clearListeners();
 }

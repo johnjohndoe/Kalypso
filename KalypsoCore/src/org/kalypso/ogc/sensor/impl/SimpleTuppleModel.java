@@ -140,10 +140,6 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   /**
    * A <code>DefaultTableModel</code> is used to back the values which are taken from the given model. Uses the given
    * <code>DateRangeArgument</code> to check which values to copy.
-   * 
-   * @param copyTupples
-   * @param dra
-   * @throws SensorException
    */
   public final void setFrom( final ITuppleModel copyTupples, final DateRange dra ) throws SensorException
   {
@@ -207,23 +203,10 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
   /**
    * Adds a tupple at the end of the model
-   * 
-   * @param tupple
    */
   public void addTupple( final Vector tupple )
   {
     m_tupples.addRow( tupple );
-  }
-
-  /**
-   * Inserts the tupple at given position.
-   * 
-   * @param index
-   * @param tupple
-   */
-  public void insertTupple( final int index, final Object[] tupple )
-  {
-    m_tupples.insertRow( index, tupple );
   }
 
   /**

@@ -273,7 +273,7 @@ public class KalypsoObservationService implements IObservationService
     final String hereHref = ZmlURL.removeServerSideId( href );
     final String obsId = ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
-
+    
     FileOutputStream fos = null;
 
     try
@@ -338,7 +338,7 @@ public class KalypsoObservationService implements IObservationService
     catch( final Exception e ) // generic exception used for simplicity
     {
       m_logger.throwing( getClass().getName(), "readData", e );
-      throw new RemoteException( "", e );
+      throw new RemoteException( e.getLocalizedMessage(), e );
     }
     finally
     {
@@ -394,7 +394,7 @@ public class KalypsoObservationService implements IObservationService
     catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( getClass().getName(), "writeData", e );
-      throw new RemoteException( "", e );
+      throw new RemoteException( e.getLocalizedMessage(), e );
     }
   }
 
@@ -417,8 +417,7 @@ public class KalypsoObservationService implements IObservationService
     {
       final IRepository rep = (IRepository)m_mapRepId2Rep.get( repId );
 
-      final String itemId = RepositoryUtils.getItemId( obean.getId() );
-      final IRepositoryItem item = rep.findItem( itemId );
+      final IRepositoryItem item = rep.findItem( obean.getId() );
 
       if( item == null )
         throw new RepositoryException( "Item does not exist or could not be found: " + obean.getId() );
@@ -461,7 +460,7 @@ public class KalypsoObservationService implements IObservationService
     catch( final RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "hasChildren", e );
-      throw new RemoteException( "", e );
+      throw new RemoteException( e.getLocalizedMessage(), e );
     }
   }
 
@@ -518,7 +517,7 @@ public class KalypsoObservationService implements IObservationService
     catch( final RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "getChildren", e );
-      throw new RemoteException( "", e );
+      throw new RemoteException( e.getLocalizedMessage(), e );
     }
   }
 
@@ -535,7 +534,7 @@ public class KalypsoObservationService implements IObservationService
     catch( RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "adaptItem", e );
-      throw new RemoteException( "", e );
+      throw new RemoteException( e.getLocalizedMessage(), e );
     }
 
     if( item == null )
