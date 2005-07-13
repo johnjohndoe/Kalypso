@@ -42,6 +42,7 @@ package org.kalypso.dwd;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Date;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -52,6 +53,9 @@ import org.kalypso.contribs.java.util.logging.ILogger;
  * <li>lm-file (dwd-raster forecast), and</li>
  * <li>dwd2zmlconf.xml (mapping)</li>
  * <p>
+ * TODO: add property for default filterstring <br>
+ * TODO: add properties for timeintervalls (startsim,startforecast,stopsim) <br>
+ * TODO: always update target, do not just overwrite
  * 
  * @author doemming
  */
@@ -68,6 +72,14 @@ public class DWDTask extends Task
   /** lm raster */
   private URL m_obsRasterURL;
 
+  private long m_from;
+
+  private long m_forecastFrom;
+
+  private long m_to;
+
+  private String m_filter;
+
   public final void setDwd2zmlConfUrl( final URL dwd2zmlConfUrl )
   {
     m_dwd2zmlConfUrl = dwd2zmlConfUrl;
@@ -81,6 +93,42 @@ public class DWDTask extends Task
   public final void setTargetContext( final File targetContext )
   {
     m_targetContext = targetContext;
+  }
+
+  /**
+   * 
+   * @param from
+   *          beginning of measure periode
+   */
+  public final void setFrom( long from )
+  {
+    m_from = from;
+  }
+
+  /**
+   * 
+   * @param forecastFrom
+   *          beginning of forecast periode (end of measure periode)
+   *  
+   */
+  public final void setForecastFrom( long forecastFrom )
+  {
+    m_forecastFrom = forecastFrom;
+  }
+
+  /**
+   * 
+   * @param to
+   *          end of forecast periode
+   */
+  public final void setTo( long to )
+  {
+    m_to = to;
+  }
+
+  public final void setZMLFilter( String filter )
+  {
+    m_filter = filter;
   }
 
   /**
@@ -108,7 +156,8 @@ public class DWDTask extends Task
       logger.log( "  unmarshall dwd2zml configuration ..." );
 
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
-      delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext );
+      delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date(
+          m_forecastFrom ), new Date( m_to ), m_filter );
     }
     catch( final Exception e )
     {

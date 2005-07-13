@@ -52,21 +52,24 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.ObservationType;
 
 /**
  * 
- * TODO: insert type comment here
+ * @see org.kalypso.dwd.DWDTask
  * 
  * @author doemming
  */
 public class DWDTaskDelegate
 {
 
-  public void execute( final ILogger logger, final URL obsRasterURL, final URL dwd2zmlConfUrl, final File targetContext )
+  public void execute( final ILogger logger, final URL obsRasterURL, final URL dwd2zmlConfUrl,
+      final File targetContext, final Date startSim, final Date startForecast, final Date stopSim, String filter )
       throws Exception
   {
     logger.log( "DWD-task: generates ZML files from DWD-forecast" );
@@ -117,10 +120,10 @@ public class DWDTaskDelegate
       final FileWriter writer = new FileWriter( resultFile );
       try
       {
-        final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+        final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true, true );
         final String title = TimeserieUtils.getName( axisType );
         final IAxis valueAxis = new DefaultAxis( title, axisType, TimeserieUtils.getUnit( axisType ), TimeserieUtils
-            .getDataClass( axisType ), true );
+            .getDataClass( axisType ), false, true );
         final IAxis[] axis = new IAxis[]
         {
             dateAxis,
@@ -130,11 +133,22 @@ public class DWDTaskDelegate
 
         final MetadataList metadataList = new MetadataList();
 
-        final IObservation resultObservation = new SimpleObservation( "href", "ID", title, false, null, metadataList,
+        final IObservation dwdObservation = new SimpleObservation( "href", "ID", title, false, null, metadataList,
             axis, tupleModel );
+        final IObservation forecastObservation;
+        // generate href from filter and intervall
+        if( filter == null )
+          filter = "";
+        final String href = ZmlURL.insertRequest( filter, new ObservationRequest( startForecast, stopSim ) );
+        if( filter != href )
+          forecastObservation = ZmlFactory.decorateObservation( dwdObservation, href, targetContext.toURL() );
+        else
+          forecastObservation = dwdObservation;
 
+        // TODO merge with existing ZML in correct intervalls
         // write result
-        final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
+
+        final ObservationType observationType = ZmlFactory.createXML( forecastObservation, null );
         final Marshaller marshaller = ZmlFactory.getMarshaller();
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
