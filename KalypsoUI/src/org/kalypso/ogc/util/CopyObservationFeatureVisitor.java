@@ -45,7 +45,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -89,8 +91,20 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final Date m_forecastTo;
 
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final String targetobservation, final Source[] sources,
-      final Date forecastFrom, final Date forecastTo, final PrintWriter logWriter )
+  /**
+   * @param context
+   *          context to resolve relative url
+   * @param urlResolver
+   *          resolver for urls
+   * @param forecastFrom
+   * @param forecastTo
+   * @param logWriter
+   * @param sources
+   * @param targetobservation
+   */
+  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
+      final String targetobservation, final Source[] sources, final Date forecastFrom, final Date forecastTo,
+      final PrintWriter logWriter )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -123,31 +137,30 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         return true;
       }
 
-      final IObservation obs;
+      final IObservation resultObs;
 
-      // only do ForeCastFilter if we have mor than one obs
+      // only do ForeCastFilter if we have more than one obs
       if( sourceObses.length < 2 || sourceObses[1] == null )
-        obs = sourceObses[0];
+        resultObs = sourceObses[0];
       else
       {
         // NOTE for ForecastFilter: the order is important:
         // obs( i ) has a higher priority than obs( i + 1 )
         // with 'i' the index in the observations array...
         final ForecastFilter fc = new ForecastFilter();
-        fc.initFilter( new IObservation[]
-        {
-            sourceObses[0],
-            sourceObses[1] }, sourceObses[0], null ); // TODO check if null
-                                                      // context is ok here
-        obs = fc;
+        fc.initFilter( sourceObses
+        // new IObservation[]{sourceObses[0],sourceObses[1]} // changed by doemming: wy not take all sourceObses
+            , sourceObses[0], null ); // TODO check if null
+        // context is ok here
+        resultObs = fc;
       }
 
       // set forecast metadata, might be used in diagram for instance
       // to mark the forecast range
-      TimeserieUtils.setForecast( obs, m_forecastFrom, m_forecastTo );
+      TimeserieUtils.setForecast( resultObs, m_forecastFrom, m_forecastTo );
 
       // protocol the observations here and inform the user
-      KalypsoProtocolWriter.analyseValues( obs, obs.getValues( null ), m_logWriter, SUMM_INFO );
+      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logWriter, SUMM_INFO );
 
       // remove query part if present, href is also used as file name here!
       final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
@@ -160,7 +173,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       {
         protected void write( final OutputStreamWriter w ) throws Throwable
         {
-          final ObservationType type = ZmlFactory.createXML( obs, null );
+          final ObservationType type = ZmlFactory.createXML( resultObs, null );
           ZmlFactory.getMarshaller().marshal( type, w );
         }
       };
@@ -179,12 +192,25 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private IObservation[] getObservations( final Feature f ) throws SensorException, IOException
   {
-    final IObservation[] obses = new IObservation[m_sources.length];
+    List result = new ArrayList();
+    //    final IObservation[] obses = new IObservation[m_sources.length];
     for( int i = 0; i < m_sources.length; i++ )
     {
       final Source source = m_sources[i];
-      obses[i] = getObservation( f, source.getProperty(), source.getFrom(), source.getTo() );
-
+      try
+      {
+        result.add( getObservation( f, source.getProperty(), source.getFrom(), source.getTo() ) );
+      }
+      catch( Exception e )
+      {
+        // it is possible to use the target also as input, e.g. if you want to update just a part of the zml.
+        // if this source==target is unreachable it should be ignored, if it is not the target throw an exception
+        if( m_targetobservation.equals( source.getProperty() ) )
+          m_logWriter
+              .println( "Hinweis: Zielzeitreihe konnte nicht gleichzeitig als Quelle verwendet werden und wird ignoriert. (kein Fehler)" );
+        else
+          throw new SensorException( e );
+      }
       //      m_summaryWriter.write( "Zeitreihe unbekannt: " + (
       // (TimeseriesLink)f.getProperty( source.getProperty() ) ).getHref() );
       // TODO: catch exception and log unknown obs
@@ -194,11 +220,11 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       //          msgWriter, logWriter );
     }
 
-    return obses;
+    return (IObservation[])result.toArray( new IObservation[result.size()] );
   }
 
-  private IObservation getObservation( final Feature feature, final String sourceProperty, final Date from, final Date to )
-      throws MalformedURLException, SensorException
+  private IObservation getObservation( final Feature feature, final String sourceProperty, final Date from,
+      final Date to ) throws MalformedURLException, SensorException
   {
     if( sourceProperty == null )
       return null;
