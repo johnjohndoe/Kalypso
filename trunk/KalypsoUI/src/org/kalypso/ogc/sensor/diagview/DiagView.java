@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.util.Hashtable;
 import java.util.Map;
 
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -51,6 +52,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -214,7 +216,25 @@ public class DiagView extends ObsView
           }
           mappings[1] = new AxisMapping( valueAxis[i], daValue );
 
-          final Color color = data.color != null ? data.color : TimeserieUtils.getColorFor( valueAxis[i].getType() );
+          // if color not defined, find suitable one
+          final Color color;
+          if( data.color != null )
+            color = data.color;
+          else
+          {
+            // look in existing items to see if one has same type
+            int found = 0;
+            final ObsViewItem[] items = getItems();
+            for( int j = 0; j < items.length; j++ )
+            {
+              final AxisMapping[] mps = ((DiagViewCurve)items[j]).getMappings();
+              if( mps[1].getObservationAxis().getType().equals( valueAxis[i].getType() ) )
+                found++;
+            }
+            
+            color = ColorUtilities.derivateColor( TimeserieUtils.getColorFor( valueAxis[i].getType() ), found );
+          }
+          
           final String name = NameUtils.replaceTokens( tokenizedName, obs, valueAxis[i] );
 
           final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, mappings );
