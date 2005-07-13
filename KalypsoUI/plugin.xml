@@ -658,10 +658,10 @@
          point="org.kalypso.core.client.serviceproxy">
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_CalculationService_Impl"
-            interfacename="ICalcService"/>
+            interfacename="ICalculationService"/>
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
-            interfacename="IObsService"/>
+            interfacename="IObservationService"/>
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_MetaDocService_Impl"
             interfacename="IMetaDocService"/>
