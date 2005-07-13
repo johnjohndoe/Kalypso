@@ -121,11 +121,10 @@ public class WeisseElster_DWDConfigureTest extends TestCase
   private void createZMLFormDWD( final URL lmObsURL, final URL dwd2zmlURL, final File targetContext ) throws Exception
   {
     final DWDTask task = new DWDTask();
-    // TODO check if version is needed
-    // TODO check if hour is needed
     task.setObsRasterURL( lmObsURL );
     task.setTargetContext( targetContext );
     task.setDwd2zmlConfUrl( dwd2zmlURL );
+    
     task.execute();
   }
 
@@ -143,20 +142,15 @@ public class WeisseElster_DWDConfigureTest extends TestCase
     try
     {
 
-      //      RasterStorage storage = new RasterStorage();
-      //      storage.loadRaster( getClass().getResource( "resources/LM2/lm2_inv_slug" ) );
-      //      DWDRaster xRaster = (DWDRaster)storage.get( DWDRaster.KEY_100000_LON );
-      //      DWDRaster yRaster = (DWDRaster)storage.get( DWDRaster.KEY_100000_LAT );
-      //      DWDRasterGeoLayer geoRaster = new DWDRasterGeoLayer( "EPSG:31469", xRaster, yRaster );
       DWDRasterGeoLayer geoRaster = DWDRasterHelper.loadGeoRaster( lmbaseURL, "EPSG:31469" );
       geoRaster.saveAsGML( new File( "C:\\TMP\\raster.gml" ) );
       // raster gml generated
       // start part two and generate mapping configuration
       // N
-      generateDwdZmlConf( geoRaster, DWDRaster.KEY_RAIN, KalypsoStati.BIT_OK, "VorhersageN/N_", new FileWriter(
-          fileDwdZmlN ) );
+      generateDwdZmlConf( geoRaster, DWDRaster.KEY_RAIN, KalypsoStati.BIT_OK, "Niederschlag/Niederschlag_",
+          new FileWriter( fileDwdZmlN ) );
       // T
-      generateDwdZmlConf( geoRaster, DWDRaster.KEY_TEMP, KalypsoStati.BIT_OK, "VorhersageT/T_", new FileWriter(
+      generateDwdZmlConf( geoRaster, DWDRaster.KEY_TEMP, KalypsoStati.BIT_OK, "Temperatur/Temperatur_", new FileWriter(
           fileDwdZmlT ) );
     }
     catch( Exception e )
