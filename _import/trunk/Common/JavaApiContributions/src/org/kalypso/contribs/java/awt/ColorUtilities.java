@@ -42,6 +42,8 @@ package org.kalypso.contribs.java.awt;
 
 import java.awt.Color;
 
+import org.kalypso.contribs.java.util.Arrays;
+
 /**
  * Some useful method dealing with java.awt.Color. See also org.kalypso.contribs.java.util.StringUtilities for some
  * other methods using Colors and Strings.
@@ -94,22 +96,36 @@ public class ColorUtilities
    */
   public static Color derivateColor( final Color c, int distance )
   {
-    final int a = c.getAlpha();
-    int r = c.getRed();
-    int g = c.getGreen();
-    int b = c.getBlue();
+    if( distance == 0 )
+      return c;
 
-    for( int i = 0; i < distance; i++ )
+    // get color components
+    final int a = c.getAlpha();
+    final int[] rgb = {c.getRed(), c.getGreen(), c.getBlue()};
+
+    // test if components are all 0 or all 255
+    final int[] range = { 0, 255 };
+    for( int i = 0; i < range.length; i++ )
     {
-      if( r == 0 && g == 0 && b == 0 ||  r == 255 && g == 255 && b == 255 )
-        r = (int)( Math.random() * 255 );
-      
-      int tmp = b - g;
-      b = g;
-      g = r;
-      r = Math.abs(r - tmp) % 255;
+      if( rgb[0] == range[i] && rgb[1] == range[i] && rgb[2] == range[i] )
+      {
+        rgb[0] = (int)( Math.random() * 255 );
+        rgb[1] = (int)( Math.random() * 255 );
+        rgb[2] = (int)( Math.random() * 255 );
+      }
     }
     
-    return new Color( r, g, b, a );
+    final int pos = Arrays.indexOfMin( rgb );
+    
+    // derivate color
+    for( int i = 0; i < distance; i++ )
+    {
+      rgb[pos] += 51;
+      
+      if( rgb[pos] > 255 )
+        rgb[pos] = rgb[pos] - 255;
+    }
+    
+    return new Color( rgb[0], rgb[1], rgb[2], a );
   }
 }
