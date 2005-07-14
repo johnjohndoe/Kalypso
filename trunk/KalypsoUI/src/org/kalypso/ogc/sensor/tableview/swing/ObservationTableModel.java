@@ -42,6 +42,8 @@ package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -100,13 +102,21 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public void addColumn( final TableViewColumn col ) throws SensorException
   {
-    addColumn( col, m_columns.size() );
+    // columns should be in ascending order (since we always add them in that order)
+    final Object[] cols = m_columns.toArray();
+    
+    // find good position for column (alphabetically sorted)
+    int i = Arrays.binarySearch( cols, col, ColOrderComparator.INSTANCE );
+    if( i < 0 )
+      i = -i - 1;
+
+    addColumn( col, i );
   }
 
   /**
    * Adds a column to this tablemodel at the given position
    */
-  public void addColumn( final TableViewColumn col, int pos ) throws SensorException
+  private void addColumn( final TableViewColumn col, int pos ) throws SensorException
   {
     synchronized( m_columns )
     {
@@ -433,7 +443,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     if( column == 0 )
       return TimeserieUtils.getNumberFormatFor( m_sharedAxis.getType() );
-    
+
     synchronized( m_columns )
     {
       final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
@@ -512,5 +522,23 @@ public class ObservationTableModel extends AbstractTableModel
     }
 
     return map;
+  }
+
+  /**
+   * Simple comparator used for ordering the columns in ascending order according to their names.
+   * 
+   * @author schlienger
+   */
+  private static class ColOrderComparator implements Comparator
+  {
+    public final static ColOrderComparator INSTANCE = new ColOrderComparator();
+
+    public int compare( final Object o1, final Object o2 )
+    {
+      final TableViewColumn col1 = (TableViewColumn)o1;
+      final TableViewColumn col2 = (TableViewColumn)o2;
+
+      return col1.getName().compareTo( col2.getName() );
+    }
   }
 }
