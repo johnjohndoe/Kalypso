@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -67,14 +68,20 @@ public class WQTuppleModel extends AbstractTuppleModel
 
   private final IAxis m_dateAxis;
 
+  /** source axis from the underlying model */
   private final IAxis m_srcAxis;
+  private final IAxis m_srcStatusAxis;
 
+  /** generated axis */
   private final IAxis m_destAxis;
 
+  /** generated status axis */
   private final IAxis m_destStatusAxis;
 
+  /** backs the generated values for the dest axis */
   private final Map m_values = new HashMap();
 
+  /** backs the stati for the dest status axis */
   private final Map m_stati = new HashMap();
 
   private final IWQConverter m_converter;
@@ -92,13 +99,15 @@ public class WQTuppleModel extends AbstractTuppleModel
    * @param dateAxis
    * @param srcAxis
    *          source axis from which values are read
+   * @param srcStatusAxis
+   *          source status axis
    * @param destAxis
    *          destination axis for which values are computed
    * @param destStatusAxis
    *          status axis for the destAxis (destination axis)
    */
   public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis,
-      final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter )
+      final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter )
   {
     super( axes );
 
@@ -110,6 +119,7 @@ public class WQTuppleModel extends AbstractTuppleModel
 
     m_dateAxis = dateAxis;
     m_srcAxis = srcAxis;
+    m_srcStatusAxis = srcStatusAxis;
     m_destAxis = destAxis;
     m_destStatusAxis = destStatusAxis;
   }
@@ -136,18 +146,30 @@ public class WQTuppleModel extends AbstractTuppleModel
       final Number number = (Number)m_model.getElement( objIndex.intValue(), m_srcAxis );
 
       if( !m_values.containsKey( objIndex ) )
-        read( objIndex, axis, number );
+      {
+        final Number[] res = read( objIndex, axis, number );
+
+        // in the case there were some errors during computation, the numbers
+        // will differ and so we overwrite the underlying model
+        //        if( ! computed.equals( number ) )
+        //          m_model.setElement( objIndex.intValue(), computed, m_srcAxis );
+        //      }
+        m_values.put( objIndex, res[0] );
+        m_stati.put( objIndex, res[1] );
+      }
 
       if( bDestAxis )
         return m_values.get( objIndex );
+      //return res[0];
 
       return m_stati.get( objIndex );
+      //      return res[1];
     }
 
     return m_model.getElement( index, axis );
   }
 
-  private void read( final Integer objIndex, final IAxis axis, final Number number ) throws SensorException
+  private Number[] read( final Integer objIndex, final IAxis axis, final Number number ) throws SensorException
   {
     Double value = null;
     Integer status = null;
@@ -177,13 +199,19 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
       catch( final WQException e )
       {
+        Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsfehler: " + e.getLocalizedMessage() );
+
         value = ZERO;
         status = KalypsoStati.STATUS_DERIVATION_ERROR;
       }
     }
 
-    m_values.put( objIndex, value );
-    m_stati.put( objIndex, status );
+    //    m_values.put( objIndex, value );
+    //    m_stati.put( objIndex, status );
+    return new Number[]
+    {
+        value,
+        status };
   }
 
   /**
@@ -210,22 +238,27 @@ public class WQTuppleModel extends AbstractTuppleModel
           value = new Double( m_converter.computeW( d, q ) );
         }
 
-        status = KalypsoStati.STATUS_DERIVATED;
+        status = KalypsoStati.STATUS_USERMOD;
       }
       catch( final WQException e )
       {
+        Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsfehler weil: " + e.getLocalizedMessage() );
+
         value = ZERO;
-        status = KalypsoStati.STATUS_DERIVATION_ERROR;
+        status = KalypsoStati.STATUS_CHECK;
       }
 
-      final Integer objIndex = new Integer( index );
-      m_values.put( objIndex, element );
-      m_stati.put( objIndex, status );
-
       m_model.setElement( index, value, m_srcAxis );
+      m_model.setElement( index, status, m_srcStatusAxis );
     }
     else
+    {
+      final Integer objIndex = new Integer( index );
+      m_values.remove( objIndex );
+      m_stati.remove( objIndex );
+
       m_model.setElement( index, element, axis );
+    }
   }
 
   /**
@@ -253,6 +286,11 @@ public class WQTuppleModel extends AbstractTuppleModel
   public IAxis getSrcAxis()
   {
     return m_srcAxis;
+  }
+
+  public IAxis getSrcStatusAxis()
+  {
+    return m_srcStatusAxis;
   }
 
   public IAxis getDateAxis()

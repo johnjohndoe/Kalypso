@@ -79,9 +79,6 @@ public class WechmannGroup implements IWQConverter
 
   /**
    * Returns the WechmannSet that is valid for the given date.
-   * 
-   * @param d
-   * @return the set
    */
   public WechmannSet getFor( final Date d )
   {
@@ -110,7 +107,7 @@ public class WechmannGroup implements IWQConverter
   /**
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
-  public double computeQ( Date date, double W )
+  public double computeQ( Date date, double W ) throws WQException
   {
     final WechmannParams params = getFor( date ).getForW( W );
     return WechmannFunction.computeQ( params, W );
