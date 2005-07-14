@@ -27,7 +27,7 @@
      	  <antTask
            class="org.kalypso.dwd.DWDTask"
             library="lib/kalypsoDWD.jar"
-           name="dwdTask"/>
+           name="kalypso.dwdTask"/>
    </extension>
 
 </plugin>
