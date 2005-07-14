@@ -2,6 +2,7 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Properties;
 
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannSet;
@@ -235,11 +236,9 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
   /**
    * Helper that converts PSICompact WQParamSet objects to a WechmannSets object.
    * 
-   * @param pset
    * @return WechmannGroup constructed from the WQParamSet array
-   *  
    */
-  public static WechmannGroup readWQParams( final WQParamSet[] pset )
+  public static WechmannGroup readWQParams( final WQParamSet[] pset ) throws WQException
   {
     final WechmannSet[] wsets = new WechmannSet[pset.length];
     for( int i = 0; i < pset.length; i++ )
