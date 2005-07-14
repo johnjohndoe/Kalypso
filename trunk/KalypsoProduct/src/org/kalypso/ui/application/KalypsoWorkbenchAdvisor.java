@@ -56,8 +56,6 @@ import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
-import org.eclipse.ui.internal.ClosePerspectiveAction;
-import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
@@ -66,7 +64,7 @@ import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.auth.user.UserRights;
 import org.kalypso.contribs.eclipse.ui.FullscreenPerspectiveListener;
 import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
-import org.kalypso.simulation.ui.wizards.calculation.CalcWizardPerspective;
+import org.kalypso.simulation.ui.startscreen.PrognosePerspective;
 
 /**
  * @author belger
@@ -157,12 +155,12 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     super.preWindowOpen( windowConfigurer );
 
-    // HACK: the (Calculation-)WizardPerspective should run in fullscreen mode.
+    // HACK: the (Prognose-)WizardPerspective should run in fullscreen mode.
     final IWorkbenchWindow window = windowConfigurer.getWindow();
     final IPerspectiveRegistry perspectiveRegistry = window.getWorkbench().getPerspectiveRegistry();
     final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
-        .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
-    window.addPerspectiveListener( new FullscreenPerspectiveListener( wizardPerspective, true, true ) );
+        .findPerspectiveWithId( PrognosePerspective.class.getName() );
+    window.addPerspectiveListener( new FullscreenPerspectiveListener( wizardPerspective, false, true ) );
     
     if( !m_user.hasRight( UserRights.RIGHT_EXPERT ) && !m_user.hasRight( UserRights.RIGHT_ADMIN ) )
     {
@@ -184,22 +182,23 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     super.postWindowOpen( configurer );
 
     // HACK: close the WizardPerspective if it is still open
-    final IWorkbenchWindow window = configurer.getWindow();
-    final IPerspectiveRegistry perspectiveRegistry = window.getWorkbench().getPerspectiveRegistry();
-    final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
-        .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
-    
-    final IWorkbenchPage activePage = window.getActivePage();
-    
-    // DOUBLE-HACK: ther is no public API to access the perspectives in the page :-(
-    if( ((WorkbenchPage)activePage).findPerspective( wizardPerspective ) != null )
-    {
-      // activate perspective, to it can be closed
-      activePage.setPerspective( wizardPerspective );
-      activePage.setPerspective( wizardPerspective );
-      final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( window );
-      closePerspAction.run();
-    }
+    // TODO: was?
+//    final IWorkbenchWindow window = configurer.getWindow();
+//    final IPerspectiveRegistry perspectiveRegistry = window.getWorkbench().getPerspectiveRegistry();
+//    final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
+//        .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
+//    
+//    final IWorkbenchPage activePage = window.getActivePage();
+//    
+//    // DOUBLE-HACK: ther is no public API to access the perspectives in the page :-(
+//    if( ((WorkbenchPage)activePage).findPerspective( wizardPerspective ) != null )
+//    {
+//      // activate perspective, to it can be closed
+//      activePage.setPerspective( wizardPerspective );
+//      activePage.setPerspective( wizardPerspective );
+//      final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( window );
+//      closePerspAction.run();
+//    }
   }
   
   /**
@@ -228,7 +227,11 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final IWorkbench workbench = PlatformUI.getWorkbench();
     try
     {
-      workbench.showPerspective( IKalypsoSimulationUIConstants.PROGNOSE_PERSPECTIVE, workbench.getActiveWorkbenchWindow() );
+      final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+      workbench.showPerspective( IKalypsoSimulationUIConstants.PROGNOSE_PERSPECTIVE, activeWorkbenchWindow );
+      final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+      if( activePage != null )
+        activePage.resetPerspective();
     }
     catch( final WorkbenchException e )
     {

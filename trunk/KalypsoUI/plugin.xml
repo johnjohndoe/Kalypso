@@ -35,7 +35,6 @@
    </runtime>
 
    <requires>
-      <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.resources" export="true"/>
       <import plugin="org.eclipse.ui.ide" export="true"/>
@@ -44,6 +43,7 @@
       <import plugin="org.eclipse.core.runtime" export="true"/>
       <import plugin="org.eclipse.ui.workbench" export="true"/>    
       <import plugin="org.eclipse.debug.ui" export="true"/>
+      <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.kalypso.jwsdp" export="true"/>
       <import plugin="org.kalypso.contribs.eclipseplatform"/>
       <import plugin="org.kalypso.core.client"/>
@@ -637,22 +637,22 @@
             eclipseRuntime="true"
             class="org.kalypso.ant.CopyObservationTask"
             library="lib/kalypsoAnt.jar"
-            name="copyObservation"/>
+            name="kalypso.copyObservation"/>
       <antTask
             eclipseRuntime="true"
             class="org.kalypso.ant.GmlPropertyTask"
             library="lib/kalypsoAnt.jar"
-            name="gmlProperty"/>
+            name="kalypso.gmlProperty"/>
      <antTask
            eclipseRuntime="true"
            class="org.kalypso.ant.KrigingTask"
            library="lib/kalypsoAnt.jar"
-           name="kriging"/>
+           name="kalypso.kriging"/>
      <antTask
            eclipseRuntime="true"
            class="org.kalypso.ant.GMLWeightingTask"
            library="lib/kalypsoAnt.jar"
-           name="gmlWeight"/>
+           name="kalypso.gmlWeight"/>
    </extension>
       <extension
          point="org.kalypso.core.client.serviceproxy">

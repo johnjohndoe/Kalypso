@@ -126,7 +126,7 @@ public class TableViewUtils
   }
 
   /**
-   * Loads the xml template from the given inutsource
+   * Loads the xml template from the given inputsource
    * 
    * @param ins
    * @return table view template
@@ -258,6 +258,14 @@ public class TableViewUtils
     return xmlTemplate;
   }
 
+  /**
+   * 
+   * @param view
+   * @param xml
+   * @param context
+   * @param synchron
+   * @param status All errors are added to this multi status
+   */
   public static void applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
       final boolean synchron, final MultiStatus status )
   {
