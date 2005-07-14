@@ -62,9 +62,9 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 public class ObservationChart extends JFreeChart implements IObsViewEventListener
 {
   protected static final Logger LOGGER = Logger.getLogger( ObservationChart.class.getName() );
-  
+
   private final StandardLegend m_legend = new StandardLegend();
-  
+
   private final DiagView m_view;
 
   /**
@@ -85,7 +85,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   protected void setLegendProperties( String legendName, boolean showLegend )
   {
     m_legend.setTitle( legendName );
-    
+
     if( showLegend )
       setLegend( m_legend );
     else
@@ -135,22 +135,27 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
         else if( evt.getObject() instanceof DiagViewCurve )
           view = (DiagView)( (DiagViewCurve)evt.getObject() ).getView();
 
-        if( evt.getType() == ObsViewEvent.TYPE_ADD || evt.getType() == ObsViewEvent.TYPE_REFRESH_ITEMS
-            || evt.getType() == ObsViewEvent.TYPE_REMOVE )
+        final int et = evt.getType();
+        switch( et )
         {
-          clearChart();
-          
-          final ObsViewItem[] items = view.getItems();
-          for( int i = 0; i < items.length; i++ )
-          {
-            final DiagViewCurve curve = (DiagViewCurve)items[i];
-            obsPlot.addCurve( curve );
-          }
-        }
-        else if( evt.getType() == ObsViewEvent.TYPE_REFRESH )
-        {
-          setTitle( view.getTitle() );
-          setLegendProperties( view.getLegendName(), view.isShowLegend() );
+          case ObsViewEvent.TYPE_ADD:
+          case ObsViewEvent.TYPE_REMOVE:
+          case ObsViewEvent.TYPE_REFRESH_ITEMS:
+          case ObsViewEvent.TYPE_REMOVE_ALL:
+            clearChart();
+
+            final ObsViewItem[] items = view.getItems();
+            for( int i = 0; i < items.length; i++ )
+            {
+              final DiagViewCurve curve = (DiagViewCurve)items[i];
+              obsPlot.addCurve( curve );
+            }
+            break;
+
+          case ObsViewEvent.TYPE_REFRESH:
+            setTitle( view.getTitle() );
+            setLegendProperties( view.getLegendName(), view.isShowLegend() );
+            break;
         }
       }
     };
