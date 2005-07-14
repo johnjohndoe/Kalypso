@@ -70,13 +70,9 @@ public class WechmannFunction
   }
 
   /**
-   * @param wp
-   * @param W
-   * @return Q
    * @see WechmannFunction#computeQ(double, double, double, double)
-   *  
    */
-  public static final double computeQ( final WechmannParams wp, final double W )
+  public static final double computeQ( final WechmannParams wp, final double W ) throws WQException
   {
     return computeQ( wp.getLNK1(), W, wp.getW1(), wp.getK2() );
   }
@@ -88,32 +84,21 @@ public class WechmannFunction
    * Q = exp( ln( K1 ) + ln( W - W1 ) * K2 )
    * </pre>
    * 
-   * @param LNK1
-   * @param W
-   * @param W1
-   * @param K2
-   * @return Q
-   *  
+   * @throws WQException if (W - W1) < 0
    */
-  public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 )
+  public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 ) throws WQException
   {
-    if( W - W1 <= 0 )
+    if( W - W1 < 0 )
     {
-      // TODO: we thrown an exception before, but if W <= W1, then Q = 0. Please check this with an Hydrologue.
-      // throw new WechmannException( "Log 0 not valid (W - W1 <= 0)" );
-      return 0;
+      throw new WQException( "( W - W1 ) < 0, ln( W - W1 ) nicht möglich" );
+      //return 0;
     }
 
     return Math.exp( LNK1 + Math.log( W - W1 ) * K2 );
   }
 
   /**
-   * @param wp
-   * @param Q
-   * @return W
    * @see WechmannFunction#computeW(double, double, double, double)
-   * 
-   * @throws WQException
    */
   public static final double computeW( final WechmannParams wp, final double Q ) throws WQException
   {
@@ -129,20 +114,16 @@ public class WechmannFunction
    *                       K2
    * </pre>
    * 
-   * @param W1
-   * @param Q
-   * @param LNK1
-   * @param K2
-   * @return W
-   * 
    * @throws WQException
-   *           when K2 = 0
+   *           when (K2 = 0) or (Q < 0)
    */
   public static final double computeW( final double W1, final double Q, final double LNK1, final double K2 )
       throws WQException
   {
     if( K2 == 0 )
-      throw new WQException( "Divide by 0 (K2 = 0)" );
+      throw new WQException( "Dividieren durch 0 (K2 = 0)" );
+    if( Q < 0 )
+      throw new WQException( "Q < 0, ln( Q ) nicht möglich" );
 
     return W1 + Math.exp( ( Math.log( Q ) - LNK1 ) / K2 );
   }

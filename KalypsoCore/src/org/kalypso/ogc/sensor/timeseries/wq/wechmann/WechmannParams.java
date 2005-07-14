@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
+
 /**
  * Wechmann Parameters
  * 
@@ -72,12 +74,8 @@ public final class WechmannParams
   /**
    * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this constructor when the WGR value is not
    * defined, thus the parameters are valid for all possible W values.
-   * 
-   * @param W1
-   * @param LNK1
-   * @param K2
    */
-  public WechmannParams( double W1, double LNK1, double K2 )
+  public WechmannParams( double W1, double LNK1, double K2 ) throws WQException
   {
     this( W1, LNK1, K2, Double.MAX_VALUE );
   }
@@ -95,7 +93,7 @@ public final class WechmannParams
    *          obere Wasserstandsgrenze in cm
    *  
    */
-  public WechmannParams( double W1, double LNK1, double K2, double WGR )
+  public WechmannParams( double W1, double LNK1, double K2, double WGR ) throws WQException
   {
     m_W1 = W1;
     m_LNK1 = LNK1;

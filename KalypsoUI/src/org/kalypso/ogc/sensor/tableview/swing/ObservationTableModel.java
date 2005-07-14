@@ -104,7 +104,7 @@ public class ObservationTableModel extends AbstractTableModel
   {
     // columns should be in ascending order (since we always add them in that order)
     final Object[] cols = m_columns.toArray();
-    
+
     // find good position for column (alphabetically sorted)
     int i = Arrays.binarySearch( cols, col, ColOrderComparator.INSTANCE );
     if( i < 0 )
@@ -254,6 +254,8 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public Object getValueAt( int rowIndex, int columnIndex )
   {
+    System.out.println("getValueAt " + rowIndex );
+    
     try
     {
       final Object key = m_sharedModel.toArray()[rowIndex];
@@ -330,13 +332,15 @@ public class ObservationTableModel extends AbstractTableModel
       final int ix = values.indexOf( key, col.getKeyAxis() );
       if( ix != -1 )
       {
-        values.setElement( ix, aValue, col.getAxis() );
-
-        col.setDirty( true );
-
+        // first set status (may be overriden)
         final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
         if( statusAxis != null )
           values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
+
+        // then set value
+        values.setElement( ix, aValue, col.getAxis() );
+
+        col.setDirty( true );
       }
       else
         m_logger.info( "Cannot setValue because key not found" );
@@ -380,6 +384,7 @@ public class ObservationTableModel extends AbstractTableModel
         if( statusAxis != null )
         {
           final Number status = (Number)values.getElement( ix, statusAxis );
+
           if( status != null )
             return m_rules.findRules( status );
         }

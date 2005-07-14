@@ -99,7 +99,7 @@ public class WechmannFunctionTest extends TestCase
     assertTrue( m_dc1.compare( WechmannFunction.computeW( m_wp2, 144 ), 265 ) == 0 );
   }
 
-  public void testForSchirgiswalde()
+  public void testForSchirgiswalde() throws WQException
   {
     WechmannParams wp1 = new WechmannParams( 99.96, -8.43382, 2.25920, 230 );
     /* WechmannParams wp2 = */new WechmannParams( 89.99, -7.49066, 2.03671 );
