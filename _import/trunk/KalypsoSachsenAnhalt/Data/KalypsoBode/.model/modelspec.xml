@@ -13,12 +13,9 @@
 	<input id="VSpeicherDirIn" path="Zeitreihen/Speicher" relativeToCalcCase="true" optional="true"/>
 	<input id="NsGebietDirIn" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true"/>
 
-	
-
 	<output id="Logs" path="Log-Dateien" relativeToCalcCase="true"/>
 	<output id="Ergebnisse" path="" relativeToCalcCase="true"/>
 
 	<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
 	<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true"/>
-	
 </modeldata>

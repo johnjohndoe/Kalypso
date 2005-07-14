@@ -64,7 +64,7 @@
 		geschrieben wird.
 		-->
 	</target>
-	
+
 	<!-- ================================= 
           target: update              
          ================================= -->
@@ -73,31 +73,31 @@
 
 		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
 
-		<property name="HOURS_OF_DAY" value="11"/>
-		
+		<property name="HOURS_OF_DAY" value="11" />
+
 		<gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
-			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
-			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}"/>
-			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}"/>
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast" />
+			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}" />
+			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}" />
 		</gmlProperty>
 
 		<echo message="Zeitreihen werden von WISKI geladen" />
-		
+
 		<copyObservation gml="${calc.url}/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim_48}"/>
+			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim_48}" />
 		</copyObservation>
 
 		<copyObservation gml="${calc.url}/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
-			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
+			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" />
 		</copyObservation>
 
 		<copyObservation gml="${calc.url}/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
+			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" />
 		</copyObservation>
 
 		<copyObservation gml="${calc.url}/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim_48}"/>
+			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim_48}" />
 		</copyObservation>
 
 	</target>
@@ -106,4 +106,30 @@
           target: afterCalc              
          ================================= -->
 	<target name="afterCalc" description="wird nach Beendigung der Berechnung ausgeführt" />
+
+	<!-- ================================= 
+          target: runCalculation              
+         ================================= -->
+	<target name="runCalculation" description="Führt die Berechnung durch">
+		<kalypso.runCalculation typeID="TubigV1.0" calcCaseFolder="${calc.path}">
+			<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
+			<input id="MODELL_GML" path="modell.gml" relativeToCalcCase="true" />
+			<input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true" />
+
+			<!-- Verzeichnisse relativ zur Rechenvariante (.../input/calc/) -->
+			<!-- optionales Attribut 'optional' könnte bei der Bode für die Speicher weg -->
+			<!-- Unterverzeichnisse Messung und Vorhersage! -->
+			<input id="QPegelDirIn" path="Zeitreihen/Pegel" relativeToCalcCase="true" />
+			<input id="QSpeicherDirIn" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true" optional="true" />
+			<!-- haben keine Unterverzeichnisse -->
+			<input id="VSpeicherDirIn" path="Zeitreihen/Speicher" relativeToCalcCase="true" optional="true" />
+			<input id="NsGebietDirIn" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true" />
+
+			<output id="Logs" path="Log-Dateien" relativeToCalcCase="true" />
+			<output id="Ergebnisse" path="" relativeToCalcCase="true" />
+
+			<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
+			<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true" />
+		</kalypso.runCalculation>
+	</target>
 </project>
