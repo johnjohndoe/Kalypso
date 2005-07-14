@@ -136,10 +136,37 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   private boolean m_useNormalBackground = false;
 
+  private boolean m_backJumpsToLastVisited = true;
+
+  private Map m_buttonLabels = new HashMap();
+
   /** If set to true, the background color of error messages is the same as normal messages. */
   public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
   {
     m_useNormalBackground = useNormalBackground;
+  }
+
+  /**
+   * Determines the behaviour of the back button.
+   * <ul>
+   * <li>if true, back jumps to the last visited page (default behaviour)</li>
+   * <li>if false, back jumps to the previous page given by the {@link IWizard}</li>
+   * </ul>
+   */
+  public void setBackJumpsToLastVisited( final boolean backJumpsToLastVisited )
+  {
+    m_backJumpsToLastVisited = backJumpsToLastVisited;
+  }
+
+  /**
+   * Overwrites the default label for the given button (-id).
+   * <p>
+   * Must be called before the buttons are created
+   * </p>
+   */
+  public void setButtonLabel( final int buttonID, final String label )
+  {
+    m_buttonLabels.put( new Integer( buttonID ), label );
   }
 
   /** Sets an new wizard and immediately displays its first page */
@@ -157,7 +184,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
       // IMPORTANT: set the image to null, because it probably gets disposed
       // by m_wizard.dispose();
       setWizardTitleImage( null );
-      
+
       //  todo: maybe ask for unsaved data?
       m_wizard.setContainer( null );
       m_wizard.dispose();
@@ -409,7 +436,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
    *          the parent composite
    * @param id
    *          the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
-   * @param label
+   * @param defaultLabel
    *          the label from the button
    * @param defaultButton
    *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
@@ -418,9 +445,12 @@ public class WizardView extends ViewPart implements IWizardContainer3
    * 
    * @return the new button
    */
-  protected Button createButton( final Composite parent, final int id, final String label, final String handlerMethod,
-      final boolean defaultButton )
+  protected Button createButton( final Composite parent, final int id, final String defaultLabel,
+      final String handlerMethod, final boolean defaultButton )
   {
+    final Integer buttonID = new Integer( id );
+    final String label = m_buttonLabels.containsKey( buttonID ) ? (String)m_buttonLabels.get(buttonID) : defaultLabel;
+
     // increment the number of columns in the button bar
     ( (GridLayout)parent.getLayout() ).numColumns++;
     final Button button = new Button( parent, SWT.PUSH );
@@ -441,7 +471,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
         shell.setDefaultButton( button );
     }
 
-    m_buttons.put( new Integer( id ), button );
+    m_buttons.put( buttonID, button );
     setButtonLayoutData( button );
     return button;
   }
@@ -582,8 +612,11 @@ public class WizardView extends ViewPart implements IWizardContainer3
       return false;
 
     if( !m_isMovingToPreviousPage )
-      //    remember my previous page.
-      page.setPreviousPage( m_currentPage );
+    //    remember my previous page.
+    {
+      if( m_backJumpsToLastVisited )
+        page.setPreviousPage( m_currentPage );
+    }
     else
       m_isMovingToPreviousPage = false;
     //Update for the new page ina busy cursor if possible
@@ -629,7 +662,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
       finishButton.setEnabled( canFinish );
 
     // finish is default unless it is diabled and next is enabled
-    if( canFlipToNextPage && !canFinish )
+    //    if( canFlipToNextPage && !canFinish )
+    // cancel is default unless it is disabled or non-existent
+    if( canFlipToNextPage && nextButton != null )
       getShell().setDefaultButton( nextButton );
     else
       getShell().setDefaultButton( finishButton );
@@ -1355,7 +1390,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   {
     if( titleImage == null || titleImage.isDisposed() )
       return;
-    
+
     titleImage.setImage( newTitleImage );
     titleImage.setVisible( newTitleImage != null );
     if( newTitleImage != null )

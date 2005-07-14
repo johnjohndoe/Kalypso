@@ -57,10 +57,38 @@ import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
  */
 public final class RunnableContextHelper
 {
+  public static final class CoreRunnableWrapper implements IRunnableWithProgress
+  {
+    private final ICoreRunnableWithProgress runnable;
+
+    private IStatus m_status = Status.OK_STATUS;
+
+    public CoreRunnableWrapper( final ICoreRunnableWithProgress runnable )
+    {
+      super();
+      this.runnable = runnable;
+    }
+
+    public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+    {
+      try
+      {
+        m_status = runnable.execute( monitor );
+      }
+      catch( final CoreException e )
+      {
+        throw new InvocationTargetException( e );
+      }
+    }
+
+    public IStatus getStatus()
+    {
+      return m_status;
+    }
+  }
+
   private final IRunnableContext m_context;
   
-  protected IStatus m_status = Status.OK_STATUS;
-
   private RunnableContextHelper( final IRunnableContext context )
   {
     m_context = context;
@@ -106,7 +134,10 @@ public final class RunnableContextHelper
       return statusFromThrowable( t );
     }
 
-    return m_status;
+    if( runnable instanceof CoreRunnableWrapper )
+      return ((CoreRunnableWrapper)runnable).getStatus();
+    
+    return Status.OK_STATUS;
   }
   
   /**
@@ -116,20 +147,7 @@ public final class RunnableContextHelper
   public IStatus execute( final boolean fork,
       final boolean cancelable, final ICoreRunnableWithProgress runnable )
   {
-    final IRunnableWithProgress innerRunnable = new IRunnableWithProgress()
-    {
-      public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
-      {
-        try
-        {
-          m_status = runnable.execute( monitor );
-        }
-        catch( final CoreException e )
-        {
-          throw new InvocationTargetException( e );
-        }
-      }
-    };
+    final IRunnableWithProgress innerRunnable = new CoreRunnableWrapper( runnable );
 
     return execute( fork, cancelable, innerRunnable );
   }
