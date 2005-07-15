@@ -49,7 +49,11 @@ package org.kalypso.auth.scenario;
  */
 public interface IScenario
 {
-  public String getText();
+  /** used internally by Kalypso (id of default scenario is the empty string)*/
+  public String getId();
+  
+  /** scenario name, user friendly*/
+  public String getName();
 
   public String getDescription();
 }

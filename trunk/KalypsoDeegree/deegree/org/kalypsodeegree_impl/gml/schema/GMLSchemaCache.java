@@ -48,6 +48,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.commons.cache.StringValidityFileCache;
@@ -139,8 +140,8 @@ public class GMLSchemaCache
       }
       catch( final Exception e )
       {
-        LOGGER.warning( "Fehler beim Laden von Schema aus URL: " + schemaURL
-            + "\nEs wird versucht die lokale Kopie zu laden." );
+        LOGGER.log( Level.WARNING, "Fehler beim Laden von Schema aus URL: " + schemaURL
+            + "\nEs wird versucht die lokale Kopie zu laden.", e );
       }
       // als file speichern falls laden geklappt hat
       if( schema != null )

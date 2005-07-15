@@ -89,10 +89,5 @@ public interface IUserService extends Remote, IKalypsoService
   /**
    * @return list of scenarios that must be managed by clients
    */
-  public String[] getScenarios() throws RemoteException;
-
-  /**
-   * @return list of description for each scenario
-   */
-  public String[] getScenarioDescriptions() throws RemoteException;
+  public ScenarioBean[] getScenarios() throws RemoteException;
 }

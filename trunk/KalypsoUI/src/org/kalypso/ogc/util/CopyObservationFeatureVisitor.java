@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
@@ -48,6 +47,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -91,6 +91,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final Date m_forecastTo;
 
+  private final Properties m_metadata;
+
   /**
    * @param context
    *          context to resolve relative url
@@ -100,16 +102,19 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    * @param forecastTo
    * @param logWriter
    * @param sources
+   * @param metadata
+   *          All entries will be added to the target observation
    * @param targetobservation
    */
   public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
-      final String targetobservation, final Source[] sources, final Date forecastFrom, final Date forecastTo,
-      final PrintWriter logWriter )
+      final String targetobservation, final Source[] sources, final Properties metadata, final Date forecastFrom,
+      final Date forecastTo, final PrintWriter logWriter )
   {
     m_context = context;
     m_urlResolver = urlResolver;
     m_targetobservation = targetobservation;
     m_sources = sources;
+    m_metadata = metadata;
     m_forecastFrom = forecastFrom;
     m_forecastTo = forecastTo;
     m_logWriter = logWriter;
@@ -159,6 +164,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       // to mark the forecast range
       TimeserieUtils.setForecast( resultObs, m_forecastFrom, m_forecastTo );
 
+      // put additional metadata that we got from outside
+      resultObs.getMetadataList().putAll( m_metadata );
+
       // protocol the observations here and inform the user
       KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logWriter, SUMM_INFO );
 
@@ -190,7 +198,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     return true;
   }
 
-  private IObservation[] getObservations( final Feature f ) throws SensorException, IOException
+  private IObservation[] getObservations( final Feature f ) throws SensorException
   {
     List result = new ArrayList();
     //    final IObservation[] obses = new IObservation[m_sources.length];

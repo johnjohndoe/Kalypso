@@ -254,8 +254,6 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public Object getValueAt( int rowIndex, int columnIndex )
   {
-    System.out.println("getValueAt " + rowIndex );
-    
     try
     {
       final Object key = m_sharedModel.toArray()[rowIndex];

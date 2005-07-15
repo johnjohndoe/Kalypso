@@ -55,4 +55,7 @@ public interface ObservationConstants
 
   /** Some information about the Origin of the observation */
   public final static String MD_ORIGIN = "Entstehung";
+
+  /** Some information about the Scenario into which this observation got delivered */
+  public final static String MD_SCENARIO = "Szenario";
 }

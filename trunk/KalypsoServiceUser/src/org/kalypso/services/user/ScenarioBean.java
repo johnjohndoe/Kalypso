@@ -39,57 +39,56 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.auth.scenario;
+package org.kalypso.services.user;
 
 /**
- * A default implementation of IScenario. Simply holds the scenario text and description. This class is immutable.
- * 
  * @author schlienger
  */
-public class Scenario implements IScenario
+public class ScenarioBean
 {
-  public final static IScenario DEFAULT_SCENARIO = new Scenario( "", "", "" );
-  
-  private final String m_text;
-  private final String m_desc;
-  private final String m_id;
+  private String m_id;
+  private String m_name;
+  private String m_description;
 
-  public Scenario(final String id, final String text, final String desc )
+  public ScenarioBean()
+  {
+    this( "", "", "" );
+  }
+
+  public ScenarioBean( final String id, final String name, final String description )
   {
     m_id = id;
-    m_text = text;
-    m_desc = desc;
+    m_name = name;
+    m_description = description;
   }
 
-  /**
-   * @see org.kalypso.auth.scenario.IScenario#getName()
-   */
-  public String getName()
-  {
-    return m_text;
-  }
-
-  /**
-   * @see org.kalypso.auth.scenario.IScenario#getDescription()
-   */
   public String getDescription()
   {
-    return m_desc;
-  }
-  
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    return m_text;
+    return m_description;
   }
 
-  /**
-   * @see org.kalypso.auth.scenario.IScenario#getId()
-   */
+  public void setDescription( String description )
+  {
+    m_description = description;
+  }
+
   public String getId()
   {
     return m_id;
+  }
+
+  public void setId( String id )
+  {
+    m_id = id;
+  }
+
+  public String getName()
+  {
+    return m_name;
+  }
+
+  public void setName( String name )
+  {
+    m_name = name;
   }
 }

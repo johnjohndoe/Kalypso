@@ -216,7 +216,7 @@ public class GrafikLauncher
 
       // use the windows encoding for the vorlage because of the grafik tool
       // which uses it when reading...
-      final SetContentHelper sch = new SetContentHelper()
+      final SetContentHelper sch = new SetContentHelper("Datei Konvertierung - Grafik öffnen")
       {
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
@@ -502,7 +502,7 @@ public class GrafikLauncher
   private static IStatus zml2dat( final IObservation obs, final IFile datFile, final IAxis dateAxis, final IAxis axis,
       final IProgressMonitor monitor ) throws CoreException
   {
-    final SetContentHelper sch = new SetContentHelper()
+    final SetContentHelper sch = new SetContentHelper( ".zml --> .dat Konvertierung" )
     {
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {

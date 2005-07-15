@@ -41,7 +41,6 @@
 package org.kalypso.auth.ui;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
@@ -164,8 +163,8 @@ public class KalypsoLoginDialog extends TitleAreaDialog
         public void selectionChanged( final SelectionChangedEvent event )
         {
           final IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-          final IScenario scenario = (IScenario)sel.getFirstElement();
-          String desc = scenario.getDescription();
+          m_selectedScenario = (IScenario)sel.getFirstElement();
+          String desc = m_selectedScenario.getDescription();
 
           if( desc == null )
             desc = "";
@@ -215,13 +214,6 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   {
     m_userName = m_txtName == null ? null : m_txtName.getText();
     m_passerword = m_txtPass == null ? null : m_txtPass.getText();
-
-    if( m_sceViewer != null )
-    {
-      final ISelection sel = m_sceViewer.getSelection();
-      if( sel.isEmpty() )
-        m_selectedScenario = (IScenario)sel;
-    }
 
     super.okPressed();
   }

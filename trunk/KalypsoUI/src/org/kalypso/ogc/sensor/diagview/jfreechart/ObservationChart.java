@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.awt.Color;
+import java.awt.GradientPaint;
 import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
@@ -80,6 +82,9 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
+
+    // good for the eyes
+    setBackgroundPaint( new GradientPaint(0, 0, Color.white, 0, 1000, new Color(168,168,255) ) );
   }
 
   protected void setLegendProperties( String legendName, boolean showLegend )
