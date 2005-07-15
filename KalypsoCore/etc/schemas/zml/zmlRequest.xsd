@@ -43,14 +43,14 @@
 							</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="dateFrom" type="xs:date" minOccurs="0" maxOccurs="1" >
+				<xs:element name="dateFrom" type="xs:dateTime" minOccurs="0" maxOccurs="1" >
 					<xs:annotation>
 						<xs:documentation>The from-part of the date-range for which 
 						to retrieve the observation values.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="dateTo" type="xs:date" minOccurs="0" maxOccurs="1" >
+				<xs:element name="dateTo" type="xs:dateTime" minOccurs="0" maxOccurs="1" >
 					<xs:annotation>
 						<xs:documentation>The to-part of the date-range for which 
 						to retrieve the observation values.
