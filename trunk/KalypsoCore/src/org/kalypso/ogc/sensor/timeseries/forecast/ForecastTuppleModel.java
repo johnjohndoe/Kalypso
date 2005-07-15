@@ -69,7 +69,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
    * @throws SensorException
    *           exception
    * 
-   * TODO marc: change class name to MultiTuppleModel, as this is not only for forecast
+   * TODO change class name to MultiTuppleModel, as this is not only for forecast
    */
   public ForecastTuppleModel( final ITuppleModel[] models ) throws SensorException
   {
@@ -131,7 +131,6 @@ public class ForecastTuppleModel extends AbstractTuppleModel
         continue;
       final IAxis[] axes = models[i].getAxisList();
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
-
       for( int rowIx = 0; rowIx < models[i].getCount(); rowIx++ )
       {
         final Date date = (Date)models[i].getElement( rowIx, dateAxis );

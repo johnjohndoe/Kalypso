@@ -69,7 +69,7 @@ public class RequestObservationProxy extends AbstractObservationDecorator implem
   {
     if( args == null )
       args = m_args;
-
+    //  TODO if m_args!=null: they are not used at all, check policy here
     return m_obs.getValues( args );
   }
 }
