@@ -252,6 +252,9 @@ public class ObservationPlot extends XYPlot
     for( int i = 0; i < getDatasetCount(); i++ )
       setDataset( i, null );
 
+    setBackgroundImage( null );
+    m_bgImageSet = false;
+    
     m_serie2dataset.clear();
     m_curve2serie.clear();
 
