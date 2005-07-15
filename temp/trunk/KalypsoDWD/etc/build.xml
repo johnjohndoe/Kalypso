@@ -15,6 +15,7 @@
 
   <target name="clean">
   	<delete dir="${dist.dir}"></delete>
+    <delete file="${deploy.dir}/${jar.name}"/>
   </target>
   
   <target name="jar" depends="init">

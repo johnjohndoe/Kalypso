@@ -40,6 +40,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
@@ -49,12 +50,16 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.ObservationType;
@@ -89,6 +94,14 @@ public class DWDTaskDelegate
         .getNumberOfCells() );
 
     final List targetList = conf.getTarget();
+    if( filter == null )
+      filter = "";
+    else
+      logger.log( "benutze Filter: " + filter );
+    logger.log( "Zeitraum " );
+    logger.log( " von " + startSim + " (Messung" );
+    logger.log( " von " + startForecast + " (Vorhersage)" );
+    logger.log( " bis " + stopSim );
     logger.log( " generate zml..." );
     // iterate zml to generate
     for( Iterator iter = targetList.iterator(); iter.hasNext(); )
@@ -98,8 +111,9 @@ public class DWDTaskDelegate
       final File resultFile = new File( targetContext, targetZMLref );
 
       // iterate hours
-      final Date[] dates = obsRaster.getDates();
-      final Object[][] tupleData = new Object[dates.length][2];
+
+      final Date[] dates = obsRaster.getDates( startForecast, stopSim );
+      final Object[][] tupleData = new Object[dates.length][3];
       for( int i = 0; i < dates.length; i++ )
       {
         final Date date = dates[i];
@@ -115,19 +129,22 @@ public class DWDTaskDelegate
         }
         tupleData[i][0] = date;
         tupleData[i][1] = new Double( value );
+        tupleData[i][2] = new Integer( KalypsoStati.BIT_OK );
       }
       resultFile.getParentFile().mkdirs();
-      final FileWriter writer = new FileWriter( resultFile );
+
       try
       {
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true, true );
         final String title = TimeserieUtils.getName( axisType );
         final IAxis valueAxis = new DefaultAxis( title, axisType, TimeserieUtils.getUnit( axisType ), TimeserieUtils
             .getDataClass( axisType ), false, true );
+        final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( valueAxis, true );
         final IAxis[] axis = new IAxis[]
         {
             dateAxis,
-            valueAxis };
+            valueAxis,
+            statusAxis };
 
         final ITuppleModel tupleModel = new SimpleTuppleModel( axis, tupleData );
 
@@ -137,30 +154,72 @@ public class DWDTaskDelegate
             axis, tupleModel );
         final IObservation forecastObservation;
         // generate href from filter and intervall
-        if( filter == null )
-          filter = "";
         final String href = ZmlURL.insertRequest( filter, new ObservationRequest( startForecast, stopSim ) );
-        if( filter != href )
-          forecastObservation = ZmlFactory.decorateObservation( dwdObservation, href, targetContext.toURL() );
-        else
-          forecastObservation = dwdObservation;
+        //        if( filter != href )
+        forecastObservation = ZmlFactory.decorateObservation( dwdObservation, href, targetContext.toURL() );
+        //        else
+        //          forecastObservation = dwdObservation;
 
         // TODO merge with existing ZML in correct intervalls
         // write result
 
-        final ObservationType observationType = ZmlFactory.createXML( forecastObservation, null );
+        // ----------------
+        // merge with target:
+        // load target
+        final ObservationRequest observationRequest = new ObservationRequest( startSim, startForecast );
+        final String sourceref = ZmlURL.insertRequest( targetZMLref, observationRequest );
+
+        final URL sourceURL = new UrlResolver().resolveURL( targetContext.toURL(), sourceref );
+        IObservation targetObservation = null;
+        try
+        {
+          targetObservation = ZmlFactory.parseXML( sourceURL, title );
+          IAxis dAxis = ObservationUtilities.findAxisByClass(targetObservation.getAxisList(), Date.class);
+          ITuppleModel mValues = targetObservation.getValues(null);
+          System.out.println(mValues.getRangeFor(dAxis)+" (measured)");
+        }
+        catch( Exception e )
+        {
+          // nothing
+        }
+        ITuppleModel fValues = forecastObservation.getValues(null);
+        System.out.println(fValues.getRangeFor(dateAxis)+" (forecast)");
+        final ForecastFilter fc = new ForecastFilter();
+        final IObservation[] srcObs;
+        if( targetObservation != null )
+          srcObs = new IObservation[]
+          {
+              targetObservation
+              ,forecastObservation
+              };
+        else
+          srcObs = new IObservation[]
+          { forecastObservation };
+
+        fc.initFilter( srcObs, forecastObservation, targetContext.toURL() );
+        // ----------------
+
+        final ObservationType observationType = ZmlFactory.createXML( fc, null );
         final Marshaller marshaller = ZmlFactory.getMarshaller();
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
-        marshaller.marshal( observationType, writer );
+        final FileWriter writer = new FileWriter( resultFile );
+        try
+        {
+          marshaller.marshal( observationType, writer );
+        }
+        catch( Exception e )
+        {
+          // nothing
+        }
+        finally
+        {
+          IOUtils.closeQuietly( writer );
+        }
       }
       catch( Exception e )
       {
         throw e;
-      }
-      finally
-      {
-        IOUtils.closeQuietly( writer );
       }
     }
   }

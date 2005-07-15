@@ -30,9 +30,10 @@
 package org.kalypso.dwd;
 
 import java.util.Date;
-import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * 
@@ -87,7 +88,18 @@ public class DWDObservationRaster
 
   public Date[] getDates()
   {
-    final Set set = m_valueHash.keySet();
-    return (Date[])set.toArray( new Date[set.size()] );
+    final SortedSet sort = new TreeSet( m_valueHash.keySet() );
+    return (Date[])sort.toArray( new Date[sort.size()] );
+  }
+
+  public Date[] getDates( Date min, Date max )
+  {
+    final SortedSet sort = new TreeSet( m_valueHash.keySet() );
+    if( min == null )
+      min = (Date)sort.first();
+    if( max == null )
+      max = (Date)sort.last();
+    final SortedSet result = sort.subSet( min, max );
+    return (Date[])result.toArray( new Date[result.size()] );
   }
 }

@@ -149,11 +149,6 @@ public class DWDTask extends Task
           System.out.println( message );
         }
       };
-      logger.log( "DWD-task: generates ZML files from DWD-forecast" );
-      logger.log( "  inputRaster: " + m_obsRasterURL );
-      logger.log( "  raster to zml mapping: " + m_dwd2zmlConfUrl );
-      logger.log( "  context for targets (zml-files): " + m_targetContext );
-      logger.log( "  unmarshall dwd2zml configuration ..." );
 
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
       delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date(
