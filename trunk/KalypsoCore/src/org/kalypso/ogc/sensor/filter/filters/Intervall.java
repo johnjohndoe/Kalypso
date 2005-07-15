@@ -74,19 +74,18 @@ public class Intervall
 
   final Calendar m_end;
 
-  private long[] m_status;
+  private int[] m_status;
 
   private double[] m_value;
 
   /**
    * @author doemming
    */
-  public Intervall( Calendar start, Calendar end, final long[] status, final double[] value )
+  public Intervall( Calendar start, Calendar end, final int[] status, final double[] value )
   {
-
     m_start = (Calendar)start.clone();
     m_end = (Calendar)end.clone();
-    m_status = (long[])status.clone();
+    m_status = (int[])status.clone();
     m_value = (double[])value.clone();
   }
 
@@ -106,13 +105,13 @@ public class Intervall
    * 
    * @author doemming
    */
-  public Intervall( Calendar start, Calendar end, Long[] status, Double[] values )
+  public Intervall( Calendar start, Calendar end, Integer[] status, Double[] values )
   {
     m_start = start;
     m_end = end;
-    m_status = new long[status.length];
+    m_status = new int[status.length];
     for( int i = 0; i < status.length; i++ )
-      m_status[i] = status[i].longValue();
+      m_status[i] = status[i].intValue();
     m_value = new double[values.length];
     for( int i = 0; i < values.length; i++ )
       m_value[i] = values[i].doubleValue();
@@ -128,14 +127,14 @@ public class Intervall
     return m_start;
   }
 
-  public long[] getStatus()
+  public int[] getStatus()
   {
     return m_status;
   }
 
-  public void setStatus( final long[] status )
+  public void setStatus( final int[] status )
   {
-    m_status = (long[])status.clone();
+    m_status = (int[])status.clone();
   }
 
   public double[] getValue()
@@ -253,6 +252,14 @@ public class Intervall
       result.append( "value : " );
       for( int i = 0; i < m_value.length; i++ )
         result.append( "  " + m_value[i] );
+      result.append( "\n" );
+    }
+    if( m_status != null )
+    {
+      result.append( "status : " );
+      for( int i = 0; i < m_status.length; i++ )
+        result.append( "  " + m_status[i] );
+      result.append( "\n" );
     }
     return result.toString();
   }
