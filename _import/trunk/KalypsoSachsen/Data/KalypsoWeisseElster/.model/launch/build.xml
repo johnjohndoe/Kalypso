@@ -4,14 +4,50 @@
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
-         - - - - - - - - - - - - - - - - - -->
+      - - - - - - - - - - - - - - - - - -->
 	<target name="fake" />
+
+	<target name="info">
+		<echo message="project dir ${project.dir}" />
+		<echo message="project url ${project.url}" />
+		<echo message="calc dir    ${calc.dir}" />
+		<echo message="calc url    ${calc.url}" />
+	</target>
+
+	<!--
+	
+	Konzept N:
+
+	updateOmbrometer(I,U):
+						ombrometer von PSI-abholen
+						mit intervallfilter (TODO)
+						
+	updateMeassured(I,U):
+						gebietsniederschlagsmodell in berechnet.zml einfügen
+
+	fetchRaster(I,U):	Raster-datei in Rechenfall kopieren
+
+	updateForecast(I,U):		
+					  	Raster auslesen und in berechnet.zml einfügen
+						TODO: einfügen supporten
+						TODO: task bekommt intervallfilter mit
+	
+	Konzept T: wie Konzept für N, nur Vorhersage kommt aus template
+	
+	Konzept Zufluss:
+	
+	Konzept Pegel:
+	
+	TODO generell auch bei Ausfall richtige Achsen garantieren ! 
+		 z.b. jeweils bei messung leeres Template einbeziehen
+	-->
 
 	<!-- 
 		 ================================= 
           target: create			Rechenvariante erzeugen
          ================================= 
     -->
+
 	<target name="create" description="Erzeugt eine Rechenvariante">
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
 		<!-- copy modell -->
@@ -23,48 +59,131 @@
 		</copy>
 	</target>
 
-	<!-- 
-		 ================================= 
-          target: update			Zeitreihen aktualisieren
-         ================================= 
-    -->
-	<target name="update" description="Aktualisiert eine Rechenvariante">
-		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
-
-
+	<target name="setProperties" depends="info">
+		<echo message="Variablen einrichten" />
 		<gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="/" featureProperty="startsimulation" />
 			<property name="startforecast" featurepath="/" featureProperty="startforecast" />
 			<!-- stopsim = startforecast + 48h -->
 			<property name="stopsim" featurepath="/" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11" />
 		</gmlProperty>
+		<property name="dwdRasterRemoteURL" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
+		<property name="dwdRasterLocalPath" value="${calc.dir}/dwd/lm_aktuell.txt" />
+		<property name="dwdRasterLocalURL" value="${calc.url}/dwd/lm_aktuell.txt" />
 
-		<!-- ombrometer from repository -->
+		<!-- properties for filters --> 
+		<property name="interval.amount" value="15" />
+		<property name="interval.field" value="MINUTE" />
+
+		<echo message="von           ${startsim}" />
+		<echo message="vorhersage ab ${startforecast}" />
+		<echo message="bis           ${stopsim}" />
+	</target>
+
+	<target name="updateOmbrometer" depends="setProperties">
+		<!-- updateOmbrometer(I,U):
+						ombrometer von PSI-abholen						
+						TODO: intervallfilter
+						zum test erst ObsService neu deployen ??
+	     -->
+		<echo message="aktualisiere Ombrometer Zeitreihen im Rechenfall" />
 		<copyObservation gml="${calc.url}/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetObservation="N" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="NRepository" from="${startsim}" to="${startforecast}" />
 		</copyObservation>
-		<!-- pegel -->
-		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="NodeCollectionMember/nodeMember" context="${calc.url}" targetObservation="pegelZR" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+	</target>
+
+	<target name="updateMeasured" depends="setProperties">
+		<!-- updateMeassured(I,U):
+						gebietsniederschlagsmodell in berechnet.zml einfügen
+		 -->
+		<echo message="aktualisiere Gebietsniederschläge (Messung)" />
+
+		<copyObservation gml="${project.url}/.model/kriging/mapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${startforecast}" />
+			<!-- Vorhersage übernehmen -->
+			<source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+		</copyObservation>
+	</target>
+
+	<target name="fetchRaster" depends="setProperties">
+		<!-- fetchRaster(I,U):	Raster-datei in Rechenfall kopieren
+		TODO: alternativ web-quellen für dwd-quelle angeben
+		 -->
+		<echo message="aktualisiere DWD-Raster im Rechenfall" />
+		<get dest="${dwdRasterLocalPath}" src="${dwdRasterRemoteURL}" />
+	</target>
+
+	<target name="updateForecast" depends="setProperties">
+		<!-- updateForecast(I,U):		
+					  	Raster auslesen und in berechnet.zml einfügen
+						TODO: teste generierte werte wenn keine DWD-Daten vorhanden
+						DONE: einfügen supporten
+						DONE: Statusachse generieren
+						DONE: task bekommt intervallfilter mit 
+						DONE: Zeitraum beachten
+		 -->
+		<echo message="aktualisiere Gebietsniederschläge (Vorhersage aus DWD-Raster ${dwdRasterLocalURL} )" />
+		<dwdTask 
+			dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConfN.xml"
+			obsrasterurl="${dwdRasterLocalURL}"
+			targetcontext="${calc.dir}" 
+			description="raster zu zml" 
+			from="${startsim}" 
+			forecastfrom="${startforecast}" 
+			to="${stopsim}" 
+			zmlfilter="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+		<!-- der Filter im Klartext: 
+			<filter>
+				<intervallFilter amount="15" calendarField="MINUTE" mode="sum" xmlns="filters.zml.kalypso.org"/>
+			</filter>" 
+		 -->
+	</target>
+
+	<!--	<target name="update" depends="updateOmbrometer,updateMeassured,fetchRaster,updateForecast" description="Aktualisiert eine Rechenvariante">-->
+	<target name="update" depends="updateForecast" description="Aktualisiert eine Rechenvariante">
+		<echo message="aktualisiere Zeitreihen: ${calc.dir}" />
+	</target>
+
+	<!--
+		<echo message="Vorhersage T generieren (aus DWD-Raster)" />
+		<dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConfT.xml" obsrasterurl="${project.url}/.model/dwd/lm_test.txt" targetcontext="${calc.dir}/dwd" />
+-->
+	<!-- pegel 
+
+<copyObservation gml="${calc.url}/calcCase.gml" featurePath="NodeCollectionMember/nodeMember" context="${calc.url}" targetObservation="pegelZR" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="pegelZRRepository" from="${startsim}" to="${startforecast}" />
 		</copyObservation>
-
-		<!-- zufluesse from repository -->
+-->
+	<!-- zufluesse from repository 
 		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="NodeCollectionMember/nodeMember" context="${calc.url}" targetObservation="zuflussZR" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="zuflussZRRepository" from="${startsim}" to="${startforecast}" />
 			<source property="zuflussZRRepositoryVorhersage" from="${startforecast}" to="${stopsim}" />
 		</copyObservation>
-
-		<!-- gebietsniederschlagsmodell -->
-		<copyObservation gml="${project.url}/.model/kriging/mapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="inObservationLink" from="${startsim}" to="${startforecast}" />
-			<!--			<source property="zuflussZRRepositoryVorhersage" from="${startforecast}" to="${stopsim}" />-->
-		</copyObservation>
+-->
 
 
-		<!--        areal precipitation -->
-		<!-- dwdraster abhohlen -->
-		<!-- dwdraster zu teilgebite-->
-		<!--
+	<!-- gebietsniederschlagsmodell -->
+
+	<!-- dwdraster abhohlen -->
+	<!--
+			http://127.0.0.1:webdav/dwd/aktuell.lm		
+		-->
+
+	<!--		<dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConfN.xml" obsrasterurl="${project.url}/.model/dwd/lm_test.txt" targetcontext="${calc.url}/dwd">
+		</dwdTask>
+-->
+	<!-- neueste Vorhersage soll immer unter dem gleichen namen vorhamnden sein: 
+		"aktuell.lm" und wird in die Rechenvariante kopiert.		
+		-->
+	<!-- dwdraster zu teilgebiete-->
+	<!-- 
+			
+		
+		Konfiguration liegt vor und macht ZML aus dem Raster
+		
+		
+		-->
+	<!--
 		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="TalsperreCollectionAssociation/TalsperreMember" context="${calc.url}" targetObservation="Abgabe" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="Abgabe_eingang" from="${startsim}" to="${stopsim}" />
 		</copyObservation>
@@ -73,12 +192,30 @@
 			<source property="Abfluss_eingang" from="${startsim}" to="${stopsim}" />
 		</copyObservation>
 	    -->
-	</target>
 
+
+	<!--	<target name="dwdN" description="DWD-Vorhersage zu Gebietsniederschlag umrechnen">
+		<echo message="generiere ZML auf raster" />
+		<dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConfN.xml" obsrasterurl="${project.url}/.model/dwd/lm_test.txt" targetcontext="${calc.url}/dwd">
+		</dwdTask>
+	</target>
+-->
 	<!--<target name="kriging" description="convert">
 		<property name="project.dir" value="file:/E:\\runtime-workspace\\KalypsoWeisseElster\\" />
 		<property name="project.dir.file" value="E:\\runtime-workspace\\KalypsoWeisseElster\\" />
-		<ktest context="${project.dir}/" epsg="EPSG:31468" modellgml="${project.dir}/modell.gml" modellgmlfeaturepath="CatchmentCollectionMember/catchmentMember" modellgmlpolygonpropname="Ort" modellgmltargetobservationlinkpropname="niederschlagZR" hrefkrigingtxt="${project.dir}/.model/kriging/Kriging_GewichteWeisseElster.txt" sourcegml="${project.dir}/ombrometer.gml" sourcegmlfeaturepath="ombrometerMember" sourcegmlidlinkproperty="DWDID" sourcegmlobservationlinkproperty="N" hrefgeneratesgml="${project.dir.file}/.model/kriging/krigingMapping.gml" timestepminutes="15" />
+		<ktest context="${project.dir}/" 
+		epsg="EPSG:31468"
+modellgml="${project.dir}/modell.gml"
+modellgmlfeaturepath="CatchmentCollectionMember/catchmentMember" 
+modellgmlpolygonpropname="Ort" 
+modellgmltargetobservationlinkpropname="niederschlagZR" 
+hrefkrigingtxt="${project.dir}/.model/kriging/Kriging_GewichteWeisseElster.txt" 
+sourcegml="${project.dir}/ombrometer.gml" 
+sourcegmlfeaturepath="ombrometerMember" 
+sourcegmlidlinkproperty="DWDID"
+ sourcegmlobservationlinkproperty="N" 
+ hrefgeneratesgml="${project.dir.file}/.model/kriging/krigingMapping.gml" 
+ timestepminutes="15" />
 	</target>
 -->
 	<target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">
