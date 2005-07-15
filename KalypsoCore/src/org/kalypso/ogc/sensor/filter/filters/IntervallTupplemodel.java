@@ -164,9 +164,10 @@ public class IntervallTupplemodel extends AbstractTuppleModel
   private void initModell() throws SensorException
   {
     // default values
-    final long[] defaultStatus = new long[m_statusAxis.length];
+    final int[] defaultStatus = new int[m_statusAxis.length];
     for( int i = 0; i < defaultStatus.length; i++ )
-      defaultStatus[i] = KalypsoStati.BIT_OK;
+      defaultStatus[i] = KalypsoStati.BIT_CHECK;
+    // CHECK BIT_OK
     final double[] defaultValues = new double[m_valueAxis.length];
     for( int i = 0; i < defaultValues.length; i++ )
       defaultValues[i] = 0d;
@@ -206,16 +207,17 @@ public class IntervallTupplemodel extends AbstractTuppleModel
         }
         final Calendar cal = getDefaultCalendar( (Date)m_baseModel.getElement( srcRow, m_dateAxis ) );
         final Object[] o = ObservationUtilities.getElements( m_baseModel, srcRow, m_statusAxis );
-        final Long[] stati = new Long[o.length];
+        final Integer[] stati = new Integer[o.length];
         for( int i = 0; i < o.length; i++ )
-          stati[i] = (Long)o[i];
+          stati[i] = (Integer)o[i];
 
         final Object[] valueOs = ObservationUtilities.getElements( m_baseModel, srcRow, m_valueAxis );
         final Double[] values = new Double[valueOs.length];
         for( int i = 0; i < valueOs.length; i++ )
           values[i] = (Double)valueOs[i];
 
-        if( srcCal_last.before( cal ) )
+        // TODO check "&& srcRow > 0"
+        if( srcCal_last.before( cal ) && srcRow > 0 )
           srcIntervall = new Intervall( srcCal_last, cal, stati, values );
         else
           srcIntervall = null;
@@ -290,11 +292,11 @@ public class IntervallTupplemodel extends AbstractTuppleModel
       throws SensorException
   {
     final Calendar cal = targetIntervall.getEnd();
-    final long[] status = targetIntervall.getStatus();
+    final int[] status = targetIntervall.getStatus();
     final double[] value = targetIntervall.getValue();
     model.setElement( targetRow, cal.getTime(), m_dateAxis );
     for( int i = 0; i < m_statusAxis.length; i++ )
-      model.setElement( targetRow, new Long( status[i] ), m_statusAxis[i] );
+      model.setElement( targetRow, new Integer( status[i] ), m_statusAxis[i] );
     for( int i = 0; i < m_valueAxis.length; i++ )
       model.setElement( targetRow, new Double( value[i] ), m_valueAxis[i] );
   }
