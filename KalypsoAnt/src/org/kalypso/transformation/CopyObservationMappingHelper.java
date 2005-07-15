@@ -33,6 +33,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Date;
+import java.util.Properties;
 
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
@@ -152,7 +153,7 @@ public class CopyObservationMappingHelper
       { new CopyObservationHandler.Source( RESULT_TS_IN_PROP, from, forecastStart ), // measured
       };
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver,
-        RESULT_TS_OUT_PROP, sources, null, null, writer );
+        RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer );
     workspace.accept( visitor, RESULT_LIST_PROP, 1 );
     logger.log( stringWriter.toString() );
   }

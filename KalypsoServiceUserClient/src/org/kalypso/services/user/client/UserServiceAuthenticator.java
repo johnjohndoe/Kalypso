@@ -54,6 +54,7 @@ import org.kalypso.auth.ui.KalypsoLoginDialog;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.auth.user.KalypsoUser;
 import org.kalypso.services.proxy.IUserService;
+import org.kalypso.services.proxy.ScenarioBean;
 
 /**
  * @author schlienger
@@ -69,12 +70,11 @@ public class UserServiceAuthenticator implements IAuthenticator
   {
     final IUserService srv = KalypsoServiceUserClientPlugin.getDefault().getUserServiceProxy();
 
-    final String[] texts = srv.getScenarios();
-    final String[] descriptions = srv.getScenarioDescriptions();
+    final ScenarioBean[] beans = srv.getScenarios();
 
-    final IScenario[] scenarios = new IScenario[texts.length];
+    final IScenario[] scenarios = new IScenario[beans.length];
     for( int i = 0; i < scenarios.length; i++ )
-      scenarios[i] = new Scenario( texts[i], descriptions[i] );
+      scenarios[i] = new Scenario( beans[i].getId(), beans[i].getName(), beans[i].getDescription() );
 
     String username = System.getProperty( "user.name" );
     IScenario scenario = Scenario.DEFAULT_SCENARIO;

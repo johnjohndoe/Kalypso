@@ -43,6 +43,7 @@ package org.kalypso.ogc.util;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Date;
+import java.util.Properties;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -59,7 +60,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public final class CopyObservationHandler
 {
   public static void copyObserations( final IUrlResolver urlResolver, final URL gmlURL, final String featurePath,
-      final String targetobservation, final URL context, final Source[] sources, final Date forecastFrom,
+      final String targetobservation, final URL context, final Source[] sources, final Properties metadata, final Date forecastFrom,
       final Date forecastTo, final PrintWriter logWriter ) throws Exception
   {
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
@@ -67,7 +68,7 @@ public final class CopyObservationHandler
     if( ft == null )
       throw new TransformationException( "FeaturePath unbekannt: " + featurePath );
 
-    final FeatureVisitor visitor = new CopyObservationFeatureVisitor( context, urlResolver, targetobservation, sources,
+    final FeatureVisitor visitor = new CopyObservationFeatureVisitor( context, urlResolver, targetobservation, sources, metadata,
         forecastFrom, forecastTo, logWriter );
     workspace.accept( visitor, featurePath, FeatureVisitor.DEPTH_INFINITE );
   }

@@ -67,6 +67,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 public class ObservationTableEditor extends AbstractObservationEditor
 {
   protected final ObservationTable m_table;
+  private Composite m_swingContainer;
 
   /**
    * Constructor: the ObservationTable is already created here because of the listening functionality that needs to be
@@ -105,8 +106,8 @@ public class ObservationTableEditor extends AbstractObservationEditor
   {
     super.createPartControl( parent );
 
-    // SWT-AWT Brücke für die Darstellung von JFreeChart
-    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+    m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    final Frame vFrame = SWT_AWT.new_Frame( m_swingContainer );
 
     final JScrollPane pane = new JScrollPane( m_table );
     vFrame.add( pane );
@@ -145,5 +146,14 @@ public class ObservationTableEditor extends AbstractObservationEditor
     };
 
     helper.setFileContents( input.getFile(), false, true, monitor );
+  }
+  
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
+   */
+  public void setFocus()
+  {
+    if( m_swingContainer != null )
+      m_swingContainer.setFocus();
   }
 }

@@ -64,6 +64,21 @@ import org.kalypso.contribs.java.lang.CatchRunnable;
 public abstract class SetContentHelper
 {
   private String m_newCharset;
+  private final String m_title;
+
+  public SetContentHelper()
+  {
+    this( "Schreibe in Datei" );
+  }
+
+  /**
+   * @param title
+   *          title of the task in the context of the monitor
+   */
+  public SetContentHelper( final String title )
+  {
+    m_title = title;
+  }
 
   public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
       final IProgressMonitor monitor ) throws CoreException
@@ -87,7 +102,7 @@ public abstract class SetContentHelper
     PipedInputStream m_pis = null;
     try
     {
-      monitor.beginTask( "Schreibe in Datei", 2000 );
+      monitor.beginTask( m_title, 2000 );
 
       final PipedOutputStream m_pos = new PipedOutputStream();
       m_pis = new PipedInputStream( m_pos );

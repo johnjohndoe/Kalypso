@@ -47,6 +47,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -104,6 +105,11 @@ public class CopyObservationTask extends Task
   private List m_sources = new LinkedList();
 
   /**
+   * List of metadata-properties and values to set to the target observation
+   */
+  private Properties m_metadata = new Properties();
+
+  /**
    * @see org.apache.tools.ant.Task#execute()
    */
   public void execute() throws BuildException
@@ -124,9 +130,10 @@ public class CopyObservationTask extends Task
       if( m_forecastTo != -1 )
         forecastTo = new Date( m_forecastTo );
 
+      final CopyObservationHandler.Source[] srcs = (CopyObservationHandler.Source[])m_sources
+          .toArray( new CopyObservationHandler.Source[m_sources.size()] );
       CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(), getTargetobservation(),
-          getContext(), (CopyObservationHandler.Source[])m_sources.toArray( new CopyObservationHandler.Source[m_sources
-              .size()] ), forecastFrom, forecastTo, logPW );
+          getContext(), srcs, m_metadata, forecastFrom, forecastTo, logPW );
 
       logPW.close();
 
@@ -197,6 +204,24 @@ public class CopyObservationTask extends Task
     m_sources.add( new CopyObservationHandler.Source( property, fromDate, toDate ) );
   }
 
+  public void addConfiguredMetadata( final Metadata metadata )
+  {
+    if( metadata.getName() == null )
+    {
+      getProject().log( "Cannot add Metadata since property name is null", Project.MSG_WARN );
+      return;
+    }
+
+    if( metadata.getValue() == null )
+    {
+      getProject().log( "Cannot add Metadata since property value is null. Property name: " + metadata.getName(),
+          Project.MSG_WARN );
+      return;
+    }
+
+    m_metadata.setProperty( metadata.getName(), metadata.getValue() );
+  }
+
   public final static class Source
   {
     private String property;
@@ -254,5 +279,31 @@ public class CopyObservationTask extends Task
   public final void setForecastTo( long forecastTo )
   {
     m_forecastTo = forecastTo;
+  }
+
+  public final static class Metadata
+  {
+    private String m_name;
+    private String m_value;
+
+    public String getName()
+    {
+      return m_name;
+    }
+
+    public void setName( String name )
+    {
+      m_name = name;
+    }
+
+    public String getValue()
+    {
+      return m_value;
+    }
+
+    public void setValue( String value )
+    {
+      m_value = value;
+    }
   }
 }

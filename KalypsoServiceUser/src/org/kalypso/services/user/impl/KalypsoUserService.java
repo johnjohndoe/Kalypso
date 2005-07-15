@@ -57,6 +57,7 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.user.IUserRightsProvider;
 import org.kalypso.services.user.IUserService;
+import org.kalypso.services.user.ScenarioBean;
 import org.kalypso.services.user.UserRightsException;
 
 /**
@@ -81,8 +82,8 @@ public class KalypsoUserService implements IUserService
 
   private static final String PROP_IMPERSONATE_USER = "IMPERSONATE_USER";
 
-  private static final String PROP_SCENARIO_LIST = "SCENARIO_LIST";
-
+  private static final String PROP_SCENARIO_ID_LIST = "SCENARIO_ID_LIST";
+  private static final String PROP_SCENARIO_NAME_LIST = "SCENARIO_NAME_LIST";
   private static final String PROP_SCENARIO_DESC_LIST = "SCENARIO_DESC_LIST";
 
   private static final String PROP_CHOOSE_SCENARIO = "CHOOSE_SCENARIO";
@@ -91,9 +92,7 @@ public class KalypsoUserService implements IUserService
 
   private boolean m_chooseScenario;
 
-  private String[] m_scenarios;
-
-  private String[] m_scenarioDescriptions;
+  private ScenarioBean[] m_scenarios;
 
   public KalypsoUserService() throws RemoteException
   {
@@ -129,7 +128,7 @@ public class KalypsoUserService implements IUserService
       final Properties props = new Properties();
       props.load( stream );
 
-      // step through properties and 
+      // step through properties and
       final Set keys = props.keySet();
       for( final Iterator it = keys.iterator(); it.hasNext(); )
       {
@@ -137,7 +136,7 @@ public class KalypsoUserService implements IUserService
         if( key.endsWith( "URL" ) )
         {
           final String path = props.getProperty( key );
-          final URL resolved = UrlResolverSingleton.resolveUrl( conf.toURL() , path);
+          final URL resolved = UrlResolverSingleton.resolveUrl( conf.toURL(), path );
           final String fullPath = resolved.toExternalForm();
 
           props.setProperty( key, fullPath );
@@ -154,16 +153,28 @@ public class KalypsoUserService implements IUserService
       m_impersonateUser = Boolean.valueOf( iu ).booleanValue();
       final String cs = props.getProperty( PROP_CHOOSE_SCENARIO, "false" );
       m_chooseScenario = Boolean.valueOf( cs ).booleanValue();
-      final String sl = props.getProperty( PROP_SCENARIO_LIST, "" );
-      m_scenarios = sl.split( ";" );
+
+      final String sid = props.getProperty( PROP_SCENARIO_ID_LIST, "" );
+      final String[] scenarioIds = sid.split( ";" );
+      final String sl = props.getProperty( PROP_SCENARIO_NAME_LIST, "" );
+      final String[] scenarioNames = sl.split( ";" );
       final String sdl = props.getProperty( PROP_SCENARIO_DESC_LIST, "" );
-      m_scenarioDescriptions = sdl.split( ";" );
+      final String[] scenarioDescriptions = sdl.split( ";" );
+      if( scenarioIds.length == scenarioNames.length && scenarioNames.length == scenarioDescriptions.length )
+      {
+        m_scenarios = new ScenarioBean[scenarioIds.length];
+        
+        for( int i = 0; i < m_scenarios.length; i++ )
+          m_scenarios[i] = new ScenarioBean( scenarioIds[i], scenarioNames[i], scenarioDescriptions[i] );
+      }
+      else
+        throw new IllegalArgumentException( "Szenario Listen unterschiedlich lang" );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( "KalypsoUserService", "init", e );
 
-      throw new RemoteException( "Exception in init()", e );
+      throw new RemoteException( "Fehler bei der Initialisierung", e );
     }
     finally
     {
@@ -248,16 +259,8 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#getScenarios()
    */
-  public String[] getScenarios()
+  public ScenarioBean[] getScenarios()
   {
     return m_scenarios;
-  }
-
-  /**
-   * @see org.kalypso.services.user.IUserService#getScenarioDescriptions()
-   */
-  public String[] getScenarioDescriptions()
-  {
-    return m_scenarioDescriptions;
   }
 }

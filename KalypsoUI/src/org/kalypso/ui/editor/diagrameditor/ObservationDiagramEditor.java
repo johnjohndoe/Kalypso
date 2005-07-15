@@ -69,6 +69,8 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
 
   protected ObservationChart m_obsChart = null;
 
+  private Composite m_swingContainer;
+
   public ObservationDiagramEditor()
   {
     super( new DiagView( true ) );
@@ -80,9 +82,9 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
   public void createPartControl( Composite parent )
   {
     super.createPartControl( parent );
-    
-    // SWT-AWT Brücke für die Darstellung von JFreeChart
-    m_diagFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
+
+    m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    m_diagFrame = SWT_AWT.new_Frame( m_swingContainer );
 
     try
     {
@@ -141,5 +143,14 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
   public ObservationChart getChart()
   {
     return m_obsChart;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
+   */
+  public void setFocus()
+  {
+    if( m_swingContainer != null )
+      m_swingContainer.setFocus();
   }
 }

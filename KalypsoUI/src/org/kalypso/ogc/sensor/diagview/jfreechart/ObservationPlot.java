@@ -42,13 +42,20 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.ImageIcon;
 
 import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.AxisLocation;
@@ -61,6 +68,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.ui.Align;
 import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
@@ -72,6 +80,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.AxisMapping;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -123,6 +132,9 @@ public class ObservationPlot extends XYPlot
   private transient Map m_yConsts = new HashMap();
 
   private transient Map m_markers = new HashMap();
+
+  /** is true as soon as one background image has been set */
+  private boolean m_bgImageSet = false;
 
   /**
    * Constructor.
@@ -354,30 +366,55 @@ public class ObservationPlot extends XYPlot
       }
     }
 
-    // add a constant Y line if obs has alarmstufen
-    if( obs != null && yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+    if( obs != null )
     {
-      final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( obs );
       final MetadataList mdl = obs.getMetadataList();
-      for( int i = 0; i < alarms.length; i++ )
+
+      // change diagram background if obs has scenario specific metadata property
+      if( mdl.getProperty( ObservationConstants.MD_SCENARIO ) != null )
       {
-        final Double value = new Double( mdl.getProperty( alarms[i] ) );
-        if( !m_yConsts.containsKey( value ) )
+        // TODO: test is currently hardcoded! make it scenario dependent...
+        if( mdl.getProperty( ObservationConstants.MD_SCENARIO ).equals( "test" ) && !m_bgImageSet )
         {
-          final Color color = TimeserieUtils.getColorForAlarmLevel( alarms[i] );
+          try
+          {
+            final Image image = new ImageIcon( new URL( "http://lfug-kv-01:8080/webdav/simulation.png" ) ).getImage();
+            setBackgroundImage( image );
+            setBackgroundImageAlignment( Align.FIT_HORIZONTAL | Align.NORTH );
+            m_bgImageSet = true;
+          }
+          catch( final MalformedURLException e )
+          {
+            Logger.getLogger( getClass().getName() ).log( Level.WARNING, "Hintergrundbild konnte nicht geladen werden",
+                e );
+          }
+        }
+      }
 
-          final double x;
-          if( xyc.getItemCount() > 1 )
-            x = xyc.getXValue( 1 ).doubleValue();
-          else
-            x = getDomainAxis().getLowerBound();
-          final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() );
-          ann.setPaint( color );
+      // add a constant Y line if obs has alarmstufen
+      if( yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      {
+        final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( obs );
+        for( int i = 0; i < alarms.length; i++ )
+        {
+          final Double value = new Double( mdl.getProperty( alarms[i] ) );
+          if( !m_yConsts.containsKey( value ) )
+          {
+            final Color color = TimeserieUtils.getColorForAlarmLevel( alarms[i] );
 
-          final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( alarms[i] + " (" + value.doubleValue() + ")",
-              value.doubleValue(), color, ann, yDiagAxis );
+            final double x;
+            if( xyc.getItemCount() > 1 )
+              x = xyc.getXValue( 1 ).doubleValue();
+            else
+              x = getDomainAxis().getLowerBound();
+            final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() );
+            ann.setPaint( color );
 
-          m_yConsts.put( value, vac );
+            final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( alarms[i] + " (" + value.doubleValue() + ")",
+                value.doubleValue(), color, ann, yDiagAxis );
+
+            m_yConsts.put( value, vac );
+          }
         }
       }
     }
