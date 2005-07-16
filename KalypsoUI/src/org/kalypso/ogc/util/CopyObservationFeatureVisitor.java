@@ -207,7 +207,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       final Source source = m_sources[i];
       try
       {
-        result.add( getObservation( f, source.getProperty(), source.getFrom(), source.getTo() ) );
+        result.add( getObservation( f, source.getProperty(), source.getFrom(), source.getTo(), source.getFilter() ) );
       }
       catch( Exception e )
       {
@@ -232,7 +232,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   }
 
   private IObservation getObservation( final Feature feature, final String sourceProperty, final Date from,
-      final Date to ) throws MalformedURLException, SensorException
+      final Date to, String filter ) throws MalformedURLException, SensorException
   {
     if( sourceProperty == null )
       return null;
@@ -242,9 +242,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       return null;
     // keine Zeitreihe verlink, z.B. kein Pegel am
     // Knoten in KalypsoNA
-    String href = sourcelink.getHref();
+    final String href;
+    if( filter == null )
+      href = sourcelink.getHref();
+    else
+      href = ZmlURL.insertFilter( sourcelink.getHref(), filter );
     final String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
-
     final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
 
     return ZmlFactory.parseXML( sourceURL, feature.getId() );
