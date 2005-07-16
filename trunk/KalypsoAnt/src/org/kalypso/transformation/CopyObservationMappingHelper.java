@@ -145,12 +145,12 @@ public class CopyObservationMappingHelper
     if( keepForecast )
       sources = new CopyObservationHandler.Source[]
       {
-          new CopyObservationHandler.Source( RESULT_TS_IN_PROP, from, forecastStart ), // measured
-          new CopyObservationHandler.Source( RESULT_TS_OUT_PROP, forecastStart, end ) // forecast
+          new CopyObservationHandler.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
+          new CopyObservationHandler.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ) // forecast
       };
     else
       sources = new CopyObservationHandler.Source[]
-      { new CopyObservationHandler.Source( RESULT_TS_IN_PROP, from, forecastStart ), // measured
+      { new CopyObservationHandler.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
       };
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver,
         RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer );

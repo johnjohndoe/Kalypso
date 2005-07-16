@@ -196,12 +196,12 @@ public class CopyObservationTask extends Task
 
     final Date fromDate = new Date( from );
     final Date toDate = new Date( to );
-
+    final String filter = source.getFilter();
     getProject().log(
         "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(),
         Project.MSG_DEBUG );
 
-    m_sources.add( new CopyObservationHandler.Source( property, fromDate, toDate ) );
+    m_sources.add( new CopyObservationHandler.Source( property, fromDate, toDate, filter ) );
   }
 
   public void addConfiguredMetadata( final Metadata metadata )
@@ -229,6 +229,8 @@ public class CopyObservationTask extends Task
     private long from;
 
     private long to;
+
+    private String filter;
 
     public final String getProperty()
     {
@@ -259,6 +261,16 @@ public class CopyObservationTask extends Task
     {
       this.to = lto;
     }
+
+    public final String getFilter()
+    {
+      return filter;
+    }
+
+    public final void setFilter( String filter )
+    {
+      this.filter = filter;
+    }
   }
 
   public final long getForecastFrom()
@@ -284,6 +296,7 @@ public class CopyObservationTask extends Task
   public final static class Metadata
   {
     private String m_name;
+
     private String m_value;
 
     public String getName()

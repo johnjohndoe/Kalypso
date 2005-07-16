@@ -81,11 +81,14 @@ public final class CopyObservationHandler
 
     private final Date to;
 
-    public Source( final String prop, final Date dfrom, final Date dto )
+    private final String filter;
+
+    public Source( final String prop, final Date dfrom, final Date dto ,final String filter)
     {
       this.property = prop;
       this.from = dfrom;
       this.to = dto;
+      this.filter=filter;
     }
 
     public final Date getFrom()
@@ -101,6 +104,12 @@ public final class CopyObservationHandler
     public final Date getTo()
     {
       return to;
+    }
+
+    public String getFilter()
+    {
+      // TODO Auto-generated method stub
+      return filter;
     }
   }
 }
