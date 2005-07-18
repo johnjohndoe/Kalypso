@@ -5,7 +5,9 @@ set CATALINA_HOME=%KALYPSO_SERVER_HOME%\Tomcat5.0
 
 set KALYPSO_SERVER_WEBDAV=%CATALINA_HOME%\webapps\webdav
 set KALYPSO_SERVER_TMP=%CATALINA_HOME%\temp
-set KALYPSO_SERVER_CONF=%KALYPSO_SERVER_WEBDAV%\srvconf
+
+REM The trailing '/' is important!
+set KALYPSO_SERVER_CONF=http://%COMPUTERNAME%:8080/webdav/srvconf/
 set KALYPSO_SERVER_DATA=%KALYPSO_SERVER_WEBDAV%\data
 
 rem set ECLIPSE_DEBUG=-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Djava.compiler=NONE

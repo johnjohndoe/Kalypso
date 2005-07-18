@@ -32,6 +32,7 @@ package org.kalypso.contribs.java.net;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.Map;
@@ -47,16 +48,18 @@ public class ClassUrlCatalog implements IUrlCatalog
 {
   private IUrlCatalog m_catalog;
 
-  private static Properties loadProperties( final File propertyFile )
+  /** Closes the stream  
+   * @throws IOException*/
+  private static Properties loadProperties( final InputStream stream ) throws IOException
   {
     final Properties props = new Properties();
     try
     {
-      props.load( new FileInputStream( propertyFile ) );
+      props.load( stream );
     }
-    catch( final IOException e )
+    finally
     {
-      e.printStackTrace();
+      stream.close();
     }
 
     return props;
@@ -64,10 +67,20 @@ public class ClassUrlCatalog implements IUrlCatalog
 
   /**
    * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die 'keys' werden ignoriert.
+   * @throws IOException
    */
-  public ClassUrlCatalog( final File propertyFile )
+  public ClassUrlCatalog( final File propertyFile ) throws IOException
   {
-    this( loadProperties( propertyFile ) );
+    this( loadProperties( new FileInputStream( propertyFile ) ) );
+  }
+
+    /**
+   * Die Classennamen werden aus den 'values' der URL gelesen. Die 'keys' werden ignoriert.
+   * @throws IOException
+   */
+  public ClassUrlCatalog( final URL propertyURL ) throws IOException
+  {
+    this( loadProperties( propertyURL.openStream() ) );
   }
 
   /**

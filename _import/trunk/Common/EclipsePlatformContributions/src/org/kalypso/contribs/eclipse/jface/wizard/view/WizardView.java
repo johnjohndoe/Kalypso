@@ -54,6 +54,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
@@ -67,8 +68,6 @@ import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -108,6 +107,13 @@ import org.kalypso.contribs.java.lang.CatchRunnable;
  */
 public class WizardView extends ViewPart implements IWizardContainer3
 {
+  private RGB m_defaultTitleBackground;
+  private RGB m_defaultTitleForeground;
+
+  private final String m_foregroundRGB_ID = "" + this + ".title.foreground";
+
+  private final String m_backgroundRGB_ID = "" + this + ".title.background";
+
   private final List m_listeners = new ArrayList( 5 );
 
   private IWizard m_wizard;
@@ -449,7 +455,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
       final String handlerMethod, final boolean defaultButton )
   {
     final Integer buttonID = new Integer( id );
-    final String label = m_buttonLabels.containsKey( buttonID ) ? (String)m_buttonLabels.get(buttonID) : defaultLabel;
+    final String label = m_buttonLabels.containsKey( buttonID ) ? (String)m_buttonLabels.get( buttonID ) : defaultLabel;
 
     // increment the number of columns in the button bar
     ( (GridLayout)parent.getLayout() ).numColumns++;
@@ -954,8 +960,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   private Label titleImage;
   private Label bottomFillerLabel;
   private Label leftFillerLabel;
-  private RGB titleAreaRGB;
-  protected Color titleAreaColor;
+  //  private RGB titleAreaRGB;
   private String message = ""; //$NON-NLS-1$
   private String errorMessage;
   private Text messageLabel;
@@ -966,6 +971,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   private Image errorMsgImage;
   private boolean showingError = false;
   private boolean titleImageLargest = true;
+  private Composite m_parent;
 
   /**
    * Creates the dialog's title area.
@@ -974,38 +980,21 @@ public class WizardView extends ViewPart implements IWizardContainer3
    *          the SWT parent for the title area widgets
    * @return Control with the highest x axis value.
    */
-  private Control createTitleArea( Composite parent )
+  private Control createTitleArea( final Composite parent )
   {
-    // add a dispose listener
-    parent.addDisposeListener( new DisposeListener()
-    {
-      public void widgetDisposed( DisposeEvent e )
-      {
-        if( titleAreaColor != null )
-          titleAreaColor.dispose();
-      }
-    } );
+    // remeber parent in order to change its colors
+    m_parent = parent;
+    
     // Determine the background color of the title bar
-    Display display = parent.getDisplay();
-    Color background;
-    Color foreground;
-    if( titleAreaRGB != null )
-    {
-      titleAreaColor = new Color( display, titleAreaRGB );
-      background = titleAreaColor;
-      foreground = null;
-    }
-    else
-    {
-      background = JFaceColors.getBannerBackground( display );
-      foreground = JFaceColors.getBannerForeground( display );
-    }
+    final Display display = parent.getDisplay();
+    m_defaultTitleBackground = JFaceColors.getBannerBackground( display ).getRGB();
+    m_defaultTitleForeground = JFaceColors.getBannerForeground( display ).getRGB();
+
     int verticalSpacing = convertVerticalDLUsToPixels( IDialogConstants.VERTICAL_SPACING );
     int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
-    parent.setBackground( background );
+
     // Dialog image @ right
     titleImage = new Label( parent, SWT.CENTER );
-    titleImage.setBackground( background );
     titleImage.setImage( JFaceResources.getImage( TitleAreaDialog.DLG_IMG_TITLE_BANNER ) );
     FormData imageData = new FormData();
     imageData.top = new FormAttachment( 0, verticalSpacing );
@@ -1018,7 +1007,6 @@ public class WizardView extends ViewPart implements IWizardContainer3
     titleImage.setLayoutData( imageData );
     // Title label @ top, left
     titleLabel = new Label( parent, SWT.LEFT );
-    JFaceColors.setColors( titleLabel, foreground, background );
     titleLabel.setFont( JFaceResources.getBannerFont() );
     titleLabel.setText( " " );//$NON-NLS-1$
     FormData titleData = new FormData();
@@ -1028,17 +1016,13 @@ public class WizardView extends ViewPart implements IWizardContainer3
     titleLabel.setLayoutData( titleData );
     // Message image @ bottom, left
     messageImageLabel = new Label( parent, SWT.CENTER );
-    messageImageLabel.setBackground( background );
     // Message label @ bottom, center
     messageLabel = new Text( parent, SWT.WRAP | SWT.READ_ONLY );
-    JFaceColors.setColors( messageLabel, foreground, background );
     messageLabel.setText( " \n " ); // two lines//$NON-NLS-1$
     messageLabel.setFont( JFaceResources.getDialogFont() );
     // Filler labels
     leftFillerLabel = new Label( parent, SWT.CENTER );
-    leftFillerLabel.setBackground( background );
     bottomFillerLabel = new Label( parent, SWT.CENTER );
-    bottomFillerLabel.setBackground( background );
     setLayoutsForNormalMessage( verticalSpacing, horizontalSpacing );
     determineTitleImageLargest();
     if( titleImageLargest )
@@ -1292,17 +1276,17 @@ public class WizardView extends ViewPart implements IWizardContainer3
     {
       switch( newType )
       {
-      case IMessageProvider.NONE:
-        break;
-      case IMessageProvider.INFORMATION:
-        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_INFO );
-        break;
-      case IMessageProvider.WARNING:
-        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING );
-        break;
-      case IMessageProvider.ERROR:
-        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_ERROR );
-        break;
+        case IMessageProvider.NONE:
+          break;
+        case IMessageProvider.INFORMATION:
+          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_INFO );
+          break;
+        case IMessageProvider.WARNING:
+          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING );
+          break;
+        case IMessageProvider.ERROR:
+          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_ERROR );
+          break;
       }
     }
     showMessage( newMessage, newImage );
@@ -1367,17 +1351,6 @@ public class WizardView extends ViewPart implements IWizardContainer3
     if( title == null )
       title = "";//$NON-NLS-1$
     titleLabel.setText( title );
-  }
-
-  /**
-   * Sets the title bar color for this dialog.
-   * 
-   * @param color
-   *          the title bar color
-   */
-  public void setTitleAreaColor( RGB color )
-  {
-    titleAreaRGB = color;
   }
 
   /**
@@ -1486,6 +1459,37 @@ public class WizardView extends ViewPart implements IWizardContainer3
    */
   public void updateTitleBar()
   {
+    // update title-bar colors
+    final RGB backgroundRGB;
+    final RGB foregroundRGB = m_defaultTitleForeground;
+    if( m_wizard != null )
+      backgroundRGB = m_wizard.getTitleBarColor();
+    else
+      backgroundRGB = m_defaultTitleBackground;
+
+    final ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
+    colorRegistry.put( m_backgroundRGB_ID, backgroundRGB );
+    colorRegistry.put( m_foregroundRGB_ID, foregroundRGB );
+
+    final Color background = colorRegistry.get( m_backgroundRGB_ID );
+    final Color foreground = colorRegistry.get( m_foregroundRGB_ID );
+
+    
+    if( m_parent != null && !m_parent.isDisposed() )
+      m_parent.setBackground( background );
+    if( titleImage != null && !titleImage.isDisposed() )
+      titleImage.setBackground( background );
+    if( titleLabel != null && !titleLabel.isDisposed() )
+      JFaceColors.setColors( titleLabel, foreground, background );
+    if( messageImageLabel != null && !messageImageLabel.isDisposed() )
+      messageImageLabel.setBackground( background );
+    if( messageLabel != null && !messageLabel.isDisposed() )
+      JFaceColors.setColors( messageLabel, foreground, background );
+    if( leftFillerLabel != null && !leftFillerLabel.isDisposed() )
+      leftFillerLabel.setBackground( background );
+    if( bottomFillerLabel != null && !bottomFillerLabel.isDisposed() )
+      bottomFillerLabel.setBackground( background );
+
     String s = null;
     if( m_currentPage != null )
       s = m_currentPage.getTitle();
@@ -1494,6 +1498,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
     setWizardTitle( s );
     if( m_currentPage != null )
       setWizardTitleImage( m_currentPage.getImage() );
+
     updateDescriptionMessage();
     updateMessage();
   }
