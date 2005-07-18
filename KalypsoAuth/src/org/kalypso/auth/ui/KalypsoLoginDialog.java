@@ -67,6 +67,8 @@ import org.kalypso.commons.java.util.StringUtilities;
  */
 public class KalypsoLoginDialog extends TitleAreaDialog
 {
+  private static final String STR_SCENARIO_TOOLTIP = "Mit Szenarios werden zum Beispiel spezielle Anwendungsfälle"
+      + " wie Katastrophentest unterstützt";
   private final boolean m_userNameChangeable;
   private String m_userName;
 
@@ -106,9 +108,9 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
-    final Composite composite = new Composite( parent, SWT.FILL );
+    final Composite composite = new Composite( parent, SWT.NONE );
 
     final GridLayout gridLayout = new GridLayout( 2, false );
     composite.setLayout( gridLayout );
@@ -119,14 +121,12 @@ public class KalypsoLoginDialog extends TitleAreaDialog
     m_txtName = new Text( composite, SWT.LEFT | SWT.BORDER );
     m_txtName.setText( m_userName );
     m_txtName.setEditable( m_userNameChangeable );
-    m_txtName.setSize( 100, m_txtName.getSize().y );
     m_txtName.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     final Label lblPass = new Label( composite, SWT.LEFT );
     lblPass.setText( "Passwort:" );
     m_txtPass = new Text( composite, SWT.LEFT | SWT.PASSWORD | SWT.BORDER );
     m_txtPass.setEnabled( m_passwordEnabled );
-    m_txtPass.setSize( 100, m_txtName.getSize().y );
     m_txtPass.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     if( m_useScenarios )
@@ -138,10 +138,9 @@ public class KalypsoLoginDialog extends TitleAreaDialog
 
       final Label lblSce = new Label( composite, SWT.LEFT );
       lblSce.setText( "Wählen Sie bitte ein Szenario aus:" );
-      lblSce.setToolTipText( "Mit Szenarios werden zum Beispiel spezielle Anwendungsfälle"
-          + " wie Katastrophentest unterstützt" );
-      lblSce.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL, GridData.VERTICAL_ALIGN_FILL, true, false, 2,
-          1 ) );
+      lblSce.setToolTipText( STR_SCENARIO_TOOLTIP );
+      final GridData gdSce = new GridData( GridData.FILL, GridData.FILL, true, false, 2, 1 );
+      lblSce.setLayoutData( gdSce );
 
       // fake label in order to eat one column
       new Label( composite, SWT.NONE );
@@ -150,13 +149,16 @@ public class KalypsoLoginDialog extends TitleAreaDialog
       m_sceViewer = new ListViewer( composite, SWT.SINGLE | SWT.BORDER );
       m_sceViewer.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
       m_sceViewer.add( m_scenarios );
+      m_sceViewer.getControl().setToolTipText( STR_SCENARIO_TOOLTIP );
 
       // fake label
       new Label( composite, SWT.NONE );
 
-      final Label lblDesc = new Label( composite, SWT.LEFT | SWT.WRAP );
-      lblDesc.setLayoutData( new GridData( GridData.BEGINNING, GridData.VERTICAL_ALIGN_FILL, true, true, 1, 2 ) );
-      //      lblDesc.set
+      final Text txtDesc = new Text( composite, SWT.LEFT | SWT.WRAP );
+      txtDesc.setEditable( false );
+      final GridData gdDesc = new GridData( GridData.FILL, GridData.FILL, true, true );
+      gdDesc.heightHint = convertHeightInCharsToPixels( 2 );
+      txtDesc.setLayoutData( gdDesc );
 
       m_listener = new ISelectionChangedListener()
       {
@@ -169,8 +171,8 @@ public class KalypsoLoginDialog extends TitleAreaDialog
           if( desc == null )
             desc = "";
 
-          lblDesc.setText( StringUtilities.spanOverLines( desc, 70, true, StringUtilities.ALIGNMENT_LEFT ) );
-          composite.layout();
+          txtDesc.setText( desc );
+          txtDesc.setToolTipText( StringUtilities.spanOverLines( desc, 70, true, StringUtilities.ALIGNMENT_LEFT ) );
         }
       };
 
