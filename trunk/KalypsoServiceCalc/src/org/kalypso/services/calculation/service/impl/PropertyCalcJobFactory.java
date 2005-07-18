@@ -43,8 +43,11 @@ package org.kalypso.services.calculation.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
@@ -55,16 +58,32 @@ public class PropertyCalcJobFactory implements ICalcJobFactory
 {
   private static final Properties m_jobTypes = new Properties();
 
-  public PropertyCalcJobFactory( final File typeFile )
+  /**
+   * Closes the stream!
+   * 
+   * @throws IOException
+   */
+  private PropertyCalcJobFactory( final InputStream typeStream ) throws IOException
   {
     try
     {
-      m_jobTypes.load( new FileInputStream( typeFile ) );
+      m_jobTypes.load( typeStream );
+      typeStream.close();
     }
-    catch( final IOException e )
+    finally
     {
-      e.printStackTrace();
+      IOUtils.closeQuietly( typeStream );
     }
+  }
+
+  public PropertyCalcJobFactory( final File typeFile ) throws IOException
+  {
+    this( new FileInputStream( typeFile ) );
+  }
+
+  public PropertyCalcJobFactory( final URL typeURL ) throws IOException
+  {
+    this( typeURL.openStream() );
   }
 
   public PropertyCalcJobFactory( final Properties typeProperties )

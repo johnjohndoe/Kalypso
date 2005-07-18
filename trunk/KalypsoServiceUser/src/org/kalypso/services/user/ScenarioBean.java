@@ -41,35 +41,25 @@
 
 package org.kalypso.services.user;
 
+import java.util.Properties;
+
 /**
  * @author schlienger
  */
 public class ScenarioBean
 {
   private String m_id;
-  private String m_name;
-  private String m_description;
+  private Properties m_props;
 
   public ScenarioBean()
   {
-    this( "", "", "" );
+    this( "", new Properties() );
   }
 
-  public ScenarioBean( final String id, final String name, final String description )
+  public ScenarioBean( final String id, final Properties props )
   {
     m_id = id;
-    m_name = name;
-    m_description = description;
-  }
-
-  public String getDescription()
-  {
-    return m_description;
-  }
-
-  public void setDescription( String description )
-  {
-    m_description = description;
+    m_props = props;
   }
 
   public String getId()
@@ -82,13 +72,13 @@ public class ScenarioBean
     m_id = id;
   }
 
-  public String getName()
+  public Properties getProps()
   {
-    return m_name;
+    return m_props;
   }
 
-  public void setName( String name )
+  public void setProps( Properties props )
   {
-    m_name = name;
+    m_props = props;
   }
 }

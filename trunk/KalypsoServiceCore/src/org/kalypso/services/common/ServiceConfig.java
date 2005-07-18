@@ -41,6 +41,8 @@
 package org.kalypso.services.common;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Helper Klasse für die Services, um auf gemeinsame Konfigurationsdaten zuzugreifen
@@ -60,9 +62,9 @@ public class ServiceConfig
   // wird nicht instantitiert
   }
 
-  public static File getConfDir()
+  public static URL getConfLocation() throws MalformedURLException
   {
-    return new File( System.getProperty( CONF_DIR ) );
+    return new URL( System.getProperty( CONF_DIR ) );
   }
 
   public static File getTempDir()

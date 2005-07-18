@@ -41,10 +41,10 @@
 package org.kalypso.services.sensor.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -61,6 +61,7 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -196,18 +197,19 @@ public class KalypsoObservationService implements IObservationService
 
     try
     {
-      final File conf = new File( ServiceConfig.getConfDir(), "IObservationService/repconf_server.xml" );
-      final InputStream stream = new FileInputStream( conf );
+      final URL confLocation = ServiceConfig.getConfLocation();
+      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "IObservationService/repconf_server.xml" );
+      final InputStream stream = confUrl.openStream();
       // this call also closes the stream
       final List facConfs = RepositoryConfigUtils.loadConfig( stream );
 
       // load the service properties
       final Properties props = new Properties();
-      final File fProps = new File( ServiceConfig.getConfDir(), "IObservationService/service.properties" );
-      FileInputStream ins = null;
+      final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "IObservationService/service.properties" );
+      InputStream ins = null;
       try
       {
-        ins = new FileInputStream( fProps );
+        ins = urlProps.openStream();
         props.load( ins );
         ins.close();
       }

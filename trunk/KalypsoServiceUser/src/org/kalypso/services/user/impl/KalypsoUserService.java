@@ -40,15 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.user.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -83,8 +81,7 @@ public class KalypsoUserService implements IUserService
   private static final String PROP_IMPERSONATE_USER = "IMPERSONATE_USER";
 
   private static final String PROP_SCENARIO_ID_LIST = "SCENARIO_ID_LIST";
-  private static final String PROP_SCENARIO_NAME_LIST = "SCENARIO_NAME_LIST";
-  private static final String PROP_SCENARIO_DESC_LIST = "SCENARIO_DESC_LIST";
+  private static final String PROP_SCENARIO_INI_LIST = "SCENARIO_INI_LIST";
 
   private static final String PROP_CHOOSE_SCENARIO = "CHOOSE_SCENARIO";
 
@@ -118,30 +115,18 @@ public class KalypsoUserService implements IUserService
    */
   private final void init() throws RemoteException
   {
-    final File conf = new File( ServiceConfig.getConfDir(), "IUserService/userService.properties" );
-
     InputStream stream = null;
     try
     {
-      stream = new FileInputStream( conf );
+      final URL confLocation = ServiceConfig.getConfLocation();
+      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "IUserService/userService.properties" );
+      stream = confUrl.openStream();
 
       final Properties props = new Properties();
       props.load( stream );
 
       // step through properties and
-      final Set keys = props.keySet();
-      for( final Iterator it = keys.iterator(); it.hasNext(); )
-      {
-        final String key = (String)it.next();
-        if( key.endsWith( "URL" ) )
-        {
-          final String path = props.getProperty( key );
-          final URL resolved = UrlResolverSingleton.resolveUrl( conf.toURL(), path );
-          final String fullPath = resolved.toExternalForm();
-
-          props.setProperty( key, fullPath );
-        }
-      }
+      UrlResolverSingleton.resolveUrlProperties( confUrl, props );
 
       // try to instanciate our commiter
       final String className = props.getProperty( PROP_PROVIDER );
@@ -156,16 +141,40 @@ public class KalypsoUserService implements IUserService
 
       final String sid = props.getProperty( PROP_SCENARIO_ID_LIST, "" );
       final String[] scenarioIds = sid.split( ";" );
-      final String sl = props.getProperty( PROP_SCENARIO_NAME_LIST, "" );
-      final String[] scenarioNames = sl.split( ";" );
-      final String sdl = props.getProperty( PROP_SCENARIO_DESC_LIST, "" );
-      final String[] scenarioDescriptions = sdl.split( ";" );
-      if( scenarioIds.length == scenarioNames.length && scenarioNames.length == scenarioDescriptions.length )
+      final String sini = props.getProperty( PROP_SCENARIO_INI_LIST, "" );
+      final String[] scenarioInis = sini.split( ";" );
+
+      if( scenarioIds.length == scenarioInis.length )
       {
         m_scenarios = new ScenarioBean[scenarioIds.length];
-        
+
         for( int i = 0; i < m_scenarios.length; i++ )
-          m_scenarios[i] = new ScenarioBean( scenarioIds[i], scenarioNames[i], scenarioDescriptions[i] );
+        {
+          final String id = scenarioIds[i];
+          final String ini = scenarioInis[i];
+
+          final Properties iniProperties = new Properties();
+          if( ini != "" )
+          {
+            InputStream iniStream = null;
+            try
+            {
+              final URL iniUrl = new URL( confUrl, ini );
+              iniStream = iniUrl.openStream();
+              iniProperties.load( iniStream );
+              iniStream.close();
+
+              UrlResolverSingleton.resolveUrlProperties( iniUrl, iniProperties );
+            }
+            catch( final IOException e )
+            {
+              m_logger.log( Level.WARNING, "Konnte ini Datei für Szenario nicht laden: " + id, e );
+              IOUtils.closeQuietly( iniStream );
+            }
+          }
+
+          m_scenarios[i] = new ScenarioBean( id, iniProperties );
+        }
       }
       else
         throw new IllegalArgumentException( "Szenario Listen unterschiedlich lang" );

@@ -48,8 +48,5 @@ package org.kalypso.auth.scenario;
  */
 public interface IScenarioProvider
 {
-  /**
-   * @return selected scenario to drive on
-   */
-  public IScenario getScenario();
+  public IScenario[] getAvailableScenarios();
 }

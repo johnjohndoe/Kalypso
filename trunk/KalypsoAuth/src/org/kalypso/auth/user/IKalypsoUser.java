@@ -49,4 +49,7 @@ import org.kalypso.auth.scenario.IScenarioProvider;
 public interface IKalypsoUser extends IScenarioProvider
 {
   public boolean hasRight( final String right );
+  
+  /** Return the scenario-id selected for this user */
+  public String getScenario();
 }

@@ -98,8 +98,6 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
       if( storage instanceof TemplateStorage )
       {
         final TemplateStorage ts = (TemplateStorage)storage;
-        if( view instanceof DiagView )
-          ( (DiagView)view ).setTitle( ts.getName() );
 
         loadObservation( ts.getContext(), ts.getHref() );
       }

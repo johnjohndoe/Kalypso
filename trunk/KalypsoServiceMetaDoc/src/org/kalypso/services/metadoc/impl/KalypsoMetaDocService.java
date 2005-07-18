@@ -1,8 +1,8 @@
 package org.kalypso.services.metadoc.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +15,7 @@ import javax.activation.DataHandler;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.MetaDocException;
@@ -70,12 +71,13 @@ public class KalypsoMetaDocService implements IMetaDocService
    */
   private void init() throws RemoteException
   {
-    final File conf = new File( ServiceConfig.getConfDir(), "IMetaDocService/metadocService.properties" );
 
     InputStream stream = null;
     try
     {
-      stream = new FileInputStream( conf );
+      final URL confLocation = ServiceConfig.getConfLocation();
+      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "IMetaDocService/metadocService.properties" );
+      stream = confUrl.openStream();
 
       m_props.load( stream );
 

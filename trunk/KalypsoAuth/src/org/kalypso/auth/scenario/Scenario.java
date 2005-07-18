@@ -41,6 +41,8 @@
 
 package org.kalypso.auth.scenario;
 
+import java.util.Properties;
+
 /**
  * A default implementation of IScenario. Simply holds the scenario text and description. This class is immutable.
  * 
@@ -48,17 +50,16 @@ package org.kalypso.auth.scenario;
  */
 public class Scenario implements IScenario
 {
-  public final static IScenario DEFAULT_SCENARIO = new Scenario( "", "", "" );
+  public final static IScenario DEFAULT_SCENARIO = new Scenario( "", new Properties() );
   
-  private final String m_text;
-  private final String m_desc;
   private final String m_id;
 
-  public Scenario(final String id, final String text, final String desc )
+  private final Properties m_props;
+
+  public Scenario(final String id, final Properties props )
   {
     m_id = id;
-    m_text = text;
-    m_desc = desc;
+    m_props = props;
   }
 
   /**
@@ -66,7 +67,7 @@ public class Scenario implements IScenario
    */
   public String getName()
   {
-    return m_text;
+    return getProperty( IScenario.PROP_NAME, "" );
   }
 
   /**
@@ -74,7 +75,7 @@ public class Scenario implements IScenario
    */
   public String getDescription()
   {
-    return m_desc;
+    return getProperty( IScenario.PROP_DESCRIPTION, "" );
   }
   
   /**
@@ -82,7 +83,7 @@ public class Scenario implements IScenario
    */
   public String toString()
   {
-    return m_text;
+    return getName();
   }
 
   /**
@@ -91,5 +92,13 @@ public class Scenario implements IScenario
   public String getId()
   {
     return m_id;
+  }
+
+  /**
+   * @see org.kalypso.auth.scenario.IScenario#getProperty(java.lang.String, java.lang.String)
+   */
+  public String getProperty( final String name, final String defaultValue )
+  {
+    return m_props.getProperty( name, defaultValue );
   }
 }

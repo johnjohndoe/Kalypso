@@ -72,12 +72,19 @@ public class UserServiceAuthenticator implements IAuthenticator
 
     final ScenarioBean[] beans = srv.getScenarios();
 
-    final IScenario[] scenarios = new IScenario[beans.length];
-    for( int i = 0; i < scenarios.length; i++ )
-      scenarios[i] = new Scenario( beans[i].getId(), beans[i].getName(), beans[i].getDescription() );
+    IScenario scenario = Scenario.DEFAULT_SCENARIO;
+    final IScenario[] scenarios;
+    if( beans.length > 0 )
+    {
+      scenarios = new IScenario[beans.length];
+      for( int i = 0; i < scenarios.length; i++ )
+        scenarios[i] = new Scenario( beans[i].getId(), beans[i].getProps() );
+    }
+    else
+      scenarios = new IScenario[]
+      { scenario };
 
     String username = System.getProperty( "user.name" );
-    IScenario scenario = Scenario.DEFAULT_SCENARIO;
 
     final boolean askForLogin = srv.isAskForLogin();
     final boolean askForScenario = srv.isAskForScenario();
@@ -95,17 +102,17 @@ public class UserServiceAuthenticator implements IAuthenticator
 
           if( askForLogin )
           {
-	          // using authentication
-	          final String[] rights = srv.getRights2( username, dlg.getPassword() );
-	          if( rights != null && rights.length > 0 )
-	            return new KalypsoUser( username, rights, scenario );
+            // using authentication
+            final String[] rights = srv.getRights2( username, dlg.getPassword() );
+            if( rights != null && rights.length > 0 )
+              return new KalypsoUser( username, rights, scenario.getId(), scenarios );
           }
           else
           {
             // using single sign on
             final String[] rights = srv.getRights( username );
             if( rights != null && rights.length > 0 )
-              return new KalypsoUser( username, rights, scenario );
+              return new KalypsoUser( username, rights, scenario.getId(), scenarios );
           }
         }
         else
@@ -116,7 +123,7 @@ public class UserServiceAuthenticator implements IAuthenticator
     // using single sign on
     final String[] rights = srv.getRights( username );
     if( rights != null && rights.length > 0 )
-      return new KalypsoUser( username, rights, scenario );
+      return new KalypsoUser( username, rights, scenario.getId(), scenarios );
 
     return null;
   }
