@@ -15,10 +15,9 @@ import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
  * sollte nur für abgeleitete Typen benutzt werden emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen
  * Typ
  * 
- * segment ::= #fid# <id>|<property>| <property>[ <typename>]
+ * segment ::= #fid#<id> | <property> | <property> [<typename>]
  * 
- * featurePath ::= <emptypath>|
- *                      <segment>/<segment>                 
+ * featurePath ::= <emptypath> | <segment>/<segment>                 
  * ]]>
  * 
  * @author belger

@@ -53,7 +53,12 @@ import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 
 /**
- * MergeTuppleModel
+ * TODO: die Reihenfolge der models[] sollte von auﬂerhalb der Klasse entschieden werden. Somit kann der "client"
+ * entscheiden ob:
+ * <ul>
+ * <li> die models[] sortiert sind
+ * <li> die models[] eine "andere" Reihenfolge haben
+ * </ul>
  * 
  * @author schlienger
  */
@@ -63,11 +68,6 @@ public class ForecastTuppleModel extends AbstractTuppleModel
 
   /**
    * Constructor
-   * 
-   * @param models
-   * 
-   * @throws SensorException
-   *           exception
    * 
    * TODO change class name to MultiTuppleModel, as this is not only for forecast
    */
@@ -79,7 +79,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
 
     m_model = new SimpleTuppleModel( models[0].getAxisList() );
 
-    // let them sort, so order does not matter
+    // let them sort, so order does not matter (siehe TODO in Klassenkommentar)
     Arrays.sort( models, new Comparator()
     {
       public boolean equals( Object obj )

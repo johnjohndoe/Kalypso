@@ -38,7 +38,6 @@ import java.util.Properties;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
-import org.kalypso.ogc.util.CopyObservationHandler;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
@@ -141,16 +140,16 @@ public class CopyObservationMappingHelper
   {
     final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter( stringWriter );
-    final CopyObservationHandler.Source[] sources;
+    final CopyObservationFeatureVisitor.Source[] sources;
     if( keepForecast )
-      sources = new CopyObservationHandler.Source[]
+      sources = new CopyObservationFeatureVisitor.Source[]
       {
-          new CopyObservationHandler.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
-          new CopyObservationHandler.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ) // forecast
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ) // forecast
       };
     else
-      sources = new CopyObservationHandler.Source[]
-      { new CopyObservationHandler.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
+      sources = new CopyObservationFeatureVisitor.Source[]
+      { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
       };
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver,
         RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer );

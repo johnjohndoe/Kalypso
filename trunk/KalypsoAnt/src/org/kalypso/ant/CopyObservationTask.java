@@ -40,20 +40,22 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ant;
 
-import java.io.BufferedWriter;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.kalypso.commons.java.net.UrlResolver;
-import org.kalypso.ogc.util.CopyObservationHandler;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist es, alle Features eines GML durchzugehen,
@@ -68,19 +70,8 @@ import org.kalypso.ogc.util.CopyObservationHandler;
  * 
  * @author belger
  */
-public class CopyObservationTask extends Task
+public class CopyObservationTask extends AbstractFeatureVisitorTask
 {
-  /** href auf das GML */
-  private String m_gml;
-
-  /**
-   * Feature-Path innerhalb des GMLs. Alle durch diesen Pfad denotierten Features werden behandelt.
-   */
-  private String m_featurePath;
-
-  /** Kontext (=URL), gegen welche die Links innerhalb des GML aufgelöst werden. */
-  private URL m_context;
-
   /**
    * Name der Feature-Property, welche den Link enthält, an welche Stelle das Ergebnis geschrieben wird.
    */
@@ -110,71 +101,23 @@ public class CopyObservationTask extends Task
   private Properties m_metadata = new Properties();
 
   /**
-   * @see org.apache.tools.ant.Task#execute()
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void execute() throws BuildException
+  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter, final IProgressMonitor monitor )
   {
-    try
-    {
-      final UrlResolver urlResolver = new UrlResolver();
-      final URL gmlURL = urlResolver.resolveURL( m_context, getGml() );
+    Date forecastFrom = null;
+    if( m_forecastFrom != -1 )
+      forecastFrom = new Date( m_forecastFrom );
 
-      final StringWriter logwriter = new StringWriter();
-      final PrintWriter logPW = new PrintWriter( new BufferedWriter( logwriter ) );
+    Date forecastTo = null;
+    if( m_forecastTo != -1 )
+      forecastTo = new Date( m_forecastTo );
 
-      Date forecastFrom = null;
-      if( m_forecastFrom != -1 )
-        forecastFrom = new Date( m_forecastFrom );
-
-      Date forecastTo = null;
-      if( m_forecastTo != -1 )
-        forecastTo = new Date( m_forecastTo );
-
-      final CopyObservationHandler.Source[] srcs = (CopyObservationHandler.Source[])m_sources
-          .toArray( new CopyObservationHandler.Source[m_sources.size()] );
-      CopyObservationHandler.copyObserations( urlResolver, gmlURL, getFeaturePath(), getTargetobservation(),
-          getContext(), srcs, m_metadata, forecastFrom, forecastTo, logPW );
-
-      logPW.close();
-
-      log( logwriter.toString() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      throw new BuildException( e.getLocalizedMessage(), e );
-    }
-  }
-
-  public final URL getContext()
-  {
-    return m_context;
-  }
-
-  public final void setContext( final URL context )
-  {
-    m_context = context;
-  }
-
-  public final String getFeaturePath()
-  {
-    return m_featurePath;
-  }
-
-  public final void setFeaturePath( String featurePath )
-  {
-    m_featurePath = featurePath;
-  }
-
-  public final String getGml()
-  {
-    return m_gml;
-  }
-
-  public final void setGml( String gml )
-  {
-    m_gml = gml;
+    final CopyObservationFeatureVisitor.Source[] srcs = (CopyObservationFeatureVisitor.Source[])m_sources
+        .toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
+    
+    return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs,
+        m_metadata, forecastFrom, forecastTo, logWriter );
   }
 
   public final String getTargetobservation()
@@ -201,7 +144,7 @@ public class CopyObservationTask extends Task
         "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(),
         Project.MSG_DEBUG );
 
-    m_sources.add( new CopyObservationHandler.Source( property, fromDate, toDate, filter ) );
+    m_sources.add( new CopyObservationFeatureVisitor.Source( property, fromDate, toDate, filter ) );
   }
 
   public void addConfiguredMetadata( final Metadata metadata )
@@ -267,9 +210,9 @@ public class CopyObservationTask extends Task
       return filter;
     }
 
-    public final void setFilter( String filter )
+    public final void setFilter( final String filt )
     {
-      this.filter = filter;
+      this.filter = filt;
     }
   }
 
@@ -318,5 +261,23 @@ public class CopyObservationTask extends Task
     {
       m_value = value;
     }
+  }
+
+  /**
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
+   */
+  protected void validateInput()
+  {
+    // nothing to do
+  }
+  
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
+   *      org.eclipse.core.runtime.IStatus)
+   */
+  public void handleError( final Shell shell, final IStatus status )
+  {
+    ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ),
+        "Fehler beim Kopieren der Zeitreihen", status );
   }
 }
