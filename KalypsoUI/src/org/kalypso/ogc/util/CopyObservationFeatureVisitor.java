@@ -64,7 +64,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.ogc.util.CopyObservationHandler.Source;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
@@ -149,14 +148,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         resultObs = sourceObses[0];
       else
       {
-        // NOTE for ForecastFilter: the order is important:
-        // obs( i ) has a higher priority than obs( i + 1 )
-        // with 'i' the index in the observations array...
         final ForecastFilter fc = new ForecastFilter();
-        fc.initFilter( sourceObses
-        // new IObservation[]{sourceObses[0],sourceObses[1]} // changed by doemming: wy not take all sourceObses
-            , sourceObses[0], null ); // TODO check if null
-        // context is ok here
+        fc.initFilter( sourceObses, sourceObses[0], null );
+        // TODO check if null context is ok here
         resultObs = fc;
       }
 
@@ -252,4 +246,44 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
     return ZmlFactory.parseXML( sourceURL, feature.getId() );
   }
+  
+  public final static class Source
+  {
+    private final String property;
+
+    private final Date from;
+
+    private final Date to;
+
+    private final String filter;
+
+    public Source( final String prop, final Date dfrom, final Date dto, final String filt )
+    {
+      this.property = prop;
+      this.from = dfrom;
+      this.to = dto;
+      this.filter = filt;
+    }
+
+    public final Date getFrom()
+    {
+      return from;
+    }
+
+    public final String getProperty()
+    {
+      return property;
+    }
+
+    public final Date getTo()
+    {
+      return to;
+    }
+
+    public String getFilter()
+    {
+      return filter;
+    }
+  }
+
 }

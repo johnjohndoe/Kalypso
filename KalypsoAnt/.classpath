@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="src" path="/KalypsoUI"/>
+	<classpathentry kind="src" path="/KalypsoSimulationUI"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
