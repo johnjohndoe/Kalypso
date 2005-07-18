@@ -117,14 +117,17 @@ public class NaModelInnerCalcJob implements ICalcJob
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
-  // TODO hier noch was machen
-  private final String EXE_FILE = "start/kalypso_WeisseElster.exe";
+  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_WeisseElster.exe";
 
-  //  private final String EXE_FILE = "start/kalypso_2.01_3000.exe";
-  //  private final String EXE_FILE = "start/kalypso_2.01_7500.exe";
-  //private final String EXE_FILE = "start/kalypso_2.02.exe";
+  private final String EXE_FILE_2_01_3000 = "start/kalypso_2.01_3000.exe";
+
+  private final String EXE_FILE_2_01_7500 = "start/kalypso_2.01_7500.exe";
+
+  private final String EXE_FILE_2_02 = "start/kalypso_2.02.exe";
 
   private boolean m_succeeded = false;
+
+  private String m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
 
   public NaModelInnerCalcJob()
   {
@@ -221,9 +224,9 @@ public class NaModelInnerCalcJob implements ICalcJob
 
       final GMLWorkspace modellWorkspace = generateASCII( tmpdir, inputProvider );
 
-      // kopiere executable aus resourcen:
       if( monitor.isCanceled() )
         return;
+      // kopiere executable aus resourcen:
       copyExecutable( tmpdir );
 
       // starte berechnung
@@ -310,21 +313,18 @@ public class NaModelInnerCalcJob implements ICalcJob
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellURL );
     ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
+    final Date startForecastDate = (Date)metaFE.getProperty( "startforecast" );
+    conf.setSimulationForecasetStart( startForecastDate );
     conf.setSimulationStart( (Date)metaFE.getProperty( "startsimulation" ) );
-    conf.setSimulationForecasetStart( (Date)metaFE.getProperty( "startforecast" ) );
-    // TODO add endsimulation [in hours after forecast start] in control.xsd and
-    // use it here
-    // TODO change also in NAControlConverter
-
-    Date startForecastDate = (Date)metaWorkspace.getRootFeature().getProperty( "startforecast" );
-
-    //  , "yyyy MM dd HH",
-    //       "notset" );
-    Calendar c = Calendar.getInstance();
+    chooseSimulationExe( (String)metaFE.getProperty( "versionKalypsoNA" ) );
+    int hoursForecast = 0; // default length of forecast hours
+    final Integer hoursOfForecast = (Integer)metaFE.getProperty( "hoursforecast" );
+    if( hoursOfForecast != null )
+      hoursForecast = hoursOfForecast.intValue();
+    final Calendar c = Calendar.getInstance();
     c.setTime( startForecastDate );
-    // FETTES TODO
-    //    c.add( Calendar.DATE, 2 );
-    Date endDate = c.getTime();
+    c.add( Calendar.HOUR, hoursForecast );
+    final Date endDate = c.getTime();
     conf.setSimulationEnd( endDate );
     conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
@@ -350,7 +350,26 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       writer.writeVerdFile( new File( tmpDir, "klima.dat/std.ver" ) );
     }
+
     return modellWorkspace;
+  }
+
+  /**
+   * @param kalypsoNAVersion
+   *          name/version of simulation kernel
+   */
+  private void chooseSimulationExe( final String kalypsoNAVersion )
+  {
+    if( kalypsoNAVersion == null || kalypsoNAVersion.equals( "lfug" ) || kalypsoNAVersion.equals( "" ) )
+      m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
+    else if( kalypsoNAVersion.equals( "test" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_02;
+    else if( kalypsoNAVersion.equals( "kalypso2.01_3000" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_01_3000;
+    else if( kalypsoNAVersion.equals( "kalypso2.01_7500" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_01_7500;
+    else
+      m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
   }
 
   private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile ) throws IOException,
@@ -817,8 +836,8 @@ public class NaModelInnerCalcJob implements ICalcJob
 
   private void copyExecutable( File basedir ) throws Exception
   {
-    final String exeResource = m_resourceBase + EXE_FILE;
-    final File destFile = new File( basedir, EXE_FILE );
+    final String exeResource = m_resourceBase + m_kalypsoKernelPath;
+    final File destFile = new File( basedir, m_kalypsoKernelPath );
     if( !destFile.exists() )
     {
       try
@@ -859,7 +878,7 @@ public class NaModelInnerCalcJob implements ICalcJob
 
     try
     {
-      final File exeFile = new File( basedir, EXE_FILE );
+      final File exeFile = new File( basedir, m_kalypsoKernelPath );
       final File exeDir = exeFile.getParentFile();
       final String commandString = exeFile.getAbsolutePath();
 
@@ -887,8 +906,6 @@ public class NaModelInnerCalcJob implements ICalcJob
 
         if( monitor.isCanceled() )
         {
-          // TODO mit remote debugging testen ob dies auch im tomcat
-          // funktioniert - sollte eigentlich
           process.destroy();
           return;
         }
