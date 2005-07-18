@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NAModellControl fid="ID000000" xmlns="org.kalypso.namodell.control" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="project:/.model/schema/nacontrol.xsd">
   <description>Beschreibung</description>
-  <name>Gera</name>
+  <name>Gera-Langenberg</name>
   <editor>Editor</editor>
   <comment>Kommentar</comment>
   <calctime>2001-12-17T09:30:47</calctime>
@@ -47,7 +47,7 @@
   <rootNode>Node1210</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node1210.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Gera-Langenberg.zml" ns1:type="simple"/>
   </pegelZR>
   <qberechnetZR>
     <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1210.zml" ns1:type="simple"/>

@@ -47,7 +47,7 @@
   <rootNode>Node1020</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node1020.zml" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Kleindalzig.zml" ns1:type="simple"/>
   </pegelZR>
   <qberechnetZR>
     <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1020.zml" ns1:type="simple"/>

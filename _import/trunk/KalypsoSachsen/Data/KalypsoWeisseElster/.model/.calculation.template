@@ -3,6 +3,8 @@
  xsi:schemaLocation="org.kalypso.na.control project:/.model/schema/control.xsd">
 	<startsimulation>:startsim:</startsimulation>
 	<startforecast>:startforecast:</startforecast>
+	<hoursforecast>48</hoursforecast>
+	<versionKalypsoNA>lfug</versionKalypsoNA>
 	<editor>:user:</editor>
 	<description>- bitte ausfüllen -</description>
 	<comment>- bitte ausfüllen -</comment>

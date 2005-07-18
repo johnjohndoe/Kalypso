@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 <!-- Ansicht Ombrometer -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ansicht Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ansicht Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/Ombrometer.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
@@ -13,7 +13,7 @@
     </page>
 
 <!-- Gebietsniederschlagsmodell -->
-    <page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Gebietsniederschlagsmodell - Kontrolle/Bearbeitung Niederschlag" imageLocation="icons/calcwizard/kalypso32.gif" >
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Gebietsniederschlagsmodell - Kontrolle/Bearbeitung Niederschlag" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
@@ -23,7 +23,7 @@
     </page>
 
 <!-- zufluesse -->
-		<page className="org.kalypso.ui.calcwizard.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Zuflüsse" 
+		<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Zuflüsse" 
 			imageLocation="icons/calcwizard/kalypso32.gif" >
 			<arg name="mapTemplate" value=".templates/calcCase/zufluesse.gmt"/>
 			<arg name="mainSash" value="50"/>
@@ -87,7 +87,7 @@
 -->
 
 	<!-- 1/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Bad Elster 1/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Bad Elster 1/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_1.gml"/> 
@@ -109,7 +109,7 @@
 	</page>
 
 	<!-- 2/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Adorf 2/17"
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Adorf 2/17"
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_2.gml"/> 
@@ -131,7 +131,7 @@
 
 
 	<!-- 3/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Oelsnitz 3/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Oelsnitz 3/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_3.gml"/> 
@@ -155,7 +155,7 @@
 
 
 	<!-- 4/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Strassberg 4/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Strassberg 4/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_4.gml"/> 
@@ -177,7 +177,7 @@
 	</page>
 
 	<!-- 5/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Elsterberg 5/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Elsterberg 5/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_5.gml"/> 
@@ -199,7 +199,7 @@
 	</page>
 
 	<!-- 6/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Rodewisch 6/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Rodewisch 6/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_6.gml"/> 
@@ -220,7 +220,7 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 7/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Mylau 7/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Mylau 7/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_7.gml"/> 
@@ -241,7 +241,7 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 8/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Greiz 8/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Greiz 8/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_8.gml"/> 
@@ -262,7 +262,7 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 9/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" 
 pageTitle="Prognose Pegel Weida 9/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
@@ -284,7 +284,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 10/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Gera 10/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Gera 10/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_10.gml"/> 
@@ -305,7 +305,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 11/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Zeitz 11/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Zeitz 11/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_11.gml"/> 
@@ -326,7 +326,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 12/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Kleindalzig 12/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Kleindalzig 12/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_12.gml"/> 
@@ -347,7 +347,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 13/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Albrechtshain 13/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Albrechtshain 13/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_13.gml"/> 
@@ -368,7 +368,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 14/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Leipzig-Thekla 14/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Leipzig-Thekla 14/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_14.gml"/> 
@@ -389,7 +389,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 15/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Oberthau 15/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Oberthau 15/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_15.gml"/> 
@@ -410,7 +410,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 16/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Neukirchen 16/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Neukirchen 16/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_16.gml"/> 
@@ -432,7 +432,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 	</page>
 
 	<!-- 17/17 -->
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Goessnitz 17/17" 
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Goessnitz 17/17" 
 		imageLocation="icons/calcwizard/boden.gif" >
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_17.gml"/> 
@@ -455,12 +455,15 @@ pageTitle="Prognose Pegel Weida 9/17"
 
 
 	<!-- Ergebniskontrolle NA-Modelle-->
-	<page className="org.kalypso.ui.calcwizard.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" 
+	<page 
+		className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" 
+		pageTitle="Ergebnisbearbeitung und Veröffentlichung" 
 		imageLocation="icons/calcwizard/kalypso32.gif" >
 		<arg name="mapTemplate" value="project:.templates/calcCase/export.gmt"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
-		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
-
+		<arg name="timeserie1" 
+			value="nameColumn=name#nameString=%featureprop% - %axisname% - berechnet#linkColumn=qberechnetZR#color=0xff0000"/>
+		<arg name="timeserie2" 
+			value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR"/>
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="256"/>
@@ -471,44 +474,48 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="pegelNameProperty" value="name"/>
 		<arg name="resultProperty" value="qberechnetZR"/>
 		<arg name="prognoseProperty" value="pegelBerechnetZRAblage"/>
-		
-	   	<arg name="maximizeMap" value="true"/>
-
-	   	<arg name="exporter1">
-			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
-	   		<arg name="name" value="Tabelle"/>
-	   		<arg name="nameproperty" value="name"/>
-	   		<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+		<arg name="maximizeMap" value="true"/>
+		<arg name="exporter1">
+			<arg name="class" 
+				value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
+			<arg name="name" value="Tabelle"/>
+			<arg name="nameproperty" value="name"/>
+			<arg name="template" 
+				value="project:/.templates/calcCase/berichtTabelle.ott"/>
 			<arg name="tokens">
 				<arg name="title" value="name"/>
 				<arg name="href1" value="qberechnetZR"/>
 			</arg>
-	   	</arg>
-	   	<arg name="exporter2">
-			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
-	   		<arg name="name" value="Abflussgrafik"/>
-	   		<arg name="nameproperty" value="name"/>
-	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
-	   		<arg name="width" value="1024"/>
-	   		<arg name="height" value ="768"/>
+		</arg>
+		<arg name="exporter2">
+			<arg name="class" 
+				value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+			<arg name="name" value="Abflussgrafik"/>
+			<arg name="nameproperty" value="name"/>
+			<arg name="template" 
+				value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+			<arg name="width" value="1024"/>
+			<arg name="height" value ="768"/>
 			<arg name="tokens">
 				<arg name="title" value="name"/>
 				<arg name="href1" value="qberechnetZR"/>
-    			<arg name="href2" value="pegelZR"/>
+				<arg name="href2" value="pegelZR"/>
 			</arg>
-	   	</arg>	   	
-	   	<arg name="exporter3">
-			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
-	   		<arg name="name" value="Wasserstandgrafik"/>
-	   		<arg name="nameproperty" value="name"/>
-	   		<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
-	   		<arg name="width" value="1024"/>
-	   		<arg name="height" value ="768"/>
+		</arg>
+		<arg name="exporter3">
+			<arg name="class" 
+				value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
+			<arg name="name" value="Wasserstandgrafik"/>
+			<arg name="nameproperty" value="name"/>
+			<arg name="template" 
+				value="project:/.templates/calcCase/berichtDiagW.odt"/>
+			<arg name="width" value="1024"/>
+			<arg name="height" value ="768"/>
 			<arg name="tokens">
 				<arg name="title" value="name"/>
 				<arg name="href1" value="qberechnetZR"/>
-    			<arg name="href2" value="pegelZR"/>
+				<arg name="href2" value="pegelZR"/>
 			</arg>
-	   	</arg>
+		</arg>
 	</page>
 </calcwizard>

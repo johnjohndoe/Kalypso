@@ -47,7 +47,7 @@
   <rootNode>Node7300</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Node7300.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
+    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Pegel/Pegel_Neukirchen.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;W&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>
   </pegelZR>
   <qberechnetZR>
     <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" ns1:href="Ergebnisse/Berechnet/Abfluss_Node7300.zml?&lt;filter&gt;&lt;wqFilter xmlns=&quot;filters.zml.kalypso.org&quot; type=&quot;Q&quot;/&gt;&lt;/filter&gt;" ns1:type="simple"/>

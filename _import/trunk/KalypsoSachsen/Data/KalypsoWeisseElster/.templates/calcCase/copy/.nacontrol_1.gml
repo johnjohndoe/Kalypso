@@ -47,7 +47,7 @@
   <rootNode>Node1800</rootNode>
   <resultForRootNodeOnly>true</resultForRootNodeOnly>
   <pegelZR>
-    <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_Node1800.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+    <TimeseriesLink linktype="zml" ns1:href="Pegel/Pegel_BadElster.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Q" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
   </pegelZR>
   <qberechnetZR>
     <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Abfluss_Node1800.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
