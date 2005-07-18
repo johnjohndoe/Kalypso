@@ -33,7 +33,6 @@ public class SplitSort implements FeatureList
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
-    //
   }
 
   public SplitSort( final Feature parentFeature, FeatureTypeProperty parentFTP, final GM_Envelope env )

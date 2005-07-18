@@ -75,7 +75,7 @@ public class DefaultAuthenticator implements IAuthenticator
       {
         if( DEFAULT_PASSWORD.equals( dlg.getPassword() ) )
           return new KalypsoUser( "Administrator", new String[]
-          { UserRights.RIGHT_ADMIN }, Scenario.DEFAULT_SCENARIO );
+          { UserRights.RIGHT_ADMIN }, "", new IScenario[] { Scenario.DEFAULT_SCENARIO } );
       }
       else
         throw new InterruptedException();

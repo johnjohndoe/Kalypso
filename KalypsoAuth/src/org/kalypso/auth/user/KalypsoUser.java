@@ -12,14 +12,17 @@ public class KalypsoUser implements IKalypsoUser
   private final String[] m_rights;
 
   private final String m_userName;
+  
+  private final IScenario[] m_scenarios;
 
-  private final IScenario m_scenario;
+  private final String m_scenarioID;
 
-  public KalypsoUser( final String userName, final String[] rights, final IScenario scenario )
+  public KalypsoUser( final String userName, final String[] rights, final String scenarioID, final IScenario[] scenarios )
   {
     m_userName = userName;
     m_rights = rights;
-    m_scenario = scenario;
+    m_scenarioID = scenarioID;
+    m_scenarios = scenarios;
   }
 
   public String toString()
@@ -39,10 +42,18 @@ public class KalypsoUser implements IKalypsoUser
   }
 
   /**
-   * @see org.kalypso.auth.scenario.IScenarioProvider#getScenario()
+   * @see org.kalypso.auth.user.IKalypsoUser#getScenario()
    */
-  public IScenario getScenario()
+  public String getScenario()
   {
-    return m_scenario;
+    return m_scenarioID;
+  }
+
+  /**
+   * @see org.kalypso.auth.scenario.IScenarioProvider#getAvailableScenarios()
+   */
+  public IScenario[] getAvailableScenarios()
+  {
+    return m_scenarios;
   }
 }

@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.login.DefaultAuthenticator;
 import org.kalypso.auth.login.IAuthenticator;
+import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.osgi.framework.BundleContext;
 
@@ -151,5 +152,21 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
       if( shell != null )
         shell.dispose();
     }
+  }
+
+  /**
+   * Returns a scenario from the available scenarios
+   */
+  public IScenario getScenario( final String scenarioId )
+  {
+    final IScenario[] scenarios = m_user.getAvailableScenarios();
+    for( int i = 0; i < scenarios.length; i++ )
+    {
+      final IScenario scenario = scenarios[i];
+      if( scenario.getId().equals( scenarioId ))
+        return scenario;
+    }
+
+    return null;
   }
 }

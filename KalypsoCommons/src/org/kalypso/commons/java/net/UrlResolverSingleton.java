@@ -31,6 +31,8 @@ package org.kalypso.commons.java.net;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * UrlResolverSingleton
@@ -63,5 +65,28 @@ public class UrlResolverSingleton
       return new URL( relativeURL );
 
     return getDefault().resolveURL( baseURL, relativeURL );
+  }
+
+  /**
+   * Goes through a property-list and resolves every key ending with 'URL' against the
+   * given context.
+   * @param confUrl Context for resolving the urls
+   * @param props Every property ending with 'URL' will be changed = URL( context, prop )
+   * @throws MalformedURLException if any url is malformed
+   */
+  public static void resolveUrlProperties( final URL confUrl, final Properties props ) throws MalformedURLException
+  {
+    for( final Iterator it = props.keySet().iterator(); it.hasNext(); )
+    {
+      final String key = (String)it.next();
+      if( key.endsWith( "URL" ) )
+      {
+        final String path = props.getProperty( key );
+        final URL resolved = resolveUrl( confUrl, path );
+        final String fullPath = resolved.toExternalForm();
+
+        props.setProperty( key, fullPath );
+      }
+    }
   }
 }

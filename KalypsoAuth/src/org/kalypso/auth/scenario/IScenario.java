@@ -49,6 +49,11 @@ package org.kalypso.auth.scenario;
  */
 public interface IScenario
 {
+  public final static String PROP_NAME = "NAME";
+  public final static String PROP_DESCRIPTION = "DESCRIPTION";
+  public final static String PROP_DIAG_BACKGROUND_IMAGE_URL = "DIAG_BACKGROUND_IMAGE_URL";
+  public final static String PROP_WIZARD_TITLE_RGB = "WIZARD_TITLE_RGB";
+  
   /** used internally by Kalypso (id of default scenario is the empty string)*/
   public String getId();
   
@@ -56,4 +61,6 @@ public interface IScenario
   public String getName();
 
   public String getDescription();
+  
+  public String getProperty( final String name, final String defaultValue );
 }

@@ -74,6 +74,8 @@ import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.Spacer;
 import org.jfree.ui.TextAnchor;
+import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.ogc.sensor.DateRange;
@@ -252,8 +254,7 @@ public class ObservationPlot extends XYPlot
     for( int i = 0; i < getDatasetCount(); i++ )
       setDataset( i, null );
 
-    setBackgroundImage( null );
-    m_bgImageSet = false;
+    clearBackground();
     
     m_serie2dataset.clear();
     m_curve2serie.clear();
@@ -381,7 +382,9 @@ public class ObservationPlot extends XYPlot
         {
           try
           {
-            final Image image = new ImageIcon( new URL( "http://lfug-kv-01:8080/webdav/simulation.png" ) ).getImage();
+            final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( "test" );
+            final String imageURL = scenario.getProperty( IScenario.PROP_DIAG_BACKGROUND_IMAGE_URL, null );
+            final Image image = new ImageIcon( new URL( imageURL ) ).getImage();
             setBackgroundImage( image );
             setBackgroundImageAlignment( Align.FIT_HORIZONTAL | Align.NORTH );
             m_bgImageSet = true;
@@ -484,7 +487,16 @@ public class ObservationPlot extends XYPlot
       }
 
       m_curve2serie.remove( curve );
+      
+      if( m_curve2serie.size() == 0 )
+        clearBackground();
     }
+  }
+
+  private void clearBackground()
+  {
+    setBackgroundImage( null );
+    m_bgImageSet = false;
   }
 
   /**

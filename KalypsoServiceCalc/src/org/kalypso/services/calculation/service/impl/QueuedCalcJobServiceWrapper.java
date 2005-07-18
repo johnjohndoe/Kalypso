@@ -41,17 +41,21 @@
 package org.kalypso.services.calculation.service.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.contribs.java.net.ClassUrlCatalog;
@@ -111,29 +115,33 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     LOGGER.info( "Lese Konfigurationsdateien" );
 
     // die root aus dem Kalypso-Server-Properties lesen
-    final File confDir = ServiceConfig.getConfDir();
-    final File myConfDir = new File( confDir, ClassUtilities.getOnlyClassName( ICalculationService.class ) );
-
-    // Konfiguration der Modelltypen
-    final File typeFile = new File( myConfDir, "modelltypen.properties" );
-    if( !typeFile.exists() )
-      throw new RemoteException( "Can't find configuration file: " + typeFile.getAbsolutePath() );
-    final ICalcJobFactory factory = new PropertyCalcJobFactory( typeFile );
-
-    // Konfiguration dieser Service-Implementation
-    final Properties confProps = new Properties();
-    final File confFile = new File( myConfDir, "calculationService.properties" );
-    File classCatalogFile = null;
+    InputStream confStream = null;
+    URL classCatalogUrl = null;
     int maxThreads = 1;
     long schedulingPeriod = 2000;
+    ICalcJobFactory factory = new PropertyCalcJobFactory( new Properties() );
     try
     {
-      confProps.load( new FileInputStream( confFile ) );
+      final URL confLocation = ServiceConfig.getConfLocation();
+      final URL myConfUrl = UrlResolverSingleton.resolveUrl( confLocation, ClassUtilities
+          .getOnlyClassName( ICalculationService.class ) );
+
+      // Konfiguration der Modelltypen
+      final URL typeUrl = UrlResolverSingleton.resolveUrl( myConfUrl, "modelltypen.properties" );
+      //    if( !typeFile.exists() )
+      //      throw new RemoteException( "Can't find configuration file: " + typeFile.getAbsolutePath() );
+      factory = new PropertyCalcJobFactory( typeUrl );
+
+      // Konfiguration dieser Service-Implementation
+      final Properties confProps = new Properties();
+      final URL confUrl = UrlResolverSingleton.resolveUrl( myConfUrl, "calculationService.properties" );
+      confStream = confUrl.openStream();
+      confProps.load( confStream );
       maxThreads = Integer.parseInt( confProps.getProperty( "MAX_THREADS", "1" ) );
       schedulingPeriod = Long.parseLong( confProps.getProperty( "SCHEDULING_PERIOD", "2000" ) );
       final String classCatalogName = confProps.getProperty( "CLASS_CATALOG", null );
       if( classCatalogName != null )
-        classCatalogFile = new File( myConfDir, classCatalogName );
+        classCatalogUrl = UrlResolverSingleton.resolveUrl( myConfUrl, classCatalogName );
     }
     catch( final IOException e )
     {
@@ -141,21 +149,35 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
       LOGGER.warning( "Could not load service configuration file.\nWill proceed with default values" );
     }
+    finally
+    {
+      IOUtils.closeQuietly( confStream );
+    }
 
     {
-      IUrlCatalog catalog;
-      if( classCatalogFile == null )
+      final AbstractUrlCatalog emptyCatalog = new AbstractUrlCatalog()
       {
-        catalog = new AbstractUrlCatalog()
+        protected void fillCatalog( final Class myClass, final Map katalog )
         {
-          protected void fillCatalog( final Class myClass, final Map katalog )
-          {
-          // nix, ist leer
-          }
-        };
-      }
+        // nix, ist leer
+        }
+      };
+
+      IUrlCatalog catalog;
+      if( classCatalogUrl == null )
+        catalog = emptyCatalog;
       else
-        catalog = new ClassUrlCatalog( classCatalogFile );
+      {
+        try
+        {
+          catalog = new ClassUrlCatalog( classCatalogUrl );
+        }
+        catch( final IOException e )
+        {
+          LOGGER.log( Level.SEVERE, "Fehler beim Lesen des UrlClassCatalog: " + classCatalogUrl.toString(), e );
+          catalog = emptyCatalog;
+        }
+      }
 
       // TODO: auch den catalog aus der schemaConf nehmen?
       final File cacheDir = new File( FileUtilities.TMP_DIR, "schemaCache" );
@@ -168,11 +190,11 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
     LOGGER
         .info( "Service initialisiert mit:\nMAX_THREAD = " + maxThreads + "\nSCHEDULING_PERIOD = " + schedulingPeriod );
-    if( classCatalogFile == null )
+    if( classCatalogUrl == null )
       LOGGER
           .warning( "Kein Klassen-URL-Katalog angegeben (CLASS_CATALOG). Rechendienst ist vermutlich nicht richtig initialisiert." );
     else
-      LOGGER.info( "CLASS_CATALOG = " + classCatalogFile.getName() );
+      LOGGER.info( "CLASS_CATALOG = " + classCatalogUrl.toString() );
   }
 
   /**
