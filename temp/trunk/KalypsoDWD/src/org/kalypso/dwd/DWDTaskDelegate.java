@@ -174,16 +174,16 @@ public class DWDTaskDelegate
         try
         {
           targetObservation = ZmlFactory.parseXML( sourceURL, title );
-          IAxis dAxis = ObservationUtilities.findAxisByClass(targetObservation.getAxisList(), Date.class);
-          ITuppleModel mValues = targetObservation.getValues(null);
-          System.out.println(mValues.getRangeFor(dAxis)+" (measured)");
+//          IAxis dAxis = ObservationUtilities.findAxisByClass(targetObservation.getAxisList(), Date.class);
+//          ITuppleModel mValues = targetObservation.getValues(null);
+//          System.out.println(mValues.getRangeFor(dAxis)+" (measured)");
         }
         catch( Exception e )
         {
           // nothing
         }
         ITuppleModel fValues = forecastObservation.getValues(null);
-        System.out.println(fValues.getRangeFor(dateAxis)+" (forecast)");
+//        System.out.println(fValues.getRangeFor(dateAxis)+" (forecast)");
         final ForecastFilter fc = new ForecastFilter();
         final IObservation[] srcObs;
         if( targetObservation != null )
