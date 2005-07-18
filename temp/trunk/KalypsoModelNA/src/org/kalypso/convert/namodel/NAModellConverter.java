@@ -176,18 +176,6 @@ public class NAModellConverter
         " project:/.model/schema/namodell.xsd", modelSchema.getNamespaceURI(), modelGmlSchema.getNamespaceMap() );
     GmlSerializer.serializeWorkspace( new FileWriter( modelGmlFile ), modelWorkspace );
 
-    //    
-    //      File parameterGmlFile = new File( gmlBaseDir, "parameter.gml" ); final
-    //      GMLSchema paraGmlSchema = GMLSchemaCatalog.getSchema(
-    //      NaModelConstants.NS_NAPARAMETER ); final Document paraSchema =
-    //      paraGmlSchema.getSchema(); final GMLWorkspace paraWorkspace = new
-    //      GMLWorkspace_Impl( paraGmlSchema.getFeatureTypes(), parameterRootFeature,
-    //      null, " project:/.model/schema/parameter.xsd", paraSchema
-    //      .getNamespaceURI(), paraGmlSchema.getNamespaceMap() );
-    //      GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ),
-    //      paraWorkspace );
-    //     
-
     System.out.println( "Conversion from ASCII to GML was successfull!!!" );
     System.out.println( "Outputfolder: " + gmlBaseDir );
   }

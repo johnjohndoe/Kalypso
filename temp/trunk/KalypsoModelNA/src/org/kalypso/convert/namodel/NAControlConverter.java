@@ -99,7 +99,8 @@ public class NAControlConverter
   private static void appendResultsToGenerate( Feature controlFE, StringBuffer b )
   {
     b.append( " " + FeatureHelper.getAsString( controlFE, "timeStep" ) + "\n" );
-
+    //JH: Fortran-Code ‰ndern, um hier nur true und false abzufragen (einige erfordern 1,2)
+    //(auﬂerdem bei der Ausgabe darauf achten, dass nicht alles Zeitreihen sind.
     b.append( getBoolean( controlFE.getProperty( "tmp" ) ) + "       Temperatur                 .tmp\n" );
     b.append( getBoolean( controlFE.getProperty( "pre" ) ) + "       Niederschlag               .pre\n" );
     b.append( getBoolean( controlFE.getProperty( "sch" ) ) + "       Schnee                     .sch\n" );
@@ -115,7 +116,8 @@ public class NAControlConverter
     b.append( getBoolean( controlFE.getProperty( "qt1" ) ) + "       Kluftgrundw1               .qt1\n" );
     b.append( getBoolean( controlFE.getProperty( "qtg" ) ) + "       Kluftgrundw                .qtg\n" );
     b.append( getBoolean( controlFE.getProperty( "qgw" ) ) + "       Krundwasser                .qgw\n" );
-    b.append( getBoolean( controlFE.getProperty( "kap" ) ) + "       Kapil.Aufstieg/Perkolation .kap\n" );
+    //    b.append( getBoolean( controlFE.getProperty( "kap" ) ) + " Kapil.Aufstieg/Perkolation .kap\n" );
+    b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" );
     b.append( getBoolean( controlFE.getProperty( "vet" ) ) + "       Evapotranspiration         .vet\n" );
     b.append( getBoolean( controlFE.getProperty( "hyd" ) ) + "       Ausgabe hydrotope          .hyd\n" );
     b.append( getBoolean( controlFE.getProperty( "bil" ) ) + "       Abflussbilanz              .bil\n" );
@@ -134,8 +136,8 @@ public class NAControlConverter
     // knoten
     final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
-    boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
-        "resultForRootNodeOnly", true );
+    //    boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
+    //        "resultForRootNodeOnly", true );
     final String rootNodeID = (String)controlWorkspace.getRootFeature().getProperty( "rootNode" );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
@@ -143,7 +145,7 @@ public class NAControlConverter
       if( rootNodeID != null && rootNodeID.equals( nodeFEs[i].getId() ) )
         b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
       // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
-      else if( !onlyRootNodeResult && FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
+      else if( rootNodeID == null && FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
         b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
     }
     b.append( "99999\n" );
