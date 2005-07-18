@@ -31,29 +31,35 @@
 	<target name="update" description="Aktualisiert eine Rechenvariante">
 		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
 
-		<gmlProperty gmlURL="${calc.url}/.calculation">
+		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="" featureProperty="startsimulation" />
 			<property name="startforecast" featurepath="" featureProperty="startforecast"/>
 			<!-- stopsim = startforecast + 48h -->
 			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
-		</gmlProperty>
 
-		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" context="${calc.url}" targetObservation="Niederschlag_rechnung" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<property name="scenarioId" featurepath="" featureProperty="scenarioId"/>
+		</kalypso.gmlProperty>
+
+		<kalypso.copyObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" context="${calc.url}" targetObservation="Niederschlag_rechnung" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="Niederschlag_gemessen" from="${startsim}" to="${startforecast}"/>
 			<source property="Niederschlag_prognose" from="${startforecast}" to="${stopsim}"/>
-		</copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
 
-		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember" context="${calc.url}" targetObservation="Wasserstand_gemessen" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember" context="${calc.url}" targetObservation="Wasserstand_gemessen" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="Wasserstand_gemessenEingang" from="${startsim}" to="${startforecast}"/>
-		</copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
 
-		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="TalsperreCollectionAssociation/TalsperreMember" context="${calc.url}" targetObservation="Abgabe" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${calc.url}/calcCase.gml" featurePath="TalsperreCollectionAssociation/TalsperreMember" context="${calc.url}" targetObservation="Abgabe" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="Abgabe_eingang" from="${startsim}" to="${stopsim}"/>
-		</copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
 		
-		<copyObservation gml="${calc.url}/calcCase.gml" featurePath="VorgabeCollectionAssociation/VorgabeMember" context="${calc.url}" targetObservation="Abfluss" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${calc.url}/calcCase.gml" featurePath="VorgabeCollectionAssociation/VorgabeMember" context="${calc.url}" targetObservation="Abfluss" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="Abfluss_eingang" from="${startsim}" to="${stopsim}"/>
-		</copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
 	</target>
 	
 	<target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">
