@@ -46,8 +46,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
@@ -59,21 +61,20 @@ public final class RunnableContextHelper
 {
   public static final class CoreRunnableWrapper implements IRunnableWithProgress
   {
-    private final ICoreRunnableWithProgress runnable;
+    private final ICoreRunnableWithProgress m_runnable;
 
     private IStatus m_status = Status.OK_STATUS;
 
     public CoreRunnableWrapper( final ICoreRunnableWithProgress runnable )
     {
-      super();
-      this.runnable = runnable;
+      m_runnable = runnable;
     }
 
     public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
     {
       try
       {
-        m_status = runnable.execute( monitor );
+        m_status = m_runnable.execute( monitor );
       }
       catch( final CoreException e )
       {
@@ -88,7 +89,7 @@ public final class RunnableContextHelper
   }
 
   private final IRunnableContext m_context;
-  
+
   private RunnableContextHelper( final IRunnableContext context )
   {
     m_context = context;
@@ -135,17 +136,16 @@ public final class RunnableContextHelper
     }
 
     if( runnable instanceof CoreRunnableWrapper )
-      return ((CoreRunnableWrapper)runnable).getStatus();
-    
+      return ( (CoreRunnableWrapper)runnable ).getStatus();
+
     return Status.OK_STATUS;
   }
-  
+
   /**
    * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
    * {@Link IStatus}object.
    */
-  public IStatus execute( final boolean fork,
-      final boolean cancelable, final ICoreRunnableWithProgress runnable )
+  public IStatus execute( final boolean fork, final boolean cancelable, final ICoreRunnableWithProgress runnable )
   {
     final IRunnableWithProgress innerRunnable = new CoreRunnableWrapper( runnable );
 
@@ -156,20 +156,33 @@ public final class RunnableContextHelper
    * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
    * {@Link IStatus}object.
    */
-  public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
+  public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable,
+      final IRunnableWithProgress runnable )
   {
-      final RunnableContextHelper helper = new RunnableContextHelper( context );
-      return helper.execute( fork, cancelable, runnable );
+    final RunnableContextHelper helper = new RunnableContextHelper( context );
+    return helper.execute( fork, cancelable, runnable );
   }
 
   /**
    * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
    * {@Link IStatus}object.
    */
-  public static IStatus execute( final IRunnableContext context, final boolean fork,
-      final boolean cancelable, final ICoreRunnableWithProgress runnable )
+  public static IStatus execute( final IRunnableContext context, final boolean fork, final boolean cancelable,
+      final ICoreRunnableWithProgress runnable )
   {
     final RunnableContextHelper helper = new RunnableContextHelper( context );
     return helper.execute( fork, cancelable, runnable );
+  }
+
+  /**
+   * Runs a runnable in a progress monitor dialog. 
+   */
+  public final static void executeInProgressDialog( final Shell shell, final ICoreRunnableWithProgress runnable,
+      final IErrorHandler errorHandler )
+  {
+    // run the execute method in a Progress-Dialog
+    final ProgressMonitorDialog dialog = new ProgressMonitorDialog( shell );
+    final IStatus status = execute( dialog, true, true, runnable );
+    errorHandler.handleError( shell, status );
   }
 }

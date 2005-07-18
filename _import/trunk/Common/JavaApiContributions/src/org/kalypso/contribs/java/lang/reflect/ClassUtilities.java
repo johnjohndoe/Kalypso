@@ -55,7 +55,6 @@ public class ClassUtilities
    * <p>
    * Example: org.foo.bar.FooBar will return FooBar
    * 
-   * @param someClass
    * @return the classname of the given class without package part.
    */
   public static String getOnlyClassName( final Class someClass )
@@ -66,12 +65,6 @@ public class ClassUtilities
   }
 
   /**
-   * @param classname
-   * @param target
-   * @param cl
-   * @return new instance
-   * @throws ClassUtilityException
-   * 
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[], Object[])
    */
   public static Object newInstance( final String classname, final Class target, final ClassLoader cl )
@@ -85,13 +78,6 @@ public class ClassUtilities
    * but in some cases, where the arguments do inherit from the class required in the constructor, the constructor might
    * not be found. In these cases, use the full version of this method where you can exactly specify the classes of the
    * arguments.
-   * 
-   * @param classname
-   * @param target
-   * @param cl
-   * @param arguments
-   * @return new instance
-   * @throws ClassUtilityException
    * 
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[], Object[])
    */
