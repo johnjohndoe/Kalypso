@@ -350,12 +350,12 @@
 					<element name="typkap" type="string">
 						<annotation>
 							<documentation xml:lang="de">
-								<label/>
-								<tooltip/>
+								<label>Kurzzeichen kap. Aufstieg</label>
+								<tooltip>Kurzzeichen kap. Aufstieg (zur Zeit nicht verwendet)</tooltip>
 								<description/>
 							</documentation>
 							<documentation xml:lang="en">
-								<label/>
+								<label>cap. uprise</label>
 								<tooltip/>
 								<description/>
 							</documentation>
@@ -407,6 +407,11 @@
 					<element name="typkf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
+								<label>kf-Wert</label>
+								<tooltip>kf-Wert [mm/d]</tooltip>
+								<description>kf-Wert [mm/d]</description>
+							</documentation>
+							<documentation xml:lang="en">
 								<label>Hydraulic conductivity</label>
 								<tooltip>Hydraulic conductivity [mm/d]</tooltip>
 								<description>Hydraulic conductivity [mm/d]</description>
@@ -415,6 +420,11 @@
 					</element>
 					<element name="typbf0" type="double">
 						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfangsbodenfeuchte</label>
+								<tooltip>Anfangsbodenfeuchte [-] (= 0-1)</tooltip>
+								<description>Anfangsbodenfeuchte [-] (= 0-1)</description>
+							</documentation>
 							<documentation xml:lang="en">
 								<label>Initial soil moisture</label>
 								<tooltip>Initial soil moisture [-] (= 0-1)</tooltip>
