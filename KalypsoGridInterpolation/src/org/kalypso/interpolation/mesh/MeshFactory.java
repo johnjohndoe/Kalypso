@@ -20,7 +20,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MeshFactory
 {
-  public final static String MESH_NAMESPACE = "http://www.tu-harburg.de/GridInterpolation";
+  public final static String MESH_NAMESPACE = "http://www.tu-harburg.de/risk/mesh";
 
   private static MeshFactory myInstance = new MeshFactory();
 
@@ -29,9 +29,6 @@ public class MeshFactory
   //private Mesh myMesh;
   private final HashMap meshTable;
 
-  /*
-   * private MeshFactory(){ myMesh = new Mesh(); }
-   */
   private MeshFactory()
   {
     meshTable = new HashMap();
