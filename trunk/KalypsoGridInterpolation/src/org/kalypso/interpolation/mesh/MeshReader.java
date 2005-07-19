@@ -85,7 +85,7 @@ public class MeshReader
 
   private ElementTable m_elements = null;
 
-  private boolean m_initialise = false;
+//  private boolean m_initialise = false;
 
   protected Mesh importMesh( Mesh mesh, File[] files, CS_CoordinateSystem cs, GM_Surface wishbox, String shapeBase )
   {
@@ -180,18 +180,12 @@ public class MeshReader
       e.printStackTrace();
       System.exit( 0 );
     }
-    mesh.setGridInitialize( m_initialise );
     return mesh;
   }
 
   private PointTable createNodes( File nodefile, File attributefile, CS_CoordinateSystem crs )
   {
     PointTable pt = new PointTable();
-    //    double xmin = 0;
-    //    double xmax = 0;
-    //    double ymin = 0;
-    //    double ymax = 0;
-
     System.out.println( "Reading Nodes.." );
     try
     {
@@ -211,26 +205,6 @@ public class MeshReader
         st.nextToken();
         double ycor = st.nval;
         st.nextToken();
-        //        if( firstLine == true )
-        //        {
-        //          xmin = xcor;
-        //          xmax = xcor;
-        //          ymin = ycor;
-        //          ymax = ycor;
-        //          firstLine = false;
-        //        }
-        //        else
-        //        {
-        //          if( xcor < xmin )
-        //            xmin = xcor;
-        //          else if( xcor > xmax )
-        //            xmax = xcor;
-        //
-        //          if( ycor < ymin )
-        //            ymin = ycor;
-        //          else if( ycor > ymax )
-        //            ymax = ycor;
-        //        }
         //create a point from x,y coordinate and with dummy initial
         // elevation attribute
         Point p = new Point( pointID, xcor, ycor, crs );
@@ -244,9 +218,6 @@ public class MeshReader
     //assigning BoundigBox of Mesh
     try
     {
-      //      m_meshEnv = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax ), crs
-      // );
-
       System.out.print( pt.size() + " points created." );
       System.out.println( "Bounding Box of the Net: " + m_meshEnv );
       System.out.println( "Reading Attributes.." );
@@ -285,9 +256,6 @@ public class MeshReader
   private void createElements( File elementfile, CS_CoordinateSystem crs, Mesh mesh, GM_Surface wishbox )
       throws Exception
   {
-    if( wishbox != null && wishbox.contains( m_meshEnv ) )
-      mesh.setBoundingBox( m_meshEnv );
-    //    GM_Surface bbox = GeometryFactory.createGM_Surface( wishbox, crs );
     System.out.println( "Reading Elements.." );
     //reads file into streamtokenizer
     BufferedReader bEleFReader = new BufferedReader( new InputStreamReader( new FileInputStream( elementfile ) ) );
@@ -305,7 +273,6 @@ public class MeshReader
     for( eleLine = bEleFReader.readLine(); eleLine != null; eleLine = bEleFReader.readLine() )
     {
       st = new StringTokenizer( eleLine );
-      //st.parseNumbers(); // sets the tonenizer to parse for numbers
       int totalNodes = st.countTokens() - 1;//-1 was not there, but
       // changed later
 
@@ -329,10 +296,7 @@ public class MeshReader
           double value = p.getAttribute().doubleValue();
           pointarray[nodeCounter] = value;
           nodeCounter++;
-          if( value <= 0.0 )
-            m_initialise = true;
         }
-        //*System.out.println("nodeocunter:" + nodeCounter);
         if( nodeCounter == 3 )
         {// its element is triangle
           //First vertex equals last vertex - > defines a closed
@@ -554,8 +518,8 @@ public class MeshReader
               double value = ( (Double)points.get( String.valueOf( xcor ) + String.valueOf( ycor ) ) ).doubleValue();
               values[nodeCounter] = value;
               verticies[nodeCounter++] = GeometryFactory.createGM_Position( xcor, ycor );
-              if( value <= 0.0 )
-                m_initialise = true;
+//              if( value <= 0.0 )
+//                m_initialise = true;
             }
 
             //*System.out.println("nodeocunter:" + nodeCounter);

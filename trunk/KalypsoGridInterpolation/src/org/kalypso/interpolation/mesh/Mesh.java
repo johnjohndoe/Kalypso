@@ -5,7 +5,6 @@
  */
 package org.kalypso.interpolation.mesh;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -31,7 +30,7 @@ public class Mesh
 
   private GM_Surface m_env = null;
 
-//  private ElementTable et = null;
+  //  private ElementTable et = null;
 
   private final HashMap m_meshElements = new HashMap();
 
@@ -39,7 +38,7 @@ public class Mesh
 
   private Grid m_grid = null;
 
-  private boolean m_gridInitialise = false;
+//  private boolean m_gridInitialise = false;
 
   private GM_Surface m_border = null;
 
@@ -55,7 +54,6 @@ public class Mesh
     this.name = name;
     this.m_crs = cs;
   }//constructor
-
 
   public String getMeshName()
   {
@@ -107,7 +105,6 @@ public class Mesh
     return m_env.getEnvelope();
   }//getBBox
 
-
   public Grid getGrid()
   {
     return m_grid;
@@ -120,24 +117,24 @@ public class Mesh
 
   }
 
-  public void interpolateGrid( File file, GM_Surface polyline, IGrid grid )
+  public void interpolateGrid( IGrid grid )
   {
     if( m_meshElements.size() == 0 )
       return;
     int progress = 1;
-//    int noElements = m_meshElements.size();
+    int noElements = m_meshElements.size();
     try
     {
       Iterator it = m_meshElements.keySet().iterator();
       while( it.hasNext() )
       {
-        MeshElement me = (MeshElement)m_meshElements.get( it.next() );
+        MeshElement me = (MeshElement)m_meshElements.get( (String)it.next() );
         Vector cells = ( (Grid)grid ).getCellsFromGrid( me.getEnvelope(), me.getCoordinateSystem() );
         //System.out.println( progress + " of " + noElements );
         me.interpolateMeshElement( (GM_Position[])cells.toArray( new GM_Position[cells.size()] ), (Grid)grid );
         progress++;
       }
-      ( (Grid)grid ).export( polyline, file );
+      //      ( (Grid)grid ).exportESRIasc( polyline, file );
     }
     catch( Exception e )
     {
@@ -161,16 +158,16 @@ public class Mesh
     m_meshElements.remove( me.getMeshElementID() );
   }
 
-  protected boolean isGridInitialised()
-  {
-    return m_gridInitialise;
-
-  }
-
-  public void setGridInitialize( boolean initialise )
-  {
-    m_gridInitialise = initialise;
-  }
+//  protected boolean isGridInitialised()
+//  {
+//    return m_gridInitialise;
+//
+//  }
+//
+//  public void setGridInitialize( boolean initialise )
+//  {
+//    m_gridInitialise = initialise;
+//  }
 
   public void setBorderLine( GM_Surface surface )
   {
