@@ -399,7 +399,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     final Map proxies = new LinkedHashMap();
 
-    // put lokal services first, so they will will be taken in preference
+    // put lokal services first, so they will be taken in preference
     //System.out.println( "check local Calcservices" );
     proxies.putAll( getLocalCalcServices() );
     //System.out.println( "check local Calcservices DONE" );

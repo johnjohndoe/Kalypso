@@ -209,6 +209,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     m_swtControls.add( control );
 
     control.setVisible( controlType.isVisible() );
+    control.setEnabled( controlType.isEnabled() );
 
     // einen bereits gesetzten Tooltip nicht überschreiben
     if( control.getToolTipText() == null )
@@ -263,7 +264,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final TextFeatureControl tfc = new TextFeatureControl( workspace, feature, ftp );
 
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
-      tfc.setEnabled( editorType.isEditable() );
+      tfc.setEditable( editorType.isEditable() );
 
       addFeatureControl( tfc );
 
@@ -510,7 +511,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           }
           catch( final Exception e )
           {
-            // ignore, this control has not text
+            // ignore, this control has no 'setText'
           }
 
           label.setToolTipText( annotation.getTooltip() );

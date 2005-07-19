@@ -147,10 +147,10 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     return m_isValid;
   }
 
-  public void setEnabled( final boolean enabled )
+  public void setEditable( final boolean enabled )
   {
     if( m_text != null && !m_text.isDisposed() )
-      m_text.setEnabled( enabled );
+      m_text.setEditable( enabled );
   }
 
   /**
