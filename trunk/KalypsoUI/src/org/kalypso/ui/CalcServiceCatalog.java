@@ -71,7 +71,9 @@ public class CalcServiceCatalog extends AbstractUrlCatalog
         for( int j = 0; j < namespaces.length; j++ )
         {
           final URL url = new URL( CalculationSchemaStreamHandler.PROTOCOL + "://" + name + "/" + namespaces[j] );
-          catalog.put( namespaces[j], url );
+          // first one wins (usually localCalcservices)
+          if( !catalog.containsKey( namespaces[j] ) )
+            catalog.put( namespaces[j], url );
         }
       }
     }
