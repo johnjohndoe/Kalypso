@@ -87,6 +87,8 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -313,10 +315,14 @@ public class NaModelInnerCalcJob implements ICalcJob
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellURL );
     ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
+
+    // setting duration of simulation...
+    // start
+    conf.setSimulationStart( (Date)metaFE.getProperty( "startsimulation" ) );
+    // start forecast
     final Date startForecastDate = (Date)metaFE.getProperty( "startforecast" );
     conf.setSimulationForecasetStart( startForecastDate );
-    conf.setSimulationStart( (Date)metaFE.getProperty( "startsimulation" ) );
-    chooseSimulationExe( (String)metaFE.getProperty( "versionKalypsoNA" ) );
+    // end of simulation
     int hoursForecast = 0; // default length of forecast hours
     final Integer hoursOfForecast = (Integer)metaFE.getProperty( "hoursforecast" );
     if( hoursOfForecast != null )
@@ -326,6 +332,18 @@ public class NaModelInnerCalcJob implements ICalcJob
     c.add( Calendar.HOUR, hoursForecast );
     final Date endDate = c.getTime();
     conf.setSimulationEnd( endDate );
+
+    // calculate timestep
+    int minutesTimeStep = 60;
+    final Integer minutesOfTimeStep = (Integer)metaFE.getProperty( "minutesTimestep" );
+    if( minutesOfTimeStep != null )
+      minutesTimeStep = minutesOfTimeStep.intValue() != 0 ? minutesOfTimeStep.intValue() : 60;
+    conf.setMinutesOfTimeStep( minutesTimeStep );
+
+    // choose simulation kernel
+    chooseSimulationExe( (String)metaFE.getProperty( "versionKalypsoNA" ) );
+
+    // set rootnode
     conf.setRootNodeID( (String)controlWorkspace.getRootFeature().getProperty( "rootNode" ) );
 
     // generate control files
@@ -477,14 +495,14 @@ public class NaModelInnerCalcJob implements ICalcJob
     loadTSResults( inputDir, modellWorkspace, logger, outputDir );
     loadLogs( inputDir, logger, resultEater );
     File[] files = outputDir.listFiles();
-    // TODO change for Ergebnis/Berechnungen
     if( files != null )
     {
       for( int i = 0; i < files.length; i++ )
       {
-        if( files[i].isDirectory() )
+        if( files[i].isDirectory() ) // Ergebnisse
         {
-          resultEater.addResult( NaModelConstants.OUT_ZML, files[i].listFiles()[0] );
+          resultEater.addResult( NaModelConstants.OUT_ZML, files[i] );
+          //          resultEater.addResult( NaModelConstants.OUT_ZML, files[i].listFiles()[0] );
           return;
         }
       }
@@ -674,7 +692,7 @@ public class NaModelInnerCalcJob implements ICalcJob
 
         // transform data to tuppelmodel
         final SortedMap data = ts.getTimeSerie( key );
-        final Object[][] tupelData = new Object[data.size()][2];
+        final Object[][] tupelData = new Object[data.size()][3];
         final Set dataSet = data.entrySet();
         final Iterator iter = dataSet.iterator();
         int pos = 0;
@@ -683,17 +701,19 @@ public class NaModelInnerCalcJob implements ICalcJob
           Map.Entry entry = (Map.Entry)iter.next();
           tupelData[pos][0] = (Date)entry.getKey();
           tupelData[pos][1] = new Double( Double.parseDouble( entry.getValue().toString() ) * resultFactor );
+          tupelData[pos][2] = new Integer( KalypsoStati.BIT_OK );
           pos++;
         }
 
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
-
         final IAxis qAxis = new DefaultAxis( getTitleForSuffix( suffix ) + "_" + title, resultType, TimeserieUtils
             .getUnit( resultType ), Double.class, false );
+        IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
         IAxis[] axis = new IAxis[]
         {
             dateAxis,
-            qAxis };
+            qAxis,
+            statusAxis };
         ITuppleModel qTuppelModel = new SimpleTuppleModel( axis, tupelData );
 
         final MetadataList metadataList = new MetadataList();
@@ -751,8 +771,8 @@ public class NaModelInnerCalcJob implements ICalcJob
         }
         catch( Exception e )
         {
-          // if there is target defined or there are some problems with that we
-          // generate one
+          // if there is target defined or there are some problems with that
+          // we generate one
           resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_" + key
               + "_" + feature.getId() + ".zml";
         }

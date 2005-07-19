@@ -133,6 +133,8 @@ public class NAConfiguration
 
   private final URL m_hydrotopFormatURL;
 
+  private int m_minutesTimeStep = 60;
+
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
     m_asciiBaseDir = asciiBaseDir;
@@ -381,5 +383,18 @@ public class NAConfiguration
   public FeatureType getBodartFT()
   {
     return m_bodartFT;
+  }
+
+  /**
+   * @param minutesTimeStep
+   */
+  public void setMinutesOfTimeStep( int minutesTimeStep )
+  {
+    m_minutesTimeStep = minutesTimeStep;
+  }
+
+  public int getMinutesOfTimeStep()
+  {
+    return m_minutesTimeStep;
   }
 }

@@ -88,7 +88,7 @@ public class NAControlConverter
 
     // generate Start
     final StringBuffer b = new StringBuffer();
-    appendResultsToGenerate( controlFE, b );
+    appendResultsToGenerate( conf, controlFE, b );
     appendResultInformation( modellWorkspace, controlWorkspace, b );
     //write it
     final FileWriter writer = new FileWriter( startFile );
@@ -96,9 +96,12 @@ public class NAControlConverter
     writer.close();
   }
 
-  private static void appendResultsToGenerate( Feature controlFE, StringBuffer b )
+  private static void appendResultsToGenerate( NAConfiguration conf, Feature controlFE, StringBuffer b )
   {
-    b.append( " " + FeatureHelper.getAsString( controlFE, "timeStep" ) + "\n" );
+    int minutesOfTimeStep = conf.getMinutesOfTimeStep();
+    double hoursOfTimeStep = minutesOfTimeStep / 60d;
+    //    b.append( " " + FeatureHelper.getAsString( controlFE, "timeStep" ) + "\n" );
+    b.append( " " + hoursOfTimeStep + "\n" );
     //JH: Fortran-Code ‰ndern, um hier nur true und false abzufragen (einige erfordern 1,2)
     //(auﬂerdem bei der Ausgabe darauf achten, dass nicht alles Zeitreihen sind.
     b.append( getBoolean( controlFE.getProperty( "tmp" ) ) + "       Temperatur                 .tmp\n" );

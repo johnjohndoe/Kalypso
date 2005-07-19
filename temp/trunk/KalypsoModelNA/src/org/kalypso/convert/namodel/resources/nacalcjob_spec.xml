@@ -12,8 +12,8 @@
 
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
-	<output id="OUT_ZML" description="Alle Ergebnisse kommen erstmal in ein Verzeichnis"/>
-
+	<output id="OUT_ZML" description="Verzeichnis der Berechnungsergebnisse"/>
+	<output id="OUT_OPTIMIZEFILE" description="Optimierte Parameter Datei"/>
 	<output id="LOG_EXE_STDOUT" description="Pegel Vorhersage Abfluss"/>
 	<output id="LOG_EXE_ERROUT" description="Speicherabgabe (Gesamtzeitraum)"/>
 	<output id="LOG_OUTRES" description="Speicherinhalt Vorhersage"/>

@@ -42,6 +42,7 @@ package org.kalypso.convert.namodel.optimize;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -58,6 +59,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.convert.namodel.NaModelConstants;
@@ -107,7 +109,9 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private final ICalcDataProvider m_dataProvider;
 
-  private URL m_lastOptimizedUrl;
+  private File m_lastOptimizedFile;
+
+  private File m_bestOptimizedFile = null;
 
   private final ICalcMonitor m_monitor;
 
@@ -121,22 +125,29 @@ public class NAOptimizingJob implements IOptimizingJob
 
   public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far";
 
+  private int m_counter=0;
+  private int m_bestNumber=0;
+
   public NAOptimizingJob( File tmpDir, final ICalcDataProvider dataProvider, ICalcMonitor monitor ) throws Exception
   {
     m_tmpDir = tmpDir;
     m_dataProvider = dataProvider;
     m_monitor = monitor;
 
-    final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
+    //    final URL schemaURL = getClass().getResource( "schema/nacontrol.xsd" );
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
+        .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
+    //    final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
+    //        .getURLForID( NaModelConstants.IN_CONTROL_ID ), schemaURL );
     final Feature rootFeature = controlWorkspace.getRootFeature();
     m_linkMeasuredTS = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
     m_linkCalcedTS = (TimeseriesLink)rootFeature.getProperty( "qberechnetZR" );
 
-    final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
+    //    final URL metaSchemaURL = getClass().getResource( "schema/control.xsd" );
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
-        .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
+        .getURLForID( NaModelConstants.IN_META_ID ) );
+    //    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
+    //        .getURLForID( NaModelConstants.IN_META_ID ), metaSchemaURL );
     final Feature metaFE = metaWorkspace.getRootFeature();
     final Date measuredStartDate = (Date)metaFE.getProperty( "startsimulation" );
     final Date measuredEndDate = (Date)metaFE.getProperty( "startforecast" );
@@ -159,15 +170,17 @@ public class NAOptimizingJob implements IOptimizingJob
   }
 
   /**
+   * @throws MalformedURLException
    * @see org.kalypso.optimize.IOptimizingJob#calculate()
    */
-  public void calculate()
+  public void calculate() throws MalformedURLException
   {
+    m_counter++;
     final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir );
     optimizeRunDir.mkdirs();
 
     final OptimizeCalcDataProvider newDataProvider = new OptimizeCalcDataProvider( m_dataProvider );
-    newDataProvider.addURL( NaModelConstants.IN_CONTROL_ID, m_lastOptimizedUrl );
+    newDataProvider.addURL( NaModelConstants.IN_CONTROL_ID, m_lastOptimizedFile.toURL() );
 
     // some generated files from best run can be recycled to increase
     // performance
@@ -206,6 +219,8 @@ public class NAOptimizingJob implements IOptimizingJob
       clear( m_bestOptimizeRunDir );
       m_bestOptimizeRunDir = m_lastOptimizeRunDir;
       m_bestResultEater = m_lastResultEater;
+      m_bestOptimizedFile = m_lastOptimizedFile;
+      m_bestNumber=m_counter;
     }
     else
     {
@@ -219,16 +234,15 @@ public class NAOptimizingJob implements IOptimizingJob
   {
     if( dir != null )
     {
-      System.out.println( "remove " + dir.toString() );
-      // TODO clean this
-      //      try
-      //      {
-      //        FileUtils.deleteDirectory( dir );
-      //      }
-      //      catch( IOException e )
-      //      {
-      //        e.printStackTrace();
-      //      }
+      //      System.out.println( "remove " + dir.toString() );
+      try
+      {
+        FileUtils.deleteDirectory( dir );
+      }
+      catch( IOException e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -269,7 +283,7 @@ public class NAOptimizingJob implements IOptimizingJob
     }
     IOUtils.closeQuietly( writer );
 
-    m_lastOptimizedUrl = file.toURL();
+    m_lastOptimizedFile = file;
 
   }
 
@@ -346,6 +360,8 @@ public class NAOptimizingJob implements IOptimizingJob
       String id = (String)iter.next();
       resultEater.addResult( id, (File)m_bestResultEater.get( id ) );
     }
+    resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
+    System.out.println("best was #"+m_bestNumber);
   }
 
   /**
