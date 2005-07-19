@@ -91,6 +91,8 @@ public class FunctionMultiError extends IErrorFunktion
       }
     }
     // find max
+    // TODO: what about using Arrays.sort() and error[error.length - 1] ?
+    // ask Marc for more information. I beliebe it must be more performant.
     final double maxError = org.kalypso.contribs.java.util.Arrays.findMax( error );
     for( int i = 0; i < m_functions.size(); i++ )
     {
