@@ -53,6 +53,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.XmlProperty;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -166,13 +167,13 @@ public class GmlPropertyTask extends Task
       // just write time in millies since 1970
       final Date dateValue = (Date)value;
       final Integer dateoffset = property.getDateoffset();
-      final Integer dateoffsetfield = property.getDateoffsetfield();
+      final String dateoffsetfield = property.getDateoffsetfield();
       final Date date;
       if( dateoffset != null && dateoffsetfield != null )
       {
         final Calendar cal = Calendar.getInstance();
         cal.setTime( dateValue );
-        cal.add( dateoffsetfield.intValue(), dateoffset.intValue() );
+        cal.add( CalendarUtilities.getCalendarField(dateoffsetfield), dateoffset.intValue() );
         date = cal.getTime();
       }
       else
@@ -242,7 +243,7 @@ public class GmlPropertyTask extends Task
     private Integer m_dateoffset;
 
     /** HACK: if the property is a date, the offset to this field. Must be One of Calendar.HOUR_OF_DAY, etc. */
-    private Integer m_dateoffsetfield;
+    private String m_dateoffsetfield;
 
     public final Integer getDateoffset()
     {
@@ -254,12 +255,12 @@ public class GmlPropertyTask extends Task
       m_dateoffset = dateoffset;
     }
 
-    public final Integer getDateoffsetfield()
+    public final String getDateoffsetfield()
     {
       return m_dateoffsetfield;
     }
 
-    public final void setDateoffsetfield( Integer dateoffsetfield )
+    public final void setDateoffsetfield(String dateoffsetfield )
     {
       m_dateoffsetfield = dateoffsetfield;
     }

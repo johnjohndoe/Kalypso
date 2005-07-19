@@ -179,7 +179,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
           ZmlFactory.getMarshaller().marshal( type, w );
         }
       };
-      thread.setFileContents( targetfile, false, true, new NullProgressMonitor() );
+      thread.setFileContents( targetfile, true, true, new NullProgressMonitor() );
     }
     catch( final Exception e )
     {
@@ -204,7 +204,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         result.add( getObservation( f, source.getProperty(), source.getFrom(), source.getTo(), source.getFilter() ) );
       }
       catch( Exception e )
-      {
+      {      
         // it is possible to use the target also as input, e.g. if you want to update just a part of the zml.
         // if this source==target is unreachable it should be ignored, if it is not the target throw an exception
         if( m_targetobservation.equals( source.getProperty() ) )
@@ -263,8 +263,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       this.from = dfrom;
       this.to = dto;
       this.filter = filt;
-    }
-
+}
     public final Date getFrom()
     {
       return from;
