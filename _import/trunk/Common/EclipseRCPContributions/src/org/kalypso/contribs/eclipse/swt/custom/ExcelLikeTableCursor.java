@@ -373,15 +373,20 @@ public class ExcelLikeTableCursor extends TableCursor
     final IStructuredSelection newSelection = new StructuredSelection( featureList );
 
     final TableItem[] viewerSelection = m_viewer.getTable().getSelection();
-    final List itemList = Arrays.asList( viewerSelection );
-    itemList.add( item );
-    final TableItem[] newViewerSelection = (TableItem[])itemList.toArray( new TableItem[itemList.size()] );
+    
+    final TableItem[] newViewerSelection = new TableItem[viewerSelection.length + 1];
+    System.arraycopy( viewerSelection, 0, newViewerSelection, 0, viewerSelection.length );
+    newViewerSelection[viewerSelection.length] = item;
+    
     m_viewer.setSelection( newSelection, true );
     m_viewer.getTable().setSelection( newViewerSelection );
   }
 
-  void toggleSelection( TableItem item )
+  void toggleSelection( final TableItem item )
   {
+    if( item == null )
+      return;
+    
     if( DEBUG )
       System.out.println( "toggle selection" );
     final IStructuredSelection tableSelection = (IStructuredSelection)m_viewer.getSelection();
@@ -393,30 +398,18 @@ public class ExcelLikeTableCursor extends TableCursor
       featureList.add( feature );
     final IStructuredSelection newSelection = new StructuredSelection( featureList );
     final TableItem[] viewerSelection = m_viewer.getTable().getSelection();
-    final List itemList = Arrays.asList( viewerSelection );
+    
+    // do not use asList directly, as it is unmodifiable
+    final List itemList = new ArrayList( Arrays.asList( viewerSelection ) );
     if( itemList.contains( item ) )
       itemList.remove( item );
     else
       itemList.add( item );
+    
     final TableItem[] newViewerSelection = (TableItem[])itemList.toArray( new TableItem[itemList.size()] );
     m_viewer.setSelection( newSelection, true );
     m_viewer.getTable().setSelection( newViewerSelection );
   }
-
-  //  void clearSelection()
-  //  {
-  //    if( DEBUG )
-  //      System.out.println( "clear selection" );
-  //    final ISelection selection = m_viewer.getSelection();
-  //    if( !selection.isEmpty() && selection instanceof IStructuredSelection )
-  //    {
-  //      // clear selections
-  //      m_viewer.setSelection( null );
-  //      m_viewer.getTable().setSelection( new TableItem[0] );
-  //      // refresh view
-  //      m_viewer.refresh();
-  //    }
-  //  }
 
   public void stopEditing()
   {
