@@ -8,5 +8,4 @@
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="E:\runtime-workspace\KalypsoWeisseElster\.model\launch"/>
 <stringAttribute key="org.eclipse.ant.ui.ATTR_BUILD_SCOPE" value="${none}"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="updateMeasured,"/>
 </launchConfiguration>

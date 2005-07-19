@@ -17,7 +17,7 @@
 	<input id="Parameter" path="parameter.gml" relativeToCalcCase="true"/>
 -->
 
-	<output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
+	<output id="OUT_OPTIMIZEFILE" path=".nacontrol_14.gml" relativeToCalcCase="true"/>
 
 	<output id="OUT_ZML" path="Ergebnisse" relativeToCalcCase="true"/>
 
@@ -25,4 +25,5 @@
 	<output id="LOG_EXE_ERROUT" path="logs2.txt" relativeToCalcCase="true"/>
 	<output id="LOG_OUTRES" path="logs3.txt" relativeToCalcCase="true"/>
 	<output id="LOG_OUTERR" path="logs4.txt" relativeToCalcCase="true"/>
+	<output id="LOG_INFO" path="logs5.txt" relativeToCalcCase="true"/>
 </modeldata>

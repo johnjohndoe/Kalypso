@@ -11,18 +11,17 @@
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Boehlen.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>        
       </outObservationLink>
     </MappingObservation>
-  </mappingMember>
-  
+  </mappingMember>  
   
   <mappingMember>
     <MappingObservation fid="MappingObservation1">
       <gml:description/>
       <gml:name>Koberbach</gml:name>
       <inObservationLink>
-            <TimeseriesLink linktype="zml" ns1:href="project:/.model/zeitreihen/Q_leer.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>        
+		<TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577705.P3" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>            
       </inObservationLink>
       <outObservationLink>
-            <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Koberbach.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>      
+        <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Koberbach.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>      
       </outObservationLink>
     </MappingObservation>
   </mappingMember>
@@ -32,7 +31,7 @@
       <gml:description/>
       <gml:name>Poehl</gml:name>
       <inObservationLink>
-            <TimeseriesLink linktype="zml" ns1:href="project:/.model/zeitreihen/Q_leer.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>        
+		<TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577110.P3" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>            
       </inObservationLink>
       <outObservationLink>
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Poehl.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>      
@@ -44,7 +43,7 @@
       <gml:description/>
       <gml:name>Magwitz</gml:name>
       <inObservationLink>
-            <TimeseriesLink linktype="zml" ns1:href="project:/.model/zeitreihen/Q_leer.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>        
+		<TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...576420.P3" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>            
       </inObservationLink>
       <outObservationLink>
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Magwitz.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>      
@@ -56,7 +55,7 @@
       <gml:description/>
       <gml:name>Droeda</gml:name>
       <inObservationLink>
-            <TimeseriesLink linktype="zml" ns1:href="project:/.model/zeitreihen/Q_leer.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>        
+		<TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.5_WE.02PG...577050.P3" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>            
       </inObservationLink>
       <outObservationLink>
             <TimeseriesLink linktype="zml" ns1:href="Zufluss/Zufluss_Droeda.zml" ns1:type="simple" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>      
