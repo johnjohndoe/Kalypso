@@ -11,11 +11,14 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Vector;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.deegree_impl.services.NotSupportedFormatException;
 import org.kalypso.interpolation.mesh.Point;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -57,7 +60,7 @@ public class Grid implements IGrid
 
   private final RandomAccessFile m_gridValues;
 
-  private final String rafPath = "d://temp//array.raf";
+  private final File rafPath;//= "d://temp//array.raf";
 
   private static String m_nodata = "-9999";
 
@@ -66,6 +69,8 @@ public class Grid implements IGrid
   public static final int NOT_ON_GRID = -1;
 
   private final String m_id;
+
+  private GM_Surface m_borderLine;
 
   /**
    * <B>public Grid(Point refPoint, Integer r, Integer c, Double cellsize) </B>
@@ -83,11 +88,12 @@ public class Grid implements IGrid
    * @throws FileNotFoundException
    */
   protected Grid( String id, String gridName, GM_Position llc, CS_CoordinateSystem crs, int r, int c, double cellsize,
-      GM_Envelope wishbox ) throws Exception
+      GM_Envelope wishbox, GM_Surface borderLine ) throws Exception
   {
-    File file = new File( rafPath );
-    if( file.exists() )
-      file.delete();
+    m_borderLine = borderLine;
+    rafPath = File.createTempFile( "grid", "raf" );
+    if( rafPath.exists() )
+      rafPath.delete();
     m_gridValues = new RandomAccessFile( rafPath, "rw" );
     GM_Envelope env = GeometryFactory.createGM_Envelope( llc.getX(), llc.getY(), llc.getX() + cellsize * c, llc.getY()
         + cellsize * r );
@@ -97,7 +103,10 @@ public class Grid implements IGrid
     m_cellsize = cellsize;
     m_name = gridName;
     m_id = id;
-    m_wishbox = GeometryFactory.createGM_Surface( wishbox, crs );
+    if( wishbox != null )
+      m_wishbox = GeometryFactory.createGM_Surface( wishbox, crs );
+    else
+      m_wishbox = m_env;
     initGrid();
   }//constructor
 
@@ -117,8 +126,10 @@ public class Grid implements IGrid
    * @throws FileNotFoundException
    */
   protected Grid( String id, String gridName, GM_Envelope gridSize, CS_CoordinateSystem crs, double cellsize,
-      GM_Envelope wishbox ) throws Exception
+      GM_Envelope wishbox, GM_Surface borderline ) throws Exception
   {
+    m_borderLine = borderline;
+    rafPath = File.createTempFile( "grid", "raf" );
     m_cols = ( (int)Math.ceil( gridSize.getWidth() / cellsize ) + 2 );
     m_rows = ( (int)Math.ceil( gridSize.getHeight() / cellsize ) + 2 );
     //create a grid for output with an additional row and column
@@ -130,9 +141,8 @@ public class Grid implements IGrid
 
     /* GM_Envelope gridenv = */GeometryFactory.createGM_Envelope( llcGrid, urcGrid );
     m_env = GeometryFactory.createGM_Surface( gridSize, crs );
-    File file = new File( rafPath );
-    if( file.exists() )
-      file.delete();
+    if( rafPath.exists() )
+      rafPath.delete();
     m_gridValues = new RandomAccessFile( rafPath, "rw" );
     m_cellsize = cellsize;
     m_name = gridName;
@@ -149,21 +159,18 @@ public class Grid implements IGrid
    * @throws IOException
    *  
    */
-  private long initGrid() throws IOException
+  private void initGrid() throws IOException
   {
-    m_gridValues.setLength( getRows() * getCols() * 8 + 8 );
-    //    System.out.println( "Initialized grid: " + m_env.getEnvelope()
-    //        + "\tcell size: " + m_cellsize );
-    System.out.println( "Starting grid initialization.." );
+    m_gridValues.setLength( m_rows * m_cols * 8 + 8 );
+    System.out.print( " ..initialization of grid: " + m_id + " .." );
     long index = 0;
     while( index < m_gridValues.length() )
     {
       m_gridValues.writeDouble( Double.parseDouble( m_nodata ) );
       index = index + 8;
     }//while
-    System.out.print( "..finished" );
+    System.out.print( "..finished\n" );
     m_gridValues.seek( 0 );
-    return m_gridValues.length();
   } //initgrid
 
   public String getGridName()
@@ -179,20 +186,18 @@ public class Grid implements IGrid
       int row = getRowIndex( pos );
       return getPosInFile( row, col );
     }
-    return -1;
+    return -1l;
 
   }//getPosInFile
 
   private long getPosInFile( int row, int col )
   {
-    return ( row * ( getCols() - 1 ) * 8 + col * 8 );
-    //    return Long.parseLong( String.valueOf( row * ( getCols() - 1 ) * 8 + col * 8 ) );
-
+    return ( row * ( m_cols - 1 ) * 8 + col * 8 );
   }
 
   public double readGridValue( GM_Position pos ) throws Exception
   {
-    if( isPointOnGrid( pos ) )
+    if( isPointOnGrid( pos, true ) )
     {
       return readGridValue( getPosInFile( pos ) );
     }
@@ -225,9 +230,9 @@ public class Grid implements IGrid
    * @return Method returns -1 when pos is not on the grid, else the column index is returned.
    */
 
-  private int getColIndex( GM_Position pos )
+  protected int getColIndex( GM_Position pos )
   {
-    if( !isPointOnGrid( pos ) || pos.getY() >= getEnvelope().getMax().getY() )
+    if( !isPointOnGrid( pos, true ) || pos.getY() >= getEnvelope().getMax().getY() )
       return NOT_ON_GRID;
 
     double c = ( pos.getX() - getEnvelope().getMin().getX() - m_cellsize / 2 ) / m_cellsize;
@@ -242,9 +247,9 @@ public class Grid implements IGrid
    * @param pos
    * @return Method returns -1 when pos lays not on the grid, else the row index is returned.
    */
-  private int getRowIndex( GM_Position pos )
+  protected int getRowIndex( GM_Position pos )
   {
-    if( !isPointOnGrid( pos ) || pos.getX() <= getEnvelope().getMin().getX() )
+    if( !isPointOnGrid( pos, true ) )//|| pos.getX() <= getEnvelope().getMin().getX() )
       return NOT_ON_GRID;
 
     //      double r = ( pos.getY() - env.getMin().getY() - cellsize / 2 ) /
@@ -297,7 +302,7 @@ public class Grid implements IGrid
    * @param str
    *          String string which should represent nodata
    */
-  public void setNodata( String str )
+  protected void setNodata( String str )
   {
     m_nodata = str;
   }
@@ -317,11 +322,9 @@ public class Grid implements IGrid
   public GM_Position getPosition( int row, int col )
   {
     double xcor = ( getEnvelope().getMin().getX() + m_cellsize / 2 + ( col * m_cellsize ) );
-    //    double ycor = ( env.getMin().getY() + cellsize / 2 + ( row * cellsize )
-    // );
     double ycor = ( getEnvelope().getMax().getY() - m_cellsize / 2 - ( row * m_cellsize ) );
     GM_Position p = GeometryFactory.createGM_Position( xcor, ycor );
-    if( isPointOnGrid( p ) )
+    if( isPointOnGrid( p, false ) )
       return p;
 
     return null;
@@ -342,7 +345,7 @@ public class Grid implements IGrid
 
   public void writeGridValue( GM_Position centerOfCell, double value ) throws Exception
   {
-    if( !isPointOnGrid( centerOfCell ) )
+    if( !isPointOnGrid( centerOfCell, true ) )
       throw new Exception( "GM_Position is not on the Grid!" );
 
     //gets row and col value for grid
@@ -351,6 +354,19 @@ public class Grid implements IGrid
     m_gridValues.writeDouble( value );
     //System.out.println("value: " + value);
 
+  }//setGridValue
+
+  public void writeGridValue( int row, int col, double value ) throws Exception
+  {
+    if( ( row >= 0 || row <= m_rows ) && ( col >= 0 || col <= m_cols ) )
+    {
+      //gets row and col value for grid
+      //set given elevation value at particular row and col in grid
+      m_gridValues.seek( getPosInFile( row, col ) );
+      m_gridValues.writeDouble( value );
+    }
+    else
+      throw new Exception( "GM_Position is not on the Grid. Value cannot be written to grid!" );
   }//setGridValue
 
   /**
@@ -362,7 +378,7 @@ public class Grid implements IGrid
    */
   private Vector getNeighborCells( GM_Position p )
   {
-    if( isPointOnGrid( p ) )
+    if( isPointOnGrid( p, true ) )
     {
       return getNeighborCellsOnGrid( p );
     }//if
@@ -383,23 +399,28 @@ public class Grid implements IGrid
    * 
    * @param p
    *          the position of the point to be checked
+   * @param inEnvelope
+   *          additional restraint, not just on the grid but also within the envelope of the grid if the value is true
+   *          false the point only needs to match the position and cell width.
    * @return true if the p is on the grid, false if not.
    */
-  public boolean isPointOnGrid( GM_Position p )
+  public boolean isPointOnGrid( GM_Position p, boolean inEnvelope )
   {
     if( p == null )
       return false;
-    //    double dx = ( p.getX() - env.getMin().getX() - cellsize / 2 );
-    //    double dy = ( p.getY() - env.getMin().getY() - cellsize / 2 );
     double px = p.getX();
     double py = p.getY();
-    double dx = ( px - getEnvelope().getMin().getX() - m_cellsize / 2 );
-    double dy = ( getEnvelope().getMax().getY() - py - m_cellsize / 2 );
+    double llcx = getEnvelope().getMin().getX();
+    double llcy = getEnvelope().getMin().getY();
+    double urcx = getEnvelope().getMax().getX();
+    double urcy = getEnvelope().getMax().getY();
+    double dx = ( px - llcx - m_cellsize / 2 );
+    double dy = ( urcy - py - m_cellsize / 2 );
     double testx = Math.abs( Math.IEEEremainder( dx, m_cellsize ) );
     double testy = Math.abs( Math.IEEEremainder( dy, m_cellsize ) );
-    if( testx < 0.000001 && testy < 0.000001 && px >= getEnvelope().getMin().getX()
-        && py <= getEnvelope().getMax().getY() && px <= getEnvelope().getMax().getX()
-        && py >= getEnvelope().getMin().getY() )
+    boolean first = testx < 1e-4 && testy < 1e-4;
+    boolean second = inEnvelope && px >= llcx && py <= urcy && px <= urcx && py >= llcy;
+    if( first && ( second || !inEnvelope ) )
       return true;
     return false;
 
@@ -662,25 +683,28 @@ public class Grid implements IGrid
     return m_env.getCoordinateSystem();
   }
 
-  public void export( GM_Surface border, File out ) throws Exception
+  private void exportESRIasc( File out ) throws Exception
   {
+    DecimalFormat fix = new DecimalFormat( "0.00000" );
+    DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+    dfs.setDecimalSeparator( '.' );
+    fix.setDecimalFormatSymbols( dfs );
     if( out == null )
       out = File.createTempFile( m_id, Grid.DEFAULT_SUFFIX );
 
     GM_Object intersection = null;
     BufferedWriter bw = new BufferedWriter( new FileWriter( out ) );
-    System.out.print( "\n" + "Exporting Grid..." );
     try
     {
-      if( border != null )
+      if( m_borderLine != null )
       {
-        GM_Object intersection1 = getExtend().intersection( border );
+        GM_Object intersection1 = getExtend().intersection( m_borderLine );
         intersection = intersection1.intersection( m_wishbox );
         if( intersection == null )
           throw new Exception( "The boundary (polyline) does not intersect the requested bounding box.\n"
               + "Interpolation not successful!!" );
       }
-      else if( m_wishbox != null && border == null )
+      else if( m_wishbox != null && m_borderLine == null )
       {
         intersection = getExtend().intersection( m_wishbox );
       }
@@ -706,7 +730,7 @@ public class Grid implements IGrid
         {
           double value = readGridValue( row, col );
           if( value != nodata && intersection.contains( getPosition( row, col ) ) )
-            bw.write( String.valueOf( value ) );
+            bw.write( fix.format( value ) );
           else
             bw.write( m_nodata );
           bw.write( ' ' );
@@ -721,9 +745,6 @@ public class Grid implements IGrid
     finally
     {
       bw.close();
-      m_gridValues.close();
-      File file = new File( rafPath );
-      file.delete();
     }
 
   }
@@ -732,4 +753,44 @@ public class Grid implements IGrid
   {
     m_name = name;
   }
+
+  protected void clean()
+  {
+    try
+    {
+      m_gridValues.close();
+      rafPath.delete();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @see org.kalypso.interpolation.grid.IGrid#export(java.io.File)
+   */
+  public void export( File file )
+  {
+    System.out.print( "Exporting Grid..." );
+    try
+    {
+      String type = file.getName();
+      if( type.matches( ".+\\.(a|A)(s|S)(c|C)$" ) )
+        exportESRIasc( file );
+      else
+        throw new NotSupportedFormatException( "The choosen raster data type is not supported" );
+    }
+    catch( NotSupportedFormatException e )
+    {
+      e.printStackTrace();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    System.out.print( " finished\n" );
+  }
+
 }

@@ -45,7 +45,7 @@ public class GridInterpolationAction implements IWorkbenchWindowActionDelegate
     {
       grid = GridFactory.getInstance().createGrid( null, wizard.getCoordinateSystem(), wizard.getSize(), mesh );
       //String target = "";
-      mesh.interpolateGrid( wizard.getTarget(), wizard.getBorderLine(), grid );
+      mesh.interpolateGrid( grid );
     }
     catch( Exception e )
     {
