@@ -54,28 +54,33 @@ public abstract class IErrorFunktion
 
   protected final TreeMap m_measuredTS;
 
-  protected double m_errorDivisor;
+  /**
+   * calculated errors can be weighted with this offset, this makes it possible to compare different errorfuntions
+   */
+  protected double m_normalizeOffset = 0d;
 
   /**
    * abstract error funktion class
-   * 
-   * @param errorDivisor
-   *          calculated errors can be weighted with this divisor, this makes it possible to compare different
-   *          errorfuntions, good idea is to start with 1.0d and update it later
+   *  
    */
-  public IErrorFunktion( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor )
+  public IErrorFunktion( TreeMap measuredTS, Date startCompare, Date endCompare )
   {
     m_measuredTS = measuredTS;
     m_startCompare = startCompare;
     m_endCompare = endCompare;
-    m_errorDivisor = errorDivisor;
+
   }
 
   public abstract double calculateError( TreeMap calcedTS );
 
-  public double updateErrorDivisor( TreeMap calcedTS )
+  /**
+   * @param normalizeOffset
+   *          calculated errors can be weighted with this offset, this makes it possible to compare different
+   *          errorfuntions
+   */
+  public void setNormalizeOffset( double normalizeOffset )
   {
-    m_errorDivisor = calculateError( calcedTS );
-    return m_errorDivisor;
+    m_normalizeOffset = normalizeOffset;
   }
+
 }

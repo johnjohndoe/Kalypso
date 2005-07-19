@@ -49,10 +49,10 @@ import java.util.TreeMap;
  */
 public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
 {
-  public FunctionRMSEPeakAndLowFlow( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor,
+  public FunctionRMSEPeakAndLowFlow( TreeMap measuredTS, Date startCompare, Date endCompare, 
       double min, double max )
   {
-    super( measuredTS, startCompare, endCompare, errorDivisor );
+    super( measuredTS, startCompare, endCompare);
     m_min = min;
     m_max = max;
 
@@ -117,6 +117,6 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
     }
     errorAll += Math.sqrt( error / c );
     cAll++;
-    return errorAll / cAll / m_errorDivisor;
+    return errorAll / cAll + m_normalizeOffset;
   }
 }

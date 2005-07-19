@@ -50,10 +50,9 @@ import java.util.TreeMap;
 public class FunctionRMSError extends IErrorFunktion
 {
 
-  public FunctionRMSError( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor )
+  public FunctionRMSError( TreeMap measuredTS, Date startCompare, Date endCompare )
   {
-    super( measuredTS, startCompare, endCompare, errorDivisor );
-
+    super( measuredTS, startCompare, endCompare);
   }
 
   public double calculateError( TreeMap calced )
@@ -79,6 +78,6 @@ public class FunctionRMSError extends IErrorFunktion
         }
       }
     }
-    return Math.sqrt( error / c ) / m_errorDivisor;
+    return Math.sqrt( error / c ) + m_normalizeOffset;
   }
 }

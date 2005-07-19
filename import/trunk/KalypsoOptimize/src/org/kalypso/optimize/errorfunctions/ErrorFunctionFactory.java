@@ -60,7 +60,6 @@ public class ErrorFunctionFactory
 {
   public ErrorFunctionFactory()
   {
-  // TODO use transformationconstant in a better way, not as error-divisor !!
   // do not instantiate
   }
 
@@ -68,7 +67,7 @@ public class ErrorFunctionFactory
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
-    final FunctionMultiError result = new FunctionMultiError( measuredTS, startOptimize, endOptimize, 1d );
+    final FunctionMultiError result = new FunctionMultiError( measuredTS, startOptimize, endOptimize );
     final List errorFunktions = autocalibration.getOptParameter().getObjectiveFunction().getErrorFunktion();
 
     for( Iterator iter = errorFunktions.iterator(); iter.hasNext(); )
@@ -76,9 +75,9 @@ public class ErrorFunctionFactory
       Object fXML = iter.next();
       final IErrorFunktion function;
       if( fXML instanceof VolumeError )
-        function = createErrorFunction( (VolumeError)fXML, autocalibration, measuredTS );
+        function = createErrorFunctionVolume( autocalibration, measuredTS );
       else if( fXML instanceof RootMeanSquareError )
-        function = createErrorFunction( (RootMeanSquareError)fXML, autocalibration, measuredTS );
+        function = createErrorFunctionRMS( autocalibration, measuredTS );
       else if( fXML instanceof RootMeanSquareErrorLowFlows )
         function = createErrorFunction( (RootMeanSquareErrorLowFlows)fXML, autocalibration, measuredTS );
       else if( fXML instanceof RootMeanSquareErrorPeakFlows )
@@ -97,8 +96,7 @@ public class ErrorFunctionFactory
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
 
-    return new FunctionRMSEPeakAndLowFlow( calcedTS, startOptimize, endOptimize, error.getTransformationConstant(), 0d,
-        error.getLowFlowLevel() );
+    return new FunctionRMSEPeakAndLowFlow( calcedTS, startOptimize, endOptimize, 0d, error.getLowFlowLevel() );
   }
 
   public static IErrorFunktion createErrorFunction( RootMeanSquareErrorPeakFlows error,
@@ -107,23 +105,22 @@ public class ErrorFunctionFactory
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
 
-    return new FunctionRMSEPeakAndLowFlow( calcedTS, startOptimize, endOptimize, error.getTransformationConstant(),
-        error.getPeakFlowLevel(), FunctionRMSEPeakAndLowFlow.UNBOUND );
+    return new FunctionRMSEPeakAndLowFlow( calcedTS, startOptimize, endOptimize, error.getPeakFlowLevel(),
+        FunctionRMSEPeakAndLowFlow.UNBOUND );
   }
 
-  public static IErrorFunktion createErrorFunction( RootMeanSquareError error, AutoCalibration autocalibration,
-      TreeMap calcedTS )
+  public static IErrorFunktion createErrorFunctionRMS( AutoCalibration autocalibration, TreeMap calcedTS )
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
-    return new FunctionRMSError( calcedTS, startOptimize, endOptimize, error.getTransformationConstant() );
+    return new FunctionRMSError( calcedTS, startOptimize, endOptimize );
   }
 
-  public static IErrorFunktion createErrorFunction( VolumeError error, AutoCalibration autocalibration, TreeMap calcedTS )
+  public static IErrorFunktion createErrorFunctionVolume( AutoCalibration autocalibration, TreeMap calcedTS )
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
 
-    return new FunctionVolumeError( calcedTS, startOptimize, endOptimize, error.getTransformationConstant() );
+    return new FunctionVolumeError( calcedTS, startOptimize, endOptimize );
   }
 }

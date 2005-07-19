@@ -68,8 +68,9 @@ public interface IOptimizingJob
 
   /**
    * start calculation
+   * @throws MalformedURLException
    */
-  public void calculate();
+  public void calculate() throws Exception;
 
   /**
    * @return timeseries of measured values

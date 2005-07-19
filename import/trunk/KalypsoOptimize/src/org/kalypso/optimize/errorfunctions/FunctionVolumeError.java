@@ -50,9 +50,9 @@ import java.util.TreeMap;
 public class FunctionVolumeError extends IErrorFunktion
 {
 
-  public FunctionVolumeError( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor )
+  public FunctionVolumeError( TreeMap measuredTS, Date startCompare, Date endCompare)
   {
-    super( measuredTS, startCompare, endCompare, errorDivisor );
+    super( measuredTS, startCompare, endCompare );
   }
 
   public double calculateError( TreeMap calced )
@@ -78,6 +78,6 @@ public class FunctionVolumeError extends IErrorFunktion
         }
       }
     }
-    return Math.abs( error / c / m_errorDivisor );
+    return Math.abs( error / c) + m_normalizeOffset ;
   }
 }

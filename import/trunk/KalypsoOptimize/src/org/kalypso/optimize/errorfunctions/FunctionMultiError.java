@@ -41,6 +41,7 @@
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -53,23 +54,55 @@ public class FunctionMultiError extends IErrorFunktion
 {
   private final List m_functions;
 
-  public FunctionMultiError( TreeMap measuredTS, Date startCompare, Date endCompare, double errorDivisor )
+  private boolean m_normalized = false;
+
+  public FunctionMultiError( TreeMap measuredTS, Date startCompare, Date endCompare )
   {
-    super( measuredTS, startCompare, endCompare, errorDivisor );
+    super( measuredTS, startCompare, endCompare );
     m_functions = new ArrayList();
   }
 
   public double calculateError( TreeMap calcedTS )
   {
-    return calculateError( calcedTS, false );
+    // first time normalize offsets
+    if( !m_normalized )
+    {
+      normalizeOffset( calcedTS );
+      m_normalized = true;
+    }
+    return calculateInnerError( calcedTS );
   }
 
-  public double normalizeWeights( TreeMap calcedTS )
+  public void normalizeOffset( TreeMap calcedTS )
   {
-    return calculateError( calcedTS, true );
+    double error[] = new double[m_functions.size()];
+    boolean valid[] = new boolean[m_functions.size()];
+    Arrays.fill( valid, true );
+    for( int i = 0; i < m_functions.size(); i++ )
+    {
+      final IErrorFunktion function = (IErrorFunktion)m_functions.get( i );
+      final double calculateError = function.calculateError( calcedTS );
+      if( !Double.isInfinite( calculateError ) && !Double.isNaN( calculateError ) )
+        error[i] = calculateError;
+      else
+      {
+        error[i] = 0;
+        valid[i] = false;
+      }
+    }
+    // find max
+    final double maxError = org.kalypso.contribs.java.util.Arrays.findMax( error );
+    for( int i = 0; i < m_functions.size(); i++ )
+    {
+      final IErrorFunktion function = (IErrorFunktion)m_functions.get( i );
+      if( valid[i] )
+        function.setNormalizeOffset( maxError - error[i] );
+      else
+        function.setNormalizeOffset( 0 );
+    }
   }
 
-  private double calculateError( TreeMap calcedTS, boolean normalize )
+  private double calculateInnerError( TreeMap calcedTS )
   {
     double c = 0;
     double error = 0;
@@ -79,11 +112,7 @@ public class FunctionMultiError extends IErrorFunktion
       final IErrorFunktion function = (IErrorFunktion)iter.next();
       try
       {
-        final double calculateError;
-        if( normalize )
-          calculateError = function.updateErrorDivisor( calcedTS );
-        else
-          calculateError = function.calculateError( calcedTS );
+        final double calculateError = function.calculateError( calcedTS );
         if( !Double.isInfinite( calculateError ) && !Double.isNaN( calculateError ) )
         {
           error += Math.pow( calculateError, 2d );
@@ -97,7 +126,7 @@ public class FunctionMultiError extends IErrorFunktion
         e.printStackTrace();
       }
     }
-    return Math.sqrt( error / c );
+    return Math.sqrt( error / c ) + m_normalizeOffset;
   }
 
   public void addFunction( IErrorFunktion function )
