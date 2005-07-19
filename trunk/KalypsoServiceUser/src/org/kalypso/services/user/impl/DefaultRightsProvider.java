@@ -1,10 +1,9 @@
 package org.kalypso.services.user.impl;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -27,13 +26,13 @@ public class DefaultRightsProvider implements IUserRightsProvider
    */
   public void init( final Properties props ) throws UserRightsException
   {
-    final String loc = props.getProperty( PROP_RIGHTSFILE_URL );
-    final File file = new File( loc );
+    final String locURLString = props.getProperty( PROP_RIGHTSFILE_URL );
 
     InputStream ins = null;
     try
     {
-      ins = new BufferedInputStream( new FileInputStream( file ) );
+      final URL locURL = new URL( locURLString );
+      ins = new BufferedInputStream( locURL.openStream() );
 
       m_rights.load( ins );
       ins.close();
