@@ -46,6 +46,10 @@ public class Feature_Impl implements Feature
 
   /**
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten
+   * 
+   * @deprecated use Constructor:
+   *             <code>Feature_Impl( final FeatureType ft, final String id, boolean initializeWithDefaults )</code>
+   *             instead.
    */
   protected Feature_Impl( final FeatureType ft, final String id )
   {
@@ -65,6 +69,8 @@ public class Feature_Impl implements Feature
         else
           m_properties[i] = new ArrayList();
       }
+      else
+        m_properties[i] = null;
     }
 
     final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
@@ -72,6 +78,45 @@ public class Feature_Impl implements Feature
     {
       if( properties[i].getValue() != null && ft.getMaxOccurs( i ) == 1 )
         setProperty( properties[i] );
+    }
+  }
+
+  /**
+   * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten
+   * 
+   * @param initializeWithDefaults
+   *          set <code>true</code> when generating from UserInterface <br>
+   *          set <code>false</code> when generating from GML or so.
+   */
+  protected Feature_Impl( final FeatureType ft, final String id, boolean initializeWithDefaults )
+  {
+    if( ft == null )
+      throw new UnsupportedOperationException( "must provide a featuretype" );
+    m_featureType = ft;
+    m_id = id;
+    // initialize
+    final FeatureTypeProperty[] ftp = ft.getProperties();
+    m_properties = new Object[ftp.length];
+    for( int i = 0; i < ftp.length; i++ )
+    {
+      if( m_featureType.getMaxOccurs( i ) != 1 )
+      {
+        if( ftp[i] instanceof FeatureAssociationTypeProperty )
+          m_properties[i] = FeatureFactory.createFeatureList( this, ftp[i] );
+        else
+          m_properties[i] = new ArrayList();
+      }
+      else
+        m_properties[i] = null;
+    }
+    if( initializeWithDefaults )
+    {
+      final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
+      for( int i = 0; i < ftp.length; i++ )
+      {
+        if( properties[i].getValue() != null && ft.getMaxOccurs( i ) == 1 )
+          setProperty( properties[i] );
+      }
     }
   }
 

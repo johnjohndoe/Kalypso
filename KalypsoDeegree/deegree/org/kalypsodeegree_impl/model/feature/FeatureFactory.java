@@ -185,6 +185,23 @@ public class FeatureFactory
     return new Feature_Impl( featureType, id, properties );
   }
 
+  /**
+   * 
+   * @param initializeWithDefaults
+   *          set <code>true</code> when generating from UserInterface <br>
+   *          set <code>false</code> when generating from GML or so.
+   */
+  public static Feature createFeature( String id, FeatureType featureType, boolean initializeWithDefaults )
+  {
+    return new Feature_Impl( featureType, id, initializeWithDefaults );
+  }
+
+  /**
+   * 
+   * @deprecated use constructor
+   *             <code>Feature createFeature( String id, FeatureType featureType, boolean initializeWithDefaults )</code>
+   *             instead
+   */
   public static Feature createFeature( String id, FeatureType featureType )
   {
     return new Feature_Impl( featureType, id );
@@ -298,8 +315,8 @@ public class FeatureFactory
 
     final GMLProperty[] gmlProps = gmlFeature.getProperties();
 
-    String id = gmlFeature.getId();
-    Feature feature = new Feature_Impl( featureType, id );
+    final String id = gmlFeature.getId();
+    final Feature feature = new Feature_Impl( featureType, id, false );
 
     // every gmlProp should fit to a featurePropertyType
     for( int p = 0; p < gmlProps.length; p++ )
