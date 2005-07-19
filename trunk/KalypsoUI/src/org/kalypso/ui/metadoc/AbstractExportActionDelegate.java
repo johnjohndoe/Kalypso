@@ -68,10 +68,6 @@ public abstract class AbstractExportActionDelegate extends AbstractEditorActionD
 
   /**
    * Performs the export action
-   * 
-   * @param wizardClass
-   * @param expDoc
-   * @param shell
    */
   public void runExportAction( final Class wizardClass, final IExportableDocument expDoc, final Shell shell )
   {

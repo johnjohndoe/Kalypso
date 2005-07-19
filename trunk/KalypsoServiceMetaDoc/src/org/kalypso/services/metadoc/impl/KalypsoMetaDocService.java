@@ -7,7 +7,6 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,22 +40,10 @@ public class KalypsoMetaDocService implements IMetaDocService
 
   /**
    * Constructs service instance
-   * 
-   * @throws RemoteException
    */
   public KalypsoMetaDocService() throws RemoteException
   {
     m_logger = Logger.getLogger( KalypsoMetaDocService.class.getName() );
-
-    try
-    {
-      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IMetaDocService%g.log", 10000000, 1, true ) );
-    }
-    catch( Exception e ) // generic Exception caught for simplicity
-    {
-      e.printStackTrace();
-      throw new RemoteException( "Exception in KalypsoMetaDocService.constructor()", e );
-    }
 
     m_tmpDir = FileUtilities.createNewTempDir( "Documents", ServiceConfig.getTempDir() );
     m_tmpDir.deleteOnExit();
@@ -65,9 +52,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   }
 
   /**
-   * initialize this service
-   * 
-   * @throws RemoteException
+   * Initialize this service
    */
   private void init() throws RemoteException
   {

@@ -40,10 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -54,11 +61,17 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
+import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.auth.scenario.IScenario;
+import org.kalypso.auth.scenario.ScenarioUtilities;
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
@@ -94,6 +107,10 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   private final PopupMenu m_popup;
 
   private ExcelClipboardAdapter m_excelCp;
+
+  protected ObservationTablePanel m_panel = null;
+
+  private String m_currentScenarioName = "";
 
   /**
    * Constructs a table based on the given template
@@ -161,6 +178,8 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     m_dateRenderer.clearMarkers();
     m_view.removeObsViewListener( this );
 
+    m_panel = null;
+    
     m_model.clearColumns();
   }
 
@@ -183,7 +202,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.refreshColumn( column );
 
-          checkForecast( column.getObservation(), true );
+          analyseObservation( column.getObservation(), true );
         }
 
         // ADD COLUMN
@@ -193,7 +212,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           if( column.isShown() )
             model.addColumn( column );
 
-          checkForecast( column.getObservation(), true );
+          analyseObservation( column.getObservation(), true );
         }
 
         // REMOVE COLUMN
@@ -202,7 +221,13 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.removeColumn( column );
 
-          checkForecast( column.getObservation(), false );
+          analyseObservation( column.getObservation(), false );
+          
+          if( model.getColumnCount() == 0 )
+          {
+            m_panel.clearLabel();
+            m_currentScenarioName = "";
+          }
         }
 
         // REMOVE ALL
@@ -210,6 +235,12 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         {
           model.clearColumns();
           dateRenderer.clearMarkers();
+          
+          if( m_panel != null )
+          {
+            m_panel.clearLabel();
+            m_currentScenarioName = "";
+          }
         }
       }
     };
@@ -250,15 +281,21 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   }
 
   /**
-   * Helper method that adds a marker to the date renderer for observations that are forecasts
+   * Helper method that analyses the observation.
+   * <ul>
+   * <li>adds a marker to the date renderer for observations that are forecasts or remove the corresponding marker when
+   * the associated column is removed from the model
+   * <li>adds a label if the observation has a scenario property
+   * </ul>
    * 
    * @param adding
+   *          is true when the observation (actually its associated table-view-column) is added to the model
    */
-  protected void checkForecast( final IObservation obs, final boolean adding )
+  protected void analyseObservation( final IObservation obs, final boolean adding )
   {
-    // check if observation is a vorhersage
     if( obs != null )
     {
+      // check if observation is a vorhersage
       final DateRange dr = TimeserieUtils.isForecast( obs );
       if( dr != null )
       {
@@ -266,6 +303,51 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           m_dateRenderer.addMarker( new ForecastLabelMarker( dr ) );
         else
           m_dateRenderer.removeMarker( new ForecastLabelMarker( dr ) );
+      }
+      
+      final MetadataList mdl = obs.getMetadataList();
+
+      // add a scenario-label if obs has scenario specific metadata property
+      if( mdl.getProperty( ObservationConstants.MD_SCENARIO ) != null )
+      {
+        final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario(
+            mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
+
+        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && m_panel != null && !m_panel.isLabelSet() )
+        {
+          Icon icon = null;
+          final String imageURL = scenario.getProperty( IScenario.PROP_TABLE_HEADER_IMAGE_URL, null );
+          if( imageURL != null )
+          {
+            try
+            {
+              icon = new ImageIcon( new URL( imageURL ) );
+            }
+            catch( final MalformedURLException e )
+            {
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING,
+                  "Bild konnte nicht geladen werden", e );
+            }
+          }
+          
+          Color color = null;
+          final String strc = scenario.getProperty( IScenario.PROP_TABLE_HEADER_RGB, null );
+          if( strc != null )
+            color = StringUtilities.stringToColor( strc );
+          
+          Integer height = null;
+          final String strHeight = scenario.getProperty( IScenario.PROP_TABLE_HEADER_HEIGHT, null );
+          if( strHeight != null )
+            height = Integer.valueOf( strHeight );
+          
+          Boolean showTxt = null;
+          final String strShow = scenario.getProperty( IScenario.PROP_TABLE_HEADER_SHOWTEXT, null );
+          if( strShow != null )
+            showTxt = Boolean.valueOf( strShow );
+          
+          m_currentScenarioName = scenario.getName();
+          m_panel.setLabel( m_currentScenarioName, icon, color, height, showTxt );
+        }
       }
     }
   }
@@ -284,5 +366,15 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   public Object getObservationTableModel()
   {
     return m_model;
+  }
+  
+  public void setPanel( final ObservationTablePanel panel )
+  {
+    m_panel = panel;
+  }
+  
+  public String getCurrentScenarioName()
+  {
+    return m_currentScenarioName;
   }
 }

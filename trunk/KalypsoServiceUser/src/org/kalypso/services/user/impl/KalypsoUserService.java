@@ -45,7 +45,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Properties;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,16 +92,6 @@ public class KalypsoUserService implements IUserService
 
   public KalypsoUserService() throws RemoteException
   {
-    try
-    {
-      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IUserService%g.log", 10000000, 1, true ) );
-    }
-    catch( Exception e ) // generic Exception caught for simplicity
-    {
-      e.printStackTrace();
-      System.out.println( "Logger für User-Service konnte nicht erzeugt werden" );
-    }
-
     m_logger.info( "Initialisiere UserService" );
 
     init();

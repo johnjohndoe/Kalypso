@@ -51,9 +51,6 @@ public interface IExportableDocument
 {
   /**
    * Exports the document using the writer.
-   * 
-   * @param outs
-   * @throws Exception
    */
   public void exportDocument( final OutputStream outs ) throws Exception;
 

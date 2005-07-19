@@ -55,9 +55,6 @@ public interface IBerichtExporter
 {
   /**
    * Initialize this exporter with the given arguments
-   * 
-   * @param context
-   * @param arguments
    */
   public void init( final URL context, final Arguments arguments );
 
@@ -65,10 +62,6 @@ public interface IBerichtExporter
 
   /**
    * Export feature to Stream
-   * 
-   * @param os
-   * 
-   * @throws CoreException
    */
   public IStatus export( final Feature feature, final OutputStream os ) throws CoreException;
 

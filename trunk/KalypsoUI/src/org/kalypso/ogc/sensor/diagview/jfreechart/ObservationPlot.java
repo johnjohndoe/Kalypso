@@ -76,6 +76,7 @@ import org.jfree.ui.Spacer;
 import org.jfree.ui.TextAnchor;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.scenario.IScenario;
+import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.ogc.sensor.DateRange;
@@ -255,7 +256,7 @@ public class ObservationPlot extends XYPlot
       setDataset( i, null );
 
     clearBackground();
-    
+
     m_serie2dataset.clear();
     m_curve2serie.clear();
 
@@ -377,22 +378,26 @@ public class ObservationPlot extends XYPlot
       // change diagram background if obs has scenario specific metadata property
       if( mdl.getProperty( ObservationConstants.MD_SCENARIO ) != null )
       {
-        // TODO: test is currently hardcoded! make it scenario dependent...
-        if( mdl.getProperty( ObservationConstants.MD_SCENARIO ).equals( "test" ) && !m_bgImageSet )
+        final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario(
+            mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
+
+        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && !m_bgImageSet )
         {
-          try
+          final String imageURL = scenario.getProperty( IScenario.PROP_DIAG_BACKGROUND_IMAGE_URL, null );
+          if( imageURL != null )
           {
-            final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( "test" );
-            final String imageURL = scenario.getProperty( IScenario.PROP_DIAG_BACKGROUND_IMAGE_URL, null );
-            final Image image = new ImageIcon( new URL( imageURL ) ).getImage();
-            setBackgroundImage( image );
-            setBackgroundImageAlignment( Align.FIT_HORIZONTAL | Align.NORTH );
-            m_bgImageSet = true;
-          }
-          catch( final MalformedURLException e )
-          {
-            Logger.getLogger( getClass().getName() ).log( Level.WARNING, "Hintergrundbild konnte nicht geladen werden",
-                e );
+            try
+            {
+              final Image image = new ImageIcon( new URL( imageURL ) ).getImage();
+              setBackgroundImage( image );
+              setBackgroundImageAlignment( Align.FIT_HORIZONTAL | Align.NORTH );
+              m_bgImageSet = true;
+            }
+            catch( final MalformedURLException e )
+            {
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING,
+                  "Hintergrundbild konnte nicht geladen werden", e );
+            }
           }
         }
       }
@@ -487,7 +492,7 @@ public class ObservationPlot extends XYPlot
       }
 
       m_curve2serie.remove( curve );
-      
+
       if( m_curve2serie.size() == 0 )
         clearBackground();
     }
