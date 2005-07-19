@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -650,7 +651,7 @@ public class ZmlFactory
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
+      LOG.log( Level.WARNING, "Fehler beim Schreiben einer Zeitreihe", e );
 
       throw new SensorException( e );
     }
