@@ -1,0 +1,786 @@
+
+
+
+
+
+
+          *****************************************************
+          *****************************************************
+          ****                                             ****
+          ****      TU HAMBURG-HARBURG, AB WASSERBAU       ****
+          ****                                             ****
+          ****                                             ****
+          ****            K A L Y P S O - N A              ****
+          ****                                             ****
+          ****                                             ****
+          ****      NIEDERSCHLAG-ABFLUSS-MODELLIERUNG      ****
+          ****                                             ****
+          ****                                             ****
+          ****                                             ****
+          ****                                             ****
+          ****     VERS.  2.0.1       Stand: 03.08.2004    ****
+          ****                                             ****
+          ****                                             ****
+          *****************************************************
+          *****************************************************
+
+
+
+
+ bearbeitung fall: 2 .. we nat  1995 08 30 16 1995 09 06 16 start\we_nat_start.txt                                                         
+
+
+ anzahl der straenge in der netzdatei:      7
+ anzahl der teilgebiete in der netzdatei:   5
+
+
+ fuer knoten  6100 wurde
+ version zufluss einer vorgegebenen
+ funktion gewaehlt.
+ knotennummer und eingabefile:
+ 5    1234..\zufluss\Z_6100.zufluss                                             
+
+ fuer knoten  1500 wurde
+ version zufluss einer vorgegebenen
+ funktion gewaehlt.
+ knotennummer und eingabefile:
+ 5    1234..\zufluss\Z_1500.zufluss                                             
+
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+   neuer Jahreszyklus 
+
+         Jahr:      1995
+         Zyklus:       1
+
+
+
+
+ differenz zwischen idata und idate :      336
+ jahreszyklus :                          1
+
+auswertung des stranges     6100
+
+
+auswertung des stranges  6100
+
+  Anfangsstrang!
+  Anfangsknoten > 9000 
+  Es erfolgt kein Zufluss und daher auch keine Abflussverzoegerung.
+
+
+auswertung des stranges     6000
+
+
+auswertung des stranges  6000
+  Zuflussganglinie wird eingelesen aus File ..\zufluss\Z_6100.zufluss                                                                                               
+  Eingelesener Knoten:  1234
+  Fall:                    5
+  (1+2 = Zufluss, 3+4 = Entnahme, 2+4 = Werte in 1000m^3/Tag)
+
+
+  Abflussfuelle im Gerinne vor Zugabe/Entnahme:       0.000
+  Abfluessfuelle Zugabe/Entnahme:                     0.000
+  Abflussfuelle im Gerinne nach Zugabe/Entnahme:      0.000
+
+
+
+abflussverzoegerung mit kalinin-miljukov parametern
+
+
+ auswertung von gebiet  6000
+
+
+warnung!
+file ..\lzsim\we6000.lzs                                                             
+mit anfangsbedingungen fuer die kurzzeitsimulation existiert nicht!
+(bodenfeuchte, grundwasserstand, interzeptionsfeuchte)
+
+vor der kurzzeitsimulation sollte langzeitsimulation durchgefuehrt werden.
+
+
+ filename der niederschlageswerte: ..\klima.dat\C_6000.niederschlag                            
+
+ korrekturfaktor fuer niederschl.:    1.00
+
+ gesamtmenge an niederschlag (mm):       42.8
+
+Subroutine INP_HYDRO: Anzahl Hydrotope im TG:      1
+
+anfangswerte   h01 =  0.000
+               w01 =  0.000
+               bo1 =  1.000
+            bianf1 =  1.000
+             aint1 =  0.000
+            aigw1 =  0.500
+
+
+vers. flaeche  =      0.00
+natur. flaeche =      6.90
+gesamtflaeche  =      6.90
+
+
+
+
+-----------------------------------------
+
+ z u s a m m e n f a s s u n g  
+ der bilanz fuer teilgebiet:    6000
+ anzahl hydrotope:       1
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)      42.8 mm
+ interz.verd.:                       5.6 mm
+ bestandsniederschlag:              36.7 mm
+ differenz interz.speicher:         -0.4 mm
+ fehler:                             0.0 mm
+
+ pot. verdunst. (grasref.):          4.8 mm
+ pot. verdunst.(akt. vegetat.):       5.9 mm
+ aktuelle verdunstung:               5.8 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:              36.7 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                     36.7 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             0.2 mm
+ lateral. abfluss (interflow):       0.1 mm
+ perkolation:                        0.0 mm
+ differenz bodenspeicher:          -36.4 mm
+ fehler:                             0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.0 mm
+
+ abgabe grundw.speicher:               0.0 mm
+        tiefengrundw.leiter:           0.0 mm
+
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.0 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  2.3 mm
+        grundw. unterh.l.TG:           6.2 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+     pot.entnahme GWS:                 0.0 mm
+ speicherinhaltsaenderung:            -9.4 mm
+ fehler:                               0.9 mm
+
+
+ flaechenanteile: 
+
+   grundwasserleiter:                6.900 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+   gesamtflaeche:                    6.900 qkm
+
+
+fuellenberechnung in iso
+abflusz =             0.000
+niederschlag =        0.000
+flaeche zft  =        1.000
+flaeche eing.=        6.900
+
+GEBIET: Abflusswelle Interflow:
+ISOV:  fuellenberechnung
+ISOV: Abflusz =           765.113
+ISOV: Niederschlag =      765.114
+
+GEBIET: Abfluszwelle Kluft-Grundwasserleiter
+ anzahl der zeitschritte in isov durch nachlauf zu hoch geworden.
+ sie wird auf IDIM begrenzt !
+
+ISOV:  fuellenberechnung
+ISOV: Abflusz =             0.000
+ISOV: Niederschlag =        0.000
+auswertung des stranges     1403
+
+
+auswertung des stranges  1403
+
+  Anfangsstrang!
+  Anfangsknoten > 9000 
+  Es erfolgt kein Zufluss und daher auch keine Abflussverzoegerung.
+
+
+
+
+ auswertung von gebiet  1403
+
+
+warnung!
+file ..\lzsim\we1403.lzs                                                             
+mit anfangsbedingungen fuer die kurzzeitsimulation existiert nicht!
+(bodenfeuchte, grundwasserstand, interzeptionsfeuchte)
+
+vor der kurzzeitsimulation sollte langzeitsimulation durchgefuehrt werden.
+
+
+ filename der niederschlageswerte: ..\klima.dat\C_1403.niederschlag                            
+
+ korrekturfaktor fuer niederschl.:    1.00
+
+ gesamtmenge an niederschlag (mm):       47.5
+
+Subroutine INP_HYDRO: Anzahl Hydrotope im TG:      5
+
+anfangswerte   h01 =  0.000
+               w01 =  0.000
+               bo1 =  1.000
+            bianf1 =  1.000
+             aint1 =  0.000
+            aigw1 =  0.500
+
+
+vers. flaeche  =      0.00
+natur. flaeche =     39.35
+gesamtflaeche  =     39.35
+
+
+
+
+-----------------------------------------
+
+ z u s a m m e n f a s s u n g  
+ der bilanz fuer teilgebiet:    1403
+ anzahl hydrotope:       5
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)      47.5 mm
+ interz.verd.:                       2.3 mm
+ bestandsniederschlag:              30.1 mm
+ differenz interz.speicher:          1.0 mm
+ fehler:                            16.0 mm
+
+ pot. verdunst. (grasref.):          4.8 mm
+ pot. verdunst.(akt. vegetat.):       5.0 mm
+ aktuelle verdunstung:               4.6 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:              30.1 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                     30.1 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             2.3 mm
+ lateral. abfluss (interflow):       0.1 mm
+ perkolation:                        3.4 mm
+ differenz bodenspeicher:          -24.3 mm
+ fehler:                             0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            3.4 mm
+
+ abgabe grundw.speicher:               3.4 mm
+        tiefengrundw.leiter:           0.0 mm
+
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  3.4 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  2.5 mm
+        grundw. unterh.l.TG:           6.3 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+     pot.entnahme GWS:                 0.0 mm
+ speicherinhaltsaenderung:            -6.0 mm
+ fehler:                               0.6 mm
+
+
+ flaechenanteile: 
+
+   grundwasserleiter:               39.350 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+   gesamtflaeche:                   39.350 qkm
+
+
+fuellenberechnung in iso
+abflusz =           347.230
+niederschlag =      347.230
+flaeche zft  =        1.000
+flaeche eing.=       39.350
+
+GEBIET: Abflusswelle Interflow:
+ISOV:  fuellenberechnung
+ISOV: Abflusz =          3360.741
+ISOV: Niederschlag =     3360.739
+
+GEBIET: Abfluszwelle Kluft-Grundwasserleiter
+ anzahl der zeitschritte in isov durch nachlauf zu hoch geworden.
+ sie wird auf IDIM begrenzt !
+
+ISOV:  fuellenberechnung
+ISOV: Abflusz =             0.000
+ISOV: Niederschlag =        0.000
+auswertung des stranges     1404
+
+
+auswertung des stranges  1404
+
+  Anfangsstrang!
+  Anfangsknoten > 9000 
+  Es erfolgt kein Zufluss und daher auch keine Abflussverzoegerung.
+
+
+
+
+ auswertung von gebiet  1404
+
+
+warnung!
+file ..\lzsim\we1404.lzs                                                             
+mit anfangsbedingungen fuer die kurzzeitsimulation existiert nicht!
+(bodenfeuchte, grundwasserstand, interzeptionsfeuchte)
+
+vor der kurzzeitsimulation sollte langzeitsimulation durchgefuehrt werden.
+
+
+ filename der niederschlageswerte: ..\klima.dat\C_1404.niederschlag                            
+
+ korrekturfaktor fuer niederschl.:    1.00
+
+ gesamtmenge an niederschlag (mm):       40.3
+
+Subroutine INP_HYDRO: Anzahl Hydrotope im TG:      9
+
+anfangswerte   h01 =  0.000
+               w01 =  0.000
+               bo1 =  1.000
+            bianf1 =  1.000
+             aint1 =  0.000
+            aigw1 =  0.500
+
+
+vers. flaeche  =      0.00
+natur. flaeche =     36.72
+gesamtflaeche  =     36.72
+
+
+
+
+-----------------------------------------
+
+ z u s a m m e n f a s s u n g  
+ der bilanz fuer teilgebiet:    1404
+ anzahl hydrotope:       9
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)      40.3 mm
+ interz.verd.:                       1.4 mm
+ bestandsniederschlag:              33.1 mm
+ differenz interz.speicher:          1.0 mm
+ fehler:                             6.8 mm
+
+ pot. verdunst. (grasref.):          4.8 mm
+ pot. verdunst.(akt. vegetat.):       3.9 mm
+ aktuelle verdunstung:               3.7 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:              33.1 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                     33.1 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             2.3 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                       19.2 mm
+ differenz bodenspeicher:          -11.6 mm
+ fehler:                             0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:           19.2 mm
+
+ abgabe grundw.speicher:              19.2 mm
+        tiefengrundw.leiter:           0.0 mm
+
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                 19.2 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  3.8 mm
+        grundw. unterh.l.TG:           7.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+     pot.entnahme GWS:                 0.0 mm
+ speicherinhaltsaenderung:             9.5 mm
+ fehler:                              -1.1 mm
+
+
+ flaechenanteile: 
+
+   grundwasserleiter:               36.723 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+   gesamtflaeche:                   36.723 qkm
+
+
+fuellenberechnung in iso
+abflusz =             0.000
+niederschlag =        0.000
+flaeche zft  =        1.000
+flaeche eing.=       36.723
+
+GEBIET: Abflusswelle Interflow:
+ISOV:  fuellenberechnung
+ISOV: Abflusz =          1653.163
+ISOV: Niederschlag =     1653.162
+
+GEBIET: Abfluszwelle Kluft-Grundwasserleiter
+ anzahl der zeitschritte in isov durch nachlauf zu hoch geworden.
+ sie wird auf IDIM begrenzt !
+
+ISOV:  fuellenberechnung
+ISOV: Abflusz =             0.000
+ISOV: Niederschlag =        0.000
+auswertung des stranges     1401
+
+
+auswertung des stranges  1401
+  Zuflussganglinie wird eingelesen aus File ..\zufluss\Z_1500.zufluss                                                                                               
+  Eingelesener Knoten:  1234
+  Fall:                    5
+  (1+2 = Zufluss, 3+4 = Entnahme, 2+4 = Werte in 1000m^3/Tag)
+
+
+  Abflussfuelle im Gerinne vor Zugabe/Entnahme:     143.421
+  Abfluessfuelle Zugabe/Entnahme:                     0.000
+  Abflussfuelle im Gerinne nach Zugabe/Entnahme:    143.421
+
+
+
+abflussverzoegerung mit kalinin-miljukov parametern
+ anzahl der zeitschritte in gerinne durch nachlauf zu hoch geworden.
+ sie wird auf 2880 begrenzt ! 
+
+ dt [h]:   0.50      tmax [d]:     2.52
+
+ kennwerte zuflusswelle
+ ----------------------
+
+ scheitel-zufluss               iqzmax =    121   qzmax =       0.505 [m**3/s]
+ scheitel-zufluss im gerinne    iqzfmx =    121  qzfmax =       0.505 [m**3/s]
+ scheitel-zufluss im vorland    iqzvmx =      0  qzvmax =       0.000 [m**3/s]
+
+ fuelle-zuflusz                  fuqz =   0.2582 [hm**3]
+ fuelle-zuflusz im gerinne      fuqzf =   0.2582 [hm**3]
+ fuelle-zuflusz im vorland      fuqzv =   0.0000 [hm**3]
+
+ kennwerte der systemfunktionen
+ -------------------------------
+
+ anzahl der zeitschritte  ituh =     26
+ maximum u                imax =     16     umax = 0.011766
+ summe u                   suu = 0.028519   suuh = 1.000000
+
+ tmax [d]:     2.58
+
+ kennwerte ausflusswelle
+ -----------------------
+
+ endordinate ausflusz           qaend =   0.000
+ scheitel-ausflusz              iqmax =    124    qmax =       0.505 [m**3/s]
+
+ fuelle-ausflusz                   fuq =   0.2582 [hm**3]
+ fuelle-ausflusz im gerinne       fuqa =   0.2582 [hm**3]
+
+ scheitel-ausflusz im gerinne   iqamax =    124   qamax =       0.505 [m**3/s]
+
+ gesamtzufluszwelle (ohne basisabflusz)  sqz =      143.421
+ gesamtabfluszwelle    "       "         sq  =      143.421
+
+
+
+
+ auswertung von gebiet  1401
+
+
+warnung!
+file ..\lzsim\we1401.lzs                                                             
+mit anfangsbedingungen fuer die kurzzeitsimulation existiert nicht!
+(bodenfeuchte, grundwasserstand, interzeptionsfeuchte)
+
+vor der kurzzeitsimulation sollte langzeitsimulation durchgefuehrt werden.
+
+
+ filename der niederschlageswerte: ..\klima.dat\C_1401.niederschlag                            
+
+ korrekturfaktor fuer niederschl.:    1.00
+
+ gesamtmenge an niederschlag (mm):       39.2
+
+Subroutine INP_HYDRO: Anzahl Hydrotope im TG:      3
+
+anfangswerte   h01 =  0.000
+               w01 =  0.000
+               bo1 =  1.000
+            bianf1 =  1.000
+             aint1 =  0.000
+            aigw1 =  0.500
+
+
+vers. flaeche  =      0.00
+natur. flaeche =     21.95
+gesamtflaeche  =     21.95
+
+
+
+
+-----------------------------------------
+
+ z u s a m m e n f a s s u n g  
+ der bilanz fuer teilgebiet:    1401
+ anzahl hydrotope:       3
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)      39.2 mm
+ interz.verd.:                       2.1 mm
+ bestandsniederschlag:              35.5 mm
+ differenz interz.speicher:          1.0 mm
+ fehler:                             2.6 mm
+
+ pot. verdunst. (grasref.):          4.8 mm
+ pot. verdunst.(akt. vegetat.):       3.4 mm
+ aktuelle verdunstung:               3.2 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:              35.5 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                     35.5 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             1.2 mm
+ lateral. abfluss (interflow):       0.1 mm
+ perkolation:                        0.2 mm
+ differenz bodenspeicher:          -34.1 mm
+ fehler:                             0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:            0.2 mm
+
+ abgabe grundw.speicher:               0.2 mm
+        tiefengrundw.leiter:           0.0 mm
+
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                  0.2 mm
+        grundw. oberh.l.TG:           25.0 mm
+ abgabe basisabfluss:                  3.6 mm
+        grundw. unterh.l.TG:           7.0 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+     pot.entnahme GWS:                 0.0 mm
+ speicherinhaltsaenderung:            16.7 mm
+ fehler:                              -2.0 mm
+
+
+ flaechenanteile: 
+
+   grundwasserleiter:               21.954 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+   gesamtflaeche:                   21.954 qkm
+
+
+fuellenberechnung in iso
+abflusz =             0.000
+niederschlag =        0.000
+flaeche zft  =        1.000
+flaeche eing.=       21.954
+
+GEBIET: Abflusswelle Interflow:
+ISOV:  fuellenberechnung
+ISOV: Abflusz =          2314.328
+ISOV: Niederschlag =     2314.327
+
+GEBIET: Abfluszwelle Kluft-Grundwasserleiter
+ anzahl der zeitschritte in isov durch nachlauf zu hoch geworden.
+ sie wird auf IDIM begrenzt !
+
+ISOV:  fuellenberechnung
+ISOV: Abflusz =             0.000
+ISOV: Niederschlag =        0.000
+auswertung des stranges     1402
+
+
+auswertung des stranges  1402
+
+  Anfangsstrang!
+  Anfangsknoten > 9000 
+  Es erfolgt kein Zufluss und daher auch keine Abflussverzoegerung.
+
+
+
+
+ auswertung von gebiet  1402
+
+
+warnung!
+file ..\lzsim\we1402.lzs                                                             
+mit anfangsbedingungen fuer die kurzzeitsimulation existiert nicht!
+(bodenfeuchte, grundwasserstand, interzeptionsfeuchte)
+
+vor der kurzzeitsimulation sollte langzeitsimulation durchgefuehrt werden.
+
+
+ filename der niederschlageswerte: ..\klima.dat\C_1402.niederschlag                            
+
+ korrekturfaktor fuer niederschl.:    1.00
+
+ gesamtmenge an niederschlag (mm):       37.5
+
+Subroutine INP_HYDRO: Anzahl Hydrotope im TG:     14
+
+anfangswerte   h01 =  0.000
+               w01 =  0.000
+               bo1 =  1.000
+            bianf1 =  1.000
+             aint1 =  0.000
+            aigw1 =  0.500
+
+
+vers. flaeche  =      0.00
+natur. flaeche =     77.20
+gesamtflaeche  =     77.20
+
+
+
+
+-----------------------------------------
+
+ z u s a m m e n f a s s u n g  
+ der bilanz fuer teilgebiet:    1402
+ anzahl hydrotope:      14
+
+
+ speicherbilanz interzeption: 
+
+ niederschlag:(nach schneesp.)      37.5 mm
+ interz.verd.:                       1.2 mm
+ bestandsniederschlag:              23.5 mm
+ differenz interz.speicher:          1.0 mm
+ fehler:                            13.7 mm
+
+ pot. verdunst. (grasref.):          4.8 mm
+ pot. verdunst.(akt. vegetat.):       4.3 mm
+ aktuelle verdunstung:               4.0 mm
+
+
+ speicherbilanz bodenspeicher:   
+
+ bestandsniederschlag:              23.5 mm
+ overlandflow:                       0.0 mm
+ [infiltration:                     23.5 mm]
+ kapilarer aufstieg:                 0.0 mm
+ verdunstung (bodensp.):             2.7 mm
+ lateral. abfluss (interflow):       0.0 mm
+ perkolation:                       10.8 mm
+ differenz bodenspeicher:          -10.0 mm
+ fehler:                             0.0 mm
+
+
+
+ aufteilung perkolation: 
+
+ perkolation bodenspeicher:           10.8 mm
+
+ abgabe grundw.speicher:              10.8 mm
+        tiefengrundw.leiter:           0.0 mm
+
+        verlust tiefengw.leiter:       0.0 mm
+
+ fehler:                               0.0 mm
+
+
+ bilanz grundwasserspeicher: 
+
+ zufluss perkolation:                 10.8 mm
+        grundw. oberh.l.TG:            0.0 mm
+ abgabe basisabfluss:                  3.1 mm
+        grundw. unterh.l.TG:           6.4 mm
+        kapilarer aufstieg:            0.0 mm
+        entnahme GWS:                 0.0 mm
+     pot.entnahme GWS:                 0.0 mm
+ speicherinhaltsaenderung:             1.5 mm
+ fehler:                              -0.2 mm
+
+
+ flaechenanteile: 
+
+   grundwasserleiter:               77.204 qkm
+   tiefengrundwasserleiter:          0.000 qkm
+   gesamtflaeche:                   77.204 qkm
+
+
+fuellenberechnung in iso
+abflusz =             0.000
+niederschlag =        0.000
+flaeche zft  =        1.000
+flaeche eing.=       77.204
+
+GEBIET: Abflusswelle Interflow:
+ISOV:  fuellenberechnung
+ISOV: Abflusz =           503.904
+ISOV: Niederschlag =      503.904
+
+GEBIET: Abfluszwelle Kluft-Grundwasserleiter
+ anzahl der zeitschritte in isov durch nachlauf zu hoch geworden.
+ sie wird auf IDIM begrenzt !
+
+ISOV:  fuellenberechnung
+ISOV: Abflusz =             0.000
+ISOV: Niederschlag =        0.000
+auswertung des stranges    10002
+
+
+auswertung des stranges 10002
+
+ fiktiver strang! Es erfolgt keine abflussverzoegerung!
+
+
+xxx berechnung wurde ohne fehler beendet!

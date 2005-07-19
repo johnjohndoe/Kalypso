@@ -1,0 +1,106 @@
+
+
+
+
+
+
+         *****************************************************
+         *****************************************************
+         ****                                             ****
+         ****      TU HAMBURG-HARBURG, AB WASSERBAU       ****
+         ****                                             ****
+         ****                                             ****
+         ****            K A L Y P S O - N A              ****
+         ****                                             ****
+         ****                                             ****
+         ****      NIEDERSCHLAG-ABFLUSS-MODELLIERUNG      ****
+         ****                                             ****
+         ****                                             ****
+         ****                                             ****
+         ****                                             ****
+         ****     VERS.  2.0.1       Stand: 03.08.2004    ****
+         ****                                             ****
+         ****                                             ****
+         *****************************************************
+         *****************************************************
+
+
+
+
+iken= 3
+namntz=..\inp.dat\we_nat.ntz                                                           
+dathyd=..\out_we.nat\gwn_hyd.out\                                                      
+
+
+differenz zwischen idata und idate :      336
+jahreszyklus :                          1
+
+
+
+
+
+anzahl eingelesener niederschlagswerte:  290
+
+eingeles. Niederschlag:  0.00000000E+00 0.00000000E+00 ..\zufluss\Z_6100.zufluss                                                                                               
+6000 95083016 95090616 950830 950906
+
+
+auswertung von gebiet  6000
+
+anzahl eingelesener niederschlagswerte:  338
+
+eingeles. Niederschlag:  42.8068619 42.8068619 ..\klima.dat\C_6000.niederschlag                                                                                        
+ verdunst. 4.00000000 4.75000000
+nfangswerte: aus eingabe-datei
+
+
+1403 95083016 95090616 950830 950906
+
+
+auswertung von gebiet  1403
+
+anzahl eingelesener niederschlagswerte:  338
+
+eingeles. Niederschlag:  47.4528236 47.4528236 ..\klima.dat\C_1403.niederschlag                                                                                        
+nfangswerte: aus eingabe-datei
+
+
+1404 95083016 95090616 950830 950906
+
+
+auswertung von gebiet  1404
+
+anzahl eingelesener niederschlagswerte:  338
+
+eingeles. Niederschlag:  40.3472939 40.3472939 ..\klima.dat\C_1404.niederschlag                                                                                        
+nfangswerte: aus eingabe-datei
+
+
+anzahl eingelesener niederschlagswerte:  290
+
+eingeles. Niederschlag:  0.00000000E+00 0.00000000E+00 ..\zufluss\Z_1500.zufluss                                                                                               
+1401 95083016 95090616 950830 950906
+
+
+auswertung von gebiet  1401
+
+anzahl eingelesener niederschlagswerte:  338
+
+eingeles. Niederschlag:  39.1853294 39.1853294 ..\klima.dat\C_1401.niederschlag                                                                                        
+nfangswerte: aus eingabe-datei
+
+
+1402 95083016 95090616 950830 950906
+
+
+auswertung von gebiet  1402
+
+anzahl eingelesener niederschlagswerte:  338
+
+eingeles. Niederschlag:  37.4670334 37.4670334 ..\klima.dat\C_1402.niederschlag                                                                                        
+nfangswerte: aus eingabe-datei
+
+
+
+
+berechnung wurde ohne fehler beendet!
