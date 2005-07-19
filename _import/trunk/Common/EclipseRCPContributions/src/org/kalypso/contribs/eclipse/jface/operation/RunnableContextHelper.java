@@ -132,6 +132,7 @@ public final class RunnableContextHelper
     }
     catch( final Throwable t )
     {
+      // TODO log stacktrace somewhere
       return statusFromThrowable( t );
     }
 
@@ -175,7 +176,7 @@ public final class RunnableContextHelper
   }
 
   /**
-   * Runs a runnable in a progress monitor dialog. 
+   * Runs a runnable in a progress monitor dialog.
    */
   public final static void executeInProgressDialog( final Shell shell, final ICoreRunnableWithProgress runnable,
       final IErrorHandler errorHandler )

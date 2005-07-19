@@ -100,7 +100,7 @@ public class CalendarUtilities
       return Calendar.YEAR;
     else if( "ZONE_OFFSET".equalsIgnoreCase( fieldName ) )
       return Calendar.ZONE_OFFSET;
-
-    throw new IllegalArgumentException( "Calendar does not have a constant for: " + fieldName );
+    // last we assume that it is allready an integer
+    return Integer.parseInt(fieldName);    
   }
 }

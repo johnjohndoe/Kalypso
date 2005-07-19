@@ -3,6 +3,7 @@
 	<repository
 		factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"
 		name="psicompact" />
+<!--
 	<repository
 		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
 		conf="C:/Programme/KalypsoService/Tomcat5.0/webapps/webdav/data/WeisseElsterVorhersage#*.zml"
@@ -13,6 +14,7 @@
 		conf="C:/Programme/KalypsoService/Tomcat5.0/webapps/webdav/data/Gebietsniederschlag/gebietsNiederschlagRep.xml"
 		readOnly="true"
 		name="GebietsNiederschlaege" />
+-->
 	<repository
 		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
 		conf="C:/Programme/KalypsoService/Tomcat5.0/webapps/webdav/data/Spree#*.zml"

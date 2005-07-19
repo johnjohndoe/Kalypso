@@ -399,4 +399,26 @@ public final class Arrays
 
     return chars;
   }
+
+  public static double findMin( double[] doubleArray )
+  {
+    double result = doubleArray[0];
+    for( int i = 1; i < doubleArray.length; i++ )
+    {
+      if( doubleArray[i] < result )
+        result = doubleArray[i];
+    }
+    return result;
+  }
+
+  public static double findMax( double[] doubleArray )
+  {
+    double result = doubleArray[0];
+    for( int i = 1; i < doubleArray.length; i++ )
+    {
+      if( doubleArray[i] > result )
+        result = doubleArray[i];
+    }
+    return result;
+  }
 }
