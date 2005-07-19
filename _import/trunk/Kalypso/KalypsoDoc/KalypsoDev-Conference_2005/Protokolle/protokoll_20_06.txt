@@ -459,17 +459,21 @@ Christoph:
 	Auswahl der GML Resource (AbstrakteTypen, SubstitutionGroupes, Baum)
 	
 5) Anwender
-	BSU
-	HSE
-	LGV
-	Bezirksämter
+	BSU (Behörde für Stadtentwicklung und Umwelt)
+	HSE (Hamburger Stadtentwässerung )
+	LGV (Landesbetrieb für Geoinformation und Vermessung )
+	Bezirksämter (Eimsbüttel, Hamburg-Nord)
 	TesterCommunity
 
 6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
 	Gernot, Andreas, Jessica, Marc
 	
 7) Anregungen/FeatureRequests
-	Beim Produzieren einer neuen Karte einmalig AddLayer durchlaufen
+	*Beim Produzieren einer neuen Karte einmalig AddLayer durchlaufen
+	*Catalog für OWS (file cache oder so um metadaten der abgerufenen services vorzuhalten )
+	*Conf-file für statischen Catalog, der Benutzer soll eine feste Auswahl von OWS Addresssen 
+	 je nach Benutzerprofil vom Server erhalten.
+	 
 
 --------------------------------------------------------------------------------------------------------
 2) Sonstiges
