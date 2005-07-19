@@ -43,8 +43,6 @@ package org.kalypso.ui.editor.obstableeditor;
 import java.awt.Frame;
 import java.io.OutputStreamWriter;
 
-import javax.swing.JScrollPane;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -56,6 +54,7 @@ import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTablePanel;
 import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
@@ -109,8 +108,7 @@ public class ObservationTableEditor extends AbstractObservationEditor
     m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( m_swingContainer );
 
-    final JScrollPane pane = new JScrollPane( m_table );
-    vFrame.add( pane );
+    vFrame.add( new ObservationTablePanel( m_table ) );
 
     vFrame.setVisible( true );
   }

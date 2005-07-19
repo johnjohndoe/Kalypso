@@ -53,8 +53,6 @@ public class ServiceConfig
 {
   public final static String CONF_DIR = "kalypso.server.confdir";
 
-  public final static String DATA_DIR = "kalypso.server.datadir";
-
   private static File tmpdir = new File( System.getProperty( "java.io.tmpdir" ) );
 
   private ServiceConfig()
@@ -70,10 +68,5 @@ public class ServiceConfig
   public static File getTempDir()
   {
     return tmpdir;
-  }
-
-  public static File getDataDir()
-  {
-    return new File( System.getProperty( DATA_DIR ) );
   }
 }

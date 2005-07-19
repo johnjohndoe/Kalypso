@@ -169,4 +169,17 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
 
     return null;
   }
+  
+  /**
+   * This is a shorthand for calling
+   * <code>
+   * getScenario( getCurrentUser().getScenario() )
+   * </code>
+   * 
+   * @return the scenario associated to the current user
+   */
+  public IScenario getScenarioForCurrentUser()
+  {
+    return getScenario( getCurrentUser().getScenario() );
+  }
 }

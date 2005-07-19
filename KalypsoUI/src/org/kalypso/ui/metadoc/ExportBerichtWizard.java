@@ -57,6 +57,9 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.internal.UIPlugin;
+import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.auth.scenario.IScenario;
+import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.metadoc.Document;
@@ -96,6 +99,8 @@ public class ExportBerichtWizard extends Wizard
 
     setWindowTitle( "Berichtsablage" );
 
+    final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenarioForCurrentUser();
+    
     // create featuretype from bean
     final Collection ftpColl = new ArrayList();
     final Collection fpColl = new ArrayList();
@@ -112,7 +117,12 @@ public class ExportBerichtWizard extends Wizard
 
       final String xmltype = splits.length == 0 ? String.class.getName() : splits[0];
 
-      final String value = splits.length >= 2 ? splits[1] : null;
+      String value = splits.length >= 2 ? splits[1] : null;
+
+      // TRICKY: maybe replace tokens with scenario specific values
+      value = ScenarioUtilities.replaceTokens( value, scenario );
+      // Important: always put value again in metadata, in case it changed
+      metadata.put( name, value );
 
       String typename = null;
       Object realValue = null;

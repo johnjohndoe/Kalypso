@@ -49,15 +49,30 @@ package org.kalypso.auth.scenario;
  */
 public interface IScenario
 {
+  /** denotes the begin of a token */
+  public final static String TOKEN_BEGIN = ":";
+  /** denotes the end of a token */
+  public final static String TOKEN_END = ":";
+  
+  /** contains a semicolon separated list of tokens that are delivered by the properties of this scenario */
+  public static final String PROP_TOKEN_LIST = "TOKEN_LIST";
+  
   public final static String PROP_NAME = "NAME";
   public final static String PROP_DESCRIPTION = "DESCRIPTION";
-  public final static String PROP_DIAG_BACKGROUND_IMAGE_URL = "DIAG_BACKGROUND_IMAGE_URL";
+  
   public final static String PROP_WIZARD_TITLE_RGB = "WIZARD_TITLE_RGB";
   
-  /** used internally by Kalypso (id of default scenario is the empty string)*/
+  public final static String PROP_DIAG_BACKGROUND_IMAGE_URL = "DIAG_BACKGROUND_IMAGE_URL";
+  
+  public static final String PROP_TABLE_HEADER_IMAGE_URL = "TABLE_HEADER_IMAGE_URL";
+  public static final String PROP_TABLE_HEADER_RGB = "TABLE_HEADER_RGB";
+  public static final String PROP_TABLE_HEADER_SHOWTEXT = "TABLE_HEADER_SHOWTEXT";
+  public static final String PROP_TABLE_HEADER_HEIGHT = "TABLE_HEADER_HEIGHT";
+  
+  /** used internally by Kalypso (id of default scenario is the empty string) */
   public String getId();
   
-  /** scenario name, user friendly*/
+  /** scenario name, user friendly */
   public String getName();
 
   public String getDescription();

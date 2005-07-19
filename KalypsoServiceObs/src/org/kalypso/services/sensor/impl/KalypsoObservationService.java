@@ -53,7 +53,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.Vector;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
@@ -140,16 +139,6 @@ public class KalypsoObservationService implements IObservationService
     m_mapDataId2File = new Hashtable( 128 );
 
     m_logger = Logger.getLogger( KalypsoObservationService.class.getName() );
-
-    try
-    {
-      m_logger.addHandler( new FileHandler( ServiceConfig.getTempDir() + "/IObservation%g.log", 10000000, 1, true ) );
-    }
-    catch( Exception e ) // generic Exception caught for simplicity
-    {
-      e.printStackTrace();
-      throw new RemoteException( "Exception in constructor von: " + getClass().getName(), e );
-    }
 
     m_tmpDir = FileUtilities.createNewTempDir( "Observations", ServiceConfig.getTempDir() );
     m_tmpDir.deleteOnExit();

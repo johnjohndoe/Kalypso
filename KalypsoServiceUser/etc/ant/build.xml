@@ -9,11 +9,13 @@
 
 	<path id="compile.classpath">
 		<fileset dir="${project.lib}" includes="**/*.jar"/>
-		<fileset dir="${workspace}/KalypsoBuild/common-project/compile-libs" includes="**/*.jar" />
-		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+
+	    <fileset dir="${workspace}/KalypsoBuild/common-project/compile-libs" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
+		
+	    <fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />
-		<fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
 	</path>
 	
 	<!-- Fake target just to allow a default target since ant requires it. Using

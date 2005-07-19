@@ -78,6 +78,17 @@ public class ExportableObservationTable implements IExportableTableDocument
     final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( outs ) );
     try
     {
+      // scenario name header
+      if( !m_table.getCurrentScenarioName().equals( "" ) )
+      {
+        writer.write( m_table.getCurrentScenarioName() );
+        int columnCount = m_table.getColumnCount() - 1;
+        for( int i = 0; i < columnCount; i++ )
+          writer.write( "\t" );
+        writer.newLine();
+      }
+
+      // normal table dump
       TableUtils.dump( m_table, "\t", writer );
     }
     finally
