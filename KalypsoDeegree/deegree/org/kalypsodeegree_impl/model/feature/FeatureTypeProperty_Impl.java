@@ -88,9 +88,13 @@ public class FeatureTypeProperty_Impl extends AbstractFeatureType implements Fea
    * initializes a FeatureTypeProperty with its name its associated type and a boolean variable that says if the
    * propetry maybe <tt>null</tt>
    */
-  protected FeatureTypeProperty_Impl( String name, String namespace, String type, boolean nullable, Map annotationMap )
+  protected FeatureTypeProperty_Impl( final String name, final String namespace, final String type, final boolean nullable, final Map annotationMap )
   {
     super( name, namespace, annotationMap );
+  
+    if( type == null )
+      throw new NullPointerException( "'type' is null" );
+    
     m_type = type;
     m_nullable = nullable;
   }

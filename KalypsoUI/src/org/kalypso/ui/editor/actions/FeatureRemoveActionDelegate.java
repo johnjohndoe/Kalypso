@@ -89,20 +89,14 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     if( selection instanceof IFeatureThemeSelection && !selection.isEmpty() )
     {
       m_selection = (IFeatureThemeSelection)selection;
-      if( m_selection.size() >= 2 )
-      {
-        action.setEnabled( true );
-        String text = action.getText();
-        String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + m_selection.size() + ")";
-        action.setText( newText );
-        return;
-      }
+      final String text = action.getText();
+      final String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + m_selection.size() + ")";
+      action.setText( newText );
     }
-    action.setEnabled( false );
   }
 }

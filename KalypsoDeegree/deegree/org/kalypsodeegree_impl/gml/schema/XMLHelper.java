@@ -229,7 +229,8 @@ public class XMLHelper
       {
         NamedNodeMap nodeMap = nl.item( i ).getAttributes();
 
-        if( attributeValue.equals( nodeMap.getNamedItem( attributeName ).getNodeValue() ) )
+        final Node namedItem = nodeMap.getNamedItem( attributeName );
+        if( namedItem != null && attributeValue.equals( namedItem.getNodeValue() ) )
           result.add( nl.item( i ) );
       }
       catch( Exception e )

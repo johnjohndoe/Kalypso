@@ -116,7 +116,7 @@ public class FeatureTypeBuilder
     m_maxOccurs.put( namespace + ":" + name, maxOccurs );
   }
 
-  public void setTypeName( SchemaAttribute typeAttribute ) throws Exception
+  public void setTypeName( final SchemaAttribute typeAttribute ) throws Exception
   {
     final String typeName = typeAttribute.getValue();
     final String valueNS = typeAttribute.getValueNS();
@@ -172,28 +172,6 @@ public class FeatureTypeBuilder
           .getAttributeNode( custoumNode, "type" ) );
       setTypeName( innerTypeAttribute );
       return;
-      // custoumNode.getAttributes();xx
-      // final String typeName = typeAttribute.getValue();
-      // final String valueNS = typeAttribute.getValueNS();
-      //
-      // // is registred type ?
-      // final String typename = valueNS + ":" + typeName;
-      //
-      // final IMarshallingTypeHandler typeHandler =
-      // MarshallingTypeRegistrySingleton.getTypeRegistry()
-      // .getTypeHandlerForTypeName( typename );
-      // if( typeHandler != null )
-      // {
-      // m_typeName = typeHandler.getClassName();
-      // if(m_typeName==null)
-      // System.out.println("debug");
-      // m_isCutoumType=true;
-      // return;
-      // }
-      // custoum
-      // a custoum base type ?
-      // /////////
-
     }
     else if( "simpleType".equals( ( (Element)cNode ).getLocalName() ) )
     {
@@ -215,10 +193,6 @@ public class FeatureTypeBuilder
     return m_namespace;
   }
 
-  // public void add( FeatureTypeProperty featureTypeProperty )
-  // {
-  // m_featureProtoTypes.add( featureTypeProperty );
-  // }
   public void add( FeatureTypeProperty ftp )
   {
     m_featureProtoTypes.add( ftp );
@@ -297,9 +271,6 @@ public class FeatureTypeBuilder
     if( m_enumeration.size() > 0 )
       return new EnumerationFeatureTypeProperty( m_name, m_namespace, m_typeName, true, m_enumeration.toArray(),
           m_annotationMap );
-
-    // if( m_typeName == null )
-    // System.out.println( "debug" );
 
     if( m_isCutoumType )
       return new CustoumFeatureTypeProperty( m_name, m_namespace, m_typeName, true, m_annotationMap );
