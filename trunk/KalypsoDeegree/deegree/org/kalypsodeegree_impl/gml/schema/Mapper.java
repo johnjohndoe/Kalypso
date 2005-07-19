@@ -199,7 +199,7 @@ public class Mapper
     if( "java.lang.Boolean".equals( type ) )
       return Boolean.FALSE;
     if( "java.lang.Float".equals( type ) )
-      return new Integer( 0 );
+      return new Float( 0 );
     if( "java.lang.Integer".equals( type ) )
       return new Integer( 0 );
     if( "java.lang.String".equals( type ) )
