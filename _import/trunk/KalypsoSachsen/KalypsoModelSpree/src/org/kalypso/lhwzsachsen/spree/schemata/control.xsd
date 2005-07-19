@@ -23,7 +23,7 @@
                     <element name="scenarioName" type="string" minOccurs="0" maxOccurs="1">
    						<annotation>
 							<documentation xml:lang="de">
-								<label>Szenario Name</label>
+								<label>Szenario</label>
 								<tooltip>Name des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
 								<description></description>
 							</documentation>

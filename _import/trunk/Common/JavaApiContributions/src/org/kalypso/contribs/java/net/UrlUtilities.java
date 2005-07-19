@@ -48,8 +48,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
@@ -77,15 +75,8 @@ public class UrlUtilities implements IUrlResolver
    */
   public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
   {
-    try
-    {
-      final URI uri = new URI( relativeURL );
-      return uri.isAbsolute() ? new URL( relativeURL ) : new URL( baseURL, relativeURL );
-    }
-    catch( final URISyntaxException e )
-    {
-      throw new MalformedURLException( e.getLocalizedMessage() );
-    }
+    // REMARK: warum nicht einfach so?
+    return new URL( baseURL, relativeURL );
   }
 
   /**

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.model.spree"
+   name="KalypsoModelSpree"
+   version="1.0.0"
+   provider-name="kalypso.org">
+   <runtime>
+      <library name="kalypsoModelSpree.jar"/>
+   </runtime>
+   <requires>
+      <import plugin="org.kalypso.services.calculation.local"/>
+   </requires>
+   <extension
+         point="org.kalypso.services.calculation.local.calcJob">
+      <calcJob
+            typeID="spree"
+            catalogClass="org.kalypso.lhwzsachsen.spree.SpreeUrlCatalog"
+            jobClass="org.kalypso.lhwzsachsen.spree.SpreeCalcJob"/>
+   </extension>
+
+</plugin>
