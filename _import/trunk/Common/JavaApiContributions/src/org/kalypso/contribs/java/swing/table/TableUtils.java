@@ -52,6 +52,17 @@ public class TableUtils
     final int rowCount = table.getRowCount();
     final int colCount = table.getColumnCount();
 
+    // header
+    for( int col = 0; col < colCount; col++ )
+    {
+      writer.write( table.getColumnName( col ) );
+
+      if( col != colCount - 1 )
+        writer.write( columnSeparator );
+    }
+    writer.newLine();
+
+    // values
     for( int row = 0; row < rowCount; row++ )
     {
       for( int col = 0; col < colCount; col++ )

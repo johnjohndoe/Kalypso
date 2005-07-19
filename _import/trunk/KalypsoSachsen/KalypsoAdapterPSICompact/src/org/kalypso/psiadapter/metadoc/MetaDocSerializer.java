@@ -55,9 +55,6 @@ public class MetaDocSerializer
    * 
    * TRICKY: we currently given the XSD-type of the value we expect and the default value. The value stuff is a ';'
    * separated string
-   * 
-   * @param serviceProps
-   * @param props
    */
   public static void prepareProperties( final Properties serviceProps, final Properties props )
   {
@@ -76,9 +73,6 @@ public class MetaDocSerializer
    *          properties of the service
    * @param mdProps
    *          properties of the metadata
-   * @param writer
-   * @param fileName
-   * @throws IOException
    */
   public static void buildXML( final Properties serviceProps, final Properties mdProps, final Writer writer,
       final String fileName ) throws IOException
@@ -126,7 +120,6 @@ public class MetaDocSerializer
   /**
    * Properties can contain the value type and the value. In that case, just return the value.
    * 
-   * @param prop
    * @return value part of prop
    */
   private static String valueOfProperty( final String prop )

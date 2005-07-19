@@ -8,12 +8,11 @@ set KALYPSO_SERVER_TMP=%CATALINA_HOME%\temp
 
 REM The trailing '/' is important!
 set KALYPSO_SERVER_CONF=http://%COMPUTERNAME%:8080/webdav/srvconf/
-set KALYPSO_SERVER_DATA=%KALYPSO_SERVER_WEBDAV%\data
 
 rem set ECLIPSE_DEBUG=-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Djava.compiler=NONE
 set ECLIPSE_DEBUG=-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
 
-set JAVA_OPTS=-Xmx512m -Dkalypso.server.tempdir=%KALYPSO_SERVER_TMP% -Dkalypso.server.confdir=%KALYPSO_SERVER_CONF% -Dkalypso.server.datadir=%KALYPSO_SERVER_TEMP% %ECLIPSE_DEBUG%
+set JAVA_OPTS=-Xmx512m -Dkalypso.server.tempdir=%KALYPSO_SERVER_TMP% -Dkalypso.server.confdir=%KALYPSO_SERVER_CONF% %ECLIPSE_DEBUG%
 
 rem set CATALINA_OPTS=-Djava.security.debug=help
 
