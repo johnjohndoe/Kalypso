@@ -26,10 +26,13 @@
         <complexContent>
             <extension base="gml:AbstractFeatureType">
                 <sequence>
-                    <!--<element name="Ort" type="gml:GeometryPropertyType"/>
-                        -->
+	                <element name="Point" type="gml:PointPropertyType" substitutionGroup="gml:_Geometry" minOccurs="0" maxOccurs="1"/>
+					<element name="LineString" type="gml:LineStringPropertyType" substitutionGroup="gml:_Geometry" minOccurs="0" maxOccurs="1"/>
+					<element name="Polygon" type="gml:PolygonPropertyType" substitutionGroup="gml:_Geometry" minOccurs="0" maxOccurs="1"/>
                     <element name="inObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
-                    <element name="outObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
+                    <element name="in1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
+                    <element name="outObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="out1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
                 </sequence>
             </extension>
         </complexContent>

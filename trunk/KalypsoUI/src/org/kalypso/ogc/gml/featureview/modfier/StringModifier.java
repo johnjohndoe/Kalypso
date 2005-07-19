@@ -159,11 +159,11 @@ public class StringModifier implements IFeatureModifier
   {
     try
     {
+      if( value == null )
+        return null;
       final String text = value.toString();
       if( text.length() == 0 )
-      {
         return null;
-      }
       parseData( text );
       return null;
     }

@@ -55,7 +55,7 @@ public class FeatureAddActionDelegate implements IActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( action.isEnabled() && m_selection != null )
     {

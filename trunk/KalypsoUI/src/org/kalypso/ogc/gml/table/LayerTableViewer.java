@@ -328,6 +328,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     if( getContentProvider() != null )
       setInput( null );
+    else
+      disposeTheme( getInput() );
 
     if( tableView != null )
     {
@@ -922,6 +924,17 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     super.inputChanged( input, oldInput );
 
+    disposeTheme( oldInput );
+
+    clearColumns();
+
+    final IKalypsoTheme theme = (IKalypsoTheme)input;
+    if( theme != null )
+      theme.addModellListener( this );
+  }
+
+  private void disposeTheme( final Object oldInput )
+  {
     final IKalypsoTheme oldTheme = (IKalypsoTheme)oldInput;
 
     if( oldTheme != null )
@@ -929,12 +942,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       oldTheme.removeModellListener( this );
       oldTheme.dispose();
     }
-
-    clearColumns();
-
-    final IKalypsoTheme theme = (IKalypsoTheme)input;
-    if( theme != null )
-      theme.addModellListener( this );
   }
 
   /** Registers this MenuManager es context menu on table and table cursor */
