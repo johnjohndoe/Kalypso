@@ -400,17 +400,9 @@ public final class Arrays
     return chars;
   }
 
-  public static double findMin( double[] doubleArray )
-  {
-    double result = doubleArray[0];
-    for( int i = 1; i < doubleArray.length; i++ )
-    {
-      if( doubleArray[i] < result )
-        result = doubleArray[i];
-    }
-    return result;
-  }
-
+  /**
+   * @deprecated You should use java.util.Arrays.sort() and doubleArray[ doubleArray.length - 1 ] to get the max
+   */
   public static double findMax( double[] doubleArray )
   {
     double result = doubleArray[0];
