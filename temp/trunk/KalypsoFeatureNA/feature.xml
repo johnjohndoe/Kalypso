@@ -2,14 +2,10 @@
 <feature
       id="org.kalypso.enterprise.na"
       label="Kalypso Enterprise-NA"
-      version="0.0.6"
+      version="1.0.0"
       provider-name="kalypso.org"
       plugin="org.kalypso.ui"
-      os="win32"
-      ws="win32"
-      nl="de"
-      arch="x86"
-      image="kalypso32.bmp"
+      image="kalypso32.gif"
       primary="true">
 
    <install-handler/>
@@ -19,11 +15,11 @@
    </description>
 
    <copyright url="copyright.html">
-      Copyright
+      
    </copyright>
 
    <license url="licence.html">
-      Lizenztext
+      
    </license>
 
    <requires>
@@ -60,22 +56,10 @@
          version="0.0.5"/>
 
    <plugin
-         id="org.kalypso.debug"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.wizard"
          download-size="0"
          install-size="0"
          version="0.0.1"/>
-
-   <plugin
-         id="org.kalypso.ant"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
 
    <plugin
          id="org.kalypso.dwd"
@@ -162,7 +146,73 @@
          version="1.0.0"/>
 
    <plugin
+         id="org.kalypso.contribs.eclipsercp"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.contribs.java"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.featureview"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.auth"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.services.user.client"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.core.client"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.debug"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.services.core"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.services.user"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.simulation.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
          id="org.kalypso.commons"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.psicompactadapter"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
