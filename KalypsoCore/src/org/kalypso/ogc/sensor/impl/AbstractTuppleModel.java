@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -109,12 +110,42 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   }
 
   /**
+   * This needs refactoring... which might be undertaken once the whole IObservation and ITuppleModel stuff is
+   * refactored.
+   * <p>
+   * The assuption here that the order is already ok is tricky. And the case where the axis denotes numbers is not so
+   * nice, even not really performant.
+   * 
    * @see org.kalypso.ogc.sensor.ITuppleModel#getRangeFor(org.kalypso.ogc.sensor.IAxis)
    */
   public IAxisRange getRangeFor( final IAxis axis ) throws SensorException
   {
     if( getCount() > 0 )
     {
+      // for numbers we need to step through all the
+      // rows in order to find the range
+      if( Number.class.isAssignableFrom( axis.getDataClass() ) )
+      {
+        Number lower = new Double( Double.MAX_VALUE );
+        Number upper = new Double( Double.MIN_VALUE );
+
+        final DoubleComparator dc = new DoubleComparator( 0.000001 );
+        for( int i = 0; i < getCount(); i++ )
+        {
+          final Object value = getElement( i, axis );
+
+          if( dc.compare( value, lower ) < 0 )
+            lower = (Number)value;
+
+          if( dc.compare( value, upper ) > 0 )
+            upper = (Number)value;
+        }
+
+        return new DefaultAxisRange( lower, upper );
+      }
+
+      // else we assume that the order is already correct
+      // and simply take the first and the last element
       Object begin = getElement( 0, axis );
       Object end = getElement( getCount() - 1, axis );
 

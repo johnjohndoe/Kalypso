@@ -49,6 +49,9 @@ package org.kalypso.auth.scenario;
  */
 public interface IScenario
 {
+  /** this is the id of the default scenario, namely: the empty string */
+  public final static String ID_DEFAULT_SCENARIO = "";
+  
   /** denotes the begin of a token */
   public final static String TOKEN_BEGIN = ":";
   /** denotes the end of a token */

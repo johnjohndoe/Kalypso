@@ -72,17 +72,25 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.ui.internal.Workbench;
+import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.auth.scenario.IScenario;
+import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.io.ProcessWraper;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
+import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -216,7 +224,7 @@ public class GrafikLauncher
 
       // use the windows encoding for the vorlage because of the grafik tool
       // which uses it when reading...
-      final SetContentHelper sch = new SetContentHelper("Datei Konvertierung - Grafik öffnen")
+      final SetContentHelper sch = new SetContentHelper( "Datei Konvertierung - Grafik öffnen" )
       {
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
@@ -270,7 +278,8 @@ public class GrafikLauncher
       final Process proc = Runtime.getRuntime().exec(
           grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"' );
 
-      final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Grafik kann nicht gestartet werden" );
+      final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Grafik kann nicht gestartet werden" );
 
       final ProcessWraper wraper = new ProcessWraper( proc, null )
       {
@@ -307,7 +316,7 @@ public class GrafikLauncher
 
       // wait for grafik to finish and eventually synchronise data
       wraper.waitForProcess();
-      
+
       return ms;
     }
     catch( Exception e )
@@ -362,6 +371,11 @@ public class GrafikLauncher
     final GrafikAchsen gAchsen = new GrafikAchsen( odt.getAxis() );
     final GrafikKurven gKurven = new GrafikKurven( gAchsen );
 
+    String scenarioName = null;
+    Date xLower = null;
+    Date xUpper = null;
+    Number yLower = new Double( Double.MAX_VALUE );
+    Number yUpper = new Double( Double.MIN_VALUE );
     final Set xLines = new TreeSet();
     final Map yLines = new HashMap();
 
@@ -392,13 +406,17 @@ public class GrafikLauncher
       }
 
       final IObservation obs;
+      final ITuppleModel values;
       InputStream ins = null;
       try
       {
         ins = zmlFile.getContents();
         obs = ZmlFactory.parseXML( new InputSource( ins ), zmlFile.toString(), context );
+        ins.close();
+
+        values = obs.getValues( null );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         final String msg = "Zeitreihe konnte nicht eingelesen werden. Datei: " + zmlFile.getName() + " Grund: "
             + e.getLocalizedMessage();
@@ -433,18 +451,68 @@ public class GrafikLauncher
         displayedAxes.add( axis );
 
         // convert to dat-file, ready to be read by the grafik tool
-        zml2dat( obs, datFile, dateAxis, axis, monitor );
+        zml2dat( values, datFile, dateAxis, axis, monitor );
 
         final RememberForSync rfs = new RememberForSync( zmlFile, datFile, axis );
         sync.add( rfs );
 
         cc++;
+
+        try
+        {
+          // fetch Y axis range for placing possible scenario text item
+          final IAxisRange range = values.getRangeFor( axis );
+
+          final DoubleComparator dc = new DoubleComparator( 0.001 );
+          if( dc.compare( range.getLower(), yLower ) < 0 )
+            yLower = (Number)range.getLower();
+          if( dc.compare( range.getUpper(), yUpper ) > 0 )
+            yUpper = (Number)range.getUpper();
+        }
+        catch( final SensorException e )
+        {
+          e.printStackTrace();
+        }
+      }
+
+      try
+      {
+        // fetch X axis range for placing possible scenario text item
+        final IAxisRange range = values.getRangeFor( dateAxis );
+        final Date d1 = (Date)range.getLower();
+        final Date d2 = (Date)range.getUpper();
+
+        if( xLower == null || d1.before( xLower ) )
+          xLower = d1;
+        if( xUpper == null || d2.after( xUpper ) )
+          xUpper = d2;
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+      }
+
+      // check observation for specific scenario
+      if( scenarioName == null ) // not already set in this session?
+      {
+        final MetadataList mdl = obs.getMetadataList();
+        final String scenarioId = mdl.getProperty( ObservationConstants.MD_SCENARIO );
+
+        if( !ScenarioUtilities.isDefaultScenario( scenarioId ) )
+        {
+          final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( scenarioId );
+          if( scenario != null )
+            scenarioName = scenario.getName();
+        }
       }
 
       // is this obs a forecast?
       final DateRange fr = TimeserieUtils.isForecast( obs );
       if( fr != null )
-        xLines.add( GRAFIK_DF.format( fr.getFrom() ) );
+      {
+        final String strDate = GRAFIK_DF.format( fr.getFrom() );
+        xLines.add( new XLine( "Vorhersage Start: " + strDate, strDate ) );
+      }
 
       // does is have Alarmstufen? only check if we are displaying at least a
       // W-axis
@@ -477,6 +545,15 @@ public class GrafikLauncher
     writer.write( "yTitel1:\t" + gAchsen.getLeftLabel() + "\n" );
     writer.write( "yTitel2:\t" + gAchsen.getRightLabel() + "\n" );
 
+    // Scenario stuff as free text items
+    if( scenarioName != null )
+    {
+      final double xPos = ( xUpper.getTime() - xLower.getTime() ) / 60000 / 2;
+      final double yPos = ( yUpper.doubleValue() - yLower.doubleValue() ) / 2;
+      writer.write( "Text1: " + xPos + " " + yPos + " 0 " + scenarioName + "\n" );
+      writer.write( "TextFont6: -29 0 255 400 0 3 2 1 34 0 Arial\n" ); // the font is global for all the free text items
+    }
+
     // constant vertical lines...
     for( Iterator it = xLines.iterator(); it.hasNext(); )
     {
@@ -493,20 +570,22 @@ public class GrafikLauncher
     }
     yLines.clear();
 
+    final Rectangle bounds = Workbench.getInstance().getDisplay().getBounds();
+    writer.write( "Window: " + bounds.x + " " + bounds.y + " " + bounds.width + " " + bounds.height + "\n" );
+    
     return multiStatus;
   }
 
   /**
    * Converts a zml file to a dat file that the grafik tool can load.
    */
-  private static IStatus zml2dat( final IObservation obs, final IFile datFile, final IAxis dateAxis, final IAxis axis,
-      final IProgressMonitor monitor ) throws CoreException
+  private static IStatus zml2dat( final ITuppleModel values, final IFile datFile, final IAxis dateAxis,
+      final IAxis axis, final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper sch = new SetContentHelper( ".zml --> .dat Konvertierung" )
     {
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
-        final ITuppleModel values = obs.getValues( null );
         for( int i = 0; i < values.getCount(); i++ )
         {
           if( monitor.isCanceled() )
@@ -547,6 +626,23 @@ public class GrafikLauncher
       this.label = lbl;
       this.value = val;
       this.color = col;
+    }
+  }
+  
+  private final static class XLine
+  {
+    public final String label;
+    public final String strDate;
+
+    public XLine( final String lbl, final String strdate )
+    {
+      label = lbl;
+      strDate = strdate;
+    }
+    
+    public String toString()
+    {
+      return strDate;
     }
   }
 }
