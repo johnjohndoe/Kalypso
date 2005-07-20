@@ -50,7 +50,7 @@ import java.util.Properties;
  */
 public class Scenario implements IScenario
 {
-  public final static IScenario DEFAULT_SCENARIO = new Scenario( "", new Properties() );
+  public final static IScenario DEFAULT_SCENARIO = new Scenario( ID_DEFAULT_SCENARIO, new Properties() );
   
   private final String m_id;
 

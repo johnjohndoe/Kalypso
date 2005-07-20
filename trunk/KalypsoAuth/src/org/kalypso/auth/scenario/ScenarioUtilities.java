@@ -63,9 +63,19 @@ public class ScenarioUtilities
     if( sce == null )
       throw new IllegalArgumentException( "scenario is null" );
 
-    return sce.getId().equals( "" );
+    return sce.getId().equals( IScenario.ID_DEFAULT_SCENARIO );
   }
-  
+
+  /**
+   * The kalypso convention says that a (or the) default scenario has an id which value is the empty string.
+   * 
+   * @return true if the given scenarioId denotes a default scenario
+   */
+  public static boolean isDefaultScenario( final String scenarioId )
+  {
+    return IScenario.ID_DEFAULT_SCENARIO.equals( scenarioId );
+  }
+
   /**
    * Convenient method for replacing the tokens within a string with
    * the values of the properties delivered by the given scenario.
