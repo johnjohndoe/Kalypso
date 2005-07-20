@@ -1,7 +1,3 @@
-/*
- * Created on Jan 19, 2005
- *  
- */
 package org.kalypso.ui.editor.gmleditor.ui;
 
 import java.io.BufferedReader;

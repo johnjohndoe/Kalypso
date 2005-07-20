@@ -85,7 +85,6 @@ public final class AddFeatureAction extends Action
     try
     {
       m_workspace.postCommand( command );
-      //m_commandTarget.postCommand(command, null);
       return;
     }
     catch( final Exception e )

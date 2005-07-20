@@ -56,7 +56,7 @@ public final class PasteFeatureAction extends Action
 
   private Clipboard m_clipboard = null;
 
-  public static final String NAME = "Paste Feature";
+  public static final String NAME = "Einfügen";
 
   public PasteFeatureAction( CommandableWorkspace workspace, Feature parentFeature, String propertyName,
       Clipboard clipboard )
