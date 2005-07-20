@@ -11,7 +11,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.login.DefaultAuthenticator;
 import org.kalypso.auth.login.IAuthenticator;
 import org.kalypso.auth.scenario.IScenario;
+import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.auth.user.IKalypsoUser;
+import org.kalypso.auth.user.KalypsoUser;
+import org.kalypso.auth.user.UserRights;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -25,7 +28,13 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   //Resource bundle.
   private ResourceBundle resourceBundle;
 
-  private IKalypsoUser m_user = null;
+  /**
+   * the one and only one kalypso user. By default it is set to a default one in order to allow developers to start
+   * kalypso bypassing the login procedure. Once the login procedure is started, the user is set to null unless
+   * authentication succeeded.
+   */
+  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS, "", new IScenario[]
+  { Scenario.DEFAULT_SCENARIO } );
 
   /**
    * The constructor.
@@ -116,6 +125,13 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    */
   public void startLoginProcedure( final Display display ) throws InterruptedException, CoreException
   {
+    // important: once login procedure is started, directly set user to null.
+    // Kalypso should be started using the product "org.kalypso.product.product"
+    // which uses the KalypsoApplication which, in turn, calls this method.
+    // During development, one might want to bypass the login stuff. So by default,
+    // the user is set to some default one.
+    m_user = null;
+
     final Shell shell = new Shell( display, SWT.SYSTEM_MODAL );
     shell.setImage( ImageProvider.IMAGE_KALYPSO_ICON.createImage() );
 
@@ -163,7 +179,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
     for( int i = 0; i < scenarios.length; i++ )
     {
       final IScenario scenario = scenarios[i];
-      if( scenario.getId().equals( scenarioId ))
+      if( scenario.getId().equals( scenarioId ) )
         return scenario;
     }
 
