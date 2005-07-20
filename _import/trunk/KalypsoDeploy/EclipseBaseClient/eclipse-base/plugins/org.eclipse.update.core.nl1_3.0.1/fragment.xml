@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<fragment
+    name="Install/Update Core NL Support"
+    id="org.eclipse.update.core.nl1"
+    version="3.0.1"
+    plugin-id="org.eclipse.update.core"
+    plugin-version="3.0.1"
+>
+<runtime>
+    <library name="nl1.jar"/>
+</runtime>
+</fragment>

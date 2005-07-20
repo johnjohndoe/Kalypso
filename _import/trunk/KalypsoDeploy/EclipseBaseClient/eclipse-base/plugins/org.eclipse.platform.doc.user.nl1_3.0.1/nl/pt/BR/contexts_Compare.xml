@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+
+<!-- Compare plugin -->
+
+	<context id="compare_editor_context">
+		<description>Comparar e mesclar arquivos e pastas em um Editor de Comparação.</description>
+ 		<topic label="Editor de comparação" href="reference/ref-25.htm"/>
+ 		<topic label="Comparando Recursos" href="tasks/tasks-68.htm"/>
+ 		<topic label="Compreendendo a comparação" href="tasks/tasks-68bg.htm"/>
+ 		<topic label="Combinando alterações no editor de Comparação" href="tasks/tasks-68dg.htm"/>
+ 		<topic label="Três formas de comparação" href="concepts/concepts-29.htm"/>
+	</context>
+
+	<context id="patch_input_wizard_page_context">
+		<description>Esse assistente ajuda você a aplicar uma correção aos arquivos e pastas
+no espaço de trabalho. Na primeira página, você pode selecionar o arquivo ou as pastas nas
+quais a correção será aplicada e se a correção será carregada de um arquivo externo ou da
+área de transferência.</description>
+ 		<topic label="Trabalhando com Correções" href="tasks/tasks-68c.htm"/>
+	</context>
+
+	<context id="patch_preview_wizard_page_context">
+		<description>Nessa página, você pode ver como a correção corresponde ao espaço de
+trabalho. Alguns parâmetros podem ser ajustados para influenciar na correspondência.</description>
+ 		<topic label="Trabalhando com Correções" href="tasks/tasks-68c.htm"/>
+	</context>
+
+	<context id="compare_dialog_context">
+		<description>Um diálogo exibindo os resultados dos arquivos de comparação.</description>
+ 		<topic label="Comparando Recursos" href="tasks/tasks-68.htm"/>
+ 		<topic label="Compreendendo a comparação" href="tasks/tasks-68bg.htm"/>
+	</context>
+	
+	<context id="add_from_history_dialog_context">
+		<description>Um diálogo que permite restaurar arquivos excluídos do histórico local.</description>
+ 		<topic label="Restaurando Recursos Excluídos do Histórico Local" href="tasks/tasks-87b.htm"/>
+ 		<topic label="Histórico local" href="concepts/concepts-17a.htm"/>
+ 		<topic label="Trabalhando com histórico local" href="tasks/tasks-1f.htm"/>
+ 		<topic label="Histórico local" href="reference/ref-6a.htm"/>
+	</context>
+	
+	<context id="compare_with_edition_dialog_context">
+		<description>Um diálogo que permite comparar arquivos com entradas do histórico local.</description>
+ 		<topic label="Comparando recursos com o histórico local" href="tasks/tasks-70.htm"/>
+ 		<topic label="Histórico local" href="concepts/concepts-17a.htm"/>
+ 		<topic label="Trabalhando com histórico local" href="tasks/tasks-1f.htm"/>
+ 		<topic label="Histórico local" href="reference/ref-6a.htm"/>
+	</context>
+	
+	<context id="replace_with_edition_dialog_context">
+		<description>Um diálogo que permite substituir arquivos por entradas do histórico local.</description>
+ 		<topic label="Substituindo um recurso pelo histórico local" href="tasks/tasks-87.htm"/>
+ 		<topic label="Histórico local" href="concepts/concepts-17a.htm"/>
+ 		<topic label="Trabalhando com histórico local" href="tasks/tasks-1f.htm"/>
+ 		<topic label="Histórico local" href="reference/ref-6a.htm"/>
+	</context>
+	
+	
+		
+	<context id="text_merge_view_context">
+		<description>Esse editor fornece suporte para comparar e mesclar arquivos de texto.</description>
+	</context>
+		
+	<context id="image_compare_view_context">
+		<description>Essa visualização mostra duas imagens lado a lado.</description>
+	</context>
+
+	<context id="binary_compare_view_context">
+		<description>Essa visualização mostra a primeira posição onde dois arquivos diferem.</description>
+	</context>
+		
+
+	<context id="global_next_diff_action_context">
+		<description>Ir para próxima diferença globalmente.</description>
+	</context>
+	
+	<context id="global_previous_diff_action_context">
+		<description>Ir para diferença anterior globalmente.</description>
+	</context>
+	
+	<context id="next_diff_action_context">
+		<description>Ir para próxima diferença.</description>
+	</context>
+	
+	<context id="previous_diff_action_context">
+		<description>Ir para diferença anterior.</description>
+	</context>
+	
+	<context id="ignore_whitespace_action_context">
+		<description>Ignorar espaço em branco.</description>
+	</context>
+
+	
+  	<context id="compare_preference_page_context" >
+		<description>Essa página de preferência é utilizada para definir preferências para as
+funcionalidades de comparação, fusão e correção no workbench.</description>
+ 		<topic label="Definindo preferências para comparação de arquivos" href="tasks/tasks-68b.htm"/>
+ 		<topic label="Preferências - Comparação/Correção" href="reference/ref-11.htm"/>
+   		<topic label="Comparando Recursos" href="reference/ref-25.htm"/>
+	</context>
+
+</contexts>

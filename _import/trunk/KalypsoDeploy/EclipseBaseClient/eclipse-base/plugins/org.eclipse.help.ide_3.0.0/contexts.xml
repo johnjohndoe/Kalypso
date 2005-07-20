@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+
+<contexts>
+
+<!-- Search Menu: Help... -->   
+   <context  id="helpSearchMenu" >
+      <description>This action will open the Search dialog that allows documentation searching.</description>
+	  <topic label="Searching online help" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm" />
+   </context>
+
+
+<!-- Help page on Search Dialog-->
+   <context  id="searchPage" >
+      <description>Type a search term or terms in the search expression field, and then click <b>Search</b>. This will open Search view that contains all the search results.
+
+You can use OR and NOT qualifiers between terms. Also, if you put double-quotation marks around a query, search will return only results that contain specified phrase.
+
+Click <b>Choose</b> to see the working set selection dialog, allowing for additional filtering to be specified.</description>
+       <topic label="Searching online help" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm" />
+   </context>
+
+<!-- Search result view with help hits -->
+   <context  id="searchResultView" >
+      <description>This view lists the results of recent searches.  Currently displayed are results or last documentation search.  Double click one of the documents to open it.</description>
+      <topic label="Help search" href="/org.eclipse.platform.doc.user/tasks/tsearch.htm"/>
+      <topic label="Search view" href="reference/ref-26.htm"/>
+      <topic label="File search" href="reference/ref-45.htm"/>
+   </context>
+
+</contexts>

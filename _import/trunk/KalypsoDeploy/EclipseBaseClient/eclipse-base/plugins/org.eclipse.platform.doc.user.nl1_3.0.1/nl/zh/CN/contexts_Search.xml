@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+
+<!-- Search plugin -->
+   <context  id="search_dialog_context" >
+      <description>您可以在工作台中搜索与指示的条件匹配的资源。</description>
+ 	<topic label="文本搜索" href="tasks/tasks-84.htm"/>
+ 	<topic label="文件搜索" href="tasks/tasks-84b.htm"/>
+   	<topic label="文件搜索" href="reference/ref-45.htm"/>
+   </context>
+
+   <context  id="text_search_page_context" >
+      <description>输入您希望在工作台中搜索的文件模式和／表达式。可以根据需要使用所指示的通配符和／或仅搜索特定的文件类型。</description>
+ 	<topic label="文本搜索" href="tasks/tasks-84.htm"/>
+ 	<topic label="文件搜索" href="tasks/tasks-84b.htm"/>
+   	<topic label="文件搜索" href="reference/ref-45.htm"/>
+   	<topic label="可用的正则表达式" href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html" />
+   </context>
+
+   <context  id="replace_dialog_context" >
+      <description>将搜索结果视图中的匹配项替换为替换字符串。</description>
+   	<topic label="关于正则表达式" href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html" />
+   </context>
+ 
+   <context  id="search_view_context" >
+      <description>此视图显示最新搜索的结果。 </description>
+ 	<topic label="“搜索”视图" href="reference/ref-26.htm"/>
+ 	<topic label="文件搜索" href="reference/ref-45.htm"/>
+   </context>
+
+   <context  id="search_preference_page_context" >
+      <description>此页面显示搜索首选项。</description>
+ 	<topic label="搜索首选项" href="reference/ref-search.htm"/>
+ 	<topic label="搜索视图" href="reference/ref-26.htm"/>
+ 	<topic label="文件搜索" href="reference/ref-45.htm"/>
+   </context>
+
+   <context  id="open_search_dialog_action_context" >
+      <description>此命令将打开“搜索”对话框。</description>
+   </context>
+
+   <context  id="file_search_action_context" >
+      <description>此命令将打开文件“搜索”对话框。</description>
+ 	<topic label="文本搜索" href="tasks/tasks-84.htm"/>
+ 	<topic label="文件搜索" href="tasks/tasks-84b.htm"/>
+   	<topic label="文件搜索" href="reference/ref-45.htm"/>
+
+   </context>
+
+</contexts>
