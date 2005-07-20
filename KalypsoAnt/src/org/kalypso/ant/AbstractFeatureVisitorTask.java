@@ -127,7 +127,15 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       if( m_runAsync )
         executeInDialog();
       else
-        execute( new NullProgressMonitor() );
+      {
+        final IStatus status = execute( new NullProgressMonitor() );
+        if( !status.isOK() )
+          throw new BuildException( status.getMessage(), status.getException() );
+      }
+    }
+    catch( final BuildException be )
+    {
+      throw be;
     }
     catch( final Exception e )
     {

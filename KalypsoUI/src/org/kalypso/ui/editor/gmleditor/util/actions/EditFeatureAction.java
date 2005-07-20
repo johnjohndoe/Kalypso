@@ -41,28 +41,27 @@
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.featureview.FeatureComposite;
-import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
 
 public final class EditFeatureAction extends Action
 {
-
-  CommandableWorkspace m_workspace;
-
-  private final Feature m_feature;
+  final CommandableWorkspace m_workspace;
 
   final ICommandTarget m_commandTarget;
 
   final Shell m_shell;
 
-  public EditFeatureAction( Feature feature, CommandableWorkspace workspace, ICommandTarget commandTarget, Shell shell )
+  public EditFeatureAction( final CommandableWorkspace workspace, final ICommandTarget commandTarget, final Shell shell )
   {
     super( "Bearbeiten" );
-    m_feature = feature;
+
     m_workspace = workspace;
     m_commandTarget = commandTarget;
     m_shell = shell;
@@ -73,15 +72,27 @@ public final class EditFeatureAction extends Action
    */
   public void run()
   {
-    final FeatureComposite helper = new FeatureComposite( m_workspace, m_feature );
-
-    m_shell.getDisplay().asyncExec( new Runnable()
+    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    final IWorkbenchPage page = window.getActivePage();
+    try
     {
-      public void run()
-      {
-        final FeatureviewDialog dialog = new FeatureviewDialog( m_workspace, m_commandTarget, m_shell, helper );
-        dialog.open();
-      }
-    } );
+      page.showView( "org.kalypso.featureview.views.FeatureView" );
+    }
+    catch( final PartInitException e )
+    {
+      e.printStackTrace();
+      ErrorDialog.openError( m_shell, "Feature bearbeiten", "Fehler beim Öffnen der Feature-View", e.getStatus() );
+    }
+    
+//    final FeatureComposite helper = new FeatureComposite( m_workspace, m_feature );
+//
+//    m_shell.getDisplay().asyncExec( new Runnable()
+//    {
+//      public void run()
+//      {
+//        final FeatureviewDialog dialog = new FeatureviewDialog( m_workspace, m_commandTarget, m_shell, helper );
+//        dialog.open();
+//      }
+//    } );
   }
 }

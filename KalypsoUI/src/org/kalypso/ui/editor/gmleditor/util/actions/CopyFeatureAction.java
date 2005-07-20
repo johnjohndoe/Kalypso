@@ -53,7 +53,7 @@ public final class CopyFeatureAction extends Action
 
   private Feature m_originalFeature;
 
-  public static final String NAME = "Copy As Link";
+  public static final String NAME = "Als Link kopieren";
 
   private Clipboard m_clipboard;
 

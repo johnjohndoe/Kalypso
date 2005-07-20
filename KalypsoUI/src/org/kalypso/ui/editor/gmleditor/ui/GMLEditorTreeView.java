@@ -141,7 +141,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
 
   protected void createActions()
   {
-    deleteFeatureAction = new Action( "Delete" )
+    deleteFeatureAction = new Action( "Löschen" )
     {
       public void run()
       {
@@ -184,7 +184,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
       }
     };
 
-    moveFeatureUpAction = new Action( "MoveUp" )
+    moveFeatureUpAction = new Action( "Nach oben verschieben" )
     {
       public void run()
       {
@@ -227,7 +227,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
       }
     };
 
-    moveFeatureDownAction = new Action( "MoveDown" )
+    moveFeatureDownAction = new Action( "Nach unten verschieben" )
     {
       public void run()
       {
@@ -272,9 +272,9 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
     };
   }
 
-  protected void createMenu( Control control )
+  protected void createMenu( final Control control )
   {
-    MenuManager rootMenuManager = new MenuManager( "#PopUp" );
+    final MenuManager rootMenuManager = new MenuManager( "#PopUp" );
     rootMenuManager.setRemoveAllWhenShown( true );
     rootMenuManager.addMenuListener( new IMenuListener()
     {
@@ -301,7 +301,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
           mgr.add( pasteFeatureAction );
       }
     } );
-    Menu menu = rootMenuManager.createContextMenu( control );
+    final Menu menu = rootMenuManager.createContextMenu( control );
     control.setMenu( menu );
   }
 
@@ -309,7 +309,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
   {
     m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
-      public void doubleClick( DoubleClickEvent event )
+      public void doubleClick( final DoubleClickEvent event )
       {
         if( event.getSelection() instanceof IStructuredSelection )
         {
@@ -397,7 +397,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
         editFeatureAction.setEnabled( false );
       if( obj instanceof FeatureElement )
       {
-        editFeatureAction = new EditFeatureAction( ( (FeatureElement)obj ).getFeature(), m_workspace, m_reader,
+        editFeatureAction = new EditFeatureAction( m_workspace, m_reader,
             m_composite.getShell() );
         editFeatureAction.setEnabled( true );
         copyFeatureAction = new CopyFeatureAction( ( (FeatureElement)obj ).getFeature(), m_workspace, clipboard );
