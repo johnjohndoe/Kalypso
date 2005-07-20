@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<layer id="foo" featurePath="" linktype="gml" xlink:href="./.calculation"/>
+	<layer id="foo" featurePath="" linktype="gml" xlink:href=".calculation"/>
 	<view typename="SpreeControl" style="0" tooltip="TopLevel">
 		<gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="4" verticalAlignment="4"/>
 		<gridLayout numColumns="1" horizontalSpacing="10"/>
@@ -21,6 +21,10 @@
 		<group style="0" text="Metadaten">
 			<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 			<gridLayout numColumns="2" horizontalSpacing="10"/>
+			<label property="scenarioName" style="0"/>
+			<text property="scenarioName" style="SWT.BORDER" editable="false">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
 			<label property="editor" style="0"/>
 			<text property="editor" style="2048">
 				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>

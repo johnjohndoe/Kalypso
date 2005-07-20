@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpreeControl fid="foo" xmlns="org.kalypso.spree.control" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.spree.control project:/.model/schema/control.xsd">
+	<scenarioId>test</scenarioId>
+	<scenarioName>Testbetrieb</scenarioName>
+	<scenarioDescription>:scenarioDescription:</scenarioDescription>
+  <startsimulation>2004-04-26T22:00:00</startsimulation>
+  <startforecast>2004-04-27T10:00:00</startforecast>
+  <editor>belger</editor>
+  <description>- bitte ausfüllen -</description>
+  <comment>- bitte ausfüllen -</comment>
+  <calctime>2005-03-29T19:04:00</calctime>
+</SpreeControl>

@@ -12,11 +12,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5460570.00016158,5660600.021143925</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink  linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582010?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen/QX_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -49,11 +46,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5458610.000169803,5670080.021103631</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582030?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen/QX_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -86,11 +80,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5473800.000107538,5674170.021085799</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583121?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_GROEDI.zml" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_GROEDI.zml" valueaxis="Wert" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen//QX_GROEDI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -123,11 +114,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5487000.000053392,5679730.021061616</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583250?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen//QX_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -160,11 +148,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5492110.000032412,5681830.021052472</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583290?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen//W_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen//QX_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -197,11 +182,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5467400.000134027,5688520.021023534</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582060?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_LIESKE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_LIESKE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen//QX_LIESKE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -226,11 +208,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5470540.00012123,5696840.020986796</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583200?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_BOXBRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_BOXBRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen//QX_BOXBRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -255,11 +234,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5466760.000136828,5699710.020974114</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582080?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_SPREY.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SPREY.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen//QX_SPREY.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -284,11 +260,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5458780.000169841,5708640.020934349</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582820?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_SPWITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SPWITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen//QX_SPWITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -313,11 +286,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5456440.000215545,5716010.025081432</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Wasserstand_gemessenEingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582090?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Wasserstand_gemessenEingang>
           <Wasserstand_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/W_SPREMB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/W_SPREMB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Wasserstand_gemessen>
           <Wasserstand_gerechnet>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen//QX_SPREMB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
