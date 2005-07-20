@@ -32,11 +32,12 @@ C:\Programme_inst\eclipse\workspace\KalypsoCore\etc\schemas\template\featureview
 		<text property="startforecast" style="2048">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
-		<!-- wird für Ilse nicht angezeigt
-		<label text="Batches" style="SWT.NONE">
-			<gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"/>
-		</label>
-		<subcomposite property="BatchIDCollectionAssociation" style="SWT.BORDER"></subcomposite> -->
+		<!-- wird beim Erstellen einer Rechenvariante nicht angezeigt
+			<label text="Batches" style="SWT.NONE">
+				<gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"/>
+			</label>
+			<subcomposite property="BatchIDCollectionAssociation" style="SWT.BORDER"/>
+		-->
 	</view>
 	<view typename="Metadata" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>

@@ -5,8 +5,8 @@ project:/.model/schema/control.xsd">
 		<Control fid="IlseControl">
 			<startsimulation>:startsim:</startsimulation>
 			<startforecast>:startforecast:</startforecast>
-				<BatchIDCollectionAssociation fid="batches">
-				<BatchIDCollection>
+			<BatchIDCollectionAssociation>
+				<BatchIDCollection fid="batches">
 					<BatchIDAssociation>
 						<BatchID fid="batchid_1">
 							<id>run_ilse.bat</id>

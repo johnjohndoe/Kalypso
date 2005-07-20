@@ -13,10 +13,10 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!-- 
-       Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+       Karte, Diagramm und Tabelle -->  
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsstationen.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="4"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
@@ -40,9 +40,9 @@
 		<arg name="rightSash" value="50"/>
 		<!-- 
        Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="8"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
@@ -61,9 +61,9 @@
 		<arg name="rightSash" value="50"/>
 		<!-- 
        Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="2"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
@@ -86,9 +86,9 @@
 		<arg name="rightSash" value="0"/>
 		<!-- 
        Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<!--
         <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/ezg.odt"/>
@@ -115,9 +115,9 @@
 		<arg name="rightSash" value="25"/>
 		<!-- 
        Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag"/>
 		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>

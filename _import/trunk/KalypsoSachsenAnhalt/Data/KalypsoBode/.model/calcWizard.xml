@@ -14,9 +14,9 @@
 		<arg name="rightSash" value="50"/>
 		<!-- 
        Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsstationen.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsstationen.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/> 
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="4"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
@@ -40,9 +40,9 @@
 		<arg name="rightSash" value="50"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Niederschlagsgebiete.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="8"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
@@ -62,9 +62,9 @@
 		<arg name="rightSash" value="50"/>
 		<!-- 
          Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Eingabepegel_uh_Wendefurth.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_uh_Wendefurth.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="2"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
@@ -87,9 +87,9 @@
 		<arg name="rightSash" value="50"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="2"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
@@ -108,9 +108,9 @@
 		<arg name="rightSash" value="0"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Vorhersagepegel_uh_Wendefurth.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel_uh_Wendefurth.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="16"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -136,9 +136,9 @@
 		<arg name="rightSash" value="50"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_ohne_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="2"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
@@ -158,9 +158,9 @@
 		<arg name="rightSash" value="50"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Pegel_oh_Speicher.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Pegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="2"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
@@ -183,9 +183,9 @@
 		<arg name="rightSash" value="0"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Pegel_oh_Speicher.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Pegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="16"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -210,9 +210,9 @@
 		<arg name="rightSash" value="50"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_ohne_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="2"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
@@ -236,9 +236,9 @@
 		<arg name="rightSash" value="50"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_ohne_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="2"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
@@ -259,9 +259,9 @@
 		<arg name="rightSash" value="50"/>
 		<!--  
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="2"/>
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
@@ -281,9 +281,9 @@
 		<arg name="rightSash" value="0"/>
 		<!-- 
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="16"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
@@ -309,9 +309,9 @@
 		<arg name="rightSash" value="0"/>
 		<!-- 
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="16"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
@@ -335,9 +335,9 @@
 		<arg name="rightSash" value="0"/>
 		<!-- 
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Speicher_mit_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="16"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
@@ -359,9 +359,9 @@
 		<arg name="rightSash" value="25"/>
 		<!-- 
         Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/Modell/Karten/Vorhersagepegel.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="false"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag"/>
 		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
