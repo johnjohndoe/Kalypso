@@ -46,7 +46,17 @@
 			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}" />
 		</kalypso.gmlProperty>
 
-		<kalypso.gmlWeight modelurl="${calc.url}/modell.gml" featurepathtarget="PegelCollectionAssociation/PegelMember" propzmltarget="Niederschlag" proprelationweightmember="gewichtung" propweight="faktor" proprelationsourcefeature="ombrometerMember" propzmlsource="Niederschlag_gemessen" targetcontext="${calc.url}" from="${startsim}" forecastfrom="${startforecast}" to="${stopsim_48}" />
+		<kalypso.gmlWeight modelurl="${calc.url}/modell.gml" 
+			               	featurepathtarget="PegelCollectionAssociation/PegelMember[Niederschlagsgebiet]" 
+							propzmltarget="Niederschlag" 
+							proprelationweightmember="gewichtung" 
+							propweight="faktor" 
+							proprelationsourcefeature="ombrometerMember" 
+							propzmlsource="Niederschlag_gemessen" 
+							targetcontext="${calc.url}" 
+							from="${startsim}" 
+							forecastfrom="${startforecast}" 
+							to="${stopsim_48}" />
 		<!--
 		Das Argument targetmapping="C:\\TMP\\testMapping.gml" in der 
 		gmlweight-Task bewirkt, dass der Filter als GML an die angegebene Stelle
