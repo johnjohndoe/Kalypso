@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.contribs.java.util.CalendarIterator;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -91,7 +92,8 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
   private SimpleTuppleModel m_intervallModel;
 
-  public IntervallTupplemodel( int mode, int calendarField, int amount, ITuppleModel baseModel, Date from, Date to )
+  public IntervallTupplemodel( int mode, int calendarField, int amount,final int startCalendarValue, final String startCalendarField,
+      ITuppleModel baseModel, Date from, Date to )
   {
     super( baseModel.getAxisList() );
     m_mode = mode;
@@ -134,6 +136,10 @@ public class IntervallTupplemodel extends AbstractTuppleModel
       m_from = getDefaultCalendar( from );
     else
       m_from = getDefaultCalendar( (Date)range.getLower() );
+
+    // correct from
+    if( startCalendarField != null && startCalendarField.length()>0)
+      m_from.set( CalendarUtilities.getCalendarField(startCalendarField), startCalendarValue );
     if( to != null )
       m_to = getDefaultCalendar( to );
     else
@@ -306,7 +312,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
       model.setElement( targetRow, new Double( value[i] ), m_valueAxis[i] );
   }
 
-  private Calendar getDefaultCalendar( Date date )
+  private Calendar getDefaultCalendar( final Date date )
   {
     final Calendar result = Calendar.getInstance();
     result.setTime( date );

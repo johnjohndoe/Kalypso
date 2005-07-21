@@ -272,6 +272,8 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public boolean contains( GM_Envelope bb )
   {
+    if(bb==null)
+      return false;
     GM_Position p1 = new GM_Position_Impl( bb.getMin().getX(), bb.getMin().getY() );
     GM_Position p2 = new GM_Position_Impl( bb.getMin().getX(), bb.getMax().getY() );
     GM_Position p3 = new GM_Position_Impl( bb.getMax().getX(), bb.getMin().getY() );
@@ -433,6 +435,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.13  2005/07/21 02:56:47  doemming
+ * *** empty log message ***
+ *
  * Revision 1.12  2005/06/19 15:10:01  doemming
  * *** empty log message ***
  * Revision 1.11 2005/04/17 21:19:24 doemming

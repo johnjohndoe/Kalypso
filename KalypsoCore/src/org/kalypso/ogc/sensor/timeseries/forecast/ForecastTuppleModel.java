@@ -56,8 +56,8 @@ import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
  * TODO: die Reihenfolge der models[] sollte von auﬂerhalb der Klasse entschieden werden. Somit kann der "client"
  * entscheiden ob:
  * <ul>
- * <li> die models[] sortiert sind
- * <li> die models[] eine "andere" Reihenfolge haben
+ * <li>die models[] sortiert sind
+ * <li>die models[] eine "andere" Reihenfolge haben
  * </ul>
  * 
  * @author schlienger
@@ -129,20 +129,24 @@ public class ForecastTuppleModel extends AbstractTuppleModel
     {
       if( models[i] == null )
         continue;
-      final IAxis[] axes = models[i].getAxisList();
-      final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
+      final IAxis[] modelAxes = models[i].getAxisList();
+      final IAxis[] targetAxes = m_model.getAxisList();
+      final IAxis modelDateAxis = ObservationUtilities.findAxisByClass( modelAxes, Date.class );
+      final int[] map = ObservationUtilities.getAxisMapping( targetAxes, modelAxes );
       for( int rowIx = 0; rowIx < models[i].getCount(); rowIx++ )
       {
-        final Date date = (Date)models[i].getElement( rowIx, dateAxis );
-
+        final Date date = (Date)models[i].getElement( rowIx, modelDateAxis );
         if( date.after( lastDate ) )
         {
-          final Object[] tupple = new Object[axes.length];
+          final Object[] targetTupple = new Object[modelAxes.length];
 
-          for( int colIx = 0; colIx < axes.length; colIx++ )
-            tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
-
-          m_model.addTupple( tupple );
+          for( int colIx = 0; colIx < targetAxes.length; colIx++ )
+          {
+            if( map[colIx] > -1 )
+              targetTupple[colIx] = models[i].getElement( rowIx, modelAxes[map[colIx]] );
+          }
+          //            tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
+          m_model.addTupple( targetTupple );
           lastDate = date;
         }
       }
