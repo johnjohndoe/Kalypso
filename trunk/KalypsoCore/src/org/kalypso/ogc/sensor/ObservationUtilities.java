@@ -469,4 +469,47 @@ public class ObservationUtilities
       return a1.getType().compareTo( a2.getType() );
     }
   }
+
+  /**
+   * @return array of positions, position of -1 means not mapable
+   */
+  public static int[] getAxisMapping( final IAxis[] compareAxes,final IAxis[] testAxes )
+  {
+    final int[] result = new int[compareAxes.length];
+    for( int i = 0; i < compareAxes.length; i++ )
+    {
+      result[i] = findBestFitPos( compareAxes[i], testAxes );
+    }
+    return result;
+  }
+
+  /**
+   * 
+   * @param compareAxis
+   * @param testAxes
+   * @return position of best fit, else <code>-1</code> if not fit
+   */
+  private static int findBestFitPos( final IAxis compareAxis, IAxis[] testAxes )
+  {
+    int resultPos = -1;
+    int maxHits = -1;
+    for( int i = 0; i < testAxes.length; i++ )
+    {
+      int hits = 0;
+      if( !testAxes[i].getType().equals( compareAxis.getType() )
+          && !testAxes[i].getDataClass().equals( compareAxis.getDataClass() ) )
+        continue;
+      hits++;
+      if( testAxes[i].getUnit().equals( compareAxis.getUnit() ) )
+        hits++;
+      if( testAxes[i].getName().equals( compareAxis.getName() ) )
+        hits++;
+      if( hits > maxHits )
+      {
+        resultPos = i;
+        maxHits = hits;
+      }
+    }
+    return resultPos;
+  }
 }

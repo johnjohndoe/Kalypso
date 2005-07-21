@@ -47,6 +47,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * @author doemming
@@ -90,7 +91,7 @@ public class OperationTupplemodel extends AbstractTuppleModel
     if( index >= m_baseModel.getCount() )
       return null;
     Object object = m_baseModel.getElement( index, a );
-    if( object == null || object instanceof Date )
+    if( object == null || object instanceof Date || KalypsoStatusUtils.isStatusAxis(axis))
       return object;
     if( object instanceof Number ) // let it be a Number here so we can handle integers and such
     {

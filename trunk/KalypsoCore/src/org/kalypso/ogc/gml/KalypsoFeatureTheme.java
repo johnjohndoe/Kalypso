@@ -273,7 +273,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -408,7 +409,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     public void restyle( GM_Envelope env )
     {
-      if( m_vaildEnvelope == null || !m_vaildEnvelope.contains( env ) )
+      if( env != null && ( m_vaildEnvelope == null || !m_vaildEnvelope.contains( env ) ) )
       { // restyle
         if( m_vaildEnvelope == null )
           m_vaildEnvelope = env;

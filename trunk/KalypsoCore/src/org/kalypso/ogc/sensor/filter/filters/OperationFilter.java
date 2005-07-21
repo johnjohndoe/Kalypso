@@ -94,7 +94,6 @@ public class OperationFilter extends AbstractObservationFilter
   public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     return new OperationTupplemodel( m_operand, m_operation, m_baseobservation.getValues( args ) );
-
   }
 
   /*

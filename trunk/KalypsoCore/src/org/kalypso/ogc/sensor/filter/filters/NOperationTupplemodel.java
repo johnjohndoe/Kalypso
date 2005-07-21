@@ -47,6 +47,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * @author doemming
@@ -127,8 +128,8 @@ public class NOperationTupplemodel extends AbstractTuppleModel
       return new Double( value );
     }
 
-    // Integer: vermutlich eine Status-Achse!
-    if( dataClass.equals( Integer.class ) )
+    // status-axis
+    if(KalypsoStatusUtils.isStatusAxis(axis) )
     {
       final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
       if( index >= m_baseModels[0].getCount() )
@@ -146,10 +147,8 @@ public class NOperationTupplemodel extends AbstractTuppleModel
         int nextValue = ( (Number)model.getElement( index, a2 ) ).intValue();
         value |= nextValue;
       }
-
       return new Integer( value );
     }
-
     throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt den Datentyp "
         + axis.getDataClass().getName() + " nicht." );
   }

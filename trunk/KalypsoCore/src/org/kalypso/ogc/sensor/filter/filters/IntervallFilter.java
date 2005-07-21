@@ -67,6 +67,10 @@ public class IntervallFilter extends AbstractObservationFilter
 
   private final int m_amount;
 
+  private final String m_startCalendarField;
+
+  private final int m_startCalendarValue;
+
   public IntervallFilter( IntervallFilterType filter )
   {
     final String mode = filter.getMode();
@@ -78,6 +82,8 @@ public class IntervallFilter extends AbstractObservationFilter
       m_mode = MODE_INTENSITY; // default is intensity
     m_calendarField = CalendarUtilities.getCalendarField( filter.getCalendarField() );
     m_amount = filter.getAmount();
+    m_startCalendarField= filter.getStartCalendarfield();
+    m_startCalendarValue = filter.getStartCalendarvalue();
   }
 
   public void initFilter( Object dummy, IObservation baseObs, URL context ) throws SensorException
@@ -99,9 +105,9 @@ public class IntervallFilter extends AbstractObservationFilter
     {
       from = null;
       to = null;
-    }
+    }  
 
-    return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_baseobservation.getValues( request ), from, to );
+    return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue,m_startCalendarField,m_baseobservation.getValues( request ), from, to );
 
   }
 
