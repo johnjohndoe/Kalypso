@@ -18,26 +18,15 @@
 		<copy todir="${calc.dir}">
 			<fileset dir="${modell.template.dir}">
 				<include name="modell.gml" />
-				<include name="**/*.gmt" />
+				<include name="Info_Rechenvariante.gft" />
+				<include name="wiskiimport_messung_120_h_vorhersage.gml" />
+				<include name="wiskiimport_messung_48_h_vorhersage.gml" />
+				<include name="wiskiimport_gesamt.gml" />
+				<include name="wiskiimport_vorhersage.gml" />
+				<include name="**/*.gmt" />		<!-- Kartenansichten -->
+				<include name="**/*.ott" />		<!-- Zeitreihen-Tabellen -->
+				<include name="**/*.gtt" />		<!-- GIS-Tabellen (Parameteransichten) -->
 			</fileset>
-		</copy>
-
-		<!-- modell.gml, Info_Rechenvariant,gft (= view auf .calculation) -->
-		<copy file="${project.dir}/.templates/Modell/modell.gml" tofile="${calc.dir}/modell.gml" />
-		<copy file="${project.dir}/.templates/Modell/Info_Rechenvariante.gft" tofile="${calc.dir}/Info_Rechenvariante.gft" />
-		<copy file="${project.dir}/.templates/Modell/wiskiimport_messung_120_h_vorhersage.gml" tofile="${calc.dir}/wiskiimport_messung_120_h_vorhersage.gml" />
-		<copy file="${project.dir}/.templates/Modell/wiskiimport_messung_48_h_vorhersage.gml" tofile="${calc.dir}/wiskiimport_messung_48_h_vorhersage.gml" />
-		<copy file="${project.dir}/.templates/Modell/wiskiimport_gesamt.gml" tofile="${calc.dir}/wiskiimport_gesamt.gml" />
-		<copy file="${project.dir}/.templates/Modell/wiskiimport_vorhersage.gml" tofile="${calc.dir}/wiskiimport_vorhersage.gml" />
-
-		<!-- Kartenansichten  -->
-		<copy toDir="${calc.dir}/Karten/">
-			<fileset dir="${project.dir}/.templates/Modell/Karten/" />
-		</copy>
-
-		<!-- Parameteransichten -->
-		<copy toDir="${calc.dir}/Parameter/">
-			<fileset dir="${project.dir}/.templates/Modell/Parameter/" />
 		</copy>
 
 		<!-- 

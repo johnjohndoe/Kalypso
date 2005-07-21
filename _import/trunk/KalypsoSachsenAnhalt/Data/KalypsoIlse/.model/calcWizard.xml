@@ -20,7 +20,7 @@
 		<arg name="selectionID" value="1"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -56,7 +56,7 @@
 		<arg name="buttonLaunch" value="niederschlagsmodell"/>
 	</page>
 	<!-- Wasserstand / Abfluss (Messung) -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse /  Wasserstände  - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Wasserstand"/>
@@ -75,7 +75,7 @@
 		<arg name="selectionID" value="4"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -103,9 +103,9 @@
 		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="8"/>		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -133,9 +133,9 @@
 		<arg name="selectionID" value="16"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag"/>
-		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Rechnung#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <observation linktype="zml" ns1:href="Speicherabgabe/Wendefurth.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c1" name="TS Wendefurth" width="50"/>
+    </observation>
+    <observation linktype="zml" ns2:href="Speicherabgabe/Rappbode.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c2" name="TS Rappbode" width="50"/>
+    </observation>
+    <observation linktype="zml" ns3:href="Speicherabgabe/Kalte_Bode.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c3" name="HWR Kalte Bode" width="50"/>
+    </observation>
+    <rules>
+        <renderingrule mask="2">
+            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
+        </renderingrule>
+        <renderingrule mask="4">
+            <tooltip>Eingabe erforderlich</tooltip>
+        </renderingrule>
+        <renderingrule mask="8">
+            <tooltip>Vom Benutzer geändert</tooltip>
+        </renderingrule>
+    </rules>
+</obstableview>
+

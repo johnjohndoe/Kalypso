@@ -20,7 +20,7 @@
 		<arg name="selectionID" value="1"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -57,7 +57,7 @@
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
 	<!-- Wasserstand / Abfluss (Messung) -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel uh. Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse /  Wasserstände - Eingabepegel uh. Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="W_uh_Wendefurth"/>
@@ -76,7 +76,7 @@
 		<arg name="selectionID" value="4"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -106,7 +106,7 @@
 		<arg name="selectionID" value="8"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
 		<!-- 
          Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -131,9 +131,9 @@
 		<arg name="selectionID" value="16"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -165,14 +165,14 @@
 		<arg name="selectionID" value="32"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
 	<!-- Wasserstand / Abfluss (Messung) -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Abflüsse - Eingabepegel oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse / Wasserstände - Eingabepegel oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="W_oh_Speicher"/>
@@ -191,7 +191,7 @@
 		<arg name="selectionID" value="64"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -221,9 +221,9 @@
 		<arg name="selectionID" value="128"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -235,7 +235,7 @@
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG ALLGEMEIN -->
 	<!-- Inhalt Speicher (Messung) -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstände / Inhalte - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Inhalte / Wasserstände - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Inhalt_Speicher"/>
@@ -254,10 +254,10 @@
 		<arg name="selectionID" value="256"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
-		<arg name="ignoreLabel1" value="Inhalt"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
@@ -284,7 +284,7 @@
 		<arg name="selectionID" value="512"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -311,13 +311,13 @@
 		<arg name="selectionID" value="1024"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
-	<!-- dies Seite gilt auch für Bat4/5, abgesehen von der Überschrift-->
+	<!-- dies Seite gilt auch für Bat4/5, abgesehen von der Überschrift -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Speicherrechnung bei Vorgabe der Abgaben" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
@@ -337,10 +337,14 @@
 		<arg name="selectionID" value="2048"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Zufluss_gerechnet"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>   <!-- orange (255,128,64) -->
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -365,18 +369,20 @@
 		<arg name="selectionID" value="4096"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>   <!-- orange (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
-		<arg name="ignoreLabel1" value="Inhalt"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 5  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT5 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - TS-Steuerung ohne Optimierung" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - TS-Steuerung mit Optimierung" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat5"/>
@@ -395,11 +401,13 @@
 		<arg name="selectionID" value="8192"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>   <!-- orange (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
-		<arg name="ignoreLabel1" value="Inhalt"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
@@ -423,10 +431,10 @@
 		<arg name="selectionID" value="16384"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag"/>
-		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Rechnung#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
-		<arg name="ignoreType1" value="W"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
+		<arg name="ignoreTye1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
