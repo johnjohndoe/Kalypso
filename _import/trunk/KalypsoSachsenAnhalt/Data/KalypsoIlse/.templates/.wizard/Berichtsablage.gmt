@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5746305.801980153" left="5186239.418107808" right="5222236.273864297" top="5779459.388951108"/>
+    <layers active="ID_1">
+        <layer name="Vorhersagepegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Pegel]" id="ID_1" linktype="gml" ns1:href="modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Vorhersagepegel" ns1:href="project:/.styles/vorhersagepegel.sld" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/.shapes/gewässer#EPSG:31468" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="sachsenrivers" ns3:actuate="onRequest" ns3:href="project:/.styles/styles.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Niederschlagsgebiete_Flächen" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns5:actuate="onRequest" ns5:href="project:/.shapes/Einzugsgebiete_NS_Gebiete#EPSG:31468" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+            <ns6:style linktype="sld" style="niederschlagsgebiete_poly" ns5:actuate="onRequest" ns5:href="project:/.styles/niederschlagsgebiete_poly.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+

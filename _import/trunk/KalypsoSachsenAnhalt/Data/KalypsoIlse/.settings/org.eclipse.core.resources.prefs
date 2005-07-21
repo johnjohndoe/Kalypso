@@ -1,10 +1,8 @@
-#Fri Jul 15 11:34:29 CEST 2005
+#Thu Jul 21 11:29:16 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
-encoding//.prognose/Vorhersage-2005-07-11_11h51/Zeitreihen/Gebietsniederschlag/B\u00FChne_Hoppenstedt.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
 encoding//.prognose/prognose2/calcCase.gml=UTF-8
-encoding//.prognose/Vorhersage-2005-07-11_11h51/.calculation=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h25/Gesamtansicht.gmt=UTF-8
 encoding//Rechenvarianten/20041125_15_07/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_17h24/steuerparameter.gft=UTF-8
@@ -12,7 +10,6 @@ encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_SPWIESE.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//Rechenvarianten/Spielplatz_fuer_Andreas/Zeitreihen/Pegel/Messung/B\u00FChne_Hoppenstedt.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_SAERI.zml=UTF-8
-encoding//.prognose/Vorhersage-2005-07-11_11h51/Zeitreihen/Pegel/Messung/Ilsenburg.zml=UTF-8
 encoding//.prognose/prognose9/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Gesamtansicht.gmt=UTF-8
@@ -57,7 +54,6 @@ encoding//.prognose/prognose7/calcCase.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_TSQUITZ.zml=UTF-8
 encoding//.templates/Modell/wiskiimport_vorhersage.gml=UTF-8
-encoding//.prognose/Vorhersage-2005-07-11_11h51/Zeitreihen/Gebietsniederschlag/Ilsenburg.zml=UTF-8
 encoding//Rechenvarianten/20041125_15_07/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/PA_GROEDI.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h23/Anfangsvolumen.gtt=UTF-8
@@ -165,7 +161,6 @@ encoding//.prognose/Vorhersage-25-11-2004_15h28/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h50/Flusslaufparameter.gtt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_GROEDI.zml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/steuerparameter.gft=UTF-8
-encoding//.prognose/Vorhersage-2005-07-11_11h51/Zeitreihen/Pegel/Messung/B\u00FChne_Hoppenstedt.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_JAENKD.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/Bodenfeuchten.gtt=UTF-8

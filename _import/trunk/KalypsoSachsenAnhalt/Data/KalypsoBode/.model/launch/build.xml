@@ -50,14 +50,14 @@
          ================================= -->
 	<target name="gebietsniederschlag" description="Umrechnung in Gebietsniederschlag">
 		<property name="HOURS_OF_DAY" value="11" />
-		<gmlProperty gmlURL="${calc.url}/.calculation">
+		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
 			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast" />
 			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}" />
 			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}" />
-		</gmlProperty>
+		</kalypso.gmlProperty>
 
-		<gmlWeight modelurl="${calc.url}/modell.gml" featurepathtarget="PegelCollectionAssociation/PegelMember" propzmltarget="Niederschlag" proprelationweightmember="gewichtung" propweight="faktor" proprelationsourcefeature="ombrometerMember" propzmlsource="Niederschlag_gemessen" targetcontext="${calc.url}" from="${startsim}" forecastfrom="${startforecast}" to="${stopsim_48}" />
+		<kalypso.gmlWeight modelurl="${calc.url}/modell.gml" featurepathtarget="PegelCollectionAssociation/PegelMember" propzmltarget="Niederschlag" proprelationweightmember="gewichtung" propweight="faktor" proprelationsourcefeature="ombrometerMember" propzmlsource="Niederschlag_gemessen" targetcontext="${calc.url}" from="${startsim}" forecastfrom="${startforecast}" to="${stopsim_48}" />
 		<!--
 		Das Argument targetmapping="C:\\TMP\\testMapping.gml" in der 
 		gmlweight-Task bewirkt, dass der Filter als GML an die angegebene Stelle
@@ -75,30 +75,30 @@
 
 		<property name="HOURS_OF_DAY" value="11" />
 
-		<gmlProperty gmlURL="${calc.url}/.calculation">
+		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
 			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast" />
 			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}" />
 			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}" />
-		</gmlProperty>
+		</kalypso.gmlProperty>
 
 		<echo message="Zeitreihen werden von WISKI geladen" />
 
-		<copyObservation gml="${calc.url}/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+		<kalypso.copyObservation gml="${calc.url}/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim_48}" />
-		</copyObservation>
+		</kalypso.copyObservation>
 
-		<copyObservation gml="${calc.url}/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+		<kalypso.copyObservation gml="${calc.url}/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" />
-		</copyObservation>
+		</kalypso.copyObservation>
 
-		<copyObservation gml="${calc.url}/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+		<kalypso.copyObservation gml="${calc.url}/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" />
-		</copyObservation>
+		</kalypso.copyObservation>
 
-		<copyObservation gml="${calc.url}/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+		<kalypso.copyObservation gml="${calc.url}/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
 			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim_48}" />
-		</copyObservation>
+		</kalypso.copyObservation>
 
 	</target>
 

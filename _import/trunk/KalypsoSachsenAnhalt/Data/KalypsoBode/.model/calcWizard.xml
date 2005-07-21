@@ -13,18 +13,17 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!-- 
-       Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsstationen.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="true"/> 
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="4"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="1"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
 		<!-- 
-        Ant-Knopf -->
-		<arg name="buttonText" value="NS -> NG"/>
-		<arg name="buttonTooltip" value="Gebietsniederschlagsmodell berechnen"/>
-		<arg name="buttonLaunch" value="niederschlagsmodell"/>
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -39,13 +38,22 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="8"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="2"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<!-- 
+        Ant-Knopf -->
+   	    <arg name="buttonText" value="Gebietsniederschlag berechnen"/>
+		<arg name="buttonTooltip" value="Gebietsniederschlag mittels Gebietsniederschlagsmodell berechnen"/>
+		<arg name="buttonLaunch" value="niederschlagsmodell"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
 	<!-- Wasserstand / Abfluss (Messung) -->
@@ -61,17 +69,22 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!-- 
-         Karte, Diagramm und Tabelle -->
+         Karte  -->
 		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_uh_Wendefurth.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="4"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="template"/>
+		<arg name="zmlTableTemplate" value=".templates/.wizard/Eingabepegel_uh_Wendefurth.ott"/>
 	</page>
 	<!-- Abgabe Speicher (Messung und Prognose) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -86,13 +99,17 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="8"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+		<!-- 
+         Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE UNTERHALB WENDEFURTH -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose unterhalb Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -107,18 +124,24 @@
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="0"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel_uh_Wendefurth.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="16"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
-		<arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<!-- 
+         Tabelle -->
+		<arg name="zmlTableShow" value="template"/>
+		<arg name="zmlTableTemplate" value=".templates/.wizard/Vorhersagepegel_uh_Wendefurth.ott"/>
 	</page>
 	<!-- ??? Seite auf der die gerechneten Speicheabgaben dargestellt werden (=2. Ergebnisseite)-->
 	<!-- ??? werden Abgaben in BAT 1 überhaupt gerechnet? -->
@@ -135,13 +158,17 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="32"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
 	<!-- Wasserstand / Abfluss (Messung) -->
@@ -157,17 +184,22 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/.wizard/Pegel_oh_Speicher.gmt"/>
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_oh_Speicher.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="64"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="template"/>
+		<arg name="zmlTableTemplate" value=".templates/.wizard/Eingabepegel_oh_Speicher.ott"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE OBERHALB SPEICHER -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose oberhalb Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -182,18 +214,24 @@
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="0"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
-		<arg name="mapTemplate" value=".templates/.wizard/Pegel_oh_Speicher.gmt"/>
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel_oh_Speicher.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="16"/>
+		<arg name="selectionID" value="128"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
-		<arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="timeserie2" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<!--
+        Tabelle -->
+		<arg name="zmlTableShow" value="template"/>
+		<arg name="zmlTableTemplate" value=".templates/.wizard/Vorhersagepegel_oh_Speicher.ott"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG ALLGEMEIN -->
 	<!-- Inhalt Speicher (Messung) -->
@@ -209,17 +247,21 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="256"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Inhalt"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- ??? ggf. wieder Titel anpassen -->
 	<!-- ??? nur Messung!!! Abgabe Speicher (Messung) -->
@@ -235,13 +277,17 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="512"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 3  -->
 	<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG  BAT 3 -->
@@ -258,13 +304,17 @@
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!--  
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2"/>
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="selectionID" value="1024"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
 	<!-- dies Seite gilt auch für Bat4/5, abgesehen von der Überschrift-->
@@ -280,19 +330,19 @@
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="0"/>
 		<!-- 
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="16"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="V"/>
-		<arg name="ignoreLabel1" value="Inhalt"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="selectionID" value="2048"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="diagDateAxis=d#diagValueAxis=w#nameColumn=Name#linkColumn=Zufluss_gerechnet"/>
+		<!-- 
+        Tabelle -->
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 4  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 4 -->
@@ -308,17 +358,21 @@
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="0"/>
 		<!-- 
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="16"/>
+		<arg name="selectionID" value="4096"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Inhalt"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
-		<arg name="timeserie1" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<!-- 
+        Tabelle -->
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 5  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT5 -->
@@ -334,17 +388,21 @@
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="0"/>
 		<!-- 
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="16"/>
+		<arg name="selectionID" value="8192"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Inhalt"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
-		<arg name="timeserie1" value="nameString=Messung - %axisname%#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=Vorhersage - %axisname%#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<!-- 
+        Tabelle -->
 	</page>
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -358,11 +416,13 @@
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="25"/>
 		<!-- 
-        Karte, Diagramm und Tabelle -->
+        Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="32"/>
+		<arg name="selectionID" value="16384"/>
+		<!--
+		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag"/>
 		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Rechnung#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
@@ -370,6 +430,8 @@
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
 		<!-- -->
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
