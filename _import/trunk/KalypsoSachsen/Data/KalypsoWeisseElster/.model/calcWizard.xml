@@ -4,26 +4,48 @@
 
 	<!-- Ansicht Ombrometer -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ansicht Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/Ombrometer.gmt"/>
+        <arg name="mapTemplate" value="project:.templates/calcCase/Ombrometer.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="1"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=name#linkColumn=N"/>   
         <arg name="maximizeMap" value="true"/>
-    	
     </page>
 
 	<!-- Ansicht Gebietsniederschläge -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Gebietsniederschlagsmodell - Kontrolle/Bearbeitung Niederschlag" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
+        <arg name="mapTemplate" value="project:.templates/calcCase/ezg.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
         <arg name="selectionID" value="2"/>
 		<arg name="timeserie1" value="nameColumn=inum#nameString=Gebietsniederschlag Teilgebiet %featureprop%#linkColumn=niederschlagZR"/>
        	<arg name="maximizeMap" value="true"/>
-    	<arg name="buttonText" value="Ombrometerdaten übernehmen"/>
+    	<arg name="buttonText" value="Ombrometer-Messung übernehmen"/>
 		<arg name="buttonTooltip" value="Ombrometer mittels Gebietsniederschlagsmodell übernehmen"/>
 		<arg name="buttonLaunch" value="kalypso.we.gebietsniederschlagsmodell"/>
+    </page>
+
+	<!-- Ansicht Temperatur -->
+    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ansicht Temperaturmessung" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value="project:.templates/calcCase/ObsT.gmt"/>
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="1"/>
+        <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=t#nameColumn=name#linkColumn=outObservationLink"/>   
+        <arg name="maximizeMap" value="true"/>
+    </page>
+
+	<!-- Ansicht Gebiets-Temperatur -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Gebietstemperaturmodell - Kontrolle/Bearbeitung Temperaturen" imageLocation="icons/calcwizard/kalypso32.gif" >
+        <arg name="mapTemplate" value="project:.templates/calcCase/ezg.gmt"/>
+        <arg name="mainSash" value="50"/>
+        <arg name="rightSash" value="50"/>
+        <arg name="selectionID" value="2"/>
+		<arg name="timeserie1" value="nameColumn=inum#nameString=Gebietstemperatur Teilgebiet %featureprop%#linkColumn=temperaturZR"/>
+       	<arg name="maximizeMap" value="true"/>
+    	<arg name="buttonText" value="Temperaturmessung übernehmen"/>
+		<arg name="buttonTooltip" value="gemessene Temperatur mittels Gebietstemperaturmodell übernehmen"/>
+		<arg name="buttonLaunch" value="kalypso.we.gebietstemperaturmodell"/>
     </page>
 
 <!-- zufluesse -->
@@ -96,7 +118,7 @@
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_1.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -118,7 +140,7 @@
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_2.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -140,7 +162,7 @@
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_3.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -164,7 +186,7 @@
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_4.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -186,7 +208,7 @@
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_5.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -208,7 +230,7 @@
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_6.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -229,7 +251,7 @@
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_7.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -250,7 +272,7 @@
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_8.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -272,7 +294,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_9.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -293,7 +315,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_10.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -314,7 +336,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_11.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -335,7 +357,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_12.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -356,7 +378,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_13.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -377,7 +399,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_14.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -398,7 +420,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_15.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -419,7 +441,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_16.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -441,7 +463,7 @@ pageTitle="Prognose Pegel Weida 9/17"
 		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_17.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="50"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>

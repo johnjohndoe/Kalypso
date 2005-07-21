@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5561992.500041803" left="4466161.820294509" right="4569189.679562358" top="5712746.499999909"/>
+    <layers active="ID_1">
+        <layer name="Observation" visible="true" featurePath="mappingMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href=".obsT.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="MappingObservation" ns1:actuate="onRequest" ns1:href="project:/.styles/observationMapping.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Teilgebiete" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="calcCase.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="Teilgebiete" ns3:actuate="onRequest" ns3:href="project:/.styles/teilgebiete.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+

@@ -14,36 +14,6 @@
         <echo message="calc url    ${calc.url}" />
     </target>
 
-    <!--
-	
-	Konzept N:
-
-	updateOmbrometer(I,U):
-						ombrometer von PSI-abholen
-						mit intervallfilter (TODO)
-						
-	updateMeassured(I,U):
-						gebietsniederschlagsmodell in berechnet.zml einfügen
-
-	fetchRaster(I,U):	Raster-datei in Rechenfall kopieren
-
-	updateForecast(I,U):		
-					  	Raster auslesen und in berechnet.zml einfügen
-						TODO: einfügen supporten
-						TODO: task bekommt intervallfilter mit
-	
-	Konzept T: wie Konzept für N, nur Vorhersage kommt aus template
-	
-	Konzept Zufluss:
-	messung:		abholen per ObsMapping.gml
-	vorhersage:	    abholen per ObsMapping.gml
-	
-	Konzept Pegel:
-	messung:		abholen per ObsMapping.gml
-	
-	TODO generell auch bei Ausfall richtige Achsen garantieren ! 
-		 z.b. jeweils bei messung leeres Template einbeziehen
-	-->
 
     <!-- 
 		 ================================= 
@@ -56,6 +26,8 @@
         <!-- copy modell -->
         <copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
         <copy file="${project.dir}/ombrometer.gml" tofile="${calc.dir}/ombrometer.gml" />
+        <copy file="${project.dir}/.model/observationConf/ObsTMapping.gml"
+              tofile="${calc.dir}/.obsT.gml" />
         <!-- copy others -->
         <copy todir="${calc.dir}">
             <fileset dir="${project.dir}/.templates/calcCase/copy"
@@ -79,7 +51,7 @@
                       featurepath="/"
                       featureProperty="startforecast"
                       dateoffset="${hoursofforecast}"
-                      dateoffsetfield="HOUR" />
+                      dateoffsetfield="HOUR_OF_DAY" />
         </kalypso.gmlProperty>
         <property name="dwdRasterRemoteURL" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
         <property name="dwdRasterLocalPath" value="${calc.dir}/dwd/lm_aktuell.txt" />
@@ -87,8 +59,8 @@
 
         <property name="interval.field" value="MINUTE" />
 
-        <echo message="intervall.field:  ${intervall.field}" />
-        <echo message="intervall.amount: ${interval.amount}" />
+        <echo message="interval.field:  ${interval.field}" />
+        <echo message="interval.amount: ${interval.amount}" />
 
         <!-- define the filters -->
         <!-- N: sum-filter -->
@@ -98,12 +70,19 @@
         <property name="filterWQ"
                   value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
         <!-- T: intensity/average-filter -->
+        <!-- Temperatur wird als Tageswert benötigt,
+             der hydrologische Tag geht von 7 Uhr bis 7 Uhr, denn
+			 manuelle Pegel werden um 7 Uhr morgens abgelesen -->
         <property name="intervalT.amount" value="1" />
-        <property name="intervalT.field" value="DATE" />
+        <property name="intervalT.field" value="HOUR_OF_DAY" />
+        <!--
+        <property name="intervalT.start.value" value="7" /> 
+        <property name="intervalT.start.field" value="HOUR_OF_DAY" />
+		-->
         <property name="filterT"
                   value="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${intervalT.amount}&quot; calendarField=&quot;${intervalT.field}&quot; mode=&quot;intensity&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
-
         <!-- die Filter im Klartext: 
+
 			filterN="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" 
 			<filter>
 				<intervallFilter amount="15" calendarField="MINUTE" mode="sum" xmlns="filters.zml.kalypso.org"/>
@@ -127,8 +106,6 @@
     <target name="updateOmbrometer" depends="setProperties">
         <!-- updateOmbrometer(I,U):
 						ombrometer von PSI-abholen						
-						TODO: intervallfilter
-						zum test erst ObsService neu deployen ??
 	     -->
         <echo message="aktualisiere Ombrometer Zeitreihen im Rechenfall" />
         <kalypso.copyObservation gml="${calc.url}/ombrometer.gml"
@@ -144,7 +121,7 @@
         </kalypso.copyObservation>
     </target>
 
-    <target name="updateMeasured" depends="setProperties">
+    <target name="updateMeasuredN" depends="setProperties">
         <!-- updateMeassured(I,U):
 						gebietsniederschlagsmodell in berechnet.zml einfügen
 		 -->
@@ -170,7 +147,7 @@
         <get dest="${dwdRasterLocalPath}" src="${dwdRasterRemoteURL}" />
     </target>
 
-    <target name="updateForecast" depends="setProperties">
+    <target name="updateForecastN" depends="setProperties">
         <!-- updateForecast(I,U):		
 					  	Raster auslesen und in berechnet.zml einfügen
 						TODO: teste generierte werte wenn keine DWD-Daten vorhanden
@@ -242,12 +219,69 @@
         </kalypso.copyObservation>
     </target>
 
+    <target name="updateObsT" depends="setProperties">
+        <echo message="aktualisiere Temperaturen (Messung)" />
+        <kalypso.copyObservation gml="${project.url}/.model/observationConf/ObsTMapping.gml"
+                                 featurePath="mappingMember"
+                                 context="${calc.url}"
+                                 targetObservation="outObservationLink"
+                                 forecastFrom="${startforecast}"
+                                 forecastTo="${stopsim}">
+            <source property="inObservationLink"
+                    from="${startsim}"
+                    to="${startforecast}"
+                    filter="${filterT}" />
+            <!-- Vorhersage übernehmen -->
+            <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+        </kalypso.copyObservation>
+    </target>
+
+    <target name="updateObsGebT" depends="setProperties">
+        <echo message="rechen Temperaturen (Messung) auf gebiete um" />
+        <kalypso.copyObservation gml="${project.url}/.model/observationConf/ObsTGebMapping.gml"
+                                 featurePath="mappingMember"
+                                 context="${calc.url}"
+                                 targetObservation="outObservationLink"
+                                 forecastFrom="${startforecast}"
+                                 forecastTo="${stopsim}">
+            <source property="inObservationLink" from="${startsim}" to="${startforecast}" />
+            <!-- Vorhersage übernehmen -->
+            <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+        </kalypso.copyObservation>
+    </target>
+
+    <target name="updateForecastT" depends="setProperties">
+        <!-- updateForecast(I,U):		
+    					  	Raster auslesen und in berechnet.zml einfügen
+    						TODO: teste generierte werte wenn keine DWD-Daten vorhanden
+    						TODO: setze vorhersagezeitraum
+    						DONE: einfügen supporten
+    						DONE: Statusachse generieren
+    						DONE: task bekommt intervallfilter mit 
+    						DONE: Zeitraum beachten
+    		 -->
+        <echo message="aktualisiere Gebietstemperaturen (Vorhersage aus DWD-Raster ${dwdRasterLocalURL} )" />
+        <kalypso.dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConfT.xml"
+                         obsrasterurl="${dwdRasterLocalURL}"
+                         targetcontext="${calc.dir}"
+                         description="raster zu zml"
+                         from="${startsim}"
+                         forecastfrom="${startforecast}"
+                         to="${stopsim}"
+                         zmlfilter="${filterT}" />
+    </target>
+
     <target name="updateAll"
-            depends="fetchRaster,updateForecast,updateOmbrometer,updateMeasured,updateZuflussMessung,updateZuflussVorhersage,updatePegelMessung"
+            depends="fetchRaster,updateForecastN,updateOmbrometer,updateMeasuredN,updateZuflussMessung,updateZuflussVorhersage,updatePegelMessung,updateObsT,updateForecastT,updateObsGebT"
             description="Aktualisiert eine Rechenvariante">
         <echo message="aktualisiere alle Zeitreihen: ${calc.dir}" />
     </target>
-    <!--	<target name="update" depends="updateOmbrometer,updateMeassured,fetchRaster,updateForecast" description="Aktualisiert eine Rechenvariante">-->
+
+    <target name="updateForecastNComplete"
+            depends="fetchRaster,updateForecastN"
+            description="Aktualisiert Vorhersage N von aktuellen DWD-Rasterdaten">
+    </target>
+
     <target name="update" depends="updateAll" description="Aktualisiert eine Rechenvariante">
         <echo message="aktualisiere Zeitreihen: ${calc.dir}" />
     </target>

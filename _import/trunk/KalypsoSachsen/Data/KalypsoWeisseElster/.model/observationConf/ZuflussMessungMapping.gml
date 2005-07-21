@@ -14,7 +14,7 @@
   </mappingMember>  
   
   <mappingMember>
-    <MappingObservation fid="MappingObservation1">
+    <MappingObservation fid="MappingObservation2">
       <gml:description/>
       <gml:name>Koberbach</gml:name>
       <inObservationLink>

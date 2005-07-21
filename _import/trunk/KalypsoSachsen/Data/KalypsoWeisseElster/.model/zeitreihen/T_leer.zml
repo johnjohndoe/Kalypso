@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>virtuelle Zeitreihe</name>
+    <metadataList>
+        <metadata name="Beschreibung" value="Platzhalter für fehlende T-Zeitreihen"/>
+        <metadata name="Name" value="Virtuelle T-Zeitreihe"/>
+    </metadataList>
+    <axis datatype="TYPE=integer" key="false" name="Status" type="kalypso-status" unit="">
+        <valueArray separator=";"></valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Temeratur" type="T" unit="°C">
+        <valueArray separator=";"></valueArray>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";"></valueArray>
+    </axis>
+</observation>
+
