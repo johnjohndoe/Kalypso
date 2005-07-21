@@ -16,9 +16,10 @@ import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilBuildingProperty;
-import com.bce.eind.core.profil.ProfilChange;
+import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.ProfilPointProperty;
+import com.bce.eind.core.profil.IPlainProfil.DeviderTyp;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
 import com.bce.eind.core.profil.impl.points.ProfilPoints;
 import com.bce.eind.core.profil.util.ProfilUtil;
@@ -61,6 +62,16 @@ public class PlainProfil implements IPlainProfil
       throws ProfilDataException
   {
     return m_points.addPoint( breite, hoehe );
+  }
+/*
+ * return true falls der Devider noch nicht an diesem Punkt existiert
+ * false wenn dort schon einer ist oder ein Fehler
+ * @see com.bce.eind.core.profil.IPlainProfil#addDevider(com.bce.eind.core.profil.IProfilPoint, com.bce.eind.core.profil.IPlainProfil.DeviderTyp)
+ */
+  public boolean addDevider( IProfilPoint point, DeviderTyp devider )
+  {
+    // TODO Auto-generated method stub
+    return false;
   }
 
   /**
@@ -206,13 +217,14 @@ public class PlainProfil implements IPlainProfil
    */
   public IProfilPoint getNextPoint( final IProfilPoint point ) throws ProfilDataException
   {
-    if( !m_points.contains( point ) )
+    final ProfilPoints points = m_points;
+    if( !points.contains( point ) )
       throw new ProfilDataException( "Punkt existiert nicht" );
 
-    if( point == m_points.getLast() )
+    if( point == points.getLast() )
       return null;
 
-    final ListIterator<IProfilPoint> ptIt = m_points.listIterator( m_points.indexOf( point ) + 1 );
+    final ListIterator<IProfilPoint> ptIt = points.listIterator( points.indexOf( point ) + 1 );
 
     return ptIt.next();
   }
@@ -220,10 +232,10 @@ public class PlainProfil implements IPlainProfil
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getPoint(double, double)
    */
-  public IProfilPoint getPoint( final double breite, final double hoehe )
+ /* public IProfilPoint getPoint( final double breite, final double hoehe )
   {
     return m_points.getPoint( breite, hoehe );
-  }
+  }*/
 
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getPoint(int)
@@ -409,6 +421,7 @@ public class PlainProfil implements IPlainProfil
   public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
       throws ProfilDataException
   {
+    // TODO: check, ob properties passen
     return m_points.insertPoint( thePointBefore, point );
   }
 
@@ -614,18 +627,18 @@ public class PlainProfil implements IPlainProfil
   private void setValueFor( final IProfilPoint point, final ProfilPointProperty pointProperty,
       final double value ) throws ProfilDataException
   {
-    setValues( new ProfilChange[]
-    { new ProfilChange( point, pointProperty, value ) } );
+    setValues( new PointChange[]
+    { new PointChange( point, pointProperty, value ) } );
   }
 
   private void setValuesFor( final List<IProfilPoint> pointList, ProfilPointProperty pointProperty,
       double value ) throws ProfilDataException
   {
-    final List<ProfilChange> changes = new ArrayList<ProfilChange>( pointList.size() );
+    final List<PointChange> changes = new ArrayList<PointChange>( pointList.size() );
     for( final IProfilPoint point : pointList )
-      changes.add( new ProfilChange( point, pointProperty, value ) );
+      changes.add( new PointChange( point, pointProperty, value ) );
 
-    setValues( changes.toArray( new ProfilChange[changes.size()] ) );
+    setValues( changes.toArray( new PointChange[changes.size()] ) );
   }
 
   /**
@@ -680,9 +693,9 @@ public class PlainProfil implements IPlainProfil
     return pkt;
   }
 
-  public void setValues( final ProfilChange[] changes ) throws ProfilDataException
+  public void setValues( final PointChange[] changes ) throws ProfilDataException
   {
-    for( final ProfilChange change : changes )
+    for( final PointChange change : changes )
     {
       final IProfilPoint point = change.getPoint();
       if( !profilPointExists( point ) )

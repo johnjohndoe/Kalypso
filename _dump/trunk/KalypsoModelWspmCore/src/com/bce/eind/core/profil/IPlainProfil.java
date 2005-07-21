@@ -10,9 +10,12 @@ public interface IPlainProfil
 {
   public static enum BUILDING_TYP
   {
-    NONE, BRUECKE, EI, KREIS, MAUL, TRAPEZ;
+    NONE, BRUECKE, EI, KREIS, MAUL, TRAPEZ, WEHR;
   }
-
+  public static enum DeviderTyp
+  {
+    WEHR,TRENNFLAECHE,DURCHSTROMTE,BORDVOLL;
+  }
   public static enum METADATA
   {
     KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
@@ -42,7 +45,7 @@ public interface IPlainProfil
       throws ProfilDataException;
 
   public void addUnknownObject( final Object unknownData );
-
+public boolean addDevider(IProfilPoint point,DeviderTyp devider);
   public String getComment( );
 
   public IProfilPoint getDevider( final DeviderKey deviderKey );
@@ -51,7 +54,7 @@ public interface IPlainProfil
 
   public IProfilPoint getNextPoint( IProfilPoint point ) throws ProfilDataException;
 
-  public IProfilPoint getPoint( final double breite, final double hoehe );
+ // public IProfilPoint getPoint( final double breite, final double hoehe );
 
   public IProfilPoint getPoint( final int index );
 
@@ -129,7 +132,7 @@ public interface IPlainProfil
 
   public void setRauheitTyp( final RAUHEITEN_TYP r );
 
-  public void setValues( final ProfilChange[] changes ) throws ProfilDataException;
+  public void setValues( final PointChange[] changes ) throws ProfilDataException;
 
   public void editBuilding( final ProfilBuildingProperty buildingProperty, final double value )
       throws ProfilBuildingException;

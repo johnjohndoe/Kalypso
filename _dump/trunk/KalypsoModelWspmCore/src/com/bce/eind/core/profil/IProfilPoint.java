@@ -30,5 +30,5 @@ public interface IProfilPoint
   public Collection<ProfilPointProperty> getProperties( );
 
   /** Kim: Doc */
-  public boolean isPosition( final double breite, final double hoehe ) throws ProfilDataException;
+ // public boolean isPosition( final double breite, final double hoehe ) throws ProfilDataException;
 }

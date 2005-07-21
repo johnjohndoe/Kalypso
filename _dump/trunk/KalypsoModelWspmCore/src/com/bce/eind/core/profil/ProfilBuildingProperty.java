@@ -28,6 +28,10 @@ public class ProfilBuildingProperty
   public final static ProfilBuildingProperty UNTERWASSER = new ProfilBuildingProperty(
       "Unterwasser [NN+m]", "Höhe der Gewässersohle im Unterwasser" );
 
+  public final static ProfilBuildingProperty WEHRART = new ProfilBuildingProperty(
+      "Wehrart", "Form der Wehrkrone" );
+  
+    
   private final String m_label;
 
   private final String m_tooltip;

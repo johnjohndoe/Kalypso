@@ -106,7 +106,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return point;
   }
 
-  public final IProfilPoint getPoint( final double breite, final double hoehe )
+  /*public final IProfilPoint getPoint( final double breite, final double hoehe )
   {
     for( final Iterator<IProfilPoint> ptIt = this.iterator(); ptIt.hasNext(); )
     {
@@ -122,7 +122,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
       }
     }
     return null;
-  }
+  }*/
 
   public final boolean removePoint( final IProfilPoint point )
   {

@@ -1,5 +1,7 @@
 package com.bce.eind.core.profil;
 
+import com.bce.eind.core.profil.IPlainProfil.DeviderTyp;
+
 
 /**
  * @author Belger
@@ -7,7 +9,7 @@ package com.bce.eind.core.profil;
 public interface IProfilListener
 {
   /** Wird aufgerufen, wenn sich ein oder mehrere Werte eines Punktes geändert haben */
-  public void onPointValuesChanged( final ProfilChange[] changes );
+  public void onPointValuesChanged( final PointChange[] changes );
 
   public void onPointsAdded( final IProfilPoint[] newPoints );
   
@@ -24,4 +26,6 @@ public interface IProfilListener
   public void onMetaDataChanged( final IProfil.METADATA metadata, final Object value );
   
   public void onCommentChanged();
+  
+  public void onDeviderChanged( final IProfilPoint point, final DeviderTyp devider );
 }

@@ -92,7 +92,7 @@ public class ProfilPoint implements IProfilPoint
     return true;
   }
 
-  public final boolean isPosition( final double breite, final double hoehe )
+ /* public final boolean isPosition( final double breite, final double hoehe )
       throws ProfilDataException
   {
     final int breitePrecision = ProfilPointProperty.BREITE.getPrecision();
@@ -101,5 +101,5 @@ public class ProfilPoint implements IProfilPoint
     final double deltaB = Math.abs( this.getValueFor( ProfilPointProperty.BREITE ) - breite );
     final double deltaH = Math.abs( this.getValueFor( ProfilPointProperty.HOEHE ) - hoehe );
     return ((deltaB < Math.exp( -breitePrecision )) & (deltaH < Math.exp( -hoehePrecision )));
-  }
+  }*/
 }

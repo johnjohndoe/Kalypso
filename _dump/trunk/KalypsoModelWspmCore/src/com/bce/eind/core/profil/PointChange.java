@@ -1,6 +1,6 @@
 package com.bce.eind.core.profil;
 
-public final class ProfilChange
+public final class PointChange
 {
   private final IProfilPoint m_point;
 
@@ -8,7 +8,7 @@ public final class ProfilChange
 
   private final double m_newValue;
 
-  public ProfilChange( final IProfilPoint p, final ProfilPointProperty column, final double newValue )
+  public PointChange( final IProfilPoint p, final ProfilPointProperty column, final double newValue )
   {
     m_point = p;
     m_column = column;

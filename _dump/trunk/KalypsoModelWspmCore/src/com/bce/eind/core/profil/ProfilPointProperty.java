@@ -44,7 +44,10 @@ public class ProfilPointProperty
 
   public final static ProfilPointProperty OBERKANTEBRUECKE = new ProfilPointProperty(
       "Brückenoberkante", true, true, false,true, 4 );
-
+  
+  public final static ProfilPointProperty OBERKANTEWEHR = new ProfilPointProperty(
+      "Wehr", true, true, false,true, 4 );
+  
   public final static ProfilPointProperty HOEHE = new ProfilPointProperty( "Geländehöhe", false, true,
       true,true, 4 );
 

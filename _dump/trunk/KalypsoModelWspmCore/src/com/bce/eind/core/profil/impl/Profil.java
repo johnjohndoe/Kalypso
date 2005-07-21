@@ -11,7 +11,7 @@ import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilBuildingProperty;
-import com.bce.eind.core.profil.ProfilChange;
+import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.ProfilPointProperty;
 
@@ -103,10 +103,10 @@ public class Profil implements IProfil
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getPoint(double, double)
    */
-  public IProfilPoint getPoint( final double breite, final double hoehe )
+ /* public IProfilPoint getPoint( final double breite, final double hoehe )
   {
     return m_profil.getPoint( breite, hoehe );
-  }
+  }*/
 
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getPoint(int)
@@ -393,18 +393,18 @@ public class Profil implements IProfil
   public void setValueFor( final IProfilPoint point, final ProfilPointProperty pointProperty,
       final double value ) throws ProfilDataException
   {
-    setValues( new ProfilChange[]
-    { new ProfilChange( point, pointProperty, value ) } );
+    setValues( new PointChange[]
+    { new PointChange( point, pointProperty, value ) } );
   }
 
   public void setValuesFor( final List<IProfilPoint> pointList, ProfilPointProperty pointProperty,
       double value ) throws ProfilDataException
   {
-    final List<ProfilChange> changes = new ArrayList<ProfilChange>( pointList.size() );
+    final List<PointChange> changes = new ArrayList<PointChange>( pointList.size() );
     for( final IProfilPoint point : pointList )
-      changes.add( new ProfilChange( point, pointProperty, value ) );
+      changes.add( new PointChange( point, pointProperty, value ) );
 
-    setValues( changes.toArray( new ProfilChange[changes.size()] ) );
+    setValues( changes.toArray( new PointChange[changes.size()] ) );
   }
 
   public void editBuilding( final ProfilBuildingProperty buildingProperty, final double value )
@@ -424,7 +424,7 @@ public class Profil implements IProfil
     return m_profil.getPointNearBy( breite,delta );
   }
   /** Interne Methode die wirklich die Daten ändert. Schickt KEINEN event ! */
-  public void setValues( final ProfilChange[] changes ) throws ProfilDataException
+  public void setValues( final PointChange[] changes ) throws ProfilDataException
   {
     m_profil.setValues( changes );
 
@@ -506,11 +506,27 @@ public class Profil implements IProfil
       l.onPointsRemoved( removedPoints );
   }
 
-  public void firePointValuesChanged( final ProfilChange[] changes )
+  public void fireDeviderChanged( final IProfilPoint point, final DeviderTyp devider )
+  {
+    final IProfilListener[] listeners = m_listeners
+        .toArray( new IProfilListener[m_listeners.size()] );
+    for( final IProfilListener l : listeners )
+      l.onDeviderChanged(point,devider);
+  }
+  public void firePointValuesChanged( final PointChange[] changes )
   {
     final IProfilListener[] listeners = m_listeners
         .toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener l : listeners )
       l.onPointValuesChanged( changes );
+  }
+
+  public boolean addDevider( IProfilPoint point, DeviderTyp devider )
+  {
+
+    final boolean result = m_profil.addDevider(point,devider);
+    fireDeviderChanged( point,devider );
+    return result;
+
   }
 }

@@ -1,5 +1,6 @@
 package com.bce.eind.core.profil;
 
+import com.bce.eind.core.profil.IPlainProfil.DeviderTyp;
 import com.bce.eind.core.profil.IPlainProfil.METADATA;
 
 /**
@@ -8,12 +9,24 @@ import com.bce.eind.core.profil.IPlainProfil.METADATA;
  */
 public class ProfilAdapter implements IProfilListener
 {
+  
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointValuesChanged(com.bce.eind.core.profil.ProfilChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.PointChange[])
    */
-  public void onPointValuesChanged( ProfilChange[] changes )
+ 
+  public void onDeviderChanged( IProfilPoint point, DeviderTyp devider )
+  {
+     
+  }
+
+  /**
+   * Does nothing.
+   * 
+   * @see com.bce.eind.core.profil.IProfilListener#onPointValuesChanged(com.bce.eind.core.profil.PointChange[])
+   */
+  public void onPointValuesChanged( PointChange[] changes )
   {
   }
 
