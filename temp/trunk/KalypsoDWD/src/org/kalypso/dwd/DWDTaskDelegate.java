@@ -30,7 +30,9 @@
 package org.kalypso.dwd;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
@@ -174,24 +176,23 @@ public class DWDTaskDelegate
         try
         {
           targetObservation = ZmlFactory.parseXML( sourceURL, title );
-//          IAxis dAxis = ObservationUtilities.findAxisByClass(targetObservation.getAxisList(), Date.class);
-//          ITuppleModel mValues = targetObservation.getValues(null);
-//          System.out.println(mValues.getRangeFor(dAxis)+" (measured)");
+          //          IAxis dAxis = ObservationUtilities.findAxisByClass(targetObservation.getAxisList(), Date.class);
+          //          ITuppleModel mValues = targetObservation.getValues(null);
+          //          System.out.println(mValues.getRangeFor(dAxis)+" (measured)");
         }
         catch( Exception e )
         {
           // nothing
         }
-        ITuppleModel fValues = forecastObservation.getValues(null);
-//        System.out.println(fValues.getRangeFor(dateAxis)+" (forecast)");
+        //        ITuppleModel fValues = forecastObservation.getValues(null);
+        //        System.out.println(fValues.getRangeFor(dateAxis)+" (forecast)");
         final ForecastFilter fc = new ForecastFilter();
         final IObservation[] srcObs;
         if( targetObservation != null )
           srcObs = new IObservation[]
           {
-              targetObservation
-              ,forecastObservation
-              };
+              targetObservation,
+              forecastObservation };
         else
           srcObs = new IObservation[]
           { forecastObservation };
@@ -203,10 +204,11 @@ public class DWDTaskDelegate
         final Marshaller marshaller = ZmlFactory.getMarshaller();
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
-        final FileWriter writer = new FileWriter( resultFile );
+        final FileOutputStream fileWriter = new FileOutputStream( resultFile );
+        final OutputStreamWriter streamWriter = new OutputStreamWriter( fileWriter, "UTF-8" );
         try
         {
-          marshaller.marshal( observationType, writer );
+          marshaller.marshal( observationType, streamWriter );
         }
         catch( Exception e )
         {
@@ -214,7 +216,8 @@ public class DWDTaskDelegate
         }
         finally
         {
-          IOUtils.closeQuietly( writer );
+          IOUtils.closeQuietly( streamWriter );
+          IOUtils.closeQuietly( fileWriter );
         }
       }
       catch( Exception e )
