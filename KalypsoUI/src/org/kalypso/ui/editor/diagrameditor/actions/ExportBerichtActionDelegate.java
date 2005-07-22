@@ -68,6 +68,7 @@ public class ExportBerichtActionDelegate extends AbstractExportActionDelegate
     final ExportableChart exportableChart = new ExportableChart( editor.getChart(), ExportableChart.EXT_JPEG, width,
         height );
 
-    runExportAction( ExportBerichtWizard.class, exportableChart, editor.getSite().getShell() );
+    // TODO
+    //runExportAction( ExportBerichtWizard.class, exportableChart, editor.getSite().getShell() );
   }
 }
