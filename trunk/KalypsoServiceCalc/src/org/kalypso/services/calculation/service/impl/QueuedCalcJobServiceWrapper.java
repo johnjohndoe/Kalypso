@@ -124,7 +124,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     {
       final URL confLocation = ServiceConfig.getConfLocation();
       final URL myConfUrl = UrlResolverSingleton.resolveUrl( confLocation, ClassUtilities
-          .getOnlyClassName( ICalculationService.class ) );
+          .getOnlyClassName( ICalculationService.class ) + "/" );
 
       // Konfiguration der Modelltypen
       final URL typeUrl = UrlResolverSingleton.resolveUrl( myConfUrl, "modelltypen.properties" );

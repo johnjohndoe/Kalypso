@@ -43,14 +43,18 @@ package org.kalypso.ui.editor.diagrameditor;
 import java.awt.Frame;
 import java.io.OutputStreamWriter;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
@@ -63,7 +67,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
  * 
  * @author schlienger
  */
-public class ObservationDiagramEditor extends AbstractObservationEditor
+public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory
 {
   protected Frame m_diagFrame = null;
 
@@ -74,6 +78,17 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
   public ObservationDiagramEditor()
   {
     super( new DiagView( true ) );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   */
+  public void dispose()
+  {
+    if( m_obsChart != null )
+      m_obsChart.dispose();
+
+    super.dispose();
   }
 
   /**
@@ -104,14 +119,14 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
    */
-  public void dispose()
+  public Object getAdapter( final Class adapter )
   {
-    if( m_obsChart != null )
-      m_obsChart.dispose();
-
-    super.dispose();
+    if( adapter == IExportableObject.class )
+      return this;
+    
+    return super.getAdapter( adapter );
   }
 
   /**
@@ -152,5 +167,21 @@ public class ObservationDiagramEditor extends AbstractObservationEditor
   {
     if( m_swingContainer != null )
       m_swingContainer.setFocus();
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   */
+  public IExportableObject[] createExportableObjects( final Configuration conf )
+  {
+    return new IExportableObject[] {  };
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.apache.commons.configuration.Configuration)
+   */
+  public IWizardPage[] createWizardPages( final Configuration configuration )
+  {
+    return new IWizardPage[] {};
   }
 }
