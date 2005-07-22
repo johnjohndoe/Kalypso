@@ -152,17 +152,21 @@ Monika:
 2) Welche Modelle werden verwendet?
 -Bode
 	Wasserlaufmodell, NA-Modell, Talsperrenmodelle 
-	Probleme: viele Batch-Dateien (Rechendienst implentierung? - in control Batch-Vorgang gesteuert)
+	Probleme: Batch-Dateien, EXE-Dateien (viele), Parameter- und Daten-Dateien liegen alle 
+	          in einem Verzeichnis. Damit ist das Modell sehr unübersichtlich und schwer
+	          nachvollziehbar. 
+	     
 
 -Ilse
 	NA-Modell
 	gleiches Modell wie Bode ohne Speicher, Wasserlaufmodell (kleine Schwester)
 
 3) Code
-	KalypsoBodePlugin
+	KalypsoTubigPlugin
 
 4) Erforderliche Überarbeitung von vorhandenem Code 
 	Wizard
+	Umrechnung Niederschlag (Ombrometer -> Gebietsniederschlag)
 
 5) Anwender
 	Sachsen-Anhalt
