@@ -70,6 +70,8 @@ public class WQTuppleModel extends AbstractTuppleModel
 
   /** source axis from the underlying model */
   private final IAxis m_srcAxis;
+  
+  /** source-status axis from the underlying model [Important: this one is optional and can be null] */
   private final IAxis m_srcStatusAxis;
 
   /** generated axis */
@@ -100,7 +102,7 @@ public class WQTuppleModel extends AbstractTuppleModel
    * @param srcAxis
    *          source axis from which values are read
    * @param srcStatusAxis
-   *          source status axis
+   *          source status axis [optional, can be null]
    * @param destAxis
    *          destination axis for which values are computed
    * @param destStatusAxis
@@ -249,7 +251,8 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
 
       m_model.setElement( index, value, m_srcAxis );
-      m_model.setElement( index, status, m_srcStatusAxis );
+      if( m_srcStatusAxis != null )
+        m_model.setElement( index, status, m_srcStatusAxis );
     }
     else
     {
