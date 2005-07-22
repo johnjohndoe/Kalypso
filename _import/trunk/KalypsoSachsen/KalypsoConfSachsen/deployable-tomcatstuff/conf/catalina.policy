@@ -145,6 +145,9 @@ grant {
 	
 	permission java.util.logging.LoggingPermission "control";
 
+	// Services (Zugriff auf das Konfigurationsverzeichnis)
+	permission java.net.SocketPermission "lfug-kv-01", "connect,resolve";
+
 	// PSICompact...
 	permission java.util.PropertyPermission "*", "read,write";
 	permission java.net.SocketPermission "localhost", "resolve";
