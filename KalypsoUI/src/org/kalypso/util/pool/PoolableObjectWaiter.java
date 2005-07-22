@@ -53,14 +53,17 @@ public abstract class PoolableObjectWaiter implements IPoolListener
 
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-    if( newValue != null && status.isOK() )
-      objectLoaded( key, newValue );
-    else
+    try
     {
-      // TODO error handling!
+      if( newValue != null && status.isOK() )
+        objectLoaded( key, newValue );
     }
-
-    dispose();
+    // what happens if objectLoaded throws an exception?
+    // set status?
+    finally
+    {
+      dispose();
+    }
   }
 
   /**

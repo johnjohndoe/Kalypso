@@ -4,6 +4,7 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -117,9 +118,9 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
           final ObstableviewType baseTemplate = TableViewUtils.loadTableTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Vorlage: " + storage.getName(),
-              null );
-          TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false, status );
+          final IStatus[] stati = TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false );
+          new MultiStatus( KalypsoGisPlugin.getId(), 0, stati, "Vorlage: " + storage.getName(), null );
+          // TODO: show error message if something goes wrong (i.e. one of the multi-status is not ok)
         }
       }
     }
