@@ -40,18 +40,23 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.kalypso.ui.metadoc.IExportableDocument;
+import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * ExportableChart
  * 
  * @author schlienger
  */
-public class ExportableChart implements IExportableDocument
+public class ExportableChart implements IExportableObject
 {
   public final static String EXT_JPEG = ".jpg";
 
@@ -74,23 +79,32 @@ public class ExportableChart implements IExportableDocument
   }
 
   /**
-   * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
+   * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public void exportDocument( final OutputStream outs ) throws Exception
+  public String getPreferredDocumentName()
   {
-    if( m_fileExt.equalsIgnoreCase( EXT_JPEG ) )
-      ChartUtilities.writeChartAsJPEG( outs, m_chart, m_width, m_height );
-    else if( m_fileExt.equalsIgnoreCase( EXT_PNG ) )
-      ChartUtilities.writeChartAsPNG( outs, m_chart, m_width, m_height );
-    else
-      throw new IllegalStateException( "File extension not supported: " + m_fileExt );
+    return m_chart.getTitle() + m_fileExt;
   }
 
   /**
-   * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
+   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public String getDocumentExtension()
+  public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor )
   {
-    return m_fileExt;
+    try
+    {
+      if( m_fileExt.equalsIgnoreCase( EXT_JPEG ) )
+        ChartUtilities.writeChartAsJPEG( outs, m_chart, m_width, m_height );
+      else if( m_fileExt.equalsIgnoreCase( EXT_PNG ) )
+        ChartUtilities.writeChartAsPNG( outs, m_chart, m_width, m_height );
+      else
+        return KalypsoGisPlugin.createErrorStatus( "File extension not supported: " + m_fileExt, null );
+    }
+    catch( final IOException e )
+    {
+      return KalypsoGisPlugin.createErrorStatus( "Diagramm konnte nicht als Bild exportiert werden", e );
+    }
+
+    return Status.OK_STATUS;
   }
 }

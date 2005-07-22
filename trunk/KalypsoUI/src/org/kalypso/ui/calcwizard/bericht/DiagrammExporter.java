@@ -50,6 +50,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
@@ -114,7 +115,7 @@ public class DiagrammExporter extends AbstractBerichtExporter
       chart = new ObservationChart( tpl );
       chart.setBackgroundPaint( Color.WHITE );
 
-      new ExportableChart( chart, EXT, width, height ).exportDocument( os );
+      new ExportableChart( chart, EXT, width, height ).exportObject( os, new NullProgressMonitor() );
 
       return result;
     }
