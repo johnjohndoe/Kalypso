@@ -68,7 +68,8 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     m_view = view;
     m_name = name;
     m_observation = obsProvider.getObservation();
-    m_observation.addListener( this );
+    if( m_observation != null )
+      m_observation.addListener( this );
     obsProvider.addListener( this );
   }
 

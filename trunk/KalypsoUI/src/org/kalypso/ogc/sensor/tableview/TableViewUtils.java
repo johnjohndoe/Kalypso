@@ -45,6 +45,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
@@ -258,16 +259,8 @@ public class TableViewUtils
     return xmlTemplate;
   }
 
-  /**
-   * 
-   * @param view
-   * @param xml
-   * @param context
-   * @param synchron
-   * @param status All errors are added to this multi status
-   */
-  public static void applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
-      final boolean synchron, final MultiStatus status )
+  public static IStatus[] applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
+      final boolean synchron )
   {
     view.removeAllItems();
 
@@ -282,6 +275,7 @@ public class TableViewUtils
     }
 
     final List list = xml.getObservation();
+    final List stati = new ArrayList();
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation)it.next();
@@ -290,15 +284,16 @@ public class TableViewUtils
       try
       {
         loader = new TableViewColumnXMLLoader( view, tobs, context, synchron );
-        status.add( loader.getResult() );
+        stati.add( loader.getResult() );
       }
       catch( final Throwable e )
       {
         e.printStackTrace();
 
-        status.add( KalypsoGisPlugin.createErrorStatus( "Zeitreihe konnte nicht geladen werden", e ) );
+        stati.add( KalypsoGisPlugin.createErrorStatus( "Zeitreihe konnte nicht geladen werden", e ) );
       }
-
     }
+    
+    return (IStatus[])stati.toArray( new IStatus[stati.size()] );
   }
 }
