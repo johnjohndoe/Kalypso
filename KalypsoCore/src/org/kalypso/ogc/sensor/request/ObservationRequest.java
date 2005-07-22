@@ -172,7 +172,7 @@ public class ObservationRequest implements IRequest
     else
       axisTypesWithStatus = StringUtils.split( requestType.getStatusAxes(), ',' );
 
-    final String name = requestType.getName() != null ? requestType.getName() : "<unbekannt>";
+    final String name = requestType.getName() != null ? requestType.getName() : "unbekannt";
     
     return new ObservationRequest( dr, name, axisTypes, axisTypesWithStatus );
   }

@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.io.StringReader;
+import java.util.NoSuchElementException;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -115,7 +116,15 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     final String unit = TimeserieUtils.getUnit( m_proxyAxisType );
 
     m_srcAxis = ObservationUtilities.findAxisByType( axes, m_realAxisType );
-    m_srcStatusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, m_srcAxis );
+    try
+    {
+      m_srcStatusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, m_srcAxis );
+    }
+    catch( final NoSuchElementException ignored )
+    {
+      // this exception is ignored since the source-status axis is optional
+    }
+    
     m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class, false, false );
     m_axes[m_axes.length - 2] = m_destAxis;
 
