@@ -149,7 +149,7 @@ public class TubigConst
       + System.getProperty( "line.separator" ) + "Es werden keine Ergebnis-Dateien übertragen.";
 
   // ist betriebssystemabhängig...(z. B. für Windows 95/98
-  // "command.com / c ") und wir für das Starten von BODESTEU.EXE
+  // "command.com / c ") und wird für das Starten von BODESTEU.EXE
   // benötigt, das ein 16-Bit-Programm ist.
   public static final String START_IN_CMD = "cmd /c ";
 
@@ -157,7 +157,7 @@ public class TubigConst
   public static final String CALCJOB_SPEC = "tubigcalcjob_spec.xml";
 
   // Timeout bei Batch-Ausführung ([ms])
-  public static final int BAT_TIMEOUT = 10000;
+  public static final int BAT_TIMEOUT = 600000;
 
   public TubigConst()
   {

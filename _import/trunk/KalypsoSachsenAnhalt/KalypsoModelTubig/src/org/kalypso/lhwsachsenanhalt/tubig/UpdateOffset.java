@@ -44,6 +44,7 @@ public class UpdateOffset
   {
     super();
 
+    // Benutze Type-Handler
     //    Feature f;
     //    IObservation obs;
     //    
