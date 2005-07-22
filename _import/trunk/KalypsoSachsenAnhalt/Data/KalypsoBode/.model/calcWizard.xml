@@ -11,7 +11,7 @@
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="60"/>
 		<!-- 
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsstationen.gmt"/>
@@ -20,6 +20,7 @@
 		<arg name="selectionID" value="1"/>
 		<!--
 		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
 		<!-- 
         Tabelle -->
@@ -45,6 +46,7 @@
 		<arg name="selectionID" value="2"/>
 		<!--
 		Diagramm -->
+	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
@@ -76,6 +78,7 @@
 		<arg name="selectionID" value="4"/>
 		<!--
 		Diagramm -->
+	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -97,7 +100,7 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="60"/>
 		<!--  
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
@@ -106,6 +109,7 @@
 		<arg name="selectionID" value="8"/>
 		<!--
 		Diagramm -->
+	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
 		<!-- 
          Tabelle -->
@@ -142,6 +146,11 @@
          Tabelle -->
 		<arg name="zmlTableShow" value="template"/>
 		<arg name="zmlTableTemplate" value=".templates/.wizard/Vorhersagepegel_uh_Wendefurth.ott"/>
+		<!-- 
+        Ant-Knopf für Berechnung -->
+   	    <arg name="buttonText" value="Q-Prognose uh. Wendefurth"/>
+		<arg name="buttonTooltip" value="Abfluss-Prognose unterhalb Wendefurth"/>
+		<arg name="buttonLaunch" value="runCalculation"/>
 	</page>
 	<!-- ??? Seite auf der die gerechneten Speicheabgaben dargestellt werden (=2. Ergebnisseite)-->
 	<!-- ??? werden Abgaben in BAT 1 überhaupt gerechnet? -->
@@ -156,7 +165,7 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="60"/>
 		<!--  
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
@@ -165,6 +174,7 @@
 		<arg name="selectionID" value="32"/>
 		<!--
 		Diagramm -->
+	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
 		<!-- 
         Tabelle -->
@@ -191,6 +201,7 @@
 		<arg name="selectionID" value="64"/>
 		<!--
 		Diagramm -->
+	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -232,6 +243,11 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="template"/>
 		<arg name="zmlTableTemplate" value=".templates/.wizard/Vorhersagepegel_oh_Speicher.ott"/>
+		<!-- 
+        Ant-Knopf für Berechnung -->
+   	    <arg name="buttonText" value="Q-Prognose oh. Speicher"/>
+		<arg name="buttonTooltip" value="Abfluss-Prognose oberhalb Speicher"/>
+		<arg name="buttonLaunch" value="runCalculation"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG ALLGEMEIN -->
 	<!-- Inhalt Speicher (Messung) -->
@@ -254,6 +270,7 @@
 		<arg name="selectionID" value="256"/>
 		<!--
 		Diagramm -->
+	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
@@ -275,7 +292,7 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="60"/>
 		<!--  
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
@@ -284,6 +301,7 @@
 		<arg name="selectionID" value="512"/>
 		<!--
 		Diagramm -->
+	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
 		<!-- 
         Tabelle -->
@@ -302,7 +320,7 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="60"/>
 		<!--  
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
@@ -311,6 +329,7 @@
 		<arg name="selectionID" value="1024"/>
 		<!--
 		Diagramm -->
+	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
 		<!-- 
         Tabelle -->
@@ -347,6 +366,11 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
+		<!-- 
+        Ant-Knopf für Berechnung -->
+   	    <arg name="buttonText" value="Speicherrechnung"/>
+		<arg name="buttonTooltip" value="Speicherrechnung bei Vorgabe der Abgaben"/>
+		<arg name="buttonLaunch" value="runCalculation"/>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 4  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 4 -->
@@ -379,6 +403,11 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
+		<!-- 
+        Ant-Knopf für Berechnung -->
+   	    <arg name="buttonText" value="TS-Steuerung ohne Optim."/>
+		<arg name="buttonTooltip" value="TS-Steuerung ohne Optimierung"/>
+		<arg name="buttonLaunch" value="runCalculation"/>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 5  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT5 -->
@@ -411,6 +440,11 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
+		<!-- 
+        Ant-Knopf für Berechnung -->
+   	    <arg name="buttonText" value="TS-Steuerung mit Optim."/>
+		<arg name="buttonTooltip" value="TS-Steuerung mit Optimierung"/>
+		<arg name="buttonLaunch" value="runCalculation"/>
 	</page>
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">
