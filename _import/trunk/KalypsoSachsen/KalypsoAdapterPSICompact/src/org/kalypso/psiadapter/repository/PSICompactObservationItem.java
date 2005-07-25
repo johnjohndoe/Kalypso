@@ -316,6 +316,7 @@ public class PSICompactObservationItem implements IObservation
     {
       try
       {
+        // TODO untere und obere Umhüllende setzen
         PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(),
             model.getData()[0].getTimestamp(), model.getData() );
 

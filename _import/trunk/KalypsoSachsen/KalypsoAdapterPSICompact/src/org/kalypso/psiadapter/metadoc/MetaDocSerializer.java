@@ -13,6 +13,11 @@ import org.kalypso.metadoc.IMetaDocCommiter;
 /**
  * MetaDocSerializer
  * 
+ * Changes:
+ * <ul>
+ * <li>Changed Tagname for LHVZINTERN from "LHWZ-intern" to "LHWZIntern" (email from Büttner, 04.05.2005)
+ * </ul>
+ * 
  * @author schlienger
  */
 public class MetaDocSerializer
@@ -20,35 +25,25 @@ public class MetaDocSerializer
   private final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";
 
   private final static String TAG_FOLDERDATA = "FolderData";
-
   private final static String TAG_HEADER = "Header";
-
   private final static String TAG_IMPORTMODE = "ImportMode";
-
   private final static String TAG_RECORD = "Record";
-
   private final static String TAG_DOKUMENTTYP = "Dokumenttyp";
-
   private final static String TAG_ERSTELLER = "Ersteller";
-
   private final static String TAG_AUTOR = "Autor";
-
   private final static String TAG_REGION = "Region";
-
   private final static String TAG_EINGANGSDATUM = "Eingangsdatum";
-
   private final static String TAG_ERSTELLUNGSDATUM = "Erstellungsdatum";
-
   private final static String TAG_ENDEGDATUM = "EndeGDatum";
-
   private final static String TAG_VERSENDEN = "Versenden";
-
+  private static final String TAG_LHWZINTERN = "LHWZIntern";
   private final static String TAG_APPFILES = "AppFiles";
 
   /** date format for the date elements of the xml file */
   private final static DateFormat DFDATE = new SimpleDateFormat( "yyyy-MM-dd" );
 
   private final static DateFormat DFDATETIME = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+
 
   /**
    * Prepares the properties with some default value
@@ -104,7 +99,7 @@ public class MetaDocSerializer
       writer.write( "<" + TAG_VERSENDEN + ">" + valueOfProperty( serviceProps.getProperty( TAG_VERSENDEN, "0" ) )
           + "</" + TAG_VERSENDEN + ">" );
 
-      writer.write( "<LHWZIntern>1</LHWZIntern>" );
+      writer.write( "<" + TAG_LHWZINTERN + ">1</" + TAG_LHWZINTERN + ">" );
 
       writer.write( "<" + TAG_APPFILES + ">" + fileName + "</" + TAG_APPFILES + ">" );
 
