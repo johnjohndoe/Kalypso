@@ -35,6 +35,7 @@ import java.net.URL;
 
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -48,14 +49,10 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
 {
-
   public static final String NAMESPACE = "inline.zml.kalypso.org";
 
   private static final String NAME = "ZmlInlineType";
@@ -64,25 +61,29 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
 
   public static final String TYPE_NAME = NAMESPACE + ":" + NAME;
 
-
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
-  public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
+  public void marshall( final Object object, final Node node, final URL context ) throws TypeRegistryException
   {
+    final StringWriter sw = new StringWriter();
+    
     try
     {
-      ObservationType xml = ZmlFactory.createXML( (IObservation)object, null, null );
-      Marshaller marshaller = ZmlFactory.getMarshaller();
-      StringWriter sw = new StringWriter();
+      final ObservationType xml = ZmlFactory.createXML( (IObservation)object, null, null );
+      final Marshaller marshaller = ZmlFactory.getMarshaller();
       marshaller.marshal( xml, sw );
       XMLUtilities.setTextNode( node.getOwnerDocument(), node, sw.toString() );
       sw.close();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      throw new TypeRegistryException( e.getLocalizedMessage() );
+      throw new TypeRegistryException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( sw );
     }
 
   }
@@ -91,7 +92,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
-  public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
+  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver ) throws TypeRegistryException
   {
     final String zmlStr = XMLTools.getStringValue( node );
     final StringReader reader = new StringReader( zmlStr.trim() );
@@ -99,12 +100,17 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
     try
     {
       obs = ZmlFactory.parseXML( new InputSource( reader ), "null-id", null );
+      reader.close();
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
-      e.printStackTrace();
+      throw new TypeRegistryException(e);
     }
-    reader.close();
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
+    
     return obs;
   }
 
@@ -131,5 +137,4 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   {
     return TYPE_NAME;
   }
-
 }

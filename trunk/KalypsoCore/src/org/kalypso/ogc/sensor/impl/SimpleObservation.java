@@ -157,6 +157,9 @@ public class SimpleObservation implements IObservation
     if( m_tupples == null )
       throw new SensorException( "Keine Werte vorhanden." );
 
+    // TODO this leads to unsaved changes when a value is set because the underlying
+    // (real) model isn't changed, just the copy of it (see setFrom and the calling
+    // constructors in SimpleTuppleModel).
     if( request != null && request.getDateRange() != null )
       return new SimpleTuppleModel( m_tupples, request.getDateRange() );
 

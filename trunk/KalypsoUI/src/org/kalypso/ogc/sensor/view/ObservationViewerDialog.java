@@ -64,17 +64,21 @@ public class ObservationViewerDialog extends ResizableDialog
   public ObservationViewerDialog( final Shell parent, boolean withHeaderForm, boolean withMetaDataAndTable, boolean withChart )
   {
     super( parent, null );
+    
     m_withHeader = withHeaderForm;
     m_withMetaDataTable = withMetaDataAndTable;
     m_withChart = withChart;
   }
+  
   public ObservationViewerDialog( final Shell parent )
   {
     super( parent, null );
+    
     m_withHeader = true;
     m_withMetaDataTable = true;
     m_withChart = true;
   }
+  
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
