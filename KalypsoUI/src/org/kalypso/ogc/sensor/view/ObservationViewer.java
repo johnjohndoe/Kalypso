@@ -124,24 +124,22 @@ public class ObservationViewer extends Composite
 
   protected DateRange m_dr;
 
-
   public ObservationViewer( final Composite parent, final int style )
   {
-    super( parent, style );
-
-    m_dr = DateRange.createFromPastDays( 5 );
-
-    createControl( true, true, true );
+    this( parent, style, true, true, true );
   }
 
-  public ObservationViewer( Composite parent, int style, boolean header, boolean chart, boolean metaDataTable )
+  public ObservationViewer( final Composite parent, final int style, final boolean header, final boolean chart,
+      final boolean metaDataTable )
   {
     super( parent, style );
+
     m_dr = DateRange.createFromPastDays( 5 );
+
     createControl( header, metaDataTable, chart );
   }
 
-  private final void createControl( boolean withHeader, boolean withMetaAndTable, boolean withChart )
+  private final void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart )
   {
     final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
@@ -151,18 +149,25 @@ public class ObservationViewer extends Composite
     main.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     if( withHeader )
       createHeaderForm( main );
+    else
+      new Label( main, SWT.NONE );
 
     final SashForm bottom = new SashForm( main, SWT.HORIZONTAL );
     bottom.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     if( withMetaAndTable )
       createMetadataAndTableForm( bottom );
+    else
+      new Label( bottom, SWT.NONE );
+
     if( withChart )
       createDiagramForm( bottom );
-    if( withHeader )
-      main.setWeights( new int[]
-      {
-          1,
-          4 } );
+    else
+      new Label( bottom, SWT.NONE );
+
+    main.setWeights( new int[]
+    {
+        1,
+        4 } );
     bottom.setWeights( new int[]
     {
         1,
@@ -502,8 +507,13 @@ public class ObservationViewer extends Composite
   {
     m_mdViewer.setInput( new ObservationPropertySource( obs ) );
 
-    final PlainObsProvider pop = new PlainObsProvider( obs, new ObservationRequest( m_dr ) );
-    
+    // TODO when the date-range is specified in the form of a request,
+    // the observation returns a new tupplemodel for each call to getValues()
+    // which leads to unsaved changes when a value is set because the underlying
+    // (real) model isn't changed, just the copy of it (see setFrom and the calling
+    // constructors in SimpleTuppleModel).
+    final PlainObsProvider pop = new PlainObsProvider( obs, null );//new ObservationRequest( m_dr ) );
+
     final ItemData itd = new ObsView.ItemData( obs.isEditable(), null );
 
     m_diagView.removeAllItems();

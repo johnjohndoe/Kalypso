@@ -69,7 +69,6 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
    */
   public int open( Shell shell )
   {
-
     final ObservationViewerDialog dialog = new ObservationViewerDialog( shell, false, true, true );
     Object o = m_feature.getProperty( m_ftp.getName() );
     if( o instanceof IObservation )

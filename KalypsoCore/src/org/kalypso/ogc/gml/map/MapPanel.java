@@ -135,7 +135,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   {
     removeMouseListener( m_widgetManager );
     removeMouseMotionListener( m_widgetManager );
-    m_model.removeModellListener( this );
+    if( m_model != null )
+      m_model.removeModellListener( this );
   }
 
   public void setOffset( int dx, int dy ) // used by pan method

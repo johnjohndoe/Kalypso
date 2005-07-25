@@ -89,6 +89,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   {
     this( copyTupples.getAxisList() );
 
+    // TODO this leads to unsaved changes when a value is set because the underlying
+    // (real) model isn't changed, just the copy of it (see setFrom and the calling
+    // constructors in SimpleTuppleModel).
     setFrom( copyTupples );
   }
 
@@ -100,6 +103,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   {
     this( tupples.getAxisList() );
 
+    // TODO this leads to unsaved changes when a value is set because the underlying
+    // (real) model isn't changed, just the copy of it (see setFrom and the calling
+    // constructors in SimpleTuppleModel).
     setFrom( tupples, dra );
   }
 
@@ -231,7 +237,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    */
   public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
-    return m_tupples.getValueAt( index, getPositionFor( axis ) );
+    final Object value = m_tupples.getValueAt( index, getPositionFor( axis ) );
+    
+    return value;
   }
 
   /**
