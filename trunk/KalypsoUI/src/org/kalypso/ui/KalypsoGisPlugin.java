@@ -88,11 +88,13 @@ import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
+import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
 import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
+import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -107,6 +109,7 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
@@ -594,7 +597,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       // TODO wohin sonst
       final IUrlCatalog updateObs = new UrlCatalogUpdateObservationMapping();
-
+      // TODO @Andreas wieso war dieser Katalog nicht mehr hier wird der Serverseitig hinzugefügt? 
+      // der Client sollte diese auf jedenfall zur Verfügung haben deshalb habe ich den wieder eingefügt. (CK) 20.7.2005
+      final IUrlCatalog deegreeCatalog = new DeegreeUrlCatalog();
       final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
       {
           // test
@@ -603,7 +608,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
           updateObs,
           serverUrlCatalog,
-          calcCatalog } );
+          calcCatalog,
+          deegreeCatalog } );
 
       final IPath stateLocation = getStateLocation();
       final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
@@ -731,9 +737,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       registry.registerTypeHandler( new RangeSetTypeHandler() );
       registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
       registry.registerTypeHandler( new ResourceFileTypeHandler() );
+      registry.registerTypeHandler( new ZmlInlineTypeHandler() );
 
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
       guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler() );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

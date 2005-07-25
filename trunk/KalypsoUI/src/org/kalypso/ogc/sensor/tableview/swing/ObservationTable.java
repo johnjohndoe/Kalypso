@@ -197,7 +197,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       protected void runIntern() throws Throwable
       {
         // REFRESH ONE COLUMN
-        if( evt.getType() == ObsViewEvent.TYPE_REFRESH && evt.getObject() instanceof TableViewColumn )
+        if( evt.getType() == ObsViewEvent.TYPE_REFRESH  && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.refreshColumn( column );

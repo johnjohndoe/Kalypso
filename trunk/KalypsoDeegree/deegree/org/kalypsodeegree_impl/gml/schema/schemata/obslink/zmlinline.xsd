@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="inline.zml.kalypso.org" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:inlinezml="inline.zml.kalypso.org" version="0.9">
+	<simpleType name="ZmlInlineType">
+		<restriction base="string"/>
+	</simpleType>
+</schema>

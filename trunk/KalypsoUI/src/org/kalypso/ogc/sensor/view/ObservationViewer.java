@@ -124,16 +124,24 @@ public class ObservationViewer extends Composite
 
   protected DateRange m_dr;
 
+
   public ObservationViewer( final Composite parent, final int style )
   {
     super( parent, style );
 
     m_dr = DateRange.createFromPastDays( 5 );
-    
-    createControl();
+
+    createControl( true, true, true );
   }
 
-  private final void createControl()
+  public ObservationViewer( Composite parent, int style, boolean header, boolean chart, boolean metaDataTable )
+  {
+    super( parent, style );
+    m_dr = DateRange.createFromPastDays( 5 );
+    createControl( header, metaDataTable, chart );
+  }
+
+  private final void createControl( boolean withHeader, boolean withMetaAndTable, boolean withChart )
   {
     final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
@@ -141,19 +149,20 @@ public class ObservationViewer extends Composite
 
     final SashForm main = new SashForm( this, SWT.VERTICAL );
     main.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-    createHeaderForm( main );
+    if( withHeader )
+      createHeaderForm( main );
 
     final SashForm bottom = new SashForm( main, SWT.HORIZONTAL );
     bottom.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
-    createMetadataAndTableForm( bottom );
-    createDiagramForm( bottom );
-
-    main.setWeights( new int[]
-    {
-        1,
-        4 } );
+    if( withMetaAndTable )
+      createMetadataAndTableForm( bottom );
+    if( withChart )
+      createDiagramForm( bottom );
+    if( withHeader )
+      main.setWeights( new int[]
+      {
+          1,
+          4 } );
     bottom.setWeights( new int[]
     {
         1,
@@ -397,6 +406,7 @@ public class ObservationViewer extends Composite
 
     // TABLE
     m_table = new ObservationTable( m_tableView, false, false );
+
     m_table.setBorder( null );
     final Composite tableComp = new Composite( form, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( tableComp );
@@ -478,6 +488,11 @@ public class ObservationViewer extends Composite
     //setHref( href ); is called implicitely through m_txtHref.setText();
   }
 
+  public void setObservation( final IObservation obs )
+  {
+    updateViewer( obs );
+  }
+
   public String getHref()
   {
     return m_href;
@@ -488,7 +503,8 @@ public class ObservationViewer extends Composite
     m_mdViewer.setInput( new ObservationPropertySource( obs ) );
 
     final PlainObsProvider pop = new PlainObsProvider( obs, new ObservationRequest( m_dr ) );
-    final ItemData itd = new ObsView.ItemData( false, null );
+    
+    final ItemData itd = new ObsView.ItemData( obs.isEditable(), null );
 
     m_diagView.removeAllItems();
     m_diagView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, null, itd );
