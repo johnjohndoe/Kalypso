@@ -620,20 +620,6 @@
       </repository>
    </extension>
    <extension
-         id="importWizards"
-         name="importWizards"
-         point="org.eclipse.ui.importWizards">
-      <wizard
-            class="org.kalypso.ui.wizard.dataimport.KalypsoImportWizard"
-            icon="icons/sample.gif"
-            name="Kalypso Import Wizard"
-            id="KalypsoUI.importWizard">
-         <selection class="org.kalypso.ui.internal.wizard.IKalypsoImportWizard"/>
-      </wizard>
-   </extension>
-   <extension
-         id="antTasks"
-         name="antTasks"
          point="org.eclipse.ant.core.antTasks">
       <antTask
             eclipseRuntime="true"

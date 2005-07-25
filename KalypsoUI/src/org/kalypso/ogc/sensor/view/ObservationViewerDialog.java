@@ -37,6 +37,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ogc.sensor.IObservation;
 
 /**
  * ObservationViewerDialog
@@ -52,11 +53,28 @@ public class ObservationViewerDialog extends ResizableDialog
 
   private URL m_context;
 
+  private IObservation m_obs;
+
+  private boolean m_withHeader;
+
+  private boolean m_withMetaDataTable;
+
+  private boolean m_withChart;
+
+  public ObservationViewerDialog( final Shell parent, boolean withHeaderForm, boolean withMetaDataAndTable, boolean withChart )
+  {
+    super( parent, null );
+    m_withHeader = withHeaderForm;
+    m_withMetaDataTable = withMetaDataAndTable;
+    m_withChart = withChart;
+  }
   public ObservationViewerDialog( final Shell parent )
   {
     super( parent, null );
+    m_withHeader = true;
+    m_withMetaDataTable = true;
+    m_withChart = true;
   }
-
   /**
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
@@ -65,9 +83,12 @@ public class ObservationViewerDialog extends ResizableDialog
     final Composite composite = (Composite)super.createDialogArea( parent );
     composite.setLayout( new FillLayout() );
 
-    m_viewer = new ObservationViewer( composite, SWT.NONE );
+    m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, m_withChart, m_withMetaDataTable  );
     if( m_href != null )
       m_viewer.setHref( m_context, m_href );
+    // if there is no file but the Observation in the Memory
+    else if( m_obs != null )
+      m_viewer.setObservation( m_obs );
 
     getShell().setText( "Zeitreihenlink-Editor" );
 
@@ -91,5 +112,13 @@ public class ObservationViewerDialog extends ResizableDialog
       return m_href;
 
     return m_viewer.getHref();
+  }
+
+  public void setObservation( IObservation observation )
+  {
+    if( m_viewer != null )
+      m_viewer.setObservation( observation );
+    else
+      m_obs = observation;
   }
 }
