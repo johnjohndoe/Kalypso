@@ -254,9 +254,6 @@ public class CatchmentManager extends AbstractManager
 
     // 3
     StringBuffer b = new StringBuffer();
-    //TODO: syntetischen Niederschlag einfügen in control schema
-    //    b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature,
-    // "pns" ), "a1" ) );
     b.append( "n " + getNiederschlagEingabeDateiString( feature ) );
     b.append( " " + getNiederschlagEingabeDateiString( feature ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" ) + "\n" );
