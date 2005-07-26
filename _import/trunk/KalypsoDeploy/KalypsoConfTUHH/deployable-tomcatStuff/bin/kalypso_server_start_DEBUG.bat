@@ -1,6 +1,6 @@
-set KALYPSO_SERVER_HOME=d:\Programme\kalypso
+set KALYPSO_SERVER_HOME=C:\\KalypsoService
 
-set JAVA_HOME=%KALYPSO_SERVER_HOME%\j2sdk1.4.2_02
+set JAVA_HOME=C:\\j2sdk1.4.2_08
 set CATALINA_HOME=%KALYPSO_SERVER_HOME%\Tomcat5.0
 
 set ECLIPSE_DEBUG=-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Djava.compiler=NONE
