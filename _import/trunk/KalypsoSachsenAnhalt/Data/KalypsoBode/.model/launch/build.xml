@@ -131,4 +131,28 @@
 			<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true" />
 		</kalypso.runCalculation>
 	</target>
+	
+	
+    <!-- ================================= 
+          target: runs the batch which is given in the property  tubig.batch.name
+         ================================= -->
+    <target name="runBatch" description="--> description">
+    	<echo message="Rechne batch: ${tubig.batch.name}"/>
+    	
+    	<replaceregexp file="${calc.dir}/.calculation" flags="s"
+    	                         match="&lt;BatchIDCollectionAssociation&gt;(.*)&lt;/BatchIDCollectionAssociation&gt;"
+    	                         replace="&lt;BatchIDCollectionAssociation&gt;
+    		&lt;BatchIDCollection fid=&quot;batches&quot;&gt;
+           &lt;BatchIDAssociation&gt;
+    	&lt;BatchID fid=&quot;batchid_1&quot;&gt;
+    	&lt;id>${tubig.batch.name}&lt;/id&gt;
+    	&lt;/BatchID&gt;
+    	&lt;/BatchIDAssociation&gt;
+    	&lt;/BatchIDCollection&gt;
+    	&lt;/BatchIDCollectionAssociation&gt;"
+    	                         />
+    	<antcall target="runCalculation"/>
+    </target>
+
+
 </project>

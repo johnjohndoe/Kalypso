@@ -6,7 +6,10 @@
 		<!-- 
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="NS_Stationen"/>
+<!--
 		<arg name="htmlURL" value=".model/wizardhtml/NS_Stationen.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/flussdiagramm.html"/>
 		<arg name="nextPage" value="NS_Gebiete"/>
 		<!--
         Page-Layout -->
@@ -150,7 +153,10 @@
         Ant-Knopf für Berechnung -->
    	    <arg name="buttonText" value="Q-Prognose uh. Wendefurth"/>
 		<arg name="buttonTooltip" value="Abfluss-Prognose unterhalb Wendefurth"/>
-		<arg name="buttonLaunch" value="runCalculation"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run1.bat"/>
+		</arg>
 	</page>
 	<!-- ??? Seite auf der die gerechneten Speicheabgaben dargestellt werden (=2. Ergebnisseite)-->
 	<!-- ??? werden Abgaben in BAT 1 überhaupt gerechnet? -->
@@ -247,7 +253,11 @@
         Ant-Knopf für Berechnung -->
    	    <arg name="buttonText" value="Q-Prognose oh. Speicher"/>
 		<arg name="buttonTooltip" value="Abfluss-Prognose oberhalb Speicher"/>
-		<arg name="buttonLaunch" value="runCalculation"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run2.bat"/>
+		</arg>
+
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG ALLGEMEIN -->
 	<!-- Inhalt Speicher (Messung) -->
@@ -370,7 +380,10 @@
         Ant-Knopf für Berechnung -->
    	    <arg name="buttonText" value="Speicherrechnung"/>
 		<arg name="buttonTooltip" value="Speicherrechnung bei Vorgabe der Abgaben"/>
-		<arg name="buttonLaunch" value="runCalculation"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run3.bat"/>
+		</arg>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 4  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 4 -->
@@ -407,7 +420,10 @@
         Ant-Knopf für Berechnung -->
    	    <arg name="buttonText" value="TS-Steuerung ohne Optim."/>
 		<arg name="buttonTooltip" value="TS-Steuerung ohne Optimierung"/>
-		<arg name="buttonLaunch" value="runCalculation"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run4.bat"/>
+		</arg>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 5  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT5 -->
@@ -444,7 +460,10 @@
         Ant-Knopf für Berechnung -->
    	    <arg name="buttonText" value="TS-Steuerung mit Optim."/>
 		<arg name="buttonTooltip" value="TS-Steuerung mit Optimierung"/>
-		<arg name="buttonLaunch" value="runCalculation"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run5.bat"/>
+		</arg>
 	</page>
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">

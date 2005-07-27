@@ -183,7 +183,7 @@ public final class RunnableContextHelper
   {
     // run the execute method in a Progress-Dialog
     final ProgressMonitorDialog dialog = new ProgressMonitorDialog( shell );
-    final IStatus status = execute( dialog, true, true, runnable );
+    final IStatus status = execute( dialog, false, true, runnable );
     errorHandler.handleError( shell, status );
   }
 }

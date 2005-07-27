@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
+import java.net.URL;
+
 import org.eclipse.jface.wizard.IWizardPage;
 
 /**
@@ -49,6 +51,6 @@ import org.eclipse.jface.wizard.IWizardPage;
  */
 public interface IHtmlWizardPage extends IWizardPage
 {
-  /** A html document in form of a string */
-  public String getHtml();
+  /** A URL to a html document. */
+  public URL getHtmlURL();
 }

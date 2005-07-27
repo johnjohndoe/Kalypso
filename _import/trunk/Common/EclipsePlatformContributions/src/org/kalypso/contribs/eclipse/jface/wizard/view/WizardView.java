@@ -42,6 +42,7 @@ package org.kalypso.contribs.eclipse.jface.wizard.view;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,6 +109,7 @@ import org.kalypso.contribs.java.lang.CatchRunnable;
 public class WizardView extends ViewPart implements IWizardContainer3
 {
   private RGB m_defaultTitleBackground;
+
   private RGB m_defaultTitleForeground;
 
   private final String m_foregroundRGB_ID = "" + this + ".title.foreground";
@@ -145,6 +147,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
   private boolean m_backJumpsToLastVisited = true;
 
   private Map m_buttonLabels = new HashMap();
+
+  /** Lock for preventing call to changeLocation when url is set internally */
+  private boolean m_ignoreNextCangeLocation = false;
 
   /** If set to true, the background color of error messages is the same as normal messages. */
   public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
@@ -586,7 +591,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
    * @see org.eclipse.jface.wizard.IWizardContainer2#updateSize()
    */
   public void updateSize()
-  {}
+  {
+  //   
+  }
 
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#getCurrentPage()
@@ -696,18 +703,21 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected void changeLocation( final String location )
   {
-    if( m_wizard == null )
+    if( m_ignoreNextCangeLocation || m_wizard == null )
+    {
+      // TODO show brwoser at this point
+      m_ignoreNextCangeLocation = false;
       return;
+    }
 
+    final int index = location.indexOf( '#' );
     final String link;
-    if( location.startsWith( "about:blank" ) )
-      link = location.substring( "about:blank".length() );
-    else
+    if( index == -1 )
       link = location;
-
-    if( link.length() == 0 )
-      return;
-
+    else
+      link = location.substring( index + 1 );
+    
+    
     boolean pageChanged = false;
     if( "prev".compareToIgnoreCase( link ) == 0 )
       pageChanged = doPrev();
@@ -727,7 +737,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
     if( !pageChanged )
     {
       // we dont need to layout, because the page has not changed
-      m_browser.setText( getHtmlForPage( getCurrentPage() ) );
+      showUrl( getCurrentPage() );
     }
   }
 
@@ -800,9 +810,8 @@ public class WizardView extends ViewPart implements IWizardContainer3
     m_currentPage = page;
     m_stackLayout.topControl = m_currentPage.getControl();
 
-    final String html = getHtmlForPage( page );
-    m_browser.setText( html );
-    if( html.length() > 0 )
+    final String html = showUrl( page );
+    if( html.length() != 0 )
       m_mainSash.setMaximizedControl( null );
     else
       m_mainSash.setMaximizedControl( m_pageAndButtonArea );
@@ -814,15 +823,25 @@ public class WizardView extends ViewPart implements IWizardContainer3
     firePageChanged( page );
   }
 
+  private String showUrl( final IWizardPage page )
+  {
+    final String html = getHtmlForPage( page );
+
+    m_ignoreNextCangeLocation = true;
+    m_browser.setUrl( html );
+    return html;
+  }
+
   private String getHtmlForPage( final IWizardPage page )
   {
-    String html = "";
     if( page instanceof IHtmlWizardPage )
-      html = ( (IHtmlWizardPage)page ).getHtml();
-    if( html == null )
-      html = "";
+    {
+      final URL htmlURL = ( (IHtmlWizardPage)page ).getHtmlURL();
+      if( htmlURL != null )
+        return htmlURL.toString();
+    }
 
-    return html;
+    return "";
   }
 
   /**
@@ -957,20 +976,34 @@ public class WizardView extends ViewPart implements IWizardContainer3
   private static final int H_GAP_IMAGE = 5;
 
   private Label titleLabel;
+
   private Label titleImage;
+
   private Label bottomFillerLabel;
+
   private Label leftFillerLabel;
+
   //  private RGB titleAreaRGB;
   private String message = ""; //$NON-NLS-1$
+
   private String errorMessage;
+
   private Text messageLabel;
+
   private Label messageImageLabel;
+
   private Image messageImage;
+
   private Color normalMsgAreaBackground;
+
   private Color errorMsgAreaBackground;
+
   private Image errorMsgImage;
+
   private boolean showingError = false;
+
   private boolean titleImageLargest = true;
+
   private Composite m_parent;
 
   /**
@@ -984,7 +1017,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   {
     // remeber parent in order to change its colors
     m_parent = parent;
-    
+
     // Determine the background color of the title bar
     final Display display = parent.getDisplay();
     m_defaultTitleBackground = JFaceColors.getBannerBackground( display ).getRGB();
@@ -1276,17 +1309,17 @@ public class WizardView extends ViewPart implements IWizardContainer3
     {
       switch( newType )
       {
-        case IMessageProvider.NONE:
-          break;
-        case IMessageProvider.INFORMATION:
-          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_INFO );
-          break;
-        case IMessageProvider.WARNING:
-          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING );
-          break;
-        case IMessageProvider.ERROR:
-          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_ERROR );
-          break;
+      case IMessageProvider.NONE:
+        break;
+      case IMessageProvider.INFORMATION:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_INFO );
+        break;
+      case IMessageProvider.WARNING:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING );
+        break;
+      case IMessageProvider.ERROR:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_ERROR );
+        break;
       }
     }
     showMessage( newMessage, newImage );
@@ -1431,7 +1464,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   // The current page message and description
   private String pageMessage;
+
   private int pageMessageType = IMessageProvider.NONE;
+
   private String pageDescription;
 
   /**
@@ -1474,7 +1509,6 @@ public class WizardView extends ViewPart implements IWizardContainer3
     final Color background = colorRegistry.get( m_backgroundRGB_ID );
     final Color foreground = colorRegistry.get( m_foregroundRGB_ID );
 
-    
     if( m_parent != null && !m_parent.isDisposed() )
       m_parent.setBackground( background );
     if( titleImage != null && !titleImage.isDisposed() )
