@@ -7,9 +7,9 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="NS_Stationen"/>
 <!--
-		<arg name="htmlURL" value=".model/wizardhtml/NS_Stationen.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Stationen.html"/>
 -->
-    	<arg name="htmlFilePath" value=".model/wizardhtml/flussdiagramm.html"/>
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="nextPage" value="NS_Gebiete"/>
 		<!--
         Page-Layout -->
@@ -34,9 +34,12 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete"/>
-		<arg name="htmlURL" value=".model/wizardhtml/NS_Gebiete.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="NS_Stationen"/>
-		<arg name="nextPage" value="W_uh_Wendefurth"/>
+		<arg name="nextPage" value="Q_uh_Wendefurth"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -65,8 +68,11 @@
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse /  Wasserstände - Eingabepegel uh. Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
-		<arg name="pageID" value="W_uh_Wendefurth"/>
-		<arg name="htmlURL" value=".model/wizardhtml/W_uh_Wendefurth.html"/>
+		<arg name="pageID" value="Q_uh_Wendefurth"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_uh_Wendefurth.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="NS_Gebiete"/>
 		<arg name="nextPage" value="Abgabe_Speicher"/>
 		<!-- 
@@ -97,8 +103,11 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Abgabe_Speicher"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Abgabe_Speicher.html"/>
-		<arg name="prevPage" value="W_uh_Wendefurth"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="Q_uh_Wendefurth"/>
 		<arg name="nextPage" value="Berechnung_bat1"/>
 		<!-- 
         Page-Layout -->
@@ -123,9 +132,13 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat1"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Berechnung_bat1.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat1.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="Abgabe_Speicher"/>
-		<arg name="nextPage" value="Abgabe_Speicher_gerechnet"/>
+		<!-- <arg name="nextPage" value="Abgabe_Speicher_gerechnet"/> -->
+		<arg name="nextPage" value="Q_oh_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -158,42 +171,48 @@
 			<arg name="tubig.batch.name" value="run1.bat"/>
 		</arg>
 	</page>
-	<!-- ??? Seite auf der die gerechneten Speicheabgaben dargestellt werden (=2. Ergebnisseite)-->
+	<!-- Seite auf der die gerechneten Speicheabgaben dargestellt werden (=2. Ergebnisseite)-->
 	<!-- ??? werden Abgaben in BAT 1 überhaupt gerechnet? -->
 	<!-- Abgabe Speicher (Prognose / gerechnet) -->
+<!--
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ergebnisse Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
-		<!--  
-        HTML-Navigation und pageID-->
+		
+        HTML-Navigation und pageID
 		<arg name="pageID" value="Abgabe_Speicher_gerechnet"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Abgabe_Speicher_gerechnet.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher_gerechnet.html"/>
 		<arg name="prevPage" value="Berechnung_bat1"/>
-		<arg name="nextPage" value="W_oh_Speicher"/>
-		<!-- 
-        Page-Layout -->
+		<arg name="nextPage" value="Q_oh_Speicher"/>
+		
+        Page-Layout 
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="60"/>
-		<!--  
-        Karte -->
+		 
+        Karte 
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<arg name="selectionID" value="32"/>
-		<!--
-		Diagramm -->
+		
+		Diagramm 
 	    <arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
-		<!-- 
-        Tabelle -->
+		 
+        Tabelle 
 		<arg name="zmlTableShow" value="all"/>
 	</page>
+-->
 	<!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
 	<!-- Wasserstand / Abfluss (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse / Wasserstände - Eingabepegel oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
-		<arg name="pageID" value="W_oh_Speicher"/>
-		<arg name="htmlURL" value=".model/wizardhtml/W_oh_Speicher.html"/>
-		<arg name="prevPage" value="Abgabe_Speicher_gerechnet"/>
+		<arg name="pageID" value="Q_oh_Speicher"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_oh_Speicher.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- <arg name="prevPage" value="Abgabe_Speicher_gerechnet"/> -->
+		<arg name="prevPage" value="Berechnung_bat1"/>
 		<arg name="nextPage" value="Berechnung_bat2"/>
 		<!-- 
         Page-Layout -->
@@ -223,8 +242,11 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat2"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Berechnung_bat2.html"/>
-		<arg name="prevPage" value="W_oh_Speicher"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat2.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="Q_oh_Speicher"/>
 		<arg name="nextPage" value="Inhalt_Speicher"/>
 		<!-- 
         Page-Layout -->
@@ -265,7 +287,10 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Inhalt_Speicher"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Inhalt_Speicher.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="Berechnung_bat2"/>
 		<arg name="nextPage" value="Abgabe_Speicher_gemessen"/>
 		<!-- 
@@ -290,15 +315,17 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<!-- ??? ggf. wieder Titel anpassen -->
-	<!-- ??? nur Messung!!! Abgabe Speicher (Messung) -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+	<!-- Abgabe Speicher (Messung und ggf. auch Prognose (wird f. BAT3 benötigt)) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
-		<arg name="pageID" value="Abgabe_Speicher_gemessen"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Abgabe_Speicher_gemessen.html"/>
+		<arg name="pageID" value="Abgabe_Speicher_2"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher_2.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="Inhalt_Speicher"/>
-		<arg name="nextPage" value="Abgabe_Speicher_Prognose"/>
+		<arg name="nextPage" value="Berechnung_bat3"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -318,41 +345,18 @@
 		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 3  -->
-	<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG  BAT 3 -->
-	<!-- ??? nur Prognose!!! Abgabe Speicher (Messung) -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
-		<!--  
-        HTML-Navigation und pageID-->
-		<arg name="pageID" value="Abgabe_Speicher_Prognose"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Abgabe_Speicher_Prognose.html"/>
-		<arg name="prevPage" value="Abgabe_Speicher_gemessen"/>
-		<arg name="nextPage" value="Berechnung_bat3"/>
-		<!-- 
-        Page-Layout -->
-		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="60"/>
-		<!--  
-        Karte -->
-		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="true"/>
-		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="1024"/>
-		<!--
-		Diagramm -->
-	    <arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
-		<!-- 
-        Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
-	</page>
+
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
 	<!-- dies Seite gilt auch für Bat4/5, abgesehen von der Überschrift -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Speicherrechnung bei Vorgabe der Abgaben" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat3"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Berechnung_bat3.html"/>
-		<arg name="prevPage" value="Abgabe_Speicher_Prognose"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat3.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="Abgabe_Speicher_2"/>
 		<arg name="nextPage" value="Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
@@ -391,7 +395,10 @@
 		<!-- 
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat4"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Berechnung_bat4.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat4.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="Abgabe_Speicher_gemessen"/>
 		<arg name="nextPage" value="Berichtsablage_Pegel"/>
 		<!--
@@ -408,8 +415,8 @@
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>   <!-- orange (255,128,64) -->
+		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>   <!-- orange (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
@@ -431,7 +438,10 @@
 		<!-- 
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat5"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Berechnung_bat5.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat5.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="Abgabe_Speicher_gemessen"/>
 		<arg name="nextPage" value="Berichtsablage_Pegel"/>
 		<!--
@@ -448,8 +458,8 @@
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>   <!-- orange (255,128,64) -->
+		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>   <!-- orange (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
@@ -470,7 +480,10 @@
 		<!-- 
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Pegel"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Berichtsablage_Pegel.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="Berechnung_bat3"/>
 		<!--
         Page-Layout -->

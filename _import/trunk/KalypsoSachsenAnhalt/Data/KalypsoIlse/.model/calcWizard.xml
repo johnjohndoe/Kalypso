@@ -6,7 +6,10 @@
 		<!-- 
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="NS_Stationen"/>
-		<arg name="htmlURL" value=".model/wizardhtml/NS_Stationen.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Stationen.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="nextPage" value="NS_Gebiete"/>
 		<!--
         Page-Layout -->
@@ -31,7 +34,10 @@
 		<!-- 
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="NS_Gebiete"/>
-		<arg name="htmlURL" value=".model/wizardhtml/NS_Gebiete.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="nextPage" value="Wasserstand"/>
 		<arg name="prevPage" value="NS_Stationen"/>
 		<!--
@@ -61,8 +67,11 @@
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse /  Wasserstände  - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID -->
-		<arg name="pageID" value="Wasserstand"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Wasserstand.html"/>
+		<arg name="pageID" value="Abfluss"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Abfluss.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="nextPage" value="Berechnung"/>
 		<arg name="prevPage" value="NS_Gebiete"/>
 		<!--
@@ -88,13 +97,16 @@
 		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- BERECHNUNG -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose Ilse" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Berechnung"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Berechnung.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="nextPage" value="Berichtsablage"/>
-		<arg name="prevPage" value="Wasserstand"/>
+		<arg name="prevPage" value="Abfluss"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -115,14 +127,24 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
-
+		<!-- 
+        Ant-Knopf für Berechnung -->
+   	    <arg name="buttonText" value="Q-Prognose Ilse"/>
+		<arg name="buttonTooltip" value="Abfluss-Prognose Ilse"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run_ilse.bat"/>
+		</arg>
 	</page>
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Berichtsablage"/>
-		<arg name="htmlURL" value=".model/wizardhtml/Berichtsablage.html"/>
+<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage.html"/>
+-->
+    	<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="Berechnung"/>
 		<!--
         Page-Layout -->
