@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * @author doemming
@@ -93,4 +94,6 @@ public interface GMLWorkspace extends ModellEventProvider
    * return true if these feature are related
    */
   public boolean isExistingRelation( Feature f1, Feature f2, String relationPropertyName );
+  
+  public IFeatureSelectionManager getSelectionManager();
 }

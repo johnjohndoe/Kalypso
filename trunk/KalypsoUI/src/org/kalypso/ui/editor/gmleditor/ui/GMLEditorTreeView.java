@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.actions.CommandableFeatureSelection;
+import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.ui.editor.gmleditor.util.GMLReader;
 import org.kalypso.ui.editor.gmleditor.util.actions.AddFeatureAction;
@@ -346,7 +346,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
     // first inform my listeners
     final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     final ISelection unwrappedSelection = new CommandableFeatureSelection( getWorkspace(), new StructuredSelection(
-        getDataFromElements( selection.toArray() ) ), null, null, -1 );
+        getDataFromElements( selection.toArray() ) ), null, null);
     setSelection( unwrappedSelection );
 
     // now update actions

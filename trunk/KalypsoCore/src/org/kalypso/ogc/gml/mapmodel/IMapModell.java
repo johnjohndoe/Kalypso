@@ -79,8 +79,7 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
    * 
    * @param g
    */
-  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
-      final int selectionId );
+  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale);
 
   public IKalypsoTheme getTheme( int pos );
 
@@ -104,5 +103,13 @@ public interface IMapModell extends ModellEventProvider, ModellEventListener
 
   public IProject getProject();
 
-  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale, int i );
+  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale );
+
+  /**
+   * @param gr
+   * @param p
+   * @param bbox
+   * @param scale
+   */
+  public void paintUnselected( Graphics gr, GeoTransform p, GM_Envelope bbox, double scale );
 }

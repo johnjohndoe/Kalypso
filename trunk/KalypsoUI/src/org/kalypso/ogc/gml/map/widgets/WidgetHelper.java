@@ -71,7 +71,7 @@ public class WidgetHelper
     return (IWidget)m_widget.get( widgetID );
   }
 
-  private static IWidget createWidget( String widgetID )
+  public static IWidget createWidget( String widgetID )
   {
     if( MapPanel.WIDGET_ZOOM_IN.equals( widgetID ) )
       return ( new ZoomInWidget( "zoom in", "" ) );

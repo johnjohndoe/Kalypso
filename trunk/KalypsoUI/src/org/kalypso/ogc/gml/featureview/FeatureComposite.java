@@ -325,8 +325,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(),
-          plugin.getDefaultMapSelectionID() );
+      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory() );
       fc.setFeature( workspace, feature );
 
       addFeatureControl( fc );

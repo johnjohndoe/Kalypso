@@ -47,6 +47,7 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * @author vdoemming
@@ -68,4 +69,8 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
   public FeatureList getFeatureList();
 
   public FeatureList getFeatureListVisible( GM_Envelope env );
+
+  public IFeatureSelectionManager getSelectionManager();
+
+  public void setSelectionManager( IFeatureSelectionManager selectionManager );
 }

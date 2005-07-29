@@ -70,6 +70,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -84,6 +86,7 @@ import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.SelectFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -110,6 +113,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
@@ -201,22 +205,18 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private Feature m_lastSelectedFE;
 
-  private final int m_selectionID;
-
   /**
    * @param parent
    * @param templateTarget
    * @param featureControlFactory
-   * @param selectionID
    */
   public LayerTableViewer( final Composite parent, final int style, final ICommandTarget templateTarget,
-      final IFeatureModifierFactory featureControlFactory, final int selectionID )
+      final IFeatureModifierFactory featureControlFactory )
   {
     super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
 
     m_featureControlFactory = featureControlFactory;
     m_templateTarget = templateTarget;
-    m_selectionID = selectionID;
 
     setContentProvider( new LayerTableContentProvider( this ) );
     setLabelProvider( new LayerTableLabelProvider( this ) );
@@ -246,14 +246,23 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       }
     } );
 
-    //    getTable().addMouseListener( new MouseAdapter()
-    //    {
-    //      public void mouseUp( MouseEvent e )
-    //      {
-    //        // to remember selected row,
-    //        rememberLastSelectedFTPAndRow( e.x, e.y );
-    //      }
-    //    } );
+    getTable().addListener( SWT.Selection, new Listener()
+    {
+      public void handleEvent( Event event )
+      {
+        final TableItem[] selection = getTable().getSelection();
+        final Feature[] selectedFeatures = new Feature[selection.length];
+        for( int i = 0; i < selection.length; i++ )
+        {
+          selectedFeatures[i] = (Feature)selection[i].getData();
+        }
+        final IKalypsoFeatureTheme theme = getTheme();
+        final CommandableWorkspace workspace = theme.getWorkspace();
+        final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
+        SelectFeaturesCommand command = new SelectFeaturesCommand( workspace, selectedFeatures, selectionManager );
+        postCommand( command, null );
+      }
+    } );
   }
 
   protected void cursorChanged()
@@ -910,14 +919,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
    */
   public ISelection getSelection()
   {
-    final IStructuredSelection selection = (IStructuredSelection)super.getSelection();
     final IKalypsoFeatureTheme theme = getTheme();
     if( theme == null )
-      return selection;
+      return super.getSelection();
     final CommandableWorkspace workspace = theme.getWorkspace();
     if( workspace == null )
-      return selection;
-    return new FeatureThemeSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE, m_selectionID );
+      return super.getSelection();
+    final IFeatureSelectionManager selectionManager = getTheme().getSelectionManager();
+    final IStructuredSelection selection = selectionManager.getStructuredSelection();
+    return new FeatureThemeSelection( theme, selection, m_lastSelectedFTP, m_lastSelectedFE );
   }
 
   protected void inputChanged( final Object input, final Object oldInput )

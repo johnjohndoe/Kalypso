@@ -289,14 +289,14 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.moveUp( theme );
   }
 
-  public void paintSelected( Graphics g, GeoTransform p, GM_Envelope bbox, double scale, int selectionId )
+  public void paintSelected( Graphics g, GeoTransform p, GM_Envelope bbox, double scale )
   {
-    m_modell.paintSelected( g, p, bbox, scale, selectionId );
+    m_modell.paintSelected( g, p, bbox, scale );
   }
 
-  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale, int selectionId )
+  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale )
   {
-    m_modell.paintSelected( g, hg, p, bbox, scale, selectionId );
+    m_modell.paintSelected( g, hg, p, bbox, scale );
   }
 
   public void removeModellListener( ModellEventListener listener )
@@ -323,7 +323,7 @@ public class GisTemplateMapModell implements IMapModell
   {
     if( theme instanceof GisTemplateFeatureTheme )
       ( (GisTemplateFeatureTheme)theme ).saveFeatures( monitor );
-    //TODO save WMS and Picture Theme
+    // TODO save WMS and Picture Theme
     //    else if( theme instanceof KalypsoWMSTheme )
     //      ( (KalypsoWMSTheme)theme ).saveTheme( monitor );
     //    else if (theme instanceof KalypsoPictureTheme )
@@ -351,5 +351,15 @@ public class GisTemplateMapModell implements IMapModell
   public IProject getProject()
   {
     return m_modell.getProject();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintUnselected(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      double)
+   */
+  public void paintUnselected( Graphics gr, GeoTransform p, GM_Envelope bbox, double scale )
+  {
+    m_modell.paintUnselected( gr, p, bbox, scale );
   }
 }

@@ -182,8 +182,7 @@ public class MapModell implements IMapModell
   //    }
   //  }
 
-  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
-      final int selectionId )
+  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale )
   {
     if( getThemeSize() == 0 )
       return;
@@ -192,16 +191,17 @@ public class MapModell implements IMapModell
     {
       IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
       if( isThemeEnabled( theme ) )
-        theme.paintSelected( g, p, scale, bbox, selectionId );
+        theme.paintSelected( g, p, scale, bbox );
     }
   }
 
   /**
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintSelected(java.awt.Graphics, java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, int)
+   *      double)
    */
-  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale, int selectionId )
+  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale )
   {
     if( getThemeSize() == 0 )
       return;
@@ -210,7 +210,9 @@ public class MapModell implements IMapModell
     {
       IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
       if( isThemeEnabled( theme ) )
-        theme.paintSelected( gr, hg, p, scale, bbox, selectionId );
+      {
+        theme.paintSelected( gr, hg, p, scale, bbox );
+      }
     }
   }
 
@@ -359,4 +361,21 @@ public class MapModell implements IMapModell
     return m_project;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintUnselected(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      double)
+   */
+  public void paintUnselected( Graphics gr, GeoTransform p, GM_Envelope bbox, double scale )
+  {
+    if( getThemeSize() == 0 )
+      return;
+
+    for( int i = 0; i < getThemeSize(); i++ )
+    {
+      IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
+      if( isThemeEnabled( theme ) )
+        theme.paintUnSelected( gr, p, scale, bbox );
+    }
+  }
 }

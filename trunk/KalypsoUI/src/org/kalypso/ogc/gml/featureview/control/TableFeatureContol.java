@@ -43,8 +43,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 {
   private final IFeatureModifierFactory m_factory;
 
-  private final int m_selectionID;
-
   private LayerTableViewer m_viewer;
 
   private KalypsoFeatureTheme m_kft;
@@ -54,12 +52,11 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   Collection m_listeners = new ArrayList();
 
   public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
-      final IFeatureModifierFactory factory, final int selectionID )
+      final IFeatureModifierFactory factory )
   {
     super( workspace, ftp );
 
     m_factory = factory;
-    m_selectionID = selectionID;
     m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
   }
 
@@ -68,7 +65,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public Control createControl( final Composite parent, final int style )
   {
-    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionID );
+    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory );
 
     setFeature( getWorkspace(), getFeature() );
 

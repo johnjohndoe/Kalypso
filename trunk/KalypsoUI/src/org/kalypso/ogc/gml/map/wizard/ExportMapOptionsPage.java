@@ -267,7 +267,7 @@ public class ExportMapOptionsPage extends WizardPage implements IExportableDocum
 
     final Rectangle bounds = new Rectangle( m_width, m_height );
     final BufferedImage image = MapModellHelper.createImageFromModell( transform, boundingBox, bounds, bounds.width,
-        bounds.height, mapModell, -1 );
+        bounds.height, mapModell);
 
     m_result = ImageIO.write( image, m_destinationFormat, outs );
   }

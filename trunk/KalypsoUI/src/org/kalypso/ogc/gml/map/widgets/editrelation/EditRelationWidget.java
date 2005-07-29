@@ -152,7 +152,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
 
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
-    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, 0 );
+    IKalypsoFeatureTheme input = (IKalypsoFeatureTheme)m_viewer.getInput();
+
+    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, input.getSelectionManager() );
     m_srcFE = feature;
     m_fitProblems.setLength( 0 );
     updateProblemsText();
@@ -228,7 +230,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final GM_Point point = GeometryFactory
         .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
-    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, 0 );
+    IKalypsoFeatureTheme input = (IKalypsoFeatureTheme)m_viewer.getInput();
+    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, input.getSelectionManager() );
     m_fitProblems.setLength( 0 );
     m_targetFE = null;
     if( m_srcFE == feature )
@@ -469,23 +472,23 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       } );
     }
     // Andreas: das hatte keine Auswirkungen (mehr). Weg?
-//    if( m_srcFE == null )
-//    {
-//      setLeftMFunction( "Quelle wählen" );
-//      setRightMFunction( null );
-//    }
-//    // src != null && m_targetFE==null
-//    else if( m_targetFE == null )
-//    {
-//      setLeftMFunction( "Ziel wählen" );
-//      setRightMFunction( "Auswahl aufheben" );
-//    }
-//    // src != null && m_targetFE!=null
-//    else
-//    {
-//      setLeftMFunction( "Relation anlegen" );
-//      setRightMFunction( "Auswahl aufheben" );
-//    }
+    //    if( m_srcFE == null )
+    //    {
+    //      setLeftMFunction( "Quelle wählen" );
+    //      setRightMFunction( null );
+    //    }
+    //    // src != null && m_targetFE==null
+    //    else if( m_targetFE == null )
+    //    {
+    //      setLeftMFunction( "Ziel wählen" );
+    //      setRightMFunction( "Auswahl aufheben" );
+    //    }
+    //    // src != null && m_targetFE!=null
+    //    else
+    //    {
+    //      setLeftMFunction( "Relation anlegen" );
+    //      setRightMFunction( "Auswahl aufheben" );
+    //    }
   }
 
   /**
