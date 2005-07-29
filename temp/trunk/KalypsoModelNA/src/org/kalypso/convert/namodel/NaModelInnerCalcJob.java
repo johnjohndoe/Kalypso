@@ -103,11 +103,15 @@ import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
+import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
 /**
@@ -241,8 +245,14 @@ public class NaModelInnerCalcJob implements ICalcJob
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse" );
         loadResults( tmpdir, modellWorkspace, logger, resultDir, resultEater );
+        System.out.println( "fertig - Ergebnisse vorhanden" );
       }
-      System.out.println( "fertig" );
+      else
+      {
+        monitor.setMessage( "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
+        loadLogs( tmpdir, logger, resultEater );
+        System.out.println( "fertig - Fehler siehe Log-Dateien" );
+      }
     }
     catch( Exception e )
     {
@@ -293,14 +303,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
         .getURLForID( NaModelConstants.IN_CONTROL_ID ) );
 
-    //  model Hydrotop
-    final GMLWorkspace hydrotopWorkspace;
-    if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
-      hydrotopWorkspace = GmlSerializer
-          .createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
-    else
-      hydrotopWorkspace = null;
-
     //model Parameter
     final GMLWorkspace parameterWorkspace;
     if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
@@ -315,6 +317,30 @@ public class NaModelInnerCalcJob implements ICalcJob
 
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellURL );
     ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
+
+    //  model Hydrotop
+    final GMLWorkspace hydrotopWorkspace;
+
+    if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
+    {
+      hydrotopWorkspace = GmlSerializer
+          .createGMLWorkspace( dataProvider.getURLForID( NaModelConstants.IN_HYDROTOP_ID ) );
+      final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getFeatureType( "Hydrotop" ) );
+      CS_CoordinateSystem targetCS = null;
+      for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
+      {
+        final GM_Object geom = (GM_Object)hydroFES[i].getProperty( "Ort" );
+        if( geom != null && geom.getCoordinateSystem() != null )
+          targetCS = geom.getCoordinateSystem();
+      }
+      if( targetCS != null )
+      {
+        final TransformVisitor visitor = new TransformVisitor( targetCS );
+        modellWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
+      }
+    }
+    else
+      hydrotopWorkspace = null;
 
     // setting duration of simulation...
     // start
@@ -833,7 +859,6 @@ public class NaModelInnerCalcJob implements ICalcJob
       logger.info( e.getMessage() );
     }
 
-    final File logDir = new File( tmpDir, "start" );
     try
     {
       resultEater.addResult( NaModelConstants.LOG_OUTRES_ID, new File( tmpDir, "start/output.res" ) );
@@ -845,7 +870,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
     try
     {
-      resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, new File( logDir, "start/output.err" ) );
+      resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, new File( tmpDir, "start/output.err" ) );
     }
     catch( CalcJobServiceException e )
     {
