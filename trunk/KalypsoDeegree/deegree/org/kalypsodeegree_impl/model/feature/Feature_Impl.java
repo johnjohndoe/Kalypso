@@ -74,9 +74,9 @@ public class Feature_Impl implements Feature
     }
 
     final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
-    for( int i = 0; i < ftp.length; i++ )
+    for( int i = 0; i < properties.length; i++ )
     {
-      if( properties[i].getValue() != null && ft.getMaxOccurs( i ) == 1 )
+      if( properties[i].getValue() != null && ft.getMaxOccurs( properties[i].getName() ) == 1 )
         setProperty( properties[i] );
     }
   }
@@ -112,9 +112,9 @@ public class Feature_Impl implements Feature
     if( initializeWithDefaults )
     {
       final FeatureProperty[] properties = FeatureFactory.createDefaultFeatureProperty( ftp, false );
-      for( int i = 0; i < ftp.length; i++ )
+      for( int i = 0; i < properties.length; i++ )
       {
-        if( properties[i].getValue() != null && ft.getMaxOccurs( i ) == 1 )
+        if( properties[i].getValue() != null && ft.getMaxOccurs( properties[i].getName() ) == 1 )
           setProperty( properties[i] );
       }
     }
