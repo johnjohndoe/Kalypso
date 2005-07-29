@@ -565,8 +565,7 @@ public class GMLFactory
    * 
    * Andreas: wird nicht benutzt, kann weg?
    */
-  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature )
-      throws GMLException
+  public static GMLFeature createGMLFeature( final GMLDocument doc, final DeegreeFeature feature ) throws GMLException
   {
     Debug.debugMethodBegin( "GMLFactory", "createGMLFeature(Feature)" );
 
@@ -632,7 +631,8 @@ public class GMLFactory
   {
 
     // marshalling
-    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton
+        .getTypeRegistry().getTypeHandlerForClassName( ftp.getType() );
 
     GMLProperty prop = null;
     if( value instanceof List )
@@ -643,7 +643,7 @@ public class GMLFactory
     }
     else if( value == null )
     {
-      if( min > 0 )
+      if( min > 0 && !( ftp instanceof FeatureAssociationTypeProperty ) )
         prop = doc.createGMLProperty( ftp, "" );
     }
     else if( typeHandler != null )
@@ -690,16 +690,14 @@ public class GMLFactory
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.20  2005/06/29 10:41:17  belger
+ * Revision 1.21  2005/07/29 08:33:20  huebsch
  * *** empty log message ***
- *
- * Revision 1.19  2005/06/23 23:13:27  belger
- * Refaktoring TypeHandler
- * FeatureView Layout noch schöner
- *
- * Revision 1.18  2005/06/20 14:07:46  belger
- * Formatierung
- * Revision 1.17 2005/06/15 15:16:58 doemming *** empty log message ***
+ * Revision 1.20 2005/06/29 10:41:17 belger *** empty log message ***
+ * 
+ * Revision 1.19 2005/06/23 23:13:27 belger Refaktoring TypeHandler FeatureView Layout noch schöner
+ * 
+ * Revision 1.18 2005/06/20 14:07:46 belger Formatierung Revision 1.17 2005/06/15 15:16:58 doemming *** empty log
+ * message ***
  * 
  * Revision 1.16 2005/06/05 22:43:54 doemming *** empty log message *** Revision 1.15 2005/05/03 11:38:52 belger ***
  * empty log message ***

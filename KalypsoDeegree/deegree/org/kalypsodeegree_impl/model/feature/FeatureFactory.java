@@ -188,8 +188,8 @@ public class FeatureFactory
   /**
    * 
    * @param initializeWithDefaults
-   *          set <code>true</code> when generating from UserInterface <br>
-   *          set <code>false</code> when generating from GML or so.
+   *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
+   *          set <code>false</code> to not generate default properties ( e.g. when reading from GML or so.)
    */
   public static Feature createFeature( String id, FeatureType featureType, boolean initializeWithDefaults )
   {
@@ -368,7 +368,8 @@ public class FeatureFactory
 
       final String type = ftp.getType();
       final Object value = Mapper.defaultValueforJavaType( type, createGeometry );
-      results.add( FeatureFactory.createFeatureProperty( ftp.getName(), value ) );
+      if( !( ftp instanceof FeatureAssociationTypeProperty ) )
+        results.add( FeatureFactory.createFeatureProperty( ftp.getName(), value ) );
     }
     return (FeatureProperty[])results.toArray( new FeatureProperty[results.size()] );
   }

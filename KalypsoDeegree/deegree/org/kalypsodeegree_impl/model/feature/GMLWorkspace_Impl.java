@@ -426,7 +426,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public Feature createFeature( FeatureType type )
   {
     String newId = createFeatureId( type );
-    return FeatureFactory.createFeature( newId, type );
+    return FeatureFactory.createFeature( newId, type, false );
   }
 
   private String createFeatureId( FeatureType type )
