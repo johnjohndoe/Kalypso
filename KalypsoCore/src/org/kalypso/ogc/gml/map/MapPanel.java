@@ -48,19 +48,32 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
+import org.eclipse.jface.viewers.IPostSelectionProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureSelectionChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -70,9 +83,12 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author vdoemming
  *  
  */
-public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider
+public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider,
+    ISelectionProvider, IPostSelectionProvider
 {
   private final ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
+
+  private final SelectionProviderAdapter m_selectionProvider = new SelectionProviderAdapter();
 
   private static final long serialVersionUID = 1L;
 
@@ -94,7 +110,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
 
-  private Image mapImage = null;
+  private Image m_mapImage = null;
 
   private int xOffset = 0;
 
@@ -106,7 +122,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private boolean validMap = false;
 
-  private IMapModell m_model = null;
+  IMapModell m_model = null;
 
   private final WidgetManager m_widgetManager;
 
@@ -114,14 +130,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private GM_Envelope m_boundingBox = new GM_Envelope_Impl();
 
-  private final int m_selectionID;
-
   private GM_Envelope m_wishBBox;
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final int selectionID )
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs )
   {
-    m_selectionID = selectionID;
-
     // set empty Modell:
     setMapModell( new MapModell( crs, null ) );
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
@@ -190,14 +202,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       // setValidAll( false );
     }
 
-    if( !hasValidMap() || mapImage == null )
+    if( !hasValidMap() || m_mapImage == null )
     {
       final Rectangle clipBounds = g.getClipBounds();
       if( clipBounds != null )
       {
-        mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(),
-            getHeight(), model, m_selectionID );
-        setValidMap( mapImage != null );
+        m_mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(),
+            getHeight(), model );
+        setValidMap( m_mapImage != null );
       }
     }
 
@@ -228,10 +240,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     }
 
     // draw map:
-    g.drawImage( mapImage, xOffset, yOffset, null );
+    g.drawImage( m_mapImage, xOffset, yOffset, null );
     // draw selection:
-    // g.setXORMode( Color.red );
-    // g.drawImage( selectionImage, xOffset, yOffset, null );
+    //     g.setXORMode( Color.red );
+    //     g.drawImage( selectionImage, xOffset, yOffset, null );
     // draw highlights:
     // g.setXORMode( Color.green );
     // g.drawImage( highlightImage, xOffset, yOffset, null );
@@ -296,6 +308,23 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     clearOffset();
     // inform my listeners
     fireModellEvent( modellEvent );
+    if( modellEvent instanceof FeatureSelectionChangedModellEvent )
+    {
+      GMLWorkspace workspace = ( (FeatureSelectionChangedModellEvent)modellEvent ).getGMLWorkspace();
+      IKalypsoTheme activeTheme = m_model.getActiveTheme();
+      if( activeTheme instanceof IKalypsoFeatureTheme
+          && ( (IKalypsoFeatureTheme)activeTheme ).getWorkspace() == workspace )
+      {
+        IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
+        //            final CommandableWorkspace workspace = theme.getWorkspace();
+        final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
+        final IStructuredSelection selection = selectionManager.getStructuredSelection();
+        setSelection( new CommandableFeatureSelection( (CommandableWorkspace)workspace, selection, null, null ) );
+        //                  return ( (IKalypsoFeatureTheme)theme ).getSelectionManager().getStructuredSelection();
+        //        firePostSelectionChanged();
+        //        ( getSelection() );
+      }
+    }
   }
 
   public GM_Envelope getPanToPixelBoundingBox( double mx, double my )
@@ -404,11 +433,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
   }
 
-  public int getSelectionID()
-  {
-    return m_selectionID;
-  }
-
   public WidgetManager getWidgetManager()
   {
     return m_widgetManager;
@@ -465,5 +489,49 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   public void removeModellListener( ModellEventListener listener )
   {
     m_modellEventProvider.removeModellListener( listener );
+  }
+
+  public void addPostSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_selectionProvider.addPostSelectionChangedListener( listener );
+  }
+
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_selectionProvider.addSelectionChangedListener( listener );
+  }
+
+  public void firePostSelectionChanged()
+  {
+    m_selectionProvider.firePostSelectionChanged();
+  }
+
+  public void removePostSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_selectionProvider.removePostSelectionChangedListener( listener );
+  }
+
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_selectionProvider.removeSelectionChangedListener( listener );
+  }
+
+  public void setSelection( ISelection selection )
+  {
+    final IKalypsoTheme activeTheme = m_model.getActiveTheme();
+    if( selection instanceof IStructuredSelection && activeTheme instanceof IKalypsoFeatureTheme )
+    {
+      IFeatureSelectionManager selectionManager = ( (IKalypsoFeatureTheme)activeTheme ).getSelectionManager();
+      selectionManager.setSelection( ( (IStructuredSelection)selection ).toList() );
+    }
+    m_selectionProvider.setSelection( selection );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
+  public ISelection getSelection()
+  {
+    return m_selectionProvider.getSelection();
   }
 }

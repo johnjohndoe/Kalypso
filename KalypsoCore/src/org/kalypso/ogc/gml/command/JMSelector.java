@@ -52,6 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -85,7 +86,7 @@ public class JMSelector
     this.mySelectionMode = selectionMode;
   }
 
-  public List perform( final List listFe, final int selectionId )
+  public List perform( final List listFe, final IFeatureSelectionManager selectionManager )
   {
     final List result = new ArrayList(); // alle veraenderten fe
     final Iterator iterator = listFe.iterator();
@@ -99,11 +100,11 @@ public class JMSelector
         result.add( fe );
         break;
       case MODE_SELECT:
-        if( !fe.isSelected( selectionId ) )
+        if( !selectionManager.isSelected( fe) )
           result.add( fe );
         break;
       case MODE_UNSELECT:
-        if( fe.isSelected( selectionId ) )
+        if( selectionManager.isSelected( fe)  )
           result.add( fe );
         break;
       case MODE_COLLECT:
@@ -124,7 +125,7 @@ public class JMSelector
    * ComplexFilter(operation);
    */
   public List select( final GM_Envelope env, final FeatureList list, final boolean selectWithinBoxStatus,
-      final int selectionId )
+      final IFeatureSelectionManager selectionManager )
   {
     try
     {
@@ -147,7 +148,7 @@ public class JMSelector
           testFE.add( fe );
       }
 
-      return perform( testFE, selectionId );
+      return perform( testFE, selectionManager );
     }
     catch( final Exception e )
     {
@@ -160,7 +161,7 @@ public class JMSelector
   /**
    * selects all features that intersects the submitted point
    */
-  public List select( final GM_Position position, final FeatureList list, int selectionId )
+  public List select( final GM_Position position, final FeatureList list, final IFeatureSelectionManager selectionManager )
   {
     final List resultList = new ArrayList();
     final List testFe = new ArrayList();
@@ -180,11 +181,11 @@ public class JMSelector
         System.out.println( err.getMessage() );
         System.out.println( "...using workaround \"box selection\"" );
         System.out.println( "set view dependent radius" );
-        resultList.addAll( select( position, 0.0001d, list, false, selectionId ) );
+        resultList.addAll( select( position, 0.0001d, list, false, selectionManager ) );
       }
     }
 
-    resultList.addAll( perform( testFe, selectionId ) );
+    resultList.addAll( perform( testFe, selectionManager ) );
 
     return resultList;
   }
@@ -193,22 +194,22 @@ public class JMSelector
    * selects all features (display elements) that are located within the circle described by the position and the
    * radius.
    */
-  public List select( GM_Position pos, double r, final FeatureList list, boolean withinStatus, int selectionId )
+  public List select( GM_Position pos, double r, final FeatureList list, boolean withinStatus, final IFeatureSelectionManager selectionManager)
   {
     final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos
         .getY()
         + r );
-    final List resultDE = select( env, list, withinStatus, selectionId );
+    final List resultDE = select( env, list, withinStatus, selectionManager );
 
     return resultDE;
   }
 
   public Feature selectNearest( GM_Point pos, final double r, final FeatureList list, final boolean withinStatus,
-      final int selectionId )
+      final IFeatureSelectionManager selectionManager )
   {
     Feature result = null;
     double dist = 0;
-    final List listFE = select( pos.getPosition(), r, list, withinStatus, selectionId );
+    final List listFE = select( pos.getPosition(), r, list, withinStatus, selectionManager );
     for( int i = 0; i < listFE.size(); i++ )
     {
       final Feature fe = (Feature)listFE.get( i );

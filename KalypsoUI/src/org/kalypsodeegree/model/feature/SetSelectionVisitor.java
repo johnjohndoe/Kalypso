@@ -27,27 +27,42 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.editor.actions;
+package org.kalypsodeegree.model.feature;
 
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
- * IFeatureThemeSelection
- * <p>
  * 
- * created by
+ * TODO: insert type comment here
  * 
- * @author doemming (24.05.2005)
+ * @author doemming
  */
-public interface IFeatureThemeSelection extends ICommandableFeatureSelection
+public class SetSelectionVisitor implements FeatureVisitor
 {
-  public IKalypsoFeatureTheme getKalypsoFeatureTheme();
 
-  public FeatureTypeProperty getFocusedFeatureTypeProperty();
+  private final List m_listOfFeatureIds;
 
-  public Feature getFocusedFeature();
+  private final IFeatureSelectionManager m_selectionManager;
 
-  public int getSelectionId();
+  /**
+   *  
+   */
+  public SetSelectionVisitor( List listOfFeatureIds, IFeatureSelectionManager selectionManager )
+  {
+    m_listOfFeatureIds = listOfFeatureIds==null ? new ArrayList(): listOfFeatureIds;
+    m_selectionManager = selectionManager;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   */
+  public boolean visit( Feature f )
+  {
+    if( m_listOfFeatureIds.contains( f.getId() ) )
+      m_selectionManager.addToSelection( f );
+    return true;
+  }
 }

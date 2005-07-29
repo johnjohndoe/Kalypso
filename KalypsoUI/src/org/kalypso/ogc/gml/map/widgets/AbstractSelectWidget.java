@@ -48,9 +48,8 @@ import java.util.List;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.JMMarkSelectCommand;
 import org.kalypso.ogc.gml.command.JMSelector;
-import org.kalypso.ogc.gml.command.SingleSelectCommand;
+import org.kalypso.ogc.gml.command.SelectFeaturesCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -165,7 +164,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
             .createGM_Point( g1x, g1y, mapPanel.getMapModell().getCoordinatesSystem() );
 
         final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme )
-            .getFeatureListVisible( null ), false, mapPanel.getSelectionID() );
+            .getFeatureListVisible( null ), false, activeTheme.getSelectionManager() );
 
         final List listFe = new ArrayList();
         if( fe != null )
@@ -173,7 +172,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         //List listFe = selector.select( pointSelect, activeTheme,
         // mapPanel.getSelectionID() );
         if( !listFe.isEmpty() )
-          fireCommand( listFe, (IKalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
+          fireCommand( listFe, (IKalypsoFeatureTheme)activeTheme );
       }
       else
       // dragged
@@ -195,9 +194,9 @@ public abstract class AbstractSelectWidget extends AbstractWidget
           final JMSelector selector = new JMSelector( getSelectionMode() );
           GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
           List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
-              .getFeatureListVisible( null ), withinStatus, mapPanel.getSelectionID() );
+              .getFeatureListVisible( null ), withinStatus, activeTheme.getSelectionManager() );
           if( !features.isEmpty() )
-            fireCommand( features, (IKalypsoFeatureTheme)activeTheme, mapPanel.getSelectionID() );
+            fireCommand( features, (IKalypsoFeatureTheme)activeTheme );
         }
       }
     }
@@ -205,16 +204,18 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     m_endPoint = null;
   }
 
-  private void fireCommand( final List features, final IKalypsoFeatureTheme activeTheme, final int selectionId )
+  private void fireCommand( final List features, final IKalypsoFeatureTheme activeTheme )
   {
     ICommand command = null;
     if( allowOnlyOneSelectedFeature() )
     {
       final Feature fe = (Feature)features.get( 0 );
-      command = new SingleSelectCommand( activeTheme.getWorkspace(), fe, selectionId, activeTheme );
+      command = new SelectFeaturesCommand( activeTheme.getWorkspace(), fe, activeTheme.getSelectionManager() );
     }
     else
-      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, selectionId, getSelectionMode() );
+      command = new SelectFeaturesCommand( activeTheme.getWorkspace(), (Feature[])features
+          .toArray( new Feature[features.size()] ), activeTheme.getSelectionManager() );
+    //      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, getSelectionMode() );
 
     postViewCommand( command, null );
   }

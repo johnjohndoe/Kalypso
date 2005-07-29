@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.editor.actions;
+package org.kalypso.ogc.gml.selection;
 
 import java.util.Iterator;
 import java.util.List;
@@ -63,18 +63,15 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
 
   private final Feature m_selectedRow;
 
-  private final int m_selectionId;
-
   private final CommandableWorkspace m_workspace;
 
   public CommandableFeatureSelection( final CommandableWorkspace workspace, final IStructuredSelection selection,
-      final FeatureTypeProperty ftp, final Feature selectedRow, int selectionID )
+      final FeatureTypeProperty ftp, final Feature selectedRow )
   {
     m_workspace = workspace;
     m_selection = selection;
     m_ftp = ftp;
     m_selectedRow = selectedRow;
-    m_selectionId = selectionID;
   }
 
   public Object getFirstElement()
@@ -112,7 +109,7 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   }
 
   /**
-   * @see org.kalypso.ui.editor.actions.IFeatureThemeSelection#getFocusedFeatureTypeProperty()
+   * @see org.kalypso.ogc.gml.selection.IFeatureThemeSelection#getFocusedFeatureTypeProperty()
    */
   public FeatureTypeProperty getFocusedFeatureTypeProperty()
   {
@@ -125,16 +122,7 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   }
 
   /**
-   * @see org.kalypso.ui.editor.actions.IFeatureThemeSelection#getSelectionId()
-   */
-  public int getSelectionId()
-  {
-    return m_selectionId;
-
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.actions.ICommandableFeatureSelection#getCommandableWorkspace()
+   * @see org.kalypso.ogc.gml.selection.ICommandableFeatureSelection#getCommandableWorkspace()
    */
   public CommandableWorkspace getCommandableWorkspace()
   {

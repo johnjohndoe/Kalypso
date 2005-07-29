@@ -64,6 +64,8 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
+import org.kalypsodeegree_impl.model.feature.selection.InverseFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
@@ -79,10 +81,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   final FeatureList m_featureList;
 
+  private IFeatureSelectionManager m_selectionManager = null;
+
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name )
   {
     super( name );
-
+    setSelectionManager( workspace.getSelectionManager() );
     m_workspace = workspace;
 
     final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
@@ -130,23 +134,36 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featureType;
   }
 
-  public void paintSelected( final Graphics graphics, final GeoTransform projection, final double scale,
-      final GM_Envelope bbox, final int selectionId )
+  public void paintUnSelected( final Graphics graphics, final GeoTransform projection, final double scale,
+      final GM_Envelope bbox )
   {
+    final IFeatureSelectionManager selectionManager = new InverseFeatureSelectionManager( getSelectionManager() );
     for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
       StyleDisplayMap map = (StyleDisplayMap)iter.next();
-      map.paintSelected( graphics, projection, scale, bbox, selectionId );
+      map.paintSelected( graphics, projection, scale, bbox, selectionManager );
+    }
+  }
+
+  public void paintSelected( final Graphics graphics, final GeoTransform projection, final double scale,
+      final GM_Envelope bbox )
+  {
+    IFeatureSelectionManager selectionManager = getSelectionManager();
+    for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
+    {
+      StyleDisplayMap map = (StyleDisplayMap)iter.next();
+      map.paintSelected( graphics, projection, scale, bbox, selectionManager );
     }
   }
 
   public void paintSelected( final Graphics graphics, Graphics hg, final GeoTransform projection, final double scale,
-      final GM_Envelope bbox, final int selectionId )
+      final GM_Envelope bbox )
   {
+    IFeatureSelectionManager selectionManager = getSelectionManager();
     for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
       StyleDisplayMap map = (StyleDisplayMap)iter.next();
-      map.paintSelected( graphics, hg, projection, scale, bbox, selectionId );
+      map.paintSelected( graphics, hg, projection, scale, bbox, selectionManager );
     }
   }
 
@@ -337,7 +354,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
      * 
      * @return List of display elements that fit to selectionMask <br>
      */
-    public List getSelectedDisplayElements( List result, int selectionMask, GM_Envelope bbox )
+    public List getSelectedDisplayElements( List result, final IFeatureSelectionManager selectionManager,
+        GM_Envelope bbox )
     {
       if( result == null )
         result = new ArrayList();
@@ -347,17 +365,29 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         if( de.length > 0 )
         {
           final Feature feature = de[0].getFeature();
-          if( feature.isSelected( selectionMask ) && feature.getEnvelope().intersects( bbox ) )
+
+          if( selectionManager.isSelected( feature ) && feature.getEnvelope().intersects( bbox ) )
             result.add( de );
         }
       }
       return result;
     }
 
-    public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
+    public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
+    {
+      paintSelected( g, p, scale, bbox, getSelectionManager() );
+    }
+
+    public void paintUnSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
+    {
+      paintSelected( g, p, scale, bbox, new InverseFeatureSelectionManager( getSelectionManager() ) );
+    }
+
+    void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
+        IFeatureSelectionManager selectionManager )
     {
       restyle( bbox );
-      final List selectedDE = getSelectedDisplayElements( null, selectionId, bbox );
+      final List selectedDE = getSelectedDisplayElements( null, selectionManager, bbox );
       final List[] layerList = new List[m_maxDisplayArray];
       // try to keep order of rules in userstyle
       for( int i = 0; i < layerList.length; i++ )
@@ -377,7 +407,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           ( (DisplayElement)iterator.next() ).paint( g, p );
     }
 
-    public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
+    void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox,
+        final IFeatureSelectionManager selectionManager )
     {
       restyle( bbox );
       final List selectedDE = m_dispayElements;
@@ -400,7 +431,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         for( Iterator iterator = layerList[i].iterator(); iterator.hasNext(); )
         {
           DisplayElement de = (DisplayElement)iterator.next();
-          if( de.getFeature().isSelected( selectionId ) )
+          if( selectionManager.isSelected( de.getFeature() ) )
             de.paint( hg, p );
           else
             de.paint( g, p );
@@ -448,5 +479,21 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       }
       addDisplayElements( feature );
     }
+  }
+
+  public void setSelectionManager( final IFeatureSelectionManager selectionManager )
+  {
+//    if( m_selectionManager != null )
+//      m_selectionManager.removeModellListener( this );
+    m_selectionManager = selectionManager;
+//    m_selectionManager.addModellListener( this );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getSelectionManager()
+   */
+  public IFeatureSelectionManager getSelectionManager()
+  {
+    return m_selectionManager;
   }
 }

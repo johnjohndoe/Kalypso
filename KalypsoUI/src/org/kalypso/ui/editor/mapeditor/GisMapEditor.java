@@ -50,6 +50,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -90,19 +93,19 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider
+public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, ISelectionProvider
 {
   private GisMapOutlinePage m_outlinePage = null;
 
-  private final MapPanel myMapPanel;
+  private final MapPanel m_MapPanel;
 
   private GisTemplateMapModell m_mapModell;
 
   public GisMapEditor()
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    myMapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), plugin.getDefaultMapSelectionID() );
-    myMapPanel.getWidgetManager().addWidgetChangeListener( new IWidgetChangeListener()
+    m_MapPanel = new MapPanel( this, plugin.getCoordinatesSystem() );
+    m_MapPanel.getWidgetManager().addWidgetChangeListener( new IWidgetChangeListener()
     {
       public void widgetChanged( final IWidget newWidget )
       {
@@ -209,8 +212,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
     final Frame virtualFrame = SWT_AWT.new_Frame( composite );
     virtualFrame.setVisible( true );
-    myMapPanel.setVisible( true );
-    virtualFrame.add( myMapPanel );
+    m_MapPanel.setVisible( true );
+    virtualFrame.add( m_MapPanel );
   }
 
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
@@ -245,7 +248,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     m_mapModell = mapModell;
 
-    myMapPanel.setMapModell( m_mapModell );
+    m_MapPanel.setMapModell( m_mapModell );
     if( m_outlinePage != null )
       m_outlinePage.setMapModell( m_mapModell );
   }
@@ -263,7 +266,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public MapPanel getMapPanel()
   {
-    return myMapPanel;
+    return m_MapPanel;
   }
 
   public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
@@ -279,7 +282,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     if( m_mapModell != null )
       m_mapModell.dispose();
 
-    myMapPanel.dispose();
+    m_MapPanel.dispose();
 
     setMapModell( null );
 
@@ -289,4 +292,35 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     super.dispose();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_MapPanel.addSelectionChangedListener( listener );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
+  public ISelection getSelection()
+  {
+    return m_MapPanel.getSelection();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_MapPanel.removeSelectionChangedListener( listener );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  public void setSelection( ISelection selection )
+  {
+    m_MapPanel.setSelection( selection );
+  }
 }

@@ -373,6 +373,17 @@
                tooltip="verschiebt den Kartenausschnitt">
          </action>
          <action
+               state="false"
+               style="radio"
+               id="org.kalypso.ui.editor.mapeditor.action.SelectFeatureAction"
+               toolbarPath="karte/tools"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate"
+               icon="icons/sample.gif"
+               label="Feature Selektieren"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+               tooltip="selektiert Feature">
+         </action>
+         <action
                label="Objekt editieren"
                icon="icons/full/elcl16/kde_contexthelp.gif"
                style="radio"

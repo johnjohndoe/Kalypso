@@ -176,7 +176,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, plugin.getDefaultMapSelectionID() );
+    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory);
 
     final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );

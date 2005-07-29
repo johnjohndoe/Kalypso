@@ -47,6 +47,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -60,7 +61,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author kuepfer (20.05.2005)
  */
 public class KalypsoPictureTheme extends AbstractKalypsoTheme
-
 {
   private final static String SUFFIX_TIFF = "TFW";
 
@@ -80,9 +80,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   // Andreas: dieses Pattern (variable m_rx und m_ry nicht benutzt)
   // taucht im Code verteilt mehrfach auf; doppelter code?
-//  private double m_rx = 0;
+  //  private double m_rx = 0;
 
-//  private double m_ry = 0;
+  //  private double m_ry = 0;
 
   private double m_dy = 0;
 
@@ -134,8 +134,8 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
       InputStream is = worldFileURL.openStream();
       BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
       m_dx = Double.parseDouble( br.readLine().trim() );
-      /*m_rx = */Double.parseDouble( br.readLine().trim() );
-      /*m_ry =*/ Double.parseDouble( br.readLine().trim() );
+      /* m_rx = */Double.parseDouble( br.readLine().trim() );
+      /* m_ry = */Double.parseDouble( br.readLine().trim() );
       m_dy = Double.parseDouble( br.readLine().trim() );
       ulcx = Double.parseDouble( br.readLine().trim() );
       ulcy = Double.parseDouble( br.readLine().trim() );
@@ -207,15 +207,19 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
   //nothing
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
-   */
-  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
+  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
   {
-    if( selectionId != 0 )
-      return;
+  // nothing
+  }
+
+  /**
+   * 
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintUnSelected(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  public void paintUnSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
+  {
     try
     {
       WMSHelper.transformImage( m_image, m_origBBox, m_localCS, m_imageCS, p, g );
@@ -227,9 +231,9 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   }
 
-  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
+  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox )
   {
-    paintSelected( hg, p, scale, bbox, selectionId );
+  //    paintSelected( hg, p, scale, bbox, selectionManager );
   }
 
   /**
@@ -262,6 +266,14 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     layer.setLinktype( m_linkType );
     layer.setActuate( "onRequest" );
     layer.setType( "simple" );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getSelectionManager()
+   */
+  public IFeatureSelectionManager getSelectionManager()
+  {
+    return null;
   }
 
   //  public void saveTheme( IProgressMonitor monitor )

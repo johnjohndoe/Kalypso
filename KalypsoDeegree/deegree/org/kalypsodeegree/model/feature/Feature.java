@@ -9,19 +9,19 @@ public interface Feature extends DeegreeFeature
 {
   public void addProperty( FeatureProperty prop );
 
-  public boolean isSelected( int selectID );
+//  public boolean isSelected( int selectID );
+//
+//  public boolean toggle( int selectID );
+//
+//  public boolean unselect( int selectID );
+//
+//  public boolean select( int selectID );
 
-  public boolean toggle( int selectID );
-
-  public boolean unselect( int selectID );
-
-  public boolean select( int selectID );
-
-  /** Gibt die gesamte Selektion zurück */
-  public int getSelection();
-
-  /** setzt die Selektion komplett */
-  public void setSelection( final int selection );
+//  /** Gibt die gesamte Selektion zurück */
+//  public int getSelection();
+//
+//  /** setzt die Selektion komplett */
+//  public void setSelection( final int selection );
 
   public Object getVirtuelProperty( final String propertyName, final GMLWorkspace workspace );
 

@@ -113,7 +113,7 @@ public class MapModellHelper
   }
 
   public static BufferedImage createImageFromModell( final GeoTransform p, final GM_Envelope bbox,
-      final Rectangle bounds, final int width, final int height, final IMapModell model, final int selectionID )
+      final Rectangle bounds, final int width, final int height, final IMapModell model )
   {
     final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
     final Graphics gr = image.getGraphics();
@@ -131,16 +131,15 @@ public class MapModellHelper
       p.setDestRect( x - 2, y - 2, w + x, h + y );
 
       final double scale = calcScale( model, bbox, bounds.width, bounds.height );
-
-      model.paintSelected( gr, p, bbox, scale, 0 );
+      model.paintUnselected( gr, p, bbox, scale );
       gr.setXORMode( Color.yellow );
-      model.paintSelected( gr, p, bbox, scale, selectionID );
-      gr.setPaintMode();
+      model.paintSelected( gr, p, bbox, scale );
+      //      gr.setPaintMode();
 
-      //      Graphics hg = new HighlightGraphics( (Graphics2D)gr,
-      // Color.YELLOW.getRed() / 2, Color.YELLOW.getGreen() / 2,
-      // Color.YELLOW.getBlue() / 2,
-      //          Color.YELLOW.getAlpha() / 2 );
+      //            Graphics hg = new HighlightGraphics( (Graphics2D)gr,
+      //       Color.YELLOW.getRed() / 2, Color.YELLOW.getGreen() / 2,
+      //       Color.YELLOW.getBlue() / 2,
+      //          Colo//r.YELLOW.getAlpha() / 2 );
     }
     finally
     {

@@ -39,7 +39,7 @@ import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.actions.ICommandableFeatureSelection;
+import org.kalypso.ogc.gml.selection.ICommandableFeatureSelection;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * adapts {@link org.eclipse.jface.viewers.ISelectionProvider}or
  * {@linked org.eclipse.jface.viewers.IPostSelectionProvider}.</li>
  * <li>In preference, the view listens to post-selections, in order to change the shown feature not too often.</li>
- * <li>If the returned selection is a {@link org.kalypso.ui.editor.actions.ICommandableFeatureSelection}, changes
+ * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.ICommandableFeatureSelection}, changes
  * (i.e. made by the user) in the feature-control will be immediately postet into the given
  * {@link org.kalypso.ogc.gml.mapmodel.CommandableWorkspace}.</li>
  * <li>If the current selection changes to something not viewable, the last shown feature continues to be shown. If the

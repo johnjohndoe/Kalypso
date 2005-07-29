@@ -40,15 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree_impl.model.feature.visitors.GetSelectionVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.UnselectFeatureVisitor;
+import org.kalypsodeegree.model.feature.event.FeatureSelectionChangedModellEvent;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * Setzt die selektierten Features innerhalb eines Workspace
@@ -61,20 +57,27 @@ public class SelectFeaturesCommand implements ICommand
 
   private final Feature[] m_selection;
 
-  private final int m_selectionID;
+  private final IFeatureSelectionManager m_selectionManager;
 
-  private List m_selectedFeatures;
+  private Feature[] m_selectedFeaturesOriginal;
 
-  private final UnselectFeatureVisitor m_unselectVisitor;
+  public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature selection,
+      final IFeatureSelectionManager selectionManager )
+  {
+    this( workspace, new Feature[]
+    { selection }, selectionManager );
+  }
 
-  public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature[] selection, final int selectionID )
+  public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature[] selection,
+      final IFeatureSelectionManager selectionManager )
   {
     m_workspace = workspace;
     m_selection = selection;
-    m_selectionID = selectionID;
-
-    m_selectedFeatures = GetSelectionVisitor.getSelectedFeatures( workspace, selectionID );
-    m_unselectVisitor = new UnselectFeatureVisitor( m_selectionID );
+    if( selectionManager != null )
+      m_selectionManager = selectionManager;
+    else
+      m_selectionManager = workspace.getSelectionManager();
+    m_selectedFeaturesOriginal = m_selectionManager.getSelection();
   }
 
   /**
@@ -90,12 +93,8 @@ public class SelectFeaturesCommand implements ICommand
    */
   public void process() throws Exception
   {
-    m_workspace.accept( m_unselectVisitor, m_workspace.getRootFeature(), m_selectionID );
-
-    for( int i = 0; i < m_selection.length; i++ )
-      m_selection[i].select( m_selectionID );
-
-    m_workspace.fireModellEvent( new ModellEvent( m_workspace, ModellEvent.SELECTION_CHANGED ) );
+    m_selectionManager.setSelection( m_selection );
+    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace ) );
   }
 
   /**
@@ -111,12 +110,8 @@ public class SelectFeaturesCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_workspace.accept( m_unselectVisitor, m_workspace.getRootFeature(), m_selectionID );
-
-    for( final Iterator selIt = m_selectedFeatures.iterator(); selIt.hasNext(); )
-      ( (Feature)selIt.next() ).select( m_selectionID );
-
-    m_workspace.fireModellEvent( new ModellEvent( m_workspace, ModellEvent.SELECTION_CHANGED ) );
+    m_selectionManager.setSelection( m_selectedFeaturesOriginal );
+    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace ) );
   }
 
   /**

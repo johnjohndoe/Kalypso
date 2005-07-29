@@ -27,28 +27,51 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.editor.actions;
+package org.kalypsodeegree_impl.model.feature.selection;
+
+import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
- * IFeatureThemeSelection
- * <p>
  * 
- * created by
- * 
- * @author belger
+ * @author doemming
  */
-public interface ICommandableFeatureSelection extends IStructuredSelection
+public interface IFeatureSelectionManager 
+//extends ModellEventProvider
 {
-  public CommandableWorkspace getCommandableWorkspace();
+  public boolean addToSelection( final Feature feature );
 
-  public FeatureTypeProperty getFocusedFeatureTypeProperty();
+  public void addToSelection( final List listOfFeatures );
 
-  public Feature getFocusedFeature();
+  public void addToSelection( final Feature[] feature );
 
-  public int getSelectionId();
+  public void setSelection( final Feature[] feature );
+
+  public void setSelection( final List listOfFeatures );
+
+  public boolean removeFromSelection( final Feature feature );
+
+  public Feature[] getSelection();
+
+  public void clear();
+
+  /**
+   * @return
+   */
+  public IStructuredSelection getStructuredSelection();
+
+  /**
+   * @param feature
+   * @return
+   */
+  public boolean isSelected( final Feature feature );
+
+  /**
+   * @return
+   */
+  public List getSelectedIds();
+
 }

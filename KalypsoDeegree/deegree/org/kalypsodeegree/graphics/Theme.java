@@ -92,11 +92,6 @@ public interface Theme
   void setDisplayElements( ArrayList de );
 
   /**
-   * sets the parent MapView of the Theme.
-   */
-  void setParent( MapView parent );
-
-  /**
    * returns the name of the layer
    */
   String getName();

@@ -18,6 +18,8 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.selection.FeatureSelectionManager;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
@@ -41,6 +43,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /** xmlns -> namespaceURI */
   private final Map m_nsMap;
+
+  private final IFeatureSelectionManager m_selectionManager = new FeatureSelectionManager();
 
   /**
    * 
@@ -577,5 +581,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         return true;
     }
     return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSelectionManager()
+   */
+  public IFeatureSelectionManager getSelectionManager()
+  {
+    return m_selectionManager;
   }
 }

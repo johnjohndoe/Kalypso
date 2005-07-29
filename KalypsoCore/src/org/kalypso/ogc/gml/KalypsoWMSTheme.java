@@ -74,6 +74,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.tools.NetWorker;
 import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -201,11 +202,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
    */
-  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
+  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
   {
-    // kann keine selektion zeichnen!
-    if( selectionId != 0 )
-      return;
+  // nothing  
+  }
+  public void paintUnSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
+  {
     //the image is only updated when the wish bbox is ok
     if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
     {
@@ -233,9 +235,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     }
   }
 
-  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox, int selectionId )
+  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox )
   {
-    paintSelected( hg, p, scale, bbox, selectionId );
+    //   paintSelected( hg, p, scale, bbox, selectionManager );
   }
 
   public void updateImage( int width, int height, GM_Envelope bbox )
@@ -400,6 +402,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   public String getSource()
   {
     return m_source;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getSelectionManager()
+   */
+  public IFeatureSelectionManager getSelectionManager()
+  {
+    return null;
   }
 
   //  public void saveTheme( IProgressMonitor monitor )

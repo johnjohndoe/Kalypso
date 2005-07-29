@@ -40,8 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -149,22 +153,20 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public Color getBackground( Object element )
   {
-    if( element instanceof Feature )
-    {
-      if( ( (Feature)element ).isSelected( 1 ) )
-        return m_selectionColor;
-    }
+//    if( element instanceof Feature )
+//    {
+//      final ISelection selection = m_viewer.getSelection();
+//      if( selection instanceof IStructuredSelection )
+//      {
+//        final Iterator iterator = ( (IStructuredSelection)selection ).iterator();
+//        while( iterator.hasNext() )
+//        {
+//          final Object object = iterator.next();
+//          if( element == object )
+//            return m_selectionColor;
+//        }
+//      }
+//    }
     return m_noSelectionColor;
-    //    // TODO check highlight
-    //    final ISelection selection = m_viewer.getSelection();
-    //    if( selection instanceof IStructuredSelection )
-    //    {
-    //      final List list = ( (IStructuredSelection)selection ).toList();
-    //      if( list.contains( element ) )
-    //        return m_selectionColor;
-    //    }
-    //    else
-    //      return m_noSelectionColor;
-    //    return m_noSelectionColor;
   }
 }

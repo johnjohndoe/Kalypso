@@ -56,6 +56,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
@@ -306,5 +307,13 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public boolean isExistingRelation( Feature f1, Feature f2, String name )
   {
     return m_workspace.isExistingRelation( f1, f2, name );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSelectionManagere()
+   */
+  public IFeatureSelectionManager getSelectionManager()
+  {
+    return m_workspace.getSelectionManager();
   }
 }
