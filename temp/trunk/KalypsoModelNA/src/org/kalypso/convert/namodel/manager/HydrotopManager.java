@@ -16,7 +16,10 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -70,7 +73,8 @@ public class HydrotopManager extends AbstractManager
    * 
    * @author huebsch
    */
-  public HydrotopManager( GMLSchema schema, GMLSchema hydrotopSchema, NAConfiguration conf ) throws IOException
+  public HydrotopManager( GMLSchema hydrotopSchema, NAConfiguration conf ) throws IOException
+
   {
     super( conf.getHydrotopFormatURL() );
     //    m_crs = crs;
@@ -118,31 +122,28 @@ public class HydrotopManager extends AbstractManager
       double gesFlaeche = 0.0;
       List hydWriteList = new ArrayList();
       final Feature catchmentFE = (Feature)catchmentIter.next();
-      //      GM_Surface tGGeomProp = (GM_Surface)catchmentFE.getProperty( "Ort" );
       GM_Object tGGeomProp = (GM_Object)catchmentFE.getProperty( "Ort" );
+
       // Hydrotope im TeilgebietsEnvelope
       List hydInEnvList = hydList.query( catchmentFE.getEnvelope(), null );
       Iterator hydInEnvIter = hydInEnvList.iterator();
-      //      System.out.println( "Teilgebiet Nummer:" + catchmentFE.getProperty(
-      // "inum" ) );
       while( hydInEnvIter.hasNext() )
       {
         final Feature hydFeature = (Feature)hydInEnvIter.next();
         final GM_Object hydGeomProp = (GM_Object)hydFeature.getProperty( "Ort" );
-
-        //TODO: der centroid muss nicht zwangsläufig im teilgebiet sein zu
-        // welchem das hydrotop gehört!!! (wie kann man das besser abfragen)
-        //        if( tGGeomProp.contains( hydGeomProp) )
-        if( GeometryUtilities.isInside( tGGeomProp, hydGeomProp ) )
+        // Hint: JavaTopologySuite has no Coordinate System (here: all geometries
+        //are in the same cs - see NaModelInnerCalcJob)
+        Geometry jtsTG = JTSAdapter.export( tGGeomProp );
+        Geometry jtsHyd = JTSAdapter.export( hydGeomProp );
+        if( jtsTG.contains( jtsHyd.getInteriorPoint() ) )
         {
           hydWriteList.add( hydFeature );
-          double hydGesFlaecheTest = ( (Double)hydFeature.getProperty( "flaech" ) ).doubleValue();
           double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
           double versGrad = ( (Double)hydFeature.getProperty( "m_vers" ) ).doubleValue();
           double korVersGrad = ( (Double)hydFeature.getProperty( "fak_vers" ) ).doubleValue();
           if( korVersGrad < 0.0 )
           {
-            // TODO evt. beim NAImport setzen
+            // TODO JH: evt. beim NAImport setzen
             korVersGrad = 1.0;
           }
           double gesVersGrad = ( versGrad * korVersGrad );
@@ -154,9 +155,7 @@ public class HydrotopManager extends AbstractManager
       }
 
       int hydAnzahl = hydWriteList.size();
-
       double tGArea = GeometryUtilities.calcArea( tGGeomProp );
-
       if( (int)tGArea != (int)gesFlaeche )
       {
         System.out.println( "Fehler in den Hydrotopen!" );
@@ -166,9 +165,8 @@ public class HydrotopManager extends AbstractManager
             + ( fehler / gesFlaeche * 100d ) + "% diff: " + fehler );
       }
       else
-        System.out.println( "OK Fläche Teilgebiet (Nummer:" + catchmentFE.getProperty( "inum" ) );
-      asciiBuffer.getHydBuffer().append(
-          FortranFormatHelper.printf( FeatureHelper.getAsString( catchmentFE, "inum" ), "i4" ) );
+        asciiBuffer.getHydBuffer().append(
+            FortranFormatHelper.printf( FeatureHelper.getAsString( catchmentFE, "inum" ), "i4" ) );
       asciiBuffer.getHydBuffer().append(
           " " + hydAnzahl + " " + (int)versFlaeche + " " + (int)natFlaeche + " " + (int)gesFlaeche + "\n" );
 
