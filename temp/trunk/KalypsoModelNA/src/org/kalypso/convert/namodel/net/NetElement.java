@@ -337,4 +337,9 @@ public class NetElement
   {
     visitor.visit( this );
   }
+
+  public GMLWorkspace getWorkspace()
+  {
+    return m_workspace;
+  }
 }

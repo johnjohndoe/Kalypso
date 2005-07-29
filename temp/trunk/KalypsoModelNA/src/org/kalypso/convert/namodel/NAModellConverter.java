@@ -260,7 +260,7 @@ public class NAModellConverter
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
     m_nodeManager = new NetFileManager( m_conf );
     m_rhbManager = new RHBManager( m_modelSchema, m_conf );
-    m_hydrotopManager = new HydrotopManager( m_modelSchema, m_hydrotopSchema, m_conf );
+    m_hydrotopManager = new HydrotopManager( m_hydrotopSchema, m_conf );
     m_bodartManager = new BodenartManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
     m_bodtypManager = new BodentypManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
     m_nutzManager = new NutzungManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
