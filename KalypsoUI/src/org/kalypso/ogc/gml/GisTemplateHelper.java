@@ -60,8 +60,11 @@ import org.kalypso.template.gismapview.GismapviewType.LayersType;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.types.ExtentType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
 
 /**
@@ -167,7 +170,27 @@ public class GisTemplateHelper
   public static GM_Envelope getBoundingBox( Gismapview gisview )
   {
     final ExtentType extent = gisview.getExtent();
-    return GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
+    final GM_Envelope env=GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
+    final String orgSRSName = extent.getSrs();
+    if( orgSRSName != null )
+    {
+      try
+      {
+        final CS_CoordinateSystem targetSRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+        if( orgSRSName != null && !orgSRSName.equals( targetSRS.getName() ) )
+        {
+          // if srs attribute exists and it is not the target srs we have to convert it          
+          final GeoTransformer transformer = new GeoTransformer( targetSRS );
+          return transformer.transformEnvelope( env, orgSRSName );
+        }
+      }
+      catch( Exception e )
+      {
+        // we just print the error, but asume that we can return an envelope that is not converted
+        e.printStackTrace();
+      }
+    }
+    return env ;
   }
 
   public static void fillLayerType( Layer layer, String id, String name, boolean visible, KalypsoWMSTheme wmsTheme )
@@ -186,14 +209,12 @@ public class GisTemplateHelper
   /**
    * This method creates a new Map with a bounding box
    * 
-   * @param bbox
-   *          bounding box of new map
    * @return gismapview new empty map with a layer list
    *  
    */
-  public static Gismapview emptyGisView( final GM_Envelope bbox ) throws JAXBException
+  public static Gismapview emptyGisView( ) throws JAXBException
   {
-
+    final GM_Envelope dummyBBox = GeometryFactory.createGM_Envelope( 0, 0, 0, 0 );
     final ObjectFactory maptemplateFactory = new ObjectFactory();
 
     final org.kalypso.template.types.ObjectFactory extentedFactory = new org.kalypso.template.types.ObjectFactory();
@@ -201,17 +222,14 @@ public class GisTemplateHelper
     final LayersType layersType = maptemplateFactory.createGismapviewTypeLayersType();
     layersType.setActive( null );
 
-    if( bbox != null )
+    if( dummyBBox != null )
     {
       final ExtentType extentType = extentedFactory.createExtentType();
-
-      extentType.setTop( bbox.getMax().getY() );
-      extentType.setBottom( bbox.getMin().getY() );
-      extentType.setLeft( bbox.getMin().getX() );
-      extentType.setRight( bbox.getMax().getX() );
-
+      extentType.setTop( dummyBBox.getMax().getY() );
+      extentType.setBottom( dummyBBox.getMin().getY() );
+      extentType.setLeft( dummyBBox.getMin().getX() );
+      extentType.setRight( dummyBBox.getMax().getX() );
       gismapview.setExtent( extentType );
-
     }
 
     gismapview.setLayers( layersType );

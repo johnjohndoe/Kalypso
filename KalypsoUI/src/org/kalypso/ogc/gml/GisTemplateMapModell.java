@@ -145,7 +145,7 @@ public class GisTemplateMapModell implements IMapModell
   }
 
   // Helper
-  public Gismapview createGismapTemplate( final GM_Envelope bbox ) throws JAXBException
+  public Gismapview createGismapTemplate( final GM_Envelope bbox ,final String srsName) throws JAXBException
   {
     final ObjectFactory maptemplateFactory = new ObjectFactory();
     //
@@ -160,7 +160,7 @@ public class GisTemplateMapModell implements IMapModell
       extentType.setBottom( bbox.getMin().getY() );
       extentType.setLeft( bbox.getMin().getX() );
       extentType.setRight( bbox.getMax().getX() );
-
+      extentType.setSrs(srsName);
       gismapview.setExtent( extentType );
     }
 
