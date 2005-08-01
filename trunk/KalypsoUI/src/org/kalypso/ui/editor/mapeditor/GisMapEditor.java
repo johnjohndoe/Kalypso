@@ -76,6 +76,7 @@ import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * <p>
@@ -153,9 +154,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     try
     {
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
-      getMapPanel().getBoundingBox();
-
-      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( getMapPanel().getBoundingBox() );
+      final GM_Envelope boundingBox = getMapPanel().getBoundingBox();
+      final String srsName= KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox ,srsName);
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 

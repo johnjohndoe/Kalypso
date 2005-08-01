@@ -33,8 +33,6 @@ import org.eclipse.ui.ide.IDE;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class CreateGisMapViewWizard extends Wizard implements INewWizard
 {
@@ -151,8 +149,8 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
   private InputStream openContentStream() throws JAXBException, IOException
   {
     // Create GisMapView
-    GM_Envelope dummyEnvelope = GeometryFactory.createGM_Envelope( 0, 0, 0, 0 );
-    Gismapview gismapview = GisTemplateHelper.emptyGisView( dummyEnvelope );
+    
+    Gismapview gismapview = GisTemplateHelper.emptyGisView();
     ObjectFactory mapTemplateOF = new org.kalypso.template.gismapview.ObjectFactory();
     Marshaller marshaller = mapTemplateOF.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
