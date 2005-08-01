@@ -254,11 +254,13 @@ public class CreateFloodRiskProjectJob extends Job
       layerList.add( landuseLayer );
       layers.setActive( landuseLayer );
 
-      GM_Envelope bbox = createDummyLanduseTheme().getBoundingBox();
+      IKalypsoTheme dummyLanduseTheme = createDummyLanduseTheme();
+      GM_Envelope bbox = dummyLanduseTheme.getBoundingBox();
       extent.setLeft( bbox.getMin().getX() );
       extent.setBottom( bbox.getMin().getY() );
       extent.setRight( bbox.getMax().getX() );
       extent.setTop( bbox.getMax().getY() );
+      extent.setSrs(m_landuseCooSystem.getName());
 
       monitor.worked( 40 );
       if( monitor.isCanceled() )
