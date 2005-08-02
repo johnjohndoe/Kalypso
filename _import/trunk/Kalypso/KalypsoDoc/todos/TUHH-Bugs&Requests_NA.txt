@@ -5,17 +5,17 @@ TODO´s:
 	Wer: 		huebsch
 	Wann: 		06.07.2005
 	Termin:		?
-	Status:		offen
+	Status:		fertig
 	Kommentar:	Vergabe der ID´s, Links teilweise gesetzt
-	Bearbeiter:
+	Bearbeiter: jhueb,avd
 
 2) Editor Zeitreihenanbindung überarbeiten
 	Wer: 		huebsch
 	Wann: 		06.07.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:	
-	Bearbeiter:
+	Kommentar:	Nur relativ im Rechenfall bearbeiten. Aus Rechenfall Basismodell erzeugen.
+	Bearbeiter: 
 
 3) Anfangswerte/ Restart
 	Wer: 		Pasche, Schröder
@@ -25,29 +25,29 @@ TODO´s:
 	Kommentar:	
 	Bearbeiter:	huebsch
 	
-4) Zeitflächenfunktion integrieren in Schema & import über Excel
+4) Zeitflächenfunktion integrieren in Schema
 	Wer: 		Ingenieurbüros
 	Wann: 		06.07.2005
 	Termin:		?
 	Status:		offen
 	Kommentar:	
-	Bearbeiter:
+	Bearbeiter: jhueb, avd
 	
 5) Versionsverwaltung
 	Wer: 		huebsch
 	Wann: 		06.07.2005
 	Termin:		?
-	Status:		offen
+	Status:		erledigt
 	Kommentar:	
-	Bearbeiter:	
+	Bearbeiter:	avd
 
 6) naControl.xsd überarbeiten
 	Wer: 		huebsch
 	Wann: 		06.07.2005
 	Termin:		?
-	Status:		offen
+	Status:		erledigt
 	Kommentar:	
-	Bearbeiter:	
+	Bearbeiter:	jhueb, avd
 	
 7) Schema um Knoten zu Knoten erweitern
 	Wer: 		huebsch
@@ -55,7 +55,7 @@ TODO´s:
 	Termin:		?
 	Status:		offen
 	Kommentar:	
-	Bearbeiter:	
+	Bearbeiter:	avd, jhueb
 	
 
 -----------------
@@ -70,43 +70,43 @@ Feature Requests:
 	Kommentar:	
 	Bearbeiter:
 
-2) Zeitflächenfunktion in Schema und Import von CSV
+2) Zeitflächenfunktion in Schema und Import von Excel
 	Wer: 		Ingenieurbüros
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:	
-	Bearbeiter:
+	Kommentar:	Import über Excel in allgemeiner Form für den ZMLInline Editor.
+	Bearbeiter: avd, jhueb
 
 3) Ergebnissablage (angepasste Berichtsablage an die Ergebnisadateien), Kalibrierungsprotokoll
 	Wer: 		Ingenieurbüros
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:
-	Bearbeiter:
+	Kommentar:	Entsteht mit dem Diff
+	Bearbeiter: ck, ms&gb
 
 4) Berechnung wahlweise von Pegel zu Pegel oder das Gesamtmodell
 	Wer: 		Ingenieurbüros
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:
-	Bearbeiter:
+	Kommentar:	control erweitern - vorhandene zuflüsse übernehmen?
+	Bearbeiter: jhueb, avd
 
 5) Tabellen in den Tabellen - Werte übernehemen ermöglichen. Z.B. Kalinin-Miljukov oder Bodenkorrekturwerte von einem Strang/ Teilgebiet in ein anderes übernehmen.
 	Wer: 		Ingenieurbüros, Claudia
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:
-	Bearbeiter:
+	Kommentar:	über marshalling
+	Bearbeiter:	
 
 6) Im nacontrol.xsd annotations einfügen
 	Wer: 		Ingenieurbüros, Brüning
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		angenommen
+	Status:		erledigt
 	Kommentar:
 	Bearbeiter:	Huebsch
 
@@ -131,18 +131,18 @@ Feature Requests:
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		offen
+	Status:		erledigt
 	Kommentar:	Sollte im Code auch einheitlich durchgezogen werden (Modellunabhängig, da sonst Probleme bei
 				Modellen in Hamburg, Europa... mit global gesetztem CRS in den Preferences)	.
-	Bearbeiter:	
+	Bearbeiter:	jhueb
 
 10) Versiegelte Fläche im Teilgebiet wird nicht bei Import gesetzt, sollte durch Import berechnet werden (evtl. aus Hydrotopimport).
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:	
-	Bearbeiter:	
+	Kommentar:	kommt raus, da er nicht zur berechnung verwendet wird. evtl. styles für hydrotope zur visualisierung der versiegelungsgrade.
+	Bearbeiter:	jhueb
 	
 11) Anfangswerte in Schema übernehmen
 	Wer: 		Hübsch
@@ -150,7 +150,7 @@ Feature Requests:
 	Termin:		?
 	Status:		offen
 	Kommentar:	
-	Bearbeiter:	
+	Bearbeiter:	jhueb, avd
 
 
 ----------------------------------------------------------------------------------------------------------
@@ -158,21 +158,21 @@ Feature Requests:
 Bugs:
 -----
 
-1) GrafikTool schließen führt zum Absturz, wenn man es nicht im Grafiktool selbst beendet (Bearbeitsungsfenster in der Oberfläche)
+1) GrafikTool öffnen führt zu einfrieren der kalypso-ansicht bis zum beenden des grafiktools.
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		offen
-	Kommentar:	
+	Status:		offen (unschön)
+	Kommentar:	modaler dialog
 	Bearbeiter:	
 
 2) Grafiktoool kann nicht direkt für *.odt Vorlage geöffnet werden, obwohl das symbol aktiviert ist. man muss also die *.odt immer erst speichern.
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		offen
+	Status:		erledigt
 	Kommentar:	
-	Bearbeiter:	
+	Bearbeiter:	ms
 
 3) maximale Perkolationsrate wird nicht angezeigt (Hydrotope), da sie in Wassenschaftlicher Schreibweise vorliegt (1.0E5).
 	Wer: 		Hübsch
@@ -194,9 +194,9 @@ Bugs:
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		angenommen
-	Kommentar:	Es liegt das alte Schema beim Import vor, muss denke ich nur das neue Schema verwendet werden.
-	Bearbeiter:	Hübsch
+	Status:		erledigt
+	Kommentar:	
+	Bearbeiter:	Hübsch, avd
 
 5) Beim Zeitreihenimport ist der next Button auch auf der letzten Seite aktiv.
 	Wer: 		Hübsch
@@ -204,7 +204,7 @@ Bugs:
 	Termin:		?
 	Status:		offen
 	Kommentar:	
-	Bearbeiter:	
+	Bearbeiter:	avd
 
 6) StyleEditor: Symbolizerauswahl auf den gewählten/editierten Symbolizer abstimmen; x und y werden nicht gespeichert.
 	Wer: 		Hübsch
@@ -218,9 +218,9 @@ Bugs:
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		offen
+	Status:		erledigt
 	Kommentar:	
-	Bearbeiter:	
+	Bearbeiter:	avd, jhueb
 
 8) Bei nicht erfolgreicher Berechnung des Fortran-Programmes werden auch nicht die log-Dateien übertragen.
     Diese sind jedoch für die Fehlersuche notwendig, damit man nicht auf dem Server nachschauen muss (ist
@@ -228,7 +228,7 @@ Bugs:
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		offen
+	Status:		erledigt
 	Kommentar:	
-	Bearbeiter:	
+	Bearbeiter:	jhueb
 
