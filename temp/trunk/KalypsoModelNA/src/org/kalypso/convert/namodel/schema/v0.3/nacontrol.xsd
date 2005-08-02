@@ -239,7 +239,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					
 					<element name="qgw" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
@@ -304,7 +303,7 @@
 					<element name="bil" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Bilanz</label>
+								<label>Abflussbilanz</label>
 								<tooltip>Bilanzausgabe</tooltip>
 								<description>Ausgabe der Bilanz der Ergebnisse</description>
 							</documentation>
@@ -333,12 +332,12 @@
 					<element name="spi" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Speicher</label>
+								<label>Speicherzeitreihen</label>
 								<tooltip>Ausgabe sämtlicher Speicherwerte</tooltip>
 								<description>Ausgabe der Ergebnisse zur Speicherberechnung</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>storage</label>
+								<label>storage time series</label>
 								<tooltip>output storage calculation</tooltip>
 								<description>output of the results for storage</description>
 							</documentation>

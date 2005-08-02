@@ -29,12 +29,12 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Start der Vorhersage</label>
-								<tooltip>Startzeitpunkt der Vorhersagerechnung</tooltip>
+								<tooltip>Startzeitpunkt der Vorhersagerechnung bzw.  Ende der Modellrechnung bei Berechnung ohne Vorhersage</tooltip>
 								<description>Startzeitpunkt der Vorhersage bei einer Berechnung mit Vorhersage/ Ende der Simulation bei Berechnung ohne Vorhersage</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>forecast start</label>
-								<tooltip>Beginning of forecast calculation</tooltip>
+								<tooltip>Beginning of forecast calculation resp. end of the model calculation without forecast</tooltip>
 								<description/>
 							</documentation>
 						</annotation>
@@ -70,12 +70,12 @@
 					<element name="versionKalypsoNA" type="string" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Version Kalypso-NA</label>
-								<tooltip>Version des Kalypso-NA Rechenkerns</tooltip>
+								<label>Version Kalypso-NA (optional)</label>
+								<tooltip>Version des Kalypso-NA Rechenkerns (optionale Angabe)</tooltip>
 								<description/>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>version Kalypso-RRM</label>
+								<label>version Kalypso-RRM (optional)</label>
 								<tooltip>version of Kalypso-RRM calculation kernel</tooltip>
 								<description/>
 							</documentation>
