@@ -8,7 +8,7 @@
 
 	<!-- deploy-tomcat-conf-tuhh -->
 	<target name="deploy-tomcat-conf-tuhh" description="Copy the tomcat data files into the tomcat configuration" >
-			<copy todir="${tomcat.server.cataling_home}" overwrite="true">
+			<copy todir="\\\\134.28.87.75\\Tomcat5.0$" overwrite="true">
 			<fileset dir="${project.path}/deployable-tomcatstuff" excludes="**/CVS/**,build.xml,TomcatService.reg" />
 		</copy>
 	</target>

@@ -126,9 +126,6 @@ grant {
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.runtime.*";
 };
 
-//	kalypso.server=\\\\134.28.87.75\\KALYPSOSERVER$
-
-
 // ACHTUNG: diese Stelle ist Platformabhängig, da hier der echte FileSeparator ('\') übergeben werden muss
 grant {
 	// sonst startet der Service nicht mit dem Security Manager (WSDL kann nicht angezeigt werden z.B.)
@@ -139,53 +136,18 @@ grant {
 	// read, write auf data vergeben weil ObservationService schreibrechte braucht
 	// wenn Zeitreihen zurück geschrieben werden...
 
-
-	permission java.io.FilePermission "\\\\134.28.87.75\\KALYPSOSERVER$\\data\\-", "read,write";
-	permission java.io.FilePermission "\\\\134.28.87.75\\KALYPSOSERVER$\\data\\tmp\\-", "read,write,delete,execute";
-	permission java.io.FilePermission "\\\\134.28.87.75\\KALYPSOSERVER$\\data\\dist\\-", "read,write,delete";
-            
-	// TODO: check if necessary?
+	permission java.io.FilePermission "\\\\134.28.87.75\\Tomcat5.0$\\webapps\\webdav\\prognose\\-", "read,write";
+	permission java.io.FilePermission "\\\\134.28.87.75\\Tomcat5.0$\\webapps\\webdav\\-", "read,write";
+	permission java.io.FilePermission "\\\\134.28.87.75\\Tomcat5.0$\\temp\\-", "read,write,delete,execute";
+	permission java.io.FilePermission "C:\\KalypsoService\\Tomcat5.0\\temp\\-", "read,write,delete,execute";
 
 	permission java.util.PropertyPermission "kalypso.*", "read";
 	permission java.util.PropertyPermission "java.io.tmpdir", "read";
 	
 	permission java.util.logging.LoggingPermission "control";
 
-	// PSICompact...
-//	permission java.util.PropertyPermission "*", "read,write";
-
-//	permission java.net.SocketPermission "localhost", "resolve";
+	// Services (Zugriff auf das Konfigurationsverzeichnis)
 	permission java.net.SocketPermission "*", "connect,resolve";
-	
-
-//	permission java.io.FilePermission "D:\\Programme\\kalypso\\data\\-", "read,write";
-//	permission java.io.FilePermission "d:\\Programme\\kalypso\\data\\-", "read,write";
-//	permission java.io.FilePermission "\\\\D\\Programme\\kalypso\\data\\-", "read,write";
-//
-//	permission java.io.FilePermission "\\\\LFUG-KV-01\\kalypso$\\-", "read,write,delete,execute";
-//	permission java.io.FilePermission "\\\\lfug-kv-01\\kalypso$\\-", "read,write,delete,execute";
-//
-//	// TODO: check if necessary?
-//	//permission java.io.FilePermission "\\\\lfug-kv-01\\kalypsotemp$\\-", "read,write,delete,execute";
-//	
-//	permission java.io.FilePermission "D:\\Programme\\kalypso\\data\\tmp\\-", "read,write,delete,execute";
-//	permission java.io.FilePermission "d:\\programme\\kalypso\\data\\tmp\\-", "read,write,delete,execute";
-//	permission java.io.FilePermission "\\\\D\\Programme\\kalypso\\data\\tmp\\-", "read,write,delete,execute";
-//	permission java.io.FilePermission "\\\\d\\programme\\kalypso\\data\\tmp\\-", "read,write,delete,execute";
-//
-//	permission java.util.PropertyPermission "kalypso.*", "read";
-//	permission java.util.PropertyPermission "java.io.tmpdir", "read";
-//	
-//	permission java.util.logging.LoggingPermission "control";
-//
-//	// PSICompact...
-//	permission java.util.PropertyPermission "*", "read,write";
-//	permission java.net.SocketPermission "localhost", "resolve";
-//	permission java.net.SocketPermission "*", "connect,resolve";
-//
-//	permission java.io.FilePermission "d:\\Programme\\PSI\\lhwz\\dist\\-", "read,write,delete";
-//
-
 
 };
 
