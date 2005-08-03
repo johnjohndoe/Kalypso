@@ -119,7 +119,7 @@ public class NAModellConverter
   private final SchneeManager m_schneeManager;
 
   public static void main( String[] args )
-  {
+  {  
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
     {
         new DeegreeUrlCatalog(),

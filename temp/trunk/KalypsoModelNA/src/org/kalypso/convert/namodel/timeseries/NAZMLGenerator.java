@@ -42,6 +42,7 @@ package org.kalypso.convert.namodel.timeseries;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -54,6 +55,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -199,6 +201,12 @@ public class NAZMLGenerator
     createGRAPFile( writer, axisValueType, observation );
   }
 
+  public static void createExt2File(final FileWriter writer, final IObservation observation, final Date start,final Date end,final String axisType, final String defaultValue) throws IOException, SensorException
+  {
+    final Ext2Writer extWriter = new Ext2Writer(start,end);
+    extWriter.write(observation,axisType, writer,defaultValue);
+  }
+  
   private static void createGRAPFile( Writer writer, String valueAxisType, IObservation observation ) throws Exception
   {
     SimpleDateFormat sd = new SimpleDateFormat( "yyMMddHH" );

@@ -78,6 +78,10 @@ public class CatchmentManager extends AbstractManager
 
   private final NAConfiguration m_conf;
 
+  public static final String STD_TEMP_FILENAME = "std.tmp";
+
+  public static final String STD_VERD_FILENAME = "std.ver";
+
   public CatchmentManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
     super( conf.getCatchmentFormatURL() );
@@ -98,8 +102,8 @@ public class CatchmentManager extends AbstractManager
   {
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-                                                                                                                     // FileReader(
-                                                                                                                     // file
+    // FileReader(
+    // file
     // ) );
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
@@ -259,7 +263,12 @@ public class CatchmentManager extends AbstractManager
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" ) + "\n" );
 
     // 4-6
-    b.append( "std.tmp std.ver\n" );
+    b.append( getTemperaturEingabeDateiString( feature ) );
+    b.append( " " );
+    b.append( getVerdunstungEingabeDateiString( feature ) );
+    //    b.append( "std.tmp" );
+    //    b.append( " std.ver\n" );
+    b.append( "\n" );
     asciiBuffer.getCatchmentBuffer().append( b.toString() );
 
     asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" );
@@ -371,5 +380,43 @@ public class CatchmentManager extends AbstractManager
   public static String getNiederschlagEingabeDateiString( Feature feature )
   {
     return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".niederschlag";
+  }
+
+  public static String getTemperaturEingabeDateiString( Feature feature )
+  {
+    if( feature.getProperty( "temperaturZR" ) != null )
+      return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".tmp";
+    return STD_TEMP_FILENAME;
+  }
+
+  /**
+   * @param feature
+   * @param dir
+   */
+  public static File getTemperaturEingabeDatei( final Feature feature, final File dir )
+  {
+    final String name = getTemperaturEingabeDateiString( feature );
+    return new File( dir, name );
+  }
+
+  /**
+   * @param feature
+   */
+  public static File getNiederschlagEingabeDatei( final Feature feature, final File dir )
+  {
+    return new File( dir, getNiederschlagEingabeDateiString( feature ) );
+  }
+
+  public static File getVerdunstungEingabeDatei( Feature feature, File dir )
+  {
+    final String name = getVerdunstungEingabeDateiString( feature );
+    return new File( dir, name );
+  }
+
+  private static String getVerdunstungEingabeDateiString( Feature feature )
+  {
+    if( feature.getProperty( "verdunstungZR" ) != null )
+      return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".ver";
+    return STD_VERD_FILENAME;
   }
 }

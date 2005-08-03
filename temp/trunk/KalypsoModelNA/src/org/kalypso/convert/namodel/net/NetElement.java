@@ -49,6 +49,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaNodeResultProvider;
 import org.kalypso.convert.namodel.manager.ASCIIHelper;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
@@ -57,10 +59,10 @@ import org.kalypso.convert.namodel.manager.ChannelManager;
 import org.kalypso.convert.namodel.manager.NetFileManager;
 import org.kalypso.convert.namodel.net.visitors.NetElementVisitor;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -94,16 +96,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NetElement
 {
+  private final static String FILTER_T = "<filter><intervallFilter amount=\"24\" calendarField=\"HOUR_OF_DAY\" mode=\"intensity\" xmlns=\"filters.zml.kalypso.org\"/></filter>";
 
-  //  private boolean m_virtual = false;
+  private final static String FILTER_V = FILTER_T;
 
   private boolean m_calculated = false;
 
   private final NetFileManager m_manager;
-
-  //  public final static int UNCALCULATED = 1;
-  //
-  //  public final static int CALCULATED = 2;
 
   private final List m_upStreamDepends = new ArrayList();
 
@@ -114,8 +113,6 @@ public class NetElement
   private static final String ANFANGSKNOTEN = "    9001";
 
   private static final String ENDKNOTEN = "   10000";
-
-  //  private int m_status = UNCALCULATED;
 
   private final UrlUtilities m_urlUtils = new UrlUtilities();
 
@@ -129,11 +126,6 @@ public class NetElement
   {
     m_netAsciiFormat = formats;
   }
-
-  //  public static void setDefaultGmlWorkSpace( GMLWorkspace workspace )
-  //  {
-  //    m_workspace = workspace;
-  //  }
 
   public NetElement( NetFileManager manager, GMLWorkspace modellWorkspace, Feature channelFE,
       NaNodeResultProvider nodeResultProvider )
@@ -201,26 +193,60 @@ public class NetElement
 
   public void generateTimeSeries() throws IOException, Exception
   {
-    Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, m_manager.m_conf.getCatchemtFT(),
+    final Feature[] catchmentFeatures = m_workspace.resolveWhoLinksTo( m_channelFE, m_manager.m_conf.getCatchemtFT(),
         "entwaesserungsStrangMember" );
     for( int i = 0; i < catchmentFeatures.length; i++ )
     {
+      final NAConfiguration conf = m_manager.m_conf;
       final Feature feature = catchmentFeatures[i];
-      final TimeseriesLink link = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
-      final URL linkURL = m_urlUtils.resolveURL( m_workspace.getContext(), link.getHref() );
-      final String tsFileName = CatchmentManager.getNiederschlagEingabeDateiString( feature );
-      final File targetFile = new File( m_manager.m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileName );
-      final File parent = targetFile.getParentFile();
+
+      final File targetFileN = CatchmentManager.getNiederschlagEingabeDatei( feature, new File( conf.getAsciiBaseDir(),
+          "klima.dat" ) );
+      final File targetFileT = CatchmentManager.getTemperaturEingabeDatei( feature, new File( m_manager.m_conf
+          .getAsciiBaseDir(), "klima.dat" ) );
+      final File targetFileV = CatchmentManager.getVerdunstungEingabeDatei( feature, new File( m_manager.m_conf
+          .getAsciiBaseDir(), "klima.dat" ) );
+      final File parent = targetFileN.getParentFile();
       if( !parent.exists() )
         parent.mkdirs();
 
-      if( !NetFileManager.DEBUG )
+      // N
+      if( !targetFileN.exists() )
       {
-        if( !targetFile.exists() )
+        final TimeseriesLink linkN = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
+        final URL linkURLN = m_urlUtils.resolveURL( m_workspace.getContext(), linkN.getHref() );
+        final IObservation observation = ZmlFactory.parseXML( linkURLN, "ID_N" );
+        final FileWriter writer = new FileWriter( targetFileN );
+        NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
+        IOUtils.closeQuietly( writer );
+      }
+      // T
+      if( !targetFileT.exists() )
+      {
+        final TimeseriesLink linkT = (TimeseriesLink)feature.getProperty( "temperaturZR" );
+        if( linkT != null )
         {
-          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
-          final FileWriter writer = new FileWriter( targetFile );
-          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
+          final String hrefT = ZmlURL.insertFilter( linkT.getHref(), FILTER_T );
+          final URL linkURLT = m_urlUtils.resolveURL( m_workspace.getContext(), hrefT );
+          final IObservation observation = ZmlFactory.parseXML( linkURLT, "ID_T" );
+          final FileWriter writer = new FileWriter( targetFileT );
+          NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(),
+              TimeserieConstants.TYPE_TEMPERATURE, "1.0" );
+          IOUtils.closeQuietly( writer );
+        }
+      }
+      // V
+      if( !targetFileV.exists() )
+      {
+        final TimeseriesLink linkV = (TimeseriesLink)feature.getProperty( "verdunstungZR" );
+        if( linkV != null )
+        {
+          final String hrefV = ZmlURL.insertFilter( linkV.getHref(), FILTER_V );
+          final URL linkURLV = m_urlUtils.resolveURL( m_workspace.getContext(), hrefV );
+          final IObservation observation = ZmlFactory.parseXML( linkURLV, "ID_V" );
+          final FileWriter writer = new FileWriter( targetFileV );
+          NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(),
+              TimeserieConstants.TYPE_EVAPORATION, "0.5" );
           IOUtils.closeQuietly( writer );
         }
       }

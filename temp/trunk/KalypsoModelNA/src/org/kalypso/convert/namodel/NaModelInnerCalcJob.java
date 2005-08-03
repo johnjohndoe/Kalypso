@@ -75,6 +75,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.optimize.CalibarationConfig;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
@@ -382,17 +383,18 @@ public class NaModelInnerCalcJob implements ICalcJob
     NAModellConverter.featureToAscii( conf, modellWorkspace, parameterWorkspace, hydrotopWorkspace );
 
     // create temperatur und verdunstung timeseries
-    File tmpFile = new File( tmpDir, "klima.dat/std.tmp" );
-    File verFile = new File( tmpDir, "klima.dat/std.ver" );
+    final File klimaDir = new File( tmpDir, "klima.dat" );
+    final File tempFile = new File( klimaDir, CatchmentManager.STD_TEMP_FILENAME );
+    final File verdFile = new File( klimaDir, CatchmentManager.STD_VERD_FILENAME );
     final DummyTimeSeriesWriter writer = new DummyTimeSeriesWriter( conf.getSimulationStart(), conf.getSimulationEnd() );
 
-    if( !tmpFile.exists() )
+    if( !tempFile.exists() )
     {
-      writer.writeTmpFile( new File( tmpDir, "klima.dat/std.tmp" ) );
+      writer.writeTmpFile( tempFile );
     }
-    if( !verFile.exists() )
+    if( !verdFile.exists() )
     {
-      writer.writeVerdFile( new File( tmpDir, "klima.dat/std.ver" ) );
+      writer.writeVerdFile( verdFile );
     }
 
     return modellWorkspace;
