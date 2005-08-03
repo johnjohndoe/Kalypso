@@ -141,15 +141,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private GMLSchema m_modelSchema;
 
-  // Christoph: field never read locally
-  private URL sourceURL;
-
-  //Christoph: field never read locally
-  private URL m_modelSchemaURL = getClass().getResource( "resources/.model/schema/namodell.xsd" );
-
-  //Christoph: field never read locally
-  private URL m_hydrotopSchemaURL = getClass().getResource( "resources/.model/schema/hydrotop.xsd" );
-
   private GMLWorkspace modelWS;
 
   IPath workspacePath;
@@ -175,8 +166,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     super();
     try
     {
-      //      TODO: jh, schemata an zentrale speichern und von dort aufrufen, damit
-      // hier nicht ständig aktualisiert werden muss.
       m_modelSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA" );
       m_hydrotopSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/hydrotop" );
       setNeedsProgressMonitor( true );
@@ -215,9 +204,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, "Knoten einlesen",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) );
     addPage( createMappingNodePage );
-    //    createMappingHydrotopPage = new KalypsoNAFileImportPage( HYDROTOP_PAGE,
-    //        "Hydrotopdatei in den Workspace importieren",
-    // ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, "Hydrotope einlesen",
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) );
     addPage( createMappingHydrotopPage );
@@ -231,6 +217,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     if( ft == null )
       ft = m_hydrotopSchema.getFeatureType( featureName );
     return ft;
+
   }
 
   /**
@@ -257,7 +244,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     {
       IProjectDescription description = new ProjectDescription();
       String[] nanature =
-      { "org.kalypso.ui.ModelNature" };
+      { "org.kalypso.simulation.ui.ModelNature" };
       description.setNatureIds( nanature );
       projectHandel.create( description, null );
       projectHandel.open( null );
@@ -340,43 +327,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       e3.printStackTrace();
       return false;
     }
-
-    //copy Hydrotop file to workspace into the new project and add it as a
-    // layer to the map temlate
-
-    //    sourceURL = createMappingHydrotopPage.getFileURL();
-    //    if( sourceURL != null )
-    //    {
-    //      try
-    //      {
-    //        File source = FileUtils.toFile( sourceURL );
-    //        String shapeBaseSource = FileUtilities.nameWithoutExtension(
-    // source.toString() );
-    //        String fileName = FileUtilities.nameWithoutExtension( source.getName() );
-    //        String shapeBaseTarget = ( ( workspacePath.append(
-    // projectHandel.getFullPath().append(
-    //            "/Shapes/" + fileName ) ) ).toFile() ).toString();
-    //
-    //        // ResourceUtilities.findFileFromURL()
-    //
-    //        ResourcesPlugin.getWorkspace().build(
-    // IncrementalProjectBuilder.FULL_BUILD, null );
-    //        // String sourceFile = createMappingHydrotopPage.getFileURL()
-    //        // .getPath().substring(1);
-    //        // int index = sourceFile.lastIndexOf("/");
-    //        // String shapeBase = sourceFile.substring(index + 1);
-    //        GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBaseSource,
-    //            createMappingHydrotopPage.getCoordinateSystem(), null );
-    //        ShapeSerializer.serialize( shapeWS, shapeBaseTarget );
-    //        addLayer( source );
-    //        projectHandel.refreshLocal( IResource.DEPTH_INFINITE, null );
-    //      }
-    //      catch( Exception e )
-    //      {
-    //        e.printStackTrace();
-    //        return false;
-    //      }
-    //    }//if
     try
     {
       ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
@@ -403,7 +353,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       Feature sourceFeature = (Feature)sourceFeatureList.get( i );
-      Feature targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), hydFT );
+      Feature targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), hydFT, true );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
@@ -428,67 +378,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       }
       hydList.add( targetFeature );
     }
-    //TODO Mapping
   }
-
-  //  private void addLayer( File sourceFile ) throws Exception
-  //  {
-  //    String path = workspacePath.append( projectHandel.getFullPath() +
-  // "/BasisKarten/Hydrotope.gmt" )
-  //        .toFile().toString();
-  //    File mapfile = workspacePath
-  //        .append( projectHandel.getFullPath() + "/BasisKarten/Hydrotope.gmt"
-  // ).toFile();
-  //    InputStream inputStream = new FileInputStream( mapfile );
-  //
-  //    ObjectFactory typeOF = new ObjectFactory();
-  //    org.kalypso.template.gismapview.ObjectFactory mapTemplateOF = new
-  // org.kalypso.template.gismapview.ObjectFactory();
-  //    Unmarshaller unmarshaller = mapTemplateOF.createUnmarshaller();
-  //    Gismapview gismapview = (Gismapview)unmarshaller.unmarshal( inputStream );
-  //    LayersType layers = gismapview.getLayers();
-  //    List layerList = layers.getLayer();
-  //    Layer newLayer = mapTemplateOF.createGismapviewTypeLayersTypeLayer();
-  //
-  //    //set attributes for the layer
-  //    newLayer.setName( "Hydrotope" );
-  //    newLayer.setVisible( true );
-  //    newLayer.setFeaturePath( "featureMember" );
-  //    newLayer.setHref( "project:/Shapes/"
-  //        + FileUtilities.nameWithoutExtension( sourceFile.getName() ) +
-  // "#EPSG:31467" );
-  //    newLayer.setType( "simple" );
-  //    newLayer.setLinktype( "shape" );
-  //    newLayer.setActuate( "onRequest" );
-  //    newLayer.setId( "ID_6" );
-  //
-  //    List styleList = newLayer.getStyle();
-  //    StyleType style = typeOF.createStyledLayerTypeStyleType();
-  //
-  //    //set attributes for the style
-  //    style.setLinktype( "sld" );
-  //    style.setStyle( "hydrotop" );
-  //    style.setActuate( "onRequest" );
-  //    style.setHref( "../.styles/hydrotop.sld" );
-  //    style.setType( "simple" );
-  //
-  //    //add the style to the layer
-  //    styleList.add( style );
-  //    layerList.add( newLayer );
-  //
-  //    //gismapview.setLayers(layers);
-  //    // create new layer:
-  //    // IPath projectPath = createProjectPage.getLocationPath();
-  //    Marshaller marshaller = mapTemplateOF.createMarshaller();
-  //    // IPath mapViewFile = projectPath.append("/BasisKarten/Hydrotope.gmt");
-  //    FileWriter fw = new FileWriter( path );
-  //    marshaller.marshal( gismapview, fw );
-  //  }
 
   private void copyResourcesToProject( IPath path )
   {
     final String resource = m_resourceBase;
-    System.out.print( "resource: " + resource + "\n" );
+    //    System.out.print( "resource: " + resource + "\n" );
     InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     try
     {
@@ -513,22 +408,32 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     Feature catchmentCollectionFE = (Feature)rootFeature.getProperty( "CatchmentCollectionMember" );
     List catchmentList = (List)catchmentCollectionFE.getProperty( "catchmentMember" );
 
+    // find column for id
+    final String idColKey;
+    if( mapping.containsKey( "inum" ) )
+    {
+      idColKey = (String)mapping.get( "inum" );
+    }
+    else
+      idColKey = null;
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       Feature sourceFeature = (Feature)sourceFeatureList.get( i );
-      Feature targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), modelFT );
+      final String fid;
+      if( idColKey != null )
+        fid = "Catchment" + (String)sourceFeature.getProperty( idColKey );
+      else
+        fid = sourceFeature.getId();
+      Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
         String targetkey = (String)it.next();
         String sourcekey = (String)mapping.get( targetkey );
         Object so = sourceFeature.getProperty( sourcekey );
-        //The area property of the catchment is set at this point, to check if
-        // this is not redundant ??
-        //because the area can always be calculatet from the GM_Surface object.
         if( so instanceof GM_Surface )
         {
-          Long area = new Long( Double.doubleToLongBits( ( (GM_Surface)so ).getArea() ) );
+          Long area = new Long( (long)( (GM_Surface)so ).getArea() );
           FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "flaech", area );
           targetFeature.setProperty( fpArea );
         }
@@ -549,10 +454,24 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     Feature nodeCollectionFE = (Feature)rootFeature.getProperty( "NodeCollectionMember" );
     List nodeList = (List)nodeCollectionFE.getProperty( "nodeMember" );
 
+    // find column for id
+    final String idColKey;
+    if( mapping.containsKey( "num" ) )
+    {
+      idColKey = (String)mapping.get( "num" );
+    }
+    else
+      idColKey = null;
+
     for( int i = 0; i < sourceFeatureList.size(); i++ )
     {
       Feature sourceFeature = (Feature)sourceFeatureList.get( i );
-      Feature targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), modelFT );
+      final String fid;
+      if( idColKey != null )
+        fid = "Node" + (String)sourceFeature.getProperty( idColKey );
+      else
+        fid = sourceFeature.getId();
+      Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
       Iterator it = mapping.keySet().iterator();
       while( it.hasNext() )
       {
@@ -575,6 +494,16 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     Feature channelCollectionFE = (Feature)rootFeature.getProperty( "ChannelCollectionMember" );
     List channelList = (List)channelCollectionFE.getProperty( "channelMember" );
+
+    // find column for id
+    final String idColKey;
+    if( mapping.containsKey( "inum" ) )
+    {
+      idColKey = (String)mapping.get( "inum" );
+    }
+    else
+      idColKey = null;
+
     //StrangArt is defined in dummyFeatureType (member variable)
     String typeKey = (String)mapping.get( "StrangArt" );
     //remove the channel type mapping (just needed once)
@@ -607,21 +536,39 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       {
       case 0:
       {
+        final String fid;
+        if( idColKey != null )
+          fid = "VirtualChannel" + (String)sourceFeature.getProperty( idColKey );
+        else
+          fid = sourceFeature.getId();
+
         FeatureType vFT = getFeatureType( "VirtualChannel" );
-        targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), vFT );
+        targetFeature = FeatureFactory.createFeature( fid, vFT, true );
         break;
       }
       case 1:
       {
 
+        final String fid;
+        if( idColKey != null )
+          fid = "KMChannel" + (String)sourceFeature.getProperty( idColKey );
+        else
+          fid = sourceFeature.getId();
+
         FeatureType kmFT = getFeatureType( "KMChannel" );
-        targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), kmFT );
+        targetFeature = FeatureFactory.createFeature( fid, kmFT, true );
         break;
       }
       case 2:
       {
+        final String fid;
+        if( idColKey != null )
+          fid = "StorageChannel" + (String)sourceFeature.getProperty( idColKey );
+        else
+          fid = sourceFeature.getId();
+
         FeatureType storageFT = getFeatureType( "StorageChannel" );
-        targetFeature = FeatureFactory.createFeature( sourceFeature.getId(), storageFT );
+        targetFeature = FeatureFactory.createFeature( fid, storageFT, true );
         break;
       }
       case 3:

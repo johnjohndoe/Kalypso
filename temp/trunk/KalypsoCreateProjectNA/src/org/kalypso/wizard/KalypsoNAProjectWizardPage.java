@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -58,6 +59,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -88,13 +91,14 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
  *  
  */
-public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionListener
+public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionListener, KeyListener
 {
 
   //constants
@@ -119,11 +123,13 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private Group buttonGroup;
 
+  private Combo m_checkCRS;
+
   private Group targetGroup;
 
   private Text m_fileField;
 
-  private Composite topComposite;
+  private Composite m_topComposite;
 
   private ScrolledComposite topSCLMappingComposite;
 
@@ -138,8 +144,12 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   //Geodata
   private CS_CoordinateSystem customCS = null;
 
-  private CS_CoordinateSystem defaultCS = ConvenienceCSFactory.getInstance().getOGCCSByName(
-      "EPSG:31467" ); // Coordinate System for City of Hamburg
+  private CS_CoordinateSystem defaultCS = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" ); // Coordinate
+
+  // System
+  // for City
+  // of
+  // Hamburg
 
   private GMLWorkspace sourceWorkspace;
 
@@ -164,8 +174,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   public KalypsoNAProjectWizardPage( String pageName, FeatureType featureType )
   {
     super( pageName );
-    setDescription( "Dieser Dialog liest eine ESRI Shape-Datei ein. Der Benutzer muss jedes Attribut in "
-        + "der Shape-Datei einem NA-Modell Attribute zuordnen (Mapping). Bitte die Zuordnung bestätigen." );
+    setDescription( "Dieser Dialog liest eine ESRI Shape-Datei ein. Der Benutzer muss die gewünschten Attribute "
+        + "der Shape-Datei den NA-Modell Attributen zuordnen (Mapping). Bitte die Zuordnung bestätigen." );
     targetFT = featureType;
     setPageComplete( false );
   }
@@ -175,15 +185,50 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    * @param title
    * @param titleImage
    */
-  public KalypsoNAProjectWizardPage( String pageName, String title, ImageDescriptor titleImage,
-      FeatureType featureType )
+  public KalypsoNAProjectWizardPage( String pageName, String title, ImageDescriptor titleImage, FeatureType featureType )
   {
     super( pageName, title, titleImage );
-    setDescription( "Dieser Dialog liest eine ESRI Shape-Datei ein. Der Benutzer muss jedes Attribut in "
-        + "der Shape-Datei einem NA-Modell Attribute zuordnen. Bitte die Zuordnung bestätigen." );
+    setDescription( "Dieser Dialog liest eine ESRI Shape-Datei ein. Der Benutzer muss die gewünschten Attribute "
+        + "der Shape-Datei den NA-Modell Attributen zuordnen (Mapping). Bitte die Zuordnung bestätigen." );
     targetFT = featureType;
     setPageComplete( false );
 
+  }
+
+  private void availableCoordinateSystems( Combo checkCRS )
+  {
+    ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
+    checkCRS.setItems( factory.getKnownCS() );
+  }
+
+  void validate()
+  {
+    setErrorMessage( null );
+    boolean pageComplete = true;
+
+    //CoordinateSystem
+    if( checkCRS( m_checkCRS.getText() ) )
+    {
+      //ok
+    }
+    else
+    {
+      setErrorMessage( "Gewähltes KoordinatenSystem wird nicht unterstützt!" );
+      pageComplete = false;
+    }
+
+    setPageComplete( pageComplete );
+  }
+
+  private boolean checkCRS( String customCRS )
+  {
+    boolean result = false;
+    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( customCRS );
+    if( cs != null )
+    {
+      result = true;
+    }
+    return result;
   }
 
   private boolean checkSuffix( Text path )
@@ -209,17 +254,17 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   public void createControl( Composite parent )
   {
 
-    topComposite = new Composite( parent, SWT.NULL );
-    topComposite.setFont( parent.getFont() );
+    m_topComposite = new Composite( parent, SWT.NULL );
+    m_topComposite.setFont( parent.getFont() );
 
     initializeDialogUnits( parent );
 
-    topComposite.setLayout( new GridLayout() );
-    topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_topComposite.setLayout( new GridLayout() );
+    m_topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     // build wizard page
-    createFileGroup( topComposite );
-    createMappingGroup( topComposite );
-    setControl( topComposite );
+    createFileGroup( m_topComposite );
+    createMappingGroup( m_topComposite );
+    setControl( m_topComposite );
   }
 
   private void createFileGroup( Composite parent )
@@ -255,10 +300,34 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     browseButton.setText( "Durchsuchen..." );
     browseButton.setLayoutData( new GridData( GridData.END ) );
     browseButton.addSelectionListener( this );
+    Label crsLabel = new Label( fileGroup, SWT.NONE );
+    crsLabel.setText( "Koordinaten System: " );
+
+    m_checkCRS = new Combo( fileGroup, SWT.NONE );
+
+    availableCoordinateSystems( m_checkCRS );
+    try
+    {
+      String defaultCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      m_checkCRS.select( m_checkCRS.indexOf( defaultCRS ) );
+    }
+    catch( RemoteException e1 )
+    {
+      e1.printStackTrace();
+    }
+
+    m_checkCRS.setToolTipText( "Koordinatensystem der ESRI(tm) Shape Datei" );
+    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    data.widthHint = SIZING_TEXT_FIELD_WIDTH;
+    m_checkCRS.setLayoutData( data );
+    m_checkCRS.addSelectionListener( this );
+    m_checkCRS.addKeyListener( this );
+
     skipRadioButton = new Button( fileGroup, SWT.CHECK );
     skipRadioButton.setText( "Diese Datei einlesen" );
     skipRadioButton.setSelection( true );
     skipRadioButton.addSelectionListener( this );
+
     fileGroup.pack();
 
   }
@@ -338,7 +407,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     {
       FeatureTypeProperty featureTypeProperty = targetFtp[i];
       Text text = new Text( targetGroup, SWT.NONE | SWT.READ_ONLY );
-      text.setText(getAnnotation( featureTypeProperty, LABEL ));
+      text.setText( getAnnotation( featureTypeProperty, LABEL ) );
       text.setToolTipText( getAnnotation( featureTypeProperty, TOOL_TIP ) );
     }
     targetGroup.pack();
@@ -395,28 +464,23 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   }//handelRestSelection
 
   /**
-   * Uses the standard container selection dialog to choose the new value for
-   * the container field.
+   * Uses the standard container selection dialog to choose the new value for the container field.
    */
 
   private void handleFileBrowse()
   {
     FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[]
-    {
-      "shp"
-    } );
+    { "shp" } );
     fdialog.setText( "Wählen Sie eine ESRI Arc-View Shapedatei aus:" );
     fdialog.setFilterNames( new String[]
     {
         "Shape Files",
-        "All Files (*.*)"
-    } );
+        "All Files (*.*)" } );
     fdialog.setFilterExtensions( new String[]
     {
         "*.shp",
-        "*.*"
-    } );
+        "*.*" } );
     fdialog.setFileName( "*.shp" );
     if( fdialog.open() != null )
     {
@@ -424,8 +488,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
       try
       {
 
-        fileURL = ( new File( fdialog.getFilterPath() + File.separator + fdialog.getFileName() ) )
-            .toURL();
+        fileURL = ( new File( fdialog.getFilterPath() + File.separator + fdialog.getFileName() ) ).toURL();
         textStr = fileURL.toString();
         m_fileField.setText( textStr );
         readShapeFile( fileURL );
@@ -474,9 +537,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   }//handleOKSelection
 
   /**
-   * This method returns a HashMap with the user defined mapping of the source
-   * to the target. key = (String) target property value = (String) source
-   * property
+   * This method returns a HashMap with the user defined mapping of the source to the target. key = (String) target
+   * property value = (String) source property
    * 
    * @return map HashMap with the custom mapping
    */
@@ -509,24 +571,25 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
     try
     {
-
       sourceWorkspace = ShapeSerializer.deserialize( fileBase, cs );
-
     }
     catch( GmlSerializeException e )
     {
-
-      MessageBox message = new MessageBox( null, SWT.OK );
-      message.setText( "Lesefehler" );
-      message.setMessage( "Fehler beim einlesen der Datei: " + url.getFile() );
-      // TODO display the messageBox
+      e.printStackTrace();
+      if( m_topComposite != null && !m_topComposite.isDisposed() )
+      {
+        MessageBox message = new MessageBox( m_topComposite.getShell(), SWT.OK );
+        message.setText( "Lesefehler" );
+        message.setMessage( "Fehler beim einlesen der Datei: " + url.getFile() );
+        message.open();
+      }
     }
 
   }//getData
 
   /**
    * This method clears the mapping
-   * 
+   *  
    */
 
   public void updateSourceList( FeatureType srcFT )
@@ -625,21 +688,21 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     //        .println( "Quelle: " + w.getData( SOURCE_KEY ) + "\tZiel: " + w.getData(
     // TARGET_KEY ) );
   }
-/**
- * This method gets a specified Annotation of a FeatureType
- * 
- * */
+
+  /**
+   * This method gets a specified Annotation of a FeatureType
+   *  
+   */
   public String getAnnotation( FeatureTypeProperty ftp, int type )
   {
     //    String key = Locale.getDefault().getLanguage();
-    final String key = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
-        IKalypsoPreferences.LANGUAGE );
+    final String key = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
     Annotation annotation = ftp.getAnnotation( key );
     if( annotation != null )
     {
       if( type == TOOL_TIP )
         return annotation.getTooltip();
-      else if (type == LABEL )
+      else if( type == LABEL )
         return annotation.getLabel();
       else if( type == DESCRIPTION )
         return annotation.getDescription();
@@ -652,6 +715,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    */
   public void widgetSelected( SelectionEvent e )
   {
+    Combo c;
     Widget w = e.widget;
     if( w instanceof Button )
     {
@@ -682,6 +746,20 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
         }
       }
     }
+    if( e.widget instanceof Combo )
+    {
+      if( e.widget == m_checkCRS )
+      {
+        c = (Combo)e.widget;
+        if( c == m_checkCRS )
+        {
+          customCS = ConvenienceCSFactory.getInstance().getOGCCSByName( c.getText() );
+          readShapeFile( fileURL );
+          setPageComplete( true );
+        }
+      }
+    }
+
     validateFileField();
   }
 
@@ -690,6 +768,27 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    */
   public void widgetDefaultSelected( SelectionEvent e )
   {
-    //do nothing
+  //do nothing
+  }
+
+  /**
+   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
+   */
+  public void keyPressed( KeyEvent e )
+  {
+    Widget w = e.widget;
+    if( w instanceof Combo && e.character == SWT.CR )
+    {
+      validate();
+    }
+
+  }
+
+  /**
+   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
+   */
+  public void keyReleased( KeyEvent e )
+  {
+  //do nothing
   }
 }
