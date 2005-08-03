@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
@@ -49,6 +51,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.net.UrlResolver;
@@ -168,18 +171,33 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
 
       final IFile targetfile = ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, href ) );
-      // TODO: check if valid
-      FolderUtilities.mkdirs( targetfile.getParent() );
 
-      final SetContentHelper thread = new SetContentHelper()
+      final File file = targetfile.getLocation().toFile();
+      FileOutputStream stream = null;
+      try
       {
-        protected void write( final OutputStreamWriter w ) throws Throwable
-        {
-          final ObservationType type = ZmlFactory.createXML( resultObs, null );
-          ZmlFactory.getMarshaller().marshal( type, w );
-        }
-      };
-      thread.setFileContents( targetfile, true, true, new NullProgressMonitor() );
+        if( !file.getParentFile().exists() )
+          file.getParentFile().mkdirs();
+        stream = new FileOutputStream( file );
+        final ObservationType type = ZmlFactory.createXML( resultObs, null );
+        ZmlFactory.getMarshaller().marshal( type, stream );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( stream );
+      }
+
+    
+      //      FolderUtilities.mkdirs( targetfile.getParent() );
+      //      final SetContentHelper thread = new SetContentHelper()
+      //      {
+      //        protected void write( final OutputStreamWriter w ) throws Throwable
+      //        {
+      //          final ObservationType type = ZmlFactory.createXML( resultObs, null );
+      //          ZmlFactory.getMarshaller().marshal( type, w );
+      //        }
+      //      };
+      //      thread.setFileContents( targetfile, true, true, new NullProgressMonitor() );
     }
     catch( final Exception e )
     {
@@ -204,7 +222,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         result.add( getObservation( f, source.getProperty(), source.getFrom(), source.getTo(), source.getFilter() ) );
       }
       catch( Exception e )
-      {      
+      {
         // it is possible to use the target also as input, e.g. if you want to update just a part of the zml.
         // if this source==target is unreachable it should be ignored, if it is not the target throw an exception
         if( m_targetobservation.equals( source.getProperty() ) )
@@ -246,7 +264,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
     return ZmlFactory.parseXML( sourceURL, feature.getId() );
   }
-  
+
   public final static class Source
   {
     private final String property;
@@ -263,7 +281,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       this.from = dfrom;
       this.to = dto;
       this.filter = filt;
-}
+    }
+
     public final Date getFrom()
     {
       return from;
