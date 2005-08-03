@@ -221,7 +221,7 @@ public class ZmlFactory
       }
 
       final String scheme = ZmlURL.getSchemePart( url );
-      if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) )
+      if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) || scheme.startsWith( "jar" ) )
       {
         /*
          * if this is a local url, we remove the query part because Eclipse Platform's URLStreamHandler cannot deal with
@@ -440,8 +440,7 @@ public class ZmlFactory
   /**
    * Cover method of createXML( IObservation, IVariableArguments, TimeZone )
    */
-  public static ObservationType createXML( final IObservation obs, final IRequest args )
-      throws FactoryException
+  public static ObservationType createXML( final IObservation obs, final IRequest args ) throws FactoryException
   {
     return createXML( obs, args, null );
   }
@@ -454,8 +453,8 @@ public class ZmlFactory
    * @param timezone
    *          the timezone into which dates should be converted before serialized
    */
-  public static ObservationType createXML( final IObservation obs, final IRequest args,
-      final TimeZone timezone ) throws FactoryException
+  public static ObservationType createXML( final IObservation obs, final IRequest args, final TimeZone timezone )
+      throws FactoryException
   {
     try
     {
