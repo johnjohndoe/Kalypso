@@ -1,13 +1,13 @@
 -----------------
 TODO´s:
 -----------------
-1) CreateNA überarbeiten
++1) CreateNA überarbeiten
 	Wer: 		huebsch
 	Wann: 		06.07.2005
 	Termin:		?
 	Status:		fertig
 	Kommentar:	Vergabe der ID´s, Links teilweise gesetzt
-	Bearbeiter: jhueb,avd
+	Bearbeiter: huebsch
 
 2) Editor Zeitreihenanbindung überarbeiten
 	Wer: 		huebsch
@@ -22,8 +22,8 @@ TODO´s:
 	Wann: 		04.07.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:	
-	Bearbeiter:	huebsch
+	Kommentar:	Schema erstellen und ins Control Handhabung übernehmen, schreiben lesen von gml-ascii
+	Bearbeiter:	huebsch, doemming
 	
 4) Zeitflächenfunktion integrieren in Schema
 	Wer: 		Ingenieurbüros
@@ -31,23 +31,23 @@ TODO´s:
 	Termin:		?
 	Status:		offen
 	Kommentar:	
-	Bearbeiter: jhueb, avd
+	Bearbeiter: huebsch, doemming
 	
-5) Versionsverwaltung
++5) Versionsverwaltung
 	Wer: 		huebsch
 	Wann: 		06.07.2005
 	Termin:		?
 	Status:		erledigt
-	Kommentar:	
-	Bearbeiter:	avd
+	Kommentar:	Version kann optional im Control angegegeben werden. Default ist zunächst lfug.
+	Bearbeiter:	doemming
 
-6) naControl.xsd überarbeiten
++6) naControl.xsd überarbeiten
 	Wer: 		huebsch
 	Wann: 		06.07.2005
 	Termin:		?
 	Status:		erledigt
 	Kommentar:	
-	Bearbeiter:	jhueb, avd
+	Bearbeiter:	huebsch, doemming
 	
 7) Schema um Knoten zu Knoten erweitern
 	Wer: 		huebsch
@@ -55,8 +55,23 @@ TODO´s:
 	Termin:		?
 	Status:		offen
 	Kommentar:	
-	Bearbeiter:	avd, jhueb
+	Bearbeiter:	doemming, huebsch
 	
+8) CreateNA erweitern
+	Wer: 		huebsch
+	Wann: 		02.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	zusätzliche Wizard-Page, welche weitere Informationen vom Benutzer abfraget bzgl. Bodenkorrekturwerte & KMParameter vorbereiten, ZFL & RHB importieren/setzen
+	Bearbeiter: huebsch,doemming
+
+9)  Bei Projekterstellung beim Mapping nicht gesetze Elemente mit default Werten aus dem Schema besetzen.
+	Wer: 		huebsch
+	Wann: 		02.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Studienarbeit Gehad als Grundlage für das Schema, default aus dem Schema setzen integrieren
+	Bearbeiter: 
 
 -----------------
 Feature Requests:
@@ -76,9 +91,9 @@ Feature Requests:
 	Termin:		?
 	Status:		offen
 	Kommentar:	Import über Excel in allgemeiner Form für den ZMLInline Editor.
-	Bearbeiter: avd, jhueb
+	Bearbeiter: doemming, huebsch
 
-3) Ergebnissablage (angepasste Berichtsablage an die Ergebnisadateien), Kalibrierungsprotokoll
+3) Ergebnisablage (angepasste Berichtsablage an die Ergebnisadateien), Kalibrierungsprotokoll
 	Wer: 		Ingenieurbüros
 	Wann: 		09.06.2005
 	Termin:		?
@@ -92,7 +107,7 @@ Feature Requests:
 	Termin:		?
 	Status:		offen
 	Kommentar:	control erweitern - vorhandene zuflüsse übernehmen?
-	Bearbeiter: jhueb, avd
+	Bearbeiter: huebsch, doemming
 
 5) Tabellen in den Tabellen - Werte übernehemen ermöglichen. Z.B. Kalinin-Miljukov oder Bodenkorrekturwerte von einem Strang/ Teilgebiet in ein anderes übernehmen.
 	Wer: 		Ingenieurbüros, Claudia
@@ -102,7 +117,7 @@ Feature Requests:
 	Kommentar:	über marshalling
 	Bearbeiter:	
 
-6) Im nacontrol.xsd annotations einfügen
++6) Im nacontrol.xsd annotations einfügen
 	Wer: 		Ingenieurbüros, Brüning
 	Wann: 		09.06.2005
 	Termin:		?
@@ -115,8 +130,7 @@ Feature Requests:
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		angenommen
-	Kommentar:	Schemata weitestgehend übersetzt, Regionalisierung der Texte,Buttons usw. nach
-				Konzeptentwurf (evtl. KDC-KalypsoDeveloperConferece)
+	Kommentar:	Schemata weitestgehend übersetzt, Regionalisierung der Texte,Buttons usw.
 	Bearbeiter:	Huebsch (Schemata), Text?
 
 8) weitere Knoten zu Knoten Beziehungen einfügen
@@ -127,14 +141,15 @@ Feature Requests:
 	Kommentar:	SubstitutionGroup?!?	
 	Bearbeiter:	Huebsch (Schemata), Netzaufbau?
 
-9) Koordinatensystem sollte auch beim Import wählbar sein (zur Zeit epsg31467 festgelegt).
++9) Koordinatensystem sollte auch beim Import wählbar sein (zur Zeit epsg31467 festgelegt).
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		erledigt
 	Kommentar:	Sollte im Code auch einheitlich durchgezogen werden (Modellunabhängig, da sonst Probleme bei
-				Modellen in Hamburg, Europa... mit global gesetztem CRS in den Preferences)	.
-	Bearbeiter:	jhueb
+				Modellen in Hamburg, Europa... mit global gesetztem CRS in den Preferences).
+				Alle Shapes werden jetzt mit Koordinatensystem angegeben.
+	Bearbeiter:	huebsch
 
 10) Versiegelte Fläche im Teilgebiet wird nicht bei Import gesetzt, sollte durch Import berechnet werden (evtl. aus Hydrotopimport).
 	Wer: 		Hübsch
@@ -142,7 +157,7 @@ Feature Requests:
 	Termin:		?
 	Status:		offen
 	Kommentar:	kommt raus, da er nicht zur berechnung verwendet wird. evtl. styles für hydrotope zur visualisierung der versiegelungsgrade.
-	Bearbeiter:	jhueb
+	Bearbeiter:	huebsch
 	
 11) Anfangswerte in Schema übernehmen
 	Wer: 		Hübsch
@@ -150,7 +165,7 @@ Feature Requests:
 	Termin:		?
 	Status:		offen
 	Kommentar:	
-	Bearbeiter:	jhueb, avd
+	Bearbeiter:	huebsch, doemming
 
 
 ----------------------------------------------------------------------------------------------------------
@@ -163,10 +178,10 @@ Bugs:
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen (unschön)
-	Kommentar:	modaler dialog
+	Kommentar:	modaler dialog, in allgemeine todo liste übertragen
 	Bearbeiter:	
 
-2) Grafiktoool kann nicht direkt für *.odt Vorlage geöffnet werden, obwohl das symbol aktiviert ist. man muss also die *.odt immer erst speichern.
++2) Grafiktoool kann nicht direkt für *.odt Vorlage geöffnet werden, obwohl das symbol aktiviert ist. man muss also die *.odt immer erst speichern.
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
@@ -190,21 +205,21 @@ Bugs:
 	Kommentar:	
 	Bearbeiter:	
 
-5) Beim Modellimport aus Shapedateien werden einige Relationen unvollständig und fälschlicher weise gesetzt (href#). da die id fehlt (href ist invollständig) scheint es als seinen die Relationen vorhanden und man kann an dieser stelle keine neuen Relationen setzen. Wird das Modell nach einer Änderung gespeichert werden die unvollständigen Relationen nicht mehr gespeichert (das Modell kann jetzt normal bearbeitet werden).
++5) Beim Modellimport aus Shapedateien werden einige Relationen unvollständig und fälschlicher weise gesetzt (href#). da die id fehlt (href ist invollständig) scheint es als seinen die Relationen vorhanden und man kann an dieser stelle keine neuen Relationen setzen. Wird das Modell nach einer Änderung gespeichert werden die unvollständigen Relationen nicht mehr gespeichert (das Modell kann jetzt normal bearbeitet werden).
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		erledigt
 	Kommentar:	
-	Bearbeiter:	Hübsch, avd
+	Bearbeiter:	Hübsch, doemming
 
 5) Beim Zeitreihenimport ist der next Button auch auf der letzten Seite aktiv.
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:	
-	Bearbeiter:	avd
+	Kommentar:	in allgemeine TODO lIste übertragen
+	Bearbeiter:	doemming
 
 6) StyleEditor: Symbolizerauswahl auf den gewählten/editierten Symbolizer abstimmen; x und y werden nicht gespeichert.
 	Wer: 		Hübsch
@@ -214,21 +229,21 @@ Bugs:
 	Kommentar:	
 	Bearbeiter:	
 
-7) Teilgebietsfläche wird als long beim import nicht richtig eingelesen.
++7) Teilgebietsfläche wird als long beim import nicht richtig eingelesen.
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		erledigt
-	Kommentar:	
-	Bearbeiter:	avd, jhueb
+	Kommentar:	Cast auf long war nicht richtig angewendet.
+	Bearbeiter:	doemming, huebsch
 
-8) Bei nicht erfolgreicher Berechnung des Fortran-Programmes werden auch nicht die log-Dateien übertragen.
++8) Bei nicht erfolgreicher Berechnung des Fortran-Programmes werden auch nicht die log-Dateien übertragen.
     Diese sind jedoch für die Fehlersuche notwendig, damit man nicht auf dem Server nachschauen muss (ist
     als "normaler" Nutzer nicht möglich).
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		erledigt
-	Kommentar:	
-	Bearbeiter:	jhueb
+	Kommentar:	Es werden jetzt die Log-Dateien zurückgeschrieben.
+	Bearbeiter:	huebsch
 
