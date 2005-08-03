@@ -46,13 +46,12 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
-<!--
-		<kalypso.copyObservation gml=".model/observationConf/" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="Niederschlag_gemessen" from="${startsim}" to="${startforecast}"/>
-			<source property="Niederschlag_prognose" from="${startforecast}" to="${stopsim}"/>
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/NiederschlagMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${startforecast}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
+			<source property="in1ObservationLink" from="${startforecast}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
-
+<!--
 		<kalypso.copyObservation gml="${calc.url}/calcCase.gml" featurePath="TalsperreCollectionAssociation/TalsperreMember" context="${calc.url}" targetObservation="Abgabe" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="Abgabe_eingang" from="${startsim}" to="${stopsim}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
