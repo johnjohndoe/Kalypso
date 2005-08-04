@@ -201,10 +201,9 @@ public class CatchmentManager extends AbstractManager
     String tsFileString = (String)ts.getValue();
     String relativeZmlPath = "Niederschlag/Niederschlag_" + feature.getId() + ".zml";
     File orgTsFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileString );
-    // repository LINK
-    // is absolute
-    // do copy
-    //TODO: JH, ZML erzeugen, dies funktioniert nicht mehr
+    
+    //JH: ZML erzeugen, dies funktioniert nicht mehr
+    
     //    Object link = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(),
     //        TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RAINFALL,
     // m_conf.getGmlBaseDir(),
@@ -214,6 +213,7 @@ public class CatchmentManager extends AbstractManager
     //        "niederschlagZRRepository", link );
     //    propCollector.put( "niederschlagZRRrepository",
     // niederschlagZRRepositoryProp );
+
     // calculation LINK
     // is relative
     // no copy
@@ -282,9 +282,9 @@ public class CatchmentManager extends AbstractManager
     List list = (List)feature.getProperty( "bodenkorrekturmember" );
 
     StringBuffer buf = new StringBuffer();
-    buf.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "vsg" ), "f5.3" ) );
-    //anzlayy
-    buf.append( FortranFormatHelper.printf( Integer.toString( list.size() ), "i5" ) );
+    // Der Versiegelungsgrad vsg wird gesetzt, da er im Rechenkern aus der Hydrotopdatei übernommen wird und somit in
+    // der Gebietsdatei uninteressant ist.
+    buf.append( "1.000" + FortranFormatHelper.printf( Integer.toString( list.size() ), "i5" ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bimax" ), "f5.1" ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bianf" ), "f5.1" ) );
 
@@ -387,8 +387,7 @@ public class CatchmentManager extends AbstractManager
     if( feature.getProperty( "temperaturZR" ) != null )
       return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".tmp";
     return STD_TEMP_FILENAME;
-  }
-
+}
   /**
    * @param feature
    * @param dir
