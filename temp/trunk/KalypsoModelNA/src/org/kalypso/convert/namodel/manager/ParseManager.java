@@ -62,8 +62,6 @@ public class ParseManager
 
   private final GMLSchema m_schema;
 
-  private final GMLSchema m_hydSchema;
-
   private final GMLSchema m_paraSchema;
 
   private final NAConfiguration m_conf;
@@ -71,8 +69,6 @@ public class ParseManager
   private final NetFileManager m_nodeManager;
 
   private final RHBManager m_rhbManager;
-
-  private final HydrotopManager m_hydManager;
 
   private final BodenartManager m_bodartManager;
 
@@ -82,20 +78,17 @@ public class ParseManager
 
   private final SchneeManager m_schneeManager;
 
-  public ParseManager( GMLSchema schema, GMLSchema hydSchema, GMLSchema paraSchema, NAConfiguration conf,
-      CatchmentManager catchmentManager, ChannelManager channelManager, NetFileManager nodeManager,
-      RHBManager rhbManager, HydrotopManager hydManager, BodenartManager bodartManager, BodentypManager bodtypManager,
-      NutzungManager nutzManager, SchneeManager schneeManager )
+  public ParseManager( GMLSchema schema, GMLSchema paraSchema, NAConfiguration conf, CatchmentManager catchmentManager,
+      ChannelManager channelManager, NetFileManager nodeManager, RHBManager rhbManager, BodenartManager bodartManager,
+      BodentypManager bodtypManager, NutzungManager nutzManager, SchneeManager schneeManager )
   {
     m_conf = conf;
     m_catchmentManager = catchmentManager;
     m_channelManager = channelManager;
     m_nodeManager = nodeManager;
     m_schema = schema;
-    m_hydSchema = hydSchema;
     m_paraSchema = paraSchema;
     m_rhbManager = rhbManager;
-    m_hydManager = hydManager;
     m_bodartManager = bodartManager;
     m_bodtypManager = bodtypManager;
     m_nutzManager = nutzManager;

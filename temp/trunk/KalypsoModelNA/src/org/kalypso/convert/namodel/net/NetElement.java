@@ -217,9 +217,9 @@ public class NetElement
         final URL linkURLN = m_urlUtils.resolveURL( m_workspace.getContext(), linkN.getHref() );
         final IObservation observation = ZmlFactory.parseXML( linkURLN, "ID_N" );
         final FileWriter writer = new FileWriter( targetFileN );
-        NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
-        IOUtils.closeQuietly( writer );
-      }
+          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RAINFALL, observation );
+          IOUtils.closeQuietly( writer );
+        }
       // T
       if( !targetFileT.exists() )
       {
@@ -233,8 +233,8 @@ public class NetElement
           NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(),
               TimeserieConstants.TYPE_TEMPERATURE, "1.0" );
           IOUtils.closeQuietly( writer );
-        }
       }
+    }
       // V
       if( !targetFileV.exists() )
       {
@@ -248,7 +248,7 @@ public class NetElement
           NAZMLGenerator.createExt2File( writer, observation, conf.getSimulationStart(), conf.getSimulationEnd(),
               TimeserieConstants.TYPE_EVAPORATION, "0.5" );
           IOUtils.closeQuietly( writer );
-        }
+  }
       }
     }
   }
@@ -367,5 +367,10 @@ public class NetElement
   public GMLWorkspace getWorkspace()
   {
     return m_workspace;
+  }
+
+  public String toString()
+  {
+    return getChannel().getProperty("inum").toString();
   }
 }

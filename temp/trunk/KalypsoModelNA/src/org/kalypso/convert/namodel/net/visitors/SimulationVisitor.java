@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.convert.namodel.net.NetElement;
+import org.kalypso.convert.namodel.net.NetElementCircleFinder;
 import org.kalypsodeegree.model.feature.Feature;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -80,19 +81,31 @@ public class SimulationVisitor extends NetElementVisitor
     if( m_cycleTest.contains( netElement ) )
     {
       StringBuffer b = new StringBuffer( "Netzplan ist fehlerhaft - Wasser flieﬂt im Kreis\n" );
-      int start = m_cycleTest.indexOf( netElement );
-      for( int i = start; i < m_cycleTest.size(); i++ )
-      {
-        Feature element = ( (NetElement)m_cycleTest.get( i ) ).getChannel();
-        if( element.getProperty( "inum" ) != null )
-        {
+    
+      // check circle (shortest connection)
+      final NetElementCircleFinder circlefinder = new NetElementCircleFinder( netElement );
+      List[] circleList = circlefinder.findCircle();
+      b.append( "circle for : " + netElement +":\n");
 
-          b.append( ( i - start + 1 ) + ". bei Strang Nr. " + element.getProperty( "inum" ).toString() + "(ID="
-              + element.getId() + ")\n" );
-        }
-        else
-          b.append( ( i - start ) + ". bei " + element.getId() + "\n" );
+      for( int i = 0; i < circleList.length; i++ )
+      {
+        b.append( "StrangID: " + circleList[i]+"\n" );
       }
+
+      //      
+      //            int start = m_cycleTest.indexOf( netElement );
+      //            for( int i = start; i < m_cycleTest.size(); i++ )
+      //            {
+      //              Feature element = ( (NetElement)m_cycleTest.get( i ) ).getChannel();
+      //              if( element.getProperty( "inum" ) != null )
+      //              {
+      //      
+      //                b.append( ( i - start + 1 ) + ". bei Strang Nr. " + element.getProperty( "inum" ).toString() + "(ID="
+      //                    + element.getId() + ")\n" );
+      //              }
+      //              else
+      //                b.append( ( i - start ) + ". bei " + element.getId() + "\n" );
+      //            }
       log( b.toString() );
       throw new Exception( b.toString() );
     }

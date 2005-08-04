@@ -266,8 +266,8 @@ public class NAModellConverter
     m_nutzManager = new NutzungManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
     m_schneeManager = new SchneeManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
 
-    m_parseManager = new ParseManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, conf, m_catchmentManager,
-        m_gerinneManager, m_nodeManager, m_rhbManager, m_hydrotopManager, m_bodartManager, m_bodtypManager,
+    m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager,
+        m_gerinneManager, m_nodeManager, m_rhbManager,  m_bodartManager, m_bodtypManager,
         m_nutzManager, m_schneeManager );
   }
 
