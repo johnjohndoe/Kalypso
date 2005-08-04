@@ -39,19 +39,16 @@ v.doemming@tuhh.de
 
 --------------------------------------------------------------------------*/
 
-package org.kalypso.auth.user;
+package org.kalypso.metadoc;
 
-import org.kalypso.auth.scenario.IScenarioProvider;
 
 /**
+ * Constants for common used configuration properties.
+ *
  * @author schlienger
  */
-public interface IKalypsoUser extends IScenarioProvider
+public interface IConfigurationConstants
 {
-  public String getUserName();
-  
-  public boolean hasRight( final String right );
-  
-  /** Return the scenario-id selected by this user */
-  public String getScenario();
+  /** Must be a File (a directory or a real file) */
+  public final static String CONF_FILEEXPORT_EXTENSION = IConfigurationConstants.class.getName() + ".fileext";
 }

@@ -46,20 +46,26 @@ import java.io.OutputStreamWriter;
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
 /**
@@ -123,7 +129,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
    */
   public Object getAdapter( final Class adapter )
   {
-    if( adapter == IExportableObject.class )
+    if( adapter == IExportableObjectFactory.class )
       return this;
     
     return super.getAdapter( adapter );
@@ -174,14 +180,21 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
    */
   public IExportableObject[] createExportableObjects( final Configuration conf )
   {
-    return new IExportableObject[] {  };
+    return new IExportableObject[]
+    { new ExportableChart( m_obsChart, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT,
+        ExportableChart.DEFAULT_FORMAT ), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH,
+        ExportableChart.DEFAULT_WIDTH ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ) ) };
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(IPublishingConfiguration)
    */
-  public IWizardPage[] createWizardPages( final Configuration configuration )
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration )
   {
-    return new IWizardPage[] {};
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" );
+    final IWizardPage page = new ImageExportPage(configuration, "diagprops", "Bildexport Optionen", imgDesc );
+
+    return new IWizardPage[]
+    { page };
   }
 }

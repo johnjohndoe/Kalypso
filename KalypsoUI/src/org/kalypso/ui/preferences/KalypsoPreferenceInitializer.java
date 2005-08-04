@@ -59,10 +59,6 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS,
         "http://SERVER_NAME:8080/webdav/kalypso-client.ini" );
 
-    // size of the image export for the observation chart
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_WIDTH, 600 );
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CHART_EXPORT_HEIGHT, 500 );
-
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.GLOBAL_CRS, "EPSG:31469" );
 
     KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.LANGUAGE, "de" );

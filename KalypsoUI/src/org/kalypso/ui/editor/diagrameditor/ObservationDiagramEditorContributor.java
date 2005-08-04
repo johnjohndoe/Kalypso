@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/*--------------- Kalypso-Header ------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,35 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.metadoc;
 
-import java.io.OutputStream;
+ --------------------------------------------------------------------------*/
+
+package org.kalypso.ui.editor.diagrameditor;
+
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.metadoc.ui.ExportAction;
+import org.kalypso.metadoc.ui.ExportActionContributor;
 
 /**
- * IExportableDocument
- * 
- * @deprecated remove this class as soon as metadoc stuff is done
  * @author schlienger
  */
-public interface IExportableDocument
+public class ObservationDiagramEditorContributor extends EditorActionBarContributor
 {
-  /**
-   * Exports the document using the writer.
-   */
-  public void exportDocument( final OutputStream outs ) throws Exception;
+  private ExportAction[] m_exportActions = null;
 
   /**
-   * @return the extension of the document file (must include the point as in '.txt')
+   * @see org.eclipse.ui.part.EditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
    */
-  public String getDocumentExtension();
+  public void setActiveEditor( final IEditorPart targetEditor )
+  {
+    super.setActiveEditor( targetEditor );
+
+    if( m_exportActions == null )
+      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editor.obsdiageditor.menu/exports",
+          "diagramm" );
+    
+    for( int i = 0; i < m_exportActions.length; i++ )
+      m_exportActions[i].setActivePart( targetEditor );
+  }
 }

@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/*--------------- Kalypso-Header ------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,42 +36,23 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.metadoc.map;
 
-import org.kalypso.metadoc.Document;
-import org.kalypso.ogc.gml.map.wizard.ExportMapOptionsPage;
-import org.kalypso.ui.metadoc.ExportBerichtWizard;
+ --------------------------------------------------------------------------*/
+
+package org.kalypso.metadoc.configuration;
+
+import org.apache.commons.configuration.Configuration;
 
 /**
- * @author belger
+ * Listens on configuration changes
+ * 
+ * @author schlienger
  */
-public class ExportMapBerichtWizard extends ExportBerichtWizard
+public interface IConfigurationListener
 {
-  private final ExportMapOptionsPage m_optionPage;
-
-  public ExportMapBerichtWizard( final ExportMapOptionsPage page, final Document doc )
-  {
-    super( page, doc );
-
-    m_optionPage = page;
-  }
-
   /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   * @param key
+   *          [can be null] the key of the property that changed, or null if multiple properties changed
    */
-  public void addPages()
-  {
-    super.addPages();
-
-    addPage( m_optionPage );
-  }
-
-  public boolean performFinish()
-  {
-    m_optionPage.saveWidgetValues();
-
-    return super.performFinish();
-  }
+  public void configurationChanged( final Configuration config, final String key );
 }
