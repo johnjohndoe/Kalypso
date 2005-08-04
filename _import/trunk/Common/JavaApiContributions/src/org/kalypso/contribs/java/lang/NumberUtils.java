@@ -30,4 +30,18 @@ public final class NumberUtils
     }
   }
 
+  /**
+   * Tries to parse an integer, if fails retruns null
+   */
+  public static final Integer parseQuietInteger( final String string )
+  {
+    try
+    {
+      return new Integer( Integer.parseInt( string ) );
+    }
+    catch( final NumberFormatException e )
+    {
+      return null;
+    }
+  }
 }
