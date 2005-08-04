@@ -138,25 +138,7 @@ public class ProcessInputWizardPage extends WizardPage
     {
       public void widgetSelected( SelectionEvent e )
       {
-        try
-        {
-          KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
-          { "xml" } );
-          dialog.open();
-          Object[] result = dialog.getResult();
-          if( result != null )
-          {
-            Path resultPath = (Path)result[0];
-            m_textModelData.setText( resultPath.toString() );
-            m_processExt.setModelDataPath( resultPath );
-          }
-          validate();
-
-        }
-        catch( Exception e1 )
-        {
-          e1.printStackTrace();
-        }
+        handleButtonPressed();
       }
     } );
 
@@ -201,6 +183,29 @@ public class ProcessInputWizardPage extends WizardPage
       pageComplete = false;
     }
     setPageComplete( pageComplete );
+  }
+
+  protected void handleButtonPressed()
+  {
+    try
+    {
+      KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[]
+      { "xml" } );
+      dialog.open();
+      Object[] result = dialog.getResult();
+      if( result != null )
+      {
+        Path resultPath = (Path)result[0];
+        m_textModelData.setText( resultPath.toString() );
+        m_processExt.setModelDataPath( resultPath );
+      }
+      validate();
+
+    }
+    catch( Exception e1 )
+    {
+      e1.printStackTrace();
+    }
   }
 
 }

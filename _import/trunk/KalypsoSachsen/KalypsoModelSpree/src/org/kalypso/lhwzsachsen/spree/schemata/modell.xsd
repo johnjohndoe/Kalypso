@@ -59,7 +59,6 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Wasserstand_gemessenEingang" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Wasserstand_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Wasserstand_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Wasserstand_vorhersage" type="obslink:TimeseriesLinkFeatureProperty"/>
@@ -77,13 +76,6 @@
 					<element name="BodenfeuchteMin" type="double"/>
 					<element name="Bodenfeuchte" type="double"/>
 					<element name="BodenfeuchteMax" type="double"/>
-					<element name="Ausdehnung" type="double"  minOccurs="0">
-						<annotation>
-							<documentation>Deprecated: Wird nicht mehr benötigt, deshalb optional damit die alten Rechenvarianten noch funktionieren.</documentation>
-						</annotation>
-					</element>
-					<element name="Niederschlag_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="Niederschlag_prognose" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Niederschlag_rechnung" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
@@ -140,7 +132,6 @@
 					<element name="Name" type="string"/>
 					<element name="Anfangsstauvolumen" type="double"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abgabe_eingang" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Abgabe" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Abgabe_plausibilisiert" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Zufluss_berechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
@@ -185,7 +176,6 @@
 				<sequence>
 					<element name="Name" type="string"/>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="Abfluss_eingang" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Abfluss" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>

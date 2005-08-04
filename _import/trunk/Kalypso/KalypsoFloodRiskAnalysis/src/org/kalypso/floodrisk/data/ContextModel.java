@@ -230,21 +230,21 @@ public class ContextModel
     return assetValueList;
   }
 
-  /**
-   * returns the IntegerValue of the featureID (Format: "Name_ID")
-   * 
-   * @deprecated should use getID( String fid, FeatureType featureType )
-   * 
-   * @param fid
-   *          featureID (Format: "Name_ID")
-   * @return ID as Integer
-   */
-  private Integer get_ID( String fid )
-  {
-    String[] fidStrings = fid.split( "_" );
-    String id = fidStrings[1];
-    return new Integer( id );
-  }
+//  /**
+//   * returns the IntegerValue of the featureID (Format: "Name_ID")
+//   * 
+//   * @deprecated should use getID( String fid, FeatureType featureType )
+//   * 
+//   * @param fid
+//   *          featureID (Format: "Name_ID")
+//   * @return ID as Integer
+//   */
+//  private Integer get_ID( String fid )
+//  {
+//    String[] fidStrings = fid.split( "_" );
+//    String id = fidStrings[1];
+//    return new Integer( id );
+//  }
 
   /**
    * returns the IntegerValue of the featureID (Format: "FeatureTypeNameID")

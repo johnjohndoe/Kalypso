@@ -200,11 +200,11 @@ public class ParseFunction extends ScanString
   /*
    * * Internal values for the independent variables
    */
-  private double x;
+  private double m_x;
 
-  private double y;
+  private double m_y;
 
-  private double z;
+  private double m_z;
 
   /**
    * Debug variable. If set true debug output is printed.
@@ -228,9 +228,9 @@ public class ParseFunction extends ScanString
 
     debug = false;
 
-    x = 0.0;
-    y = 0.0;
-    z = 0.0;
+    m_x = 0.0;
+    m_y = 0.0;
+    m_z = 0.0;
 
     addKeyWord( ",", COMMA );
     addKeyWord( "(", GROUP );
@@ -364,9 +364,9 @@ public class ParseFunction extends ScanString
    */
   public double getResult( double x, double y, double z ) throws Exception
   {
-    this.x = x;
-    this.y = y;
-    this.z = z;
+    m_x = x;
+    m_y = y;
+    m_z = z;
 
     return evaluate( root );
   }
@@ -383,8 +383,8 @@ public class ParseFunction extends ScanString
   public double getResult( double x, double y ) throws Exception
   {
 
-    this.x = x;
-    this.y = y;
+    this.m_x = x;
+    this.m_y = y;
 
     return evaluate( root );
   }
@@ -399,7 +399,7 @@ public class ParseFunction extends ScanString
   public double getResult( double x ) throws Exception
   {
 
-    this.x = x;
+    this.m_x = x;
 
     return evaluate( root );
   }
@@ -439,7 +439,7 @@ public class ParseFunction extends ScanString
 
     for( int i = 0; i < n; i++ )
     {
-      this.x = x[i];
+      this.m_x = x[i];
       array[i] = evaluate( root );
     }
     return array;
@@ -472,8 +472,8 @@ public class ParseFunction extends ScanString
 
     for( int i = 0; i < n; i++ )
     {
-      this.x = x[i];
-      this.y = y[i];
+      this.m_x = x[i];
+      this.m_y = y[i];
       array[i] = evaluate( root );
     }
     return array;
@@ -508,9 +508,9 @@ public class ParseFunction extends ScanString
 
     for( int i = 0; i < n; i++ )
     {
-      this.x = x[i];
-      this.y = y[i];
-      this.z = z[i];
+      this.m_x = x[i];
+      this.m_y = y[i];
+      this.m_z = z[i];
       array[i] = evaluate( root );
     }
     return array;
@@ -537,7 +537,7 @@ public class ParseFunction extends ScanString
    */
   public void setX( double x )
   {
-    this.x = x;
+    this.m_x = x;
   }
 
   /**
@@ -545,7 +545,7 @@ public class ParseFunction extends ScanString
    */
   public void setY( double y )
   {
-    this.y = y;
+    this.m_y = y;
   }
 
   /**
@@ -553,7 +553,7 @@ public class ParseFunction extends ScanString
    */
   public void setZ( double z )
   {
-    this.z = z;
+    this.m_z = z;
   }
 
   /*********************************************************************************************************************
@@ -915,11 +915,11 @@ public class ParseFunction extends ScanString
       break;
     case Node.INDEPENDENT:
       if( node.op == X )
-        value = x;
+        value = m_x;
       else if( node.op == Y )
-        value = y;
+        value = m_y;
       else if( node.op == Z )
-        value = z;
+        value = m_z;
       break;
     default:
       throw new Exception( "evaluate: Unknown type!" );
@@ -1226,7 +1226,6 @@ class Node extends Object
 
   public void print( int indentLevel )
   {
-    char l[] = new char[1];
     indent( indentLevel );
     System.out.println( "NODE type=" + type );
     indent( indentLevel );

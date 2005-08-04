@@ -49,18 +49,15 @@ import org.kalypso.floodrisk.data.ContextModel;
 import org.kalypso.floodrisk.data.RasterDataModel;
 import org.kalypso.floodrisk.process.IProcessResultEater;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
@@ -141,29 +138,29 @@ public class RasterizeLanduseJob implements ICalcJob
     }
   }
 
-  /**
-   * returns a list of Features for a given shapeFile wird nicht mehr verwendet
-   * 
-   * @param shapeFileBase
-   *          (base of shape)
-   * 
-   * @return List of Features
-   */
-  private List getFeatureList( String shapeFileBase, CS_CoordinateSystem cs )
-  {
-    try
-    {
-      GMLWorkspace workspace = ShapeSerializer.deserialize( shapeFileBase, cs );
-      Feature root = workspace.getRootFeature();
-      List featureList = (List)root.getProperty( "featureMember" );
-      return featureList;
-    }
-    catch( Exception e )
-    {
-      System.out.println( e );
-      return null;
-    }
-  }
+//  /**
+//   * returns a list of Features for a given shapeFile wird nicht mehr verwendet
+//   * 
+//   * @param shapeFileBase
+//   *          (base of shape)
+//   * 
+//   * @return List of Features
+//   */
+//  private List getFeatureList( String shapeFileBase, CS_CoordinateSystem cs )
+//  {
+//    try
+//    {
+//      GMLWorkspace workspace = ShapeSerializer.deserialize( shapeFileBase, cs );
+//      Feature root = workspace.getRootFeature();
+//      List featureList = (List)root.getProperty( "featureMember" );
+//      return featureList;
+//    }
+//    catch( Exception e )
+//    {
+//      System.out.println( e );
+//      return null;
+//    }
+//  }
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()

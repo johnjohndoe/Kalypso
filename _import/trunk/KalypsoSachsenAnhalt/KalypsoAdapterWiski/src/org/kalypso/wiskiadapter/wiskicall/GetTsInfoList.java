@@ -71,6 +71,11 @@ public class GetTsInfoList implements IWiskiCall
    */
   public GetTsInfoList( final String groupId, final String tsinfo_name )
   {
+    if( groupId != null )
+    {
+      // do nothing
+    }
+    
     filter = new SimpleRequestFilterTerm();
     filter.addColumnReference( "tsinfo_name" );
     filter.addOperator( "like" );

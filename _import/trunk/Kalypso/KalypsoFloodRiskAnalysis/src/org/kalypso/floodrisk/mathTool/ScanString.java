@@ -51,10 +51,6 @@ public class ScanString extends Object
 
   private String string;
 
-  private char buffer[];
-
-  private int count;
-
   private int position;
 
   private int kwlength;
@@ -77,10 +73,8 @@ public class ScanString extends Object
   public ScanString()
   {
     string = null;
-    count = 0;
     position = 0;
     kwlength = 0;
-    buffer = new char[32];
     sval = null;
     nval = 0.0;
   }
@@ -154,8 +148,8 @@ public class ScanString extends Object
 
     if( i == null )
       return UNKNOWN;
-    else
-      return i.intValue();
+
+    return i.intValue();
   }
 
   /**
@@ -256,55 +250,53 @@ public class ScanString extends Object
       }
 
     }
-    else
+
+    /*
+     * * Scan for a keyword
+     */
+    //System.out.println("ScanString: Scan for Word!");
+    //System.out.println("ScanString: Maximum Keyword length "+kwlength);
+    int last = UNKNOWN;
+    int nchar = 0;
+    int pos = position;
+
+    while( pos < string.length() )
     {
-      /*
-       * * Scan for a keyword
-       */
-      //System.out.println("ScanString: Scan for Word!");
-      //System.out.println("ScanString: Maximum Keyword length "+kwlength);
-      int last = UNKNOWN;
-      int nchar = 0;
-      int pos = position;
 
-      while( pos < string.length() )
+      buffer[count++] = string.charAt( pos++ );
+
+      word = getKeyValue( new String( buffer, 0, count ) );
+
+      if( word != UNKNOWN )
       {
-
-        buffer[count++] = string.charAt( pos++ );
-
-        word = getKeyValue( new String( buffer, 0, count ) );
-
-        if( word != UNKNOWN )
-        {
-          last = word;
-          nchar = count;
-          //System.out.println("ScanString: Found KeyWord - "+
-          //       new String(buffer,0,count));
-        }
-        else if( nchar == 0 && count >= kwlength )
-        {
-          return ERROR;
-        }
-        else if( count >= kwlength )
-        {
-          sval = new String( buffer, 0, nchar );
-          position += nchar;
-          //System.out.println("ScanString: Returning KeyWord - "+
-          //         sval);
-          return last;
-        }
+        last = word;
+        nchar = count;
+        //System.out.println("ScanString: Found KeyWord - "+
+        //       new String(buffer,0,count));
       }
-
-      if( nchar != 0 )
+      else if( nchar == 0 && count >= kwlength )
+      {
+        return ERROR;
+      }
+      else if( count >= kwlength )
       {
         sval = new String( buffer, 0, nchar );
         position += nchar;
         //System.out.println("ScanString: Returning KeyWord - "+
-        //                 sval);
+        //         sval);
         return last;
       }
-
     }
+
+    if( nchar != 0 )
+    {
+      sval = new String( buffer, 0, nchar );
+      position += nchar;
+      //System.out.println("ScanString: Returning KeyWord - "+
+      //                 sval);
+      return last;
+    }
+
     return ERROR;
 
   }
