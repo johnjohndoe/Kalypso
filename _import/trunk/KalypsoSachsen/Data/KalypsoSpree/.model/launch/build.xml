@@ -16,11 +16,22 @@
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
 
 		<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml"/>
+		<copy todir="${calc.dir}">
+			<fileset dir="${project.dir}/.templates">
+				<exclude name="calcCase/**/*"/>
+				<include name="**/*.gtt"/>
+				<include name="**/*.gft"/>
+				<include name="**/*.ott"/>
+				<include name="**/*.odt"/>
+			</fileset>
+		</copy>
+<!--		
 		<copy file="${project.dir}/.templates/Steuerparameter.gft" tofile="${calc.dir}/Steuerparameter.gft"/>
 		<copy file="${project.dir}/.templates/Anfangsvolumen.gtt" tofile="${calc.dir}/Anfangsvolumen.gtt"/>
 		<copy file="${project.dir}/.templates/Bodenfeuchten.gtt" tofile="${calc.dir}/Bodenfeuchten.gtt"/>
 		<copy file="${project.dir}/.templates/Flusslaufparameter.gtt" tofile="${calc.dir}/Flusslaufparameter.gtt"/>
 		<copy file="${project.dir}/.templates/Gesamtansicht.gmt" tofile="${calc.dir}/Gesamtansicht.gmt"/>
+-->		
 	</target>
 	
 	<!-- 
@@ -40,28 +51,30 @@
 			<property name="scenarioId" featurepath="" featureProperty="scenarioId"/>
 		</kalypso.gmlProperty>
 
-
+		<!-- Pegel -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="inObservationLink" from="${startsim}" to="${startforecast}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
+		<!-- Niederschlag -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/NiederschlagMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="inObservationLink" from="${startsim}" to="${startforecast}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<source property="in1ObservationLink" from="${startforecast}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
-<!--
-		<kalypso.copyObservation gml="${calc.url}/calcCase.gml" featurePath="TalsperreCollectionAssociation/TalsperreMember" context="${calc.url}" targetObservation="Abgabe" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="Abgabe_eingang" from="${startsim}" to="${stopsim}"/>
+
+		<!-- Talsperren -->
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/TalsperreMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
-		
-		<kalypso.copyObservation gml="${calc.url}/calcCase.gml" featurePath="VorgabeCollectionAssociation/VorgabeMember" context="${calc.url}" targetObservation="Abfluss" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="Abfluss_eingang" from="${startsim}" to="${stopsim}"/>
+
+		<!-- Vorgaben: Zufluss und Abfluss -->
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="inObservationLink" from="${startsim}" to="${stopsim}" filter="&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
--->		
 	</target>
 	
 	<target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">

@@ -27,14 +27,8 @@
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>70.0</BodenfeuchteMax>
-          <Niederschlag_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_SCHIRG.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_gemessen>
-          <Niederschlag_prognose>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_SCHIRG.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_prognose>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/PA_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_SCHIRG.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Niederschlag_rechnung>
         </Einzugsgebiet>
       </PegelMember>
@@ -61,14 +55,8 @@
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>130.0</BodenfeuchteMax>
-          <Niederschlag_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_BAUTZWB.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_gemessen>
-          <Niederschlag_prognose>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_BAUTZWB.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_prognose>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/PA_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_BAUTZWB.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Niederschlag_rechnung>
         </Einzugsgebiet>
       </PegelMember>
@@ -95,14 +83,8 @@
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>1.0</Bodenfeuchte>
           <BodenfeuchteMax>70.0</BodenfeuchteMax>
-          <Niederschlag_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_GROEDI.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_gemessen>
-          <Niederschlag_prognose>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_GROEDI.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_prognose>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/PA_GROEDI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_GROEDI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Niederschlag_rechnung>
         </Einzugsgebiet>
       </PegelMember>
@@ -129,14 +111,8 @@
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>200.0</BodenfeuchteMax>
-          <Niederschlag_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_JAENKD.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_gemessen>
-          <Niederschlag_prognose>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_JAENKD.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_prognose>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/PA_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_JAENKD.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Niederschlag_rechnung>
         </Einzugsgebiet>
       </PegelMember>
@@ -163,14 +139,8 @@
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>310.0</BodenfeuchteMax>
-          <Niederschlag_gemessen>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_SAERI.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_gemessen>
-          <Niederschlag_prognose>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/PA_SAERI.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Niederschlag_prognose>
           <Niederschlag_rechnung>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/PA_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/PA_SAERI.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Niederschlag_rechnung>
         </Einzugsgebiet>
       </PegelMember>
@@ -317,11 +287,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5482460.000072073,5683900.021043521</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Abgabe_eingang>
-            <TimeseriesLink ns1:href="kalypso-ocs:Spree://2004/QV_TSQUITZ.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Abgabe_eingang>
           <Abgabe>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/QV_TSQUITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_TSQUITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abgabe>
           <Abgabe_plausibilisiert>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen/QP_TSQUITZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -343,11 +310,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5463280.000150746,5675800.02107895</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Abgabe_eingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/QV_TSBAUTZ.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Abgabe_eingang>
           <Abgabe>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/QV_TSBAUTZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_TSBAUTZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abgabe>
           <Abgabe_plausibilisiert>
             <TimeseriesLink linktype="zml" ns1:href="./Ergebnisse/Zeitreihen/QP_TSBAUTZ.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
@@ -372,11 +336,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5453430.000191948,5711860.020919969</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Abfluss_eingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/QV_RLKETTE.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Abfluss_eingang>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/QV_RLKETTE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_RLKETTE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abfluss>
         </Flutung>
       </VorgabeMember>
@@ -388,11 +349,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5466790.00013667,5697390.020984512</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Abfluss_eingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/QV_LOHSA.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Abfluss_eingang>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/QV_LOHSA.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_LOHSA.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abfluss>
         </Flutung>
       </VorgabeMember>
@@ -404,11 +362,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5466277.000138702,5692313.021006971</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Abfluss_eingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/QV_BWALDE.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Abfluss_eingang>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/QV_BWALDE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_BWALDE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abfluss>
         </Flutung>
       </VorgabeMember>
@@ -420,11 +375,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5467640.000132938,5681840.021052703</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Abfluss_eingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/QV_SPWIESE.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Abfluss_eingang>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/QV_SPWIESE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QV_SPWIESE.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abfluss>
         </Flutung>
       </VorgabeMember>
@@ -436,11 +388,8 @@
               <gml:coordinates cs="," decimal="." ts=" ">5457600.000174678,5707320.020940305</gml:coordinates>
             </gml:Point>
           </Ort>
-          <Abfluss_eingang>
-            <TimeseriesLink linktype="zml" ns1:href="kalypso-ocs:Spree://2004/QP_BURGNEU.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
-          </Abfluss_eingang>
           <Abfluss>
-            <TimeseriesLink linktype="zml" ns1:href="./Zeitreihen/QP_BURGNEU.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+            <TimeseriesLink linktype="zml" ns1:href="Zeitreihen/QP_BURGNEU.zml" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
           </Abfluss>
         </Zufluss>
       </VorgabeMember>
