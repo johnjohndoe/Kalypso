@@ -41,9 +41,6 @@ public class Feature_Impl implements Feature
 
   private final String m_id;
 
-  // fields from old KalypsoFeature
-  private int mySelection = 0;
-
   /**
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten
    * 
@@ -380,51 +377,6 @@ public class Feature_Impl implements Feature
   private String getIndent( int indent )
   {
     return "                                                  ".substring( 0, indent * 4 );
-  }
-
-  public boolean select( int selectID )
-  {
-    if( isSelected( selectID ) )
-      return false;
-
-    mySelection |= selectID;
-    return true;
-
-  }
-
-  public boolean unselect( int selectID )
-  {
-    if( !isSelected( selectID ) )
-      return false;
-    mySelection &= ~selectID;
-    return true;
-  }
-
-  public boolean toggle( int selectID )
-  {
-    mySelection ^= selectID;
-    return true;
-  }
-
-  public boolean isSelected( int selectID )
-  {
-    return selectID == ( mySelection & selectID );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getSelection()
-   */
-  public int getSelection()
-  {
-    return mySelection;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setSelection(int)
-   */
-  public void setSelection( final int selection )
-  {
-    mySelection = selection;
   }
 
   /**

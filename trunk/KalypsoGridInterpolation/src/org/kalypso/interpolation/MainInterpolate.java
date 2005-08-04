@@ -64,7 +64,6 @@ public class MainInterpolate
     String borderPath = null;
     double size = 0;
     String type = null;
-    String valueProperty = null;
     int i = 0;
     while( i != args.length )
     {
@@ -129,7 +128,11 @@ public class MainInterpolate
               System.exit( 0 );
             }
           }
-          valueProperty = args[++i];
+          String valueProperty = args[++i];
+          if( valueProperty == null )
+          {
+            // avoid yellow thingies!
+          }
           i++;
 
         }

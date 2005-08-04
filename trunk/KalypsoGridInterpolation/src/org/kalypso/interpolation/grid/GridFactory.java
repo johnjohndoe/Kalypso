@@ -101,7 +101,6 @@ public class GridFactory
   {
     String key = getKey();
     GM_Position llc = null;
-    GM_Position urc = null;
     /*
      * find the largest grid extend where all Elements of the mesh are inside and the grid is positioned according the
      * wishbox
@@ -184,7 +183,7 @@ public class GridFactory
     Iterator it = gridTable.keySet().iterator();
     while( it.hasNext() )
     {
-      Grid grid = (Grid)gridTable.get( (String)it.next() );
+      Grid grid = (Grid)gridTable.get( it.next() );
       grid.clean();
       grid = null;
     }

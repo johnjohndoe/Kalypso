@@ -38,7 +38,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * 
@@ -48,18 +47,14 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ZmlInlineFeatureDialog implements IFeatureDialog
 {
-
-  private GMLWorkspace m_workspace;
-
   private Feature m_feature;
 
   private FeatureTypeProperty m_ftp;
 
   private FeatureChange m_change;
 
-  public ZmlInlineFeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
+  public ZmlInlineFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
-    m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
   }

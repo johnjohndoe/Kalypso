@@ -310,7 +310,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSelectionManagere()
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSelectionManager()
    */
   public IFeatureSelectionManager getSelectionManager()
   {

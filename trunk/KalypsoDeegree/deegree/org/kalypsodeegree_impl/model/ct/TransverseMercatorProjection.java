@@ -140,33 +140,16 @@ final class TransverseMercatorProjection extends CylindricalProjection
   private int hemisphere = 1;
 
   /**
-   * Construct a new map projection from the suplied parameters. Projection will default to Universal Transverse
-   * Mercator (UTM).
+   * Construct a new map projection from the suplied parameters. 
    * 
    * @param parameters
    *          The parameter values in standard units.
    * @throws MissingParameterException
    *           if a mandatory parameter is missing.
    */
-  protected TransverseMercatorProjection( final Projection parameters ) throws MissingParameterException
-  {
-    this( parameters, false );
-  } // Default to UTM.
-
-  /**
-   * Construct a new map projection from the suplied parameters.
-   * 
-   * @param parameters
-   *          The parameter values in standard units.
-   * @param modified
-   *          <code>true</code> for MTM, <code>false</code> for UTM.
-   * @throws MissingParameterException
-   *           if a mandatory parameter is missing.
-   */
-  protected TransverseMercatorProjection( final Projection parameters, final boolean modified )
+  protected TransverseMercatorProjection( final Projection parameters )
       throws MissingParameterException
   {
-
     super( parameters );
 
     String[] param = parameters.getParameters().getParameterListDescriptor().getParamNames();
@@ -446,12 +429,6 @@ final class TransverseMercatorProjection extends CylindricalProjection
   static final class Provider extends MapProjection.Provider
   {
     /**
-     * <code>true</code> for Modified Mercator Projection (MTM), or <code>false</code> for Universal Mercator
-     * Projection (UTM).
-     */
-    private final boolean modified;
-
-    /**
      * Construct a new registration.
      * 
      * @param modified
@@ -462,7 +439,6 @@ final class TransverseMercatorProjection extends CylindricalProjection
     {
       super( modified ? "Modified_Transverse_Mercator" : "Transverse_Mercator", modified ? ResourceKeys.MTM_PROJECTION
           : ResourceKeys.UTM_PROJECTION );
-      this.modified = modified;
     }
 
     /**
@@ -470,7 +446,7 @@ final class TransverseMercatorProjection extends CylindricalProjection
      */
     protected Object create( final Projection parameters )
     {
-      return new TransverseMercatorProjection( parameters, modified );
+      return new TransverseMercatorProjection( parameters );
     }
   }
 }

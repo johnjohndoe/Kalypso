@@ -403,21 +403,23 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
 
   private void activateFeature( final CommandableWorkspace workspace, final Feature feature )
   {
-    // we know that we always have CommandableWorkspace
-    final CommandableWorkspace oldWorkspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
-    final Feature oldFeature = m_featureComposite.getFeature();
-    if( oldWorkspace == workspace && oldFeature == feature )
-      return;
-
-    if( oldWorkspace != null )
-      oldWorkspace.removeModellListener( this );
-
     final Group mainGroup = m_mainGroup;
     final ScrolledCompositeCreator creator = m_creator;
+
     final Job job = new UIJob( getSite().getShell().getDisplay(), "Feature anzeigen" )
     {
       public IStatus runInUIThread( IProgressMonitor monitor )
       {
+        // we know that we always have CommandableWorkspace
+        final CommandableWorkspace oldWorkspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
+        final Feature oldFeature = m_featureComposite.getFeature();
+
+        if( oldWorkspace == workspace && oldFeature == feature )
+          return Status.OK_STATUS;
+
+        if( oldWorkspace != null )
+          oldWorkspace.removeModellListener( FeatureView.this );
+
         if( m_featureComposite != null )
           m_featureComposite.disposeControl();
         final Control scroller = creator.getScrolledComposite();

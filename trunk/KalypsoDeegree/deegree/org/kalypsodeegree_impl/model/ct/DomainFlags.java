@@ -60,8 +60,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
-// OpenGIS dependencies
-import java.io.ObjectStreamException;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
@@ -217,15 +215,13 @@ public final class DomainFlags extends EnumeratedParameter
    * <code>enum1==enum2</code> instead of <code>enum1.equals(enum2)</code>.
    * 
    * @return A single instance of this enum.
-   * @throws ObjectStreamException
-   *           is deserialization failed.
    */
-  private Object readResolve() throws ObjectStreamException
+  private Object readResolve()
   {
     final int value = getValue();
     if( value >= 0 && value < ENUMS.length )
       return ENUMS[value]; // Canonicalize
-    else
-      return ENUMS[0]; // Collapse unknow value to a single canonical one
+
+    return ENUMS[0]; // Collapse unknow value to a single canonical one
   }
 }

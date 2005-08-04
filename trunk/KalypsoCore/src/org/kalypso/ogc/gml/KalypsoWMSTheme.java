@@ -198,9 +198,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    * @param bbox
    *          bounding box from map model (screen)
    * 
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, int)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(Graphics, Graphics, GeoTransform, double, GM_Envelope)
    */
   public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
   {

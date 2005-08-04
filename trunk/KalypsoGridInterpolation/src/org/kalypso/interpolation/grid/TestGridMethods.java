@@ -78,13 +78,13 @@ public class TestGridMethods extends TestCase
     GM_Position pos12 = grid.getPosition( row2, col2 );
     GM_Position pos13 = grid.getPosition( row3, col3 );
 
-    double v1 = grid.readGridValue( pos1 );
-    double v2 = grid.readGridValue( pos2 );
-    double v3 = grid.readGridValue( pos3 );
+    /*double v1 = */grid.readGridValue( pos1 );
+    /*double v2 = */grid.readGridValue( pos2 );
+    /*double v3 = */grid.readGridValue( pos3 );
 
-    double v111 = grid.readGridValue( pos11 );
-    double v121 = grid.readGridValue( pos12 );
-    double v131 = grid.readGridValue( pos13 );
+    /*double v111 = */grid.readGridValue( pos11 );
+    /*double v121 = */grid.readGridValue( pos12 );
+    /*double v131 = */grid.readGridValue( pos13 );
     grid.export( new File( originalGrid ) );
     return grid;
 
@@ -118,7 +118,7 @@ public class TestGridMethods extends TestCase
     grid1.export( new File( copiedGrid ) );
   }
 
-  public static void testPosition() throws GM_Exception
+  public static void testPosition()
   {
     GM_Position point1 = GeometryFactory.createGM_Position( 10, 4 );
     GM_Position point2 = GeometryFactory.createGM_Position( 10, 4 );
@@ -165,7 +165,6 @@ public class TestGridMethods extends TestCase
     }
     catch( GM_Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       fail( "fehler in contains" );
     }
@@ -176,7 +175,7 @@ public class TestGridMethods extends TestCase
   {
     Grid grid = (Grid)testRandomAccessFile();
     GM_Position position = GeometryFactory.createGM_Position( 11.5, 10.5 );
-    boolean onGridpos = grid.isPointOnGrid( position, true );
+    /*boolean onGridpos = */grid.isPointOnGrid( position, true );
     System.out.println( position );
     int testc = grid.getColIndex( position );
     int testr = grid.getRowIndex( position );

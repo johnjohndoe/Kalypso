@@ -115,8 +115,8 @@ final class MathTransformAdapter2D extends MathTransformAdapter implements MathT
         ptDst.setLocation( array[0], array[1] );
         return ptDst;
       }
-      else
-        return new Point2D.Double( array[0], array[1] );
+
+      return new Point2D.Double( array[0], array[1] );
     }
     catch( RemoteException exception )
     {

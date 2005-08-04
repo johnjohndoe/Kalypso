@@ -61,9 +61,9 @@ import org.eclipse.swt.widgets.Text;
  */
 public class DiagramPropertiesDialog extends TitleAreaDialog
 {
-  private String m_diagTitle;
-  private boolean m_showLegend;
-  private String m_legendTitle;
+  protected String m_diagTitle;
+  protected boolean m_showLegend;
+  protected String m_legendTitle;
 
   public DiagramPropertiesDialog( final Shell parentShell, final String diagTitle, final boolean showLegend,
       final String legendTitle )

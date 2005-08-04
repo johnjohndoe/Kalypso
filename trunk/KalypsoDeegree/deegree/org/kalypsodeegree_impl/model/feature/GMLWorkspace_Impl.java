@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -185,9 +186,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return collector.getResults( true );
   }
 
-  private final Collection m_listener = new ArrayList();
+  private final Collection m_listener = new HashSet();
 
   /**
+   * Every listener is registered only once. 
    * 
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */

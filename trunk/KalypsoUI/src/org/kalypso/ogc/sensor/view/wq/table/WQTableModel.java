@@ -123,11 +123,11 @@ public class WQTableModel extends AbstractTableModel implements TableModel
   {
     if( columnIndex == 0 )
     {
-      int w = m_startW.intValue() + rowIndex * 10;
+      final int w = m_startW.intValue() + rowIndex * 10;
       if( w < 0 )
         return new Double( -1 * (w / 10 + 1 ) * 10 );
-      else
-        return new Double( w / 10 * 10 );
+
+      return new Double( w / 10 * 10 );
     }
 
     int ix = rowIndex * 10 + columnIndex - 1;

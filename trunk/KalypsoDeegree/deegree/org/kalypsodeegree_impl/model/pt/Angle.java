@@ -102,7 +102,7 @@ public class Angle implements Comparable, Serializable
     {
       protected Number convert( final Comparable o )
       {
-        return new Double( ( (Angle)o ).theta );
+        return new Double( ( (Angle)o ).m_theta );
       }
 
       protected Comparable inverseConvert( final Number value )
@@ -115,7 +115,7 @@ public class Angle implements Comparable, Serializable
   /**
    * Angle value in degres.
    */
-  private final double theta;
+  protected final double m_theta;
 
   /**
    * Contruct a new angle with the specified value.
@@ -125,7 +125,7 @@ public class Angle implements Comparable, Serializable
    */
   public Angle( final double theta )
   {
-    this.theta = theta;
+    m_theta = theta;
   }
 
   /**
@@ -145,7 +145,7 @@ public class Angle implements Comparable, Serializable
       final Angle theta = (Angle)getAngleFormat().parseObject( string );
       if( getClass().isAssignableFrom( theta.getClass() ) )
       {
-        this.theta = theta.theta;
+        this.m_theta = theta.m_theta;
       }
       else
         throw new NumberFormatException();
@@ -163,7 +163,7 @@ public class Angle implements Comparable, Serializable
    */
   public double degrees()
   {
-    return theta;
+    return m_theta;
   }
 
   /**
@@ -171,7 +171,7 @@ public class Angle implements Comparable, Serializable
    */
   public double radians()
   {
-    return Math.toRadians( theta );
+    return Math.toRadians( m_theta );
   }
 
   /**
@@ -179,7 +179,7 @@ public class Angle implements Comparable, Serializable
    */
   public int hashCode()
   {
-    final long code = Double.doubleToLongBits( theta );
+    final long code = Double.doubleToLongBits( m_theta );
     return (int)code ^ (int)( code >>> 32 );
   }
 
@@ -192,10 +192,10 @@ public class Angle implements Comparable, Serializable
       return true;
     if( that != null && getClass().equals( that.getClass() ) )
     {
-      return Double.doubleToLongBits( theta ) == Double.doubleToLongBits( ( (Angle)that ).theta );
+      return Double.doubleToLongBits( m_theta ) == Double.doubleToLongBits( ( (Angle)that ).m_theta );
     }
-    else
-      return false;
+
+    return false;
   }
 
   /**
@@ -208,8 +208,8 @@ public class Angle implements Comparable, Serializable
      * //----- BEGIN JDK 1.4 DEPENDENCIES ---- return Double.compare(this.theta, ((Angle)that).theta); ----- END OF JDK
      * 1.4 DEPENDENCIES ---
      */
-    final double d1 = this.theta;
-    final double d2 = ( (Angle)that ).theta;
+    final double d1 = this.m_theta;
+    final double d2 = ( (Angle)that ).m_theta;
     if( d1 < d2 )
       return -1;
     if( d1 > d2 )

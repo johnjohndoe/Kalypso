@@ -352,5 +352,9 @@ public final class Utilities
    * Logger.getLogger(paquet).log(record); /*----- END OF JDK 1.4 DEPENDENCIES ---- error.printStackTrace(); ------- END
    * OF JDK 1.3 FALLBACK --------
    */
+    if( paquet == null || classe == null || method == null || error == null )
+    {
+      // to acoid yellow thingies
+    }
   }
 }
