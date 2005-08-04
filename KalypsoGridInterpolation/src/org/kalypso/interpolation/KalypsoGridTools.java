@@ -183,8 +183,8 @@ public class KalypsoGridTools implements IKalyposGridTools
         return null;
       }
     }
-    else
-      return null;
+
+    return null;
   }
 
   /**
@@ -198,11 +198,7 @@ public class KalypsoGridTools implements IKalyposGridTools
   }
 
   /**
-   * @throws IOException
-   * @throws Exception
-   * @throws
-   * @throws IOException
-   * @see org.kalypso.interpolation.IKalyposGridTools#importGrid(java.io.File)
+   * @see org.kalypso.interpolation.IKalyposGridTools#importGrid(File, CS_CoordinateSystem)
    */
   public IGrid importGrid( File file, CS_CoordinateSystem cs ) throws Exception
   {

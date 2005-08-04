@@ -96,6 +96,9 @@ public class ObservationChooserDialog extends ResizableDialog
   {
     if( m_chooser != null )
     {
+      if( id == null )
+      {
+      }
       // TODO select the observation in the tree
     }
   }

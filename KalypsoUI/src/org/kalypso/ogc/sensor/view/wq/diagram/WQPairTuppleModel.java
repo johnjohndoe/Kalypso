@@ -116,7 +116,7 @@ public class WQPairTuppleModel extends AbstractTuppleModel
   {
     if( getPositionFor( axis ) == 0 )
       return Arrays.binarySearch( m_W, element );
-    else
-      return -1;
+
+    return -1;
   }
 }

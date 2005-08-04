@@ -40,14 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -60,14 +55,11 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
 {
   private final LayerTableViewer m_viewer;
 
-  private final Color m_selectionColor;
-
   private final Color m_noSelectionColor;
 
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
     m_viewer = layerTable;
-    m_selectionColor = m_viewer.getControl().getDisplay().getSystemColor( SWT.COLOR_YELLOW );
     m_noSelectionColor = m_viewer.getControl().getBackground();
   }
 

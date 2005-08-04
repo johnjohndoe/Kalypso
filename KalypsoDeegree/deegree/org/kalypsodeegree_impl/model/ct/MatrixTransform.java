@@ -447,7 +447,7 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
     /**
      * Range of positives values. Range goes from 1 to the maximum value.
      */
-    private static final Range POSITIVE_RANGE = new Range( Integer.class, new Integer( 1 ), new Integer(
+    private static final Range PROVIDER_POSITIVE_RANGE = new Range( Integer.class, new Integer( 1 ), new Integer(
         Integer.MAX_VALUE ) );
 
     /**
@@ -462,9 +462,9 @@ final class MatrixTransform extends AbstractMathTransform implements Serializabl
     public Provider( final int numRow, final int numCol )
     {
       super( "Affine", ResourceKeys.AFFINE_TRANSFORM, null );
-      putInt( "Num_row", numRow, POSITIVE_RANGE ); // Add integer (not double)
+      putInt( "Num_row", numRow, PROVIDER_POSITIVE_RANGE ); // Add integer (not double)
       // parameter
-      putInt( "Num_col", numCol, POSITIVE_RANGE ); // Add integer (not double)
+      putInt( "Num_col", numCol, PROVIDER_POSITIVE_RANGE ); // Add integer (not double)
       // parameter
       final StringBuffer buffer = new StringBuffer( "elt_" );
       for( int j = 0; j <= numRow; j++ )

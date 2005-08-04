@@ -230,8 +230,8 @@ public class CoordinateTransformation extends Info
   {
     if( transform != null )
       return transform;
-    else
-      throw new IllegalStateException();
+
+    throw new IllegalStateException();
   }
 
   /**

@@ -38,9 +38,7 @@ import org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.template.featureview.ButtonType;
-import org.kalypso.template.featureview.Composite;
 import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.Featureview;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -48,24 +46,17 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-
-  private Composite m_composite;
-  private Featureview m_featureView;
-
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
   public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, FeatureTypeProperty ftp )
   {
-    return new ZmlInlineFeatureDialog( workspace, feature, ftp);
+    return new ZmlInlineFeatureDialog( feature, ftp);
   }
 
   /**

@@ -115,9 +115,6 @@ public class KrigingTask extends Task
   /** property name, where to generate the taget files (mandatory) */
   private String m_modellGMLTargetObservationlinkPropname;
 
-  /** timestep in minutes */
-  private double m_timeStepMinutes;
-
   /** modell, that contains links to source observations (mandatory) */
   private String m_sourceGML;
 
@@ -172,9 +169,13 @@ public class KrigingTask extends Task
     m_context = context;
   }
 
-  public final void setTimeStepMinutes( double timeStepMinutes )
+  public final void setTimeStepMinutes( final double timeStepMinutes )
   {
-    m_timeStepMinutes = timeStepMinutes;
+    if( timeStepMinutes > 0 )
+    {
+      // to avoid yellow thingies; is it used?
+    }
+//    m_timeStepMinutes = timeStepMinutes;
   }
 
   public final void setModellGMLTargetObservationlinkPropname( String modellGMLTargetObservationlinkPropname )

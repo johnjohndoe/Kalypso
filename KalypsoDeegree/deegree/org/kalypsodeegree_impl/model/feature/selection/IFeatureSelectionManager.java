@@ -33,14 +33,12 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * 
  * @author doemming
  */
 public interface IFeatureSelectionManager 
-//extends ModellEventProvider
 {
   public boolean addToSelection( final Feature feature );
 
@@ -58,20 +56,9 @@ public interface IFeatureSelectionManager
 
   public void clear();
 
-  /**
-   * @return
-   */
   public IStructuredSelection getStructuredSelection();
 
-  /**
-   * @param feature
-   * @return
-   */
   public boolean isSelected( final Feature feature );
 
-  /**
-   * @return
-   */
   public List getSelectedIds();
-
 }

@@ -158,7 +158,7 @@ final class StereographicProjection extends PlanarProjection
    * @throws MissingParameterException
    *           if a mandatory parameter is missing.
    */
-  private StereographicProjection( final Projection parameters, final boolean polar, final boolean auto )
+  protected StereographicProjection( final Projection parameters, final boolean polar, final boolean auto )
       throws MissingParameterException
   {
     //////////////////////////
@@ -392,8 +392,8 @@ final class StereographicProjection extends PlanarProjection
       ptDst.setLocation( x, y );
       return ptDst;
     }
-    else
-      return new Point2D.Double( x, y );
+
+    return new Point2D.Double( x, y );
   }
 
   /**
@@ -539,8 +539,8 @@ final class StereographicProjection extends PlanarProjection
       ptDst.setLocation( x, y );
       return ptDst;
     }
-    else
-      return new Point2D.Double( x, y );
+
+    return new Point2D.Double( x, y );
   }
 
   /**

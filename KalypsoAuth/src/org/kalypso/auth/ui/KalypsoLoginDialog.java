@@ -164,15 +164,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
       {
         public void selectionChanged( final SelectionChangedEvent event )
         {
-          final IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-          m_selectedScenario = (IScenario)sel.getFirstElement();
-          String desc = m_selectedScenario.getDescription();
-
-          if( desc == null )
-            desc = "";
-
-          txtDesc.setText( desc );
-          txtDesc.setToolTipText( StringUtilities.spanOverLines( desc, 70, true, StringUtilities.ALIGNMENT_LEFT ) );
+          handleScenarioSelected( txtDesc, event );
         }
       };
 
@@ -244,5 +236,18 @@ public class KalypsoLoginDialog extends TitleAreaDialog
   public String getPassword()
   {
     return m_passerword;
+  }
+
+  protected void handleScenarioSelected( final Text txtDesc, final SelectionChangedEvent event )
+  {
+    final IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+    m_selectedScenario = (IScenario)sel.getFirstElement();
+    String desc = m_selectedScenario.getDescription();
+
+    if( desc == null )
+      desc = "";
+
+    txtDesc.setText( desc );
+    txtDesc.setToolTipText( StringUtilities.spanOverLines( desc, 70, true, StringUtilities.ALIGNMENT_LEFT ) );
   }
 }

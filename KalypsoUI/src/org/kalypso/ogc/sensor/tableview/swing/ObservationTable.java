@@ -110,7 +110,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   protected ObservationTablePanel m_panel = null;
 
-  private String m_currentScenarioName = "";
+  protected String m_currentScenarioName = "";
 
   /**
    * Constructs a table based on the given template

@@ -456,65 +456,65 @@ public class WMSHelper
 
   }
 
-  private static void internalTransformation2( Graphics2D g2, GeoTransform projection, TiledImage rasterImage,
-      RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS )
-  {
-
-    try
-    {
-      PlanarImage image = rasterImage;
-
-      RectifiedGridDomain rgDomain = gridDomain;
-
-      CS_CoordinateSystem cs = targetCS;
-      GM_Surface destSurface = rgDomain.getGM_Surface( cs );
-      GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
-      GM_Position llCorner = destExtRing.getPositions()[0];
-      GM_Position lrCorner = destExtRing.getPositions()[1];
-      GM_Position urCorner = destExtRing.getPositions()[2];
-      GM_Position ulCorner = destExtRing.getPositions()[3];
-      GM_Position pixel_llCorner = projection.getDestPoint( llCorner );
-      GM_Position pixel_lrCorner = projection.getDestPoint( lrCorner );
-      GM_Position pixel_urCorner = projection.getDestPoint( urCorner );
-      GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner );
-      double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
-      double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
-      double scaleX = destImageWidth / image.getWidth();
-      double scaleY = destImageHeight / image.getHeight();
-      double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
-      double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
-      AffineTransform trafo = new AffineTransform();
-      trafo.scale( scaleX, scaleY );
-      trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY ) / Math.abs( scaleY ) );
-      trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
-
-      GM_Position scaledImage_min = pixel_ulCorner;
-      GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
-
-      GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ),
-          scaledImage_min.getY() - Math.abs( shearY ) );
-      GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ),
-          scaledImage_max.getY() + Math.abs( shearY ) );
-      GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
-
-      BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight(),
-          BufferedImage.TYPE_INT_ARGB );
-      Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
-      //bufferGraphics.setColor(Color.GREEN);
-      bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-      bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
-      bufferGraphics.drawRenderedImage( image, trafo );
-      //      g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(),
-      // (int)buffImageEnv.getMin().getY(),
-      //          null );
-      g2.drawImage( buffer, 0, 0, null );
-    }
-
-    catch( Exception e )
-    {
-      // TODO: handle exception
-    }
-
-  }
+//  private static void internalTransformation2( Graphics2D g2, GeoTransform projection, TiledImage rasterImage,
+//      RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS )
+//  {
+//
+//    try
+//    {
+//      PlanarImage image = rasterImage;
+//
+//      RectifiedGridDomain rgDomain = gridDomain;
+//
+//      CS_CoordinateSystem cs = targetCS;
+//      GM_Surface destSurface = rgDomain.getGM_Surface( cs );
+//      GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
+//      GM_Position llCorner = destExtRing.getPositions()[0];
+//      GM_Position lrCorner = destExtRing.getPositions()[1];
+//      GM_Position urCorner = destExtRing.getPositions()[2];
+//      GM_Position ulCorner = destExtRing.getPositions()[3];
+//      GM_Position pixel_llCorner = projection.getDestPoint( llCorner );
+//      GM_Position pixel_lrCorner = projection.getDestPoint( lrCorner );
+//      GM_Position pixel_urCorner = projection.getDestPoint( urCorner );
+//      GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner );
+//      double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
+//      double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
+//      double scaleX = destImageWidth / image.getWidth();
+//      double scaleY = destImageHeight / image.getHeight();
+//      double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
+//      double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
+//      AffineTransform trafo = new AffineTransform();
+//      trafo.scale( scaleX, scaleY );
+//      trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY ) / Math.abs( scaleY ) );
+//      trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
+//
+//      GM_Position scaledImage_min = pixel_ulCorner;
+//      GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
+//
+//      GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ),
+//          scaledImage_min.getY() - Math.abs( shearY ) );
+//      GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ),
+//          scaledImage_max.getY() + Math.abs( shearY ) );
+//      GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
+//
+//      BufferedImage buffer = new BufferedImage( (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight(),
+//          BufferedImage.TYPE_INT_ARGB );
+//      Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
+//      //bufferGraphics.setColor(Color.GREEN);
+//      bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
+//      bufferGraphics.fillRect( 0, 0, (int)buffImageEnv.getWidth(), (int)buffImageEnv.getHeight() );
+//      bufferGraphics.drawRenderedImage( image, trafo );
+//      //      g2.drawImage( buffer, (int)buffImageEnv.getMin().getX(),
+//      // (int)buffImageEnv.getMin().getY(),
+//      //          null );
+//      g2.drawImage( buffer, 0, 0, null );
+//    }
+//
+//    catch( Exception e )
+//    {
+//      // TODO: handle exception
+//    }
+//
+//  }
 
 }//class WMSHelper

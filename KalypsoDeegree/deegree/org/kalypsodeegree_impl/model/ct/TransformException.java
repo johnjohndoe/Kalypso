@@ -98,5 +98,9 @@ public class TransformException extends Exception
    * //----- BEGIN JDK 1.4 DEPENDENCIES ----- super(message, cause); /*----- END OF JDK 1.4 DEPENDENCIES ----
    * super(message); ------- END OF JDK 1.3 FALLBACK --------
    */
+    if( message == null || cause == null )
+    {
+      // to avoid yellow thingies
+    }
   }
 }

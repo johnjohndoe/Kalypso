@@ -130,7 +130,7 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
    * <code>true</code> if geographic coordinates include an ellipsoidal height (i.e. are 3-D), or <code>false</code>
    * if they are strictly 2-D.
    */
-  private final boolean hasHeight;
+  private final boolean m_hasHeight;
 
   /**
    * The inverse of this transform. Will be created only when needed.
@@ -167,7 +167,7 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
   protected GeocentricTransform( final double semiMajor, final double semiMinor, final Unit units,
       final boolean hasHeight )
   {
-    this.hasHeight = hasHeight;
+    this.m_hasHeight = hasHeight;
     a = Unit.METRE.convert( semiMajor, units );
     b = Unit.METRE.convert( semiMinor, units );
     a2 = a * a;
@@ -212,23 +212,22 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
    * computation.
    */
   private void transform( final double[] srcPts, int srcOff, final double[] dstPts, int dstOff, int numPts,
-      boolean hasHeight )
+      boolean hasHeight2 )
   {
     int step = 0;
     final int dimSource = getDimSource();
-    hasHeight |= ( dimSource >= 3 );
+    hasHeight2 |= ( dimSource >= 3 );
     if( srcPts == dstPts && srcOff < dstOff && srcOff + numPts * dimSource > dstOff )
     {
       step = -dimSource;
       srcOff -= ( numPts - 1 ) * step;
       dstOff -= ( numPts - 1 ) * step;
     }
-    TransformException error = null;
     while( --numPts >= 0 )
     {
       final double L = Math.toRadians( srcPts[srcOff++] ); // Longitude
       final double P = Math.toRadians( srcPts[srcOff++] ); // Latitude
-      final double h = hasHeight ? srcPts[srcOff++] : 0; // Height above the
+      final double h = hasHeight2 ? srcPts[srcOff++] : 0; // Height above the
       // ellipsoid (metres).
 
       final double cosLat = Math.cos( P );
@@ -258,7 +257,6 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
       srcOff -= ( numPts - 1 ) * step;
       dstOff -= ( numPts - 1 ) * step;
     }
-    TransformException error = null;
     while( --numPts >= 0 )
     {
       final double L = Math.toRadians( srcPts[srcOff++] ); // Longitude
@@ -454,7 +452,7 @@ class GeocentricTransform extends AbstractMathTransform implements Serializable
    */
   public int getDimSource()
   {
-    return hasHeight ? 3 : 2;
+    return m_hasHeight ? 3 : 2;
   }
 
   /**
