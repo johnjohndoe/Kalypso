@@ -80,10 +80,11 @@ public class RelationCircleFinder
       else if( list.contains( linkFeature ) )
       {
         // an other circle
+        System.out.println( "found an other circle:\n" + list.toString() + " : " + linkFeature.toString() );
       }
       else
       {
-        final List[] lists = findCircle( linkFeature, list );
+        final List[] lists = findCircle( linkFeature, newList );
         result.addAll( Arrays.asList( lists ) );
       }
     }
