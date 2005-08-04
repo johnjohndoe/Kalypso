@@ -6,7 +6,7 @@ ___________(inum,i5)____(ispk,i3)
 (namfzf,a)
 (namhydro,a)
 (snowtype,a15)(ftem,*)_(fver,*)
-(vsg,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,i5)_____(tint,f5.1)_____(rintmx,f5.1)
+(IGNORE,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,i5)_____(tint,f5.1)_____(rintmx,f5.1)
 (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
 (f_eva,f4.1)_(aint,f4.1)_(aigw,f6.2)_(fint,f4.2)_(ftra,f4.2)
 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
@@ -17,3 +17,6 @@ ___________(inum,i5)____(ispk,i3)
 # ausgabe:
 (inum,*)_
 (num,i5)
+#Zeitflächenfunktion:
+(ianzf,*)_(dtzf,*)_(iart,*)
+(ptime,*)_(p,*)
