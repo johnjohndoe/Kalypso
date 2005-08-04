@@ -46,13 +46,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -60,8 +63,13 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.IExportableObjectFactory;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -76,7 +84,6 @@ import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * <p>
@@ -94,7 +101,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, ISelectionProvider
+public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, ISelectionProvider,
+    IExportableObjectFactory
 {
   private GisMapOutlinePage m_outlinePage = null;
 
@@ -142,6 +150,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       return m_outlinePage;
     }
 
+    if( IExportableObjectFactory.class.equals( adapter ) )
+      return this;
+
     return super.getAdapter( adapter );
   }
 
@@ -155,8 +166,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     {
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
       final GM_Envelope boundingBox = getMapPanel().getBoundingBox();
-      final String srsName= KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox ,srsName);
+      final String srsName = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      final Gismapview modellTemplate = m_mapModell.createGismapTemplate( boundingBox, srsName );
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -323,5 +334,27 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public void setSelection( ISelection selection )
   {
     m_MapPanel.setSelection( selection );
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   */
+  public IExportableObject[] createExportableObjects( Configuration conf )
+  {
+    return new IExportableObject[]
+    { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt(
+        ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) };
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   */
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration )
+  {
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" );
+    final IWizardPage page = new ImageExportPage( configuration, "mapprops", "Export Optionen", imgDesc );
+
+    return new IWizardPage[]
+    { page };
   }
 }

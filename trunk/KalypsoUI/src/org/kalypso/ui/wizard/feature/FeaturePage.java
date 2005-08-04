@@ -97,12 +97,11 @@ public class FeaturePage extends WizardPage
 
     m_featureComposite = new FeatureComposite( m_workspace, null, new URL[] {} );
     m_featureComposite.setFeature( m_workspace, m_feature );
-    final Collection changes = m_changes;
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       public void featureChanged( final FeatureChange change )
       {
-        changes.add( change );
+        applyFeatureChange( change );
       }
 
       public void openFeatureRequested( Feature feature )
@@ -115,6 +114,14 @@ public class FeaturePage extends WizardPage
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     setControl( group );
+  }
+
+  /**
+   * Add the change to our list of changes. Subclass may override (and call super.applyFeatureChange())
+   */
+  protected void applyFeatureChange( final FeatureChange change )
+  {
+    m_changes.add( change );
   }
 
   /**

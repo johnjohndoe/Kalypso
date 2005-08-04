@@ -58,6 +58,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * Wrapps the service to provide utility functions
  * 
  * @author belger
+ * @deprecated remove this class as soon as metadoc stuff is done
  */
 public class MetadocServiceWrapper
 {

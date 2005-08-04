@@ -24,6 +24,11 @@ public class KalypsoUser implements IKalypsoUser
     m_scenarioID = scenarioID;
     m_scenarios = scenarios;
   }
+  
+  public String getUserName()
+  {
+    return m_userName;
+  }
 
   public String toString()
   {

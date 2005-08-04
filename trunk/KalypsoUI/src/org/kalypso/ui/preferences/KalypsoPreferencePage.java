@@ -75,11 +75,6 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
     addField( new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS,
         "Verfügbare &Server (Komma-getrennte Liste):", getFieldEditorParent() ) );
 
-    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_WIDTH, "Breite des Exportbildes (Diagramm):",
-        getFieldEditorParent() ) );
-    addField( new StringFieldEditor( IKalypsoPreferences.CHART_EXPORT_HEIGHT, "Höhe des Exportbildes (Diagramm):",
-        getFieldEditorParent() ) );
-
     addField( new BooleanFieldEditor( IKalypsoPreferences.HTTP_PROXY_USE, "Http-&Proxy benutzen",
         getFieldEditorParent() ) );
     addField( new StringFieldEditor( IKalypsoPreferences.HTTP_PROXY_HOST, "Http-Proxy &Hostname:",

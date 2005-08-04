@@ -74,6 +74,7 @@ import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
+ * @deprecated use new metadoc stuff
  * @author belger
  */
 public class ExportBerichtWizard extends Wizard

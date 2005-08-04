@@ -49,48 +49,36 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.metadoc.IExportTarget;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.KalypsoMetaDocPlugin;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.metadoc.ui.FileSelectionWizardPage;
 
 /**
  * The file-target simply writes the document into a local file.
  * 
  * @author schlienger
  */
-public class FileExportTarget implements IExportTarget
+public class FileExportTarget extends AbstractExportTarget
 {
   /** Must be a File (a directory or a real file) */
   public final static String CONF_FILEEXPORT_FILE = FileExportTarget.class.getName() + ".file";
   
-  private String m_name;
-  private String m_desc;
-  private ImageDescriptor m_imageDescriptor;
-
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
-   */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, Object data ) throws CoreException
-  {
-    m_name = config.getAttribute( "name" );
-    m_desc = config.getAttribute( "description" );
-    
-    final String iconLocation = config.getAttribute( "icon" );
-    if( iconLocation != null )
-      m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), iconLocation );
-  }
-
+  /** Extension of the file (must be in the form: .ext )*/
+  public final static String CONF_FILEEXPORT_EXTENSION = FileExportTarget.class.getName() + ".extension";
+  
   /**
    * @see org.kalypso.metadoc.IExportTarget#commitDocument(org.kalypso.metadoc.IExportableObject, org.apache.commons.configuration.Configuration, org.eclipse.core.runtime.IProgressMonitor)
    */
   public IStatus commitDocument( final IExportableObject document, final Configuration conf, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
+    monitor.beginTask( "Export von " + document.getPreferredDocumentName(), IProgressMonitor.UNKNOWN );
+    
     FileOutputStream stream = null;
     try
     {
@@ -111,39 +99,19 @@ public class FileExportTarget implements IExportTarget
     finally
     {
       IOUtils.closeQuietly( stream );
+      
+      monitor.done();
     }
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportTarget#getName()
+   * @see org.kalypso.metadoc.IExportTarget#createWizardPages(IPublishingConfiguration)
    */
-  public String getName()
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration )
   {
-    return m_name;
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportTarget#getDescription()
-   */
-  public String getDescription()
-  {
-    return m_desc;
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportTarget#getImage()
-   */
-  public ImageDescriptor getImage()
-  {
-    return m_imageDescriptor;
-  }
-
-
-  /**
-   * @see org.kalypso.metadoc.IExportTarget#createWizardPages(org.apache.commons.configuration.Configuration)
-   */
-  public IWizardPage[] createWizardPages( Configuration configuration )
-  {
-    return new IWizardPage[] {};
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/newfile_wiz.gif" );
+    final FileSelectionWizardPage page = new FileSelectionWizardPage( configuration, "file.export.target.page", "Dateiauswahl", imgDesc, "Datei" );
+    
+    return new IWizardPage[] { page };
   }
 }

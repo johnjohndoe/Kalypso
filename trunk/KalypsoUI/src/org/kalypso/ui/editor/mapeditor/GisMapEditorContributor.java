@@ -39,19 +39,44 @@ v.doemming@tuhh.de
 
 --------------------------------------------------------------------------*/
 
-package org.kalypso.auth.user;
+package org.kalypso.ui.editor.mapeditor;
 
-import org.kalypso.auth.scenario.IScenarioProvider;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.metadoc.ui.ExportActionContributor;
 
 /**
  * @author schlienger
  */
-public interface IKalypsoUser extends IScenarioProvider
+public class GisMapEditorContributor extends EditorActionBarContributor
 {
-  public String getUserName();
+  private final Set m_editors = new HashSet();
+
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()
+   */
+  public void dispose()
+  {
+    super.dispose();
+    
+    m_editors.clear();
+  }
   
-  public boolean hasRight( final String right );
-  
-  /** Return the scenario-id selected by this user */
-  public String getScenario();
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
+   */
+  public void setActiveEditor( final IEditorPart targetEditor )
+  {
+    super.setActiveEditor( targetEditor );
+
+    if( !m_editors.contains( targetEditor ) )
+    {
+      ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.mapeditor.menu/export",
+          "edit" );
+      m_editors.add( targetEditor );
+    }
+  }
 }

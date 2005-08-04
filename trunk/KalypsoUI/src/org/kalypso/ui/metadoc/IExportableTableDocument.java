@@ -43,6 +43,7 @@ package org.kalypso.ui.metadoc;
 /**
  * IExportableTableDocument
  * 
+ * @deprecated remove this class as soon as metadoc stuff is done
  * @author schlienger
  */
 public interface IExportableTableDocument extends IExportableDocument

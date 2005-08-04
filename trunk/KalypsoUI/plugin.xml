@@ -77,12 +77,13 @@
          name="editors"
          point="org.eclipse.ui.editors">
       <editor
-            default="true"
-            name="Karten Editor"
-            icon="icons/kalypso_gmt.gif"
-            extensions="gmt"
             class="org.kalypso.ui.editor.mapeditor.GisMapEditor"
-            id="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+            icon="icons/kalypso_gmt.gif"
+            default="true"
+            contributorClass="org.kalypso.ui.editor.mapeditor.GisMapEditorContributor"
+            name="Karten Editor"
+            id="org.kalypso.ui.editor.mapeditor.GisMapEditor"
+            extensions="gmt">
       </editor>
       <editor
             default="true"
@@ -110,9 +111,10 @@
             id="org.kalypso.ui.editor.GMLEditor">
       </editor>
       <editor
-            icon="icons/kalypso_odt.gif"
             class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
+            icon="icons/kalypso_odt.gif"
             default="true"
+            contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor"
             name="Diagramm Editor"
             id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
             extensions="odt">
@@ -322,26 +324,6 @@
             </groupMarker>
          </menu>
          <action
-               label="Berichtsablage..."
-               icon="icons/util/bericht.gif"
-               style="push"
-               tooltip="Exportiert die Karte in das Berichtswesen."
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ExportBerichtActionDelegate"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/export"
-               toolbarPath="karte/export"
-               id="org.kalypso.ui.editor.mapeditor.ExportAction">
-         </action>
-         <action
-               label="Exportieren..."
-               icon="icons/gistable/export_wiz.gif"
-               style="push"
-               tooltip="Die Karte exportieren"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.ExportActionDelegate"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/export"
-               toolbarPath="karte/export"
-               id="org.kalypso.ui.editor.mapeditor.ExportAction">
-         </action>
-         <action
                label="Ausschnitt verkleinern"
                icon="icons/map/zoomout.gif"
                style="push"
@@ -500,6 +482,7 @@
                id="org.kalypso.ui.editor.obsdiageditor.menu">
             <separator name="separator1"/>
             <groupMarker name="tools"/>
+            <groupMarker name="exports"/>
          </menu>
          <action
                toolbarPath="diagramm"
@@ -519,16 +502,6 @@
                style="push"
                menubarPath="org.kalypso.ui.editor.obsdiageditor.menu/tools"
                id="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction">
-         </action>
-         <action
-               toolbarPath="diagramm"
-               label="Diagramm exportieren"
-               tooltip="Exportiert das Diagramm in das Berichtswesen."
-               class="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate"
-               icon="icons/util/bericht.gif"
-               style="push"
-               menubarPath="org.kalypso.ui.editor.obsdiageditor.menu/tools"
-               id="org.kalypso.ui.editor.diagrameditor.actions.ExportBerichtActionDelegate">
          </action>
       </editorContribution>
    </extension>
@@ -665,30 +638,13 @@
             class="org.kalypso.services.proxy.Kalypso_MetaDocService_Impl"
             interfacename="IMetaDocService"/>
    </extension>
-     <extension
-            point="org.eclipse.ui.actionSetPartAssociations">
-         <actionSetPartAssociation targetID="org.kalypso.ui.documentExport">
-            <part id="org.kalypso.ui.editor.gistableeditor.GisTableEditor"/>
-            <part id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"/>
-            <part id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"/>
-            <part id="org.kalypso.ui.editor.mapeditor.GisMapEditor"/>
-         </actionSetPartAssociation>
-      </extension>
       <extension
-            point="org.eclipse.ui.actionSets">
-         <actionSet
-               label="Dokumenten-Export"
-               visible="true"
-               id="org.kalypso.ui.documentExport">
-            <action
-                  allowLabelUpdate="true"
-                  retarget="false"
-                  toolbarPath="additions"
-                  label="Export"
-                  icon="icons/gistable/export_wiz.gif"
-                  class="org.kalypso.ui.editor.actions.ExportActionDelegate"
-                  style="pulldown"
-                  id="org.kalypso.ui.editor.actions.ExportActionDelegate"/>
-         </actionSet>
+            point="org.kalypso.metadoc.exportTarget">
+         <target
+               icon="icons/metadoc/berichte2.gif"
+               class="org.kalypso.ui.metadoc.MetaDocServiceExportTarget"
+               description="Export in die serverseitige Dokumentenablage"
+               name="Berichtsexport"
+               id="metadocServiceTarget"/>
       </extension>
  </plugin>

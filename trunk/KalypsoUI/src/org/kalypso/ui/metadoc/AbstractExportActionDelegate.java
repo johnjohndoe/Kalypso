@@ -55,6 +55,7 @@ import org.kalypso.ui.metadoc.util.MetadocServiceWrapper;
 /**
  * AbstractExportActionDelegate
  * 
+ * @deprecated remove this class as soon as metadoc stuff is done
  * @author schlienger
  */
 public abstract class AbstractExportActionDelegate extends AbstractEditorActionDelegate

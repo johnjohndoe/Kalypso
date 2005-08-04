@@ -105,8 +105,9 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_MAPVIEW_UNSELECT = id( "icons/full/elcl16/kde_abort.gif" );
 
   public static final ImageDescriptor IMAGE_ICON_GTT = id( "icons/kalypso_gtt.gif" );
-
   public static final ImageDescriptor IMAGE_ICON_GMT = id( "icons/kalypso_gmt.gif" );
+  public static final ImageDescriptor IMAGE_ICON_ODT = id( "icons/kalypso_odt.gif" );
+  public static final ImageDescriptor IMAGE_ICON_OTT = id( "icons/kalypso_ott.gif" );
 
   public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "org.kalypso.product", "etc/kalypso16.gif" );
 
@@ -139,7 +140,7 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_FORWARD = id( "icons/util/forward_nav.gif" );
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
-
+  
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
 
   // features:

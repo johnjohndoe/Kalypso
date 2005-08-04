@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
 /**
  * The target into which the documents will go.
@@ -58,13 +59,13 @@ import org.eclipse.jface.wizard.IWizardPage;
  */
 public interface IExportTarget extends IExecutableExtension
 {
-  public IStatus commitDocument( final IExportableObject document, final Configuration targetConf, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
-  
   public String getName();
   
   public String getDescription();
   
   public ImageDescriptor getImage();
 
-  public IWizardPage[] createWizardPages( final Configuration configuration );
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException;
+
+  public IStatus commitDocument( final IExportableObject document, final Configuration targetConf, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
 }

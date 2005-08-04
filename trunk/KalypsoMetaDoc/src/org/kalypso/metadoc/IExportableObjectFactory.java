@@ -42,7 +42,9 @@
 package org.kalypso.metadoc;
 
 import org.apache.commons.configuration.Configuration;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
 /**
  * Responsible for creating one or more documents
@@ -51,7 +53,7 @@ import org.eclipse.jface.wizard.IWizardPage;
  */
 public interface IExportableObjectFactory
 {
-  public IExportableObject[] createExportableObjects( final Configuration conf );
+  public IExportableObject[] createExportableObjects( final Configuration conf ) throws CoreException;
 
-  public IWizardPage[] createWizardPages( final Configuration configuration);
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration) throws CoreException;
 }

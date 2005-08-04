@@ -39,19 +39,17 @@ v.doemming@tuhh.de
 
 --------------------------------------------------------------------------*/
 
-package org.kalypso.auth.user;
+package org.kalypso.metadoc.configuration;
 
-import org.kalypso.auth.scenario.IScenarioProvider;
+import org.apache.commons.configuration.Configuration;
 
 /**
+ * A Configuration that triggers change events and informs its listeners
+ *
  * @author schlienger
  */
-public interface IKalypsoUser extends IScenarioProvider
+public interface IPublishingConfiguration extends Configuration
 {
-  public String getUserName();
-  
-  public boolean hasRight( final String right );
-  
-  /** Return the scenario-id selected by this user */
-  public String getScenario();
+  public void addListener( final IConfigurationListener listener );
+  public void removeListener( final IConfigurationListener listener );
 }
