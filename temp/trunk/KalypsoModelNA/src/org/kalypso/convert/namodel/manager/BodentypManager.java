@@ -61,9 +61,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * @author huebsch
+ */
 public class BodentypManager extends AbstractManager
 {
-
   private final NAConfiguration m_conf;
 
   private final FeatureType m_bodentypFT;
@@ -72,10 +74,6 @@ public class BodentypManager extends AbstractManager
 
   private static final String BodArtParameterPropName = "BodArtParameterMember";
 
-  /*
-   * 
-   * @author huebsch
-   */
   public BodentypManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema, NAConfiguration conf )
       throws IOException
   {
@@ -83,6 +81,11 @@ public class BodentypManager extends AbstractManager
     m_conf = conf;
     m_bodentypFT = parameterSchema.getFeatureType( "Bodentyp" );
     m_bodenartFT = parameterSchema.getFeatureType( "BodArtParameter" );
+    
+    if( schema == null || hydrotopSchema == null )
+    {
+      // avoid yellow thingies!
+    }
   }
 
   /**

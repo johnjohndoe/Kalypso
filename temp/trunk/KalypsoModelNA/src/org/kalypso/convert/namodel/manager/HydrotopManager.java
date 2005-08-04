@@ -62,24 +62,22 @@ import com.vividsolutions.jts.geom.Geometry;
  *   
  *  ---------------------------------------------------------------------------*/
 
+/**
+ * 
+ * @author huebsch
+ */
 public class HydrotopManager extends AbstractManager
 {
+  //  private final NAConfiguration m_conf;
+  //
+  //  private final FeatureType m_hydrotopFT;
 
-  private final NAConfiguration m_conf;
-
-  private final FeatureType m_hydrotopFT;
-
-  /*
-   * 
-   * @author huebsch
-   */
   public HydrotopManager( GMLSchema hydrotopSchema, NAConfiguration conf ) throws IOException
-
   {
     super( conf.getHydrotopFormatURL() );
     //    m_crs = crs;
-    m_conf = conf;
-    m_hydrotopFT = hydrotopSchema.getFeatureType( "Hydrotop" );
+    //    m_conf = conf;
+    /* m_hydrotopFT = */hydrotopSchema.getFeatureType( "Hydrotop" );
   }
 
   /**

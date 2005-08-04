@@ -84,13 +84,15 @@ public class ModelManager extends AbstractManager
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.convert.AbstractManager#writeFile(java.io.Writer)
+  /**
+   * TODO Never called, remove?
    */
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace )
   {
   // nothing to do
+    if( asciiBuffer == null || workspace == null )
+    {
+      // avoid yellow thingies
+    }
   }
 }

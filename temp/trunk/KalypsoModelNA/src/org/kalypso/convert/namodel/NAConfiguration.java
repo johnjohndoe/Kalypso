@@ -97,13 +97,13 @@ public class NAConfiguration
 
   private final FeatureType m_bodartFT;
 
-  private final FeatureType m_bodtypFT;
-
-  private final FeatureType m_nutzungFT;
-
-  private final FeatureType m_schneeFT;
-
-  private final FeatureType m_hydFT;
+//  private final FeatureType m_bodtypFT;
+//
+//  private final FeatureType m_nutzungFT;
+//
+//  private final FeatureType m_schneeFT;
+//
+//  private final FeatureType m_hydFT;
 
   private Date m_simulationForecast;
 
@@ -157,10 +157,10 @@ public class NAConfiguration
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
     m_catchmentFT = schema.getFeatureType( "Catchment" );
     m_bodartFT = paraSchema.getFeatureType( "Bodenart" );
-    m_bodtypFT = paraSchema.getFeatureType( "Bodentyp" );
-    m_nutzungFT = paraSchema.getFeatureType( "Nutzung" );
-    m_schneeFT = paraSchema.getFeatureType( "Schnee" );
-    m_hydFT = hydSchema.getFeatureType( "Hydrotop" );
+    /*m_bodtypFT = */paraSchema.getFeatureType( "Bodentyp" );
+    /*m_nutzungFT = */paraSchema.getFeatureType( "Nutzung" );
+    /*m_schneeFT = */paraSchema.getFeatureType( "Schnee" );
+    /*m_hydFT = */hydSchema.getFeatureType( "Hydrotop" );
     m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
 
     // formats:

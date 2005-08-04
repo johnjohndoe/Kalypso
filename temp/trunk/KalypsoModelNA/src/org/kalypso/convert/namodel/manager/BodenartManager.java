@@ -61,8 +61,7 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 
 public class BodenartManager extends AbstractManager
 {
-
-  private final NAConfiguration m_conf;
+//  private final NAConfiguration m_conf;
 
   private final FeatureType m_bodenartFT;
 
@@ -75,7 +74,12 @@ public class BodenartManager extends AbstractManager
   {
     super( conf.getParameterFormatURL() );
     //    m_crs = crs;
-    m_conf = conf;
+    
+    if( conf == null || schema == null || hydrotopSchema == null )
+    {
+     // avoid yellow thingies! 
+    }
+//    m_conf = conf;
 
     m_bodenartFT = parameterSchema.getFeatureType( "Bodenart" );
   }
@@ -169,6 +173,11 @@ public class BodenartManager extends AbstractManager
   private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature ) throws Exception
   {
     asciiBuffer.getBodartBuffer().append( toAscci( feature, 6 ) + "\n" );
+    
+    if( paraWorkspace == null )
+    {
+      // avoid yellow thingies!
+    }
   }
 
 }
