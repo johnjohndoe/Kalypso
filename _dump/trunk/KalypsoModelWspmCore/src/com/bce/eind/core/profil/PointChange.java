@@ -4,11 +4,11 @@ public final class PointChange
 {
   private final IProfilPoint m_point;
 
-  private final ProfilPointProperty m_column;
+  private final PointProperty m_column;
 
   private final double m_newValue;
 
-  public PointChange( final IProfilPoint p, final ProfilPointProperty column, final double newValue )
+  public PointChange( final IProfilPoint p, final PointProperty column, final double newValue )
   {
     m_point = p;
     m_column = column;
@@ -18,7 +18,7 @@ public final class PointChange
   /**
    * @return Returns the column.
    */
-  public ProfilPointProperty getColumn( )
+  public PointProperty getColumn( )
   {
     return m_column;
   }

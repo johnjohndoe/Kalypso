@@ -19,10 +19,10 @@ public interface IProfil extends IPlainProfil
   /////////////////////////
   // Convenience methods //
   /////////////////////////
-  public void setValueFor( final IProfilPoint point, final ProfilPointProperty pointProperty,
+  public void setValueFor( final IProfilPoint point, final PointProperty pointProperty,
       final double value ) throws ProfilDataException;
 
   public void setValuesFor( final List<IProfilPoint> pointList,
-      final ProfilPointProperty pointProperty, final double value ) throws ProfilDataException;
+      final PointProperty pointProperty, final double value ) throws ProfilDataException;
 
 }

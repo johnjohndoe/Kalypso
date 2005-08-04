@@ -1,7 +1,5 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IPlainProfil.DeviderTyp;
-import com.bce.eind.core.profil.IPlainProfil.METADATA;
 
 /**
  * Default implementation of {@link com.bce.eind.core.profil.IProfilListener}. The default
@@ -16,7 +14,7 @@ public class ProfilAdapter implements IProfilListener
    * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.PointChange[])
    */
  
-  public void onDeviderChanged( IProfilPoint point, DeviderTyp devider )
+  public void onDeviderChanged( IProfilPoint point, IProfilDevider devider )
   {
      
   }
@@ -51,18 +49,18 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesAdded(com.bce.eind.core.profil.ProfilPointProperty[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesAdded(com.bce.eind.core.profil.PointProperty[])
    */
-  public void onPointPropertiesAdded( ProfilPointProperty[] addedProperties )
+  public void onPointPropertiesAdded( PointProperty[] addedProperties )
   {
   }
 
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesRemoved(com.bce.eind.core.profil.ProfilPointProperty[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesRemoved(com.bce.eind.core.profil.PointProperty[])
    */
-  public void onPointPropertiesRemoved( ProfilPointProperty[] removedProperties )
+  public void onPointPropertiesRemoved( PointProperty[] removedProperties )
   {
   }
 
@@ -81,7 +79,7 @@ public class ProfilAdapter implements IProfilListener
    * @see com.bce.eind.core.profil.IProfilListener#onMetaDataChanged(com.bce.eind.core.profil.IProfil.METADATA,
    *      java.lang.String)
    */
-  public void onMetaDataChanged( METADATA metadata, Object value )
+  public void onMetaDataChanged( Object key, Object value )
   {
   }
 
@@ -104,4 +102,6 @@ public class ProfilAdapter implements IProfilListener
   public void onCommentChanged( )
   {
   }
+
+
 }

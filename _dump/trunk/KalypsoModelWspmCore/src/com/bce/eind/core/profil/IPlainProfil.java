@@ -10,80 +10,96 @@ public interface IPlainProfil
 {
   public static enum BUILDING_TYP
   {
-    NONE, BRUECKE, EI, KREIS, MAUL, TRAPEZ, WEHR;
+    BRUECKE, EI, KREIS, MAUL, NONE, TRAPEZ, WEHR;
   }
-  public static enum DeviderTyp
+
+  public static enum DEVIDER_TYP
   {
-    WEHR,TRENNFLAECHE,DURCHSTROMTE,BORDVOLL;
+    BORDVOLL, DURCHSTROEMTE, TRENNFLAECHE, WEHR;
   }
-  public static enum METADATA
+
+  public static enum PROPERTY
   {
-    KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
+    KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, RAUHEIT_TYP, STATION, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
   }
 
-  public static enum PROFILDATA_TYP
-  {
-    RAUHEIT
-  }
+  /**
+   * @param point
+   * @param devider
+   * @return IProfilDevider
+   */
+  public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider );
 
-  public static enum RAUHEITEN_TYP
-  {
-    UNDEFINED, ks, KST
-  }
+  /**
+   * gibt Null zurück wenn das profil nicht geändert wurde
+   */
+  public IProfilPoint addPoint( final double breite, final double hoehe );
 
-  public static enum TRENNFLAECHEN_TYP
-  {
-    UNDEFINED, BOESCHUNG, SOHLE
-  }
+  /**
+   * @param pointProperty
+   * @return PointProperty[] with all current pointproperties
+   */
+  public PointProperty[] addPointProperty( final PointProperty pointProperty );
 
-  public IProfilPoint addPoint( final double breite, final double hoehe )
-      throws ProfilDataException;
+  /**
+   * sucht den nächsten Punkt bei breite ,findet aber auf jeden Fall den ersten Punkt in der Liste
+   * als nächsten
+   */
+  public IProfilPoint findNearestPoint( final double breite );
 
-  public void addProfilMetaData( final METADATA metaDataKey, final Object data );
+  /**
+   * sucht den nächsten Punkt dessen x-position näher als delta an breite ist, ansonsten Null
+   */
 
-  public ProfilPointProperty[] addProfilPointProperty( final ProfilPointProperty pointProperty )
-      throws ProfilDataException;
+  /**
+   * @param breite
+   * @param delta
+   * @return
+   */
+  public IProfilPoint findPoint( final double breite, final double delta );
+  
+  /**
+   * @param index
+   * @param breite
+   * @param delta
+   * @return
+   */
+  public IProfilPoint findPoint(final int index,  final double breite, final double delta );
 
-  public void addUnknownObject( final Object unknownData );
-public boolean addDevider(IProfilPoint point,DeviderTyp devider);
-  public String getComment( );
+  /**
+   * @return das aktuelle bauwerk oder Typ Building_typ NONE
+   */
+  public IProfilBuilding getBuilding( );
 
-  public IProfilPoint getDevider( final DeviderKey deviderKey );
+  /**
+   * @param deviderTyp
+   * @return IProfilDevider[] mit allen Trennern sortiert nach breite, oder null bei leerem array
+   */
+  public IProfilDevider[] getDevider( final DEVIDER_TYP deviderTyp );
 
-  public TRENNFLAECHEN_TYP getDeviderTyp( final DeviderKey deviderKey );
+  /**
+   * @param filterNonVisible
+   * @return LinkedList<PointProperty>
+   */
+  public LinkedList<PointProperty> getPointProperties( final boolean filterNonVisible );
 
-  public IProfilPoint getNextPoint( IProfilPoint point ) throws ProfilDataException;
+  /**
+   * @return
+   */
+  public LinkedList<IProfilPoint> getPoints( );
 
- // public IProfilPoint getPoint( final double breite, final double hoehe );
+  /**
+   * @param key Schlüsselwert einer Hashmap see IPlainProfil.PROPERTY
+   * @return Wert zu key oder null
+   */
+  public Object getProperty( Object key );
 
-  public IProfilPoint getPoint( final int index );
-
-  public List<IProfilPoint> getPoints( );
-
-  public List<IProfilPoint> getPoints( final IProfilPoint startPoint );
-
-  public List<IProfilPoint> getPoints( final IProfilPoint startPoint, final IProfilPoint endPoint );
-
-  public LinkedList<IProfilPoint> getPointsAtPos( final double breite );
-
-  public int getPointsCount( );
-
-  public IProfilPoint getPreviousPoint( final IProfilPoint point ) throws ProfilDataException;
-
-  public IProfilBuilding getProfilBuilding( );
-
-  public Object getProfilMetaData( METADATA metaData );
-
-  public LinkedList<ProfilPointProperty> getProfilPointProperties( final boolean filterNonVisible );
-
-  public RAUHEITEN_TYP getRauheitTyp( );
-
-  public List<Object> getUnknownObjects( );
-
-  public double[] getValuesFor( final ProfilPointProperty pointProperty )
-      throws ProfilDataException;
-
-  public int indexOf( final IProfilPoint point );
+  /**
+   * @param pointProperty
+   * @return double[] with values of pointproperty sorted by breite
+   * @throws ProfilDataException 
+   */
+  public double[] getValuesFor( final PointProperty pointProperty ) throws ProfilDataException;
 
   /**
    * Erzeugt einen neuen Punkt und fügt in in das Profil ein. Er wird genau in die Mitte des
@@ -98,6 +114,13 @@ public boolean addDevider(IProfilPoint point,DeviderTyp devider);
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite,
       final double hoehe ) throws ProfilDataException;
 
+  /**
+   * Fügt einen bestehenden Punkt ein. return true wenn die Liste geändert wurde, sonst false.
+   * @param thePointBefore
+   * @param point
+   * @return
+   * @throws ProfilDataException
+   */
   public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
       throws ProfilDataException;
 
@@ -106,36 +129,68 @@ public boolean addDevider(IProfilPoint point,DeviderTyp devider);
    *         Punkt lag
    * @throws ProfilDataException
    */
-  public boolean moveDevider( final DeviderKey deviderKey, final IProfilPoint newPosition )
-      throws ProfilDataException;
+  public IProfilPoint moveDevider( final IProfilDevider devider, final IProfilPoint newPosition );
 
-  public void removePoint( final IProfilPoint point ) throws ProfilDataException;
+  /**
+   * @return das entfernte Bauwerk
+   */
+  public IProfilBuilding removeBuilding( );
 
-  public IProfilBuilding removeProfilBuilding( );
+  /**
+   * @param devider
+   * @return den entfernten Trenner
+   */
+  public IProfilDevider removeDevider( final IProfilDevider devider );
 
-  public void removeProfilMetaData( final METADATA metaData );
+  /**
+   * @param point to remove
+    */
+  public boolean removePoint( final IProfilPoint point );
 
-  public ProfilPointProperty[] removeProfilPointProperty( final ProfilPointProperty pointProperty );
+  /**
+   * @param pointProperty
+   * @return alle übriggebliebenen Eigenschaften
+   */
+  public PointProperty[] removePointProperty( final PointProperty pointProperty );
 
-  public void setComment( final String comment );
+  /**
+   * @param key eine HashMap see IPlainProfil.PROPERTY
+   * @return den zugehörigen wert
+   */
+  public Object removeProperty( final Object key );
 
-  public void setDevider( final IProfilPoint leftPoint, final IProfilPoint rightPoint,
-      final ProfilPointProperty pointProperty ) throws ProfilDataException;
+  /**
+   * ändert den Bauwerkstyp @see IPlainProfil.BUILDING_TYP
+   * setzen der Eigenschaften @see IProfilBuilding.setValue
+   * @param buildingTyp
+   * @throws ProfilDataException
+   */
+  public void setBuilding( final IPlainProfil.BUILDING_TYP buildingTyp ) throws ProfilDataException;
 
-  public boolean setDeviderTyp( final DeviderKey deviderKey, final TRENNFLAECHEN_TYP deviderTyp )
-      throws ProfilDataException;
-
-  public void setProfilBuilding( final IPlainProfil.BUILDING_TYP buildingTyp )
-      throws ProfilDataException;
-
-  public void setProfilMetaData( final METADATA metaDataKey, final Object data );
-
-  public void setRauheitTyp( final RAUHEITEN_TYP r );
+  /**
+   * @param key
+   * @param value
+   * @see PROPERTY
+   */
+  public void setProperty( final Object key, final Object value );
 
   public void setValues( final PointChange[] changes ) throws ProfilDataException;
-
-  public void editBuilding( final ProfilBuildingProperty buildingProperty, final double value )
-      throws ProfilBuildingException;
-  public IProfilPoint getPointNearBy( final double breite, final double delta ) throws ProfilDataException;
-  public IProfilPoint getPointCloseTo( final double breite ) throws ProfilDataException;
+  
+  /**
+   * @param pointList
+   * @param pointProperty
+   * @param value
+   * @throws ProfilDataException
+    */
+  public void setValuesFor( final List<IProfilPoint> pointList, PointProperty pointProperty,
+      double value ) throws ProfilDataException;
+  /**
+   * @param pointProperty
+   * @param value
+   * @throws ProfilDataException
+   * ändert alle Punkte des Profils @see setValuesFor( final List<IProfilPoint> pointList, PointProperty pointProperty,
+   *   double value )
+   */
+  public void setValuesFor( final PointProperty pointProperty, final double value )
+  throws ProfilDataException;
 }

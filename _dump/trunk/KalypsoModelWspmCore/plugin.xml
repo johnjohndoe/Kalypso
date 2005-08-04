@@ -18,6 +18,7 @@
       <import plugin="org.junit"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
       <import plugin="org.eclipse.core.resources" export="true"/>
+      <import plugin="org.bce.java.contributions"/>
    </requires>
    
    <extension-point id="validatorrule" name="validatorrule" schema="schema/validatorrule.exsd"/>

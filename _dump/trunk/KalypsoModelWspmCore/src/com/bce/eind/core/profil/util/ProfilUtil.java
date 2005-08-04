@@ -4,10 +4,12 @@
 package com.bce.eind.core.profil.util;
 
 import java.util.Iterator;
+import java.util.logging.Level;
 
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.ProfilPointProperty;
+import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
 
 /**
@@ -21,11 +23,11 @@ public class ProfilUtil
     if( (startPoint == null) | (endPoint == null) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
     final IProfilPoint point = startPoint.clonePoint();
-    for( final Iterator<ProfilPointProperty> ppIt = point.getProperties().iterator(); ppIt
+    for( final Iterator<PointProperty> ppIt = point.getProperties().iterator(); ppIt
         .hasNext(); )
     {
-      final ProfilPointProperty ppp = ppIt.next();
-       if( ppp.isInterpolation() )
+      final PointProperty ppp = ppIt.next();
+       if( (Boolean)ppp.getParameter(PointProperty.PARAMETER.INTERPOLATION))
       {
         try
         {
@@ -41,5 +43,30 @@ public class ProfilUtil
     return point;
   }
 
+  /**
+   * findet einen Punkt in einem Profil 1.hole Punkt[index] und vergleiche Punkt.breite mit breite ->
+   * 2.suche Punkt bei breite mit einer Toleranz von delta 3.kein Punkt gefunden -> (return null)
+   */
+  public final IProfilPoint findPoint( final IProfil profil, final int index, final double breite,
+      final double delta )
+  {
+    final IProfilPoint point = profil.getPoints().get( index );
+    try
+    {
+      if( point != null )
+      {
+        if( point.getValueFor( (PointProperty.BREITE) ) == breite )
+          return point;
+      }
+
+      return profil.findPoint( breite, delta );
+      
+    }
+    catch( ProfilDataException e )
+    {
+      //sollte nie passieren da Breite als Eigenschaft immer existiert
+    }
+    return null;
+  }
  
 }

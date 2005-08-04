@@ -17,17 +17,17 @@ public interface IProfilPoint
    * @return
    * @throws ProfilDataException
    */
-  public double getValueFor( final ProfilPointProperty pointProperty ) throws ProfilDataException;
+  public double getValueFor( final PointProperty pointProperty ) throws ProfilDataException;
 
   /**
    * @param pointProperty
    * @return
    */
-  public boolean hasProperty( final ProfilPointProperty pointProperty );
+  public boolean hasProperty( final PointProperty pointProperty );
 
   public IProfilPoint clonePoint( );
 
-  public Collection<ProfilPointProperty> getProperties( );
+  public Collection<PointProperty> getProperties( );
 
   /** Kim: Doc */
  // public boolean isPosition( final double breite, final double hoehe ) throws ProfilDataException;

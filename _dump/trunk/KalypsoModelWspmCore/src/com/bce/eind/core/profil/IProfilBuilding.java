@@ -11,7 +11,7 @@ public interface IProfilBuilding
 {
   public BUILDING_TYP getBuildingTyp( );
 
-  public ProfilPointProperty[] getProfilPointProperties( );
+  public PointProperty[] getProfilPointProperties( );
 
   public Collection<ProfilBuildingProperty> getProfilBuildingProperties( );
 

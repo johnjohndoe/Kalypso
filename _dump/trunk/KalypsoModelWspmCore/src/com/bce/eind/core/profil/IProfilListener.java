@@ -1,6 +1,5 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IPlainProfil.DeviderTyp;
 
 
 /**
@@ -15,17 +14,17 @@ public interface IProfilListener
   
   public void onPointsRemoved( final IProfilPoint[] removedPoints );
   
-  public void onPointPropertiesAdded( final ProfilPointProperty[] addedProperties );
+  public void onPointPropertiesAdded( final PointProperty[] addedProperties );
   
-  public void onPointPropertiesRemoved( final ProfilPointProperty[] removedProperties );
+  public void onPointPropertiesRemoved( final PointProperty[] removedProperties );
   
   public void onBuildingChanged();
 
   public void onBuildingDataChanged( final IProfilBuilding building, final ProfilBuildingProperty buildingProperty, final double value );
   
-  public void onMetaDataChanged( final IProfil.METADATA metadata, final Object value );
+  public void onMetaDataChanged( final Object key, final Object value );
   
   public void onCommentChanged();
   
-  public void onDeviderChanged( final IProfilPoint point, final DeviderTyp devider );
+  public void onDeviderChanged( final IProfilPoint point, final IProfilDevider devider );
 }

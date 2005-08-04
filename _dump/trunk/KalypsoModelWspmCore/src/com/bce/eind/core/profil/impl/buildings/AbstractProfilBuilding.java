@@ -12,7 +12,7 @@ import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilBuildingProperty;
-import com.bce.eind.core.profil.ProfilPointProperty;
+import com.bce.eind.core.profil.PointProperty;
 
 /**
  * @author kimwerner
@@ -23,12 +23,12 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
 
   private final Map<ProfilBuildingProperty, Double> m_buildingValues = new LinkedHashMap<ProfilBuildingProperty, Double>();
 
-  private final ProfilPointProperty[] m_pointProperties;
+  private final PointProperty[] m_pointProperties;
 
-  public AbstractProfilBuilding( final IProfil.BUILDING_TYP buildingTyp, final Collection<ProfilBuildingProperty> properties, final ProfilPointProperty[] pointProperties )
+  public AbstractProfilBuilding( final IProfil.BUILDING_TYP buildingTyp, final Collection<ProfilBuildingProperty> properties, final PointProperty[] pointProperties )
   {
     m_buildingTyp = buildingTyp;
-    m_pointProperties = pointProperties == null ? new ProfilPointProperty[] {} : pointProperties;
+    m_pointProperties = pointProperties == null ? new PointProperty[] {} : pointProperties;
     
     for( final ProfilBuildingProperty property : properties )
       m_buildingValues.put( property, new Double( 0.0 ) );
@@ -45,7 +45,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   /**
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeys()
    */
-  public ProfilPointProperty[] getProfilPointProperties( )
+  public PointProperty[] getProfilPointProperties( )
   {
     return m_pointProperties;
   }
