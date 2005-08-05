@@ -62,10 +62,14 @@ public class TextLabelComboPanel extends ComboPanel
     super( parent, label );
     // read possible items to get the label text from
     ArrayList labelStringItems = new ArrayList();
-    FeatureTypeProperty[] ftp = featureType.getProperties();
+    final FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      if( !ftp[i].getType().startsWith( "org.kalypsodeegree.model.geometry." ) )
+      if( !ftp[i].isGeometryProperty() )
         labelStringItems.add( ftp[i].getName() );
+    final FeatureTypeProperty[] vftp = featureType.getVirtuelFeatureTypeProperty();
+    for( int i = 0; i < vftp.length; i++ )
+      if( !vftp[i].isGeometryProperty() )
+        labelStringItems.add( vftp[i].getName() );
     items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
       items[j] = (String)labelStringItems.get( j );

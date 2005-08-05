@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
@@ -150,13 +149,11 @@ public class PropertyName extends Expression_Impl
    * @param feature
    *          that determines the value of this <tt>PropertyName</tt>
    * @return the resulting value
-   * @throws FilterEvaluationException
-   *           if the <Feature>has no <tt>Property</tt> with a matching name
    */
-  public Object evaluate( Feature feature ) throws FilterEvaluationException
+  public Object evaluate( Feature feature )
   {
     //        FeatureTypeProperty[] ftp = feature.getFeatureType().getProperties();
-    Object object = getProperty( feature, m_value );
+    final Object object = getProperty( feature, m_value );
 
     //        if (feature.getFeatureType ().getProperty (value) == null) {
     //            throw new FilterEvaluationException (
@@ -165,9 +162,7 @@ public class PropertyName extends Expression_Impl
     //        }
     //        Object object = feature.getProperty (value);
     if( object == null )
-    {
       return null;
-    }
 
     if( object instanceof Number )
     {
@@ -187,13 +182,18 @@ public class PropertyName extends Expression_Impl
    * 
    * @return an Object
    */
-  private Object getProperty( Feature feature, String value ) throws FilterEvaluationException
+  private Object getProperty( Feature feature, String value )
   {
     if( feature.getFeatureType().getProperty( value ) != null )
     {
       return feature.getProperty( value );
     }
-    throw new FilterEvaluationException( "FeatureType '" + feature.getFeatureType().getName()
-        + "' has no property with name '" + value + "'!" );
+    if( feature.getFeatureType().getVirtuelFeatureTypeProperty( value ) != null )
+    {
+      return feature.getVirtuelProperty( value, null );
+    }
+    return null;
+    //    throw new FilterEvaluationException( "FeatureType '" + feature.getFeatureType().getName()
+    //        + "' has no property with name '" + value + "'!" );
   }
 }

@@ -24,9 +24,11 @@ public class VirtualFeatureTypeRegistry
     m_instance = new VirtualFeatureTypeRegistry();
     try
     {
-      // na-modell:
+      // common: show ids
+      m_instance.register( new VirtualIdFeatureTypePropertyHandler() );
+      // common / na-modell: generate relations as geometry
       m_instance.register( new VirtualAssociationFeatureTypePropertyHandler() );
-      // 2d:
+      // 2d: generate velocity as arrow
       m_instance.register( new VirtualVelocityFeatureTypePropertyHandler() );
       m_instance.register( new VirtualIsoFeatureTypePropertyHandler() );
     }
