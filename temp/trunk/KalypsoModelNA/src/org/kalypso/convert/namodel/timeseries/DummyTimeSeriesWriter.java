@@ -45,6 +45,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,6 +70,8 @@ public class DummyTimeSeriesWriter
 
   private static DateFormat m_dateFormat = new SimpleDateFormat( "dd MM yyyy 12 " );
 
+  private static DecimalFormat m_numberFoirmat = new DecimalFormat( "##.###" );
+
   public static void main( String[] args )
   {
     long jetzt = new Date().getTime();
@@ -89,6 +93,11 @@ public class DummyTimeSeriesWriter
     m_dateFormat.setCalendar( Calendar.getInstance( m_timeZone ) );
     m_start = start;
     m_end = end;
+    m_numberFoirmat.setGroupingUsed(false);
+    DecimalFormatSymbols decimalFormatSymbols = m_numberFoirmat.getDecimalFormatSymbols();
+    decimalFormatSymbols.setDecimalSeparator('.');
+    m_numberFoirmat.setDecimalFormatSymbols(decimalFormatSymbols);
+    //    decimalFormatSymbols.set 
   }
 
   /**
@@ -146,7 +155,8 @@ public class DummyTimeSeriesWriter
       final double dayOfYear = cal.get( Calendar.DAY_OF_YEAR );
       double value = ( VERD_MAX + VERD_MIN ) / 2d - Math.cos( 2d * Math.PI / 365d * dayOfYear )
           * ( VERD_MAX - VERD_MIN ) / 2d;
-      writer.write( Double.toString( value ) );
+      writer.write( m_numberFoirmat.format( value ) );
+      //      writer.write( Double.toString( value ) );
       //            writer.write( "0.5");
       writer.write( "\n" );
       calendarStart.add( Calendar.DATE, 1 );
