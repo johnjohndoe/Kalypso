@@ -122,7 +122,7 @@ public class ZipUtilities
    * @param files
    *          The files to zip
    * @param basedir
-   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir 8alle files must be within
+   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
    *          this dir). If null, alle ZipEntries are create with full path.
    * @throws IOException
    *  
@@ -146,6 +146,23 @@ public class ZipUtilities
     {
       IOUtils.closeQuietly( zos );
     }
+  }
+
+  /**
+   * 
+   * @param zipfile
+   *          file to write
+   * @param dir
+   *          dir to archive
+   * @throws IOException
+   */
+  public static void zip( final File zipfile, final File dir ) throws IOException
+  {
+    ZipFileVisitor visitor = new ZipFileVisitor( zipfile );
+    visitor.setBasePattern( dir.getAbsolutePath() );
+    visitor.setBaseReplace( "" );
+    FileUtilities.accept( dir, visitor, true );
+    visitor.close();
   }
 
   /**
