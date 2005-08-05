@@ -172,12 +172,19 @@ public class OptimizeModelUtils
     }
   }
 
-  // TODO
   //method returns nodeList to a given query
   public static NodeList getXPath( String xPathQuery, Document domNode ) throws TransformerException
   {
-    NodeList nl = XPathAPI.selectNodeList( domNode, xPathQuery );
-    //    System.out.println( nl.getLength() + " <- " + xPathQuery );
+    NodeList nl;
+    try
+    {
+      nl = XPathAPI.selectNodeList( domNode, xPathQuery );
+    }
+    catch( TransformerException e )
+    {
+      System.out.println( xPathQuery );
+      throw e;
+    }
     return nl;
   }
 
