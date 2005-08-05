@@ -49,6 +49,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
@@ -104,9 +105,10 @@ public class ZmlTableExporter extends AbstractBerichtExporter
 
       final IStatus[] stati = TableViewUtils.applyXMLTemplate( view, xml, getContext(), true );
       final IStatus result = new MultiStatus( KalypsoGisPlugin.getId(), 0, stati, this.toString() + " - " + name + ": ", null );
-      new ExportableObservationTable( table ).exportDocument( os );
-
-      return result;
+      if( !result.isOK() )
+        return result;
+      
+      return new ExportableObservationTable( table ).exportObject( os, new NullProgressMonitor() );
     }
     catch( final Exception e )
     {

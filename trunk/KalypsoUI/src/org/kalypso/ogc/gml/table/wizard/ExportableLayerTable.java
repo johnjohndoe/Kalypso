@@ -44,16 +44,19 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.CSV;
+import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypso.ui.metadoc.IExportableTableDocument;
 
 /**
  * ExportableTableDocument
  * 
  * @author schlienger
  */
-public class ExportableLayerTable implements IExportableTableDocument
+public class ExportableLayerTable implements IExportableObject
 {
   private final LayerTableViewer m_layerTable;
 
@@ -64,10 +67,24 @@ public class ExportableLayerTable implements IExportableTableDocument
     m_layerTable = layerTable;
   }
 
+  public void setOnlySelectedRows( final boolean flag )
+  {
+    m_onlyRows = flag;
+  }
+
   /**
-   * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
+   * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public void exportDocument( final OutputStream outs )
+  public String getPreferredDocumentName()
+  {
+    return "GisTabelle.csv";
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
     final LayerTableViewer layerTable = m_layerTable;
     final boolean onlyRows = m_onlyRows;
@@ -77,29 +94,14 @@ public class ExportableLayerTable implements IExportableTableDocument
       public void run()
       {
         final String[][] csv = layerTable.exportTable( onlyRows );
-        final PrintWriter pw = new PrintWriter( new OutputStreamWriter( outs ) );
+        final PrintWriter pw = new PrintWriter( new OutputStreamWriter( output ) );
         CSV.writeCSV( csv, pw );
         pw.close();
-
       }
     };
 
     layerTable.getTable().getDisplay().syncExec( runnable );
-  }
-
-  /**
-   * @see org.kalypso.ui.metadoc.IExportableTableDocument#setOnlySelectedRows(boolean)
-   */
-  public void setOnlySelectedRows( boolean flag )
-  {
-    m_onlyRows = flag;
-  }
-
-  /**
-   * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
-   */
-  public String getDocumentExtension()
-  {
-    return ".csv";
+    
+    return Status.OK_STATUS;
   }
 }

@@ -48,8 +48,10 @@ import java.net.URL;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -59,18 +61,25 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.IExportableObjectFactory;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
+import org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage;
+import org.kalypso.ogc.gml.table.wizard.ExportableLayerTable;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
@@ -88,7 +97,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider
+public class GisTableEditor extends AbstractEditorPart implements ISelectionProvider, IExportableObjectFactory
 {
   private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
@@ -176,7 +185,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory);
+    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory );
 
     final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );
@@ -268,7 +277,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
       return;
 
     final FeatureTypeProperty[] ftps = theme.getFeatureType().getProperties();
-    // TODO: use platform mechanism instead: 
+    // TODO: use platform mechanism instead:
     //    Platform.getNL();
     final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.LANGUAGE );
 
@@ -281,6 +290,32 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    */
   public Object getAdapter( final Class adapter )
   {
+    if( adapter == IExportableObjectFactory.class )
+      return this;
+    
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   */
+  public IExportableObject[] createExportableObjects( Configuration configuration ) throws CoreException
+  {
+    final ExportableLayerTable exp = new ExportableLayerTable( m_layerTable );
+
+    return new IExportableObject[]
+    { exp };
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   */
+  public IWizardPage[] createWizardPages( IPublishingConfiguration configuration ) throws CoreException
+  {
+    final IWizardPage page = new ExportTableOptionsPage( "optionPage", "Export Otionen",
+        ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
+
+    return new IWizardPage[]
+    { page };
   }
 }

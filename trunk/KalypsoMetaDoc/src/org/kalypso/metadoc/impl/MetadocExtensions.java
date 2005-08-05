@@ -42,7 +42,9 @@
 package org.kalypso.metadoc.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.CoreException;
@@ -54,6 +56,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.metadoc.IExportTarget;
+import org.kalypso.metadoc.IExporter;
 import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 
 /**
@@ -64,18 +67,86 @@ import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 public class MetadocExtensions
 {
   private static final String TARGETS_EXTENSION_POINT = "org.kalypso.metadoc.exportTarget";
+  private static final String EXPORTERS_EXTENSION_POINT = "org.kalypso.metadoc.exporter";
+  
+  private static Map m_exporters = null;
+  private static Map m_targets = null;
 
   private MetadocExtensions()
   {}
 
+  /**
+   * Retrieve the {@link IExportTarget} extensions
+   */
   public static IExportTarget[] retrieveTargets() throws CoreException
+  {
+    final IConfigurationElement[] elements = retrieveConfigurationElementsFor( TARGETS_EXTENSION_POINT );
+    final Vector items = new Vector();
+    final List stati = new ArrayList();
+    for( int i = 0; i < elements.length; i++ )
+    {
+      IConfigurationElement element = elements[i];
+
+      try
+      {
+        final IExportTarget target = (IExportTarget)element.createExecutableExtension( "class" );
+        items.add( target );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+        stati.add( e.getStatus() );
+      }
+    }
+
+    if( stati.size() > 0 )
+      throw new CoreException( new MultiStatus( KalypsoMetaDocPlugin.getId(), 0, (IStatus[])stati
+          .toArray( new IStatus[stati.size()] ), "Nicht alle Target konnten geladen werden", null ) );
+
+    return (IExportTarget[])items.toArray( new IExportTarget[items.size()] );
+  }
+
+  /**
+   * Retrieves the exporter (from the corresponding extensions) which has the given id
+   */
+  public static IExporter retrieveExporter( final String id ) throws CoreException
+  {
+    if( m_exporters == null )
+      m_exporters = retrieveExporterInHash( EXPORTERS_EXTENSION_POINT );
+
+    final IConfigurationElement element = (IConfigurationElement)m_exporters.get( id );
+    return (IExporter)element.createExecutableExtension( "class" );
+  }
+
+  /**
+   * Lazy loading of the exporters into map (exporter-id --&gt; conf-element)
+   */
+  private static Map retrieveExporterInHash( final String extensionPointId )
+  {
+    final HashMap map = new HashMap();
+    
+    final IConfigurationElement[] elements = retrieveConfigurationElementsFor( extensionPointId );
+    for( int i = 0; i < elements.length; i++ )
+    {
+      final IConfigurationElement element = elements[i];
+      
+      map.put( element.getAttribute( "id" ), element );
+    }
+    
+    return map;
+  }
+
+  /**
+   * Helper retriever that returns the {@link IConfigurationElement}s for the given extension point
+   */
+  public static IConfigurationElement[] retrieveConfigurationElementsFor( final String extensionPointId )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( TARGETS_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( extensionPointId );
 
     if( extensionPoint == null )
-      return new IExportTarget[0];
+      return new IConfigurationElement[0];
 
     final IExtension[] extensions = extensionPoint.getExtensions();
 
@@ -86,28 +157,22 @@ public class MetadocExtensions
       final IExtension extension = extensions[i];
       final IConfigurationElement[] elements = extension.getConfigurationElements();
 
-      final List stati = new ArrayList();
       for( int j = 0; j < elements.length; j++ )
-      {
-        try
-        {
-          final IConfigurationElement element = elements[j];
-          final IExportTarget target = (IExportTarget)element.createExecutableExtension( "class" );
-          items.add( target );
-        }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-          stati.add( e.getStatus() );
-//          ErrorDialog
-//              .openError( shell, "Export Targets", "Fehler beim Laden eines Export-Target: " + id, e.getStatus() );
-        }
-      }
-      
-      if( stati.size() > 0 )
-        throw new CoreException( new MultiStatus( KalypsoMetaDocPlugin.getId(), 0, (IStatus[])stati.toArray( new IStatus[stati.size()] ), "Nicht alle Target konnten geladen werden", null ) );
+        items.add( elements[j] );
     }
 
-    return (IExportTarget[])items.toArray( new IExportTarget[items.size()] );
+    return (IConfigurationElement[])items.toArray( new IConfigurationElement[items.size()] );
+  }
+
+  /**
+   * Retrieves the target (from the corresponding extensions) which has the given id
+   */
+  public static IExportTarget retrieveTarget( final String id ) throws CoreException
+  {
+    if( m_targets == null )
+      m_targets = retrieveExporterInHash( TARGETS_EXTENSION_POINT );
+
+    final IConfigurationElement element = (IConfigurationElement)m_targets.get( id );
+    return (IExportTarget)element.createExecutableExtension( "class" );
   }
 }

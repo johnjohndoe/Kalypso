@@ -39,16 +39,32 @@ v.doemming@tuhh.de
 
 --------------------------------------------------------------------------*/
 
-package org.kalypso.metadoc;
+package org.kalypso.ui.editor.obstableeditor;
 
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.metadoc.ui.ExportAction;
+import org.kalypso.metadoc.ui.ExportActionContributor;
 
 /**
- * Constants for common used configuration properties.
- *
  * @author schlienger
  */
-public interface IConfigurationConstants
+public class ObservationTableEditorContributor extends EditorActionBarContributor
 {
-  /** Must be a File (a directory or a real file) */
-  public final static String CONF_FILEEXPORT_EXTENSION = IConfigurationConstants.class.getName() + ".fileext";
+  private ExportAction[] m_exportActions = null;
+
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
+   */
+  public void setActiveEditor( final IEditorPart targetEditor )
+  {
+    super.setActiveEditor( targetEditor );
+
+    if( m_exportActions == null )
+      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editor.obstableditor.menu/exports",
+          "tabelle" );
+    
+    for( int i = 0; i < m_exportActions.length; i++ )
+      m_exportActions[i].setActivePart( targetEditor );
+  }
 }

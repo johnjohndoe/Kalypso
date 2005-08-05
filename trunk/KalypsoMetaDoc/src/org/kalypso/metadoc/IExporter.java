@@ -41,22 +41,36 @@
 
 package org.kalypso.metadoc;
 
-import org.apache.commons.configuration.Configuration;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
- * Responsible for creating one or more documents and for creating the wizard pages required to configure the documents
- * that will be exported.
- * <p>
- * The configuration is shared between the wizard pages and the call to <b>createExportableObjects() </b>.
+ * Exporters can create one or more {@link org.kalypso.metadoc.IExportableObject} and export them to some {@link org.kalypso.metadoc.IExportTarget}. This is actually used as a
+ * wrapper over {@link org.kalypso.metadoc.IExportableObjectFactory} which is exhibited as an extension point (org.kalypso.metadoc.exporter)
  * 
  * @author schlienger
  */
-public interface IExportableObjectFactory
+public interface IExporter extends IExportableObjectFactory, IExecutableExtension
 {
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException;
+  /** used as label */
+  public String getName();
 
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException;
+  /** used as tooltip */
+  public String getDescription();
+  
+  /** used as icon */
+  public ImageDescriptor getImageDescriptor();
+
+  /**
+   * Init this exporter with context dependent data. The adaptable object is used
+   * to get the data on a per class basis.
+   * <p>
+   * For instance, a GIS-Exporter will probably want to have a list of features. It would
+   * get it by doing the following:
+   * <code>
+   * 	features = adaptable.getAdapter( Feature[].class );
+   * </code>
+   */
+  public void init( final IAdaptable adaptable );
 }

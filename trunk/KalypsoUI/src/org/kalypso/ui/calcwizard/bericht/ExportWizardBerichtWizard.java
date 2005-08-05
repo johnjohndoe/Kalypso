@@ -40,132 +40,124 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.calcwizard.bericht;
 
-import java.util.List;
-
-import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.metadoc.Document;
-import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.metadoc.ExportBerichtWizard;
-import org.kalypso.ui.metadoc.IExportableDocument;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
+ * @deprecated
  * @author belger
  */
 public class ExportWizardBerichtWizard extends ExportBerichtWizard
 {
-  private final static class FeatureItem
-  {
-    private final Feature m_feature;
+//  private final static class FeatureItem
+//  {
+//    private final Feature m_feature;
+//
+//    private final String m_name;
+//
+//    public FeatureItem( final Feature feature, final String name )
+//    {
+//      m_feature = feature;
+//      m_name = name;
+//    }
+//
+//    public Feature getFeature()
+//    {
+//      return m_feature;
+//    }
+//
+//    public String getName()
+//    {
+//      return m_name;
+//    }
+//
+//    /**
+//     * @see java.lang.Object#toString()
+//     */
+//    public String toString()
+//    {
+//      return getName();
+//    }
+//  }
+//
+//  private final FeatureItem[] m_featureItems;
+//
+//  private final FeatureItem[] m_checkedItems;
+//
+//  private final IBerichtExporter[] m_exporters;
+//
+//  private ArrayChooserPage m_chooseFeaturePage;
+//
+//  private Feature[] m_choosenFeatures;
+//
+//  private IBerichtExporter[] m_choosenExporter;
+//
+//  private ArrayChooserPage m_chooseFromListPage;
 
-    private final String m_name;
+//  public ExportWizardBerichtWizard( final FeatureList features, final List checkedFeatures, final String nameProperty,
+//      final IExportableDocument document2export, final Document doc, final IBerichtExporter[] exporters )
+//  {
+//    super( document2export, doc );
+//
+//    final FeatureItem[] items = new FeatureItem[features.size()];
+//    final FeatureItem[] checkeditems = new FeatureItem[checkedFeatures.size()];
+//    int checkcount = 0;
+//    for( int count = 0; count < features.size(); count++ )
+//    {
+//      final Feature f = (Feature)features.get( count );
+//      final FeatureItem fi = new FeatureItem( f, (String)f.getProperty( nameProperty ) );
+//      items[count] = fi;
+//      if( checkedFeatures.contains( f ) )
+//        checkeditems[checkcount++] = fi;
+//    }
+//
+//    m_featureItems = items;
+//    m_checkedItems = checkeditems;
+//
+//    m_exporters = exporters;
+//  }
 
-    public FeatureItem( final Feature feature, final String name )
-    {
-      m_feature = feature;
-      m_name = name;
-    }
-
-    public Feature getFeature()
-    {
-      return m_feature;
-    }
-
-    public String getName()
-    {
-      return m_name;
-    }
-
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString()
-    {
-      return getName();
-    }
-  }
-
-  private final FeatureItem[] m_featureItems;
-
-  private final FeatureItem[] m_checkedItems;
-
-  private final IBerichtExporter[] m_exporters;
-
-  private ArrayChooserPage m_chooseFeaturePage;
-
-  private Feature[] m_choosenFeatures;
-
-  private IBerichtExporter[] m_choosenExporter;
-
-  private ArrayChooserPage m_chooseFromListPage;
-
-  public ExportWizardBerichtWizard( final FeatureList features, final List checkedFeatures, final String nameProperty,
-      final IExportableDocument document2export, final Document doc, final IBerichtExporter[] exporters )
-  {
-    super( document2export, doc );
-
-    final FeatureItem[] items = new FeatureItem[features.size()];
-    final FeatureItem[] checkeditems = new FeatureItem[checkedFeatures.size()];
-    int checkcount = 0;
-    for( int count = 0; count < features.size(); count++ )
-    {
-      final Feature f = (Feature)features.get( count );
-      final FeatureItem fi = new FeatureItem( f, (String)f.getProperty( nameProperty ) );
-      items[count] = fi;
-      if( checkedFeatures.contains( f ) )
-        checkeditems[checkcount++] = fi;
-    }
-
-    m_featureItems = items;
-    m_checkedItems = checkeditems;
-
-    m_exporters = exporters;
-  }
-
-  /**
-   * @see org.kalypso.ui.metadoc.ExportBerichtWizard#addPages()
-   */
-  public void addPages()
-  {
-    m_chooseFeaturePage = new ArrayChooserPage( m_featureItems, null, m_checkedItems, "chooseFeatures",
-        "Für diese Vorhersagepegel werden die Berichte erzeugt:", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
-    m_chooseFromListPage = new ArrayChooserPage( m_exporters, "arrayChooser", "Diese Berichtsarten werden erzeugt:",
-        ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
-
-    addPage( m_chooseFeaturePage );
-    addPage( m_chooseFromListPage );
-
-    super.addPages();
-  }
+//  /**
+//   * @see org.kalypso.ui.metadoc.ExportBerichtWizard#addPages()
+//   */
+//  public void addPages()
+//  {
+//    m_chooseFeaturePage = new ArrayChooserPage( m_featureItems, null, m_checkedItems, "chooseFeatures",
+//        "Für diese Vorhersagepegel werden die Berichte erzeugt:", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
+//    m_chooseFromListPage = new ArrayChooserPage( m_exporters, "arrayChooser", "Diese Berichtsarten werden erzeugt:",
+//        ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
+//
+//    addPage( m_chooseFeaturePage );
+//    addPage( m_chooseFromListPage );
+//
+//    super.addPages();
+//  }
 
   /**
    * @see org.kalypso.ui.metadoc.ExportBerichtWizard#performFinish()
    */
   public boolean performFinish()
   {
-    // don't call super.performFinish()
-    // instead:
-    commitData();
-
-    final Object[] choosenItems = m_chooseFeaturePage.getChoosen();
-    m_choosenFeatures = new Feature[choosenItems.length];
-    for( int i = 0; i < choosenItems.length; i++ )
-      m_choosenFeatures[i] = ( (FeatureItem)choosenItems[i] ).getFeature();
-    m_choosenExporter = (IBerichtExporter[])Arrays.castArray( m_chooseFromListPage.getChoosen(),
-        new IBerichtExporter[0] );
+//    // don't call super.performFinish()
+//    // instead:
+//    commitData();
+//
+//    final Object[] choosenItems = m_chooseFeaturePage.getChoosen();
+//    m_choosenFeatures = new Feature[choosenItems.length];
+//    for( int i = 0; i < choosenItems.length; i++ )
+//      m_choosenFeatures[i] = ( (FeatureItem)choosenItems[i] ).getFeature();
+//    m_choosenExporter = (IBerichtExporter[])Arrays.castArray( m_chooseFromListPage.getChoosen(),
+//        new IBerichtExporter[0] );
 
     return true;
   }
-
-  public Feature[] getChoosenFeatures()
-  {
-    return m_choosenFeatures;
-  }
-
-  public IBerichtExporter[] getChoosenExporter()
-  {
-    return m_choosenExporter;
-  }
+//
+//  public Feature[] getChoosenFeatures()
+//  {
+//    return m_choosenFeatures;
+//  }
+//
+//  public IBerichtExporter[] getChoosenExporter()
+//  {
+//    return m_choosenExporter;
+//  }
 }

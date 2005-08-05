@@ -38,25 +38,32 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.metadoc;
-
-import java.io.OutputStream;
+package org.kalypso.metadoc.impl;
 
 /**
- * IExportableDocument
+ * MetaDocException
  * 
- * @deprecated remove this class as soon as metadoc stuff is done
  * @author schlienger
  */
-public interface IExportableDocument
+public class MetaDocException extends Exception
 {
-  /**
-   * Exports the document using the writer.
-   */
-  public void exportDocument( final OutputStream outs ) throws Exception;
+  public MetaDocException()
+  {
+    super();
+  }
 
-  /**
-   * @return the extension of the document file (must include the point as in '.txt')
-   */
-  public String getDocumentExtension();
+  public MetaDocException( String message )
+  {
+    super( message );
+  }
+
+  public MetaDocException( Throwable cause )
+  {
+    super( cause );
+  }
+
+  public MetaDocException( String message, Throwable cause )
+  {
+    super( message, cause );
+  }
 }

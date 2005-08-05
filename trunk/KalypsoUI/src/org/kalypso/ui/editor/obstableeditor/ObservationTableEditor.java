@@ -43,15 +43,21 @@ package org.kalypso.ui.editor.obstableeditor;
 import java.awt.Frame;
 import java.io.OutputStreamWriter;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.IExportableObjectFactory;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
+import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTablePanel;
@@ -63,14 +69,14 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
  * 
  * @author schlienger
  */
-public class ObservationTableEditor extends AbstractObservationEditor
+public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
 {
   protected final ObservationTable m_table;
   private Composite m_swingContainer;
 
   /**
-   * Constructor: the ObservationTable is already created here because of the listening functionality that needs to be
-   * set up before the template gets loaded.
+   * The ObservationTable is already created here because of the listening functionality that needs to be set up before
+   * the template gets loaded.
    * <p>
    * Doing this stuff in createPartControl would prove inadequate, because the order in which createPartControl and
    * loadIntern are called is not guaranteed to be always the same.
@@ -124,6 +130,17 @@ public class ObservationTableEditor extends AbstractObservationEditor
   }
 
   /**
+   * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == IExportableObjectFactory.class )
+      return this;
+
+    return super.getAdapter( adapter );
+  }
+
+  /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
@@ -145,7 +162,7 @@ public class ObservationTableEditor extends AbstractObservationEditor
 
     helper.setFileContents( input.getFile(), false, true, monitor );
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
    */
@@ -153,5 +170,23 @@ public class ObservationTableEditor extends AbstractObservationEditor
   {
     if( m_swingContainer != null )
       m_swingContainer.setFocus();
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   */
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
+  {
+    final ExportableObservationTable exportable = new ExportableObservationTable( m_table );
+    return new IExportableObject[]
+    { exportable };
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   */
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException
+  {
+    return new IWizardPage[0];
   }
 }
