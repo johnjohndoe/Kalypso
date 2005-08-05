@@ -26,6 +26,7 @@
       <import plugin="org.kalypso.commons"/>
    </requires>
    <extension-point id="exportTarget" name="exportTarget" schema="schema/exportTarget.exsd"/>
+   <extension-point id="exporter" name="exporter" schema="schema/exporter.exsd"/>
    <extension
          point="org.kalypso.metadoc.exportTarget">
       <target
@@ -34,6 +35,15 @@
             description="Exportiert das Dokument in eine Datei"
             name="Dateiexport"
             id="fileTarget"/>
+   </extension>
+   <extension
+         point="org.kalypso.metadoc.exporter">
+      <exporter
+            icon="icons/sample.gif"
+            class="org.kalypso.metadoc.impl.EmptyExporter"
+            description="Tut nix"
+            name="Leerer Exporter"
+            id="emptyExporter"/>
    </extension>
 
 </plugin>

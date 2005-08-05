@@ -120,12 +120,13 @@
             extensions="odt">
       </editor>
       <editor
-            default="true"
-            name="Zeitreihen Editor"
-            icon="icons/kalypso_ott.gif"
-            extensions="ott"
             class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
-            id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor">
+            icon="icons/kalypso_ott.gif"
+            default="true"
+            contributorClass="org.kalypso.ui.editor.obstableeditor.ObservationTableEditorContributor"
+            name="Zeitreihen Editor"
+            id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
+            extensions="ott">
       </editor>
       <editor
             launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher"
@@ -224,26 +225,6 @@
                   name="spaltenMenu">
             </separator>
          </menu>
-         <action
-               label="Berichtsablage..."
-               icon="icons/util/bericht.gif"
-               style="push"
-               tooltip="Exportiert die Tabelle in das Berichtswesen."
-               class="org.kalypso.ui.editor.gistableeditor.actions.ExportBerichtActionDelegate"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               toolbarPath="tabelle"
-               id="org.kalypso.ui.editor.gistableeditor.ExportAction">
-         </action>
-         <action
-               label="Exportieren..."
-               icon="icons/gistable/export_wiz.gif"
-               style="push"
-               tooltip="Die Tabelle exportieren"
-               class="org.kalypso.ui.editor.gistableeditor.actions.ExportActionDelegate"
-               menubarPath="org.kalypso.ui.editors.tableeditor.menu/tabelle"
-               toolbarPath="tabelle"
-               id="org.kalypso.ui.editor.gistableeditor.ExportAction">
-         </action>
          <action
                disabledIcon="icons/feature/save_GML_gray.gif"
                enablesFor="+"
@@ -447,30 +428,19 @@
                path="additions"
                id="org.kalypso.ui.editor.obstableeditor.menu">
             <separator name="separator1"/>
-            <groupMarker name="edit"/>
-            <separator name="separator2"/>
             <groupMarker name="tools"/>
+            <groupMarker name="exports"/>
          </menu>
          <action
                disabledIcon="icons/feature/save_GML_gray.gif"
-               toolbarPath="tabelle/edit"
+               toolbarPath="tabelle"
                label="Daten speichern"
                icon="icons/feature/save_GML.gif"
                tooltip="Speichert die grundliegende Daten"
                class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
                style="push"
-               menubarPath="org.kalypso.ui.editor.obstableeditor.menu/edit"
-               id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction">
-         </action>
-         <action
-               toolbarPath="tabelle/tools"
-               label="Tabelle exportieren"
-               tooltip="Exportiert die Tabelle in das Berichtswesen"
-               class="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate"
-               icon="icons/util/bericht.gif"
-               style="push"
                menubarPath="org.kalypso.ui.editor.obstableeditor.menu/tools"
-               id="org.kalypso.ui.editor.obstableeditor.actions.ExportBerichtActionDelegate">
+               id="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction">
          </action>
       </editorContribution>
       <editorContribution

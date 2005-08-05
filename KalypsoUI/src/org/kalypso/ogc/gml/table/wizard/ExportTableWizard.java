@@ -59,7 +59,6 @@ import org.kalypso.commons.io.CSV;
 import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.metadoc.table.ExportTableOptionsPage;
 
 /**
  * @author belger

@@ -44,6 +44,8 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.metadoc.ui.ExportAction;
+import org.kalypso.metadoc.ui.ExportActionContributor;
 
 /**
  * @author belger
@@ -51,12 +53,25 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 public class GisTableEditorActionBarContributor extends EditorActionBarContributor
 {
   private static final String M_SPALTEN = "spaltenSubMenu";
+  
+  private ExportAction[] m_exportActions = null;
 
   /**
    * @see org.eclipse.ui.IEditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
    */
   public void setActiveEditor( final IEditorPart targetEditor )
   {
+    super.setActiveEditor( targetEditor );
+
+    if( m_exportActions == null )
+      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.tableeditor.menu/tabelle",
+          "tabelle" );
+    
+    for( int i = 0; i < m_exportActions.length; i++ )
+      m_exportActions[i].setActivePart( targetEditor );
+
+    // TODO ExportActionContributor.contributeAction macht auch schon sowas.
+    // könnte man daraus eine Helper-Klasse schreiben?
     if( targetEditor != null )
     {
       final IMenuManager menuManager = getActionBars().getMenuManager();

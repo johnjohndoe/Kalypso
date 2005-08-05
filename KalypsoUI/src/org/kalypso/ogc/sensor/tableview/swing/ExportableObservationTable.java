@@ -45,15 +45,19 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.swing.table.TableUtils;
-import org.kalypso.ui.metadoc.IExportableTableDocument;
+import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * ExportableObservationTable
  * 
  * @author schlienger
  */
-public class ExportableObservationTable implements IExportableTableDocument
+public class ExportableObservationTable implements IExportableObject
 {
   private final ObservationTable m_table;
 
@@ -63,19 +67,22 @@ public class ExportableObservationTable implements IExportableTableDocument
   }
 
   /**
-   * @see org.kalypso.ui.metadoc.IExportableTableDocument#setOnlySelectedRows(boolean)
+   * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public void setOnlySelectedRows( final boolean flag )
+  public String getPreferredDocumentName()
   {
-  // ignored
+    return "Tabelle.csv";
   }
 
   /**
-   * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
+   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void exportDocument( final OutputStream outs ) throws Exception
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
-    final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( outs ) );
+    monitor.beginTask( "Export", 2 );
+    
+    final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( output ) );
     try
     {
       // scenario name header
@@ -88,20 +95,25 @@ public class ExportableObservationTable implements IExportableTableDocument
         writer.newLine();
       }
 
+      monitor.worked(1);
+      
       // normal table dump
       TableUtils.dump( m_table, "\t", writer );
+      
+      monitor.worked(1);
+      
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Export", e);
     }
     finally
     {
       IOUtils.closeQuietly( writer );
+      monitor.done();
     }
-  }
-
-  /**
-   * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
-   */
-  public String getDocumentExtension()
-  {
-    return ".csv";
   }
 }

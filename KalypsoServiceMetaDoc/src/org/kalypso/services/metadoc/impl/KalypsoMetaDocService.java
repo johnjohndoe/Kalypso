@@ -17,7 +17,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.metadoc.IMetaDocCommiter;
-import org.kalypso.metadoc.MetaDocException;
+import org.kalypso.metadoc.impl.MetaDocException;
 import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.metadoc.IMetaDocService;
 
