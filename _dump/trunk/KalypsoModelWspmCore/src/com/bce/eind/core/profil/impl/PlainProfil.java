@@ -1,13 +1,11 @@
 package com.bce.eind.core.profil.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import com.bce.eind.ProfilBuildingFactory;
 import com.bce.eind.core.profil.IPlainProfil;
@@ -421,6 +419,13 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   {
     final List<IProfilPoint> allPoints = getPoints();
     setValuesFor( allPoints, pointProperty, value );
+  }
+
+  public void setValueFor( final IProfilPoint point, final PointProperty pointProperty,
+      final double value ) throws ProfilDataException
+  {
+    setValues( new PointChange[]
+    { new PointChange( point, pointProperty, value ) } );
   }
 
 }

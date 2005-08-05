@@ -1,5 +1,7 @@
 package com.bce.eind.core.profil.impl.test;
 
+import java.util.LinkedList;
+
 import junit.framework.TestCase;
 
 import com.bce.eind.core.profil.IProfil;
@@ -24,7 +26,7 @@ public class ProfilDataTest extends TestCase
     final IProfil p = CreateTestProfil();
     setGetMoveDevider( p );
     setGetBuilding( p );
-   // addMoveBordvoll( p );
+    addMoveDeleteBordvoll(p);
   }
 
   public IProfil CreateTestProfil( ) throws Exception
@@ -86,12 +88,22 @@ rightTF.setValueFor(DEVIDER_PROPERTY.class,DEVIDER_PROPERTY.SOHLE);
     assertEquals( "neu Durchstroemte links:", newPkt, aktPkt );
   }
 
- /* public void addMoveBordvoll( final IProfil p ) throws Exception
+  public void addMoveDeleteBordvoll( final IProfil p ) throws Exception
   {
-    p.addPointProperty( PointProperty.BORDVOLL );
-    final IProfilPoint aktPkt = p.getPoint( 2 );
-    assertEquals( "Bordvoll Position:", aktPkt, p.getDevider( DeviderKey.BORDVOLL_L ) );
-  }*/
+    final LinkedList<IProfilPoint> pktlst = p.getPoints();
+    final IProfilPoint pkt = p.insertPoint(pktlst.getFirst());
+    final IProfilDevider deviderBVL = p.addDevider(pkt,DEVIDER_TYP.BORDVOLL);
+    final IProfilDevider deviderBVR = p.addDevider(pkt,DEVIDER_TYP.BORDVOLL);
+    p.moveDevider(deviderBVR,pktlst.getLast());
+    final IProfilPoint aktPkt = deviderBVR.getPoint();
+    assertEquals( "Bordvoll links:", pkt, deviderBVL.getPoint());
+    assertEquals( "Bordvoll rechts:", aktPkt, deviderBVR.getPoint());
+    p.removeDevider(deviderBVL);
+    final IProfilDevider[] deviders = p.getDevider(DEVIDER_TYP.BORDVOLL);
+    assertEquals( "Anzahl Bordvollpunkte:", 1, deviders.length);
+    assertEquals( "Bordvoll links:", pktlst.getLast(), deviders[0].getPoint());
+    
+  }
 
   public void setGetBuilding( final IProfil p ) throws Exception
   {

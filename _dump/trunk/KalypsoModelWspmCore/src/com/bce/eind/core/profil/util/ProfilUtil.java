@@ -4,12 +4,11 @@
 package com.bce.eind.core.profil.util;
 
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.PointProperty;
+import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
 
 /**

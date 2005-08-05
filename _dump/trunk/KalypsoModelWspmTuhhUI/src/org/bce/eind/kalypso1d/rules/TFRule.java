@@ -3,10 +3,6 @@ package org.bce.eind.kalypso1d.rules;
 import org.eclipse.core.runtime.CoreException;
 
 import com.bce.eind.core.profil.IProfil;
-import com.bce.eind.core.profil.IProfilConstants;
-import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.PointProperty;
-import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IPlainProfil.DEVIDER_TYP;
 import com.bce.eind.core.profil.validator.AbstractValidatorRule;
 import com.bce.eind.core.profil.validator.IValidatorMarkerCollector;

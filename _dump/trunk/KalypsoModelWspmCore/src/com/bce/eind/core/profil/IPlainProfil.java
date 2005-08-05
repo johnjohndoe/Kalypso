@@ -174,6 +174,8 @@ public interface IPlainProfil
    */
   public void setProperty( final Object key, final Object value );
 
+  public void setValueFor(IProfilPoint point,PointProperty property, double value) throws ProfilDataException;
+  
   public void setValues( final PointChange[] changes ) throws ProfilDataException;
   
   /**
