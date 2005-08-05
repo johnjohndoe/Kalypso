@@ -220,28 +220,16 @@ public class FeatureFactory
    *          properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
-  public static Feature createFeature( String id, FeatureType featureType, FeatureProperty[] properties )
+  public static Feature createFeature( final String id, final FeatureType featureType,
+      final FeatureProperty[] properties )
   {
-    //    return new Feature_Impl( id, featureType, properties );
-
-    Object[] o = new Object[properties.length];
-    FeatureTypeProperty[] ftp = featureType.getProperties();
-    for( int i = 0; i < ftp.length; i++ )
+    final Feature result = createFeature( id, featureType, false );
+    for( int i = 0; i < properties.length; i++ )
     {
-      String name = ftp[i].getName();
-      for( int j = 0; j < properties.length; j++ )
-      {
-        if( properties[j].getName().equals( name ) )
-        {
-          o[i] = properties[j].getValue();
-          break;
-        }
-      }
+      if( featureType.getProperty( properties[i].getName() ) != null )
+        result.setProperty( properties[i] );
     }
-
-    Debug.debugMethodEnd();
-    //	return new Feature_Impl( id, featureType, properties );
-    return createFeature( id, featureType, o );
+    return result;
   }
 
   /**

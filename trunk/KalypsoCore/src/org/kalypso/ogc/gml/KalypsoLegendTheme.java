@@ -65,7 +65,7 @@ import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * @author sbad0205
+ * @author doemming
  */
 public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 {
@@ -260,7 +260,8 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
     g.setColor( backColor );
     g.setPaintMode();
     g.fillRect( 0, 0, width, height );
-    final Feature feature = FeatureFactory.createDefaultFeature( "egal", ft, true );
+    final Feature feature = FeatureFactory.createFeature( "legende", ft, false );
+    KalypsoLegendUtilities.updatePropertiesForLegend( feature );
     DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[]
     { style }, null );
     for( int i = 0; i < des.length; i++ )

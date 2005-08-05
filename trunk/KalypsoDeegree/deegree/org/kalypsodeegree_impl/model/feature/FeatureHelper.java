@@ -17,6 +17,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.extension.TypeRegistryException;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -151,6 +152,17 @@ public class FeatureHelper
       // TODO: eigentlich clonen!
       return object;
     }
+    // test if we have an marshaller and marhall it an back
+    //    ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    //    IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)typeRegistry.getTypeHandlerForClassName( type );
+    //    if( typeHandler != null )
+    //    {
+    //      Node node = null;
+    //      xxx
+    //      typeHandler.marshall( object, node, null );
+    //      Object result = typeHandler.unmarshall( node, null, null );
+    //      return result;
+    //    }
     throw new UnsupportedOperationException( "Kann Datenobjekt vom Typ '" + type + "' nicht kopieren." );
   }
 

@@ -3,12 +3,6 @@ package org.kalypsodeegree_impl.gml.schema;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
 /**
  * mapping between xml-typenames and java-classnames for GML-geometry types and XMLSCHEMA-simple types
  * 
@@ -20,43 +14,7 @@ public class Mapper
 
   private static final SimpleDateFormat XML_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd" );
 
-  private static GM_Object DEFAULT_POINT = GeometryFactory.createGM_Point( 0.5, 0.5, null );
-
-  private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[]
-  {
-      GeometryFactory.createGM_Position( 0.00, 0.3 ),
-      GeometryFactory.createGM_Position( 0.33, 0.7 ),
-      GeometryFactory.createGM_Position( 0.66, 0.3 ),
-      GeometryFactory.createGM_Position( 1.00, 0.7 ), };
-
-  private static GM_Envelope DEFAULT_ENVELOPE = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
-
-  private static GM_Object DEFAULT_LINESTRING = null;
-
-  private static GM_Object DEFAULT_POLYGONE = null;
-  static
-  {
-    try
-    {
-      DEFAULT_LINESTRING = GeometryFactory.createGM_Curve( DEFAULT_LINEPOSITIONS, null );
-    }
-    catch( GM_Exception e )
-    {
-      DEFAULT_LINESTRING = null;
-      e.printStackTrace();
-    }
-  }
-  static
-  {
-    try
-    {
-      DEFAULT_POLYGONE = GeometryFactory.createGM_Surface( DEFAULT_ENVELOPE, null );
-    }
-    catch( GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
+  
 
   public static String mapGMLSchemaType2JavaType( String name )
   {
@@ -189,9 +147,7 @@ public class Mapper
 
   public static Object defaultValueforJavaType( final String type, final boolean createGeometry )
   {
-    // TODO: uses special values espacially for KalypsoLegendView
-    // this is no good!
-
+    // TODO try to get default value from schema !
     if( "java.util.Date".equals( type ) )
       return new Date( 0 );
     if( "DateWithoutTime.class.getName()".equals( type ) )
@@ -212,13 +168,8 @@ public class Mapper
     if( !createGeometry )
       return null;
 
-    if( "org.kalypsodeegree.model.geometry.GM_Point".equals( type ) )
-      return DEFAULT_POINT;
-    if( "org.kalypsodeegree.model.geometry.GM_LineString".equals( type ) )
-      return DEFAULT_LINESTRING;
-    if( "org.kalypsodeegree.model.geometry.GM_Polygon".equals( type ) )
-      return DEFAULT_POLYGONE;
-
+    // TODO create default geo properties 
+    
     return null;
   }
 }
