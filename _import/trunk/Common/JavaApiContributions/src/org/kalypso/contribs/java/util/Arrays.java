@@ -413,4 +413,55 @@ public final class Arrays
     }
     return result;
   }
+
+  /**
+   * merges bytearray a and part of bytearray b
+   * 
+   * @param a
+   * @param b
+   * @param lengthB
+   *          the length of b to merge
+   */
+  public static byte[] append( byte[] a, byte[] b, int lengthB )
+  {
+    final byte[] result = new byte[a.length + b.length];
+    for( int i = 0; i < a.length; i++ )
+      result[i] = a[i];
+    for( int i = 0; i < lengthB; i++ )
+      result[i + a.length] = b[i];
+    return result;
+  }
+
+  /**
+   * checks if bytearray a and bytearray b are equal till position length
+   * 
+   * @param a
+   * @param b
+   * @param length
+   *          compare till this position
+   */
+  public static boolean equals( byte[] a, byte[] b, int length )
+  {
+    for( int i = 0; i < length; i++ )
+    {
+      if( a[i] != b[i] )
+        return false;
+    }
+    return true;
+  }
+
+  /**
+   * 
+   * @param array
+   *          the data
+   * @param fromPos
+   * @param toPos
+   */
+  public static byte[] copyPart( byte[] array, int fromPos, int toPos )
+  {
+    final byte[] result = new byte[toPos - fromPos];
+    for( int i = fromPos; i < toPos; i++ )
+      result[i - fromPos] = array[i];
+    return result;
+  }
 }

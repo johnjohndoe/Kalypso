@@ -85,4 +85,57 @@ public class StreamUtilities
       is.read( inBuffer );
     }
   }
+
+  /**
+   * compares content of two inputstreams
+   * 
+   * @param isA
+   * @param isB
+   * @return true is content is equal
+   * @throws IOException
+   */
+  public static final boolean isEqual( final InputStream isA, final InputStream isB ) throws IOException
+  {
+    try
+    {
+      final byte[] bufferA = new byte[1024 * 16];
+      final byte[] bufferB = new byte[1024 * 16];
+      byte[] restA = new byte[0];
+      byte[] restB = new byte[0];
+      int a = 0;
+      int b = 0;
+      while( true )
+      {
+        if( a > -1 )
+          a = isA.read( bufferA );
+        if( b > -1 )
+          b = isB.read( bufferB );
+
+        if( a == -1 && b == -1 )
+          return restA.length == 0 && restB.length == 0;
+        if( a > -1 && b > -1 )
+        {
+          byte[] mergeA = org.kalypso.contribs.java.util.Arrays.append( restA, bufferA, a );
+          byte[] mergeB = org.kalypso.contribs.java.util.Arrays.append( restB, bufferB, b );
+          if( !org.kalypso.contribs.java.util.Arrays.equals( mergeA, mergeB, Math.min( mergeA.length, mergeB.length ) ) )
+            return false;
+          if( mergeB.length > mergeA.length )
+          {
+            restA = new byte[0];
+            restB = org.kalypso.contribs.java.util.Arrays.copyPart( mergeB, mergeA.length, mergeB.length );
+          }
+          else
+          {
+            restA = org.kalypso.contribs.java.util.Arrays.copyPart( mergeA, mergeB.length, mergeA.length );
+            restB = new byte[0];
+          }
+        }
+      }
+    }
+    finally
+    {
+      isA.close();
+      isB.close();
+    }
+  }
 }
