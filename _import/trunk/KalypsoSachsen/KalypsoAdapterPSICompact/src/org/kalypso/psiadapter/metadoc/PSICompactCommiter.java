@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.metadoc.IMetaDocCommiter;
-import org.kalypso.metadoc.MetaDocException;
+import org.kalypso.metadoc.impl.MetaDocException;
 import org.kalypso.psiadapter.PSICompactFactory;
 
 import de.psi.go.lhwz.ECommException;

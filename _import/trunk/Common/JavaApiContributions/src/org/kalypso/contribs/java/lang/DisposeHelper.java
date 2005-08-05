@@ -44,6 +44,7 @@ package org.kalypso.contribs.java.lang;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -63,6 +64,11 @@ public class DisposeHelper
   public DisposeHelper( final Object[] disposeCandidates )
   {
     m_candidates.addAll( Arrays.asList( disposeCandidates ) );
+  }
+
+  public DisposeHelper( final Collection collection )
+  {
+    m_candidates.addAll( collection );
   }
 
   public void addDisposeCandidates( final Object[] disposeCandidates )

@@ -136,9 +136,9 @@ public class RobotronRightsProvider implements IUserRightsProvider
   {
     try
     {
-      final Attributes userAtts = getDirContext().getAttributes( "uid=" + username + ",ou=benutzer", new String[]
+      final Attributes userAtts = getDirContext().getAttributes( "cn=" + username + ",ou=benutzer", new String[]
       {
-          "gruppe",
+          "gidNumber",
           "userPassword" } );
 
       final Logger logger = Logger.getLogger( getClass().getName() );
@@ -151,10 +151,10 @@ public class RobotronRightsProvider implements IUserRightsProvider
         return UserRights.NO_RIGHTS;
       }
 
-      final String groupName = (String)userAtts.get( "gruppe" ).get();
+      final String groupName = (String)userAtts.get( "gidNumber" ).get();
       logger.info( "User " + username + " exists in group: " + groupName );
 
-      final Attributes rightsAtt = m_dirCtxt.getAttributes( "cn=" + groupName + ",ou=gruppen" );
+      final Attributes rightsAtt = m_dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
 
       final NamingEnumeration rightsEnum = rightsAtt.get( "recht" ).getAll();
       while( rightsEnum.hasMore() )
