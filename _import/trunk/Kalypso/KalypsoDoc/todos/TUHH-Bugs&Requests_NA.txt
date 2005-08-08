@@ -53,8 +53,8 @@ TODO´s:
 	Wer: 		huebsch
 	Wann: 		06.07.2005
 	Termin:		?
-	Status:		offen
-	Kommentar:	
+	Status:		angenommen
+	Kommentar:	schema in namodell.xsd 0.4 fertig. netz schreiben, Ascii<->gml, Modelle Updaten muss noch.
 	Bearbeiter:	doemming, huebsch
 	
 8) CreateNA erweitern
@@ -71,7 +71,7 @@ TODO´s:
 	Termin:		?
 	Status:		offen
 	Kommentar:	Studienarbeit Gehad als Grundlage für das Schema, default aus dem Schema setzen integrieren
-	Bearbeiter: 
+	Bearbeiter: doemming
 
 -----------------
 Feature Requests:
@@ -90,7 +90,7 @@ Feature Requests:
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:	Import über Excel in allgemeiner Form für den ZMLInline Editor.
+	Kommentar:	Import über Excel in allgemeiner Form für den ZMLInline Editor. In namodell.xsd schema integriert. es fehlt (un)marshalling, ascii<->gml.
 	Bearbeiter: doemming, huebsch
 
 3) Ergebnisablage (angepasste Berichtsablage an die Ergebnisadateien), Kalibrierungsprotokoll
@@ -106,7 +106,7 @@ Feature Requests:
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:	control erweitern - vorhandene zuflüsse übernehmen?
+	Kommentar:	control erweitern - vorhandene zuflüsse übernehmen? in control.xsd version 0.4 eingefügt. in netz schreiben integrieren.
 	Bearbeiter: huebsch, doemming
 
 5) Tabellen in den Tabellen - Werte übernehemen ermöglichen. Z.B. Kalinin-Miljukov oder Bodenkorrekturwerte von einem Strang/ Teilgebiet in ein anderes übernehmen.
@@ -115,7 +115,7 @@ Feature Requests:
 	Termin:		?
 	Status:		offen
 	Kommentar:	über marshalling
-	Bearbeiter:	
+	Bearbeiter:	doemming
 
 +6) Im nacontrol.xsd annotations einfügen
 	Wer: 		Ingenieurbüros, Brüning
@@ -138,7 +138,7 @@ Feature Requests:
 	Wann: 		09.06.2005
 	Termin:		?
 	Status:		angenommen
-	Kommentar:	SubstitutionGroup?!?	
+	Kommentar:	SubstitutionGroup?!?	schema fertig, namodell.xsd version 0.4.
 	Bearbeiter:	Huebsch (Schemata), Netzaufbau?
 
 +9) Koordinatensystem sollte auch beim Import wählbar sein (zur Zeit epsg31467 festgelegt).
@@ -151,12 +151,12 @@ Feature Requests:
 				Alle Shapes werden jetzt mit Koordinatensystem angegeben.
 	Bearbeiter:	huebsch
 
-10) Versiegelte Fläche im Teilgebiet wird nicht bei Import gesetzt, sollte durch Import berechnet werden (evtl. aus Hydrotopimport).
++10) Versiegelte Fläche im Teilgebiet wird nicht bei Import gesetzt, sollte durch Import berechnet werden (evtl. aus Hydrotopimport).
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		offen
-	Kommentar:	kommt raus, da er nicht zur berechnung verwendet wird. evtl. styles für hydrotope zur visualisierung der versiegelungsgrade.
+	Status:		erledigt
+	Kommentar:	ist raus, da er nicht zur berechnung verwendet wird. styles für hydrotope zur visualisierung der versiegelungsgrade.
 	Bearbeiter:	huebsch
 	
 11) Anfangswerte in Schema übernehmen
@@ -166,6 +166,14 @@ Feature Requests:
 	Status:		offen
 	Kommentar:	
 	Bearbeiter:	huebsch, doemming
+	
+12) Synthetische berechnungen ermöglichen
+	Wer: 		
+	Wann: 		
+	Termin:		
+	Status:		offen
+	Kommentar:	Control erweitern, pns in gebietsdatei übernehmen (wird zur zeit n gesetzt).
+	Bearbeiter:	
 
 
 ----------------------------------------------------------------------------------------------------------
@@ -247,3 +255,10 @@ Bugs:
 	Kommentar:	Es werden jetzt die Log-Dateien zurückgeschrieben.
 	Bearbeiter:	huebsch
 
+9) Es werden nicht alle im nacontrol.xsd Schema verfügbaren Ergebnisse beim zurückschreiben unterstützt.
+	Wer: 		Hübsch
+	Wann: 		04.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
