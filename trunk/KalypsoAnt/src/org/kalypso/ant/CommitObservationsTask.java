@@ -49,6 +49,8 @@ import javax.xml.rpc.ServiceException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -56,6 +58,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.simulation.ui.wizards.calculation.modelpages.CommitPrognoseFeatureVisitor;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.ant.AbstractFeatureVisitorTask;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -80,7 +83,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
 
   /**
    * @throws InvocationTargetException
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
+   * @see org.kalypso.util.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter,
@@ -94,16 +97,27 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
     }
     catch( final ServiceException e )
     {
-      throw new InvocationTargetException( e, "Fehler beim Zugriff auf den Zeitreihendienst" );
+      throw new InvocationTargetException( e );
     }
   }
 
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
+   * @see org.kalypso.util.ant.AbstractFeatureVisitorTask#statusFromVisitor(org.kalypsodeegree.model.feature.FeatureVisitor)
+   */
+  protected IStatus statusFromVisitor( final FeatureVisitor visitor )
+  {
+    final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor)visitor;
+    if( v.getStati().length > 0 )
+      return new MultiStatus( KalypsoGisPlugin.getId(), 0, v.getStati(), "", null );
+    
+    return Status.OK_STATUS;
+  }
+
+  /**
+   * @see org.kalypso.util.ant.AbstractFeatureVisitorTask#validateInput()
    */
   protected void validateInput()
-  {
-  }
+  {}
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,

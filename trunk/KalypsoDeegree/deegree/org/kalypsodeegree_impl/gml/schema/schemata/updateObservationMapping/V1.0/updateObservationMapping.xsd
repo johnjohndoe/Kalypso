@@ -30,9 +30,13 @@
 					<element name="lineString" type="gml:LineStringPropertyType" substitutionGroup="gml:_Geometry" minOccurs="0" maxOccurs="1"/>
 					<element name="polygon" type="gml:PolygonPropertyType" substitutionGroup="gml:_Geometry" minOccurs="0" maxOccurs="1"/>
                     <element name="inObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
-                    <element name="in1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
-                    <element name="outObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="in1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="outObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
                     <element name="out1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="out2ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="out3ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="out4ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="out5ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
                 </sequence>
             </extension>
         </complexContent>
