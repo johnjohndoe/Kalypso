@@ -81,4 +81,62 @@ public final class StatusUtilities
     final IStatus[] childStati = (IStatus[])stati.toArray( new IStatus[stati.size()] );
     return new MultiStatus( pluginId, code, childStati, sMainMessage, throwable );
   }
+
+  /**
+   * Returns the message of the given status.
+   * <p>
+   * If the status is a multi-status, it recursively creates a string with all includes child-stati, separated by
+   * line-breaks.
+   * </p>
+   */
+  public static String messageFromStatus( final IStatus status )
+  {
+    return createStringFromStatus( status, 0 );
+  }
+
+  /**
+   * Returns the message form the given status. If the status is a multi-status, it recursively creates a string with
+   * all includes child-stati, separated by line-breaks
+   * 
+   * @param currentDepth
+   *          Amout of tabs with wich the message will be indentated
+   */
+  private static String createStringFromStatus( final IStatus status, final int currentDepth )
+  {
+    final StringBuffer tabBuffer = new StringBuffer();
+    for( int i = 0; i < currentDepth; i++ )
+      tabBuffer.append( '\t' );
+
+    if( !status.isMultiStatus() )
+    {
+      final StringBuffer statusBuffer = new StringBuffer( tabBuffer.toString() );
+      statusBuffer.append( status.getMessage() );
+      final Throwable exception = status.getException();
+      if( exception != null )
+      {
+        final String localizedMessage = exception.getLocalizedMessage();
+        if( localizedMessage != null )
+        {
+          statusBuffer.append( "\n\t" );
+          statusBuffer.append( tabBuffer.toString() );
+          statusBuffer.append( localizedMessage );
+        }
+      }
+
+      return statusBuffer.toString();
+    }
+
+    final StringBuffer buffer = new StringBuffer( tabBuffer.toString() );
+    buffer.append( status.getMessage() );
+    buffer.append( '\n' );
+
+    final IStatus[] children = status.getChildren();
+    for( int i = 0; i < children.length; i++ )
+    {
+      buffer.append( createStringFromStatus( children[i], currentDepth + 1 ) );
+      buffer.append( '\n' );
+    }
+
+    return buffer.toString();
+  }
 }

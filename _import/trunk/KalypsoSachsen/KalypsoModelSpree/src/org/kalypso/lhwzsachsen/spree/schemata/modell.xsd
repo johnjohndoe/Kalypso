@@ -62,7 +62,6 @@
 					<element name="Wasserstand_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Wasserstand_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Wasserstand_vorhersage" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="Wasserstand_vorhersageAblage" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
