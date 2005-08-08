@@ -71,6 +71,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.core.client.ProxyFactory;
@@ -106,7 +107,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     {
       monitor.beginTask( "Dokument " + document.getPreferredDocumentName() + " wird exportiert", 2 );
 
-      file = KalypsoGisPlugin.getDefault().createTempFile( "metadoc", document.getPreferredDocumentName(), "tmp" );
+      file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "metadoc", document.getPreferredDocumentName(), "tmp" );
       file.deleteOnExit();
 
       outputStream = new BufferedOutputStream( new FileOutputStream( file ) );

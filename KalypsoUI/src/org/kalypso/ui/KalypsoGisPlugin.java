@@ -63,7 +63,6 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.xml.rpc.ServiceException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -78,6 +77,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
@@ -381,7 +381,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final String pDirs = props.getProperty( "DELETE_STARTUP", "" );
       final String[] dirNames = pDirs.split( "," );
       for( int i = 0; i < dirNames.length; i++ )
-        deleteTempDir( dirNames[i] );
+        TempFileUtilities.deleteTempDir( this, dirNames[i] );
     }
     catch( final IOException e )
     {
@@ -861,31 +861,31 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
   }
 
-  /**
-   * Create a temp file in the subDirName of the plugin's state location (where files can be created, deleted, etc.).
-   * Uses File.createTempFile() so as written in the File javadoc, you should call .deleteOnExit() on the returned file
-   * instance to make it a real 'temp' file.
-   */
-  public File createTempFile( final String subDirName, final String prefix, final String suffix ) throws IOException
-  {
-    final IPath path = getStateLocation();
-    final File dir = new File( path.toFile(), subDirName );
-    if( !dir.exists() )
-      dir.mkdir();
-
-    final File file = File.createTempFile( prefix, suffix, dir );
-    return file;
-  }
-
-  /**
-   * Deletes the given subDir of this plugin's state location. This method can be called when the plugin starts for
-   * instance, in order to clear non-deleted temp files.
-   */
-  public void deleteTempDir( final String subDirName ) throws IOException
-  {
-    final IPath path = getStateLocation();
-    final File dir = new File( path.toFile(), subDirName );
-    if( dir.exists() )
-      FileUtils.cleanDirectory( dir );
-  }
+//  /**
+//   * Create a temp file in the subDirName of the plugin's state location (where files can be created, deleted, etc.).
+//   * Uses File.createTempFile() so as written in the File javadoc, you should call .deleteOnExit() on the returned file
+//   * instance to make it a real 'temp' file.
+//   */
+//  public File createTempFile( final String subDirName, final String prefix, final String suffix ) throws IOException
+//  {
+//    final IPath path = getStateLocation();
+//    final File dir = new File( path.toFile(), subDirName );
+//    if( !dir.exists() )
+//      dir.mkdir();
+//
+//    final File file = File.createTempFile( prefix, suffix, dir );
+//    return file;
+//  }
+//
+//  /**
+//   * Deletes the given subDir of this plugin's state location. This method can be called when the plugin starts for
+//   * instance, in order to clear non-deleted temp files.
+//   */
+//  public void deleteTempDir( final String subDirName ) throws IOException
+//  {
+//    final IPath path = getStateLocation();
+//    final File dir = new File( path.toFile(), subDirName );
+//    if( dir.exists() )
+//      FileUtils.cleanDirectory( dir );
+//  }
 }

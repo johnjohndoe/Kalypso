@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -80,7 +81,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       return u.openConnection();
 
     // create a local temp file for storing the zml
-    final File file = KalypsoGisPlugin.getDefault().createTempFile( "zml-proxy", "zml", "zml" );
+    final File file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "zml-proxy", "zml", "zml" );
     file.deleteOnExit();
 
     InputStream ins = null;

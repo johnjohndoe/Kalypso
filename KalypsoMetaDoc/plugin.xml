@@ -24,6 +24,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.kalypso.commons"/>
+      <import plugin="org.kalypso.jwsdp"/>
    </requires>
    <extension-point id="exportTarget" name="exportTarget" schema="schema/exportTarget.exsd"/>
    <extension-point id="exporter" name="exporter" schema="schema/exporter.exsd"/>
@@ -32,7 +33,7 @@
       <target
             icon="icons/file_obj.gif"
             class="org.kalypso.metadoc.impl.FileExportTarget"
-            description="Exportiert das Dokument in eine Datei"
+            description="Exportiert Dokumente in Dateien"
             name="Dateiexport"
             id="fileTarget"/>
    </extension>
