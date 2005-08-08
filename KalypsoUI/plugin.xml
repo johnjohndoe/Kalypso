@@ -595,6 +595,11 @@
            class="org.kalypso.ant.GMLWeightingTask"
            library="lib/kalypsoAnt.jar"
            name="kalypso.gmlWeight"/>
+     <antTask
+           eclipseRuntime="true"
+           class="org.kalypso.ant.CommitObservationsTask"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.commitPrognoses"/>
    </extension>
       <extension
          point="org.kalypso.core.client.serviceproxy">

@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ant;
+package org.kalypso.util.ant;
 
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
@@ -50,17 +50,20 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.net.UrlResolver;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -75,13 +78,20 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * Abstract tast for task which starts a visitor on some features.
  * <p>
- * TODO: give argument of accept-depth (default is DEPTH_INFINITE)
- * </p>
+ * 
+ * @todo: give argument of accept-depth (default is DEPTH_INFINITE)
+ *        </p>
  * 
  * @author belger
  */
 public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
 {
+  /**
+   * Separator between feature-pathes ; can be used to give this Task multiple feature-pathes. The task will then
+   * iterate over every feature in every given feature-path
+   */
+  public static final String FEATURE_PATH_SEPARATOR = ";";
+
   /** Href to GML */
   private String m_gml;
 
@@ -96,12 +106,11 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   /** if true, the task is executed whithin a progress dialog */
   private boolean m_runAsync;
 
-  
   public void setRunAsync( final boolean runAsync )
   {
     m_runAsync = runAsync;
   }
-  
+
   public final void setContext( final URL context )
   {
     m_context = context;
@@ -109,7 +118,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
 
   public final void setFeaturePath( final String featurePath )
   {
-    m_featurePath = featurePath.split( ";" );
+    m_featurePath = featurePath.split( FEATURE_PATH_SEPARATOR );
   }
 
   public final void setGml( final String gml )
@@ -130,7 +139,10 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       {
         final IStatus status = execute( new NullProgressMonitor() );
         if( !status.isOK() )
-          throw new BuildException( status.getMessage(), status.getException() );
+        {
+          final String message = StatusUtilities.messageFromStatus( status );
+          throw new BuildException( message, status.getException() );
+        }
       }
     }
     catch( final BuildException be )
@@ -146,7 +158,8 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   }
 
   protected abstract FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver,
-      final PrintWriter logWriter, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
+      final PrintWriter logWriter, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+      InterruptedException;
 
   protected abstract void validateInput();
 
@@ -159,7 +172,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     try
     {
       monitor.beginTask( ClassUtilities.getOnlyClassName( getClass() ), m_featurePath.length );
-      
+
       final StringWriter logwriter = new StringWriter();
       logPW = new PrintWriter( new BufferedWriter( logwriter ) );
 
@@ -169,7 +182,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       final URL gmlURL = resolver.resolveURL( m_context, m_gml );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
-      
+
       final List stati = new ArrayList();
       for( int i = 0; i < m_featurePath.length; i++ )
       {
@@ -183,10 +196,14 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
 
           final String fp = m_featurePath[i];
           workspace.accept( visitor, fp, FeatureVisitor.DEPTH_INFINITE );
+
+          stati.add( statusFromVisitor( visitor ) );
         }
         catch( final Throwable t )
         {
-          stati.add( RunnableContextHelper.statusFromThrowable( t ) );
+          final IStatus status = RunnableContextHelper.statusFromThrowable( t );
+          stati.add( status );
+          logPW.println( status.getMessage() );
         }
         finally
         {
@@ -195,9 +212,14 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       }
 
       logPW.close();
-      log( logwriter.toString() );
+      final Project antProject = getProject();
+      if( antProject == null )
+        System.out.print( logwriter.toString() );
+      else
+        antProject.log( logwriter.toString() );
 
-      return new MultiStatus( KalypsoGisPlugin.getId(), 0, (IStatus[])stati.toArray( new IStatus[stati.size()] ), "", null );
+      return new MultiStatus( KalypsoGisPlugin.getId(), 0, (IStatus[])stati.toArray( new IStatus[stati.size()] ), "",
+          null );
     }
     catch( final Exception e )
     {
@@ -209,9 +231,29 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     finally
     {
       IOUtils.closeQuietly( logPW );
-      
+
       monitor.done();
     }
+  }
+
+  /**
+   * Returns a status for the used visitor. Default implementation return the OK-status.
+   * <p>
+   * Should be overwritten by implementors.
+   * </p>
+   * 
+   * @param visitor
+   *          The visitor previously create by {@link #createVisitor(URL, IUrlResolver, PrintWriter, IProgressMonitor)}.
+   */
+  protected IStatus statusFromVisitor( final FeatureVisitor visitor )
+  {
+    if( visitor != null )
+    {
+      // only, to avoid yellow thingies
+    }
+    ;
+
+    return Status.OK_STATUS;
   }
 
   private void executeInDialog()
