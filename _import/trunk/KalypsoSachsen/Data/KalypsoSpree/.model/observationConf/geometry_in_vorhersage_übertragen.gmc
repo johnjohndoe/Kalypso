@@ -1,0 +1,15 @@
+<!--
+	Überträgt die Geometrien aus der modell.gml in die VorhersageMapping.gml.
+	Die Zuordnung findet anhand der Pegelnamen statt.
+-->
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+ gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+ 	<gmltarget linktype="gml" xlink:href="VorhersageMapping.gml"/>
+	<featuremapping>
+		<gmlsource xlink:href="../../modell.gml"/>
+		<gmlsource xlink:href="VorhersageMapping.gml"/>
+		<changeFeaturesMapping fromPath="PegelCollectionAssociation/PegelMember" toPath="mappingMember" fromID="Name" toID="name">
+			<map from="Ort" to="point"/>
+		</changeFeaturesMapping>
+	</featuremapping>
+</gmlconvert>

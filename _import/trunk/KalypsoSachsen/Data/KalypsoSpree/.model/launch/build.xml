@@ -25,13 +25,6 @@
 				<include name="**/*.odt"/>
 			</fileset>
 		</copy>
-<!--		
-		<copy file="${project.dir}/.templates/Steuerparameter.gft" tofile="${calc.dir}/Steuerparameter.gft"/>
-		<copy file="${project.dir}/.templates/Anfangsvolumen.gtt" tofile="${calc.dir}/Anfangsvolumen.gtt"/>
-		<copy file="${project.dir}/.templates/Bodenfeuchten.gtt" tofile="${calc.dir}/Bodenfeuchten.gtt"/>
-		<copy file="${project.dir}/.templates/Flusslaufparameter.gtt" tofile="${calc.dir}/Flusslaufparameter.gtt"/>
-		<copy file="${project.dir}/.templates/Gesamtansicht.gmt" tofile="${calc.dir}/Gesamtansicht.gmt"/>
--->		
 	</target>
 	
 	<!-- 
@@ -76,8 +69,42 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 	</target>
-	
-	<target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">
-		<copy file="${calc.dir}/Ergebnisse/calcCase.gml" tofile="${calc.dir}/calcCase.gml" overwrite="true"/>
+
+	<!-- 
+		 ================================= 
+          target: runCalculation			
+         ================================= 
+    -->
+	<target name="runCalculation" description="Führt die eigentliche Simulationsrechnung durch">
+		<echo message="Berechnung wird durchgeführt: ${calc.path}"/>
+		
+		<kalypso.runCalculation calccasefolder="${calc.path}" typeid="spree">
+		    <input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true"/>
+		    <input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
+
+		    <input id="ZML" path="Zeitreihen" relativeToCalcCase="true"/>
+		    
+		    <output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
+		    <output id="NATIVE_IN_DIR" path="Ergebnisse/.native/in" relativeToCalcCase="true"/>
+		    <output id="NATIVE_OUT_DIR"  path="Ergebnisse/.native/out" relativeToCalcCase="true"/>
+
+		    <clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
+		</kalypso.runCalculation>
+		
+		<copy file="${calc.dir}/Ergebnisse/calcCase.gml" tofile="${calc.dir}/calcCase.gml" overwrite="true" failonerror="false"/>		
 	</target>
+	
+	
+    <!-- ================================= 
+          target: exportPrognosen              
+         ================================= -->
+    <target name="exportVorhersagen" description="Exportiert die Prognosen nach PSICompact">
+        <echo message="Vorhersagezeitreihen werden nach PSICompact geschrieben..."/>
+    	
+    	<!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
+    	<!-- TODO: Filter für Umhüllende konfigurieren -->
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="inObservationLink" remoteobs="outObservationLink" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="inObservationLink" remoteobs="out1ObservationLink" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="inObservationLink" remoteobs="out2ObservationLink" runasync="false"/>
+    </target>
 </project>

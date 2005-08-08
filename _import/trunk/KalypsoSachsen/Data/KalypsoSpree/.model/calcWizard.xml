@@ -111,6 +111,11 @@
         <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
         
        	<arg name="maximizeMap" value="true"/>
+
+       	<arg name="buttonText" value="Berechnung durchführen"/>
+       	<arg name="buttonLaunch" value="runCalculation"/>
+       	<arg name="buttonTooltip" value="Führt die Modellrechnung durch"/>
+       	<arg name="buttonProperties"/>
     </page>
 
 	<!-- Eingabe Anfangsvolumina der Talsperren -->
@@ -134,6 +139,11 @@
         <arg name="timeserie4" value="nameString=Stauinhalt#linkColumn=Stauinhalt"/>
         
        	<arg name="maximizeMap" value="true"/>
+       	
+        <arg name="buttonText" value="Berechnung durchführen"/>
+       	<arg name="buttonLaunch" value="runCalculation"/>
+       	<arg name="buttonTooltip" value="Führt die Modellrechnung durch"/>
+       	<arg name="buttonProperties"/>
     </page>
 
 	<!-- Eingabe Parameter der Flusslaufmodelle -->
@@ -178,7 +188,6 @@
 		
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
-		<arg name="prognoseProperty" value="Wasserstand_vorhersageAblage"/>
 
 	   	<arg name="mainSash" value="40"/>
 	   	<arg name="rightSash" value="25"/>
