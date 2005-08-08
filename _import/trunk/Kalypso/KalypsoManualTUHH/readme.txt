@@ -1,1 +1,1 @@
-Benutzerhandbuch.
+Benutzerhandbuch der TUHH (Abwandlung des Manuals bezüglich der Projektspezifischen daten des LHWZ Sachsen).
