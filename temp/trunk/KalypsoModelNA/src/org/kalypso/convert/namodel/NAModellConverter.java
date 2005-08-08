@@ -119,7 +119,7 @@ public class NAModellConverter
   private final SchneeManager m_schneeManager;
 
   public static void main( String[] args )
-  {  
+  {
     final IUrlCatalog catalog = new MultiUrlCatalog( new IUrlCatalog[]
     {
         new DeegreeUrlCatalog(),
@@ -253,22 +253,20 @@ public class NAModellConverter
   {
     m_conf = conf;
     m_modelSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAMODELL );
-    GMLSchema m_hydrotopSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAHYDROTOP );
     GMLSchema m_parameterSchema = GMLSchemaCatalog.getSchema( NaModelConstants.NS_NAPARAMETER );
 
     m_catchmentManager = new CatchmentManager( m_modelSchema, m_conf );
     m_gerinneManager = new ChannelManager( m_modelSchema, m_conf );
     m_nodeManager = new NetFileManager( m_conf );
     m_rhbManager = new RHBManager( m_modelSchema, m_conf );
-    m_hydrotopManager = new HydrotopManager( m_hydrotopSchema, m_conf );
-    m_bodartManager = new BodenartManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
-    m_bodtypManager = new BodentypManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
-    m_nutzManager = new NutzungManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
-    m_schneeManager = new SchneeManager( m_modelSchema, m_hydrotopSchema, m_parameterSchema, m_conf );
+    m_hydrotopManager = new HydrotopManager( m_conf );
+    m_bodartManager = new BodenartManager( m_parameterSchema, m_conf );
+    m_bodtypManager = new BodentypManager( m_parameterSchema, m_conf );
+    m_nutzManager = new NutzungManager( m_parameterSchema, m_conf );
+    m_schneeManager = new SchneeManager( m_parameterSchema, m_conf );
 
-    m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager,
-        m_gerinneManager, m_nodeManager, m_rhbManager,  m_bodartManager, m_bodtypManager,
-        m_nutzManager, m_schneeManager );
+    m_parseManager = new ParseManager( m_modelSchema, m_parameterSchema, conf, m_catchmentManager, m_gerinneManager,
+        m_nodeManager, m_rhbManager, m_bodartManager, m_bodtypManager, m_nutzManager, m_schneeManager );
   }
 
   public ParseManager getParseManager()

@@ -63,6 +63,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
@@ -136,7 +137,7 @@ public class UpdateModellKollau
     //    updateGebNiederschlagZR( catchmentFEs );
     //    updateLZNiederschlagZR( catchmentFEs );
     //    updateNiederschlagZR( catchmentFEs );
-    updateGeometries( naModelFe, "D:\\Kalypso_NA\\9-Programmtest\\ModellAckermann\\ImportKalypso" );
+    updateGeometries( naModelFe, "D:\\Kalypso_NA\\9-Programmtest\\AdvancedTestModel\\GIS" );
     // Nodes
     final FeatureType nodeFT = workspace.getFeatureType( "Node" );
     final Feature[] nodeFEs = workspace.getFeatures( nodeFT );
@@ -230,15 +231,15 @@ public class UpdateModellKollau
     CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
         csFac.getCSByName( "EPSG:31467" ) );
 
-    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Teileinzugsgebiete", cSystem );
+    final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Subcatchments", cSystem );
     final List catchmentFeatures = (List)catchmentWorkspace.getRootFeature().getProperty(
         ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\straenge", cSystem );
+    final GMLWorkspace channelWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Strand", cSystem );
     final List channelFeatures = (List)channelWorkspace.getRootFeature().getProperty(
         ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-    final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\modellknotenflows", cSystem );
+    final GMLWorkspace nodeWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Node", cSystem );
     final List nodeFeatures = (List)nodeWorkspace.getRootFeature()
         .getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
@@ -247,19 +248,19 @@ public class UpdateModellKollau
     System.out.println( "inserting geometries: catchments" );
     Feature catchmentCollection = (Feature)modelFeature.getProperty( "CatchmentCollectionMember" );
     List catchmentList = (List)catchmentCollection.getProperty( "catchmentMember" );
-    copyProperties( catchmentFeatures, "GEOM", "ALTETGNR", (Feature[])catchmentList.toArray( new Feature[catchmentList
+    copyProperties( catchmentFeatures, "GEOM", "SUBC_NR", (Feature[])catchmentList.toArray( new Feature[catchmentList
         .size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: channels" );
     Feature channelCollection = (Feature)modelFeature.getProperty( "ChannelCollectionMember" );
     List channelList = (List)channelCollection.getProperty( "channelMember" );
-    copyProperties( channelFeatures, "GEOM", "ID", (Feature[])channelList.toArray( new Feature[channelList.size()] ),
-        "Ort", "inum" );
+    copyProperties( channelFeatures, "GEOM", "STRAND_NR", (Feature[])channelList.toArray( new Feature[channelList
+        .size()] ), "Ort", "inum" );
 
     System.out.println( "inserting geometries: nodes" );
     Feature nodeCollection = (Feature)modelFeature.getProperty( "NodeCollectionMember" );
     List nodeList = (List)nodeCollection.getProperty( "nodeMember" );
-    copyProperties( nodeFeatures, "GEOM", "KNOTENR", (Feature[])nodeList.toArray( new Feature[nodeList.size()] ),
+    copyProperties( nodeFeatures, "GEOM", "NODE_NR", (Feature[])nodeList.toArray( new Feature[nodeList.size()] ),
         "Ort", "num" );
 
   }
@@ -287,6 +288,15 @@ public class UpdateModellKollau
           System.out.println( "copyvalue is null: id=" + id );
         FeatureProperty fProp = FeatureFactory.createFeatureProperty( destGeomPropName, value );
         destFeature.setProperty( fProp );
+        Object GEOMProperty = destFeature.getProperty("Ort");
+        if( GEOMProperty instanceof GM_Surface )
+        {
+
+          Long area = new Long( (long)( (GM_Surface)value ).getArea() );
+          FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "flaech", area );
+          destFeature.setProperty( fpArea );
+        }
+
       }
       else
         System.out.println( "not found in shapeFile: id=" + id );

@@ -49,13 +49,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.ogc.gml.typehandler.DiagramProperty;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
@@ -82,12 +81,8 @@ public class RHBManager extends AbstractManager
   public Feature[] parseFile( URL url ) throws Exception
   {
     List result = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// TODO:
-                                                                                                                     // Abfrage
-                                                                                                                     // ob
-                                                                                                                     // *.rhb
-                                                                                                                     // vorhanden
-                                                                                                                     // ist.
+    LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );
+    // TODO: Abfrage ob *.rhb vorhanden ist.
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
       result.add( fe );
@@ -146,10 +141,6 @@ public class RHBManager extends AbstractManager
     return feature;
   }
 
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace )
-  {
-  // not needed. gerinnemanager writes rhbs
-  }
 
   public String mapID( int id, FeatureType ft )
   {

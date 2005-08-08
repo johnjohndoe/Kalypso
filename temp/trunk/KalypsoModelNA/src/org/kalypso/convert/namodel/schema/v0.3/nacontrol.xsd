@@ -73,9 +73,9 @@
 					<element name="sch" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Schnee</label>
-								<tooltip>Schneezeitreihe</tooltip>
-								<description>Ausgabe der verwendeten Schneezeitreihe</description>
+								<label>Schneehöhe</label>
+								<tooltip>Zeitreihe Schneehöhe</tooltip>
+								<description>Ausgabe der Ergebnisse der Schneeberechnung</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>snow</label>
@@ -157,9 +157,9 @@
 					<element name="qna" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Oberflaechenabfluss, natuerlich</label>
-								<tooltip>Ergebnis Oberflaechenabfluss, natuerlich</tooltip>
-								<description>Ausgabe der Ergebnisse zum Oberflaechenabfluss natuerlicher Flaechen </description>
+								<label>Oberflaechenabfluss, natürlich</label>
+								<tooltip>Ergebnis Oberflaechenabfluss, natürlich</tooltip>
+								<description>Ausgabe der Ergebnisse zum Oberflaechenabfluss natürlicher Flaechen </description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>surface area discharge, natural </label>
@@ -242,14 +242,14 @@
 					<element name="qgw" type="boolean">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Grundwasser</label>
-								<tooltip>Ergebnisse Grundwasser</tooltip>
-								<description>Ausgabe der Ergebnisse zum Grundwasser</description>
+								<label>Grundwasserabfluss</label>
+								<tooltip>Ergebnisse Grundwasserabfluss</tooltip>
+								<description>Ausgabe der Ergebnisse zum Grundwasserabfluss</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>groundwater</label>
-								<tooltip>groundwater output</tooltip>
-								<description>output of the results for groundwater</description>
+								<label>groundwaterflow</label>
+								<tooltip>groundwaterflow output</tooltip>
+								<description>output of the results for groundwaterflow</description>
 							</documentation>
 						</annotation>
 					</element>

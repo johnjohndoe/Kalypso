@@ -61,7 +61,6 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 public class SchneeManager extends AbstractManager
 {
 
-  private final NAConfiguration m_conf;
 
   private final FeatureType m_snowFT;
 
@@ -69,12 +68,10 @@ public class SchneeManager extends AbstractManager
    * 
    * @author huebsch
    */
-  public SchneeManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema, NAConfiguration conf )
+  public SchneeManager( GMLSchema parameterSchema, NAConfiguration conf )
       throws IOException
   {
     super( conf.getParameterFormatURL() );
-    //    m_crs = crs;
-    m_conf = conf;
     m_snowFT = parameterSchema.getFeatureType( "Schnee" );
   }
 
@@ -149,12 +146,12 @@ public class SchneeManager extends AbstractManager
       final Feature snowFE = (Feature)iter.next();
       //    TODO: nur die schreiben, die auch in Gebietsdatei vorkommen
       //      if( asciiBuffer.writeFeature( snowFE ) )
-      writeFeature( asciiBuffer, paraWorkspace, snowFE );
+      writeFeature( asciiBuffer, snowFE );
     }
 
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace, Feature feature ) throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) throws Exception
   {
     asciiBuffer.getSnowBuffer().append( toAscci( feature, 13 ) + "\n" );
   }

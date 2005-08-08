@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.NetElementCircleFinder;
-import org.kalypsodeegree.model.feature.Feature;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *

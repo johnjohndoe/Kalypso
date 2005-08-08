@@ -100,10 +100,7 @@ public class NAControlConverter
   {
     int minutesOfTimeStep = conf.getMinutesOfTimeStep();
     double hoursOfTimeStep = minutesOfTimeStep / 60d;
-    //    b.append( " " + FeatureHelper.getAsString( controlFE, "timeStep" ) + "\n" );
     b.append( " " + hoursOfTimeStep + "\n" );
-    //JH: Fortran-Code ‰ndern, um hier nur true und false abzufragen (einige erfordern 1,2)
-    //(auﬂerdem bei der Ausgabe darauf achten, dass nicht alles Zeitreihen sind.
     b.append( getBoolean( controlFE.getProperty( "tmp" ) ) + "       Temperatur                 .tmp\n" );
     b.append( getBoolean( controlFE.getProperty( "pre" ) ) + "       Niederschlag               .pre\n" );
     b.append( getBoolean( controlFE.getProperty( "sch" ) ) + "       Schnee                     .sch\n" );
@@ -112,25 +109,26 @@ public class NAControlConverter
     b.append( getBoolean( controlFE.getProperty( "gws" ) ) + "       Grundwasserstand           .gws\n" );
     b.append( getBoolean( controlFE.getProperty( "qgs" ) ) + "       Gesamtabfluss Knoten       .qgs\n" );
     b.append( getBoolean( controlFE.getProperty( "qgg" ) ) + "       Gesamtabfluss TG           .qgg\n" );
-    b.append( getBoolean( controlFE.getProperty( "qna" ) ) + "       Oberflaechenabfluss        .qna\n" );
+    b.append( getBoolean( controlFE.getProperty( "qna" ) ) + "       nat. Oberflaechenabfluss   .qna\n" );
     b.append( getBoolean( controlFE.getProperty( "qif" ) ) + "       Interflow                  .qif\n" );
     b.append( getBoolean( controlFE.getProperty( "qvs" ) ) + "       Abfluss vers. Flaechen     .qvs\n" );
     b.append( getBoolean( controlFE.getProperty( "qbs" ) ) + "       Basisabfluss               .qbs\n" );
     b.append( getBoolean( controlFE.getProperty( "qt1" ) ) + "       Kluftgrundw1               .qt1\n" );
     b.append( getBoolean( controlFE.getProperty( "qtg" ) ) + "       Kluftgrundw                .qtg\n" );
-    b.append( getBoolean( controlFE.getProperty( "qgw" ) ) + "       Krundwasser                .qgw\n" );
-    //    b.append( getBoolean( controlFE.getProperty( "kap" ) ) + " Kapil.Aufstieg/Perkolation .kap\n" );
+    b.append( getBoolean( controlFE.getProperty( "qgw" ) ) + "       Grundwasserabfluss         .qgw\n" );
+    // sollte nicht bei der Ausgabe erzeugt werden, da Berechnung mit kap. Aufstieg noch nicht implementiert!
     b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" );
     b.append( getBoolean( controlFE.getProperty( "vet" ) ) + "       Evapotranspiration         .vet\n" );
-    b.append( getBoolean( controlFE.getProperty( "hyd" ) ) + "       Ausgabe hydrotope          .hyd\n" );
-    b.append( getBoolean( controlFE.getProperty( "bil" ) ) + "       Abflussbilanz              .bil\n" );
+    b.append( getBoolean( controlFE.getProperty( "hyd" ) ) + "       Ausgabe Hydrotope          .hyd\n" );
+    // if "2": output of *.txt and *.bil
+    if( ( (Boolean)( controlFE.getProperty( "bil" ) ) ).booleanValue() )
+      b.append( "2" + "       Abflussbilanz              .bil\n" );
+    else
+      b.append( "n" + "       Abflussbilanz              .bil\n" );
     b.append( getBoolean( controlFE.getProperty( "nmq" ) ) + "       Statistische Abflusswerte  .nmq\n" );
+    // Folgende Dateien werden zus‰tzlich mit Speicherinhalt generiert .sph, .spv, .spn, .spb
     b.append( getBoolean( controlFE.getProperty( "spi" ) ) + "       Speicherinhalt             .spi\n" );
-    b.append( getBoolean( controlFE.getProperty( "sub" ) ) + "       Speicherueberlauf          .sup\n" );
-    b.append( getBoolean( controlFE.getProperty( "sph" ) ) + "       Wasserstand Speicher       .sph\n" );
-    b.append( getBoolean( controlFE.getProperty( "spv" ) ) + "       Talsperrenverdunstung      .spv\n" );
-    b.append( getBoolean( controlFE.getProperty( "spn" ) ) + "       Zehrung                    .spn\n" );
-    b.append( getBoolean( controlFE.getProperty( "vep" ) ) + "       Evaporation                .vep\n" );
+    b.append( getBoolean( controlFE.getProperty( "sup" ) ) + "       Speicherueberlauf          .sup\n" );
   }
 
   private static void appendResultInformation( GMLWorkspace modellWorkspace, GMLWorkspace controlWorkspace,

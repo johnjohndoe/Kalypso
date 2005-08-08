@@ -7,14 +7,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -68,16 +67,12 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class HydrotopManager extends AbstractManager
 {
-  //  private final NAConfiguration m_conf;
-  //
-  //  private final FeatureType m_hydrotopFT;
 
-  public HydrotopManager( GMLSchema hydrotopSchema, NAConfiguration conf ) throws IOException
+  
+  public HydrotopManager( NAConfiguration conf ) throws IOException
+
   {
     super( conf.getHydrotopFormatURL() );
-    //    m_crs = crs;
-    //    m_conf = conf;
-    /* m_hydrotopFT = */hydrotopSchema.getFeatureType( "Hydrotop" );
   }
 
   /**
@@ -139,11 +134,6 @@ public class HydrotopManager extends AbstractManager
           double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
           double versGrad = ( (Double)hydFeature.getProperty( "m_vers" ) ).doubleValue();
           double korVersGrad = ( (Double)hydFeature.getProperty( "fak_vers" ) ).doubleValue();
-          if( korVersGrad < 0.0 )
-          {
-            // TODO JH: evt. beim NAImport setzen
-            korVersGrad = 1.0;
-          }
           double gesVersGrad = ( versGrad * korVersGrad );
           versFlaeche += ( hydGesFlaeche * gesVersGrad );
           natFlaeche += ( hydGesFlaeche - ( hydGesFlaeche * gesVersGrad ) );
@@ -154,6 +144,7 @@ public class HydrotopManager extends AbstractManager
 
       int hydAnzahl = hydWriteList.size();
       double tGArea = GeometryUtilities.calcArea( tGGeomProp );
+      //TODO: throw exception (to the user), if writing of hydrotope file is checked (testing!!!)  
       if( (int)tGArea != (int)gesFlaeche )
       {
         System.out.println( "Fehler in den Hydrotopen!" );
@@ -162,9 +153,8 @@ public class HydrotopManager extends AbstractManager
             + ") entspricht nicht der Summe der Hydrotopflächen (" + (int)gesFlaeche + ") Fehler :"
             + ( fehler / gesFlaeche * 100d ) + "% diff: " + fehler );
       }
-      else
-        asciiBuffer.getHydBuffer().append(
-            FortranFormatHelper.printf( FeatureHelper.getAsString( catchmentFE, "inum" ), "i4" ) );
+      asciiBuffer.getHydBuffer().append(
+          FortranFormatHelper.printf( FeatureHelper.getAsString( catchmentFE, "inum" ), "i4" ) );
       asciiBuffer.getHydBuffer().append(
           " " + hydAnzahl + " " + (int)versFlaeche + " " + (int)natFlaeche + " " + (int)gesFlaeche + "\n" );
 

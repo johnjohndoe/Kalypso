@@ -37,7 +37,6 @@ import org.kalypso.contribs.java.util.Arrays;
 
 /**
  * 
- * TODO: insert type comment here
  * 
  * @author doemming
  */

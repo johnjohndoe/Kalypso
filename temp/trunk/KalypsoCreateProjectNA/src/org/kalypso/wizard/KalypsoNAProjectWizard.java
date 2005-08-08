@@ -211,7 +211,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private FeatureType getFeatureType( String featureName )
   {
-    //TODO this must be changed when a schema registry exitst
     FeatureType ft = null;
     ft = m_modelSchema.getFeatureType( featureName );
     if( ft == null )
@@ -360,21 +359,26 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         String targetkey = (String)it.next();
         String sourcekey = (String)mapping.get( targetkey );
         Object so = sourceFeature.getProperty( sourcekey );
-        //The area property of the catchment is set at this point, to check if
-        // this is not redundant ??
-        //because the area can always be calculatet from the GM_Surface object.
 
         final double area;
         if( so instanceof GM_Object )
+        {
           area = GeometryUtilities.calcArea( (GM_Object)so );
-        else
-          area = 0d;
-        FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "flaech", new Double( area ) );
-        targetFeature.setProperty( fpArea );
+          FeatureProperty fpArea = FeatureFactory.createFeatureProperty( "flaech", new Double( area ) );
+          targetFeature.setProperty( fpArea );
+        }
 
         FeatureProperty fp = FeatureFactory.createFeatureProperty( targetkey, so );
         targetFeature.setProperty( fp );
 
+      }
+      // TODO: delete if default values in schema!
+      // if factor of the sealing rate isn´t set, then the factor will be set as 1.0 (instead of default 0.0)
+      if( !mapping.keySet().contains( "fak_vers" ) )
+      {
+        final double fak_vers = 1.0;
+        FeatureProperty fpFak_vers = FeatureFactory.createFeatureProperty( "fak_vers", new Double( fak_vers ) );
+        targetFeature.setProperty( fpFak_vers );
       }
       hydList.add( targetFeature );
     }

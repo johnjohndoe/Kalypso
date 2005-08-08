@@ -49,7 +49,6 @@ import java.net.URL;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author doemming
@@ -82,17 +81,5 @@ public class ModelManager extends AbstractManager
   {
     // nothing to do
     return null;
-  }
-
-  /**
-   * TODO Never called, remove?
-   */
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace )
-  {
-  // nothing to do
-    if( asciiBuffer == null || workspace == null )
-    {
-      // avoid yellow thingies
-    }
   }
 }

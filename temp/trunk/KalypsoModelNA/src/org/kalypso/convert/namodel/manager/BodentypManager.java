@@ -66,6 +66,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class BodentypManager extends AbstractManager
 {
+
   private final NAConfiguration m_conf;
 
   private final FeatureType m_bodentypFT;
@@ -74,18 +75,13 @@ public class BodentypManager extends AbstractManager
 
   private static final String BodArtParameterPropName = "BodArtParameterMember";
 
-  public BodentypManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema, NAConfiguration conf )
-      throws IOException
+  
+  public BodentypManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
     m_conf = conf;
     m_bodentypFT = parameterSchema.getFeatureType( "Bodentyp" );
     m_bodenartFT = parameterSchema.getFeatureType( "BodArtParameter" );
-    
-    if( schema == null || hydrotopSchema == null )
-    {
-      // avoid yellow thingies!
-    }
   }
 
   /**
@@ -103,8 +99,8 @@ public class BodentypManager extends AbstractManager
   {
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-                                                                                                                     // FileReader(
-                                                                                                                     // file
+    // FileReader(
+    // file
     // ) );
     Feature fe = null;
     //  Kommentarzeilen

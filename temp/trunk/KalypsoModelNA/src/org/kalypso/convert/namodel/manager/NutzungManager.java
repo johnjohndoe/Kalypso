@@ -62,7 +62,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-
+/*
+ * 
+ * @author huebsch
+ */
 public class NutzungManager extends AbstractManager
 {
 
@@ -74,12 +77,7 @@ public class NutzungManager extends AbstractManager
 
   private static final String NutzParameterpropName = "NutzungParameterMember";
 
-  /*
-   * 
-   * @author huebsch
-   */
-  public NutzungManager( GMLSchema schema, GMLSchema hydrotopSchema, GMLSchema parameterSchema, NAConfiguration conf )
-      throws IOException
+  public NutzungManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
     //    m_crs = crs;
@@ -106,8 +104,8 @@ public class NutzungManager extends AbstractManager
     String nutzID = nutzDatei.replaceAll( "\\.nuz", "" );
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-                                                                                                                     // FileReader(
-                                                                                                                     // file
+    // FileReader(
+    // file
     // ) );
     Feature fe = null;
     while( ( fe = readNextFeature( reader, nutzID ) ) != null )
