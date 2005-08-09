@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
-import org.kalypso.util.ant.AbstractFeatureVisitorTask;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -102,7 +101,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   private Properties m_metadata = new Properties();
 
   /**
-   * @see org.kalypso.util.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter, final IProgressMonitor monitor )
   {
@@ -265,7 +264,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   }
 
   /**
-   * @see org.kalypso.util.ant.AbstractFeatureVisitorTask#validateInput()
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
    */
   protected void validateInput()
   {

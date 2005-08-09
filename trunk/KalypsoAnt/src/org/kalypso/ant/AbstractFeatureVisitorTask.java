@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.util.ant;
+package org.kalypso.ant;
 
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
@@ -78,9 +78,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * Abstract tast for task which starts a visitor on some features.
  * <p>
- * 
- * @todo: give argument of accept-depth (default is DEPTH_INFINITE)
- *        </p>
+ * TODO: give argument of accept-depth (default is DEPTH_INFINITE)
+ * </p>
+ * <p>
+ * The featurePath argument supports multiple pathes separated by ';'
+ * </p>
  * 
  * @author belger
  */
