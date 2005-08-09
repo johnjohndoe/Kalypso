@@ -94,6 +94,10 @@ public class PropertyIsNullOperation extends ComparisonOperation
     return expression;
   }
 
+  public void setExpression( Expression expr )
+  {
+    expression = expr;
+  }
   /**
    * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
    * methods to validate the structure of the DOM-fragment.

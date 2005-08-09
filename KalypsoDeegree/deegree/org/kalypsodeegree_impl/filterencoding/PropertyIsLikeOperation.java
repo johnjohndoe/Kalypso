@@ -180,12 +180,22 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     return propertyName;
   }
 
+  public void setPropertyName( PropertyName propName )
+  {
+    propertyName = propName;
+  }
+
   /**
    * returns the literal the property shall be compared to
    */
   public Literal getLiteral()
   {
     return literal;
+  }
+
+  public void setLiteral( Literal literal )
+  {
+    this.literal = literal;
   }
 
   /** Produces an indented XML representation of this object. */

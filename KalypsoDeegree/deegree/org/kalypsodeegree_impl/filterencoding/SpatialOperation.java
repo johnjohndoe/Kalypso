@@ -394,4 +394,26 @@ public class SpatialOperation extends AbstractOperation
 
     return value;
   }
+
+  //CK: I added the set methods to change the filter element when it exists as an Object only. These changes must be
+  // reflected when saving the filter somewhere this means the filter has to be exported as a XML in the source
+  // Document.
+  //(August 2005)
+
+  public void setProperty( PropertyName name )
+  {
+    propertyName = name;
+  }
+
+  public void setGeometry( GMLGeometry geom ) throws GM_Exception
+  {
+    gmlGeometry = geom;
+    geometryLiteral = GMLAdapter.wrap( geom );
+  }
+
+  public void setOperatorId( int opearationId )
+  {
+    this.operatorId = opearationId;
+
+  }
 }

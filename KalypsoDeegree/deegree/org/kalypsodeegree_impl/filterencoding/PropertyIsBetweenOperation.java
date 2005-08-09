@@ -174,6 +174,11 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     return propertyName;
   }
 
+  public void setPropertyName( PropertyName propName )
+  {
+    propertyName = propName;
+  }
+
   /**
    * returns the lower boundary of the operation as an <tt>Expression</tt>
    */
@@ -182,12 +187,22 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
     return lowerBoundary;
   }
 
+  public void setLowerBoundary( Expression lowerBounds )
+  {
+    lowerBoundary = lowerBounds;
+  }
+
   /**
    * returns the upper boundary of the operation as an <tt>Expression</tt>
    */
   public Expression getUpperBoundary()
   {
     return upperBoundary;
+  }
+
+  public void setUpperBoundary( Expression upperBounds )
+  {
+    upperBoundary = upperBounds;
   }
 
   /** Produces an indented XML representation of this object. */

@@ -130,6 +130,12 @@ public class ComplexFilter extends AbstractFilter
     return operation;
   }
 
+  /** Returns the contained Operation. */
+  public void setOperation( Operation operation)
+  {
+    this.operation =operation; 
+  }
+  
   /**
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
    * 

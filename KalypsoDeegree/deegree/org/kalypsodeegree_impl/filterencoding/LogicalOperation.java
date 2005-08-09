@@ -87,7 +87,7 @@ public class LogicalOperation extends AbstractOperation
    * 
    * @see OperationDefines
    */
-  public LogicalOperation( int operatorId, ArrayList arguments ) 
+  public LogicalOperation( int operatorId, ArrayList arguments )
   {
     super( operatorId );
     this.arguments = arguments;
@@ -99,6 +99,11 @@ public class LogicalOperation extends AbstractOperation
   public ArrayList getArguments()
   {
     return arguments;
+  }
+
+  public void setArguments( ArrayList arguments )
+  {
+    this.arguments = arguments;
   }
 
   /**

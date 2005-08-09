@@ -142,6 +142,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
   
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
+  
+  public static final ImageDescriptor IMAGE_UTIL_IMPORT_WIZARD = id ("icons/util/import_wiz.gif");
 
   // features:
   public static final ImageDescriptor IMAGE_FEATURE = id( "icons/feature/gis_feature.gif" );
