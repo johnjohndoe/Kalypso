@@ -41,9 +41,10 @@
 
 package org.kalypso.metadoc;
 
-import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.contribs.java.lang.ISupplier;
 
 /**
  * Exporters can create one or more {@link org.kalypso.metadoc.IExportableObject} and export them to some {@link org.kalypso.metadoc.IExportTarget}. This is actually used as a
@@ -63,14 +64,14 @@ public interface IExporter extends IExportableObjectFactory, IExecutableExtensio
   public ImageDescriptor getImageDescriptor();
 
   /**
-   * Init this exporter with context dependent data. The adaptable object is used
-   * to get the data on a per class basis.
+   * Init this exporter with context dependent data. The supplier object is used
+   * to get the data on a per key basis.
    * <p>
    * For instance, a GIS-Exporter will probably want to have a list of features. It would
    * get it by doing the following:
    * <code>
-   * 	features = adaptable.getAdapter( Feature[].class );
+   * 	features = supplier.supply( "featureList" );
    * </code>
    */
-  public void init( final IAdaptable adaptable );
+  public void init( final ISupplier supplier ) throws CoreException;
 }

@@ -62,6 +62,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * @deprecated
  * @author belger
  */
 public class ZmlTableExporter extends AbstractBerichtExporter

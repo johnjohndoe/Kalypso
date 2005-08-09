@@ -697,6 +697,10 @@
            class="org.kalypso.ant.CommitObservationsTask"
            library="lib/kalypsoAnt.jar"
            name="kalypso.commitPrognoses"/>
+     <antTask
+           class="org.kalypso.ant.MultiEqualsTask"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.multiequals"/>
    </extension>
       <extension
          point="org.kalypso.core.client.serviceproxy">

@@ -74,6 +74,9 @@ public class ExportDocumentsWizard extends Wizard
   private final DisposeHelper m_disposer;
   private final IExportTarget m_target;
 
+  /**
+   * Calls full constructor with no extra pages
+   */
   public ExportDocumentsWizard( final Shell shell, final IExporter[] exporter, final IExportTarget target )
   {
     m_shell = shell;
@@ -99,6 +102,7 @@ public class ExportDocumentsWizard extends Wizard
    */
   public void addPages()
   {
+    // wizard selection for each exporter
     final IWizardNode[] nodes = new IWizardNode[m_exporter.length];
     for( int i = 0; i < nodes.length; i++ )
     {
@@ -141,7 +145,6 @@ public class ExportDocumentsWizard extends Wizard
         else
           setMessage( node.toString() );
       }
-      
     };
 
     page.setTitle( "Wählen Sie die Exportart" );

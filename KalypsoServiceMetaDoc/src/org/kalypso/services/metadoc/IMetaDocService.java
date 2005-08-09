@@ -16,20 +16,29 @@ import org.kalypso.services.IKalypsoService;
 public interface IMetaDocService extends Remote, IKalypsoService
 {
   /**
-   * Prepares a DocBean for a new document with the given extension.
+   * Prepares the list of metadata expected by this service for a new document.
    * 
    * @param username
-   *          The user who send the request. Can be used for authentifikation and default values
-   * @return the Metadata to fill and give back with a call to commitNewDocument( Map )
+   *          The user who send the request. Can be used for authentification and default values
+   * @return the Metadata to fill and give back when calling commitNewDocument( Map, ... )
+   * 
    * @throws RemoteException
    */
   public Map prepareNewDocument( final String username ) throws RemoteException;
 
   /**
-   * Commits the new document described by the given DocBean.
+   * Commits the document described by the metadata
+   * 
+   * @param metadata
+   *          describes the document, simple mapping between keys and values
+   * @param data
+   *          contains the document
+   * @param preferredFilename
+   *          the preferred file name for the underlying file. Kalypso will try to preserve it, but no guarantee is
+   *          made. It is possible that extra characters are appended to it so that its uniqueness is guaranteed.
    * 
    * @throws RemoteException
    */
-  public void commitNewDocument( final Map metadata, final DataHandler data, final String fileExtension )
+  public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename )
       throws RemoteException;
 }
