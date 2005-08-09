@@ -20,6 +20,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582010.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582010.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582010.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582010.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -42,6 +51,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582030.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582030.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582030.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582030.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -64,6 +82,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583121.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583121.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583121.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583121.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -86,6 +113,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583250.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583250.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583250.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583250.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -108,6 +144,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583290.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583290.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583290.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583290.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -130,6 +175,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582060.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582060.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582060.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582060.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -152,6 +206,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...583200.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583200.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583200.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9583200.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -174,6 +237,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582080.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582080.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582080.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582080.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -196,6 +268,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582820.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582820.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582820.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582820.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
   <mappingMember>
@@ -218,6 +299,15 @@
       <out2ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582090.P1_MW" ns1:type="simple" linktype="zml"/>
       </out2ObservationLink>
+      <out3ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582090.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out3ObservationLink>
+      <out4ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582090.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out4ObservationLink>
+      <out5ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582090.P1_MW" ns1:type="simple" linktype="zml"/>
+      </out5ObservationLink>
     </MappingObservation>
   </mappingMember>
 </MappingCollection>

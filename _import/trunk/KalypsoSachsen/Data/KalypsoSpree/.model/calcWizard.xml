@@ -166,6 +166,11 @@
         <arg name="selectionID" value="128"/>
         
        	<arg name="maximizeMap" value="true"/>
+       	
+        <arg name="buttonText" value="Berechnung durchführen"/>
+       	<arg name="buttonLaunch" value="runCalculation"/>
+       	<arg name="buttonTooltip" value="Führt die Modellrechnung durch"/>
+       	<arg name="buttonProperties"/>
     </page>
 
 	<!-- Phase 3: Ergebnisdarstellung und Ablage -->

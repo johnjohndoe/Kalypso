@@ -6,6 +6,9 @@
       <inObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_RLKETTE.zml" ns1:type="simple" linktype="zml"/>
       </inObservationLink>
+      <in1ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_RLKETTE.zml" ns1:type="simple" linktype="zml"/>
+      </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_RLKETTE.zml" ns1:type="simple" linktype="zml"/>
       </outObservationLink>
@@ -17,6 +20,9 @@
       <inObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_LOHSA.zml" ns1:type="simple" linktype="zml"/>
       </inObservationLink>
+      <in1ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_LOHSA.zml" ns1:type="simple" linktype="zml"/>
+      </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_LOHSA.zml" ns1:type="simple" linktype="zml"/>
       </outObservationLink>
@@ -28,6 +34,9 @@
       <inObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_BWALDE.zml" ns1:type="simple" linktype="zml"/>
       </inObservationLink>
+      <in1ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_BWALDE.zml" ns1:type="simple" linktype="zml"/>
+      </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_BWALDE.zml" ns1:type="simple" linktype="zml"/>
       </outObservationLink>
@@ -39,6 +48,9 @@
       <inObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_SPWIESE.zml" ns1:type="simple" linktype="zml"/>
       </inObservationLink>
+      <in1ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QV_SPWIESE.zml" ns1:type="simple" linktype="zml"/>
+      </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QV_SPWIESE.zml" ns1:type="simple" linktype="zml"/>
       </outObservationLink>
@@ -50,6 +62,9 @@
       <inObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QP_BURGNEU.zml" ns1:type="simple" linktype="zml"/>
       </inObservationLink>
+      <in1ObservationLink>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:Spree://2004/QP_BURGNEU.zml" ns1:type="simple" linktype="zml"/>
+      </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/QP_BURGNEU.zml" ns1:type="simple" linktype="zml"/>
       </outObservationLink>
