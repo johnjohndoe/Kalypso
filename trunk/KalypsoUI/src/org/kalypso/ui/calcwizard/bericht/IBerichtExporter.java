@@ -49,6 +49,7 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * @deprecated
  * @author belger
  */
 public interface IBerichtExporter

@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * @deprecated
  * @author belger
  */
 public class MapExporter extends AbstractBerichtExporter

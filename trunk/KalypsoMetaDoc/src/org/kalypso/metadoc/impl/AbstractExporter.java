@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExporter;
 
 /**
@@ -57,6 +58,7 @@ public abstract class AbstractExporter implements IExporter
   private String m_name;
   private String m_desc;
   private ImageDescriptor m_imageDescriptor;
+  protected ISupplier m_supplier;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -95,5 +97,13 @@ public abstract class AbstractExporter implements IExporter
   public final ImageDescriptor getImageDescriptor()
   {
     return m_imageDescriptor;
+  }
+  
+  /**
+   * @see org.kalypso.metadoc.IExporter#init(org.kalypso.contribs.java.lang.ISupplier)
+   */
+  public void init( final ISupplier supplier ) throws CoreException
+  {
+    m_supplier = supplier;
   }
 }

@@ -71,7 +71,7 @@ public class KalypsoMetaDocService implements IMetaDocService
       m_commiter = (IMetaDocCommiter)ClassUtilities.newInstance( className, IMetaDocCommiter.class, getClass()
           .getClassLoader() );
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( "KalypsoMetaDocService", "init", e );
 
@@ -109,17 +109,17 @@ public class KalypsoMetaDocService implements IMetaDocService
    * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(java.util.Map, javax.activation.DataHandler,
    *      java.lang.String)
    */
-  public void commitNewDocument( final Map metadata, final DataHandler data, final String fileExtension )
+  public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename )
       throws RemoteException
   {
     try
     {
-      final File docFile = File.createTempFile( "metadoc-tmp", fileExtension, m_tmpDir );
+      final File docFile = File.createTempFile( "metadoc-tmp", preferredFilename, m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
 
       m_commiter.commitDocument( m_props, metadata, docFile );
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       m_logger.throwing( "KalypsoMetaDocService", "commitNewDocument", e );
 

@@ -45,6 +45,7 @@ import java.net.URL;
 import org.kalypso.commons.arguments.Arguments;
 
 /**
+ * @deprecated
  * @author belger
  */
 public abstract class AbstractBerichtExporter implements IBerichtExporter

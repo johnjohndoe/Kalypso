@@ -43,8 +43,8 @@ package org.kalypso.metadoc.impl;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
@@ -56,9 +56,9 @@ import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 public class EmptyExporter extends AbstractExporter
 {
   /**
-   * @see org.kalypso.metadoc.IExporter#init(org.eclipse.core.runtime.IAdaptable)
+   * @see org.kalypso.metadoc.IExporter#init(org.kalypso.contribs.java.lang.ISupplier)
    */
-  public void init( final IAdaptable adaptable )
+  public void init( final ISupplier supploer )
   {
     // nothing to do
   }

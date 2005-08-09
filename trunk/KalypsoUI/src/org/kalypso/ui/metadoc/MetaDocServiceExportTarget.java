@@ -92,6 +92,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 /**
  * The file-target simply writes the document into a local file.
  * 
+ * TODO this class is still in KalypsoUI, it could be moved into a to-b-created project called KalypsoServiceMetaDocClient
+ * where the corresponding proxy-classes (jar) should also be moved.
+ * 
  * @author schlienger
  */
 public class MetaDocServiceExportTarget extends AbstractExportTarget

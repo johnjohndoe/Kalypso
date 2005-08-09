@@ -18,7 +18,7 @@ public class ExporterHelper
 
   private ExporterHelper()
   {
-  //
+  // not intended to be instanciated
   }
 
   public final static Properties createReplaceTokens( final Feature feature, final Arguments tokens )
@@ -44,5 +44,4 @@ public class ExporterHelper
     }
     return replacetokens;
   }
-
 }
