@@ -36,6 +36,13 @@ public class SpecialPropertyMapper
       }
     } );
 
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.String", "java.lang.Float" )
+        {
+          public Object map( Object srcObject )
+          {
+            return new Float( ( (String)srcObject ).trim() );
+          }
+        } );
     m_instance.register( m_instance.new SpecialMapper( "java.lang.Integer", "java.lang.Double" )
     {
       public Object map( Object srcObject )

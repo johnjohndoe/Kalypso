@@ -103,6 +103,10 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     this.expr2 = expr2;
   }
 
+  public void setOperatorId( int operatorId )
+  {
+    super.operatorId = operatorId;
+  }
   /**
    * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
    * methods to validate the structure of the DOM-fragment.
@@ -149,12 +153,22 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     return expr1;
   }
 
+  public void setFirstExperssion( Expression expr1 )
+  {
+    this.expr1 = expr1;
+  }
+
   /**
    * returns the second <tt>Expression</tt> of the comparison
    */
   public Expression getSecondExpression()
   {
     return expr2;
+  }
+
+  public void setSecondExperssion( Expression expr2 )
+  {
+    this.expr2 = expr2;
   }
 
   /** Produces an indented XML representation of this object. */

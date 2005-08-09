@@ -1,5 +1,6 @@
 package org.kalypsodeegree_impl.filterencoding;
 
+import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -7,7 +8,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author F.Lindemann
  *  
  */
-public class BoundaryExpression extends Expression_Impl
+public class BoundaryExpression extends Expression_Impl implements Expression
 {
 
   private String value = null;
