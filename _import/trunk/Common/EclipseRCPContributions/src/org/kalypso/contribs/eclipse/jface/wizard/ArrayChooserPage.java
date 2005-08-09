@@ -42,7 +42,9 @@ package org.kalypso.contribs.eclipse.jface.wizard;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -61,18 +63,23 @@ public class ArrayChooserPage extends WizardPage
 {
   private final Object m_chooseables;
 
-  private CheckboxTableViewer m_viewer;
+  private CheckboxTableViewer m_viewer = null;
 
-  private Object[] m_selected;
+  private Object[] m_selected = null;
 
-  private Object[] m_checked;
+  protected Object[] m_checked = null;
+
+  private final ICheckStateListener m_checkStateListener = new ICheckStateListener()
+  {
+    public void checkStateChanged( final CheckStateChangedEvent event )
+    {
+      m_checked = m_viewer.getCheckedElements();
+    }
+  };
 
   /**
    * @param chooseables
    *          Used as input for {@link ArrayContentProvider}
-   * @param pageName
-   * @param title
-   * @param titleImage
    */
   public ArrayChooserPage( final Object chooseables, final String pageName, final String title,
       final ImageDescriptor titleImage )
@@ -95,6 +102,9 @@ public class ArrayChooserPage extends WizardPage
    */
   public void dispose()
   {
+    if( m_viewer != null )
+      m_viewer.removeCheckStateListener( m_checkStateListener );
+    
     super.dispose();
   }
 
@@ -111,6 +121,7 @@ public class ArrayChooserPage extends WizardPage
     m_viewer.setLabelProvider( new LabelProvider() );
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setInput( m_chooseables );
+    m_viewer.addCheckStateListener( m_checkStateListener );
 
     if( m_selected != null )
       m_viewer.setSelection( new StructuredSelection( m_selected ) );
@@ -131,10 +142,13 @@ public class ArrayChooserPage extends WizardPage
 
   public Object[] getChoosen()
   {
-    return m_viewer.getCheckedElements();
+    if( m_checked == null )
+      return new Object[0];
+
+    return m_checked;
   }
 
-  private static void createSelectButton( final Composite parent, final CheckboxTableViewer viewer, final boolean select )
+  private void createSelectButton( final Composite parent, final CheckboxTableViewer viewer, final boolean select )
   {
     final Button button = new Button( parent, SWT.PUSH );
 
@@ -143,14 +157,12 @@ public class ArrayChooserPage extends WizardPage
 
     button.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       public void widgetSelected( SelectionEvent e )
       {
         viewer.setAllChecked( select );
+        
+        m_checked = viewer.getCheckedElements();
       }
     } );
   }
-
 }

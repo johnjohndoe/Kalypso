@@ -48,11 +48,20 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 
+ * Convenient class which provides a simple facility to call the dispose() method on a list of objects.
+ * <p>
+ * You will typically use it the following way:
+ * <p>
+ * <code><pre>
+ * public void dispose()
+ * {
+ * 	 new DisposeHelper( m_someObjectArray ).dispose();
+ * }
+ * </pre></code>
  * 
  * @author schlienger
  */
-public class DisposeHelper
+public final class DisposeHelper
 {
   private final List m_candidates = new ArrayList( 20 );
 
@@ -103,7 +112,7 @@ public class DisposeHelper
         e.printStackTrace();
       }
     }
-    
+
     m_candidates.clear();
   }
 }

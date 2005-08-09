@@ -111,7 +111,7 @@ public final class RunnableContextHelper
   public static IStatus statusFromThrowable( final Throwable t )
   {
     if( t instanceof InvocationTargetException )
-      return statusFromThrowable( ( (InvocationTargetException)t ).getTargetException() );
+      return statusFromThrowable( ( (InvocationTargetException)t ).getCause() );
     if( t instanceof CoreException )
       return ( (CoreException)t ).getStatus();
 
