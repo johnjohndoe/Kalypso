@@ -173,7 +173,7 @@ public class GmlPropertyTask extends Task
       {
         final Calendar cal = Calendar.getInstance();
         cal.setTime( dateValue );
-        cal.add( CalendarUtilities.getCalendarField(dateoffsetfield), dateoffset.intValue() );
+        cal.add( CalendarUtilities.getCalendarField( dateoffsetfield ), dateoffset.intValue() );
         date = cal.getTime();
       }
       else
@@ -184,8 +184,16 @@ public class GmlPropertyTask extends Task
     else if( value != null )
       addProperty( name, value.toString(), null );
     else
+    {
       getProject().log( "No value for feature with id " + f.getId() + " in property: " + featureProperty,
           Project.MSG_DEBUG );
+      final String defaultValue = property.getDefaultValue();
+      if( defaultValue != null )
+      {
+        getProject().log( "Using defualt value: " + defaultValue, Project.MSG_DEBUG );
+        addProperty( name, defaultValue, null );
+      }
+    }
   }
 
   /**
@@ -228,6 +236,9 @@ public class GmlPropertyTask extends Task
     /** The name, the property gets */
     private String m_name;
 
+    /** If the value cannot be determined, this value will be used */
+    private String m_defaultValue;
+
     /** FeaturePath if Feature is selected by featurePath. */
     private String m_featurePath;
 
@@ -260,7 +271,7 @@ public class GmlPropertyTask extends Task
       return m_dateoffsetfield;
     }
 
-    public final void setDateoffsetfield(String dateoffsetfield )
+    public final void setDateoffsetfield( String dateoffsetfield )
     {
       m_dateoffsetfield = dateoffsetfield;
     }
@@ -303,6 +314,16 @@ public class GmlPropertyTask extends Task
     public final void setName( String name )
     {
       m_name = name;
+    }
+
+    public final void setDefaultValue( String defaultValue )
+    {
+      m_defaultValue = defaultValue;
+    }
+
+    public final String getDefaultValue()
+    {
+      return m_defaultValue;
     }
   }
 }

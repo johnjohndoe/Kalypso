@@ -338,13 +338,9 @@ public class GMLProperty_Impl implements GMLProperty
     {
     case STRING:
     {
-      Node node = element.getFirstChild();
-
+      final Node node = element.getFirstChild();
       if( node != null )
-      {
         result = node.getNodeValue();
-      }
-
       break;
     }
     case POINT:
@@ -484,6 +480,9 @@ public class GMLProperty_Impl implements GMLProperty
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.14  2005/08/09 14:45:00  belger
+ * *** empty log message ***
+ *
  * Revision 1.13  2005/06/20 14:07:46  belger
  * Formatierung
  * Revision 1.12 2005/03/08 11:01:04 doemming *** empty log message ***
