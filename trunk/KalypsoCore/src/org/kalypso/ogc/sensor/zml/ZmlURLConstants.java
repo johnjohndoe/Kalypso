@@ -45,16 +45,6 @@ public interface ZmlURLConstants
   /** Observation-Metadata Property-Name for the OCS-identifier */
   public final static String MD_OCS_ID = "OCS-ID";
 
-//  /** From-Tags for the Date-Range-Argument */
-//  public final static String TAG_FROM1 = "<from>";
-//
-//  public final static String TAG_FROM2 = "</from>";
-
-//  /** To-Tags for the Date-Range-Argument */
-//  public final static String TAG_TO1 = "<to>";
-//
-//  public final static String TAG_TO2 = "</to>";
-
   /** Specification-Tags for the Zml-Request in the URL */
   public final static String TAG_REQUEST1 = "<request"; // !NOTE: without ending '>'
 

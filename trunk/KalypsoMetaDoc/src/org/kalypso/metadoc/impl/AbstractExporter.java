@@ -41,10 +41,13 @@
 
 package org.kalypso.metadoc.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExporter;
 
@@ -105,5 +108,23 @@ public abstract class AbstractExporter implements IExporter
   public void init( final ISupplier supplier ) throws CoreException
   {
     m_supplier = supplier;
+  }
+
+  /**
+   * Convenience method for subclasses which want to retrieve objects from the supplier
+   * set in the init() method.
+   * <p>
+   * Wraps the InvocationTargetException into a CoreException.
+   */
+  protected Object getFromSupplier( final Object request ) throws CoreException
+  {
+    try
+    {
+      return m_supplier.supply( request );
+    }
+    catch( final InvocationTargetException e )
+    {
+      throw new CoreException( RunnableContextHelper.statusFromThrowable( e ) );
+    }
   }
 }

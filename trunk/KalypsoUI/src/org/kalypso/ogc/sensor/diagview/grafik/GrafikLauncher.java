@@ -72,8 +72,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.ui.internal.Workbench;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
@@ -570,9 +568,6 @@ public class GrafikLauncher
     }
     yLines.clear();
 
-    final Rectangle bounds = Workbench.getInstance().getDisplay().getBounds();
-    writer.write( "Window: " + bounds.x + " " + bounds.y + " " + bounds.width + " " + bounds.height + "\n" );
-    
     return multiStatus;
   }
 
@@ -628,8 +623,8 @@ public class GrafikLauncher
       this.color = col;
     }
   }
-  
-  private final static class XLine
+
+  private final static class XLine implements Comparable
   {
     public final String label;
     public final String strDate;
@@ -639,10 +634,15 @@ public class GrafikLauncher
       label = lbl;
       strDate = strdate;
     }
-    
+
     public String toString()
     {
       return strDate;
+    }
+
+    public int compareTo( Object o )
+    {
+      return strDate.compareTo( ( (XLine)o ).strDate );
     }
   }
 }
