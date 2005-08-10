@@ -50,22 +50,31 @@ import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
@@ -73,6 +82,7 @@ import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -81,8 +91,10 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypso.ui.editor.actions.FeatureThemeSelection;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -106,15 +118,15 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 {
   private GisMapOutlinePage m_outlinePage = null;
 
-  private final MapPanel m_MapPanel;
+  private final MapPanel m_mapPanel;
 
   private GisTemplateMapModell m_mapModell;
 
   public GisMapEditor()
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    m_MapPanel = new MapPanel( this, plugin.getCoordinatesSystem() );
-    m_MapPanel.getWidgetManager().addWidgetChangeListener( new IWidgetChangeListener()
+    m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem() );
+    m_mapPanel.getWidgetManager().addWidgetChangeListener( new IWidgetChangeListener()
     {
       public void widgetChanged( final IWidget newWidget )
       {
@@ -219,13 +231,31 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
-
-    // create MapPanel
     final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    // create MapPanel
     final Frame virtualFrame = SWT_AWT.new_Frame( composite );
     virtualFrame.setVisible( true );
-    m_MapPanel.setVisible( true );
-    virtualFrame.add( m_MapPanel );
+    m_mapPanel.setVisible( true );
+    virtualFrame.add( m_mapPanel );
+
+    // create Context Menu
+    final MenuManager menuManager = new MenuManager();
+    menuManager.setRemoveAllWhenShown( true );
+    menuManager.addMenuListener( new IMenuListener()
+    {
+      public void menuAboutToShow( IMenuManager manager )
+      {
+        manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
+        manager.add( new Separator() );
+      }
+    } );
+    final Menu mapMenu = menuManager.createContextMenu( composite );
+    composite.setMenu( mapMenu );
+    // register it
+    getSite().registerContextMenu( menuManager, this );
+
+    m_mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
+
   }
 
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
@@ -260,16 +290,15 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   {
     m_mapModell = mapModell;
 
-    m_MapPanel.setMapModell( m_mapModell );
+    m_mapPanel.setMapModell( m_mapModell );
     if( m_outlinePage != null )
       m_outlinePage.setMapModell( m_mapModell );
   }
-
   public void showProperties( final LayerType layer )
   {
+    // TODO
     MessageDialog
         .openInformation( getEditorSite().getShell(), "Themeneigenschaften", "Leider noch nicht implementiert" );
-
     layer.getClass();
   }
 
@@ -278,7 +307,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public MapPanel getMapPanel()
   {
-    return m_MapPanel;
+    return m_mapPanel;
   }
 
   public void saveTheme( final IKalypsoFeatureTheme theme, final IProgressMonitor monitor ) throws CoreException
@@ -294,7 +323,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     if( m_mapModell != null )
       m_mapModell.dispose();
 
-    m_MapPanel.dispose();
+    m_mapPanel.dispose();
 
     setMapModell( null );
 
@@ -309,7 +338,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
-    m_MapPanel.addSelectionChangedListener( listener );
+    m_mapPanel.addSelectionChangedListener( listener );
   }
 
   /**
@@ -317,7 +346,12 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public ISelection getSelection()
   {
-    return m_MapPanel.getSelection();
+    final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+    final IStructuredSelection selection = (IStructuredSelection)m_mapPanel.getSelection();
+    if( !selection.isEmpty() && activeTheme instanceof IKalypsoFeatureTheme )
+      return new FeatureThemeSelection( (IKalypsoFeatureTheme)activeTheme, selection, null, (Feature)selection
+          .getFirstElement() );
+    return selection;
   }
 
   /**
@@ -325,7 +359,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
-    m_MapPanel.removeSelectionChangedListener( listener );
+    m_mapPanel.removeSelectionChangedListener( listener );
   }
 
   /**
@@ -333,7 +367,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public void setSelection( ISelection selection )
   {
-    m_MapPanel.setSelection( selection );
+    m_mapPanel.setSelection( selection );
   }
 
   /**
@@ -351,7 +385,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration )
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
+        "icons/util/img_props.gif" );
     final IWizardPage page = new ImageExportPage( configuration, "mapprops", "Export Optionen", imgDesc );
 
     return new IWizardPage[]
