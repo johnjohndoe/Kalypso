@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.kalypso.services.calculation.local"
-   name="KalypsoLocalCalulation Plug-in"
+   name="KalypsoLocalCalculation Plug-in"
    version="1.0.0"
    provider-name="kalypso.org"
    class="org.kalypso.services.calculation.local.KalypsoLocalCalulationPlugin">
