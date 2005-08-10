@@ -271,9 +271,20 @@ public class DBaseFile
       // get the column name into a byte array
       b = new byte[11];
       rafDbf.readFully( b );
+      
+      // bugfix: 'b' may contain 0-bytes, so convert only up to first 0 byte
+      int length = 11;
+      for( int bIndex = 0; bIndex < 11; bIndex++ )
+      {
+        if( b[bIndex] == 0 )
+        {
+          length = bIndex;
+          break;
+        }
+      }
 
       // convert the byte array to a String
-      String col_name = new String( b ).trim().toUpperCase();
+      String col_name = new String( b, 0, length ).trim().toUpperCase();
 
       // read in the column type
       char[] c = new char[1];
