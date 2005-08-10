@@ -63,7 +63,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
   protected void fillCatalog( final Class myClass, final Map catalog )
   {
     catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v0.3/control.xsd" ) );
-    catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "v0.4/namodell.xsd" ) );
+    catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "v0.3/namodell.xsd" ) );
     catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "v0.3/nacontrol.xsd" ) );
     catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "v0.2/hydrotop.xsd" ) );
     catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "v0.2/parameter.xsd" ) );
