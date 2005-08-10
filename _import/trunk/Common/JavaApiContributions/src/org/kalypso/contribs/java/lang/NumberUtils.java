@@ -1,5 +1,8 @@
 package org.kalypso.contribs.java.lang;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 /**
  * Utility class for Number parsing etc.
  * 
@@ -43,5 +46,17 @@ public final class NumberUtils
     {
       return null;
     }
+  }
+
+  /**
+   * @param value
+   * @return integer
+   * @throws ParseException
+   */
+  public static int toInteger( String value ) throws ParseException
+  {
+    final NumberFormat instance = NumberFormat.getInstance();
+    final Number number = instance.parse(value);
+    return number.intValue();
   }
 }
