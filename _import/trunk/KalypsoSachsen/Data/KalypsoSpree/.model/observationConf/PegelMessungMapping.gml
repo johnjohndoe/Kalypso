@@ -4,7 +4,7 @@
     <MappingObservation fid="MappingObservation1">
       <gml:name>Schirgiswalde</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://GN.6_SP.02PG...582010" ns1:type="simple" linktype="zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.6_SP.02PG...582010" ns1:type="simple" linktype="zml"/>
       </inObservationLink>
       <in1ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.6_SP.02PG...9582010" ns1:type="simple" linktype="zml"/>
