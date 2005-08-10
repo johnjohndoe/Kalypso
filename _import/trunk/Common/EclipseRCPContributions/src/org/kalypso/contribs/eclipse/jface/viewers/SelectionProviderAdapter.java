@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
  * Default implementation of {@link org.eclipse.jface.viewers.IPostSelectionProvider}.
@@ -90,6 +91,8 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
    */
   public ISelection getSelection()
   {
+    if(m_selection==null)
+      return new StructuredSelection();
     return m_selection;
   }
 

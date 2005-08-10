@@ -63,7 +63,7 @@ public class ArrayChooserPage extends WizardPage
 {
   private final Object m_chooseables;
 
-  private CheckboxTableViewer m_viewer = null;
+  CheckboxTableViewer m_viewer = null;
 
   private Object[] m_selected = null;
 
