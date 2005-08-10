@@ -125,8 +125,7 @@ public interface IPlainProfil
       throws ProfilDataException;
 
   /**
-   * @return true, falls die Daten geändert wurden; false, falls der devider eh schon auf diesem
-   *         Punkt lag
+   * @return Den Punkt vor dem Verschieben
    * @throws ProfilDataException
    */
   public IProfilPoint moveDevider( final IProfilDevider devider, final IProfilPoint newPosition );

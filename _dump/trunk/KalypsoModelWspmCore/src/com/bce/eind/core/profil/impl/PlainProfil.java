@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.bce.eind.ProfilBuildingFactory;
 import com.bce.eind.core.profil.IPlainProfil;
@@ -29,8 +31,10 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 {
   private IProfilBuilding m_building;
 
-  private final ArrayList<IProfilDevider> m_devider;
+//  private final ArrayList<IProfilDevider> m_devider;
 
+  private final SortedSet<IProfilDevider> m_deviders = new TreeSet<IProfilDevider>();
+  
   private final ProfilPoints m_points;
 
   private final HashMap<Object, Object> m_profilMetaData;
@@ -38,7 +42,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   public PlainProfil( )
   {
     m_profilMetaData = new HashMap<Object, Object>();
-    m_devider = new ArrayList<IProfilDevider>();
+//    m_devider = new ArrayList<IProfilDevider>();
     m_points = new ProfilPoints();
     m_points.addProperty( PointProperty.BREITE );
     m_points.addProperty( PointProperty.HOEHE );
@@ -53,7 +57,8 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider )
   {
     IProfilDevider pd = new ProfilDevider( devider, point );
-    m_devider.add( pd );
+    m_deviders.add( pd );
+//    Collections.sort(m_devider);
     return pd;
   }
 
@@ -72,11 +77,11 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
   {
     final PointProperty[] depending = m_points.getDependenciesFor( pointProperty );
-    final PointProperty[] newProperties = new PointProperty[depending.length +1];
-    
-    System.arraycopy(depending,0,newProperties,0,depending.length);
+    final PointProperty[] newProperties = new PointProperty[depending.length + 1];
+
+    System.arraycopy( depending, 0, newProperties, 0, depending.length );
     newProperties[depending.length] = pointProperty;
-  
+
     for( PointProperty pd : newProperties )
       m_points.addProperty( pd );
 
@@ -132,19 +137,25 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
   public IProfilPoint findPoint( int index, double breite, double delta )
   {
-    final IProfilPoint pkt = m_points.get(index);
-    if (pkt == null) return findPoint(breite,delta);
+
+    if((index >= m_points.size())||(index < 0) )
+        return findPoint( breite, delta );  
+    final IProfilPoint pkt = m_points.get( index );
+   
+    if( pkt == null )
+      return findPoint( breite, delta );
     try
     {
-      if(pkt.getValueFor(PointProperty.BREITE)== breite) return pkt;
+      if( pkt.getValueFor( PointProperty.BREITE ) == breite )
+        return pkt;
     }
     catch( ProfilDataException e )
     {
       // // sollte nie passieren da Breite immer vorhanden ist
       return null;
     }
-    return findPoint(breite,delta);
-    
+    return findPoint( breite, delta );
+
   }
 
   /**
@@ -161,14 +172,14 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   public IProfilDevider[] getDevider( final DEVIDER_TYP deviderTyp )
   {
     final ArrayList<IProfilDevider> deviderList = new ArrayList<IProfilDevider>();
-    for( IProfilDevider devider : m_devider )
+    for( IProfilDevider devider : m_deviders )
     {
       if( devider.getTyp() == deviderTyp )
       {
         deviderList.add( devider );
       }
-
     }
+    
     return deviderList.isEmpty() ? null : deviderList.toArray( new IProfilDevider[deviderList
         .size()] );
   }
@@ -219,10 +230,10 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
    */
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore ) throws ProfilDataException
   {
-    final int index = m_points.indexOf( thePointBefore )+1;
-    final IProfilPoint thePointNext = m_points.get(index);
+    final int index = m_points.indexOf( thePointBefore ) + 1;
+    final IProfilPoint thePointNext = m_points.get( index );
     final IProfilPoint point = ProfilUtil.splitSegment( thePointBefore, thePointNext );
-    m_points.add( index , point );
+    m_points.add( index, point );
 
     return point;
   }
@@ -290,7 +301,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
    */
   public IProfilDevider removeDevider( IProfilDevider devider )
   {
-    return m_devider.remove( devider ) ? devider : null;
+    return m_deviders.remove( devider ) ? devider : null;
   }
 
   /**
