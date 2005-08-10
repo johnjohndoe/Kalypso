@@ -183,7 +183,6 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         IOUtils.closeQuietly( stream );
       }
 
-    
       //      FolderUtilities.mkdirs( targetfile.getParent() );
       //      final SetContentHelper thread = new SetContentHelper()
       //      {
@@ -254,7 +253,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     if( filter == null )
       href = sourcelink.getHref();
     else
-      href = ZmlURL.insertFilter( sourcelink.getHref(), filter );
+      href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter ); // use insertQueryPart, not insertFilter, because
+                                                                     // filter variable might also contain request spec
+                                                                     // etc.
     final String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
     final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
 
