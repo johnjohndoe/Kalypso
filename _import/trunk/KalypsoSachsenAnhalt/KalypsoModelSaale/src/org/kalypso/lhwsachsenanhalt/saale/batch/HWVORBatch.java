@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.xml.bind.Marshaller;
@@ -52,6 +53,9 @@ import org.kalypso.lhwsachsenanhalt.saale.HWVOR00Converter;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.ObservationType;
@@ -60,16 +64,28 @@ public class HWVORBatch
 {
   private Logger m_logger = Logger.getLogger( HWVORBatch.class.getName() );
 
-  /** Syntax: HWVORBatch <inputdir><outputdir> */
+  /**
+   * Syntax: HWVORBatch <inputdir><outputdir>[ <wqdir>]
+   * 
+   * <p>
+   * if <wqdir>is given, a wq-table with for each W or Q Timeserie is read and added to the observation
+   * </p>
+   */
   public void convert( String[] args ) throws Exception
   {
-    if( args.length != 2 )
+    if( args.length < 2 )
     {
-      System.out.println( "Usage: HWVORBatch <inputdir> <outputdir>" );
+      System.out.println( "Usage: HWVORBatch <inputdir> <outputdir> [<wqdir>]" );
       return;
     }
 
     final File outputDir = new File( args[1] );
+
+    final File wqdir;
+    if( args.length > 2 )
+      wqdir = new File( args[2] );
+    else
+      wqdir = null;
 
     File currDir = new File( args[0] );
     File wasserDir = new File( outputDir, "Wasserstand" );
@@ -148,11 +164,28 @@ public class HWVORBatch
         currDir.mkdirs();
         for( int l = 0; l < obs.length; l++ )
         {
-          type = ZmlFactory.createXML( obs[l], null );
+          final IObservation observation = obs[l];
+          final String name = observation.getName();
 
-          // use IResource
+          if( wqdir != null
+              && ( sValue == TimeserieConstants.TYPE_RUNOFF || sValue == TimeserieConstants.TYPE_WATERLEVEL ) )
+          {
+            final String wqName = "DT" + name;
+            final File wqFile = new File( wqdir, wqName );
+            final String wqBasename = wqFile.getAbsolutePath();
+            final WQTable table = Dbf2WQ.readWQ( wqBasename, new Date( 0 ) );
+            if( table != null )
+            {
+              final MetadataList md = observation.getMetadataList();
+              final WQTableSet wqset = new WQTableSet( new WQTable[]
+              { table }, TimeserieConstants.TYPE_WATERLEVEL, TimeserieConstants.TYPE_RUNOFF );
+              md.setProperty( TimeserieConstants.MD_WQTABLE, WQTableFactory.createXMLString( wqset ) );
+            }
+          }
 
-          currFile = new File( currDir, "ID" + obs[l].getName() + ".zml" );
+          type = ZmlFactory.createXML( observation, null );
+
+          currFile = new File( currDir, "ID" + name + ".zml" );
 
           final FileOutputStream stream = new FileOutputStream( currFile );
           final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
@@ -161,5 +194,10 @@ public class HWVORBatch
         }
       }
     }
+  }
+
+  public static void main( String[] args ) throws Exception
+  {
+    new HWVORBatch().convert( args );
   }
 }

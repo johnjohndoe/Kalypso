@@ -227,7 +227,8 @@ public class HWVOR00Converter
       }
 
       tplValues = new SimpleTuppleModel( axis, tuppleData );
-      outOb.add( new SimpleObservation( "href", "ID", obsName, false, null, metadata, axis, tplValues ) );
+      
+      outOb.add( new SimpleObservation( "href", "ID", obsName, false, null, new MetadataList( metadata ), axis, tplValues ) );
     }
     return (IObservation[])outOb.toArray( new IObservation[outOb.size()] );
   }

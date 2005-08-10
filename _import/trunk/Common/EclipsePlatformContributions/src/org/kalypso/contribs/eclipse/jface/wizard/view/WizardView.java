@@ -705,7 +705,6 @@ public class WizardView extends ViewPart implements IWizardContainer3
   {
     if( m_ignoreNextCangeLocation || m_wizard == null )
     {
-      // TODO show brwoser at this point
       m_ignoreNextCangeLocation = false;
       return;
     }
@@ -795,7 +794,11 @@ public class WizardView extends ViewPart implements IWizardContainer3
     // (this allows lazy page control creation)
     if( page.getControl() == null )
     {
+//      final long before = System.currentTimeMillis();
       page.createControl( m_pageContainer );
+//      final long after = System.currentTimeMillis();
+//      // TODO: delete the next line!
+//      System.out.println( "Dauer: " + ( after - before ) );
       // the page is responsible for ensuring the created control is accessable
       // via getControl.
       final Control control = page.getControl();
