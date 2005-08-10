@@ -113,7 +113,6 @@ public class HWVORBatch
       final String file = files[i].toUpperCase();
       if( file.endsWith( ".VOR" ) )
       {
-
         if( file.startsWith( "W_" ) )
         {
           currDir = wasserDir;
