@@ -58,7 +58,7 @@ import org.eclipse.core.runtime.Platform;
  */
 public class ServiceProxies
 {
-  public final static String EXTENSION_POINT = "org.kalypso.core.client.serviceproxy";
+  public final static String EXTENSION_POINT = "org.kalypso.services.core.client.serviceproxy";
   public final static String ATT_INTERFACENAME = "interfacename";
   public final static String ATT_CLASS = "class";
 

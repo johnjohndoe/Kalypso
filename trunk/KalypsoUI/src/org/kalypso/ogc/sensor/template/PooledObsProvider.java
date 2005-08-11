@@ -41,7 +41,6 @@
 package org.kalypso.ogc.sensor.template;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -116,7 +115,8 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   /**
    * Set the loaded observation and inform listeners that this theme has changed
    * 
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
@@ -136,8 +136,12 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
 
   public void fireChanged()
   {
-    for( final Iterator it = m_listeners.iterator(); it.hasNext(); )
-      ( (IObsProviderListener)it.next() ).obsProviderChanged();
+    synchronized( m_listeners )
+    {
+      final Object[] listeners = m_listeners.toArray();
+      for( int i = 0; i < listeners.length; i++ )
+        ( (IObsProviderListener)listeners[i] ).obsProviderChanged();
+    }
   }
 
   public boolean isLoading()

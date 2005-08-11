@@ -70,9 +70,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -774,15 +772,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
             getPluginPreferences().getString( IKalypsoPreferences.HTTP_PROXY_PASS ).toCharArray() );
       }
     } );
-  }
-
-  public static Status createErrorStatus( final String message, final Throwable cause )
-  {
-    String msg = message;
-    if( cause != null && cause.getLocalizedMessage() != null )
-      msg += ":\n\r" + cause.getLocalizedMessage();
-
-    return new Status( IStatus.ERROR, getId(), 0, msg, cause );
   }
 
   /**

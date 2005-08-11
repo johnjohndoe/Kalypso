@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="KalypsoServiceUserClient" default="fake" basedir=".">
+<project name="KalypsoServiceMetaDocClient" default="fake" basedir=".">
 
 	<!-- 
 		Description: currently only support for generating the service-proxies
@@ -29,11 +29,11 @@
 	  	<copy file="${workspace}/KalypsoServiceCore/build/deploy/KalypsoServiceCore.jar" todir="../lib" overwrite="true"/>
 	</target>
 	
-	<target name="proxy-UserService" depends="build-core">
-		<echo message="Proxy the user service and copy the client jar"/>
+	<target name="proxy-MetaDocService" depends="build-core">
+		<echo message="Proxy the metadoc service and copy the client jar"/>
 
-		<ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml" target="build-client" inheritall="false"/>
- 		<copy file="${workspace}/KalypsoServiceUser/build/deploy/kalypsoservice_user.jar" todir="../lib" overwrite="true"/>
+		<ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="build-client" inheritall="false"/>
+ 		<copy file="${workspace}/KalypsoServiceMetaDoc/build/deploy/kalypsoservice_metadoc.jar" todir="../lib" overwrite="true"/>
 	</target>
 
 </project>

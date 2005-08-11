@@ -60,10 +60,10 @@ import org.eclipse.ui.IEditorLauncher;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.Workbench;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author schlienger
@@ -98,11 +98,11 @@ public class GrafikEditorLauncher implements IEditorLauncher
           else if( file.getFileExtension().equalsIgnoreCase( "zml" ) )
             status = GrafikLauncher.startGrafikZML( file, folder, monitor );
           else
-            status = KalypsoGisPlugin.createErrorStatus( "Datei-typ nicht erkannt für Grafikprogramm", null );
+            status = StatusUtilities.createErrorStatus( "Datei-typ nicht erkannt für Grafikprogramm" );
         }
         catch( final SensorException e )
         {
-          status = KalypsoGisPlugin.createErrorStatus( "Fehler beim Start von Grafik aufgetreten", e );
+          status = StatusUtilities.statusFromThrowable( e, "Fehler beim Start von Grafik aufgetreten" );
         }
         finally
         {

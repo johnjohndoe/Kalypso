@@ -46,9 +46,9 @@
       <import plugin="org.kalypso.core" export="true"/>
       <import plugin="org.kalypso.jwsdp" export="true"/>
       <import plugin="org.kalypso.contribs.eclipseplatform"/>
-      <import plugin="org.kalypso.core.client"/>
       <import plugin="org.kalypso.auth"/>
       <import plugin="org.kalypso.metadoc"/>
+      <import plugin="org.kalypso.services.core.client"/>
    </requires>
    <extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd"/>
    <extension-point id="dataimportwizard" name="Data Import Wizard" schema="schema/org.kalypso.ui.wizard.dataImportWizard.exsd"/>
@@ -703,24 +703,12 @@
            name="kalypso.multiequals"/>
    </extension>
       <extension
-         point="org.kalypso.core.client.serviceproxy">
+         point="org.kalypso.services.core.client.serviceproxy">
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_CalculationService_Impl"
             interfacename="ICalculationService"/>
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
             interfacename="IObservationService"/>
-      <serviceproxy
-            class="org.kalypso.services.proxy.Kalypso_MetaDocService_Impl"
-            interfacename="IMetaDocService"/>
    </extension>
-      <extension
-            point="org.kalypso.metadoc.exportTarget">
-         <target
-               icon="icons/metadoc/berichte2.gif"
-               class="org.kalypso.ui.metadoc.MetaDocServiceExportTarget"
-               description="Export in die serverseitige Dokumentenablage"
-               name="Berichtsexport"
-               id="metadocServiceTarget"/>
-      </extension>
  </plugin>

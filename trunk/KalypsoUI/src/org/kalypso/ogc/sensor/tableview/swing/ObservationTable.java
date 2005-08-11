@@ -54,7 +54,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -66,6 +65,7 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
+import org.kalypso.contribs.java.swing.SwingInvokeHelper;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.DateRange;
@@ -97,11 +97,6 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   private MaskedNumberTableCellRenderer m_nbRenderer;
 
-  /**
-   * when true, swing waits until model is updated, else swing continues normal processing
-   * 
-   * TODO: find out why this is usefull, I don't remember exactly, I believe it was due to an thread/update problem
-   */
   private final boolean m_waitForSwing;
 
   private final PopupMenu m_popup;
@@ -112,16 +107,17 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   protected String m_currentScenarioName = "";
 
-  /**
-   * Constructs a table based on the given template
-   */
   public ObservationTable( final TableView template )
   {
     this( template, false, true );
   }
 
   /**
-   * Constructs a table based on the given template
+   * @param waitForSwing
+   *          when true, the events are handled synchonuously in onObsviewChanged(), this is usefull when you are
+   *          creating the table for non-gui purposes such as in the export-document-wizard: there you need to wait for
+   *          swing to be finished with updating/painting the table before doing the export, else you get unexpected
+   *          results
    */
   public ObservationTable( final TableView template, final boolean waitForSwing, final boolean useContextMenu )
   {
@@ -179,7 +175,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     m_view.removeObsViewListener( this );
 
     m_panel = null;
-    
+
     m_model.clearColumns();
   }
 
@@ -197,7 +193,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       protected void runIntern() throws Throwable
       {
         // REFRESH ONE COLUMN
-        if( evt.getType() == ObsViewEvent.TYPE_REFRESH  && evt.getObject() instanceof TableViewColumn )
+        if( evt.getType() == ObsViewEvent.TYPE_REFRESH && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.refreshColumn( column );
@@ -222,7 +218,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           model.removeColumn( column );
 
           analyseObservation( column.getObservation(), false );
-          
+
           if( model.getColumnCount() == 0 )
           {
             m_panel.clearLabel();
@@ -235,14 +231,14 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         {
           model.clearColumns();
           dateRenderer.clearMarkers();
-          
+
           if( m_panel != null )
           {
             m_panel.clearLabel();
             m_currentScenarioName = "";
           }
         }
-        
+
         if( evt.getType() == ObsViewEvent.TYPE_REFRESH_ITEMS )
           repaint();
       }
@@ -250,21 +246,12 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
     try
     {
-      if( !SwingUtilities.isEventDispatchThread() )
-      {
-        if( m_waitForSwing )
-          SwingUtilities.invokeAndWait( runnable );
-        else
-          SwingUtilities.invokeLater( runnable );
-      }
-      else
-        runnable.run();
-
-      if( runnable.getThrown() != null )
-        throw runnable.getThrown();
+      SwingInvokeHelper.invoke( runnable, m_waitForSwing );
     }
-    catch( Throwable e )
+    catch( final Throwable e )
     {
+      e.printStackTrace();
+
       final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
       final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
       if( shell != null )
@@ -307,7 +294,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         else
           m_dateRenderer.removeMarker( new ForecastLabelMarker( dr ) );
       }
-      
+
       final MetadataList mdl = obs.getMetadataList();
 
       // add a scenario-label if obs has scenario specific metadata property
@@ -316,7 +303,8 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario(
             mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
 
-        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && m_panel != null && !m_panel.isLabelSet() )
+        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && m_panel != null
+            && !m_panel.isLabelSet() )
         {
           Icon icon = null;
           final String imageURL = scenario.getProperty( IScenario.PROP_TABLE_HEADER_IMAGE_URL, null );
@@ -328,26 +316,25 @@ public class ObservationTable extends JTable implements IObsViewEventListener
             }
             catch( final MalformedURLException e )
             {
-              Logger.getLogger( getClass().getName() ).log( Level.WARNING,
-                  "Bild konnte nicht geladen werden", e );
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING, "Bild konnte nicht geladen werden", e );
             }
           }
-          
+
           Color color = null;
           final String strc = scenario.getProperty( IScenario.PROP_TABLE_HEADER_RGB, null );
           if( strc != null )
             color = StringUtilities.stringToColor( strc );
-          
+
           Integer height = null;
           final String strHeight = scenario.getProperty( IScenario.PROP_TABLE_HEADER_HEIGHT, null );
           if( strHeight != null )
             height = Integer.valueOf( strHeight );
-          
+
           Boolean showTxt = null;
           final String strShow = scenario.getProperty( IScenario.PROP_TABLE_HEADER_SHOWTEXT, null );
           if( strShow != null )
             showTxt = Boolean.valueOf( strShow );
-          
+
           m_currentScenarioName = scenario.getName();
           m_panel.setLabel( m_currentScenarioName, icon, color, height, showTxt );
         }
@@ -370,12 +357,12 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   {
     return m_model;
   }
-  
+
   public void setPanel( final ObservationTablePanel panel )
   {
     m_panel = panel;
   }
-  
+
   public String getCurrentScenarioName()
   {
     return m_currentScenarioName;

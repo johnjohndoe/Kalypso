@@ -58,6 +58,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileSelectWizardPage;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -114,9 +115,7 @@ public class ExportAsFileWizard extends Wizard
 
     m_page1 = new DateRangeInputWizardPage();
     m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[]
-    {
-        "*.zml",
-        "*.xml" } );
+    { "*.zml", "*.xml" } );
 
     addPage( m_page1 );
     addPage( m_page2 );
@@ -177,7 +176,7 @@ public class ExportAsFileWizard extends Wizard
           {
             e.printStackTrace();
 
-            return KalypsoGisPlugin.createErrorStatus( "", e );
+            return StatusUtilities.statusFromThrowable( e );
           }
 
           return Status.OK_STATUS;

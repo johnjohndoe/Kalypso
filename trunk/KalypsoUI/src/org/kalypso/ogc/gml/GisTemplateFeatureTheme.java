@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.gismapview.GismapviewType.LayersType.Layer;
@@ -229,7 +230,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Speichern", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Speichern" ) );
     }
   }
 

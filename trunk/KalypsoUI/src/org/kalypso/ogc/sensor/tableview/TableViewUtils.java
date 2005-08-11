@@ -57,6 +57,7 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
@@ -67,7 +68,6 @@ import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType.RulesType;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
 /**
@@ -259,7 +259,7 @@ public class TableViewUtils
     return xmlTemplate;
   }
 
-  public static IStatus[] applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
+  public static IStatus applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
       final boolean synchron )
   {
     view.removeAllItems();
@@ -274,26 +274,17 @@ public class TableViewUtils
         view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule)it.next() ) );
     }
 
-    final List list = xml.getObservation();
     final List stati = new ArrayList();
+
+    final List list = xml.getObservation();
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
       final TypeObservation tobs = (TypeObservation)it.next();
 
-      TableViewColumnXMLLoader loader;
-      try
-      {
-        loader = new TableViewColumnXMLLoader( view, tobs, context, synchron );
-        stati.add( loader.getResult() );
-      }
-      catch( final Throwable e )
-      {
-        e.printStackTrace();
-
-        stati.add( KalypsoGisPlugin.createErrorStatus( "Zeitreihe konnte nicht geladen werden", e ) );
-      }
+      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs, context, synchron );
+      stati.add( loader.getResult() );
     }
-    
-    return (IStatus[])stati.toArray( new IStatus[stati.size()] );
+
+    return StatusUtilities.createStatus( stati, "Ladevorgang nicht erfoglreich abgeschlossen" );
   }
 }

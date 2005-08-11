@@ -50,11 +50,11 @@ import org.eclipse.core.runtime.Status;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.encoders.EncoderUtil;
 import org.jfree.chart.title.TextTitle;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * ExportableChart
+ * ExportableChart based on an existing chart
  * 
  * @author schlienger
  */
@@ -85,11 +85,11 @@ public class ExportableChart implements IExportableObject
   public String getPreferredDocumentName()
   {
     final TextTitle title = m_chart.getTitle();
-    
+
     String name = "Diagramm";
     if( title != null && title.getText().length() > 0 )
       name = title.getText();
-    
+
     return name + "." + m_format;
   }
 
@@ -99,21 +99,20 @@ public class ExportableChart implements IExportableObject
    */
   public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor )
   {
+    monitor.beginTask( "Diagramm-Export", IProgressMonitor.UNKNOWN );
+
     try
     {
-      BufferedImage image = m_chart.createBufferedImage( m_width, m_height, null );
+      final BufferedImage image = m_chart.createBufferedImage( m_width, m_height, null );
       EncoderUtil.writeBufferedImage( image, m_format, outs );
-
-      //      if( m_fileExt.equalsIgnoreCase( EXT_JPEG ) )
-      //        ChartUtilities.writeChartAsJPEG( outs, m_chart, m_width, m_height );
-      //      else if( m_fileExt.equalsIgnoreCase( EXT_PNG ) )
-      //        ChartUtilities.writeChartAsPNG( outs, m_chart, m_width, m_height );
-      //      else
-      //        return KalypsoGisPlugin.createErrorStatus( "File extension not supported: " + m_fileExt, null );
     }
     catch( final IOException e )
     {
-      return KalypsoGisPlugin.createErrorStatus( "Diagramm konnte nicht als Bild exportiert werden", e );
+      return StatusUtilities.statusFromThrowable( e, "Diagramm konnte nicht als Bild exportiert werden" );
+    }
+    finally
+    {
+      monitor.done();
     }
 
     return Status.OK_STATUS;
