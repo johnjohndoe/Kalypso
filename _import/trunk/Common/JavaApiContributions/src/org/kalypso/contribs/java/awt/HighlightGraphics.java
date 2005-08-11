@@ -57,9 +57,6 @@ import java.util.Map;
 
 /**
  * HighlightGraphics
- * <p>
- * 
- * created by
  * 
  * @author doemming (08.06.2005)
  */
@@ -77,7 +74,7 @@ public class HighlightGraphics extends Graphics2D
 
   private final Graphics2D m_graphics;
 
-  // Andreas: was ist admit?
+  // Andreas: was ist damit?
   // @Gernot: lass bitte mal drin, ich will das
   //          Heighlighting verbessern, muss aber gerade
   //          an anderen baustellen arbeiten
@@ -92,7 +89,6 @@ public class HighlightGraphics extends Graphics2D
 
   /**
    * @param da
-   *  
    */
   public HighlightGraphics( Graphics2D graphics, int dr, int dg, int db, int da )
   {

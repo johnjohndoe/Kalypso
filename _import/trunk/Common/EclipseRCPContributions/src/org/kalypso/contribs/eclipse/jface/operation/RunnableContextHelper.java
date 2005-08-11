@@ -50,7 +50,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * Helper-Class for IRunnableContext
@@ -96,31 +96,6 @@ public final class RunnableContextHelper
   }
 
   /**
-   * Transforms any exception into an {@link IStatus}object.
-   * <p>
-   * If the exception is an {@link InvocationTargetException}the inner exception is wrapped instead.
-   * </p>
-   * <p>
-   * If the exception is a {@link CoreException}its status is returned.
-   * </p>
-   * 
-   * 
-   * @throws NullPointerException
-   *           If <code>t</code> is null.
-   */
-  public static IStatus statusFromThrowable( final Throwable t )
-  {
-    if( t instanceof InvocationTargetException )
-      return statusFromThrowable( ( (InvocationTargetException)t ).getCause() );
-    if( t instanceof CoreException )
-      return ( (CoreException)t ).getStatus();
-
-    final String locmsg = t.getLocalizedMessage();
-    final String msg = locmsg == null ? "" : locmsg;
-    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
-  }
-
-  /**
    * Runs the given runnable in the given context, but catches all (event runtime-) exception and turns them into a
    * {@Link IStatus}object.
    */
@@ -133,7 +108,7 @@ public final class RunnableContextHelper
     catch( final Throwable t )
     {
       // TODO log stacktrace somewhere
-      return statusFromThrowable( t );
+      return StatusUtilities.statusFromThrowable( t );
     }
 
     if( runnable instanceof CoreRunnableWrapper )

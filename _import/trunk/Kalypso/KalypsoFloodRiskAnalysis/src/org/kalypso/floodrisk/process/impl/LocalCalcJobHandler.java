@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.xml.ModeldataType;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.proxy.CalcJobClientBean;
@@ -121,14 +122,14 @@ public class LocalCalcJobHandler
         boolean bStop = false;
         switch( bean.getState() )
         {
-        case ICalcServiceConstants.FINISHED:
-        case ICalcServiceConstants.ERROR:
-        case ICalcServiceConstants.CANCELED:
-          bStop = true;
-          break;
+          case ICalcServiceConstants.FINISHED:
+          case ICalcServiceConstants.ERROR:
+          case ICalcServiceConstants.CANCELED:
+            bStop = true;
+            break;
 
-        default:
-          break;
+          default:
+            break;
         }
 
         if( bStop )
@@ -142,7 +143,7 @@ public class LocalCalcJobHandler
         {
           e1.printStackTrace();
 
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Kritischer Fehler", e1 ) );
+          throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Kritischer Fehler" ) );
         }
 
         int progress = bean.getProgress();
@@ -164,29 +165,29 @@ public class LocalCalcJobHandler
       // Abhängig von den Ergebnissen was machen
       switch( jobBean.getState() )
       {
-      case ICalcServiceConstants.FINISHED:
-        project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
-        final String finishText = jobBean.getFinishText();
-        final String message = finishText == null ? "" : finishText;
-        return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, null );
+        case ICalcServiceConstants.FINISHED:
+          project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
+          final String finishText = jobBean.getFinishText();
+          final String message = finishText == null ? "" : finishText;
+          return new Status( jobBean.getFinishStatus(), KalypsoGisPlugin.getId(), 0, message, null );
 
-      case ICalcServiceConstants.CANCELED:
-        throw m_cancelException;
+        case ICalcServiceConstants.CANCELED:
+          throw m_cancelException;
 
-      case ICalcServiceConstants.ERROR:
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
-            + jobBean.getMessage(), null ) );
+        case ICalcServiceConstants.ERROR:
+          throw new CoreException( StatusUtilities.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
+              + jobBean.getMessage() ) );
 
-      default:
-        // darf eigentlich nie vorkommen
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
-            + jobBean.getMessage(), null ) );
+        default:
+          // darf eigentlich nie vorkommen
+          throw new CoreException( StatusUtilities.createErrorStatus( "Rechenvorgang fehlerhaft:\n"
+              + jobBean.getMessage() ) );
       }
     }
     catch( final RemoteException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Aufruf des Rechendienstes", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Aufruf des Rechendienstes" ) );
     }
     catch( final CoreException e )
     {
@@ -248,8 +249,8 @@ public class LocalCalcJobHandler
       {
         IResource inputResource = project.findMember( inputPath );
         if( inputResource == null )
-          throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Konnte Input-Resource nicht finden: "
-              + inputPath + "\nÜberprüfen Sie die Modellspezifikation.", null ) );
+          throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: "
+              + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
         IPath projectRelativePath = inputResource.getLocation();
         inputPath = projectRelativePath.toString();
       }

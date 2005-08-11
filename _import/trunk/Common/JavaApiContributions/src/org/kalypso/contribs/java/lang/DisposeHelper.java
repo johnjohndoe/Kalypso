@@ -85,9 +85,14 @@ public final class DisposeHelper
     m_candidates.addAll( Arrays.asList( disposeCandidates ) );
   }
 
-  public void addDisposeCandidate( final Object disposeCandidate )
+  /**
+   * Adds a dispose candidate and returns this DisposeHelper to allow chaining like
+   * <code>disposeHelper.addDisposeCandidate( foo ).addDisposeCandidate( bar );</code>
+   */
+  public DisposeHelper addDisposeCandidate( final Object disposeCandidate )
   {
     m_candidates.add( disposeCandidate );
+    return this;
   }
 
   /**
@@ -100,8 +105,11 @@ public final class DisposeHelper
     {
       try
       {
-        final Method disposeMethod = objects[i].getClass().getMethod( "dispose", null );
-        disposeMethod.invoke( objects[i], null );
+        if( objects[i] != null ) // ignore the null objects
+        {
+          final Method disposeMethod = objects[i].getClass().getMethod( "dispose", null );
+          disposeMethod.invoke( objects[i], null );
+        }
       }
       catch( final NoSuchMethodException ignored )
       {
