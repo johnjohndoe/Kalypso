@@ -59,5 +59,8 @@ public interface IExportableObject
    */
   public String getPreferredDocumentName();
 
+  /**
+   * Called by the metadoc framework when this object should be exported
+   */
   public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor );
 }

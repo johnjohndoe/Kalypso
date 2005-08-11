@@ -203,7 +203,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
         }
         catch( final Throwable t )
         {
-          final IStatus status = RunnableContextHelper.statusFromThrowable( t );
+          final IStatus status = StatusUtilities.statusFromThrowable( t );
           stati.add( status );
           logPW.println( status.getMessage() );
         }
@@ -228,7 +228,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       if( e instanceof InterruptedException )
         throw (InterruptedException)e;
 
-      return RunnableContextHelper.statusFromThrowable( e );
+      return StatusUtilities.statusFromThrowable( e );
     }
     finally
     {

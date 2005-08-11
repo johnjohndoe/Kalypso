@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExporter;
 
@@ -124,7 +124,7 @@ public abstract class AbstractExporter implements IExporter
     }
     catch( final InvocationTargetException e )
     {
-      throw new CoreException( RunnableContextHelper.statusFromThrowable( e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 }

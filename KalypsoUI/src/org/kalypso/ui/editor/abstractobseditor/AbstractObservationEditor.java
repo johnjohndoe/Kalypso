@@ -1,3 +1,43 @@
+/*--------------- Kalypso-Header --------------------------------------------------------------------
+
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
+
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
+
+ and
+
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
+
+ ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.abstractobseditor;
 
 import java.net.URL;
@@ -5,10 +45,11 @@ import java.net.URL;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -18,7 +59,6 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
 import org.kalypso.template.obstableview.ObstableviewType;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
@@ -32,7 +72,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
 
   private ObservationEditorOutlinePage m_outline = null;
 
-  public AbstractObservationEditor( ObsView view )
+  public AbstractObservationEditor( final ObsView view )
   {
     m_view = view;
   }
@@ -92,6 +132,8 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
 
     final ObsView view = getView();
 
+    IStatus status = null;
+
     try
     {
       final IStorage storage = input.getStorage();
@@ -109,29 +151,33 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
           final ObsdiagviewType baseTemplate = DiagViewUtils.loadDiagramTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          final MultiStatus status = new MultiStatus( KalypsoGisPlugin.getId(), 0, "Vorlage: " + storage.getName(),
-              null );
-          DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), false, status );
+          status = DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), false, null );
         }
         else if( view instanceof TableView )
         {
           final ObstableviewType baseTemplate = TableViewUtils.loadTableTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          final IStatus[] stati = TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false );
-          new MultiStatus( KalypsoGisPlugin.getId(), 0, stati, "Vorlage: " + storage.getName(), null );
-          // TODO: show error message if something goes wrong (i.e. one of the multi-status is not ok)
+          status = TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false );
         }
+        else
+          throw new IllegalArgumentException( "Kann Vorlage nicht öffnen, Typ wird nicht unterstützt." );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
+
+      status = StatusUtilities.statusFromThrowable( e );
     }
     finally
     {
       monitor.done();
     }
+
+    // TODO: checken ob dies in die richtige thread ausgeführt wird
+    if( status != null && !status.isOK() )
+      ErrorDialog.openError( getSite().getShell(), "Vorlage öffnen", "Siehe Details", status );
   }
 
   public void loadObservation( final URL context, final String href )

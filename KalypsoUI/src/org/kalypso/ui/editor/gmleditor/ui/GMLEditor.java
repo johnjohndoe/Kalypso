@@ -17,7 +17,7 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gmleditor.util.GMLReader;
 
@@ -117,7 +117,7 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden der Vorlagendatei.", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Vorlagendatei." ) );
     }
     finally
     {

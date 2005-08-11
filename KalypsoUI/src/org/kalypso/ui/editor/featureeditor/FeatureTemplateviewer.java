@@ -61,6 +61,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
@@ -117,7 +118,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
     public void openFeatureRequested( final Feature feature )
     {
-      // TODO: open Dialog?
+    // TODO: open Dialog?
     }
   };
 
@@ -167,7 +168,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      return KalypsoGisPlugin.createErrorStatus( "Fehler beim Speichern", e );
+      return StatusUtilities.statusFromThrowable( e, "Fehler beim Speichern" );
     }
 
     return Status.OK_STATUS;
@@ -209,7 +210,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen der Vorlage", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Vorlage" ) );
     }
     finally
     {
@@ -242,7 +243,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {

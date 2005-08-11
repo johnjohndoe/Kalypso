@@ -45,17 +45,20 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.ObsView;
@@ -67,7 +70,6 @@ import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
-import org.kalypso.ui.calcwizard.bericht.ExporterHelper;
 import org.xml.sax.InputSource;
 
 /**
@@ -301,8 +303,17 @@ public class DiagViewUtils
     return new DiagramAxis( axisType, "double", label, unit, direction, DiagramAxis.POSITION_LEFT, false );
   }
 
-  public static void applyXMLTemplate( final DiagView view, final ObsdiagviewType xml, final URL context,
-      final boolean synchron, final MultiStatus status )
+  /**
+   * Apply the given xml-template representation to the diagview.
+   * 
+   * @param ignoreHref
+   *          [optional] tricky, used in the context of the wizard where token replace takes place. If a href could not
+   *          be replaced, it is set to a specific tag-value and the ignoreHref parameter if specified denotes is
+   *          compared to each href found in the template. If it is found, then the href is ignored and the
+   *          corresponding observation isn't loaded.
+   */
+  public static IStatus applyXMLTemplate( final DiagView view, final ObsdiagviewType xml, final URL context,
+      final boolean synchron, final String ignoreHref )
   {
     view.removeAllItems();
 
@@ -321,6 +332,8 @@ public class DiagViewUtils
       }
     }
 
+    final List stati = new ArrayList();
+
     final List list = xml.getObservation();
     for( final Iterator it = list.iterator(); it.hasNext(); )
     {
@@ -328,12 +341,18 @@ public class DiagViewUtils
 
       // check, if href is ok
       final String href = tobs.getHref();
+
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
-      if( href.indexOf( ExporterHelper.MSG_TOKEN_NOT_FOUND ) != -1 )
+      if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
+      {
+        Logger.getLogger( DiagViewUtils.class.getName() ).warning( "Href ignored: " + href );
         continue;
+      }
 
       final DiagViewCurveXMLLoader loader = new DiagViewCurveXMLLoader( view, tobs, context, synchron );
-      status.add( loader.getResult() );
+      stati.add( loader.getResult() );
     }
+
+    return StatusUtilities.createStatus( stati, "Ladevorgang nicht erfoglreich abgeschlossen" );
   }
 }

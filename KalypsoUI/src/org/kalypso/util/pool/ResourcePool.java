@@ -54,11 +54,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author dömming,belger
@@ -204,7 +204,7 @@ public class ResourcePool
       {
         e.printStackTrace();
 
-        throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Ladevorgang unterbrochen", e ) );
+        throw new CoreException( StatusUtilities.statusFromThrowable( e, "Ladevorgang unterbrochen" ) );
       }
     }
 
@@ -223,7 +223,7 @@ public class ResourcePool
     }
     catch( final Exception e )
     {
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Laden", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden" ) );
     }
     finally
     {

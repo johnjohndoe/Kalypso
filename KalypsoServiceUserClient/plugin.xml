@@ -25,7 +25,7 @@
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.kalypso.contribs.java"/>
       <import plugin="org.kalypso.auth"/>
-      <import plugin="org.kalypso.core.client"/>
+      <import plugin="org.kalypso.services.core.client"/>
    </requires>
    <extension
          id="org.kalypso.auth.authenticator"
@@ -34,7 +34,7 @@
       <authenticator class="org.kalypso.services.user.client.UserServiceAuthenticator"/>
    </extension>
    <extension
-         point="org.kalypso.core.client.serviceproxy">
+         point="org.kalypso.services.core.client.serviceproxy">
       <serviceproxy
             class="org.kalypso.services.proxy.Kalypso_UserService_Impl"
             interfacename="IUserService"/>

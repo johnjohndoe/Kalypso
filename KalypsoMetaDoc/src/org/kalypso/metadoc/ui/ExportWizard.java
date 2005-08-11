@@ -1,53 +1,54 @@
 /*--------------- Kalypso-Header ------------------------------------------
 
-This file is part of kalypso.
-Copyright (C) 2004, 2005 by:
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
 
-Technical University Hamburg-Harburg (TUHH)
-Institute of River and coastal engineering
-Denickestr. 22
-21073 Hamburg, Germany
-http://www.tuhh.de/wb
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
 
-and
+ and
 
-Bjoernsen Consulting Engineers (BCE)
-Maria Trost 3
-56070 Koblenz, Germany
-http://www.bjoernsen.de
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
 
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-Contact:
+ Contact:
 
-E-Mail:
-belger@bjoernsen.de
-schlienger@bjoernsen.de
-v.doemming@tuhh.de
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
 
---------------------------------------------------------------------------*/
+ --------------------------------------------------------------------------*/
 
 package org.kalypso.metadoc.ui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -57,6 +58,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.UIPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.metadoc.IExportTarget;
@@ -66,17 +68,24 @@ import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
 
-
+/**
+ * The export wizard takes care of creating the pages using the given target and exportable-object-factory.
+ * 
+ * @author schlienger
+ */
 public final class ExportWizard extends Wizard
 {
   private final Shell m_shell;
   private final WorkspaceModifyOperation m_operation;
   private final IExportTarget m_target;
 
-  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell ) throws CoreException
+  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell )
+      throws CoreException
   {
     m_target = target;
     m_shell = shell;
+
+    setNeedsProgressMonitor( true );
 
     final IPublishingConfiguration configuration = new PublishingConfiguration( new BaseConfiguration() );
 
@@ -106,26 +115,33 @@ public final class ExportWizard extends Wizard
         {
           final IExportableObject[] objects = factory.createExportableObjects( configuration );
 
-          monitor.beginTask( "", objects.length );
+          monitor.beginTask( "Export", objects.length );
 
-          final IStatus[] stati = new IStatus[objects.length];
+          final List stati = new ArrayList( objects.length );
           for( int i = 0; i < objects.length; i++ )
           {
+            if( monitor.isCanceled() )
+              throw new InterruptedException();
+
+            IStatus status;
             try
             {
-              stati[i] = target.commitDocument( objects[i], configuration, new SubProgressMonitor( monitor, 1 ) );
+              status = target.commitDocument( objects[i], configuration, new SubProgressMonitor( monitor, 1 ) );
             }
             catch( final Exception e )
             {
-              stati[i] = RunnableContextHelper.statusFromThrowable( e );
+              status = StatusUtilities.statusFromThrowable( e );
             }
+
+            stati.add( status );
           }
-          
+
           final IStatus status;
-          if( stati.length == 0 )
-            status = new Status( IStatus.INFO, KalypsoMetaDocPlugin.getId(), 0, "Es wurden keine Dokumente erzeugt.", null );
+          if( stati.size() == 0 )
+            status = new Status( IStatus.INFO, KalypsoMetaDocPlugin.getId(), 0, "Es wurden keine Dokumente erzeugt.",
+                null );
           else
-            status = stati.length > 1 ? new MultiStatus( KalypsoMetaDocPlugin.getId(), 0, stati, "siehe Details", null ) : stati[0];
+            status = StatusUtilities.createStatus( stati, "Siehe Details" );
           if( !status.isOK() )
             throw new CoreException( status );
         }

@@ -39,7 +39,7 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.ui.metadoc;
+package org.kalypso.services.metadoc.client;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -71,6 +71,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
@@ -92,9 +93,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 /**
  * The file-target simply writes the document into a local file.
  * 
- * TODO this class is still in KalypsoUI, it could be moved into a to-b-created project called KalypsoServiceMetaDocClient
- * where the corresponding proxy-classes (jar) should also be moved.
- * 
  * @author schlienger
  */
 public class MetaDocServiceExportTarget extends AbstractExportTarget
@@ -110,13 +108,17 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     {
       monitor.beginTask( "Dokument " + document.getPreferredDocumentName() + " wird exportiert", 2 );
 
-      file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "metadoc", document.getPreferredDocumentName(), "tmp" );
+      file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "metadoc", document
+          .getPreferredDocumentName(), "tmp" );
       file.deleteOnExit();
 
       outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
 
-      document.exportObject( outputStream, new SubProgressMonitor( monitor, 1 ) );
+      final IStatus status = document.exportObject( outputStream, new SubProgressMonitor( monitor, 1 ) );
       outputStream.close();
+
+      if( !status.isOK() )
+        return status;
 
       final IMetaDocService metadocService = getMetadocService();
 
@@ -255,8 +257,9 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     catch( final ServiceException e )
     {
       e.printStackTrace();
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
-          "Dokumentenablage-Dienst konnte nicht initialisiert werden", e ) );
+
+      throw new CoreException( StatusUtilities.statusFromThrowable( e,
+          "Dokumentenablage-Dienst konnte nicht initialisiert werden" ) );
     }
   }
 }

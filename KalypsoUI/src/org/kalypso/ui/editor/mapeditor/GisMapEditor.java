@@ -74,6 +74,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -204,8 +205,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       System.out.println( e.getLocalizedMessage() );
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin
-          .createErrorStatus( "XML-Vorlagendatei konnte nicht erstellt werden.", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e,
+          "XML-Vorlagendatei konnte nicht erstellt werden." ) );
     }
     finally
     {
@@ -294,6 +295,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     if( m_outlinePage != null )
       m_outlinePage.setMapModell( m_mapModell );
   }
+
   public void showProperties( final LayerType layer )
   {
     // TODO

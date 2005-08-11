@@ -73,7 +73,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -175,7 +175,7 @@ public class FeatureEditor extends EditorPart
     {
       e.printStackTrace();
 
-      final IStatus status = KalypsoGisPlugin.createErrorStatus( "", e );
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
       ErrorDialog.openError( getSite().getShell(), "Speichern", "Fehler beim Speichern der Daten", status );
     }
   }
@@ -241,7 +241,7 @@ public class FeatureEditor extends EditorPart
       {
         final String locmsg = targetException.getLocalizedMessage();
         final String msg = locmsg == null ? "" : locmsg;
-        status = KalypsoGisPlugin.createErrorStatus( msg, targetException );
+        status = StatusUtilities.statusFromThrowable( targetException, msg );
       }
 
       ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht", status );
@@ -276,13 +276,13 @@ public class FeatureEditor extends EditorPart
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Parsen der Context-URL", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen der Context-URL" ) );
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen von XML", e ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen von XML" ) );
     }
     catch( final CoreException e )
     {

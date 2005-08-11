@@ -44,13 +44,16 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.util.logging.Logger;
 
-import javax.swing.SwingUtilities;
+import javax.swing.JOptionPane;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
 import org.kalypso.contribs.java.lang.CatchRunnable;
+import org.kalypso.contribs.java.swing.SwingInvokeHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
@@ -69,14 +72,28 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
 
   private final DiagView m_view;
 
+  private final boolean m_waitForSwing;
+
+  public ObservationChart( final DiagView template ) throws SensorException
+  {
+    this( template, false );
+  }
+
   /**
    * Creates an ObservationChart
+   * 
+   * @param waitForSwing
+   *          when true, the events are handled synchonuously in onObsviewChanged(), this is usefull when you are
+   *          creating the diagram for non-gui purposes such as in the export-document-wizard: there you need to wait
+   *          for swing to be finished with updating/painting the diagram before doing the export, else you get strange
+   *          results
    */
-  public ObservationChart( final DiagView template ) throws SensorException
+  public ObservationChart( final DiagView template, boolean waitForSwing ) throws SensorException
   {
     super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory.createObservationPlot( template ), false );
 
     m_view = template;
+    m_waitForSwing = waitForSwing;
 
     setLegendProperties( template.getLegendName(), template.isShowLegend() );
 
@@ -84,7 +101,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
     m_view.addObsViewEventListener( this );
 
     // good for the eyes
-    setBackgroundPaint( new GradientPaint(0, 0, Color.white, 0, 1000, new Color(168,168,255) ) );
+    setBackgroundPaint( new GradientPaint( 0, 0, Color.white, 0, 1000, new Color( 168, 168, 255 ) ) );
   }
 
   protected void setLegendProperties( String legendName, boolean showLegend )
@@ -167,20 +184,18 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
 
     try
     {
-      if( !SwingUtilities.isEventDispatchThread() )
-        SwingUtilities.invokeLater( runnable );
-      else
-        runnable.run();
-
-      if( runnable.getThrown() != null )
-        throw runnable.getThrown();
+      SwingInvokeHelper.invoke( runnable, m_waitForSwing );
     }
-    catch( Throwable e )
+    catch( final Throwable e )
     {
-      // TODO: hier kann ne Nullpointer exception geben (es gibt nicht immer ein
-      // activeWokbenchWindow)
-      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Aktualisierungsfehler",
-          e.toString() );
+      e.printStackTrace();
+
+      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
+      final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
+      if( shell != null )
+        MessageDialog.openError( shell, "Aktualisierungsfehler", e.toString() );
+      else
+        JOptionPane.showMessageDialog( null, e.toString(), "Aktualisierungsfehler", JOptionPane.ERROR_MESSAGE );
     }
   }
 }
