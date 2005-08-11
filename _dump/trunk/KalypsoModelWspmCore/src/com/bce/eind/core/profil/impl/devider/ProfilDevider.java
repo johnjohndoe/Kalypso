@@ -9,7 +9,7 @@ import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IPlainProfil.DEVIDER_TYP;
 
-public class ProfilDevider implements IProfilDevider, Comparable<IProfilDevider>
+public class ProfilDevider implements IProfilDevider
 {
   private IProfil.DEVIDER_TYP m_Typ;
 
@@ -56,20 +56,5 @@ public class ProfilDevider implements IProfilDevider, Comparable<IProfilDevider>
     return m_Typ;
   }
 
-  public int compareTo( IProfilDevider o )
-  {
-    try
-    {
-      if( m_point.getValueFor( PointProperty.BREITE ) > o.getPoint().getValueFor(
-          PointProperty.BREITE ) )
-      {
-        return 1;
-      }
-      return -1;
-    }
-    catch( ProfilDataException e )
-    {
-      return 0;
-    }
-  }
+ 
 }
