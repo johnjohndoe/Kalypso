@@ -48,6 +48,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Date;
 
+import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
@@ -126,6 +127,8 @@ public class NAConfiguration
   private final URL m_hydrotopFormatURL;
 
   private int m_minutesTimeStep = 60;
+  
+  private final IDManager m_idManager=new IDManager();
 
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
@@ -383,5 +386,10 @@ public class NAConfiguration
   public int getMinutesOfTimeStep()
   {
     return m_minutesTimeStep;
+  }
+  
+  public IDManager getIdManager()
+  {
+    return m_idManager;
   }
 }

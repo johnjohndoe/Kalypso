@@ -67,12 +67,13 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class HydrotopManager extends AbstractManager
 {
+  final NAConfiguration m_conf;
 
-  
   public HydrotopManager( NAConfiguration conf ) throws IOException
 
   {
     super( conf.getHydrotopFormatURL() );
+    m_conf = conf;
   }
 
   /**
@@ -95,6 +96,7 @@ public class HydrotopManager extends AbstractManager
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace hydWorkspace, GMLWorkspace modelWorkspace )
       throws Exception
   {
+    final IDManager idManager = m_conf.getIdManager();
     //Catchment
     Feature modelRootFeature = modelWorkspace.getRootFeature();
     Feature modelCol = (Feature)modelRootFeature.getProperty( "CatchmentCollectionMember" );
@@ -110,61 +112,66 @@ public class HydrotopManager extends AbstractManager
 
     while( catchmentIter.hasNext() )
     {
-      double versFlaeche = 0.0;
-      double natFlaeche = 0.0;
-      double gesFlaeche = 0.0;
-      List hydWriteList = new ArrayList();
       final Feature catchmentFE = (Feature)catchmentIter.next();
-      GM_Object tGGeomProp = (GM_Object)catchmentFE.getProperty( "Ort" );
-
-      // Hydrotope im TeilgebietsEnvelope
-      List hydInEnvList = hydList.query( catchmentFE.getEnvelope(), null );
-      Iterator hydInEnvIter = hydInEnvList.iterator();
-      while( hydInEnvIter.hasNext() )
+      if( asciiBuffer.writeFeature( catchmentFE ) ) // do it only for relevant catchments
       {
-        final Feature hydFeature = (Feature)hydInEnvIter.next();
-        final GM_Object hydGeomProp = (GM_Object)hydFeature.getProperty( "Ort" );
-        // Hint: JavaTopologySuite has no Coordinate System (here: all geometries
-        //are in the same cs - see NaModelInnerCalcJob)
-        Geometry jtsTG = JTSAdapter.export( tGGeomProp );
-        Geometry jtsHyd = JTSAdapter.export( hydGeomProp );
-        if( jtsTG.contains( jtsHyd.getInteriorPoint() ) )
+        double versFlaeche = 0.0;
+        double natFlaeche = 0.0;
+        double gesFlaeche = 0.0;
+        final List hydWriteList = new ArrayList();
+        final GM_Object tGGeomProp = (GM_Object)catchmentFE.getProperty( "Ort" );
+
+        // Hydrotope im TeilgebietsEnvelope
+        final List hydInEnvList = hydList.query( catchmentFE.getEnvelope(), null );
+        final Iterator hydInEnvIter = hydInEnvList.iterator();
+        while( hydInEnvIter.hasNext() )
         {
-          hydWriteList.add( hydFeature );
-          double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
-          double versGrad = ( (Double)hydFeature.getProperty( "m_vers" ) ).doubleValue();
-          double korVersGrad = ( (Double)hydFeature.getProperty( "fak_vers" ) ).doubleValue();
-          double gesVersGrad = ( versGrad * korVersGrad );
-          versFlaeche += ( hydGesFlaeche * gesVersGrad );
-          natFlaeche += ( hydGesFlaeche - ( hydGesFlaeche * gesVersGrad ) );
-          gesFlaeche += hydGesFlaeche;
+          final Feature hydFeature = (Feature)hydInEnvIter.next();
+          final GM_Object hydGeomProp = (GM_Object)hydFeature.getProperty( "Ort" );
+          // Hint: JavaTopologySuite has no Coordinate System (here: all geometries
+          //are in the same cs - see NaModelInnerCalcJob)
+          final Geometry jtsTG = JTSAdapter.export( tGGeomProp );
+          final Geometry jtsHyd = JTSAdapter.export( hydGeomProp );
+          if( jtsTG.contains( jtsHyd.getInteriorPoint() ) )
+          {
+            hydWriteList.add( hydFeature );
+            double hydGesFlaeche = GeometryUtilities.calcArea( hydGeomProp );
+            double versGrad = ( (Double)hydFeature.getProperty( "m_vers" ) ).doubleValue();
+            double korVersGrad = ( (Double)hydFeature.getProperty( "fak_vers" ) ).doubleValue();
+            double gesVersGrad = ( versGrad * korVersGrad );
+            versFlaeche += ( hydGesFlaeche * gesVersGrad );
+            natFlaeche += ( hydGesFlaeche - ( hydGesFlaeche * gesVersGrad ) );
+            gesFlaeche += hydGesFlaeche;
+          }
+
         }
 
-      }
-
-      int hydAnzahl = hydWriteList.size();
-      double tGArea = GeometryUtilities.calcArea( tGGeomProp );
-      //TODO: throw exception (to the user), if writing of hydrotope file is checked (testing!!!)  
-      if( (int)tGArea != (int)gesFlaeche )
-      {
-        System.out.println( "Fehler in den Hydrotopen!" );
+        int hydAnzahl = hydWriteList.size();
+        double tGArea = GeometryUtilities.calcArea( tGGeomProp );
+        //TODO: throw exception (to the user), if writing of hydrotope file is checked (testing!!!)
         double fehler = ( tGArea - gesFlaeche );
-        System.out.println( "Fläche Teilgebiet (Nummer:" + catchmentFE.getProperty( "inum" ) + ") (" + (int)tGArea
-            + ") entspricht nicht der Summe der Hydrotopflächen (" + (int)gesFlaeche + ") Fehler :"
-            + ( fehler / gesFlaeche * 100d ) + "% diff: " + fehler );
-      }
-      asciiBuffer.getHydBuffer().append(
-          FortranFormatHelper.printf( FeatureHelper.getAsString( catchmentFE, "inum" ), "i4" ) );
-      asciiBuffer.getHydBuffer().append(
-          " " + hydAnzahl + " " + (int)versFlaeche + " " + (int)natFlaeche + " " + (int)gesFlaeche + "\n" );
+        int fehlerinProzent = (int)Math.abs( fehler / gesFlaeche * 100d );
+        //        if( (int)tGArea != (int)gesFlaeche )
+        if( fehlerinProzent > 1 ) // TODO @jessica: wieviel Prozent sollen tolleriert werden ?
+        {
+          System.out.println( "Fehler in den Hydrotopen!" );
+          System.out.println( "Fläche Teilgebiet (ID:" + catchmentFE.getId() + ") (" + (int)tGArea
+              + ") entspricht nicht der Summe der Hydrotopflächen (" + (int)gesFlaeche + ") Fehler : "
+              + fehlerinProzent + "%, diff: " + ( (int)fehler ) );
+          // TODO report error to user or log file
+        }
+        asciiBuffer.getHydBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i4" ) );
+        asciiBuffer.getHydBuffer().append(
+            " " + hydAnzahl + " " + (int)versFlaeche + " " + (int)natFlaeche + " " + (int)gesFlaeche + "\n" );
 
-      Iterator hydIter = hydWriteList.iterator();
-      int anzHydrotope = 0;
-      while( hydIter.hasNext() )
-      {
-        anzHydrotope += 1;
-        final Feature hydrotopFE = (Feature)hydIter.next();
-        writeFeature( asciiBuffer, hydrotopFE, anzHydrotope );
+        Iterator hydIter = hydWriteList.iterator();
+        int anzHydrotope = 0;
+        while( hydIter.hasNext() )
+        {
+          anzHydrotope += 1;
+          final Feature hydrotopFE = (Feature)hydIter.next();
+          writeFeature( asciiBuffer, hydrotopFE, anzHydrotope );
+        }
       }
     }
   }

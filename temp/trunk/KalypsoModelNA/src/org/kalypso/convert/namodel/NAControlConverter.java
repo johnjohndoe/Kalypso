@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -89,7 +90,7 @@ public class NAControlConverter
     // generate Start
     final StringBuffer b = new StringBuffer();
     appendResultsToGenerate( conf, controlFE, b );
-    appendResultInformation( modellWorkspace, controlWorkspace, b );
+    appendResultInformation( modellWorkspace, controlWorkspace, b, conf.getIdManager() );
     //write it
     final FileWriter writer = new FileWriter( startFile );
     writer.write( b.toString() );
@@ -131,8 +132,8 @@ public class NAControlConverter
     b.append( getBoolean( controlFE.getProperty( "sup" ) ) + "       Speicherueberlauf          .sup\n" );
   }
 
-  private static void appendResultInformation( GMLWorkspace modellWorkspace, GMLWorkspace controlWorkspace,
-      StringBuffer b )
+  private static void appendResultInformation( final GMLWorkspace modellWorkspace, final GMLWorkspace controlWorkspace,
+      final StringBuffer b, final IDManager idManager )
   {
     // knoten
     final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
@@ -144,10 +145,12 @@ public class NAControlConverter
     {
       // fuer root node immer ein ergebnis generieren
       if( rootNodeID != null && rootNodeID.equals( nodeFEs[i].getId() ) )
-        b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
+        b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" );
+      //        b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
       // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
       else if( rootNodeID == null && FeatureHelper.booleanIsTrue( nodeFEs[i], "generateResult", false ) )
-        b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
+        b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" );
+      //        b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
     }
     b.append( "99999\n" );
     // teilgebiete
@@ -156,7 +159,8 @@ public class NAControlConverter
     for( int i = 0; i < catchmentFEs.length; i++ )
     {
       if( FeatureHelper.booleanIsTrue( catchmentFEs[i], "generateResult", false ) )
-        b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
+        b.append( idManager.getAsciiID( catchmentFEs[i] ) + "\n" );
+      //        b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
     }
     b.append( "99999\n" );
     // TODO startwerte fuer die kurzzeitsimulation

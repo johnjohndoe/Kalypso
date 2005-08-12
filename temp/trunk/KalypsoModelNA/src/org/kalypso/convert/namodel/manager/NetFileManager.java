@@ -271,6 +271,7 @@ public class NetFileManager extends AbstractManager
     int iknotuNr = Integer.parseInt( (String)iknotuProp.getValue() );
     // create node feature and
     // set node numbers
+
     final FeatureProperty numPropertyKnotO = FeatureFactory.createFeatureProperty( "num", "" + iknotoNr );
     final Feature knotoFE = getFeature( iknotoNr, m_conf.getNodeFT() );
     nodeCollector.put( knotoFE.getId(), knotoFE );
@@ -352,7 +353,7 @@ public class NetFileManager extends AbstractManager
     // generate net elements, each channel represents a netelement
     final Feature[] channelFEs = (Feature[])channelList.toArray( new Feature[channelList.size()] );
     for( int i = 0; i < channelFEs.length; i++ )
-      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace, channelFEs[i], nodeResultProvider ) );
+      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace, channelFEs[i], nodeResultProvider ,m_conf) );
 
     // find dependencies
     //   dependency: node - node
@@ -503,6 +504,7 @@ public class NetFileManager extends AbstractManager
   public void appendNodeList( GMLWorkspace workspace, List nodeCollector, AsciiBuffer asciiBuffer,
       NaNodeResultProvider nodeResultProvider ) throws Exception, Exception
   {
+    final IDManager idManager = m_conf.getIdManager();
     final Iterator iter = nodeCollector.iterator();
     while( iter.hasNext() )
     {
@@ -531,13 +533,14 @@ public class NetFileManager extends AbstractManager
       else
       {
         zuflussLink = (TimeseriesLink)nodeFE.getProperty( "zuflussZR" );
-        zuflussFileName = getZuflussEingabeDateiString( nodeFE );
+        zuflussFileName = getZuflussEingabeDateiString( nodeFE,m_conf );
       }
       if( zuflussLink != null )
         izuf = 5;
 
-      asciiBuffer.getNetBuffer()
-          .append( FortranFormatHelper.printf( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
+      //      asciiBuffer.getNetBuffer()
+      //          .append( FortranFormatHelper.printf( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i5" ) );
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( izug ), "i5" ) );
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( iabg ), "i5" ) );
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( iueb ), "i5" ) );
@@ -549,7 +552,8 @@ public class NetFileManager extends AbstractManager
         asciiBuffer.getNetBuffer().append(
             FortranFormatHelper.printf( FeatureHelper.getAsString( nodeFE, "zproz" ), "f10.3" ) );
         asciiBuffer.getNetBuffer().append(
-            FortranFormatHelper.printf( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
+            FortranFormatHelper.printf( idManager.getAsciiID( linkedNodeFE ), "i8" ) + "\n" );
+        //            FortranFormatHelper.printf( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
       }
       if( izuf != 0 )
       {
@@ -575,12 +579,15 @@ public class NetFileManager extends AbstractManager
       }
     }
     // ENDKNOTEN
+    
+    asciiBuffer.getNetBuffer().append( " 9001    0    0    0    0    0\n" );
     asciiBuffer.getNetBuffer().append( "10000    0    0    0    0    0\n" );
   }
 
-  private String getZuflussEingabeDateiString( Feature nodeFE )
+  private String getZuflussEingabeDateiString( Feature nodeFE ,NAConfiguration conf)
   {
-    return "Z_" + FeatureHelper.getAsString( nodeFE, "num" ) + ".zufluss";
+    int asciiID = conf.getIdManager().getAsciiID(nodeFE);
+    return "Z_" + Integer.toString(asciiID).trim() + ".zufluss";
   }
 
   //  public void removeResult( Feature nodeFE )

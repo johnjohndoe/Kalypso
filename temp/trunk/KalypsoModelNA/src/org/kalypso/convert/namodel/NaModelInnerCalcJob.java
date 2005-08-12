@@ -76,6 +76,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
+import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.optimize.CalibarationConfig;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
@@ -229,7 +230,13 @@ public class NaModelInnerCalcJob implements ICalcJob
       if( monitor.isCanceled() )
         return;
 
-      final GMLWorkspace modellWorkspace = generateASCII( tmpdir, inputProvider );
+      final File newModellFile = new File( tmpdir, "namodellBerechnung.gml" );
+
+      // calualtion model
+
+      final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellFile.toURL(), tmpdir );
+
+      final GMLWorkspace modellWorkspace = generateASCII( conf, tmpdir, inputProvider, newModellFile );
 
       if( monitor.isCanceled() )
         return;
@@ -245,7 +252,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       if( isSucceeded() )
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse" );
-        loadResults( tmpdir, modellWorkspace, logger, resultDir, resultEater );
+        loadResults( tmpdir, modellWorkspace, logger, resultDir, resultEater, conf.getIdManager() );
         System.out.println( "fertig - Ergebnisse vorhanden" );
       }
       else
@@ -290,13 +297,14 @@ public class NaModelInnerCalcJob implements ICalcJob
     }
   }
 
-  private GMLWorkspace generateASCII( File tmpDir, ICalcDataProvider dataProvider ) throws Exception
+  private GMLWorkspace generateASCII( NAConfiguration conf, File tmpDir, ICalcDataProvider dataProvider,
+      final File newModellFile ) throws Exception
   {
-    final File newModellFile = new File( tmpDir, "namodellBerechnung.gml" );
-
-    // calualtion model
-    final URL newModellURL = newModellFile.toURL();
-    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
+    //    final File newModellFile = new File( tmpDir, "namodellBerechnung.gml" );
+    //
+    //    // calualtion model
+    //    final URL newModellURL = newModellFile.toURL();
+    //    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( newModellURL, tmpDir );
 
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( dataProvider
         .getURLForID( NaModelConstants.IN_META_ID ) );
@@ -316,9 +324,10 @@ public class NaModelInnerCalcJob implements ICalcJob
     initializeModell( controlWorkspace.getRootFeature(), dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ),
         newModellFile );
 
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellURL );
+    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
 
+    // TODO update model with extra virtual channel
     //  model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
 
@@ -396,7 +405,19 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       writer.writeVerdFile( verdFile );
     }
+    // dump idmapping to file
 
+    final IDManager idManager = conf.getIdManager();
+    Writer idWriter = null;
+    try
+    {
+      idWriter = new FileWriter( new File( tmpDir, "IdMap.txt" ) );
+      idManager.dump( idWriter );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( idWriter );
+    }
     return modellWorkspace;
   }
 
@@ -518,9 +539,9 @@ public class NaModelInnerCalcJob implements ICalcJob
   }
 
   private void loadResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger,
-      final File outputDir, ICalcResultEater resultEater ) throws Exception
+      final File outputDir, ICalcResultEater resultEater, final IDManager idManager ) throws Exception
   {
-    loadTSResults( inputDir, modellWorkspace, logger, outputDir );
+    loadTSResults( inputDir, modellWorkspace, logger, outputDir, idManager );
     loadLogs( inputDir, logger, resultEater );
     File[] files = outputDir.listFiles();
     if( files != null )
@@ -621,13 +642,13 @@ public class NaModelInnerCalcJob implements ICalcJob
     return suffix;
   }
 
-  private void loadTSResults( File inputDir, GMLWorkspace modellWorkspace, Logger logger, File outputDir )
-      throws Exception
+  private void loadTSResults( File inputDir, GMLWorkspace modellWorkspace, Logger logger, File outputDir,
+      final IDManager idManager ) throws Exception
   {
     //    j Gesamtabfluss Knoten .qgs
     FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     loadTSResults( "qgs", nodeFT, "num", "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    n Schnee .sch
     //    n Bodenspeicher .bsp
     //    n Kluftgrundw1 .qt1
@@ -647,42 +668,42 @@ public class NaModelInnerCalcJob implements ICalcJob
     FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
     //    j Niederschlag .pre
     loadTSResults( "pre", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    j Temperatur .tmp
     loadTSResults( "tmp", catchmentFT, "inum", "name", TimeserieConstants.TYPE_TEMPERATURE, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
 
     //    n Interflow .qif
     loadTSResults( "qif", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
 
     //    n Grundwasser .qgw
     loadTSResults( "qgw", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    n Wasserstand Speicher .sph
     loadTSResults( "shp", catchmentFT, "inum", "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    n Gesamtabfluss TG .qgg
     loadTSResults( "qgg", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
 
     //    n Grundwasserstand .gws
     loadTSResults( "gws", catchmentFT, "inum", "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 100.0d );
+        modellWorkspace, logger, outputDir, 100.0d, idManager );
     //    n Basisabfluss .qbs
     loadTSResults( "qbs", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    n Oberflaechenabfluss .qna
     loadTSResults( "qna", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    n Abfluss vers. Flaechen .qvs
     loadTSResults( "qvs", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d );
+        modellWorkspace, logger, outputDir, 1.0d, idManager );
   }
 
   private void loadTSResults( String suffix, FeatureType resultFT, String keyPropName, String titlePropName,
       String resultType, String metadataTSLink, String targetTSLink, File inputDir, GMLWorkspace modellWorkspace,
-      Logger logger, File outputDir, double resultFactor ) throws Exception
+      Logger logger, File outputDir, double resultFactor, IDManager idManager ) throws Exception
   {
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
@@ -705,7 +726,8 @@ public class NaModelInnerCalcJob implements ICalcJob
         final Feature feature = nodeFEs[i];
         if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
           continue; // should not generate results
-        final String key = FeatureHelper.getAsString( feature, keyPropName );
+          //        final String key = FeatureHelper.getAsString( feature, keyPropName );
+        final String key = Integer.toString( idManager.getAsciiID( feature ) );
         final String feID = feature.getId();
         final String feName = (String)feature.getProperty( titlePropName );
         final String title;
@@ -719,6 +741,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         logger.info( "lese berechnetes Ergebnis fuer #" + key + "\n" );
 
         // transform data to tuppelmodel
+
         final SortedMap data = ts.getTimeSerie( key );
         final Object[][] tupelData = new Object[data.size()][3];
         final Set dataSet = data.entrySet();
@@ -801,8 +824,8 @@ public class NaModelInnerCalcJob implements ICalcJob
         {
           // if there is target defined or there are some problems with that
           // we generate one
-          resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_" + key
-              + "_" + feature.getId() + ".zml";
+          resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_"
+              + Integer.toString( idManager.getAsciiID( feature ) ).trim() + "_" + feature.getId() + ".zml";
         }
 
         final File resultFile = new File( outputDir, resultPathRelative );

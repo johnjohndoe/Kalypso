@@ -201,9 +201,9 @@ public class CatchmentManager extends AbstractManager
     String tsFileString = (String)ts.getValue();
     String relativeZmlPath = "Niederschlag/Niederschlag_" + feature.getId() + ".zml";
     File orgTsFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileString );
-    
+
     //JH: ZML erzeugen, dies funktioniert nicht mehr
-    
+
     //    Object link = NAZMLGenerator.copyToTimeseriesLink( orgTsFile.toURL(),
     //        TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RAINFALL,
     // m_conf.getGmlBaseDir(),
@@ -239,33 +239,36 @@ public class CatchmentManager extends AbstractManager
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
-
       final Feature catchmentFE = (Feature)iter.next();
       if( asciiBuffer.writeFeature( catchmentFE ) )
         writeFeature( asciiBuffer, workspace, catchmentFE );
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace workSpace, Feature feature ) throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, GMLWorkspace workSpace, final Feature feature ) throws Exception
   {
     // 0
-    asciiBuffer.getCatchmentBuffer().append(
-        "           " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "inum" ), "i5" ) + "      7"
-            + "\n" );
+    final IDManager idManager = m_conf.getIdManager();
+    int asciiID = idManager.getAsciiID( feature );
+    asciiBuffer.getCatchmentBuffer().append( "           " );
+    asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( asciiID, "i5" ) );
+    //    asciiBuffer.getCatchmentBuffer().append(
+    //        FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "inum" ), "i5" ) );
+    asciiBuffer.getCatchmentBuffer().append( "      7\n" );
     // 1-2
     for( int i = 1; i <= 2; i++ )
       asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
 
     // 3
     StringBuffer b = new StringBuffer();
-    b.append( "n " + getNiederschlagEingabeDateiString( feature ) );
-    b.append( " " + getNiederschlagEingabeDateiString( feature ) );
+    b.append( "n " + getNiederschlagEingabeDateiString( feature, m_conf ) );
+    b.append( " " + getNiederschlagEingabeDateiString( feature, m_conf ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" ) + "\n" );
 
     // 4-6
-    b.append( getTemperaturEingabeDateiString( feature ) );
+    b.append( getTemperaturEingabeDateiString( feature, m_conf ) );
     b.append( " " );
-    b.append( getVerdunstungEingabeDateiString( feature ) );
+    b.append( getVerdunstungEingabeDateiString( feature, m_conf ) );
     //    b.append( "std.tmp" );
     //    b.append( " std.ver\n" );
     b.append( "\n" );
@@ -292,7 +295,9 @@ public class CatchmentManager extends AbstractManager
     if( nodeFeVers == null )
       buf.append( "    0" );
     else
-      buf.append( toAscci( nodeFeVers, 18 ) );
+      buf.append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeVers ) ), "i5" ) + "\n" );
+
+    //      buf.append( toAscci( nodeFeVers, 18 ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) );
     buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rintmx" ), "f5.1" ) + "\n" );
     asciiBuffer.getCatchmentBuffer().append( buf.toString() );
@@ -327,18 +332,19 @@ public class CatchmentManager extends AbstractManager
     {
       Feature fe = (Feature)iterator.next();
       Feature linkedFE = workSpace.resolveLink( fe, "ngwzu" );
+
       if( linkedFE == null )
         throw new Exception( "Fehler!!! NA-Modell: Grundwasserabfluss in unbekanntes Teilgebiet: #"
             + FeatureHelper.getAsString( fe, "ngwzu" ) );
 
-      line13.append( toAscci( linkedFE, 17 ) + " " );
+      line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ).trim() + " " );
+      //      line13.append( toAscci( linkedFE, 17 ) + " " );
       line14.append( toAscci( fe, 14 ) + " " );
       sumGwwi += ( (Double)fe.getProperty( "gwwi" ) ).doubleValue();
     }
     if( sumGwwi > 1.0 )
       throw new Exception(
-          "Fehler!!! NA-Modell: Summe Grundwasserabgabe in Nachbargebiete > 1.0 (100%) in Teilgebiet: #"
-              + FeatureHelper.getAsString( feature, "inum" ) );
+          "Fehler!!! NA-Modell: Summe Grundwasserabgabe in Nachbargebiete > 1.0 (100%) in Teilgebiet: #" + asciiID );
 
     if( gwList.size() > 0 )
     {
@@ -354,12 +360,14 @@ public class CatchmentManager extends AbstractManager
     buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "pors" ), "*" ) );
     buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "gwsent" ), "*" ) );
     buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "klupor" ), "*" ) );
-
+    // tiefengrundwasser
     Feature nodeFeGW = workSpace.resolveLink( feature, "izkn" );
-    if( nodeFeVers == null )
+
+    if( nodeFeGW == null )
       buffer.append( " 0\n" );
     else
-      buffer.append( toAscci( nodeFeGW, 18 ) + "\n" );
+      buffer.append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeGW ) ), "i5" ) + "\n" );
+    //      buffer.append( toAscci( nodeFeGW, 18 ) + "\n" );
 
     asciiBuffer.getCatchmentBuffer().append( buffer.toString() );
 
@@ -377,45 +385,50 @@ public class CatchmentManager extends AbstractManager
     return ft.getName() + id;
   }
 
-  public static String getNiederschlagEingabeDateiString( Feature feature )
+  public static String getNiederschlagEingabeDateiString( Feature feature, NAConfiguration conf )
   {
-    return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".niederschlag";
+    int asciiID = conf.getIdManager().getAsciiID( feature );
+    return "C_" + Integer.toString( asciiID ).trim() + ".niederschlag";
+    //    return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".niederschlag";
   }
 
-  public static String getTemperaturEingabeDateiString( Feature feature )
+  public static String getTemperaturEingabeDateiString( Feature feature, NAConfiguration conf )
   {
+    int asciiID = conf.getIdManager().getAsciiID( feature );
     if( feature.getProperty( "temperaturZR" ) != null )
-      return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".tmp";
+      return "C_" + Integer.toString( asciiID ).trim() + ".tmp";
     return STD_TEMP_FILENAME;
-}
+  }
+
   /**
    * @param feature
    * @param dir
    */
-  public static File getTemperaturEingabeDatei( final Feature feature, final File dir )
+  public static File getTemperaturEingabeDatei( final Feature feature, final File dir, NAConfiguration conf )
   {
-    final String name = getTemperaturEingabeDateiString( feature );
+    final String name = getTemperaturEingabeDateiString( feature, conf );
     return new File( dir, name );
   }
 
   /**
    * @param feature
    */
-  public static File getNiederschlagEingabeDatei( final Feature feature, final File dir )
+  public static File getNiederschlagEingabeDatei( final Feature feature, final File dir, NAConfiguration conf )
   {
-    return new File( dir, getNiederschlagEingabeDateiString( feature ) );
+    return new File( dir, getNiederschlagEingabeDateiString( feature, conf ) );
   }
 
-  public static File getVerdunstungEingabeDatei( Feature feature, File dir )
+  public static File getVerdunstungEingabeDatei( Feature feature, File dir, NAConfiguration conf )
   {
-    final String name = getVerdunstungEingabeDateiString( feature );
+    final String name = getVerdunstungEingabeDateiString( feature, conf );
     return new File( dir, name );
   }
 
-  private static String getVerdunstungEingabeDateiString( Feature feature )
+  private static String getVerdunstungEingabeDateiString( Feature feature, NAConfiguration conf )
   {
+    int asciiID = conf.getIdManager().getAsciiID( feature );
     if( feature.getProperty( "verdunstungZR" ) != null )
-      return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".ver";
+      return "C_" + Integer.toString( asciiID ).trim() + ".ver";
     return STD_VERD_FILENAME;
   }
 }

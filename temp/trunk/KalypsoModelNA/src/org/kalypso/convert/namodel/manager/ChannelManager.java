@@ -82,9 +82,12 @@ public class ChannelManager extends AbstractManager
 
   private FeatureType m_kmParameterFT;
 
+  private final NAConfiguration m_conf;
+
   public ChannelManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
     super( conf.getChannelFormatURL() );
+    m_conf = conf;
     m_virtualChannelFT = schema.getFeatureType( "VirtualChannel" );
     m_storageChannelFT = schema.getFeatureType( "StorageChannel" );
     m_kmChannelFT = schema.getFeatureType( "KMChannel" );
@@ -175,9 +178,11 @@ public class ChannelManager extends AbstractManager
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer, Feature feature, GMLWorkspace workspace ) throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer,final Feature feature, GMLWorkspace workspace ) throws Exception
   {
-    asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
+    IDManager idManager=m_conf.getIdManager();
+    asciiBuffer.getChannelBuffer().append( idManager.getAsciiID( feature) + "\n" );
+    //    asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
     FeatureType ft = feature.getFeatureType();
     if( "VirtualChannel".equals( ft.getName() ) )
       asciiBuffer.getChannelBuffer().append( VIRTUALCHANNEL + "\n" );
@@ -200,13 +205,15 @@ public class ChannelManager extends AbstractManager
 
       // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2)
       // RHB 5-7
-      asciiBuffer.getRhbBuffer().append( "SPEICHER" + toAscci( feature, 5 ) );
+      asciiBuffer.getRhbBuffer().append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID(feature), "i8" ) );
+//      asciiBuffer.getRhbBuffer().append( "SPEICHER" + toAscci( feature, 5 ) );
       //Ueberlaufknoten optional
       Feature nodeFE = workspace.resolveLink( feature, "iknotNodeMember" );
       if( nodeFE == null )
         asciiBuffer.getRhbBuffer().append( "       0" );
       else
-        asciiBuffer.getRhbBuffer().append( toAscci( nodeFE, 6 ) );
+        asciiBuffer.getRhbBuffer().append(FortranFormatHelper.printf(idManager.getAsciiID(nodeFE),"i8") );
+//        asciiBuffer.getRhbBuffer().append( toAscci( nodeFE, 6 ) );
       asciiBuffer.getRhbBuffer().append( toAscci( feature, 7 ) + "\n" );
 
       // (itext,a80)
@@ -216,7 +223,8 @@ public class ChannelManager extends AbstractManager
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
       Feature dnodeFE = workspace.resolveLink( feature, "downStreamNodeMember" );
-      asciiBuffer.getRhbBuffer().append( toAscci( dnodeFE, 9 ) );
+      asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf(idManager.getAsciiID(dnodeFE),"i4" ) );
+//      asciiBuffer.getRhbBuffer().append( toAscci( dnodeFE, 9 ) );
       asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
       DiagramProperty rhbDiagram = (DiagramProperty)feature.getProperty( "hvvsqd" );
