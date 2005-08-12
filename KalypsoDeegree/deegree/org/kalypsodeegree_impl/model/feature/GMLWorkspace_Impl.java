@@ -104,7 +104,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return null;
   }
 
-  
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveLinks(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String)
@@ -468,6 +467,27 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       return;
     }
     // TODO eigene exception entwerfen
+    throw new Exception( "New Feature violates maxOccurs" );
+  }
+
+  /**
+   * 
+   * @throws Exception
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, org.kalypsodeegree.model.feature.Feature, boolean)
+   */
+  public void setFeatureAsComposition( final Feature parentFE, final String linkPropName, final Feature linkedFE,
+      final boolean overwrite ) throws Exception
+  {
+    final Object value = parentFE.getProperty( linkPropName );
+    if( value == null | overwrite )
+    {
+      // TODO check if value is allready a feature, then remove it from gmlworkspace
+      final FeatureProperty newProp = FeatureFactory.createFeatureProperty( linkPropName, linkedFE );
+      parentFE.setProperty( newProp );
+      m_indexMap.put( linkedFE.getId(), linkedFE );
+      return;
+    }
     throw new Exception( "New Feature violates maxOccurs" );
   }
 

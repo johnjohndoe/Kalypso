@@ -316,4 +316,14 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     return m_workspace.getSelectionManager();
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, org.kalypsodeegree.model.feature.Feature, boolean)
+   */
+  public void setFeatureAsComposition( Feature parentFE, String linkPropName, Feature linkedFE, boolean overwrite )
+      throws Exception
+  {
+    m_workspace.setFeatureAsComposition( parentFE, linkPropName, linkedFE, overwrite );
+  }
 }
