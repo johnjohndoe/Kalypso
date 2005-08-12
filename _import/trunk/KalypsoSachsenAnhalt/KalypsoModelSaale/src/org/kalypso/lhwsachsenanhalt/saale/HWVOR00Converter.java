@@ -50,7 +50,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
@@ -81,6 +80,11 @@ public class HWVOR00Converter
     m_obsMap = new TreeMap();
     m_obsNames = new ArrayList();
     m_obsNum = 0;
+  }
+
+  public boolean isEmpty()
+  {
+    return m_obsNames.isEmpty();
   }
 
   public void addObservation( final IObservation inObs, final String timeAxis, final String dataAxis )
@@ -123,34 +127,35 @@ public class HWVOR00Converter
     m_obsNum++;
   }
 
-  public void toHWVOR00( Writer file )
+  public void toHWVOR00( final Writer file )
   {
-    PrintWriter pWriter = new PrintWriter( file );
-    Set keys;
-    ArrayList currList;
-    String output;
-    Date currDate;
+    final PrintWriter pWriter = new PrintWriter( file );
 
     //Die erste Zeile erzeugen
-    output = "Datum     ";
-    for( Iterator itr = m_obsNames.iterator(); itr.hasNext(); )
-      output += "\t" + (String)itr.next();
+    pWriter.print( "Datum     " );
+    for( final Iterator itr = m_obsNames.iterator(); itr.hasNext(); )
+    {
+      pWriter.print( "\t" );
+      pWriter.print( (String)itr.next() );
+    }
 
-    pWriter.println( output );
+    pWriter.println();
 
     //Jede Zeile erzeugen, in der genügend Werte vorhanden sind
-    keys = m_obsMap.keySet();
-    for( Iterator itr = keys.iterator(); itr.hasNext(); )
+    for( final Iterator itr = m_obsMap.keySet().iterator(); itr.hasNext(); )
     {
-      currDate = (Date)itr.next();
+      final Date currDate = (Date)itr.next();
       if( ( (ArrayList)m_obsMap.get( currDate ) ).size() >= m_obsNum )
       {
-        output = HWVOR00_DATE.format( currDate );
-        currList = (ArrayList)m_obsMap.get( currDate );
+        pWriter.print( HWVOR00_DATE.format( currDate ) );
+        final ArrayList currList = (ArrayList)m_obsMap.get( currDate );
         for( Iterator i = currList.iterator(); i.hasNext(); )
-          output += "\t" + ( (Number)i.next() ).toString();
+        {
+          pWriter.print( "\t" );
+          pWriter.print( ( (Number)i.next() ).toString() );
+        }
 
-        pWriter.println( output );
+        pWriter.println();
       }
     }
   }
@@ -160,7 +165,12 @@ public class HWVOR00Converter
     return toZML( valueType, file, null );
   }
 
-  public static IObservation[] toZML( String valueType, Reader file, MetadataList metadata ) throws ParseException
+  /**
+   * @param file
+   *          Will be wrapped into a buffered reader, so no need to do so by the caller.
+   */
+  public static IObservation[] toZML( final String valueType, final Reader file, final MetadataList metadata )
+      throws ParseException
   {
     ArrayList lines = new ArrayList();
     ArrayList dates, data;
@@ -227,8 +237,9 @@ public class HWVOR00Converter
       }
 
       tplValues = new SimpleTuppleModel( axis, tuppleData );
-      
-      outOb.add( new SimpleObservation( "href", "ID", obsName, false, null, new MetadataList( metadata ), axis, tplValues ) );
+
+      outOb.add( new SimpleObservation( "href", "ID", obsName, false, null, new MetadataList( metadata ), axis,
+          tplValues ) );
     }
     return (IObservation[])outOb.toArray( new IObservation[outOb.size()] );
   }

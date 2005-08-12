@@ -115,8 +115,19 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
     return true;
   }
 
-  public void writeObservations( final File file ) throws IOException
+  /**
+   * Writes the found observations into a single '.vor' File (HWVOR00-Format).
+   * <p>
+   * If there are no observations, no file is created
+   * </p>.
+   * 
+   * @return false, if no file has been created.
+   */
+  public boolean writeObservations( final File file ) throws IOException
   {
+    if( m_converter.isEmpty() )
+      return false;
+
     Writer writer = null;
     try
     {
@@ -127,5 +138,7 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
     {
       IOUtils.closeQuietly( writer );
     }
+
+    return true;
   }
 }

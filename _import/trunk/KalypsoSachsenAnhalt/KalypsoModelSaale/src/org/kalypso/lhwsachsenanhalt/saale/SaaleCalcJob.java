@@ -224,13 +224,12 @@ public class SaaleCalcJob implements ICalcJob
 
     final URL stammdatURL = stammdatdir.toURL();
 
-    convertGml( externData, stammdatURL, "Stammdat/pegel.std", "1_pegel_std.gmc" );
-    convertGml( externData, stammdatURL, "Stammdat/met_geb.std", "2_met_geb_std.gmc" );
-    convertGml( externData, stammdatURL, "Stammdat/egmpar.hwp", "3_egmpar_hwp.gmc" );
-    convertGml( externData, stammdatURL, "Stammdat/tl.std", "4_tl_std.gmc" );
-    convertGml( externData, stammdatURL, "Stammdat/ts.std", "5_ts_std.gmc" );
-    convertGml( externData, stammdatURL, "Stammdat/wlmpar.hwp", "6_wlmpar_hwp.gmc" );
-    convertGml( externData, stammdatURL, "Stammdat/hwsteu.stv", "7_hwsteu_stv.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/pegel.std", "pegel_std.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/egmpar.hwp", "egmpar_hwp.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/tssteu.hwp", "tssteu_hwp.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/ts.std", "ts_std.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/wlmpar.hwp", "wlmpar_hwp.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/hwsteu.stv", "hwsteu_stv.gmc" );
   }
 
   private void convertGml( final Map externData, final URL stammdatURL, final String filenameForLog, final String gmcFile ) throws IOException, JAXBException, GmlConvertException
@@ -248,7 +247,7 @@ public class SaaleCalcJob implements ICalcJob
     final URL datenURL = datendir.toURL();
     final Map externData = new HashMap( 1 );
     externData.put( SaaleConst.REGISTERED_ID, modellWorkspace );
-    convertGml( externData, datenURL, "Daten/hwablauf.vor", "8_hwablauf_vor.gmc" );
+    convertGml( externData, datenURL, "Daten/hwablauf.vor", "hwablauf_vor.gmc" );
     
     writeObservations( modellWorkspace, "Durchfluﬂ", "PegelCollectionAssociation/PegelMember", new File( datendir,
         "Q_dat.vor" ), TimeserieConstants.TYPE_RUNOFF, resolver, context );
@@ -268,7 +267,11 @@ public class SaaleCalcJob implements ICalcJob
     m_logger.info( "Schreibe Zeitreihen: " + linkProperty );
     final HWVorZMLWriterVisitor visitor = new HWVorZMLWriterVisitor( linkProperty, axisType, resolver, context );
     workspace.accept( visitor, featurePath, FeatureVisitor.DEPTH_ZERO );
-    visitor.writeObservations( file );
+    final boolean bSuccess = visitor.writeObservations( file );
+    if( bSuccess )
+      m_logger.info( linkProperty + " geschrieben" );
+    else
+      m_logger.info( "Keine Zeitreihen vorhanden: " + linkProperty );
   }
 
   private File writeResults( final File tmpdir, final File datendir ) throws CalcJobServiceException
@@ -276,10 +279,10 @@ public class SaaleCalcJob implements ICalcJob
     final File resultdir = new File( tmpdir, "out" );
     try
     {
-      new HWVORBatch().convert( new String[]
-      {
-          datendir.getAbsolutePath(),
-          resultdir.getAbsolutePath() } );
+      final HWVORBatch converter = new HWVORBatch();
+      converter.convertFileToZml( new File( datendir, "Q_dat.vor" ), null, new File( resultdir, "Durchfluﬂ" ), TimeserieConstants.TYPE_RUNOFF );
+      converter.convertFileToZml( new File( datendir, "Tsdat.vor" ), null, new File( resultdir, "Speicher" ), TimeserieConstants.TYPE_RUNOFF );
+      
       m_logger.info( "Ergebnisdaten wurden konvertiert." );
       m_logger.info( "" );
     }
