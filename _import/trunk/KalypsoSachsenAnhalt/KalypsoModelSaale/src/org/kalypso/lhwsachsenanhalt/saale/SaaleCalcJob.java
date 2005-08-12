@@ -1,9 +1,13 @@
 package org.kalypso.lhwsachsenanhalt.saale;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +16,10 @@ import java.util.logging.StreamHandler;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.lhwsachsenanhalt.saale.batch.HWVORBatch;
@@ -37,6 +45,18 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class SaaleCalcJob implements ICalcJob
 {
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
+
+  private static final String HWDIR_DATEN = "Daten";
+
+  private static final String HWDIR_STAMMDAT = "stammdat";
+
+  private static final String HWDIR_WQ = "wq";
+
+  private static final String HWDIR_AUSGABE = "ausgabe";
+
+  private static final String HWDIR_ARCHIV = "archiv";
+
+  private static final String HWEXE = "hwvor00.exe";
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
@@ -72,21 +92,24 @@ public class SaaleCalcJob implements ICalcJob
         return;
       m_logger.info( "Erzeuge Eingabedateien für HWVOR00" );
       monitor.setMessage( "Erzeuge Eingabedateien für HWVOR00" );
-      final File datendir = createInputFiles( tmpdir, inputProvider );
+      final SaaleInputBean inputData = createInputFiles( tmpdir, inputProvider );
 
       // calculate
       if( monitor.isCanceled() )
         return;
+      runCalculation( inputData.getExeFile(), monitor );
 
       m_logger.info( "Berechnung wird durchgeführt" );
 
       // parse output
       if( monitor.isCanceled() )
         return;
+      
       m_logger.info( "Ergebnisdaten werden zurückgelesen." );
       monitor.setMessage( "Ergebnisdaten werden zurückgelesen." );
-      final File resultdir = writeResults( tmpdir, datendir );
+      final File resultdir = writeResults( tmpdir, inputData.getDataDir() );
       resultEater.addResult( "ZML_RESULT", resultdir );
+      resultEater.addResult( "HWVOR00", inputData.getHwvorDir() );
     }
     catch( final FileNotFoundException e )
     {
@@ -108,7 +131,28 @@ public class SaaleCalcJob implements ICalcJob
     resultEater.addResult( "LOG", loggerFile );
   }
 
-  private File createInputFiles( final File tmpdir, final ICalcDataProvider inputProvider )
+  private void runCalculation( final File exeFile, final ICalcMonitor monitor ) throws IOException, ProcessTimeoutException
+  {
+    final StringWriter logStream = new StringWriter();
+    final StringWriter errStream = new StringWriter();
+    
+    try
+    {
+      final String cmdLine = exeFile.getAbsolutePath();
+      ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, 5 * 60 * 1000, logStream, errStream );
+
+      System.out.println( logStream.toString() );
+      System.out.println( logStream.toString() );
+    }
+    finally
+    {
+      logStream.close();
+      errStream.close();
+    }
+    
+  }
+
+  private SaaleInputBean createInputFiles( final File tmpdir, final ICalcDataProvider inputProvider )
       throws CalcJobServiceException, Exception
   {
     // VERZEICHNISSE erstellen //
@@ -116,71 +160,96 @@ public class SaaleCalcJob implements ICalcJob
     hwvordir.mkdir();
 
     // braucht mans?
-    //    new File hwzugrstv = new File( hwvordir, "Hwzugr.stv" );
+    createHwzugrStv( hwvordir );
 
-    //    new File( hwvordir, "ARCHIV" ).mkdir();
-    new File( hwvordir, "AUSGABE" ).mkdir();
-    final File datendir = new File( hwvordir, "Daten" );
+    final File datendir = new File( hwvordir, HWDIR_DATEN );
     datendir.mkdir();
-    //    new File( hwvordir, "TLUG" ).mkdir();
-    //    new File( hwvordir, "WQ" ).mkdir();
+    final File ausgabedir = new File( hwvordir, HWDIR_AUSGABE );
+    ausgabedir.mkdir();
+    final File stammdatdir = new File( hwvordir, HWDIR_STAMMDAT );
+    stammdatdir.mkdir();
 
     // gml nur einmal lesen
     final URL gmlContext = inputProvider.getURLForID( "MODELL" );
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( gmlContext );
-    writeStammdaten( hwvordir, modellWorkspace );
+    writeStammdaten( stammdatdir, modellWorkspace );
     writeDaten( datendir, modellWorkspace, gmlContext );
+    
+    // exe ins datenverzeichnis kopieren
+    final File exeFile = copyExeToDir( hwvordir );
+    
     m_logger.info( "Eingangsdaten für HWVOR00.exe wurden erzeugt." );
     m_logger.info( "" );
 
-    return datendir;
+    return new SaaleInputBean( hwvordir, datendir, exeFile );
   }
 
-  private void writeStammdaten( final File hwvordir, final GMLWorkspace modellWorkspace ) throws IOException,
+  private File copyExeToDir( final File hwvordir ) throws IOException
+  {
+    final File exeFile = new File( hwvordir, HWEXE );
+    FileUtils.copyURLToFile( getClass().getResource( "resources/HWVOR00.exe" ), exeFile );
+    return exeFile;
+  }
+
+  private void createHwzugrStv( final File hwvordir ) throws IOException
+  {
+    final File hwzugrstv = new File( hwvordir, "Hwzugr.stv" );
+    
+    final String hwvorPath = hwvordir.getAbsolutePath();
+    
+    PrintWriter writer = null;
+    try
+    {
+      writer = new PrintWriter( new BufferedWriter( new FileWriter( hwzugrstv ) ) );
+      writer.println( hwvorPath + "\\" + HWDIR_DATEN +"\\" );
+      writer.println( hwvorPath + "\\" + HWDIR_STAMMDAT +"\\" );
+      writer.println( hwvorPath + "\\" + HWDIR_WQ +"\\" );
+      writer.println( hwvorPath + "\\" + HWDIR_AUSGABE +"\\" );
+      writer.println( hwvorPath + "\\" + HWDIR_ARCHIV +"\\" );
+      writer.println( "SA" );
+      writer.println( "versteckt" );
+      writer.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+  }
+
+  private void writeStammdaten( final File stammdatdir, final GMLWorkspace modellWorkspace ) throws IOException,
       JAXBException, GmlConvertException
   {
-    final File stammdatdir = new File( hwvordir, "Stammdat" );
-    stammdatdir.mkdir();
-
     final Map externData = new HashMap( 1 );
     externData.put( SaaleConst.REGISTERED_ID, modellWorkspace );
 
     final URL stammdatURL = stammdatdir.toURL();
 
-    m_logger.info( "Schreibe: Stammdat/pegel.std" );
-    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/1_pegel_std.gmc" ), new UrlUtilities(),
-        stammdatURL, externData );
+    convertGml( externData, stammdatURL, "Stammdat/pegel.std", "1_pegel_std.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/met_geb.std", "2_met_geb_std.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/egmpar.hwp", "3_egmpar_hwp.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/tl.std", "4_tl_std.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/ts.std", "5_ts_std.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/wlmpar.hwp", "6_wlmpar_hwp.gmc" );
+    convertGml( externData, stammdatURL, "Stammdat/hwsteu.stv", "7_hwsteu_stv.gmc" );
+  }
 
-    m_logger.info( "Schreibe: Stammdat/met_geb.std" );
-    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/2_met_geb_std.gmc" ),
-        new UrlUtilities(), stammdatURL, externData );
-
-    m_logger.info( "Schreibe: Stammdat/egmpar.hwp" );
-    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/3_egmpar_hwp.gmc" ), new UrlUtilities(),
-        stammdatURL, externData );
-
-    m_logger.info( "Schreibe: Stammdat/tl.std" );
-    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/4_tl_std.gmc" ), new UrlUtilities(),
-        stammdatURL, externData );
-
-    m_logger.info( "Schreibe: Stammdat/ts.std" );
-    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/5_ts_std.gmc" ), new UrlUtilities(),
-        stammdatURL, externData );
-
-    m_logger.info( "Schreibe: Stammdat/wlmpar.hwp" );
-    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/6_wlmpar_hwp.gmc" ), new UrlUtilities(),
-        stammdatURL, externData );
-
-    m_logger.info( "Schreibe: Stammdat/hwsteu.stv" );
-    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/7_hwsteu_stv.gmc" ), new UrlUtilities(),
+  private void convertGml( final Map externData, final URL stammdatURL, final String filenameForLog, final String gmcFile ) throws IOException, JAXBException, GmlConvertException
+  {
+    m_logger.info( "Schreibe: " + filenameForLog );
+    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/" + gmcFile ), new UrlUtilities(),
         stammdatURL, externData );
   }
 
   private void writeDaten( final File datendir, final GMLWorkspace modellWorkspace, final URL context )
-      throws IOException
+      throws IOException, JAXBException, GmlConvertException
   {
     final IUrlResolver resolver = new UrlUtilities();
 
+    final URL datenURL = datendir.toURL();
+    final Map externData = new HashMap( 1 );
+    externData.put( SaaleConst.REGISTERED_ID, modellWorkspace );
+    convertGml( externData, datenURL, "Daten/hwablauf.vor", "8_hwablauf_vor.gmc" );
+    
     writeObservations( modellWorkspace, "Durchfluß", "PegelCollectionAssociation/PegelMember", new File( datendir,
         "Q_dat.vor" ), TimeserieConstants.TYPE_RUNOFF, resolver, context );
     writeObservations( modellWorkspace, "Niederschlag", "PegelCollectionAssociation/PegelMember[Gebiet]", new File(

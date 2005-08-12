@@ -1,0 +1,21 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<csvtarget linktype="gml" xlink:href="HWABLAUF.vor" featurePath="PegelCollectionAssociation/PegelMember" delemiter="&#9;" writeHeader="true">
+		<column>PNR</column>
+		<column>Bodenfrost</column>
+		<column>Feuchte</column>
+		<column label="Schnee">SchneeTyp</column>
+		<column>Steuerung</column>
+		<column>Variante</column>
+		<column>STATUS</column>
+		<column>Reserve2</column>
+		<column>Reserve3</column>
+		<column>Reserve4</column>
+		<column>Reserve5</column>
+		<column>Reserve6</column>
+		<column>Reserve7</column>
+		<column>Reserve8</column>
+		<column>Reserve9</column>
+		<column>Reserve10</column>	</csvtarget>
+	<registersource registeredID="INTERNE_GML"/>
+</gmlconvert>

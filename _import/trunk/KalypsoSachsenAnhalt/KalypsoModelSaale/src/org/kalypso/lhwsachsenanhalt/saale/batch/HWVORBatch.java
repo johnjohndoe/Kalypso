@@ -44,15 +44,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStreamWriter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.xml.bind.Marshaller;
 
 import org.kalypso.lhwsachsenanhalt.saale.HWVOR00Converter;
+import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
@@ -88,28 +94,24 @@ public class HWVORBatch
       wqdir = null;
 
     File currDir = new File( args[0] );
-    File wasserDir = new File( outputDir, "Wasserstand" );
-    File durchDir = new File( outputDir, "Durchfluss" );
-    File speicherDir = new File( outputDir, "Speicherinhalt" );
-    File temperaturDir = new File( outputDir, "Temperatur" );
+    final File wasserDir = new File( outputDir, "Wasserstand" );
+    final File durchDir = new File( outputDir, "Durchfluﬂ" );
+    final File speicherDir = new File( outputDir, "Speicherinhalt" );
+    final File temperaturDir = new File( outputDir, "Temperatur" );
     //    File wqDir = new File( outputDir, "WQ" );
-    File niederDir = new File( outputDir, "Niederschlag" );
-    File schneeDir = new File( outputDir, "Schnee" );
+    final File niederDir = new File( outputDir, "Niederschlag" );
+    final File schneeDir = new File( outputDir, "Schnee" );
 
-    File currFile;
-    String files[] = currDir.list();
-    String sValue;
+    final String files[] = currDir.list();
 
     final ObjectFactory zmlFac = new ObjectFactory();
     final Marshaller marshaller = zmlFac.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
-    IObservation[] obs;
-    ObservationType type;
-    MetadataList metadata;
-
     for( int i = 0; i < files.length; i++ )
     {
+      String sValue;
+
       final String file = files[i].toUpperCase();
       if( file.endsWith( ".VOR" ) )
       {
@@ -154,18 +156,21 @@ public class HWVORBatch
           sValue = TimeserieConstants.TYPE_TEMPERATURE;
         }
 
-        metadata = new MetadataList();
+        final MetadataList metadata = new MetadataList();
         metadata.put( "FILE_NAME", args[0] + "\\" + files[i] );
 
         m_logger.info( "Lese Zeitreihen: " + files[i] );
-        obs = HWVOR00Converter.toZML( sValue, new FileReader( args[0] + "/" + files[i] ), metadata );
+        final IObservation[] obs = HWVOR00Converter
+            .toZML( sValue, new FileReader( args[0] + "/" + files[i] ), metadata );
 
         currDir.mkdirs();
         for( int l = 0; l < obs.length; l++ )
         {
           final IObservation observation = obs[l];
           final String name = observation.getName();
+          final MetadataList md = observation.getMetadataList();
 
+          // W/Q Table for W and Q Timeseries
           if( wqdir != null
               && ( sValue == TimeserieConstants.TYPE_RUNOFF || sValue == TimeserieConstants.TYPE_WATERLEVEL ) )
           {
@@ -175,17 +180,17 @@ public class HWVORBatch
             final WQTable table = Dbf2WQ.readWQ( wqBasename, new Date( 0 ) );
             if( table != null )
             {
-              final MetadataList md = observation.getMetadataList();
               final WQTableSet wqset = new WQTableSet( new WQTable[]
               { table }, TimeserieConstants.TYPE_WATERLEVEL, TimeserieConstants.TYPE_RUNOFF );
               md.setProperty( TimeserieConstants.MD_WQTABLE, WQTableFactory.createXMLString( wqset ) );
             }
           }
 
-          type = ZmlFactory.createXML( observation, null );
+          setForecastHours( observation );
 
-          currFile = new File( currDir, "ID" + name + ".zml" );
+          final ObservationType type = ZmlFactory.createXML( observation, null );
 
+          final File currFile = new File( currDir, "ID" + name + ".zml" );
           final FileOutputStream stream = new FileOutputStream( currFile );
           final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
           marshaller.marshal( type, writer );
@@ -193,6 +198,20 @@ public class HWVORBatch
         }
       }
     }
+  }
+
+  /**
+   * Adds forecast hours to metadata of the given obs: first-date + 120h until last-date
+   */
+  private void setForecastHours( final IObservation observation ) throws SensorException
+  {
+    final ITuppleModel values = observation.getValues( null );
+    final IAxisRange dateRange = values.getRangeFor( ObservationUtilities.findAxisByType( observation.getAxisList(),
+        TimeserieConstants.TYPE_DATE ) );
+    final Calendar startCal = Calendar.getInstance();
+    startCal.setTime( (Date)dateRange.getLower() );
+    startCal.add( Calendar.HOUR_OF_DAY, 120 );
+    TimeserieUtils.setForecast( observation, startCal.getTime(), (Date)dateRange.getUpper() );
   }
 
   public static void main( String[] args ) throws Exception

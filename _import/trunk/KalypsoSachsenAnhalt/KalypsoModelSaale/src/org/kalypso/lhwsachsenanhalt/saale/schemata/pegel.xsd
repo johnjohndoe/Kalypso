@@ -77,6 +77,21 @@
 					<element name="MQ"  type="int"> <annotation><documentation xml:lang="de"><label>MQ</label><tooltip>MQ</tooltip><description>MQ</description></documentation></annotation></element>
 					<element name="MHQ"  type="int"> <annotation><documentation xml:lang="de"><label>MHQ</label><tooltip>MHQ</tooltip><description>MHQ</description></documentation></annotation></element>
 					<element name="HHQ"  type="int"> <annotation><documentation xml:lang="de"><label>HHQ</label><tooltip>HHQ</tooltip><description>HHQ</description></documentation></annotation></element>				
+					<element name="Bodenfrost"  type="int"> <annotation><documentation xml:lang="de"><label>Bodenfrost</label><tooltip>Bodenfrost</tooltip><description>Bodenfrost</description></documentation></annotation></element>
+					<element name="Feuchte"  type="int"> <annotation><documentation xml:lang="de"><label>Feuchte</label><tooltip>Tage Verfrühung (negative Zahl) bzw. Verspätung der Feuchteentwicklung (Standard 0)</tooltip><description>Tage Verfrühung (negative Zahl) bzw. Verspätung der Feuchteentwicklung (Standard 0)</description></documentation></annotation></element>
+					<element name="SchneeTyp"  type="int"> <annotation><documentation xml:lang="de"><label>Schnee</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Steuerung"  type="int"> <annotation><documentation xml:lang="de"><label>Steuerung</label><tooltip>Art der Steuerung Nummer gemäß Menü für Wehr oder Talsperre</tooltip><description>Art der Steuerung Nummer gemäß Menü für Wehr oder Talsperre</description></documentation></annotation></element>
+					<element name="Variante"  type="string"> <annotation><documentation xml:lang="de"><label>Variante</label><tooltip>Textbezeichnung der Variante</tooltip><description>Textbezeichnung der Variante</description></documentation></annotation></element>
+					<element name="STATUS"  type="string"> <annotation><documentation xml:lang="de"><label>STATUS</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve2"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve2</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve3"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve3</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve4"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve4</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve5"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve5</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve6"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve6</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve7"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve7</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve8"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve8</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve9"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve9</label><tooltip></tooltip><description></description></documentation></annotation></element>
+					<element name="Reserve10"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve10</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					<element ref="gml:location"/>
 					<element name="Durchfluß" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Durchfluß_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>

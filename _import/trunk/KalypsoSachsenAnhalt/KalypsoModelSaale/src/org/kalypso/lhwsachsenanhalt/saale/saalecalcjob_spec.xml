@@ -7,4 +7,5 @@
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="LOG" description="Gesamtlog der Saaleberechnung."/>
 	<output id="ZML_RESULT" description="Ergebniszeitreihen"/>
+	<output id="HWVOR00" description="Ein- und Ausgabedateien der interen Berechnung mit HWVOR00"/>
 </modelspec>
