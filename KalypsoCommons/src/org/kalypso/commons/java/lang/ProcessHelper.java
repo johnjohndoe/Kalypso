@@ -58,7 +58,7 @@ public class ProcessHelper
    * @param envp
    * @param fleExeDir
    * @param cancelable
-   * @param lTimeOut
+   * @param lTimeOut Time-out in milliseconds
    * @param wLog
    * @param wErr
    * 
