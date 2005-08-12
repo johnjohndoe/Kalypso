@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
+import com.braju.format.Format;
+
 public final class CsvWriterVisitor implements FeatureVisitor
 {
   private final PrintWriter m_writer;
@@ -21,7 +23,6 @@ public final class CsvWriterVisitor implements FeatureVisitor
     m_writer = writer;
     m_props = properties;
     m_delemiter = delemiter;
-
   }
 
   /**
@@ -36,7 +37,8 @@ public final class CsvWriterVisitor implements FeatureVisitor
       final String def = (String)entry.getValue();
 
       final Object property = f.getProperty( prop );
-      m_writer.print( property == null ? def : property );
+      
+      m_writer.print( property == null ? def : propertyToString( property ) );
 
       if( propIt.hasNext() )
         m_writer.print( m_delemiter );
@@ -45,5 +47,13 @@ public final class CsvWriterVisitor implements FeatureVisitor
     m_writer.println();
 
     return true;
+  }
+
+  private String propertyToString( final Object property )
+  {
+    if( property instanceof Double )
+      return Format.sprintf( "%f", new Object[] { property } );
+      
+    return property.toString();
   }
 }
