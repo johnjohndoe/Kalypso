@@ -43,6 +43,7 @@ import javax.xml.bind.Unmarshaller;
 import junit.framework.TestCase;
 
 import org.kalypso.KalypsoTest;
+import org.kalypso.commons.diff.DiffUtils;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
@@ -85,18 +86,18 @@ public class ModelNACalcTest extends TestCase
   {
     try
     {
-      calc( "we", "test1", "1" );
-      calc( "we", "test1", "2" );
-      calc( "we", "test1", "3" );
-      calc( "we", "test1", "4" );
-      calc( "we", "test1", "5" );
-      calc( "we", "test1", "6" );
-      calc( "we", "test1", "7" );
-      calc( "we", "test1", "8" ); 
-      calc( "we", "test1", "9" );
-      calc( "we", "test1", "10" );
-      calc( "we", "test1", "11" );
-      calc( "we", "test1", "12" );
+      //      calc( "we", "test1", "1" );
+      //      calc( "we", "test1", "2" );
+      //      calc( "we", "test1", "3" );
+      //      calc( "we", "test1", "4" );
+      //      calc( "we", "test1", "5" ); minimal
+      //      calc( "we", "test1", "6" );
+      //      calc( "we", "test1", "7" );
+      //      calc( "we", "test1", "8" );
+      //      calc( "we", "test1", "9" );
+      //      calc( "we", "test1", "10" ); minimal
+      //      calc( "we", "test1", "11" );
+      //      calc( "we", "test1", "12" );
       calc( "we", "test1", "13" );
       calc( "we", "test1", "14" );
       calc( "we", "test1", "15" );// fehler in den hydrotopen flaechen
@@ -133,12 +134,13 @@ public class ModelNACalcTest extends TestCase
     final CalcJobClientBean[] beans = createBeans( modelSpec );
     final ICalcDataProvider dataProvider = new JarCalcDataProvider( dataHandler, beans )
     {
-      public boolean hasID(String id)
+      public boolean hasID( String id )
       {
         if( NaModelConstants.IN_HYDROTOP_ID.equals( id ) )
           return true;
         return super.hasID( id );
       }
+
       /**
        * @see org.kalypso.services.calculation.service.impl.JarCalcDataProvider#getURLForID(java.lang.String)
        */
@@ -148,9 +150,8 @@ public class ModelNACalcTest extends TestCase
           return getClass().getResource( "testData/we/hydrotop.gml" );
         return super.getURLForID( id );
       }
-      
+
     };
-    
 
     final ICalcResultEater resultEater = CalcJobTestUtilis.createResultEater();
     final ICalcMonitor monitor = CalcJobTestUtilis.createMonitor();
@@ -173,16 +174,43 @@ public class ModelNACalcTest extends TestCase
       final File tmpResults = File.createTempFile( identification, "zip" );
       tmpResults.deleteOnExit();
       ZipUtilities.zip( tmpResults, tmpDir );
-      final String[] ignore = new String[] {
-      //          "infolog.txt",
-      //          "start/we_nat_start.txt",
-      //          "IdMap.txt",
-      //          "inp.dat/we_nat.ntz",
-      //          "namodellBerechnung.gml"
-      //          ,"inp.dat/we_nat.geb"
+      final String[] ignore = new String[]
+      {
+          "inp.dat/we_nat.ntz",
+          "infolog.txt",
+          //          "inp.dat/we.hyd",
+          "start/output.res",
+          "IdMap.txt",
+          "exe.log",
+          "start/output.err",
+          "inp.dat/we_nat.ger",
+          "zufluss/Z_1001.zufluss",
+          "zufluss/Z_1002.zufluss",
+          "zufluss/Z_1003.zufluss",
+          "zufluss/Z_1004.zufluss",
+          "zufluss/Z_1005.zufluss",
+          "zufluss/Z_1006.zufluss",
+          "zufluss/Z_1007.zufluss",
+          "zufluss/Z_1008.zufluss",
+          "zufluss/Z_1009.zufluss",
+          "zufluss/Z_1010.zufluss",
+          "zufluss/Z_1011.zufluss",
+          "zufluss/Z_1012.zufluss",
+          "zufluss/Z_1013.zufluss",
+          "zufluss/Z_1014.zufluss",
+          "zufluss/Z_1015.zufluss",
+          "zufluss/Z_1016.zufluss",
+          "zufluss/Z_1017.zufluss",
+          "zufluss/Z_1018.zufluss",
+          "zufluss/Z_1019.zufluss",
+          "zufluss/Z_1020.zufluss",
+          "zufluss/Z_1021.zufluss",
+          "zufluss/Z_1022.zufluss",
+          "zufluss/Z_1023.zufluss"
+
       };
-//      assertTrue( DiffUtils.diffZips( System.out, compareResults, tmpResults, ignore ) );
-//      System.out.println( "no changes found" );
+      assertTrue( DiffUtils.diffZips( System.out, compareResults, tmpResults, ignore ) );
+      System.out.println( "no changes found" );
 
     }
   }
