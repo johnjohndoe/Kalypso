@@ -172,7 +172,7 @@ public class JarCalcDataProvider implements ICalcDataProvider
   /**
    * @see org.kalypso.services.calculation.job.ICalcDataProvider#hasID(java.lang.String)
    */
-  public final boolean hasID( final String id )
+  public boolean hasID( final String id )
   {
     return m_idhash.containsKey( id );
   }

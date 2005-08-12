@@ -104,6 +104,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return null;
   }
 
+  
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveLinks(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String)
@@ -189,7 +190,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private final Collection m_listener = new HashSet();
 
   /**
-   * Every listener is registered only once. 
+   * Every listener is registered only once.
    * 
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
@@ -563,7 +564,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     final Object featureFromPath = getFeatureFromPath( featurePath );
     if( featureFromPath instanceof Feature )
-      fv.visit( (Feature)featureFromPath );
+      accept( fv, (Feature)featureFromPath, depth );
+    //      fv.visit( (Feature)featureFromPath );
     else if( featureFromPath instanceof FeatureList )
       accept( fv, (FeatureList)featureFromPath, depth );
     else
