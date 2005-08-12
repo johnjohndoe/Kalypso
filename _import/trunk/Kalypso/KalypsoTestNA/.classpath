@@ -12,5 +12,6 @@
 	<classpathentry kind="src" path="/KalypsoModelNA"/>
 	<classpathentry kind="src" path="/KalypsoOptimize"/>
 	<classpathentry kind="src" path="/KalypsoDWD"/>
+	<classpathentry kind="src" path="/KalypsoTest"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

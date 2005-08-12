@@ -43,6 +43,7 @@ package org.kalypso.contribs.eclipse;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+
 /**
  * Convenience class for storing references to image descriptors used by the readme tool.
  */
