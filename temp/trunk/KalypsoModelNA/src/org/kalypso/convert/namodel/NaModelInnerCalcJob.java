@@ -327,7 +327,8 @@ public class NaModelInnerCalcJob implements ICalcJob
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
 
-    // TODO update model with extra virtual channel
+    updateModelWithExtraVChannel( modellWorkspace );
+//     TODO update model with extra virtual channel
     //  model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
 
@@ -419,6 +420,46 @@ public class NaModelInnerCalcJob implements ICalcJob
       IOUtils.closeQuietly( idWriter );
     }
     return modellWorkspace;
+  }
+
+  /**
+   * @param workspace
+   */
+  private void updateModelWithExtraVChannel( final GMLWorkspace workspace )
+  {
+    final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
+    //    final FeatureType channelColFT = workspace.getFeatureType( "ChannelCollection" );
+    final FeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
+    final Feature[] features = workspace.getFeatures( catchmentFT );
+    //    final Feature channelColFE = workspace.getFeatures( channelColFT )[0];
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature catchmentFE = features[i];
+      final Feature orgChannelFE = workspace.resolveLink( catchmentFE, "entwaesserungsStrangMember" );
+      if( orgChannelFE == null )
+        continue;
+      final Feature nodeFE = workspace.resolveLink( orgChannelFE, "downStreamNodeMember" );
+      final Feature newChannelFE = workspace.createFeature( vChannelFT );
+      // set new relation: catchment -> new V-channel
+      try
+      {
+        workspace.setFeatureAsComposition( catchmentFE, "entwaesserungsStrangMember", newChannelFE, true );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+      // set new relation: new V-channel -> downstream node
+      try
+      {
+        workspace.addFeatureAsAggregation( newChannelFE, "downStreamNodeMember", 1, nodeFE.getId() );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
   }
 
   /**
@@ -647,7 +688,7 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     //    j Gesamtabfluss Knoten .qgs
     FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
-    loadTSResults( "qgs", nodeFT, "num", "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir,
+    loadTSResults( "qgs", nodeFT, "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir,
         modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    n Schnee .sch
     //    n Bodenspeicher .bsp
@@ -667,43 +708,43 @@ public class NaModelInnerCalcJob implements ICalcJob
 
     FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
     //    j Niederschlag .pre
-    loadTSResults( "pre", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+    loadTSResults( "pre", catchmentFT, "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
     //    j Temperatur .tmp
-    loadTSResults( "tmp", catchmentFT, "inum", "name", TimeserieConstants.TYPE_TEMPERATURE, null, null, inputDir,
+    loadTSResults( "tmp", catchmentFT, "name", TimeserieConstants.TYPE_TEMPERATURE, null, null, inputDir,
         modellWorkspace, logger, outputDir, 1.0d, idManager );
 
     //    n Interflow .qif
-    loadTSResults( "qif", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+    loadTSResults( "qif", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
 
     //    n Grundwasser .qgw
-    loadTSResults( "qgw", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+    loadTSResults( "qgw", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
     //    n Wasserstand Speicher .sph
-    loadTSResults( "shp", catchmentFT, "inum", "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+    loadTSResults( "shp", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
         modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    n Gesamtabfluss TG .qgg
-    loadTSResults( "qgg", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+    loadTSResults( "qgg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
 
     //    n Grundwasserstand .gws
-    loadTSResults( "gws", catchmentFT, "inum", "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+    loadTSResults( "gws", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
         modellWorkspace, logger, outputDir, 100.0d, idManager );
     //    n Basisabfluss .qbs
-    loadTSResults( "qbs", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+    loadTSResults( "qbs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
     //    n Oberflaechenabfluss .qna
-    loadTSResults( "qna", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+    loadTSResults( "qna", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
     //    n Abfluss vers. Flaechen .qvs
-    loadTSResults( "qvs", catchmentFT, "inum", "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+    loadTSResults( "qvs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
   }
 
-  private void loadTSResults( String suffix, FeatureType resultFT, String keyPropName, String titlePropName,
-      String resultType, String metadataTSLink, String targetTSLink, File inputDir, GMLWorkspace modellWorkspace,
-      Logger logger, File outputDir, double resultFactor, IDManager idManager ) throws Exception
+  private void loadTSResults( String suffix, FeatureType resultFT, String titlePropName, String resultType,
+      String metadataTSLink, String targetTSLink, File inputDir, GMLWorkspace modellWorkspace, Logger logger,
+      File outputDir, double resultFactor, IDManager idManager ) throws Exception
   {
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
@@ -726,13 +767,13 @@ public class NaModelInnerCalcJob implements ICalcJob
         final Feature feature = nodeFEs[i];
         if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
           continue; // should not generate results
-          //        final String key = FeatureHelper.getAsString( feature, keyPropName );
+        //        final String key = FeatureHelper.getAsString( feature, keyPropName );
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
         final String feID = feature.getId();
         final String feName = (String)feature.getProperty( titlePropName );
         final String title;
         if( feName != null )
-          title = "Berechnung " + getTitleForSuffix( suffix ) + " " + feName + " (" + feID + ")";
+          title = "Berechnung " + getTitleForSuffix( suffix ) + " " + feName;
         else
           title = "Berechnung " + getTitleForSuffix( suffix ) + " (" + feID + ")";
 
@@ -757,8 +798,8 @@ public class NaModelInnerCalcJob implements ICalcJob
         }
 
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
-        final IAxis qAxis = new DefaultAxis( getTitleForSuffix( suffix ) + "_" + title, resultType, TimeserieUtils
-            .getUnit( resultType ), Double.class, false );
+        final IAxis qAxis = new DefaultAxis( title, resultType, TimeserieUtils.getUnit( resultType ), Double.class,
+            false );
         IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
         IAxis[] axis = new IAxis[]
         {

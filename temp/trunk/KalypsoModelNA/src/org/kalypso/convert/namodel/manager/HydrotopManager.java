@@ -3,7 +3,6 @@ package org.kalypso.convert.namodel.manager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -70,7 +69,6 @@ public class HydrotopManager extends AbstractManager
   final NAConfiguration m_conf;
 
   public HydrotopManager( NAConfiguration conf ) throws IOException
-
   {
     super( conf.getHydrotopFormatURL() );
     m_conf = conf;
@@ -107,8 +105,9 @@ public class HydrotopManager extends AbstractManager
     Feature rootFeature = hydWorkspace.getRootFeature();
     Feature hydCol = (Feature)rootFeature.getProperty( "HydrotopCollectionMember" );
     FeatureList hydList = (FeatureList)hydCol.getProperty( "HydrotopMember" );
-    Date calcDate = new Date();
-    asciiBuffer.getHydBuffer().append( "Hydrotope Modell, Datum " + calcDate.toString() + "\n" );
+//    Date calcDate = new Date();
+//    asciiBuffer.getHydBuffer().append( "Hydrotope Modell, Datum " + calcDate.toString() + "\n" );
+    asciiBuffer.getHydBuffer().append( "Hydrotope aus GML\n" );
 
     while( catchmentIter.hasNext() )
     {

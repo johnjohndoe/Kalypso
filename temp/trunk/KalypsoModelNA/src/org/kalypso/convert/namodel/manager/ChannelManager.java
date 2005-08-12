@@ -45,6 +45,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -166,13 +167,14 @@ public class ChannelManager extends AbstractManager
 
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
-    Feature rootFeature = workspace.getRootFeature();
-    Feature channelCol = (Feature)rootFeature.getProperty( "ChannelCollectionMember" );
-    List channelList = (List)channelCol.getProperty( "channelMember" );
-    Iterator iter = channelList.iterator();
+    final List channelList=new ArrayList();
+    channelList.addAll(Arrays.asList(workspace.getFeatures(m_virtualChannelFT)));
+    channelList.addAll(Arrays.asList(workspace.getFeatures(m_kmChannelFT)));
+    channelList.addAll(Arrays.asList(workspace.getFeatures(m_storageChannelFT)));
+    final Iterator iter = channelList.iterator();
     while( iter.hasNext() )
     {
-      Feature channelFE = (Feature)iter.next();
+      final Feature channelFE = (Feature)iter.next();
       if( asciiBuffer.writeFeature( channelFE ) )
         writeFeature( asciiBuffer, channelFE, workspace );
     }
