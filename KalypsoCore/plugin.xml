@@ -17,12 +17,10 @@
 
    <requires>
       <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.kalypso.repository" export="true"/>
+      <import plugin="org.kalypso.contribs.eclipseplatform" export="true"/>
       <import plugin="org.kalypso.deegree" export="true"/>
+      <import plugin="org.kalypso.repository" export="true"/>
       <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="org.kalypso.commons" export="true"/>
-      <import plugin="org.kalypso.contribs.java" export="true"/>
    </requires>
 
    <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>

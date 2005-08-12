@@ -494,7 +494,10 @@ public class LegendFactory
   {
     try
     {
-      this.legendtitle = new String( title.getBytes(), "UTF-8" );
+      if( title != null )
+        this.legendtitle = new String( title.getBytes(), "UTF-8" );
+      else
+        this.legendtitle = "";
     }
     catch( Exception e )
     {
@@ -517,12 +520,11 @@ public class LegendFactory
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
- * have been up to: Revision 1.13  2005/06/29 10:41:17  belger
+ * have been up to: Revision 1.14  2005/08/12 11:00:54  doemming
  * have been up to: *** empty log message ***
- * have been up to:
- * have been up to: Revision 1.12  2005/06/20 14:07:49  belger
- * have been up to: Formatierung
- * have been up to: Revision 1.19 2004/08/26 12:42:20 poth no message
+ * have been up to: have been up to: Revision 1.13 2005/06/29 10:41:17 belger have been up
+ * to: *** empty log message *** have been up to: have been up to: Revision 1.12 2005/06/20 14:07:49 belger have been up
+ * to: Formatierung have been up to: Revision 1.19 2004/08/26 12:42:20 poth no message
  * 
  * Revision 1.18 2004/08/10 11:45:57 poth no message
  * 
