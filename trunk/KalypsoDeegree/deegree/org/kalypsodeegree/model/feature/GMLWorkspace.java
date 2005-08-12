@@ -96,4 +96,14 @@ public interface GMLWorkspace extends ModellEventProvider
   public boolean isExistingRelation( Feature f1, Feature f2, String relationPropertyName );
   
   public IFeatureSelectionManager getSelectionManager();
+
+  /**
+   * 
+   * @param parentFE
+   * @param linkPropName
+   * @param linkedFE
+   * @param overwrite
+   * @throws Exception
+   */
+  public void setFeatureAsComposition( final Feature parentFE, final String linkPropName, final Feature linkedFE, final boolean overwrite ) throws Exception;
 }
