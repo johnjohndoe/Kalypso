@@ -186,11 +186,9 @@ public abstract class ObsView implements IObsViewEventProvider
   {
     synchronized( m_listeners )
     {
-      for( final Iterator it = m_listeners.iterator(); it.hasNext(); )
-      {
-        final IObsViewEventListener l = (IObsViewEventListener)it.next();
-        l.onObsViewChanged( evt );
-      }
+      final Object[] listeners = m_listeners.toArray();
+      for( int i = 0; i < listeners.length; i++ )
+        ((IObsViewEventListener)listeners[i]).onObsViewChanged( evt );
     }
   }
 

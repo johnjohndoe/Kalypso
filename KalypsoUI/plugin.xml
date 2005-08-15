@@ -17,9 +17,6 @@
       <library name="lib/kalypsoservice_calculation.jar">
          <export name="*"/>
       </library>
-      <library name="lib/kalypsoservice_metadoc.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/KalypsoServiceCore.jar">
          <export name="*"/>
       </library>
