@@ -110,9 +110,7 @@ public class WQTableFactory implements ISerializer
   /**
    * Creates a XML-String from the given WQTableSet object.
    * 
-   * @param wqset
    * @return xml String
-   * @throws WQException
    */
   public static String createXMLString( final WQTableSet wqset ) throws WQException
   {
