@@ -179,53 +179,102 @@
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
 	   
-	   	<arg name="mapTemplate" value=".templates/calcCase/pegel.gmt"/>
+	<arg name="mapTemplate" value=".templates/calcCase/pegel.gmt"/>
 	
         <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
         <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
         <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
 		
-		<arg name="ignoreType1" value="W"/>
+	<arg name="ignoreType1" value="W"/>
         <arg name="ignoreType2" value="Q"/>
         <arg name="ignoreLabel1" value="Abfluss"/>
         <arg name="ignoreLabel2" value="Wasserstand"/>
 		
-		<arg name="pegelNameProperty" value="Name"/>
-		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
+	<arg name="pegelNameProperty" value="Name"/>
+	<arg name="resultProperty" value="Wasserstand_vorhersage"/>
 
-	   	<arg name="mainSash" value="40"/>
-	   	<arg name="rightSash" value="25"/>
-	   	<arg name="selectionID" value="256"/>
+	<arg name="mainSash" value="40"/>
+	<arg name="rightSash" value="25"/>
+	<arg name="selectionID" value="256"/>
 
-		<arg name="exporterObservation">
-			<arg name="id" value="observationFeatureExporter"/>
-	   		<arg name="nameproperty" value="Name"/>
-	   		<arg name="width" value="1024"/>
-	   		<arg name="height" value ="768"/>
-	   		<arg name="imageFormat" value ="png"/>
-			<arg name="tokens">
-				<arg name="title" value="Name"/>
-				<arg name="href1" value="Wasserstand_gemessen"/>
-    			<arg name="href2" value="Wasserstand_gerechnet"/>
-				<arg name="href3" value="Wasserstand_vorhersage"/>
-    			<arg name="href4" value="Niederschlag_rechnung"/>
-			</arg>
-			<arg name="templateDiagQ">
-				<arg name="label" value="Abflußgrafik"/>
-				<arg name="templateFile" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
-			</arg>
-			<arg name="templateDiagW">
-				<arg name="label" value="Wasserstandsgrafik"/>
-				<arg name="templateFile" value="project:/.templates/calcCase/berichtDiagW.odt"/>
-			</arg>
-			<arg name="templateTable">
-				<arg name="label" value="Tabelle"/>
-				<arg name="templateFile" value="project:/.templates/calcCase/berichtTabelle.ott"/>
-			</arg>
-	   	</arg>
-	   	
-   		<arg name="maximizeMap" value="true"/>
-	</page>
+	<arg name="exporter1">
+		<arg name="id" value="featureWithTemplateExporter"/>
+		<arg name="nameproperty" value="Name"/>
+		<arg name="width" value="1024"/>
+		<arg name="height" value="768"/>
+		<arg name="imageFormat" value ="png"/>
+		<arg name="tokens">
+			<arg name="title" value="Name"/>
+			<arg name="href1" value="Wasserstand_gemessen"/>
+			<arg name="href2" value="Wasserstand_gerechnet"/>
+			<arg name="href3" value="Wasserstand_vorhersage"/>
+			<arg name="href4" value="Niederschlag_rechnung"/>
+		</arg>
+		<arg name="templateDiagQ">
+			<arg name="label" value="Abflußgrafik"/>
+			<arg name="href" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+		</arg>
+		<arg name="templateDiagW">
+			<arg name="label" value="Wasserstandsgrafik"/>
+			<arg name="href" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+		</arg>
+		<arg name="templateTable">
+			<arg name="label" value="Tabelle"/>
+			<arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+		</arg>
+	</arg>
+
+	<arg name="exporter2">
+		<arg name="id" value="simpleTemplateExporter"/>
+		<arg name="width" value="1024"/>
+		<arg name="height" value="768"/>
+		<arg name="imageFormat" value="png"/>
+		<arg name="templateDiag">
+			<arg name="label" value="Abflußdiagramm, Gebiet obere Spree"/>
+			<arg name="href" value="project:/.templates/calcCase/berichtDiagObereSpree.odt"/>
+			<arg name="documentName" value="obereSpree"/>
+		</arg>
+	</arg>
+
+	<arg name="exporter3">
+		<arg name="id" value="sumUpTableExporter" />
+
+		<arg name="documentName" value="übersicht.csv" />
+		<arg name="separator" value="\t"/>
+		<arg name="charset" value="UTF-8"/>
+		<arg name="delta" value="0.0001"/>
+		<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+
+		<arg name="obs3">
+		 	<arg name="label" value="Gröditz" />
+		 	<arg name="href" value="./Ergebnisse/Zeitreihen/QV_GROEDI.zml" />
+		</arg>
+		<arg name="obs2">
+		 	<arg name="label" value="Boxberg" />
+		 	<arg name="href" value="./Ergebnisse/Zeitreihen/QV_BOXBRG.zml" />
+		</arg>
+		<arg name="obs1">
+		 	<arg name="label" value="Bautzen" />
+		 	<arg name="href" value="./Ergebnisse/Zeitreihen/QV_BAUTZWB.zml" />
+		</arg>
+
+		<arg name="column2">
+			<arg name="label" value="Gewässer"/>
+			<arg name="content" value="metadata:Gewässer" />
+		</arg>
+
+		<arg name="column1">
+			<arg name="label" value="Pegel"/>
+			<arg name="content" value="arg:label" />
+		</arg>
+
+		<arg name="axisType" value="W"/>
+		<arg name="timeUnit" value="HOUR" />
+		<arg name="timeStep" value="6" />
+	</arg>
+
+	<arg name="maximizeMap" value="true"/>
+      </page>
 	
 </calcwizard>

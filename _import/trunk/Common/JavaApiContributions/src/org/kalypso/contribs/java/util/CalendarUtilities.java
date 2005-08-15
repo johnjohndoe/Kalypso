@@ -47,7 +47,7 @@ import java.util.Calendar;
  * 
  * @author schlienger
  */
-public class CalendarUtilities
+public final class CalendarUtilities
 {
   /** do not instanciate */
   private CalendarUtilities()
@@ -61,12 +61,15 @@ public class CalendarUtilities
    * Example: the name "DAY_OF_MONTH" will return Calendar.DAY_OF_MONTH
    * <p>
    * The comparison is not case sensitive.
+   * <p>
+   * As last resort, if the fieldName does not represent a the literal name of a calendar field, it is assumed to be an
+   * integer representing its java-internal value. Finally this value is returned.
    * 
    * @param fieldName
    * @return Calendar.*
    * @see java.util.Calendar
    */
-  public final static int getCalendarField( final String fieldName )
+  public static int getCalendarField( final String fieldName )
   {
     if( "DATE".equalsIgnoreCase( fieldName ) )
       return Calendar.DATE;
@@ -101,6 +104,47 @@ public class CalendarUtilities
     else if( "ZONE_OFFSET".equalsIgnoreCase( fieldName ) )
       return Calendar.ZONE_OFFSET;
     // last we assume that it is allready an integer
-    return Integer.parseInt(fieldName);    
+    return Integer.parseInt( fieldName );
+  }
+
+  /**
+   * Important note: this method is not localized and is designed to be used in a german environment.
+   * 
+   * @return the string abbreviation of the given field. For instance if field is the java internal value HOUR_OF_DAY,
+   *         'h' is returned
+   */
+  public static String getAbbreviation( final int field )
+  {
+    switch( field )
+    {
+      case Calendar.DAY_OF_MONTH:
+        return "Tag";
+      case Calendar.DAY_OF_WEEK:
+        return "Tag";
+      case Calendar.DAY_OF_WEEK_IN_MONTH:
+        return "Tag";
+      case Calendar.DAY_OF_YEAR:
+        return "Tag";
+      case Calendar.HOUR:
+        return "Std";
+      case Calendar.HOUR_OF_DAY:
+        return "Std";
+      case Calendar.MILLISECOND:
+        return "Millis";
+      case Calendar.MINUTE:
+        return "Min";
+      case Calendar.MONTH:
+        return "Mon";
+      case Calendar.SECOND:
+        return "Sek";
+      case Calendar.WEEK_OF_MONTH:
+        return "W";
+      case Calendar.WEEK_OF_YEAR:
+        return "W";
+      case Calendar.YEAR:
+        return "J";
+      default:
+        return "" + field;
+    }
   }
 }

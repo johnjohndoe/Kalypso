@@ -248,4 +248,20 @@ public final class StatusUtilities
   {
     return createStatus( IStatus.ERROR, errorMessage, null );
   }
+  
+  /**
+   * Creates an info-status with given message and null throwable.
+   */
+  public static IStatus createInfoStatus( final String infoMessage )
+  {
+    return createStatus( IStatus.INFO, infoMessage, null );
+  }
+  
+  /**
+   * Creates a warning-status with given message and null throwable.
+   */
+  public static IStatus createWarningStatus( final String warningMessage )
+  {
+    return createStatus( IStatus.WARNING, warningMessage, null );
+  }
 }
