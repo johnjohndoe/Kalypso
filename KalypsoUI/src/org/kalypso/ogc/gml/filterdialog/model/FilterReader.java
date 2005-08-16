@@ -33,7 +33,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.graphics.sld.FeatureTypeConstraint;
@@ -54,9 +53,6 @@ import org.w3c.dom.Element;
  */
 public class FilterReader
 {
-
-  private Map m_map = null;
-
   public static Filter[] collectFiltersFromSLD( Reader reader ) throws Exception
   {
     StyledLayerDescriptor sld = SLDFactory.createSLD( reader );

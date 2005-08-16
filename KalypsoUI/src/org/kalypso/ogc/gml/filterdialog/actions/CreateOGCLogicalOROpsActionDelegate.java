@@ -65,7 +65,6 @@ public class CreateOGCLogicalOROpsActionDelegate implements IActionDelegate
         if( firstElement instanceof ComplexFilter )
         {
           ComplexFilter filter = (ComplexFilter)firstElement;
-          Operation operation = filter.getOperation();
           filter.setOperation( new LogicalOperation( OperationDefines.OR, new ArrayList() ) );
         }
         if( firstElement instanceof LogicalOperation )

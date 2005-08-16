@@ -115,8 +115,8 @@ public class FilterLabelProvider extends LabelProvider
         {
           if( type == OperationDefines.UNKNOWN )
             return "Empty Spatial Operation *";
-          else
-            return operation.getOperatorName();
+
+          return operation.getOperatorName();
         }
         //Logical
         if( type == OperationDefines.TYPE_LOGICAL )

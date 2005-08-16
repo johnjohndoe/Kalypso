@@ -75,7 +75,6 @@ import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
@@ -88,33 +87,23 @@ import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
  */
 public class FilterDialog extends Dialog
 {
-  private final FeatureType m_featureType;
+  protected final FeatureType m_featureType;
 
-  private FilterRootElement m_root;
+  protected FilterRootElement m_root;
 
   private Group m_treeGroup;
 
-  private Group m_propGroup;
+  protected Group m_propGroup;
 
-  private Composite m_main;
+  protected Composite m_main;
 
-  private TreeViewer m_viewer2;
+  protected TreeViewer m_viewer2;
 
-  private final FilterLabelProvider m_labelProvider = new FilterLabelProvider();
+  protected final FilterLabelProvider m_labelProvider = new FilterLabelProvider();
 
-  private final FilterContentProvider m_contentProvider = new FilterContentProvider();
-
-  private Composite m_props = null;
-
-  private Label m_saveButton;
-
-  private Label m_loadFilterButton;
+  protected final FilterContentProvider m_contentProvider = new FilterContentProvider();
 
   private ToolBar m_toolBar;
-
-  /**
-   *  
-   */
 
   public FilterDialog( Shell parent, FeatureType featureType, Filter root )
   {
@@ -155,9 +144,9 @@ public class FilterDialog extends Dialog
            */
           public void contentChanged()
           {
-            m_viewer2.refresh( true );
-            m_viewer2.collapseAll();
-            m_viewer2.expandAll();
+            refresh( true );
+            collapseAll();
+            expandAll();
           }
 
           /**
@@ -165,9 +154,9 @@ public class FilterDialog extends Dialog
            */
           public void structureChanged()
           {
-            m_viewer2.refresh( true );
-            m_viewer2.collapseAll();
-            m_viewer2.expandAll();
+            refresh( true );
+            collapseAll();
+            expandAll();
           }
 
           public Object getModel()
@@ -204,21 +193,13 @@ public class FilterDialog extends Dialog
           m_propGroup.setLayoutData( data );
           m_propGroup.setLocation( 300, 5 );
           Object firstElement = ( (IStructuredSelection)selection ).getFirstElement();
-          Operation operation = null;
           if( firstElement instanceof Operation )
           {
-            try
-            {
-              Object oldValue = firstElement;
-              m_props = FilterCompositeFactory.getInstance( null ).createFilterElementComposite(
-                  (Operation)firstElement, m_propGroup, m_featureType );
-              ( (FilterRootElement)m_root ).firePropertyChange( FilterRootElement.OPERATION_ADDED, oldValue,
-                  firstElement );
-            }
-            catch( FilterEvaluationException e )
-            {
-              e.printStackTrace();
-            }
+            Object oldValue = firstElement;
+            FilterCompositeFactory.getInstance( null ).createFilterElementComposite(
+                (Operation)firstElement, m_propGroup, m_featureType );
+            m_root.firePropertyChange( FilterRootElement.OPERATION_ADDED, oldValue,
+                firstElement );
           }
           else if( firstElement instanceof FeatureFilter )
           {
@@ -303,7 +284,7 @@ public class FilterDialog extends Dialog
         {
           IPath result = dialog.getResult();
           IFile file = workspace.getRoot().getFile( result );
-          String xml = ( (FilterRootElement)m_root ).toXML().toString();
+          String xml = m_root.toXML().toString();
           try
           {
             file.create( new ByteArrayInputStream( xml.getBytes() ), true, new NullProgressMonitor() );
@@ -326,24 +307,24 @@ public class FilterDialog extends Dialog
     return m_main;
   }
 
-  /**
-   *  
-   */
-  private void createLocalMenu()
-  {
-    final MenuManager menuManager = new MenuManager( "#PopUp" );
-    menuManager.setRemoveAllWhenShown( true );
-    menuManager.addMenuListener( new IMenuListener()
-    {
-      public void menuAboutToShow( IMenuManager manager )
-      {
-        manager.add( new Separator() );
-        manager.add( action );
-      }
-    } );
-    Menu menu = menuManager.createContextMenu( m_viewer2.getControl() );
-    m_viewer2.getControl().setMenu( menu );
-  }
+//  /**
+//   *  
+//   */
+//  private void createLocalMenu()
+//  {
+//    final MenuManager menuManager = new MenuManager( "#PopUp" );
+//    menuManager.setRemoveAllWhenShown( true );
+//    menuManager.addMenuListener( new IMenuListener()
+//    {
+//      public void menuAboutToShow( IMenuManager manager )
+//      {
+//        manager.add( new Separator() );
+//        manager.add( action );
+//      }
+//    } );
+//    Menu menu = menuManager.createContextMenu( m_viewer2.getControl() );
+//    m_viewer2.getControl().setMenu( menu );
+//  }
 
   /**
    *  
@@ -364,7 +345,7 @@ public class FilterDialog extends Dialog
         }
         else
         {
-          manager.add( action );
+          manager.add( m_action );
           manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
           manager.add( new Separator() );
         }
@@ -400,7 +381,7 @@ public class FilterDialog extends Dialog
     shell.setSize( 650, 350 );
   }
 
-  private Action action = new Action( "&Löschen", ImageProvider.IMAGE_STYLEEDITOR_REMOVE )
+  protected Action m_action = new Action( "&Löschen", ImageProvider.IMAGE_STYLEEDITOR_REMOVE )
   {
     public void run()
     {
