@@ -28,9 +28,6 @@ public class PointProperty
 
   public final static PointProperty BREITE = new PointProperty( "Breite", false, true, true, 4 );
 
- // public final static PointProperty DURCHSTROEMTE = new PointProperty( "Durchströmte Bereiche",
- //     false, false, false, 4 );
-
   public final static PointProperty HOCHWERT = new PointProperty( "Hochwert", true, true, true, 4 );
 
   public final static PointProperty UNTERKANTEBRUECKE = new PointProperty( "Brückenunterkante",
@@ -48,11 +45,13 @@ public class PointProperty
   public final static PointProperty RECHTSWERT = new PointProperty( "Rechtswert", true, true, true,
       4 );
 
- // public final static PointProperty TRENNFLAECHE = new PointProperty( "Trennflächen", false, false,
- //     false, 4 );
+  public final static PointProperty FLIESSZONE = new PointProperty( "Trennflächen", false, false,
+      false, 4 );
+  public final static PointProperty DURCHSTROEMTE = new PointProperty( "Durchströmte Bereiche", false, false,
+      false, 4 );
 
- // public final static PointProperty BORDVOLL = new PointProperty( "Bordvollpunkte", true, false,
- //     false, 4 );
+  public final static PointProperty BORDVOLL = new PointProperty( "Bordvollpunkte", true, false,
+      false, 4 );
 
    
   public PointProperty( final String label, final boolean optional, final boolean visible,

@@ -3,6 +3,8 @@ package com.bce.eind.core.profil;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.bce.eind.core.profil.IProfilConstants.DEVIDER_PROPERTY;
+
 /**
  * @author kimwerner
  */
@@ -15,7 +17,7 @@ public interface IPlainProfil
 
   public static enum DEVIDER_TYP
   {
-    BORDVOLL, DURCHSTROEMTE, TRENNFLAECHE, WEHR;
+    BORDVOLL, DURCHSTROEMTE, FLIESSZONE, WEHR;
   }
 
   public static enum PROPERTY
@@ -174,6 +176,8 @@ public interface IPlainProfil
   public void setProperty( final Object key, final Object value );
 
   public void setValueFor(IProfilPoint point,PointProperty property, double value) throws ProfilDataException;
+ 
+  public void setValueFor(IProfilDevider devider,DEVIDER_PROPERTY property);
   
   public void setValues( final PointChange[] changes ) throws ProfilDataException;
   

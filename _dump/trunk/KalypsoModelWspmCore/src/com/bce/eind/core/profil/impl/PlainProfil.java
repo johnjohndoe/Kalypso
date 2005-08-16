@@ -439,4 +439,11 @@ return oldPkt;
     { new PointChange( point, pointProperty, value ) } );
   }
 
+  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property)
+  {
+    devider.setValueFor( DEVIDER_PROPERTY.class, property);
+    
+    
+  }
+
 }

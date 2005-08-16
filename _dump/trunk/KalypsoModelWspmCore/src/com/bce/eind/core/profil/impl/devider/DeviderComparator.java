@@ -9,7 +9,6 @@ import com.bce.eind.core.profil.ProfilDataException;
 public class DeviderComparator implements Comparator<IProfilDevider>
 {
 
-  
   public int compare( IProfilDevider o1, IProfilDevider o2 )
   {
 
@@ -21,13 +20,12 @@ public class DeviderComparator implements Comparator<IProfilDevider>
       {
         return 1;
       }
-      else if( o1.getPoint().getValueFor( PointProperty.BREITE ) < o2.getPoint().getValueFor(
+      if( o1.getPoint().getValueFor( PointProperty.BREITE ) < o2.getPoint().getValueFor(
           PointProperty.BREITE ) )
       {
         return -1;
       }
-      else
-        return 0;
+      return 0;
     }
     catch( ProfilDataException e )
     {

@@ -13,6 +13,7 @@ import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilBuildingProperty;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilConstants.DEVIDER_PROPERTY;
 
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
@@ -409,6 +410,14 @@ public class Profil implements IProfil
   {
     final List<IProfilPoint> allPoints = getPoints();
     setValuesFor( allPoints, pointProperty, value );
+    
+  }
+
+
+  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property)
+  {
+    devider.setValueFor( DEVIDER_PROPERTY.class, property);
+    fireDeviderChanged(null,devider);
     
   }
 
