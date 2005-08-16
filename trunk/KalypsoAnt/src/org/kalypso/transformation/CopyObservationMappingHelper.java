@@ -80,7 +80,7 @@ public class CopyObservationMappingHelper
     if( schema == null )
       throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
     final FeatureType mapColFT = schema.getFeatureType( "MappingCollection" );
-    final Feature rootFE = FeatureFactory.createFeature( "1", mapColFT );
+    final Feature rootFE = FeatureFactory.createFeature( "1", mapColFT, true );
     return new GMLWorkspace_Impl( schema.getFeatureTypes(), rootFE, context, null, schema.getTargetNS(), schema
         .getNamespaceMap() );
   }

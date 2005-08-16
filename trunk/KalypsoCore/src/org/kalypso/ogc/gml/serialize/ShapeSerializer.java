@@ -244,7 +244,7 @@ public class ShapeSerializer
         1,
         FeatureType.UNBOUND_OCCURENCY }, null, new HashMap() );
 
-    return FeatureFactory.createFeature( "root", collectionFT );
+    return FeatureFactory.createFeature( "root", collectionFT, true );
   }
 
   public static Collection readFeaturesFromDbf( final String basename )

@@ -82,20 +82,20 @@ public class WQRelationTableViewer extends AbstractViewer
     m_composite.setLayout( new GridLayout() );
     m_composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    m_combo = new Combo( m_composite, SWT.DROP_DOWN | SWT.READ_ONLY );
+    final Combo combo = new Combo( m_composite, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_combo = combo;
     m_combo.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+
     m_combo.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
-        final WQTable table = m_tables[m_combo.getSelectionIndex()];
-
-        m_table.setModel( WQRelationFactory.createTableModel( table ) );
+        comboSelected( combo );
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
       {
-        // empty
+      // empty
       }
     } );
 
@@ -113,6 +113,12 @@ public class WQRelationTableViewer extends AbstractViewer
     vFrame.add( pane );
   }
 
+  protected void comboSelected( final Combo combo )
+  {
+    final WQTable table = m_tables[combo.getSelectionIndex()];
+    m_table.setModel( WQRelationFactory.createTableModel( table ) );
+  }
+
   public Control getControl()
   {
     return m_composite;
@@ -121,18 +127,18 @@ public class WQRelationTableViewer extends AbstractViewer
   public void setInput( final WQTableSet wqs )
   {
     m_table.setModel( new DefaultTableModel() );
-    
+
     if( wqs == null )
       return;
 
     m_tables = wqs.getTables();
     for( int i = 0; i < m_tables.length; i++ )
       m_combo.add( m_tables[i].toString() );
-    
+
     if( m_tables.length > 0 )
     {
       m_combo.select( 0 );
-      
+
       m_table.setModel( WQRelationFactory.createTableModel( m_tables[0] ) );
     }
   }

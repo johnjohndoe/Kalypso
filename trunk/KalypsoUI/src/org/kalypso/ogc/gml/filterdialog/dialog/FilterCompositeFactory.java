@@ -51,7 +51,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.filterencoding.Expression;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLGeometry;
@@ -79,12 +78,11 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class FilterCompositeFactory
 {
-
   private static FilterCompositeFactory m_factory = new FilterCompositeFactory();
 
-  private FeatureType m_ft;
+  protected FeatureType m_ft;
 
-  private Operation m_operation;
+  protected Operation m_operation;
 
   private static final int STANDARD_WIDTH_FIELD = 150;
 
@@ -127,11 +125,12 @@ public class FilterCompositeFactory
     }
   }
 
-  private TreeSet getSupportedSpatialOperations()
+  protected TreeSet getSupportedSpatialOperations()
   {
     return m_allsupportedSpatialOps;
   }
-  private TreeSet getSupportedCOMPOperations()
+  
+  protected TreeSet getSupportedCOMPOperations()
   {
     return m_allSupportedCompOps;
   }
@@ -142,9 +141,13 @@ public class FilterCompositeFactory
 
     return m_factory;
   }
+  
+  protected Operation getOperation()
+  {
+    return m_operation;
+  }
 
   public Composite createFilterElementComposite( Operation operation, Composite parent, FeatureType ft )
-      throws FilterEvaluationException
   {
     Composite c = null;
     m_ft = ft;
@@ -180,11 +183,9 @@ public class FilterCompositeFactory
 
   class SpatialComposite extends Composite
   {
-    private String m_selection;
-
     private Combo m_combo;
 
-    private Text m_text;
+    protected Text m_text;
 
     private Label m_spatialLabel;
 
@@ -192,19 +193,19 @@ public class FilterCompositeFactory
 
     private Button m_loadButton;
 
-    private Combo m_scrabLayerCombo;
+    protected Combo m_scrabLayerCombo;
 
     private Label m_supportedOpsLable;
 
     private Combo m_supportedOpsCombo;
 
-    public SpatialComposite( Composite parent, int style ) throws FilterEvaluationException
+    public SpatialComposite( Composite parent, int style )
     {
       super( parent, style );
 
-      GMLGeometry geometry = ( (SpatialOperation)m_operation ).getGeometry();
-      PropertyName propertyName = ( (SpatialOperation)m_operation ).getPropertyName();
-      String opsName = m_operation.getOperatorName();
+      GMLGeometry geometry = ( (SpatialOperation)getOperation() ).getGeometry();
+      PropertyName propertyName = ( (SpatialOperation)getOperation() ).getPropertyName();
+      String opsName = getOperation().getOperatorName();
       //Top-Group
       setLayout( new GridLayout( 2, false ) );
       GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
@@ -366,15 +367,15 @@ public class FilterCompositeFactory
 
     private Label m_firstRowLabel = null;
 
-    private Combo m_firstRowCombo = null;
+    protected Combo m_firstRowCombo = null;
 
     private Label m_secondRowLabel = null;
 
-    private Text m_secondRowText = null;
+    protected Text m_secondRowText = null;
 
-    private Text m_errorMessage = null;
+    protected Text m_errorMessage = null;
 
-    private Label m_errorLabel = null;
+    protected Label m_errorLabel = null;
 
     private Combo m_supportedOpsCombo;
 
@@ -470,7 +471,6 @@ public class FilterCompositeFactory
             ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( pn );
             Literal l = new Literal( m_secondRowText.getText().trim() );
             ( (PropertyIsCOMPOperation)m_operation ).setSecondExperssion( l );
-            Operation o = m_operation;
             System.out.print("");
           }
         }
@@ -556,9 +556,9 @@ public class FilterCompositeFactory
 
     private Label m_firstRowLabel;
 
-    private Combo m_firstRowCombo;
+    protected Combo m_firstRowCombo;
 
-    private Text m_secondRowText;
+    protected Text m_secondRowText;
 
     protected Label m_errorLabel;
 
@@ -625,7 +625,7 @@ public class FilterCompositeFactory
       m_secondRowLabel = new Label( this, SWT.FILL );
       m_secondRowLabel.setText( secondExpression.getExpressionName().trim() );
       m_secondRowText = new Text( this, SWT.FILL | SWT.BORDER );
-      m_secondRowText.setText( ( (Literal)secondExpression ).getValue() );
+      m_secondRowText.setText( secondExpression.getValue() );
       m_secondRowText.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       m_secondRowText.addFocusListener( new FocusListener()
       {
@@ -709,11 +709,11 @@ public class FilterCompositeFactory
       else if( m_operation == null )
         expression = new PropertyName( EMPTY_VALUE );
 
-      String value = null;
-      if( expression instanceof PropertyName )
-        value = ( (PropertyName)expression ).getValue();
-      if( expression instanceof Literal )
-        value = ( (Literal)expression ).getValue();
+//      String value = null;
+//      if( expression instanceof PropertyName )
+//        value = ( (PropertyName)expression ).getValue();
+//      if( expression instanceof Literal )
+//        value = ( (Literal)expression ).getValue();
 
       m_firstRowLabel = new Label( this, SWT.NULL );
       m_firstRowLabel.setText( expression.getExpressionName().trim() );
@@ -785,8 +785,8 @@ public class FilterCompositeFactory
         }
         return null;
       }
-      else
-        return null;
+
+      return null;
     }
   }
 

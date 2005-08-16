@@ -51,7 +51,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
@@ -63,7 +62,6 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   protected Viewer m_viewer = null;
 
   /**
-   * @throws FilterEvaluationException
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( final Object parentElement )
@@ -199,10 +197,8 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
    */
   public void propertyChange( PropertyChangeEvent event )
   {
-
     Object source = event.getSource();
     Object newValue = event.getNewValue();
-    Object oldValue = event.getOldValue();
     if( source instanceof FilterRootElement && m_viewer instanceof TreeViewer )
     {
       ( (TreeViewer)m_viewer ).update( newValue, null );
