@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>Obere Spree</title>
+	<legend title="" visible="true"/>
+
+	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="W" datatype="double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
+
+	<!--<features></features>-->
+
+   	<observation linktype="zml" xlink:href="./Ergebnisse/Zeitreihen/QV_SCHIRG.zml">
+		<curve id="C1" name="Schirgiswalde" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
+
+   	<observation linktype="zml" xlink:href="./Ergebnisse/Zeitreihen/QV_BAUTZWB.zml">
+		<curve id="C2" name="Bautzen" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
+
+   	<observation linktype="zml" xlink:href="./Ergebnisse/Zeitreihen/QV_GROEDI.zml">
+		<curve id="C3" name="Gröditz" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
+
+   	<observation linktype="zml" xlink:href="./Ergebnisse/Zeitreihen/QV_JAENKD.zml">
+		<curve id="C4" name="Jänkendorf" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
+
+   	<observation linktype="zml" xlink:href="./Ergebnisse/Zeitreihen/QV_SAERI.zml">
+		<curve id="C5" name="Särichen" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
+</obsdiagview>

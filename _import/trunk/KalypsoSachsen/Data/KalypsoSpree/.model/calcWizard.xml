@@ -241,8 +241,8 @@
 		<arg name="id" value="sumUpTableExporter" />
 
 		<arg name="documentName" value="übersicht.csv" />
-		<arg name="separator" value="\t"/>
-		<arg name="charset" value="UTF-8"/>
+		<arg name="separator" value=";"/>
+		<!--arg name="charset" value="cp1252"/-->
 		<arg name="delta" value="0.0001"/>
 		<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
 
@@ -259,14 +259,16 @@
 		 	<arg name="href" value="./Ergebnisse/Zeitreihen/QV_BAUTZWB.zml" />
 		</arg>
 
-		<arg name="column2">
-			<arg name="label" value="Gewässer"/>
-			<arg name="content" value="metadata:Gewässer" />
-		</arg>
-
 		<arg name="column1">
+			<arg name="position" value="1"/>
 			<arg name="label" value="Pegel"/>
 			<arg name="content" value="arg:label" />
+		</arg>
+		
+		<arg name="column2">
+			<arg name="position" value="2"/>
+			<arg name="label" value="Gewässer"/>
+			<arg name="content" value="metadata:Gewässer" />
 		</arg>
 
 		<arg name="axisType" value="W"/>
