@@ -33,36 +33,32 @@ import java.io.IOException;
 
 /**
  * 
- * decorates complete other object
+ * decorates a structure as compareable object <br>
+ * the structure is a list of path elements <br>
+ * each path element has a content and can be compared with other contents
  * 
  * @author doemming
  */
 public interface IDiffObject
 {
-  public static final int STATUS_UNKNOWN = 0;
-
-  public static final int EQUAL = 1;
-
-  public static final int DIFF = 2;
-
-  public static final int NOT_EXISTING = 3;
 
   /**
    * @param path
-   * @return true is path exists
+   * @return <code>true</code> if path exists
    */
   public boolean exists( String path );
 
   /**
+   * 
    * @param path
-   * @return MimeType of content
+   * @return comparator
    */
-  public Class getContentClass( String path );
+  public IDiffComparator getDiffComparator( final String path );
 
   /**
    * 
    * @param path
-   * @return content according to getContentClass
+   * @return content that is assigned to this path
    * @throws IOException
    */
   public Object getContent( String path ) throws IOException;
@@ -71,5 +67,4 @@ public interface IDiffObject
    * @return all existing pathes
    */
   public String[] getPathes();
-
 }

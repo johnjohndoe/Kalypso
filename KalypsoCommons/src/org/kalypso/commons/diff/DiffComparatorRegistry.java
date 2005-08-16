@@ -29,62 +29,45 @@
  */
 package org.kalypso.commons.diff;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.HashMap;
+
+import org.eclipse.core.internal.dtree.IComparator;
 
 /**
  * 
- * 
  * @author doemming
  */
-public class DiffVisitor implements IDiffVisitor
+public class DiffComparatorRegistry
 {
 
-  private final IDiffObject m_base;
+  private static DiffComparatorRegistry m_instance = null;
 
-  private Hashtable m_log = new Hashtable();
+  private final HashMap m_comparators = new HashMap();
 
-  /**
-   *  
-   */
-  public DiffVisitor( final IDiffObject base )
+  private DiffComparatorRegistry()
   {
-    m_base = base;
+  // singelton
   }
 
-  public void addLog( Integer status, String path )
+  public static DiffComparatorRegistry getInstance()
   {
-    if( !m_log.containsKey( status ) )
-      m_log.put( status, new ArrayList() );
-    ( (List)m_log.get( status ) ).add( path );
+    if( m_instance == null )
+      m_instance = new DiffComparatorRegistry();
+    return m_instance;
   }
 
-  /**
-   * 
-   * @see org.kalypso.commons.diff.IDiffVisitor#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.String,
-   *      org.kalypso.commons.diff.IDiffObject)
-   */
-  public boolean diff( final IDiffLogger logger, final String path, final IDiffObject other ) throws Exception
+  public void register( final String suffix, final IDiffComparator comparator )
   {
-    if( !other.exists( path ) )
-    {
-      logger.log( IDiffComparator.DIFF_REMOVED, path );
-      return false;
-    }
-    // diff Content
-    final IDiffComparator differ = m_base.getDiffComparator( path );
-    final Object content1 = m_base.getContent( path );
-    final Object content2 = other.getContent( path );
-    if( !content1.getClass().equals( content2.getClass() ) )
-    {
-      logger.log( IDiffComparator.DIFF_UNCOMPAREABLE, path );
-      return false;
-    }
-    logger.block();
-    logger.log( IDiffComparator.DIFF_INFO, path );
-    boolean result = differ.diff( logger, content1, content2 );
-    logger.unblock( result );
-    return result;
+    m_comparators.put( suffix, comparator );
+  }
+
+  public boolean hasComparator( final String suffix )
+  {
+    return m_comparators.containsKey( suffix );
+  }
+
+  public IDiffComparator getDiffComparator( final String suffix )
+  {
+    return (IDiffComparator)m_comparators.get( suffix );
   }
 }
