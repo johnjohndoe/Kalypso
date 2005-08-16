@@ -629,6 +629,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     // clear the observation cache
     ObservationCache.clearCache();
+    
     // clear the default styles
     m_defaultStyleFactory.clear();
 
@@ -847,32 +848,4 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
   }
-
-//  /**
-//   * Create a temp file in the subDirName of the plugin's state location (where files can be created, deleted, etc.).
-//   * Uses File.createTempFile() so as written in the File javadoc, you should call .deleteOnExit() on the returned file
-//   * instance to make it a real 'temp' file.
-//   */
-//  public File createTempFile( final String subDirName, final String prefix, final String suffix ) throws IOException
-//  {
-//    final IPath path = getStateLocation();
-//    final File dir = new File( path.toFile(), subDirName );
-//    if( !dir.exists() )
-//      dir.mkdir();
-//
-//    final File file = File.createTempFile( prefix, suffix, dir );
-//    return file;
-//  }
-//
-//  /**
-//   * Deletes the given subDir of this plugin's state location. This method can be called when the plugin starts for
-//   * instance, in order to clear non-deleted temp files.
-//   */
-//  public void deleteTempDir( final String subDirName ) throws IOException
-//  {
-//    final IPath path = getStateLocation();
-//    final File dir = new File( path.toFile(), subDirName );
-//    if( dir.exists() )
-//      FileUtils.cleanDirectory( dir );
-//  }
 }

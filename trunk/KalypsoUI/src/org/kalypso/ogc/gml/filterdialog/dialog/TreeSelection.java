@@ -50,49 +50,31 @@ public abstract class TreeSelection implements IStructuredSelection
     m_selection = selection;
   }
 
-  /**
-   * @return
-   */
   public Object getFirstElement()
   {
     return m_selection.getFirstElement();
   }
 
-  /**
-   * @return
-   */
   public boolean isEmpty()
   {
     return m_selection.isEmpty();
   }
 
-  /**
-   * @return
-   */
   public Iterator iterator()
   {
     return m_selection.iterator();
   }
 
-  /**
-   * @return
-   */
   public int size()
   {
     return m_selection.size();
   }
 
-  /**
-   * @return
-   */
   public Object[] toArray()
   {
     return m_selection.toArray();
   }
 
-  /**
-   * @return
-   */
   public List toList()
   {
     return m_selection.toList();
