@@ -31,11 +31,13 @@ package org.kalypso.commons.diff;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipException;
+
+import org.kalypso.contribs.java.util.logging.ILogger;
 
 /**
  * 
@@ -49,7 +51,6 @@ public class DiffUtils
   /**
    *  
    */
-
   public DiffUtils()
   {
     super();
@@ -66,9 +67,12 @@ public class DiffUtils
    * @throws ZipException
    * @throws IOException
    */
-  public static boolean diffZips( PrintStream writer, File zip1, File zip2, String[] ignorePath ) throws ZipException,
-      IOException
+  public static boolean diffZips( final ILogger logger, File zip1, File zip2, String[] ignorePath )
+      throws ZipException, IOException
   {
+    boolean result = false;
+    final IDiffLogger diffLogger = new DiffLogger( logger );
+
     final List ignores;
     if( ignorePath != null )
       ignores = Arrays.asList( ignorePath );
@@ -78,15 +82,16 @@ public class DiffUtils
     final IDiffObject b = new ZipDiffObject( zip2 );
     final IDiffVisitor visitor = new DiffVisitor( a );
     final String[] pathesA = a.getPathes();
+
     for( int i = 0; i < pathesA.length; i++ )
     {
       final String path = pathesA[i];
       try
       {
         if( !ignores.contains( path ) )
-          visitor.diff( path, b );
+          result |= visitor.diff( diffLogger, path, b );
       }
-      catch( IOException e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }
@@ -96,11 +101,49 @@ public class DiffUtils
     {
       final String path = pathesB[i];
       if( ( !ignores.contains( path ) ) && !a.exists( path ) )
-        visitor.addLog( DiffVisitor.DIFF_ADDED, path );
+      {
+        diffLogger.log( IDiffComparator.DIFF_ADDED, path );
+        result = true;
+      }
     }
+    return result;
+  }
 
-    if( writer != null )
-      visitor.printLog( writer );
-    return !visitor.hasDiffs();
+  /**
+   * 
+   * @param logger
+   * @param list1
+   * @param list2
+   * @param infoMessage
+   * @return boolean
+   */
+  public static boolean diffIgnoreOrder( IDiffLogger logger, List list1, List list2, String infoMessage )
+  {
+    logger.block();
+    logger.log( IDiffComparator.DIFF_INFO, infoMessage );
+
+    boolean result = false;
+    for( Iterator iter = list1.iterator(); iter.hasNext(); )
+    {
+      final String element = (String)iter.next();
+      if( list2.contains( element ) )
+      {
+        logger.log( IDiffComparator.DIFF_OK, element );
+        list2.remove( element );
+      }
+      else
+      {
+        logger.log( IDiffComparator.DIFF_ADDED, element );
+        result = true;
+      }
+    }
+    for( Iterator iter = list2.iterator(); iter.hasNext(); )
+    {
+      final String element = (String)iter.next();
+      logger.log( IDiffComparator.DIFF_REMOVED, element );
+      result = true;
+    }
+    logger.unblock( result );
+    return result;
   }
 }

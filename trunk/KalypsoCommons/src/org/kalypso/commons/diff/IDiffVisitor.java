@@ -29,30 +29,11 @@
  */
 package org.kalypso.commons.diff;
 
-import java.io.IOException;
-import java.io.PrintStream;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public interface IDiffVisitor
 {
-  public boolean diff( final String path, final IDiffObject other ) throws IOException;
-
-  /**
-   * @param out
-   */
-  public void printLog( PrintStream out, String prefix, Integer status );
-
-  /**
-   * @param out
-   */
-  public void printLog( PrintStream out );
-  
-  public void addLog( Integer status, String path );
-
-  public boolean hasDiffs();
+  public boolean diff( IDiffLogger diffLogger, final String path, final IDiffObject other ) throws Exception;
 }

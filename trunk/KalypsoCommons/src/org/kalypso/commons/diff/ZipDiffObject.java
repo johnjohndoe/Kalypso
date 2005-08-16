@@ -31,20 +31,19 @@ package org.kalypso.commons.diff;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+
 /**
- * 
- * TODO: insert type comment here
  * 
  * @author doemming
  */
-public class ZipDiffObject implements IDiffObject
+public class ZipDiffObject extends AbstractDiffObject
 {
 
   private final ZipFile m_zipFile;
@@ -56,11 +55,9 @@ public class ZipDiffObject implements IDiffObject
    * @throws ZipException
    *  
    */
-
   public ZipDiffObject( File zipFile ) throws ZipException, IOException
   {
     m_zipFile = new ZipFile( zipFile );
-
     final Enumeration enumeration = m_zipFile.entries();
     while( enumeration.hasMoreElements() )
     {
@@ -76,22 +73,32 @@ public class ZipDiffObject implements IDiffObject
    */
   public boolean exists( String path )
   {
-    //    final ZipEntry entry = (ZipEntry)m_pathes.get(path);
-    //    final ZipEntry entrygetElement(path);
     return m_pathes.containsKey( path );
   }
 
   /**
    * 
-   * @see org.kalypso.commons.diff.IDiffObject#getContentClass(java.lang.String)
+   * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
-  public Class getContentClass( String path )
+  public IDiffComparator getDiffComparator( final String path )
   {
     final ZipEntry entry = getEntry( path );
 
     if( entry.isDirectory() )
-      return ZipEntry.class;
-    return InputStream.class;
+      return new IDiffComparator()
+      {
+        /**
+         * 
+         * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
+         *      java.lang.Object)
+         */
+        public boolean diff( IDiffLogger logger, Object content, Object content2 )
+        {
+          logger.log( IDiffComparator.DIFF_OK, path );
+          return false;
+        }
+      };
+    return super.getDiffComparator( path );
   }
 
   /**

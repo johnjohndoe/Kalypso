@@ -29,62 +29,46 @@
  */
 package org.kalypso.commons.diff;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import java.io.InputStream;
+
+import org.kalypso.contribs.java.io.StreamUtilities;
 
 /**
  * 
+ * TODO: insert type comment here
  * 
  * @author doemming
  */
-public class DiffVisitor implements IDiffVisitor
+public abstract class AbstractDiffObject implements IDiffObject
 {
-
-  private final IDiffObject m_base;
-
-  private Hashtable m_log = new Hashtable();
-
-  /**
-   *  
-   */
-  public DiffVisitor( final IDiffObject base )
-  {
-    m_base = base;
-  }
-
-  public void addLog( Integer status, String path )
-  {
-    if( !m_log.containsKey( status ) )
-      m_log.put( status, new ArrayList() );
-    ( (List)m_log.get( status ) ).add( path );
-  }
-
   /**
    * 
-   * @see org.kalypso.commons.diff.IDiffVisitor#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.String,
-   *      org.kalypso.commons.diff.IDiffObject)
+   * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
-  public boolean diff( final IDiffLogger logger, final String path, final IDiffObject other ) throws Exception
+  public IDiffComparator getDiffComparator( final String path )
   {
-    if( !other.exists( path ) )
+    DiffComparatorRegistry instance = DiffComparatorRegistry.getInstance();
+    final String suffix = "." + path.replaceAll( ".+\\.", "" );
+    if( instance.hasComparator( suffix ) )
+      return instance.getDiffComparator( suffix );
+    return new IDiffComparator()
     {
-      logger.log( IDiffComparator.DIFF_REMOVED, path );
-      return false;
-    }
-    // diff Content
-    final IDiffComparator differ = m_base.getDiffComparator( path );
-    final Object content1 = m_base.getContent( path );
-    final Object content2 = other.getContent( path );
-    if( !content1.getClass().equals( content2.getClass() ) )
-    {
-      logger.log( IDiffComparator.DIFF_UNCOMPAREABLE, path );
-      return false;
-    }
-    logger.block();
-    logger.log( IDiffComparator.DIFF_INFO, path );
-    boolean result = differ.diff( logger, content1, content2 );
-    logger.unblock( result );
-    return result;
+      /**
+       * 
+       * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
+       *      java.lang.Object)
+       */
+      public boolean diff( IDiffLogger logger, Object content, Object content2 ) throws Exception
+      {
+        final InputStream c1 = (InputStream)content;
+        final InputStream c2 = (InputStream)content2;
+        final boolean hasDiff = !StreamUtilities.isEqual( c1, c2 );
+        if( hasDiff )
+          logger.log( IDiffComparator.DIFF_CONTENT, path );
+        else
+          logger.log( IDiffComparator.DIFF_OK, path );
+        return hasDiff;
+      }
+    };
   }
 }
