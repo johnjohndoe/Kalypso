@@ -79,13 +79,14 @@ public class HighlightGraphics extends Graphics2D
   //          Heighlighting verbessern, muss aber gerade
   //          an anderen baustellen arbeiten
   //          (Andreas)
-  private final int m_dr;
+  // unused! but protected, so we have no yellow thingies
+  protected final int m_dr;
 
-  private final int m_dg;
+  protected final int m_dg;
 
-  private final int m_db;
+  protected final int m_db;
 
-  private final int m_da;
+  protected final int m_da;
 
   /**
    * @param da

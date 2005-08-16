@@ -47,9 +47,9 @@ import java.util.Properties;
 
 import javax.xml.rpc.ParameterMode;
 
+import org.apache.axis.Constants;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
-import org.apache.axis.encoding.XMLType;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.impl.MetaDocException;
 
@@ -84,10 +84,10 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
       call.setTargetEndpointAddress( new java.net.URL( endpoint ) );
       call.setOperationName( "commitDocument" );
-      call.addParameter( "docnames", XMLType.SOAP_ARRAY, ParameterMode.IN );
-      call.addParameter( "metadoc", XMLType.XSD_STRING, ParameterMode.IN );
+      call.addParameter( "docnames", Constants.SOAP_ARRAY, ParameterMode.IN );
+      call.addParameter( "metadoc", Constants.XSD_STRING, ParameterMode.IN );
 
-      call.setReturnType( XMLType.XSD_STRING );
+      call.setReturnType( Constants.XSD_STRING );
 
       String[] docs = new String[4];
       docs[0] = "/files/01";
