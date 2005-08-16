@@ -160,7 +160,7 @@ public class HWVOR00Converter
     }
   }
 
-  public static IObservation[] toZML( String valueType, Reader file ) throws ParseException
+  public static IObservation[] toZML( String valueType, Reader file ) throws ParseException, IOException
   {
     return toZML( valueType, file, null );
   }
@@ -168,47 +168,31 @@ public class HWVOR00Converter
   /**
    * @param file
    *          Will be wrapped into a buffered reader, so no need to do so by the caller.
+   * @throws IOException
    */
   public static IObservation[] toZML( final String valueType, final Reader file, final MetadataList metadata )
-      throws ParseException
+      throws ParseException, IOException
   {
-    ArrayList lines = new ArrayList();
+
+    // Die Datei einlesen!
+    final ArrayList lines = new ArrayList();
+    final LineNumberReader reader = new LineNumberReader( file );
+    while( reader.ready() )
+    {
+      final String inputline = reader.readLine();
+      if( inputline == null )
+        break;
+      
+      lines.add( new StringTokenizer( inputline, "\t" ) );
+    }
+
     ArrayList dates, data;
     ArrayList outOb = new ArrayList();
-    LineNumberReader reader = new LineNumberReader( file );
 
     IAxis[] axis;
     ITuppleModel tplValues;
     Object[][] tuppleData;
     String obsName;
-    String inputline;
-
-    // Die Datei einlesen!
-    try
-    {
-      inputline = reader.readLine();
-      while( inputline != null )
-      {
-        lines.add( new StringTokenizer( inputline, "\t" ) );
-        inputline = reader.readLine();
-      }
-    }
-    catch( IOException exp )
-    {
-      exp.printStackTrace();
-    }
-    finally
-    {
-      try
-      {
-        reader.close();
-      }
-      catch( IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
     ( (StringTokenizer)lines.get( 0 ) ).nextToken();
 
     //Daten einlesen

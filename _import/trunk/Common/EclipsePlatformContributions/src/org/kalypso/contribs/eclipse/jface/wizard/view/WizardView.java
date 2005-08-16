@@ -715,8 +715,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
       link = location;
     else
       link = location.substring( index + 1 );
-    
-    
+
     boolean pageChanged = false;
     if( "prev".compareToIgnoreCase( link ) == 0 )
       pageChanged = doPrev();
@@ -794,11 +793,11 @@ public class WizardView extends ViewPart implements IWizardContainer3
     // (this allows lazy page control creation)
     if( page.getControl() == null )
     {
-//      final long before = System.currentTimeMillis();
+      //      final long before = System.currentTimeMillis();
       page.createControl( m_pageContainer );
-//      final long after = System.currentTimeMillis();
-//      // TODO: delete the next line!
-//      System.out.println( "Dauer: " + ( after - before ) );
+      //      final long after = System.currentTimeMillis();
+      //      // TODO: delete the next line!
+      //      System.out.println( "Dauer: " + ( after - before ) );
       // the page is responsible for ensuring the created control is accessable
       // via getControl.
       final Control control = page.getControl();
@@ -944,7 +943,12 @@ public class WizardView extends ViewPart implements IWizardContainer3
     final IWizard wizard = getWizard();
 
     if( wizard == null )
-      return false;
+    {
+      // even if wizard is null, fire event, so listeners will know that the finish button was pressed (and can close
+      // this view)
+      fireWizardChanged( null, IWizardContainerListener.REASON_FINISHED );
+      return true;
+    }
 
     if( wizard.performFinish() )
     {

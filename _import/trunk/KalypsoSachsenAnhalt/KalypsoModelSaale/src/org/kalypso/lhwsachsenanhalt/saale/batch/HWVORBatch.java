@@ -165,21 +165,17 @@ public class HWVORBatch
         }
 
         final File vorFile = new File( outDir, file );
-
-        convertFileToZml( vorFile, wqdir, outDir, type );
+        final MetadataList metadata = new MetadataList();
+        metadata.put( "FILE_NAME", vorFile.getAbsolutePath() );
+        final IObservation[] obs = readObservations( vorFile, type, metadata );
+        obs2zml( wqdir, outDir, type, obs );
       }
     }
   }
 
-  public void convertFileToZml( final File vorFile, final File wqdir, final File outDir, final String type )
-      throws ParseException, FileNotFoundException, WQException, SensorException, FactoryException,
-      UnsupportedEncodingException, JAXBException, IOException
+  /** Write an array of observations into zml files using the directory and naming schemes of the saale modell. */
+  public void obs2zml( final File wqdir, final File outDir, final String type, final IObservation[] obs ) throws WQException, SensorException, FileNotFoundException, UnsupportedEncodingException, JAXBException, FactoryException, IOException
   {
-    final MetadataList metadata = new MetadataList();
-    metadata.put( "FILE_NAME", vorFile.getAbsolutePath() );
-
-    final IObservation[] obs = readObservations( vorFile, type, metadata );
-
     outDir.mkdirs();
     for( int l = 0; l < obs.length; l++ )
     {
@@ -233,7 +229,7 @@ public class HWVORBatch
     return m_marshaller;
   }
 
-  private IObservation[] readObservations( final File vorFile, String sValue, final MetadataList metadata )
+  public IObservation[] readObservations( final File vorFile, String sValue, final MetadataList metadata )
       throws FileNotFoundException, ParseException, IOException
   {
     m_logger.info( "Lese Zeitreihen: " + vorFile );

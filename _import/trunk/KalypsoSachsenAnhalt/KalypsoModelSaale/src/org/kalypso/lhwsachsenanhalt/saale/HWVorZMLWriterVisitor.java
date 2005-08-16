@@ -47,11 +47,14 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -78,6 +81,14 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
 
   private final String m_linkProperty;
 
+  /**
+   * Map to remember the metadatas of each visited observation.
+   * <p>
+   * Maps &lt;linkProperty&gt;#&lt;obsID&gt; to &lt;metadata&gt;
+   * </p>
+   */
+  private Map m_metadataMap = new HashMap();
+
   public HWVorZMLWriterVisitor( final String linkProperty, final String dataAxis, final IUrlResolver resolver,
       final URL context )
   {
@@ -97,6 +108,12 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
     try
     {
       final IObservation observation = ZmlFactory.parseXML( m_resolver.resolveURL( m_context, link.getHref() ), "id" );
+
+      final String identifier = observation.getName();
+      final MetadataList obsMeta = observation.getMetadataList();
+      final MetadataList clonedMeta = new MetadataList();
+      clonedMeta.putAll( obsMeta );
+      m_metadataMap.put( m_dataAxis + "#" + identifier, clonedMeta );
       m_converter.addObservation( observation, TimeserieConstants.TYPE_DATE, m_dataAxis );
     }
     catch( final MalformedURLException e )
@@ -140,5 +157,10 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
     }
 
     return true;
+  }
+
+  public Map getMetadataMap()
+  {
+    return m_metadataMap;
   }
 }
