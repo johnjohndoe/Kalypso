@@ -408,7 +408,7 @@ public class FilterDialog extends Dialog
       if( !selection.isEmpty() )
       {
 
-        ( (FilterRootElement)m_root ).removeChild( selection.getFirstElement() );
+        m_root.removeChild( selection.getFirstElement() );
         m_viewer2.refresh();
       }
     }

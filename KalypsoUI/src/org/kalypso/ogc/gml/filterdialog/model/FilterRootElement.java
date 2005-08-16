@@ -88,16 +88,13 @@ public class FilterRootElement implements Filter
     return m_name;
   }
 
-  /**
-   *  
-   */
   public Object[] getChildren()
   {
     if( m_filter != null )
       return new Object[]
       { m_filter };
-    else
-      return new Object[0];
+
+    return new Object[0];
   }
 
   public void addChild( Object child )
@@ -158,11 +155,6 @@ public class FilterRootElement implements Filter
     }
   }
 
-  /**
-   * @param arguments
-   * @param childToRemove
-   * @param operation
-   */
   private void remove( ArrayList arguments, Object childToRemove, Object parent )
   {
     for( Iterator iter = arguments.iterator(); iter.hasNext(); )

@@ -708,4 +708,13 @@
             class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
             interfacename="IObservationService"/>
    </extension>
+   
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            extensions="zml"
+            class="org.eclipse.compare.internal.TextMergeViewerCreator"
+            id="org.eclipse.compare.TextMergeViewerCreator">
+      </viewer>
+   </extension>
  </plugin>

@@ -54,6 +54,7 @@ public class MetadataList extends Properties
     super();
   }
 
+  /** Sets the given properties as default values. Doesn't mean 'putAll'! */
   public MetadataList( Properties arg0 )
   {
     super( arg0 );
