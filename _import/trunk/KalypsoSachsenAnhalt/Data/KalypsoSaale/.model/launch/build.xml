@@ -28,11 +28,11 @@
 
 		<gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
-			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast" />
 			<!-- stopsim = startforecast + 48h -->
-			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
+			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11" />
 		</gmlProperty>
-			
+
 		<echo message="Verzeichnisse werden erstellt" />
 		<mkdir dir="${calc.dir}/Durchfluß" />
 		<mkdir dir="${calc.dir}/Niederschlag" />
@@ -41,9 +41,34 @@
 		<mkdir dir="${calc.dir}/Temperatur" />
 
 		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
+			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" />
 		</copyObservation>
 
 		<!-- TODO: alle anderen auch holen -->
+	</target>
+
+	<target name="runCalculation">
+		<echo message="alte Ergebnisse werden gelöscht..."/>
+		<delete verbose="true" includeemptydirs="true" failonerror="false">
+			<fileset dir="${calc.dir}/Ergebnisse"/>
+		</delete>
+
+		<echo message="Modellrechnung wird durchgeführt: ${calc.dir}" />
+		<kalypso.runCalculation calccasefolder="${calc.path}" typeid="Saale_SA_V1">
+			<input id="CONTROL" path=".calculation" relativeToCalcCase="true" />
+			<input id="MODELL" path="modell.gml" relativeToCalcCase="true" />
+
+			<!--  implizit benötigte Daten (=Zeitreihen); id ist unwichtig -->
+
+			<input id="Durchfluß" path="Durchfluß" relativeToCalcCase="true"  />
+			<input id="Niederschlag" path="Niederschlag" relativeToCalcCase="true" />
+			<input id="Schnee" path="Schnee" relativeToCalcCase="true" optional="true"/>
+			<input id="Speicherinhalt" path="Speicherinhalt" relativeToCalcCase="true" />
+
+			<output id="LOG" path="Ergebnisse/Input_Output.log" relativeToCalcCase="true" />
+			<output id="ZML_RESULT" path="Ergebnisse" relativeToCalcCase="true" />
+			<output id="HWVOR00_LOG" path="Ergebnisse/HWQVOR.TXT" relativeToCalcCase="true"/>
+		</kalypso.runCalculation>
+
 	</target>
 </project>

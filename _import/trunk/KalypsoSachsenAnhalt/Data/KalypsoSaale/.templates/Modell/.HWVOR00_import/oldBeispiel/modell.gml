@@ -439,17 +439,8 @@
           <steuerung:PNR>579620</steuerung:PNR>
           <steuerung:Modellart>2</steuerung:Modellart>
           <steuerung:Zwischenspeicher>0</steuerung:Zwischenspeicher>
-          <steuerung:Verwendung>2</steuerung:Verwendung>
-          <steuerung:Beschreibung>Hausneindorf</steuerung:Beschreibung>
-        </steuerung:Steuerung>
-      </steuerung:SteuerungMember>
-      <steuerung:SteuerungMember>
-        <steuerung:Steuerung fid="ID579621">
-          <steuerung:PNR>579621</steuerung:PNR>
-          <steuerung:Modellart>2</steuerung:Modellart>
-          <steuerung:Zwischenspeicher>0</steuerung:Zwischenspeicher>
           <steuerung:Verwendung>3</steuerung:Verwendung>
-          <steuerung:Beschreibung>Selke Mündung neu</steuerung:Beschreibung>
+          <steuerung:Beschreibung>Hausneindorf</steuerung:Beschreibung>
         </steuerung:Steuerung>
       </steuerung:SteuerungMember>
       <steuerung:SteuerungMember>
@@ -468,24 +459,6 @@
           <steuerung:Zwischenspeicher>0</steuerung:Zwischenspeicher>
           <steuerung:Verwendung>2</steuerung:Verwendung>
           <steuerung:Beschreibung>MAHNDORF</steuerung:Beschreibung>
-        </steuerung:Steuerung>
-      </steuerung:SteuerungMember>
-      <steuerung:SteuerungMember>
-        <steuerung:Steuerung fid="ID579713">
-          <steuerung:PNR>579713</steuerung:PNR>
-          <steuerung:Modellart>2</steuerung:Modellart>
-          <steuerung:Zwischenspeicher>0</steuerung:Zwischenspeicher>
-          <steuerung:Verwendung>2</steuerung:Verwendung>
-          <steuerung:Beschreibung>Holtemme Mdg</steuerung:Beschreibung>
-        </steuerung:Steuerung>
-      </steuerung:SteuerungMember>
-      <steuerung:SteuerungMember>
-        <steuerung:Steuerung fid="ID579069">
-          <steuerung:PNR>579069</steuerung:PNR>
-          <steuerung:Modellart>2</steuerung:Modellart>
-          <steuerung:Zwischenspeicher>0</steuerung:Zwischenspeicher>
-          <steuerung:Verwendung>1</steuerung:Verwendung>
-          <steuerung:Beschreibung>Bode bis Holtemme</steuerung:Beschreibung>
         </steuerung:Steuerung>
       </steuerung:SteuerungMember>
       <steuerung:SteuerungMember>
@@ -587,21 +560,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>-11</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Blankenstein</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -613,24 +571,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570210.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>1013.0</pegel:AE>
+          <pegel:Stat1>210685</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43014</pegel:Stat2>
+          <pegel:Fakt2>0.5</pegel:Fakt2>
+          <pegel:Stat3>110731</pegel:Stat3>
+          <pegel:Fakt3>0.5</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>91</pegel:Snownr>
+          <pegel:QuantNr.>SA-O5</pegel:QuantNr.>
+          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:LM1>14</pegel:LM1>
+          <pegel:LM2>15</pegel:LM2>
+          <pegel:LM3>16</pegel:LM3>
+          <pegel:LM4>17</pegel:LM4>
           <pegel:L>18</pegel:L>
           <pegel:N>22</pegel:N>
           <pegel:M>54</pegel:M>
@@ -754,21 +712,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>10</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Kaulsdorf-Eichicht</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -780,24 +723,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572010.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>363.0</pegel:AE>
+          <pegel:Stat1>110421</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43038</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>97</pegel:Snownr>
+          <pegel:QuantNr.>SA-O5</pegel:QuantNr.>
+          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:LM1>56</pegel:LM1>
+          <pegel:LM2>58</pegel:LM2>
+          <pegel:LM3>59</pegel:LM3>
+          <pegel:LM4>80</pegel:LM4>
           <pegel:L>18</pegel:L>
           <pegel:N>30</pegel:N>
           <pegel:M>60</pegel:M>
@@ -921,21 +864,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Saale-TS-Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -947,24 +875,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570000.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>652.0</pegel:AE>
+          <pegel:Stat1>100816</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43032</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>100844</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>206</pegel:Snownr>
+          <pegel:QuantNr.>SA-O5</pegel:QuantNr.>
+          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:LM1>62</pegel:LM1>
+          <pegel:LM2>83</pegel:LM2>
+          <pegel:LM3>85</pegel:LM3>
+          <pegel:LM4>106</pegel:LM4>
           <pegel:L>12</pegel:L>
           <pegel:N>24</pegel:N>
           <pegel:M>54</pegel:M>
@@ -1088,21 +1016,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Schwarzburg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1114,24 +1027,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572115.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>360.0</pegel:AE>
+          <pegel:Stat1>110421</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>110731</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>43198</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>100</pegel:Snownr>
+          <pegel:QuantNr.>SA-O5</pegel:QuantNr.>
+          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:LM1>54</pegel:LM1>
+          <pegel:LM2>55</pegel:LM2>
+          <pegel:LM3>77</pegel:LM3>
+          <pegel:LM4>78</pegel:LM4>
           <pegel:L>18</pegel:L>
           <pegel:N>21</pegel:N>
           <pegel:M>48</pegel:M>
@@ -1255,21 +1168,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>3</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Rudolstadt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1281,24 +1179,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570270.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>290.0</pegel:AE>
+          <pegel:Stat1>43184</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43032</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>43198</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>101</pegel:Snownr>
+          <pegel:QuantNr.>SA-U5</pegel:QuantNr.>
+          <pegel:Region>Saale-Ilm</pegel:Region>
+          <pegel:LM1>103</pegel:LM1>
+          <pegel:LM2>123</pegel:LM2>
+          <pegel:LM3>124</pegel:LM3>
+          <pegel:LM4>127</pegel:LM4>
           <pegel:L>16</pegel:L>
           <pegel:N>19</pegel:N>
           <pegel:M>54</pegel:M>
@@ -1422,21 +1320,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>2</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Camburg-Stöben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1448,24 +1331,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570330.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>1299.0</pegel:AE>
+          <pegel:Stat1>43184</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>103100</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>43198</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>212</pegel:Snownr>
+          <pegel:QuantNr.>SA-U5</pegel:QuantNr.>
+          <pegel:Region>Saale-Ilm</pegel:Region>
+          <pegel:LM1>153</pegel:LM1>
+          <pegel:LM2>173</pegel:LM2>
+          <pegel:LM3>176</pegel:LM3>
+          <pegel:LM4>220</pegel:LM4>
           <pegel:L>17</pegel:L>
           <pegel:N>20</pegel:N>
           <pegel:M>54</pegel:M>
@@ -1589,21 +1472,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Gräfinau-Angstedt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1615,24 +1483,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572890.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>155.0</pegel:AE>
+          <pegel:Stat1>110814</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>110421</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>43760</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>105</pegel:Snownr>
+          <pegel:QuantNr.>SA-O5</pegel:QuantNr.>
+          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:LM1>98</pegel:LM1>
+          <pegel:LM2>99</pegel:LM2>
+          <pegel:LM3>121</pegel:LM3>
+          <pegel:LM4>122</pegel:LM4>
           <pegel:L>11</pegel:L>
           <pegel:N>14</pegel:N>
           <pegel:M>48</pegel:M>
@@ -1756,21 +1624,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Niedertrebra</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1782,24 +1635,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572920.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>739.0</pegel:AE>
+          <pegel:Stat1>93200</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>100655</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>43184</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>209</pegel:Snownr>
+          <pegel:QuantNr.>SA-U5</pegel:QuantNr.>
+          <pegel:Region>Saale-Ilm</pegel:Region>
+          <pegel:LM1>169</pegel:LM1>
+          <pegel:LM2>193</pegel:LM2>
+          <pegel:LM3>240</pegel:LM3>
+          <pegel:LM4>266</pegel:LM4>
           <pegel:L>17</pegel:L>
           <pegel:N>20</pegel:N>
           <pegel:M>48</pegel:M>
@@ -1923,21 +1776,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Erfurt - Möbisburg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1949,24 +1787,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID574210.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
-          <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
-          <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:AE>843.0</pegel:AE>
+          <pegel:Stat1>93200</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43760</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>110814</pegel:Stat3>
+          <pegel:Fakt3>0.3</pegel:Fakt3>
+          <pegel:Stat4>43739</pegel:Stat4>
+          <pegel:Fakt4>0.3</pegel:Fakt4>
+          <pegel:Stat5>43753</pegel:Stat5>
+          <pegel:Fakt5>0.3</pegel:Fakt5>
+          <pegel:Snownr>65</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:LM1>142</pegel:LM1>
+          <pegel:LM2>164</pegel:LM2>
+          <pegel:LM3>167</pegel:LM3>
+          <pegel:LM4>191</pegel:LM4>
           <pegel:L>12</pegel:L>
           <pegel:N>22</pegel:N>
           <pegel:M>54</pegel:M>
@@ -2090,21 +1928,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Nägelstedt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -2116,24 +1939,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573010.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>716.0</pegel:AE>
+          <pegel:Stat1>90838</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43935</pegel:Stat2>
+          <pegel:Fakt2>0.3</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>41</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:LM1>277</pegel:LM1>
+          <pegel:LM2>280</pegel:LM2>
+          <pegel:LM3>323</pegel:LM3>
+          <pegel:LM4>326</pegel:LM4>
           <pegel:L>18</pegel:L>
           <pegel:N>22</pegel:N>
           <pegel:M>60</pegel:M>
@@ -2257,21 +2080,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Straußfurt Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -2283,24 +2091,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573090.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>490.0</pegel:AE>
+          <pegel:Stat1>43811</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>93200</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>42</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:LM1>238</pegel:LM1>
+          <pegel:LM2>258</pegel:LM2>
+          <pegel:LM3>260</pegel:LM3>
+          <pegel:LM4>282</pegel:LM4>
           <pegel:L>18</pegel:L>
           <pegel:N>21</pegel:N>
           <pegel:M>48</pegel:M>
@@ -2424,21 +2232,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Wasserthaleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -2450,22 +2243,22 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575110.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>374.0</pegel:AE>
+          <pegel:Stat1>90838</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43935</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
+          <pegel:Snownr>43</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:LM1>328</pegel:LM1>
+          <pegel:LM2>329</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
           <pegel:L>6</pegel:L>
@@ -2591,21 +2384,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Hachelbich</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -2617,24 +2395,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575240.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>524.0</pegel:AE>
+          <pegel:Stat1>43935</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44188</pegel:Stat2>
+          <pegel:Fakt2>0.5</pegel:Fakt2>
+          <pegel:Stat3>90838</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>46</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:LM1>347</pegel:LM1>
+          <pegel:LM2>374</pegel:LM2>
+          <pegel:LM3>392</pegel:LM3>
+          <pegel:LM4>416</pegel:LM4>
           <pegel:L>20</pegel:L>
           <pegel:N>23</pegel:N>
           <pegel:M>60</pegel:M>
@@ -2758,21 +2536,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Oldisleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -2784,24 +2547,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573110.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>1239.0</pegel:AE>
+          <pegel:Stat1>43811</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43872</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>43935</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>300</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:LM1>330</pegel:LM1>
+          <pegel:LM2>332</pegel:LM2>
+          <pegel:LM3>309</pegel:LM3>
+          <pegel:LM4>354</pegel:LM4>
           <pegel:L>16</pegel:L>
           <pegel:N>24</pegel:N>
           <pegel:M>45</pegel:M>
@@ -2925,21 +2688,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Ilfeld</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -2951,22 +2699,22 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575660.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>62.3</pegel:AE>
+          <pegel:Stat1>44499</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44186</pegel:Stat2>
+          <pegel:Fakt2>0.5</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
+          <pegel:Snownr>16</pegel:Snownr>
+          <pegel:QuantNr.>Bode</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>465</pegel:LM1>
+          <pegel:LM2>466</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
           <pegel:L>10</pegel:L>
@@ -3092,21 +2840,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Nordhausen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -3118,23 +2851,23 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575500.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>241.7</pegel:AE>
+          <pegel:Stat1>44186</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44157</pegel:Stat2>
+          <pegel:Fakt2>0.5</pegel:Fakt2>
+          <pegel:Stat3>90838</pegel:Stat3>
+          <pegel:Fakt3>0.2</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
+          <pegel:Snownr>17</pegel:Snownr>
+          <pegel:QuantNr.>Bode</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>442</pegel:LM1>
+          <pegel:LM2>463</pegel:LM2>
+          <pegel:LM3>464</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
           <pegel:L>10</pegel:L>
           <pegel:N>12</pegel:N>
@@ -3259,21 +2992,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Sundhausen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -3285,24 +3003,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575400.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>201.0</pegel:AE>
+          <pegel:Stat1>90838</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43935</pegel:Stat2>
+          <pegel:Fakt2>0.5</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>19</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:LM1>417</pegel:LM1>
+          <pegel:LM2>418</pegel:LM2>
+          <pegel:LM3>439</pegel:LM3>
+          <pegel:LM4>463</pegel:LM4>
           <pegel:L>10</pegel:L>
           <pegel:N>12</pegel:N>
           <pegel:M>42</pegel:M>
@@ -3426,24 +3144,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Stolberg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4427829.0,5714940.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -3452,22 +3155,22 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575700.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>31.0</pegel:AE>
+          <pegel:Stat1>44157</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44186</pegel:Stat2>
+          <pegel:Fakt2>0.5</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
+          <pegel:Snownr>23</pegel:Snownr>
+          <pegel:QuantNr.>Bode</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>444</pegel:LM1>
+          <pegel:LM2>467</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
           <pegel:L>4</pegel:L>
@@ -3593,24 +3296,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Berga</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4430911.0,5702078.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -3619,24 +3307,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575710.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>126.0</pegel:AE>
+          <pegel:Stat1>44157</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44186</pegel:Stat2>
+          <pegel:Fakt2>0.5</pegel:Fakt2>
+          <pegel:Stat3>44188</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>24</pegel:Snownr>
+          <pegel:QuantNr.>UN-O4</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>421</pegel:LM1>
+          <pegel:LM2>443</pegel:LM2>
+          <pegel:LM3>444</pegel:LM3>
+          <pegel:LM4>445</pegel:LM4>
           <pegel:L>12</pegel:L>
           <pegel:N>15</pegel:N>
           <pegel:M>48</pegel:M>
@@ -3760,24 +3448,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Laucha</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4478080.0,5676890.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -3786,24 +3459,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573360.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>668.0</pegel:AE>
+          <pegel:Stat1>43872</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44299</pegel:Stat2>
+          <pegel:Fakt2>0.5</pegel:Fakt2>
+          <pegel:Stat3>80101</pegel:Stat3>
+          <pegel:Fakt3>0.5</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>305</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:LM1>334</pegel:LM1>
+          <pegel:LM2>336</pegel:LM2>
+          <pegel:LM3>357</pegel:LM3>
+          <pegel:LM4>424</pegel:LM4>
           <pegel:L>12</pegel:L>
           <pegel:N>15</pegel:N>
           <pegel:M>54</pegel:M>
@@ -3927,24 +3600,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Naumburg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4488330.0,5669090.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -3953,24 +3611,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570500.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>1254.0</pegel:AE>
+          <pegel:Stat1>82023</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44299</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>43184</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>307</pegel:Snownr>
+          <pegel:QuantNr.>UN-U4</pegel:QuantNr.>
+          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:LM1>267</pegel:LM1>
+          <pegel:LM2>269</pegel:LM2>
+          <pegel:LM3>289</pegel:LM3>
+          <pegel:LM4>290</pegel:LM4>
           <pegel:L>12</pegel:L>
           <pegel:N>15</pegel:N>
           <pegel:M>48</pegel:M>
@@ -4094,21 +3752,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Greiz</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -4120,24 +3763,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576470.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>143300</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>100844</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>116</pegel:Snownr>
+          <pegel:QuantNr.>EP-O4</pegel:QuantNr.>
+          <pegel:Region>Weisse Elster</pegel:Region>
+          <pegel:LM1>65</pegel:LM1>
+          <pegel:LM2>68</pegel:LM2>
+          <pegel:LM3>110</pegel:LM3>
+          <pegel:LM4>112</pegel:LM4>
           <pegel:L>21</pegel:L>
           <pegel:N>24</pegel:N>
           <pegel:M>60</pegel:M>
@@ -4261,21 +3904,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Gera-Langenberg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -4287,24 +3915,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576520.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>103100</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43353</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>216</pegel:Snownr>
+          <pegel:QuantNr.>EP-U4</pegel:QuantNr.>
+          <pegel:Region>Weisse Elster</pegel:Region>
+          <pegel:LM1>154</pegel:LM1>
+          <pegel:LM2>178</pegel:LM2>
+          <pegel:LM3>201</pegel:LM3>
+          <pegel:LM4>202</pegel:LM4>
           <pegel:L>18</pegel:L>
           <pegel:N>19</pegel:N>
           <pegel:M>54</pegel:M>
@@ -4428,24 +4056,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Zeitz</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4510230.0,5658010.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -4454,24 +4067,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576610.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>318.0</pegel:AE>
+          <pegel:Stat1>82023</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>103100</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>44299</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>122</pegel:Snownr>
+          <pegel:QuantNr.>EP-U4</pegel:QuantNr.>
+          <pegel:Region>Weisse Elster</pegel:Region>
+          <pegel:LM1>223</pegel:LM1>
+          <pegel:LM2>246</pegel:LM2>
+          <pegel:LM3>248</pegel:LM3>
+          <pegel:LM4>271</pegel:LM4>
           <pegel:L>12</pegel:L>
           <pegel:N>18</pegel:N>
           <pegel:M>54</pegel:M>
@@ -4595,21 +4208,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Böhlen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -4621,24 +4219,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID577570.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
-          <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:AE>1359.0</pegel:AE>
+          <pegel:Stat1>43436</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43478</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>43451</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>130849</pegel:Stat4>
+          <pegel:Fakt4>0.5</pegel:Fakt4>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>308</pegel:Snownr>
+          <pegel:QuantNr.>EP-U4</pegel:QuantNr.>
+          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:LM1>206</pegel:LM1>
+          <pegel:LM2>229</pegel:LM2>
+          <pegel:LM3>252</pegel:LM3>
+          <pegel:LM4>276</pegel:LM4>
           <pegel:L>18</pegel:L>
           <pegel:N>21</pegel:N>
           <pegel:M>60</pegel:M>
@@ -4762,24 +4360,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Oberthau</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4510300.0,5694580.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -4788,24 +4371,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576900.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>1076.0</pegel:AE>
+          <pegel:Stat1>130849</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43478</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>309</pegel:Snownr>
+          <pegel:QuantNr.>EP-U4</pegel:QuantNr.>
+          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:LM1>388</pegel:LM1>
+          <pegel:LM2>389</pegel:LM2>
+          <pegel:LM3>391</pegel:LM3>
+          <pegel:LM4>410</pegel:LM4>
           <pegel:L>14</pegel:L>
           <pegel:N>17</pegel:N>
           <pegel:M>54</pegel:M>
@@ -4929,24 +4512,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Halle-Trotha</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4496950.0,5709575.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -4955,24 +4523,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570810.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>1591.0</pegel:AE>
+          <pegel:Stat1>130849</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44299</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>310</pegel:Snownr>
+          <pegel:QuantNr.>WISA</pegel:QuantNr.>
+          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:LM1>339</pegel:LM1>
+          <pegel:LM2>341</pegel:LM2>
+          <pegel:LM3>385</pegel:LM3>
+          <pegel:LM4>431</pegel:LM4>
           <pegel:L>18</pegel:L>
           <pegel:N>21</pegel:N>
           <pegel:M>54</pegel:M>
@@ -5096,24 +4664,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Wippra</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4450100.0,5715940.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -5122,23 +4675,23 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578410.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>136.0</pegel:AE>
+          <pegel:Stat1>44337</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>81309</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
+          <pegel:Snownr>25</pegel:Snownr>
+          <pegel:QuantNr.>WISA</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>445</pegel:LM1>
+          <pegel:LM2>446</pegel:LM2>
+          <pegel:LM3>469</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
           <pegel:L>12</pegel:L>
           <pegel:N>18</pegel:N>
@@ -5263,24 +4816,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Mansfeld-Leimbach</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4463690.0,5719145.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -5289,23 +4827,23 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578420.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>74.0</pegel:AE>
+          <pegel:Stat1>44337</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>81309</pegel:Stat2>
+          <pegel:Fakt2>0.3</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
+          <pegel:Snownr>26</pegel:Snownr>
+          <pegel:QuantNr.>WISA</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>446</pegel:LM1>
+          <pegel:LM2>447</pegel:LM2>
+          <pegel:LM3>448</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
           <pegel:L>9</pegel:L>
           <pegel:N>12</pegel:N>
@@ -5430,24 +4968,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Großschierstedt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4467540.0,5735500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -5456,24 +4979,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578430.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>334.0</pegel:AE>
+          <pegel:Stat1>44337</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44414</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>28</pegel:Snownr>
+          <pegel:QuantNr.>WISA</pegel:QuantNr.>
+          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:LM1>470</pegel:LM1>
+          <pegel:LM2>472</pegel:LM2>
+          <pegel:LM3>492</pegel:LM3>
+          <pegel:LM4>518</pegel:LM4>
           <pegel:L>19</pegel:L>
           <pegel:N>25</pegel:N>
           <pegel:M>54</pegel:M>
@@ -5597,24 +5120,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Bernburg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4481900.0,5741000.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -5623,24 +5131,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570910.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>44414</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>43530</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>311</pegel:Snownr>
+          <pegel:QuantNr.>WISA</pegel:QuantNr.>
+          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:LM1>475</pegel:LM1>
+          <pegel:LM2>498</pegel:LM2>
+          <pegel:LM3>518</pegel:LM3>
+          <pegel:LM4>543</pegel:LM4>
           <pegel:L>11</pegel:L>
           <pegel:N>18</pegel:N>
           <pegel:M>48</pegel:M>
@@ -5764,24 +5272,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Elend</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4409180.0,5735160.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -5790,27 +5283,27 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579305.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>26.0</pegel:AE>
+          <pegel:Stat1>72023</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44403</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
+          <pegel:Snownr>2</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>509</pegel:LM1>
+          <pegel:LM2>510</pegel:LM2>
+          <pegel:LM3>532</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
-          <pegel:L>6</pegel:L>
-          <pegel:N>8</pegel:N>
-          <pegel:M>38</pegel:M>
+          <pegel:L>8</pegel:L>
+          <pegel:N>14</pegel:N>
+          <pegel:M>42</pegel:M>
           <pegel:IWE>80</pegel:IWE>
           <pegel:ISOA>140</pegel:ISOA>
           <pegel:ISOE>300</pegel:ISOE>
@@ -5818,42 +5311,42 @@
           <pegel:NRH>1</pegel:NRH>
           <pegel:IP9>3</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.998</pegel:PAR_1>
-          <pegel:PAR_2>0.0050</pegel:PAR_2>
-          <pegel:PAR_3>9.0E-4</pegel:PAR_3>
+          <pegel:PAR_1>0.9975</pegel:PAR_1>
+          <pegel:PAR_2>0.0060</pegel:PAR_2>
+          <pegel:PAR_3>7.0E-4</pegel:PAR_3>
           <pegel:PAR_4>2.5</pegel:PAR_4>
-          <pegel:PAR_5>8.0</pegel:PAR_5>
-          <pegel:PAR_6>0.5</pegel:PAR_6>
-          <pegel:PAR_7>0.08</pegel:PAR_7>
+          <pegel:PAR_5>6.0</pegel:PAR_5>
+          <pegel:PAR_6>0.31</pegel:PAR_6>
+          <pegel:PAR_7>0.05</pegel:PAR_7>
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.8</pegel:PAR_10>
-          <pegel:G_1>0.02</pegel:G_1>
-          <pegel:G_2>0.168</pegel:G_2>
-          <pegel:G_3>0.218</pegel:G_3>
-          <pegel:G_4>0.19</pegel:G_4>
-          <pegel:G_5>0.146</pegel:G_5>
-          <pegel:G_6>0.106</pegel:G_6>
-          <pegel:G_7>0.076</pegel:G_7>
-          <pegel:G_8>0.052</pegel:G_8>
-          <pegel:G_9>0.038</pegel:G_9>
-          <pegel:G_10>0.026</pegel:G_10>
-          <pegel:G_11>0.018</pegel:G_11>
-          <pegel:G_12>0.012</pegel:G_12>
-          <pegel:G_13>0.01</pegel:G_13>
-          <pegel:G_14>0.0060</pegel:G_14>
-          <pegel:G_15>0.0040</pegel:G_15>
-          <pegel:G_16>0.0040</pegel:G_16>
-          <pegel:G_17>0.0020</pegel:G_17>
-          <pegel:G_18>0.0020</pegel:G_18>
-          <pegel:H_1>0.05</pegel:H_1>
-          <pegel:H_2>0.07</pegel:H_2>
-          <pegel:H_3>0.07</pegel:H_3>
-          <pegel:H_4>0.025</pegel:H_4>
-          <pegel:H_5>0.015</pegel:H_5>
-          <pegel:H_6>0.0080</pegel:H_6>
-          <pegel:H_7>0.0</pegel:H_7>
-          <pegel:H_8>0.0</pegel:H_8>
+          <pegel:G_1>0.0</pegel:G_1>
+          <pegel:G_2>0.0</pegel:G_2>
+          <pegel:G_3>0.0</pegel:G_3>
+          <pegel:G_4>0.0</pegel:G_4>
+          <pegel:G_5>0.0</pegel:G_5>
+          <pegel:G_6>0.0</pegel:G_6>
+          <pegel:G_7>0.0</pegel:G_7>
+          <pegel:G_8>0.0</pegel:G_8>
+          <pegel:G_9>0.0</pegel:G_9>
+          <pegel:G_10>0.0</pegel:G_10>
+          <pegel:G_11>0.0</pegel:G_11>
+          <pegel:G_12>0.0</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
+          <pegel:G_17>0.0</pegel:G_17>
+          <pegel:G_18>0.0</pegel:G_18>
+          <pegel:H_1>0.02</pegel:H_1>
+          <pegel:H_2>0.05</pegel:H_2>
+          <pegel:H_3>0.04</pegel:H_3>
+          <pegel:H_4>0.035</pegel:H_4>
+          <pegel:H_5>0.025</pegel:H_5>
+          <pegel:H_6>0.015</pegel:H_6>
+          <pegel:H_7>0.0050</pegel:H_7>
+          <pegel:H_8>0.0020</pegel:H_8>
           <pegel:H_9>0.0</pegel:H_9>
           <pegel:H_10>0.0</pegel:H_10>
           <pegel:H_11>0.0</pegel:H_11>
@@ -5931,24 +5424,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Tanne</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4412230.0,5730240.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -5957,27 +5435,27 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579205.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>71.5</pegel:AE>
+          <pegel:Stat1>44403</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44499</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
+          <pegel:Snownr>3</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>509</pegel:LM1>
+          <pegel:LM2>510</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
-          <pegel:L>9</pegel:L>
-          <pegel:N>13</pegel:N>
-          <pegel:M>40</pegel:M>
+          <pegel:L>10</pegel:L>
+          <pegel:N>14</pegel:N>
+          <pegel:M>36</pegel:M>
           <pegel:IWE>80</pegel:IWE>
           <pegel:ISOA>140</pegel:ISOA>
           <pegel:ISOE>277</pegel:ISOE>
@@ -5985,42 +5463,42 @@
           <pegel:NRH>1</pegel:NRH>
           <pegel:IP9>3</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.999</pegel:PAR_1>
-          <pegel:PAR_2>0.0025</pegel:PAR_2>
-          <pegel:PAR_3>5.5E-4</pegel:PAR_3>
-          <pegel:PAR_4>2.5</pegel:PAR_4>
-          <pegel:PAR_5>30.0</pegel:PAR_5>
-          <pegel:PAR_6>1.0</pegel:PAR_6>
-          <pegel:PAR_7>0.04</pegel:PAR_7>
+          <pegel:PAR_1>0.998</pegel:PAR_1>
+          <pegel:PAR_2>0.0070</pegel:PAR_2>
+          <pegel:PAR_3>0.0012</pegel:PAR_3>
+          <pegel:PAR_4>3.0</pegel:PAR_4>
+          <pegel:PAR_5>10.0</pegel:PAR_5>
+          <pegel:PAR_6>0.6</pegel:PAR_6>
+          <pegel:PAR_7>0.05</pegel:PAR_7>
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.8</pegel:PAR_10>
-          <pegel:G_1>0.0080</pegel:G_1>
-          <pegel:G_2>0.32</pegel:G_2>
-          <pegel:G_3>0.688</pegel:G_3>
-          <pegel:G_4>0.744</pegel:G_4>
-          <pegel:G_5>0.64</pegel:G_5>
-          <pegel:G_6>0.488</pegel:G_6>
-          <pegel:G_7>0.352</pegel:G_7>
-          <pegel:G_8>0.248</pegel:G_8>
-          <pegel:G_9>0.168</pegel:G_9>
-          <pegel:G_10>0.112</pegel:G_10>
-          <pegel:G_11>0.08</pegel:G_11>
-          <pegel:G_12>0.056</pegel:G_12>
-          <pegel:G_13>0.032</pegel:G_13>
-          <pegel:G_14>0.024</pegel:G_14>
-          <pegel:G_15>0.016</pegel:G_15>
-          <pegel:G_16>0.0080</pegel:G_16>
-          <pegel:G_17>0.0080</pegel:G_17>
-          <pegel:G_18>0.0040</pegel:G_18>
-          <pegel:H_1>0.018</pegel:H_1>
-          <pegel:H_2>0.018</pegel:H_2>
-          <pegel:H_3>0.056</pegel:H_3>
-          <pegel:H_4>0.041</pegel:H_4>
-          <pegel:H_5>0.03</pegel:H_5>
-          <pegel:H_6>0.025</pegel:H_6>
-          <pegel:H_7>0.02</pegel:H_7>
-          <pegel:H_8>0.015</pegel:H_8>
+          <pegel:G_1>0.0010</pegel:G_1>
+          <pegel:G_2>0.039</pegel:G_2>
+          <pegel:G_3>0.08</pegel:G_3>
+          <pegel:G_4>0.05</pegel:G_4>
+          <pegel:G_5>0.015</pegel:G_5>
+          <pegel:G_6>0.0070</pegel:G_6>
+          <pegel:G_7>0.0020</pegel:G_7>
+          <pegel:G_8>0.0010</pegel:G_8>
+          <pegel:G_9>0.0</pegel:G_9>
+          <pegel:G_10>0.0</pegel:G_10>
+          <pegel:G_11>0.0</pegel:G_11>
+          <pegel:G_12>0.0</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
+          <pegel:G_17>0.0</pegel:G_17>
+          <pegel:G_18>0.0</pegel:G_18>
+          <pegel:H_1>0.01</pegel:H_1>
+          <pegel:H_2>0.02</pegel:H_2>
+          <pegel:H_3>0.02</pegel:H_3>
+          <pegel:H_4>0.045</pegel:H_4>
+          <pegel:H_5>0.04</pegel:H_5>
+          <pegel:H_6>0.03</pegel:H_6>
+          <pegel:H_7>0.01</pegel:H_7>
+          <pegel:H_8>0.0</pegel:H_8>
           <pegel:H_9>0.0</pegel:H_9>
           <pegel:H_10>0.0</pegel:H_10>
           <pegel:H_11>0.0</pegel:H_11>
@@ -6098,24 +5576,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Trautenstein</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4416480.0,5729450.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -6124,27 +5587,27 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579405.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>39.1</pegel:AE>
+          <pegel:Stat1>44499</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44404</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>81309</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>5</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>487</pegel:LM1>
+          <pegel:LM2>488</pegel:LM2>
+          <pegel:LM3>489</pegel:LM3>
+          <pegel:LM4>511</pegel:LM4>
           <pegel:L>8</pegel:L>
           <pegel:N>11</pegel:N>
-          <pegel:M>40</pegel:M>
+          <pegel:M>42</pegel:M>
           <pegel:IWE>80</pegel:IWE>
           <pegel:ISOA>140</pegel:ISOA>
           <pegel:ISOE>277</pegel:ISOE>
@@ -6152,42 +5615,42 @@
           <pegel:NRH>1</pegel:NRH>
           <pegel:IP9>3</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.999</pegel:PAR_1>
+          <pegel:PAR_1>0.9985</pegel:PAR_1>
           <pegel:PAR_2>0.0030</pegel:PAR_2>
-          <pegel:PAR_3>6.0E-4</pegel:PAR_3>
-          <pegel:PAR_4>4.0</pegel:PAR_4>
-          <pegel:PAR_5>20.0</pegel:PAR_5>
+          <pegel:PAR_3>0.0013</pegel:PAR_3>
+          <pegel:PAR_4>3.0</pegel:PAR_4>
+          <pegel:PAR_5>12.0</pegel:PAR_5>
           <pegel:PAR_6>0.3</pegel:PAR_6>
-          <pegel:PAR_7>0.055</pegel:PAR_7>
+          <pegel:PAR_7>0.04</pegel:PAR_7>
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.2</pegel:PAR_10>
-          <pegel:G_1>0.012</pegel:G_1>
-          <pegel:G_2>0.164</pegel:G_2>
-          <pegel:G_3>0.24</pegel:G_3>
-          <pegel:G_4>0.22</pegel:G_4>
-          <pegel:G_5>0.168</pegel:G_5>
-          <pegel:G_6>0.124</pegel:G_6>
-          <pegel:G_7>0.084</pegel:G_7>
-          <pegel:G_8>0.06</pegel:G_8>
-          <pegel:G_9>0.04</pegel:G_9>
-          <pegel:G_10>0.028</pegel:G_10>
-          <pegel:G_11>0.02</pegel:G_11>
-          <pegel:G_12>0.012</pegel:G_12>
-          <pegel:G_13>0.0080</pegel:G_13>
-          <pegel:G_14>0.0040</pegel:G_14>
-          <pegel:G_15>0.0040</pegel:G_15>
-          <pegel:G_16>0.0040</pegel:G_16>
+          <pegel:G_1>0.0010</pegel:G_1>
+          <pegel:G_2>0.03</pegel:G_2>
+          <pegel:G_3>0.05</pegel:G_3>
+          <pegel:G_4>0.04</pegel:G_4>
+          <pegel:G_5>0.04</pegel:G_5>
+          <pegel:G_6>0.03</pegel:G_6>
+          <pegel:G_7>0.02</pegel:G_7>
+          <pegel:G_8>0.02</pegel:G_8>
+          <pegel:G_9>0.01</pegel:G_9>
+          <pegel:G_10>0.0</pegel:G_10>
+          <pegel:G_11>0.0</pegel:G_11>
+          <pegel:G_12>0.0</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
           <pegel:G_17>0.0</pegel:G_17>
           <pegel:G_18>0.0</pegel:G_18>
-          <pegel:H_1>0.0060</pegel:H_1>
+          <pegel:H_1>0.0050</pegel:H_1>
           <pegel:H_2>0.01</pegel:H_2>
-          <pegel:H_3>0.023</pegel:H_3>
-          <pegel:H_4>0.029</pegel:H_4>
-          <pegel:H_5>0.023</pegel:H_5>
-          <pegel:H_6>0.016</pegel:H_6>
-          <pegel:H_7>0.011</pegel:H_7>
-          <pegel:H_8>0.0050</pegel:H_8>
+          <pegel:H_3>0.02</pegel:H_3>
+          <pegel:H_4>0.025</pegel:H_4>
+          <pegel:H_5>0.025</pegel:H_5>
+          <pegel:H_6>0.02</pegel:H_6>
+          <pegel:H_7>0.02</pegel:H_7>
+          <pegel:H_8>0.012</pegel:H_8>
           <pegel:H_9>0.0</pegel:H_9>
           <pegel:H_10>0.0</pegel:H_10>
           <pegel:H_11>0.0</pegel:H_11>
@@ -6265,21 +5728,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Rappbode-TS-Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -6291,26 +5739,26 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579011.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>44499</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44404</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>81309</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
-          <pegel:L>8</pegel:L>
-          <pegel:N>13</pegel:N>
+          <pegel:Snownr>5</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>487</pegel:LM1>
+          <pegel:LM2>488</pegel:LM2>
+          <pegel:LM3>489</pegel:LM3>
+          <pegel:LM4>511</pegel:LM4>
+          <pegel:L>12</pegel:L>
+          <pegel:N>15</pegel:N>
           <pegel:M>48</pegel:M>
           <pegel:IWE>72</pegel:IWE>
           <pegel:ISOA>132</pegel:ISOA>
@@ -6323,8 +5771,8 @@
           <pegel:PAR_2>0.0017</pegel:PAR_2>
           <pegel:PAR_3>6.0E-4</pegel:PAR_3>
           <pegel:PAR_4>3.0</pegel:PAR_4>
-          <pegel:PAR_5>20.0</pegel:PAR_5>
-          <pegel:PAR_6>0.75</pegel:PAR_6>
+          <pegel:PAR_5>12.0</pegel:PAR_5>
+          <pegel:PAR_6>0.9</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
@@ -6432,21 +5880,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>TS-Wendefurth-Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -6458,70 +5891,70 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579015.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>44407</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44498</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>44404</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
-          <pegel:L>8</pegel:L>
-          <pegel:N>15</pegel:N>
-          <pegel:M>48</pegel:M>
-          <pegel:IWE>72</pegel:IWE>
-          <pegel:ISOA>132</pegel:ISOA>
-          <pegel:ISOE>282</pegel:ISOE>
-          <pegel:IWA>342</pegel:IWA>
-          <pegel:NRH>2</pegel:NRH>
-          <pegel:IP9>3</pegel:IP9>
+          <pegel:Snownr>6</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>511</pegel:LM1>
+          <pegel:LM2>512</pegel:LM2>
+          <pegel:LM3>533</pegel:LM3>
+          <pegel:LM4>534</pegel:LM4>
+          <pegel:L>0</pegel:L>
+          <pegel:N>0</pegel:N>
+          <pegel:M>0</pegel:M>
+          <pegel:IWE>0</pegel:IWE>
+          <pegel:ISOA>0</pegel:ISOA>
+          <pegel:ISOE>0</pegel:ISOE>
+          <pegel:IWA>0</pegel:IWA>
+          <pegel:NRH>0</pegel:NRH>
+          <pegel:IP9>0</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.999</pegel:PAR_1>
-          <pegel:PAR_2>0.0018</pegel:PAR_2>
-          <pegel:PAR_3>3.0E-4</pegel:PAR_3>
-          <pegel:PAR_4>3.0</pegel:PAR_4>
-          <pegel:PAR_5>15.0</pegel:PAR_5>
-          <pegel:PAR_6>0.2</pegel:PAR_6>
-          <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
-          <pegel:PAR_9>3.0</pegel:PAR_9>
-          <pegel:PAR_10>0.7</pegel:PAR_10>
-          <pegel:G_1>0.0080</pegel:G_1>
-          <pegel:G_2>0.32</pegel:G_2>
-          <pegel:G_3>0.688</pegel:G_3>
-          <pegel:G_4>0.744</pegel:G_4>
-          <pegel:G_5>0.64</pegel:G_5>
-          <pegel:G_6>0.488</pegel:G_6>
-          <pegel:G_7>0.352</pegel:G_7>
-          <pegel:G_8>0.248</pegel:G_8>
-          <pegel:G_9>0.168</pegel:G_9>
-          <pegel:G_10>0.112</pegel:G_10>
-          <pegel:G_11>0.08</pegel:G_11>
-          <pegel:G_12>0.056</pegel:G_12>
-          <pegel:G_13>0.032</pegel:G_13>
-          <pegel:G_14>0.024</pegel:G_14>
-          <pegel:G_15>0.016</pegel:G_15>
-          <pegel:G_16>0.0080</pegel:G_16>
-          <pegel:G_17>0.0080</pegel:G_17>
-          <pegel:G_18>0.0040</pegel:G_18>
-          <pegel:H_1>0.0050</pegel:H_1>
-          <pegel:H_2>0.0090</pegel:H_2>
-          <pegel:H_3>0.021</pegel:H_3>
-          <pegel:H_4>0.026</pegel:H_4>
-          <pegel:H_5>0.021</pegel:H_5>
-          <pegel:H_6>0.014</pegel:H_6>
-          <pegel:H_7>0.01</pegel:H_7>
-          <pegel:H_8>0.0050</pegel:H_8>
+          <pegel:PAR_1>0.0</pegel:PAR_1>
+          <pegel:PAR_2>0.0</pegel:PAR_2>
+          <pegel:PAR_3>0.0</pegel:PAR_3>
+          <pegel:PAR_4>0.0</pegel:PAR_4>
+          <pegel:PAR_5>0.0</pegel:PAR_5>
+          <pegel:PAR_6>0.0</pegel:PAR_6>
+          <pegel:PAR_7>0.0</pegel:PAR_7>
+          <pegel:PAR_8>0.0</pegel:PAR_8>
+          <pegel:PAR_9>0.0</pegel:PAR_9>
+          <pegel:PAR_10>0.0</pegel:PAR_10>
+          <pegel:G_1>0.0</pegel:G_1>
+          <pegel:G_2>0.0</pegel:G_2>
+          <pegel:G_3>0.0</pegel:G_3>
+          <pegel:G_4>0.0</pegel:G_4>
+          <pegel:G_5>0.0</pegel:G_5>
+          <pegel:G_6>0.0</pegel:G_6>
+          <pegel:G_7>0.0</pegel:G_7>
+          <pegel:G_8>0.0</pegel:G_8>
+          <pegel:G_9>0.0</pegel:G_9>
+          <pegel:G_10>0.0</pegel:G_10>
+          <pegel:G_11>0.0</pegel:G_11>
+          <pegel:G_12>0.0</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
+          <pegel:G_17>0.0</pegel:G_17>
+          <pegel:G_18>0.0</pegel:G_18>
+          <pegel:H_1>0.0</pegel:H_1>
+          <pegel:H_2>0.0</pegel:H_2>
+          <pegel:H_3>0.0</pegel:H_3>
+          <pegel:H_4>0.0</pegel:H_4>
+          <pegel:H_5>0.0</pegel:H_5>
+          <pegel:H_6>0.0</pegel:H_6>
+          <pegel:H_7>0.0</pegel:H_7>
+          <pegel:H_8>0.0</pegel:H_8>
           <pegel:H_9>0.0</pegel:H_9>
           <pegel:H_10>0.0</pegel:H_10>
           <pegel:H_11>0.0</pegel:H_11>
@@ -6599,24 +6032,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Meisdorf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4450580.0,5728800.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -6625,27 +6043,27 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579610.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>81309</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44337</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>13</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>466</pegel:LM1>
+          <pegel:LM2>468</pegel:LM2>
+          <pegel:LM3>490</pegel:LM3>
+          <pegel:LM4>491</pegel:LM4>
           <pegel:L>12</pegel:L>
           <pegel:N>15</pegel:N>
-          <pegel:M>40</pegel:M>
+          <pegel:M>48</pegel:M>
           <pegel:IWE>72</pegel:IWE>
           <pegel:ISOA>132</pegel:ISOA>
           <pegel:ISOE>282</pegel:ISOE>
@@ -6653,46 +6071,46 @@
           <pegel:NRH>2</pegel:NRH>
           <pegel:IP9>3</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.9983</pegel:PAR_1>
-          <pegel:PAR_2>0.0028</pegel:PAR_2>
-          <pegel:PAR_3>6.5E-4</pegel:PAR_3>
+          <pegel:PAR_1>0.9988</pegel:PAR_1>
+          <pegel:PAR_2>0.0022</pegel:PAR_2>
+          <pegel:PAR_3>6.0E-4</pegel:PAR_3>
           <pegel:PAR_4>2.5</pegel:PAR_4>
-          <pegel:PAR_5>15.0</pegel:PAR_5>
+          <pegel:PAR_5>7.0</pegel:PAR_5>
           <pegel:PAR_6>1.4</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
-          <pegel:G_2>0.0060</pegel:G_2>
-          <pegel:G_3>0.02</pegel:G_3>
-          <pegel:G_4>0.028</pegel:G_4>
-          <pegel:G_5>0.027</pegel:G_5>
-          <pegel:G_6>0.022</pegel:G_6>
-          <pegel:G_7>0.016</pegel:G_7>
-          <pegel:G_8>0.012</pegel:G_8>
-          <pegel:G_9>0.0080</pegel:G_9>
-          <pegel:G_10>0.0060</pegel:G_10>
-          <pegel:G_11>0.0040</pegel:G_11>
-          <pegel:G_12>0.0030</pegel:G_12>
-          <pegel:G_13>0.0020</pegel:G_13>
-          <pegel:G_14>0.0010</pegel:G_14>
-          <pegel:G_15>0.0010</pegel:G_15>
+          <pegel:G_2>0.0</pegel:G_2>
+          <pegel:G_3>0.0</pegel:G_3>
+          <pegel:G_4>0.0</pegel:G_4>
+          <pegel:G_5>0.0</pegel:G_5>
+          <pegel:G_6>0.0</pegel:G_6>
+          <pegel:G_7>0.0</pegel:G_7>
+          <pegel:G_8>0.0</pegel:G_8>
+          <pegel:G_9>0.0</pegel:G_9>
+          <pegel:G_10>0.0</pegel:G_10>
+          <pegel:G_11>0.0</pegel:G_11>
+          <pegel:G_12>0.0</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
           <pegel:G_16>0.0</pegel:G_16>
           <pegel:G_17>0.0</pegel:G_17>
           <pegel:G_18>0.0</pegel:G_18>
-          <pegel:H_1>0.0</pegel:H_1>
-          <pegel:H_2>0.0090</pegel:H_2>
-          <pegel:H_3>0.029</pegel:H_3>
-          <pegel:H_4>0.035</pegel:H_4>
-          <pegel:H_5>0.029</pegel:H_5>
-          <pegel:H_6>0.02</pegel:H_6>
-          <pegel:H_7>0.012</pegel:H_7>
-          <pegel:H_8>0.0070</pegel:H_8>
-          <pegel:H_9>0.0040</pegel:H_9>
-          <pegel:H_10>0.0020</pegel:H_10>
-          <pegel:H_11>0.0010</pegel:H_11>
-          <pegel:H_12>0.0010</pegel:H_12>
+          <pegel:H_1>0.0060</pegel:H_1>
+          <pegel:H_2>0.0080</pegel:H_2>
+          <pegel:H_3>0.0090</pegel:H_3>
+          <pegel:H_4>0.01</pegel:H_4>
+          <pegel:H_5>0.013</pegel:H_5>
+          <pegel:H_6>0.016</pegel:H_6>
+          <pegel:H_7>0.016</pegel:H_7>
+          <pegel:H_8>0.014</pegel:H_8>
+          <pegel:H_9>0.012</pegel:H_9>
+          <pegel:H_10>0.0090</pegel:H_10>
+          <pegel:H_11>0.0070</pegel:H_11>
+          <pegel:H_12>0.0050</pegel:H_12>
           <pegel:H_13>0.0</pegel:H_13>
           <pegel:H_14>0.0</pegel:H_14>
           <pegel:H_15>0.0</pegel:H_15>
@@ -6766,24 +6184,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Hausneindorf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4449660.0,5745250.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -6792,22 +6195,22 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579620.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>44414</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>81309</pegel:Stat2>
+          <pegel:Fakt2>0.2</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
+          <pegel:Snownr>301</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:LM1>515</pegel:LM1>
+          <pegel:LM2>516</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
           <pegel:L>15</pegel:L>
@@ -6831,42 +6234,42 @@
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
-          <pegel:G_2>0.01</pegel:G_2>
-          <pegel:G_3>0.02</pegel:G_3>
-          <pegel:G_4>0.042</pegel:G_4>
-          <pegel:G_5>0.074</pegel:G_5>
-          <pegel:G_6>0.09</pegel:G_6>
-          <pegel:G_7>0.088</pegel:G_7>
-          <pegel:G_8>0.076</pegel:G_8>
-          <pegel:G_9>0.061</pegel:G_9>
-          <pegel:G_10>0.046</pegel:G_10>
-          <pegel:G_11>0.034</pegel:G_11>
-          <pegel:G_12>0.024</pegel:G_12>
-          <pegel:G_13>0.017</pegel:G_13>
-          <pegel:G_14>0.012</pegel:G_14>
-          <pegel:G_15>0.0080</pegel:G_15>
-          <pegel:G_16>0.0050</pegel:G_16>
-          <pegel:G_17>0.0040</pegel:G_17>
-          <pegel:G_18>0.0020</pegel:G_18>
+          <pegel:G_2>0.02</pegel:G_2>
+          <pegel:G_3>0.043</pegel:G_3>
+          <pegel:G_4>0.048</pegel:G_4>
+          <pegel:G_5>0.0525</pegel:G_5>
+          <pegel:G_6>0.0935</pegel:G_6>
+          <pegel:G_7>0.1005</pegel:G_7>
+          <pegel:G_8>0.0835</pegel:G_8>
+          <pegel:G_9>0.067</pegel:G_9>
+          <pegel:G_10>0.05</pegel:G_10>
+          <pegel:G_11>0.0335</pegel:G_11>
+          <pegel:G_12>0.0165</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
+          <pegel:G_17>0.0</pegel:G_17>
+          <pegel:G_18>0.0</pegel:G_18>
           <pegel:H_1>0.0</pegel:H_1>
-          <pegel:H_2>0.0010</pegel:H_2>
-          <pegel:H_3>0.0050</pegel:H_3>
-          <pegel:H_4>0.01</pegel:H_4>
-          <pegel:H_5>0.012</pegel:H_5>
-          <pegel:H_6>0.011</pegel:H_6>
+          <pegel:H_2>0.0050</pegel:H_2>
+          <pegel:H_3>0.0080</pegel:H_3>
+          <pegel:H_4>0.0090</pegel:H_4>
+          <pegel:H_5>0.01</pegel:H_5>
+          <pegel:H_6>0.01</pegel:H_6>
           <pegel:H_7>0.01</pegel:H_7>
           <pegel:H_8>0.0090</pegel:H_8>
-          <pegel:H_9>0.0070</pegel:H_9>
-          <pegel:H_10>0.0060</pegel:H_10>
-          <pegel:H_11>0.0040</pegel:H_11>
-          <pegel:H_12>0.0030</pegel:H_12>
-          <pegel:H_13>0.0030</pegel:H_13>
-          <pegel:H_14>0.0020</pegel:H_14>
-          <pegel:H_15>0.0020</pegel:H_15>
-          <pegel:H_16>0.0010</pegel:H_16>
-          <pegel:H_17>0.0010</pegel:H_17>
-          <pegel:H_18>0.0010</pegel:H_18>
-          <pegel:H_19>0.0010</pegel:H_19>
+          <pegel:H_9>0.0080</pegel:H_9>
+          <pegel:H_10>0.0070</pegel:H_10>
+          <pegel:H_11>0.0050</pegel:H_11>
+          <pegel:H_12>0.0040</pegel:H_12>
+          <pegel:H_13>0.0020</pegel:H_13>
+          <pegel:H_14>0.0010</pegel:H_14>
+          <pegel:H_15>0.0</pegel:H_15>
+          <pegel:H_16>0.0</pegel:H_16>
+          <pegel:H_17>0.0</pegel:H_17>
+          <pegel:H_18>0.0</pegel:H_18>
+          <pegel:H_19>0.0</pegel:H_19>
           <pegel:H_20>0.0</pegel:H_20>
           <pegel:H_21>0.0</pegel:H_21>
           <pegel:H_22>0.0</pegel:H_22>
@@ -6933,21 +6336,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Wegeleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -6959,24 +6347,24 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579045.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>44414</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44406</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>301</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>512</pegel:LM1>
+          <pegel:LM2>513</pegel:LM2>
+          <pegel:LM3>514</pegel:LM3>
+          <pegel:LM4>561</pegel:LM4>
           <pegel:L>17</pegel:L>
           <pegel:N>20</pegel:N>
           <pegel:M>54</pegel:M>
@@ -6989,47 +6377,47 @@
           <pegel:IP10>0</pegel:IP10>
           <pegel:PAR_1>0.9983</pegel:PAR_1>
           <pegel:PAR_2>0.0018</pegel:PAR_2>
-          <pegel:PAR_3>6.0E-4</pegel:PAR_3>
+          <pegel:PAR_3>7.0E-4</pegel:PAR_3>
           <pegel:PAR_4>4.0</pegel:PAR_4>
           <pegel:PAR_5>18.0</pegel:PAR_5>
           <pegel:PAR_6>1.3</pegel:PAR_6>
-          <pegel:PAR_7>0.045</pegel:PAR_7>
+          <pegel:PAR_7>0.05</pegel:PAR_7>
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
-          <pegel:G_1>0.0</pegel:G_1>
-          <pegel:G_2>0.0</pegel:G_2>
-          <pegel:G_3>0.05</pegel:G_3>
-          <pegel:G_4>0.094</pegel:G_4>
-          <pegel:G_5>0.229</pegel:G_5>
-          <pegel:G_6>0.3</pegel:G_6>
-          <pegel:G_7>0.273</pegel:G_7>
-          <pegel:G_8>0.237</pegel:G_8>
-          <pegel:G_9>0.195</pegel:G_9>
-          <pegel:G_10>0.155</pegel:G_10>
-          <pegel:G_11>0.122</pegel:G_11>
-          <pegel:G_12>0.095</pegel:G_12>
-          <pegel:G_13>0.073</pegel:G_13>
-          <pegel:G_14>0.056</pegel:G_14>
-          <pegel:G_15>0.043</pegel:G_15>
-          <pegel:G_16>0.033</pegel:G_16>
-          <pegel:G_17>0.026</pegel:G_17>
-          <pegel:G_18>0.012</pegel:G_18>
-          <pegel:H_1>0.0</pegel:H_1>
-          <pegel:H_2>0.0030</pegel:H_2>
-          <pegel:H_3>0.011</pegel:H_3>
-          <pegel:H_4>0.017</pegel:H_4>
-          <pegel:H_5>0.018</pegel:H_5>
-          <pegel:H_6>0.016</pegel:H_6>
-          <pegel:H_7>0.014</pegel:H_7>
-          <pegel:H_8>0.011</pegel:H_8>
-          <pegel:H_9>0.0080</pegel:H_9>
-          <pegel:H_10>0.0060</pegel:H_10>
+          <pegel:G_1>0.067</pegel:G_1>
+          <pegel:G_2>0.077</pegel:G_2>
+          <pegel:G_3>0.086</pegel:G_3>
+          <pegel:G_4>0.096</pegel:G_4>
+          <pegel:G_5>0.105</pegel:G_5>
+          <pegel:G_6>0.187</pegel:G_6>
+          <pegel:G_7>0.201</pegel:G_7>
+          <pegel:G_8>0.167</pegel:G_8>
+          <pegel:G_9>0.134</pegel:G_9>
+          <pegel:G_10>0.1</pegel:G_10>
+          <pegel:G_11>0.067</pegel:G_11>
+          <pegel:G_12>0.033</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
+          <pegel:G_17>0.0</pegel:G_17>
+          <pegel:G_18>0.0</pegel:G_18>
+          <pegel:H_1>0.0060</pegel:H_1>
+          <pegel:H_2>0.0070</pegel:H_2>
+          <pegel:H_3>0.0080</pegel:H_3>
+          <pegel:H_4>0.0090</pegel:H_4>
+          <pegel:H_5>0.011</pegel:H_5>
+          <pegel:H_6>0.011</pegel:H_6>
+          <pegel:H_7>0.012</pegel:H_7>
+          <pegel:H_8>0.01</pegel:H_8>
+          <pegel:H_9>0.0090</pegel:H_9>
+          <pegel:H_10>0.0070</pegel:H_10>
           <pegel:H_11>0.0050</pegel:H_11>
-          <pegel:H_12>0.0030</pegel:H_12>
+          <pegel:H_12>0.0040</pegel:H_12>
           <pegel:H_13>0.0020</pegel:H_13>
           <pegel:H_14>0.0020</pegel:H_14>
-          <pegel:H_15>0.0010</pegel:H_15>
+          <pegel:H_15>0.0020</pegel:H_15>
           <pegel:H_16>0.0010</pegel:H_16>
           <pegel:H_17>0.0010</pegel:H_17>
           <pegel:H_18>0.0</pegel:H_18>
@@ -7100,24 +6488,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Mahndorf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4428700.0,5750600.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -7126,26 +6499,26 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579712.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>72094</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>44430</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>44498</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
-          <pegel:L>12</pegel:L>
-          <pegel:N>15</pegel:N>
+          <pegel:Snownr>10</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Harz</pegel:Region>
+          <pegel:LM1>533</pegel:LM1>
+          <pegel:LM2>535</pegel:LM2>
+          <pegel:LM3>556</pegel:LM3>
+          <pegel:LM4>557</pegel:LM4>
+          <pegel:L>14</pegel:L>
+          <pegel:N>18</pegel:N>
           <pegel:M>54</pegel:M>
           <pegel:IWE>80</pegel:IWE>
           <pegel:ISOA>140</pegel:ISOA>
@@ -7164,38 +6537,38 @@
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
-          <pegel:G_1>0.0</pegel:G_1>
-          <pegel:G_2>0.0</pegel:G_2>
-          <pegel:G_3>0.04725</pegel:G_3>
-          <pegel:G_4>0.2205</pegel:G_4>
-          <pegel:G_5>0.45675</pegel:G_5>
-          <pegel:G_6>0.6255</pegel:G_6>
-          <pegel:G_7>0.68625</pegel:G_7>
-          <pegel:G_8>0.65475</pegel:G_8>
-          <pegel:G_9>0.57375</pegel:G_9>
-          <pegel:G_10>0.4725</pegel:G_10>
-          <pegel:G_11>0.3735</pegel:G_11>
-          <pegel:G_12>0.288</pegel:G_12>
-          <pegel:G_13>0.216</pegel:G_13>
-          <pegel:G_14>0.15975</pegel:G_14>
-          <pegel:G_15>0.11475</pegel:G_15>
-          <pegel:G_16>0.08325</pegel:G_16>
-          <pegel:G_17>0.06075</pegel:G_17>
-          <pegel:G_18>0.04275</pegel:G_18>
-          <pegel:H_1>0.0</pegel:H_1>
-          <pegel:H_2>0.0010</pegel:H_2>
-          <pegel:H_3>0.011</pegel:H_3>
-          <pegel:H_4>0.023</pegel:H_4>
-          <pegel:H_5>0.027</pegel:H_5>
-          <pegel:H_6>0.023</pegel:H_6>
-          <pegel:H_7>0.017</pegel:H_7>
-          <pegel:H_8>0.011</pegel:H_8>
-          <pegel:H_9>0.0070</pegel:H_9>
-          <pegel:H_10>0.0040</pegel:H_10>
-          <pegel:H_11>0.0020</pegel:H_11>
-          <pegel:H_12>0.0010</pegel:H_12>
-          <pegel:H_13>0.0</pegel:H_13>
-          <pegel:H_14>0.0</pegel:H_14>
+          <pegel:G_1>0.1</pegel:G_1>
+          <pegel:G_2>0.15</pegel:G_2>
+          <pegel:G_3>0.197</pegel:G_3>
+          <pegel:G_4>0.219</pegel:G_4>
+          <pegel:G_5>0.241</pegel:G_5>
+          <pegel:G_6>0.28</pegel:G_6>
+          <pegel:G_7>0.3</pegel:G_7>
+          <pegel:G_8>0.25</pegel:G_8>
+          <pegel:G_9>0.2</pegel:G_9>
+          <pegel:G_10>0.15</pegel:G_10>
+          <pegel:G_11>0.1</pegel:G_11>
+          <pegel:G_12>0.05</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
+          <pegel:G_17>0.0</pegel:G_17>
+          <pegel:G_18>0.0</pegel:G_18>
+          <pegel:H_1>0.011</pegel:H_1>
+          <pegel:H_2>0.013</pegel:H_2>
+          <pegel:H_3>0.015</pegel:H_3>
+          <pegel:H_4>0.015</pegel:H_4>
+          <pegel:H_5>0.014</pegel:H_5>
+          <pegel:H_6>0.012</pegel:H_6>
+          <pegel:H_7>0.01</pegel:H_7>
+          <pegel:H_8>0.0090</pegel:H_8>
+          <pegel:H_9>0.0080</pegel:H_9>
+          <pegel:H_10>0.0070</pegel:H_10>
+          <pegel:H_11>0.0050</pegel:H_11>
+          <pegel:H_12>0.0040</pegel:H_12>
+          <pegel:H_13>0.0020</pegel:H_13>
+          <pegel:H_14>0.0010</pegel:H_14>
           <pegel:H_15>0.0</pegel:H_15>
           <pegel:H_16>0.0</pegel:H_16>
           <pegel:H_17>0.0</pegel:H_17>
@@ -7267,24 +6640,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Hadmersleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4453380.0,5763720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -7293,74 +6651,74 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579070.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>44414</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>73200</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>72094</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>302</pegel:Snownr>
+          <pegel:QuantNr.>BODE</pegel:QuantNr.>
+          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:LM1>583</pegel:LM1>
+          <pegel:LM2>584</pegel:LM2>
+          <pegel:LM3>605</pegel:LM3>
+          <pegel:LM4>607</pegel:LM4>
           <pegel:L>12</pegel:L>
-          <pegel:N>15</pegel:N>
-          <pegel:M>45</pegel:M>
+          <pegel:N>24</pegel:N>
+          <pegel:M>54</pegel:M>
           <pegel:IWE>67</pegel:IWE>
           <pegel:ISOA>127</pegel:ISOA>
           <pegel:ISOE>287</pegel:ISOE>
           <pegel:IWA>347</pegel:IWA>
           <pegel:NRH>2</pegel:NRH>
-          <pegel:IP9>4</pegel:IP9>
+          <pegel:IP9>3</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.9994</pegel:PAR_1>
-          <pegel:PAR_2>5.0E-4</pegel:PAR_2>
-          <pegel:PAR_3>4.0E-4</pegel:PAR_3>
+          <pegel:PAR_1>0.9993</pegel:PAR_1>
+          <pegel:PAR_2>8.0E-4</pegel:PAR_2>
+          <pegel:PAR_3>5.0E-4</pegel:PAR_3>
           <pegel:PAR_4>5.0</pegel:PAR_4>
-          <pegel:PAR_5>30.0</pegel:PAR_5>
-          <pegel:PAR_6>1.0</pegel:PAR_6>
+          <pegel:PAR_5>25.0</pegel:PAR_5>
+          <pegel:PAR_6>0.9</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
-          <pegel:G_1>0.0</pegel:G_1>
-          <pegel:G_2>0.0020</pegel:G_2>
-          <pegel:G_3>0.021</pegel:G_3>
-          <pegel:G_4>0.09</pegel:G_4>
-          <pegel:G_5>0.207</pegel:G_5>
-          <pegel:G_6>0.327</pegel:G_6>
-          <pegel:G_7>0.404</pegel:G_7>
-          <pegel:G_8>0.42</pegel:G_8>
-          <pegel:G_9>0.384</pegel:G_9>
-          <pegel:G_10>0.323</pegel:G_10>
-          <pegel:G_11>0.252</pegel:G_11>
-          <pegel:G_12>0.186</pegel:G_12>
-          <pegel:G_13>0.132</pegel:G_13>
-          <pegel:G_14>0.09</pegel:G_14>
-          <pegel:G_15>0.06</pegel:G_15>
-          <pegel:G_16>0.039</pegel:G_16>
-          <pegel:G_17>0.026</pegel:G_17>
-          <pegel:G_18>0.013</pegel:G_18>
-          <pegel:H_1>0.0</pegel:H_1>
-          <pegel:H_2>0.0010</pegel:H_2>
-          <pegel:H_3>0.0060</pegel:H_3>
-          <pegel:H_4>0.012</pegel:H_4>
-          <pegel:H_5>0.015</pegel:H_5>
-          <pegel:H_6>0.016</pegel:H_6>
-          <pegel:H_7>0.014</pegel:H_7>
-          <pegel:H_8>0.012</pegel:H_8>
-          <pegel:H_9>0.01</pegel:H_9>
-          <pegel:H_10>0.0080</pegel:H_10>
-          <pegel:H_11>0.0060</pegel:H_11>
-          <pegel:H_12>0.0050</pegel:H_12>
+          <pegel:G_1>0.127</pegel:G_1>
+          <pegel:G_2>0.145</pegel:G_2>
+          <pegel:G_3>0.164</pegel:G_3>
+          <pegel:G_4>0.182</pegel:G_4>
+          <pegel:G_5>0.2</pegel:G_5>
+          <pegel:G_6>0.218</pegel:G_6>
+          <pegel:G_7>0.218</pegel:G_7>
+          <pegel:G_8>0.182</pegel:G_8>
+          <pegel:G_9>0.145</pegel:G_9>
+          <pegel:G_10>0.109</pegel:G_10>
+          <pegel:G_11>0.073</pegel:G_11>
+          <pegel:G_12>0.036</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
+          <pegel:G_17>0.0</pegel:G_17>
+          <pegel:G_18>0.0</pegel:G_18>
+          <pegel:H_1>0.0080</pegel:H_1>
+          <pegel:H_2>0.0090</pegel:H_2>
+          <pegel:H_3>0.01</pegel:H_3>
+          <pegel:H_4>0.011</pegel:H_4>
+          <pegel:H_5>0.0060</pegel:H_5>
+          <pegel:H_6>0.0080</pegel:H_6>
+          <pegel:H_7>0.0070</pegel:H_7>
+          <pegel:H_8>0.0060</pegel:H_8>
+          <pegel:H_9>0.0050</pegel:H_9>
+          <pegel:H_10>0.0040</pegel:H_10>
+          <pegel:H_11>0.0020</pegel:H_11>
+          <pegel:H_12>0.0010</pegel:H_12>
           <pegel:H_13>0.0</pegel:H_13>
           <pegel:H_14>0.0</pegel:H_14>
           <pegel:H_15>0.0</pegel:H_15>
@@ -7434,24 +6792,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Stassfurt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4471760.0,5746740.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -7460,27 +6803,27 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579085.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>44414</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>73200</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
-          <pegel:LM3>0</pegel:LM3>
-          <pegel:LM4>0</pegel:LM4>
+          <pegel:Snownr>303</pegel:Snownr>
+          <pegel:QuantNr.>WISA</pegel:QuantNr.>
+          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:LM1>564</pegel:LM1>
+          <pegel:LM2>586</pegel:LM2>
+          <pegel:LM3>587</pegel:LM3>
+          <pegel:LM4>588</pegel:LM4>
           <pegel:L>12</pegel:L>
-          <pegel:N>20</pegel:N>
-          <pegel:M>45</pegel:M>
+          <pegel:N>24</pegel:N>
+          <pegel:M>48</pegel:M>
           <pegel:IWE>77</pegel:IWE>
           <pegel:ISOA>137</pegel:ISOA>
           <pegel:ISOE>287</pegel:ISOE>
@@ -7488,34 +6831,34 @@
           <pegel:NRH>2</pegel:NRH>
           <pegel:IP9>3</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.9994</pegel:PAR_1>
-          <pegel:PAR_2>5.0E-4</pegel:PAR_2>
-          <pegel:PAR_3>4.0E-4</pegel:PAR_3>
+          <pegel:PAR_1>0.9992</pegel:PAR_1>
+          <pegel:PAR_2>8.0E-4</pegel:PAR_2>
+          <pegel:PAR_3>7.0E-4</pegel:PAR_3>
           <pegel:PAR_4>5.0</pegel:PAR_4>
-          <pegel:PAR_5>50.0</pegel:PAR_5>
+          <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>0.8</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
           <pegel:PAR_8>0.8</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
-          <pegel:G_1>0.022</pegel:G_1>
-          <pegel:G_2>0.2</pegel:G_2>
-          <pegel:G_3>0.297</pegel:G_3>
-          <pegel:G_4>0.303</pegel:G_4>
-          <pegel:G_5>0.273</pegel:G_5>
-          <pegel:G_6>0.234</pegel:G_6>
-          <pegel:G_7>0.196</pegel:G_7>
-          <pegel:G_8>0.163</pegel:G_8>
-          <pegel:G_9>0.135</pegel:G_9>
-          <pegel:G_10>0.112</pegel:G_10>
-          <pegel:G_11>0.093</pegel:G_11>
-          <pegel:G_12>0.077</pegel:G_12>
-          <pegel:G_13>0.064</pegel:G_13>
-          <pegel:G_14>0.054</pegel:G_14>
-          <pegel:G_15>0.045</pegel:G_15>
-          <pegel:G_16>0.038</pegel:G_16>
-          <pegel:G_17>0.032</pegel:G_17>
-          <pegel:G_18>0.027</pegel:G_18>
+          <pegel:G_1>0.155</pegel:G_1>
+          <pegel:G_2>0.177</pegel:G_2>
+          <pegel:G_3>0.199</pegel:G_3>
+          <pegel:G_4>0.221</pegel:G_4>
+          <pegel:G_5>0.243</pegel:G_5>
+          <pegel:G_6>0.21</pegel:G_6>
+          <pegel:G_7>0.199</pegel:G_7>
+          <pegel:G_8>0.188</pegel:G_8>
+          <pegel:G_9>0.177</pegel:G_9>
+          <pegel:G_10>0.166</pegel:G_10>
+          <pegel:G_11>0.155</pegel:G_11>
+          <pegel:G_12>0.144</pegel:G_12>
+          <pegel:G_13>0.133</pegel:G_13>
+          <pegel:G_14>0.111</pegel:G_14>
+          <pegel:G_15>0.089</pegel:G_15>
+          <pegel:G_16>0.066</pegel:G_16>
+          <pegel:G_17>0.044</pegel:G_17>
+          <pegel:G_18>0.022</pegel:G_18>
           <pegel:H_1>0.0070</pegel:H_1>
           <pegel:H_2>0.0080</pegel:H_2>
           <pegel:H_3>0.0080</pegel:H_3>
@@ -7601,48 +6944,29 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Calbe</pegel:Reserve10>
-          <gml:location>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
-            </gml:Point>
-          </gml:location>
+          <gml:location/>
           <pegel:Durchfluß>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570930.zml"/>
           </pegel:Durchfluß>
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570930.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>44414</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>73200</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>0</pegel:Stat3>
           <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
-          <pegel:LM2>0</pegel:LM2>
+          <pegel:Snownr>312</pegel:Snownr>
+          <pegel:QuantNr.>WISA</pegel:QuantNr.>
+          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:LM1>566</pegel:LM1>
+          <pegel:LM2>567</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
           <pegel:L>12</pegel:L>
@@ -7768,21 +7092,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Bad Liebenwerda</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -7794,21 +7103,21 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID553050.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>81936</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>130939</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>81936</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
+          <pegel:Snownr>308</pegel:Snownr>
+          <pegel:QuantNr.>SEUL</pegel:QuantNr.>
+          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:LM1>460</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
@@ -7935,21 +7244,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Löben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -7961,21 +7255,21 @@
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID553061.zml"/>
           </pegel:Durchfluß_gerechnet>
-          <pegel:AE>0.0</pegel:AE>
-          <pegel:Stat1/>
-          <pegel:Fakt1>0.0</pegel:Fakt1>
-          <pegel:Stat2/>
-          <pegel:Fakt2>0.0</pegel:Fakt2>
-          <pegel:Stat3/>
-          <pegel:Fakt3>0.0</pegel:Fakt3>
-          <pegel:Stat4/>
+          <pegel:AE>-1.0</pegel:AE>
+          <pegel:Stat1>81936</pegel:Stat1>
+          <pegel:Fakt1>1.0</pegel:Fakt1>
+          <pegel:Stat2>130939</pegel:Stat2>
+          <pegel:Fakt2>1.0</pegel:Fakt2>
+          <pegel:Stat3>81936</pegel:Stat3>
+          <pegel:Fakt3>1.0</pegel:Fakt3>
+          <pegel:Stat4>0</pegel:Stat4>
           <pegel:Fakt4>0.0</pegel:Fakt4>
-          <pegel:Stat5/>
+          <pegel:Stat5>0</pegel:Stat5>
           <pegel:Fakt5>0.0</pegel:Fakt5>
-          <pegel:Snownr>0</pegel:Snownr>
-          <pegel:QuantNr./>
-          <pegel:Region/>
-          <pegel:LM1>0</pegel:LM1>
+          <pegel:Snownr>313</pegel:Snownr>
+          <pegel:QuantNr.>SEUL</pegel:QuantNr.>
+          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:LM1>429</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
@@ -8102,21 +7396,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>8</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Kaulsdorf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8171,24 +7450,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Saaleck</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4478940.0,5664025.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -8240,21 +7504,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Straußfurt Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8309,21 +7558,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Wippermündung</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8378,21 +7612,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>oh. Bretleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8447,24 +7666,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Kelbra Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4426820.0,5702050.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -8516,21 +7720,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Kelbra-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8585,24 +7774,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Bennungen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4438870.0,5702720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -8654,21 +7828,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Nikolausrieth</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8723,21 +7882,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Kleindalzig</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8792,21 +7936,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Elstermündung</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8817,75 +7946,6 @@
           </pegel:Durchfluß>
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576950.zml"/>
-          </pegel:Durchfluß_gerechnet>
-        </pegel:Pegel>
-      </pegel:PegelMember>
-      <pegel:PegelMember>
-        <pegel:Pegel fid="ID579621">
-          <pegel:PNR>579621</pegel:PNR>
-          <pegel:Name>Mündung</pegel:Name>
-          <pegel:Gewaesser>Selke</pegel:Gewaesser>
-          <pegel:ZG>-1</pegel:ZG>
-          <pegel:Land>SO</pegel:Land>
-          <pegel:WN1>AS1</pegel:WN1>
-          <pegel:WN2>AS2</pegel:WN2>
-          <pegel:WN3>AS3</pegel:WN3>
-          <pegel:WN4>AS4</pegel:WN4>
-          <pegel:WN5>-</pegel:WN5>
-          <pegel:W1>9999</pegel:W1>
-          <pegel:W2>9999</pegel:W2>
-          <pegel:W3>9999</pegel:W3>
-          <pegel:W4>9999</pegel:W4>
-          <pegel:W5>9999</pegel:W5>
-          <pegel:BezqGmin>-</pegel:BezqGmin>
-          <pegel:QGMIN>0</pegel:QGMIN>
-          <pegel:BEZQGMAX>-</pegel:BEZQGMAX>
-          <pegel:QGMAX>9999</pegel:QGMAX>
-          <pegel:Vorsp>24</pegel:Vorsp>
-          <pegel:WDAT>0</pegel:WDAT>
-          <pegel:QDAT>0</pegel:QDAT>
-          <pegel:VORGP>0</pegel:VORGP>
-          <pegel:KUM>0</pegel:KUM>
-          <pegel:WMIN>-9999</pegel:WMIN>
-          <pegel:WMAX>9999</pegel:WMAX>
-          <pegel:QMAX>150</pegel:QMAX>
-          <pegel:DWMAX>9999</pegel:DWMAX>
-          <pegel:DQMAX>15</pegel:DQMAX>
-          <pegel:NNW>-1</pegel:NNW>
-          <pegel:MNW>-1</pegel:MNW>
-          <pegel:MW>-1</pegel:MW>
-          <pegel:MHW>-1</pegel:MHW>
-          <pegel:HHW>-1</pegel:HHW>
-          <pegel:NNQ>-1</pegel:NNQ>
-          <pegel:MNQ>-1</pegel:MNQ>
-          <pegel:MQ>-1</pegel:MQ>
-          <pegel:MHQ>-1</pegel:MHQ>
-          <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Mündung</pegel:Reserve10>
-          <gml:location>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
-            </gml:Point>
-          </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579621.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579621.zml"/>
           </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8930,21 +7990,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>HWR Kalte Bode -Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8999,24 +8044,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Königsh./HWR - Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4413680.0,5735760.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -9068,24 +8098,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Ül-Spere, Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4417540.0,5734200.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -9137,21 +8152,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>ÜL zur Rappbode</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -9206,21 +8206,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Rappbode-TS-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -9275,21 +8260,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Rappbode-TS, TWA</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -9344,24 +8314,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Hirtenstieg/ÜL-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4417500.0,5734180.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -9413,21 +8368,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>TS-Wendefurth, Bode-Anteil</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -9482,24 +8422,9 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>TS-Wendefurth-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">4425440.0,5734720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluß>
@@ -9507,144 +8432,6 @@
           </pegel:Durchfluß>
           <pegel:Durchfluß_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579006.zml"/>
-          </pegel:Durchfluß_gerechnet>
-        </pegel:Pegel>
-      </pegel:PegelMember>
-      <pegel:PegelMember>
-        <pegel:Pegel fid="ID579713">
-          <pegel:PNR>579713</pegel:PNR>
-          <pegel:Name>Mdg</pegel:Name>
-          <pegel:Gewaesser>Holtemme</pegel:Gewaesser>
-          <pegel:ZG>-1</pegel:ZG>
-          <pegel:Land>SO</pegel:Land>
-          <pegel:WN1>AS1</pegel:WN1>
-          <pegel:WN2>AS2</pegel:WN2>
-          <pegel:WN3>AS3</pegel:WN3>
-          <pegel:WN4>AS4</pegel:WN4>
-          <pegel:WN5>-</pegel:WN5>
-          <pegel:W1>9999</pegel:W1>
-          <pegel:W2>9999</pegel:W2>
-          <pegel:W3>9999</pegel:W3>
-          <pegel:W4>9999</pegel:W4>
-          <pegel:W5>9999</pegel:W5>
-          <pegel:BezqGmin>-</pegel:BezqGmin>
-          <pegel:QGMIN>0</pegel:QGMIN>
-          <pegel:BEZQGMAX>-</pegel:BEZQGMAX>
-          <pegel:QGMAX>9999</pegel:QGMAX>
-          <pegel:Vorsp>24</pegel:Vorsp>
-          <pegel:WDAT>0</pegel:WDAT>
-          <pegel:QDAT>0</pegel:QDAT>
-          <pegel:VORGP>0</pegel:VORGP>
-          <pegel:KUM>0</pegel:KUM>
-          <pegel:WMIN>-9999</pegel:WMIN>
-          <pegel:WMAX>9999</pegel:WMAX>
-          <pegel:QMAX>60</pegel:QMAX>
-          <pegel:DWMAX>9999</pegel:DWMAX>
-          <pegel:DQMAX>15</pegel:DQMAX>
-          <pegel:NNW>-1</pegel:NNW>
-          <pegel:MNW>-1</pegel:MNW>
-          <pegel:MW>-1</pegel:MW>
-          <pegel:MHW>-1</pegel:MHW>
-          <pegel:HHW>-1</pegel:HHW>
-          <pegel:NNQ>-1</pegel:NNQ>
-          <pegel:MNQ>-1</pegel:MNQ>
-          <pegel:MQ>-1</pegel:MQ>
-          <pegel:MHQ>-1</pegel:MHQ>
-          <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Mdg Holtemme</pegel:Reserve10>
-          <gml:location>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
-            </gml:Point>
-          </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579713.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579713.zml"/>
-          </pegel:Durchfluß_gerechnet>
-        </pegel:Pegel>
-      </pegel:PegelMember>
-      <pegel:PegelMember>
-        <pegel:Pegel fid="ID579069">
-          <pegel:PNR>579069</pegel:PNR>
-          <pegel:Name>an Holtemme</pegel:Name>
-          <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:ZG>-1</pegel:ZG>
-          <pegel:Land>SO</pegel:Land>
-          <pegel:WN1>AS1</pegel:WN1>
-          <pegel:WN2>AS2</pegel:WN2>
-          <pegel:WN3>AS3</pegel:WN3>
-          <pegel:WN4>AS4</pegel:WN4>
-          <pegel:WN5>-</pegel:WN5>
-          <pegel:W1>9999</pegel:W1>
-          <pegel:W2>9999</pegel:W2>
-          <pegel:W3>9999</pegel:W3>
-          <pegel:W4>9999</pegel:W4>
-          <pegel:W5>9999</pegel:W5>
-          <pegel:BezqGmin>-</pegel:BezqGmin>
-          <pegel:QGMIN>0</pegel:QGMIN>
-          <pegel:BEZQGMAX>-</pegel:BEZQGMAX>
-          <pegel:QGMAX>9999</pegel:QGMAX>
-          <pegel:Vorsp>24</pegel:Vorsp>
-          <pegel:WDAT>0</pegel:WDAT>
-          <pegel:QDAT>0</pegel:QDAT>
-          <pegel:VORGP>0</pegel:VORGP>
-          <pegel:KUM>0</pegel:KUM>
-          <pegel:WMIN>-9999</pegel:WMIN>
-          <pegel:WMAX>9999</pegel:WMAX>
-          <pegel:QMAX>150</pegel:QMAX>
-          <pegel:DWMAX>9999</pegel:DWMAX>
-          <pegel:DQMAX>15</pegel:DQMAX>
-          <pegel:NNW>-1</pegel:NNW>
-          <pegel:MNW>-1</pegel:MNW>
-          <pegel:MW>-1</pegel:MW>
-          <pegel:MHW>-1</pegel:MHW>
-          <pegel:HHW>-1</pegel:HHW>
-          <pegel:NNQ>-1</pegel:NNQ>
-          <pegel:MNQ>-1</pegel:MNQ>
-          <pegel:MQ>-1</pegel:MQ>
-          <pegel:MHQ>-1</pegel:MHQ>
-          <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>an Holtemme</pegel:Reserve10>
-          <gml:location>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
-            </gml:Point>
-          </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579069.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579069.zml"/>
           </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9689,21 +8476,6 @@
           <pegel:MQ>-1</pegel:MQ>
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
-          <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
-          <pegel:STATUS>0</pegel:STATUS>
-          <pegel:Reserve2>0</pegel:Reserve2>
-          <pegel:Reserve3>0</pegel:Reserve3>
-          <pegel:Reserve4>0</pegel:Reserve4>
-          <pegel:Reserve5>0</pegel:Reserve5>
-          <pegel:Reserve6>0</pegel:Reserve6>
-          <pegel:Reserve7>0</pegel:Reserve7>
-          <pegel:Reserve8>0</pegel:Reserve8>
-          <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Hilfspunkt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -9716,6 +8488,154 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579084.zml"/>
           </pegel:Durchfluß_gerechnet>
         </pegel:Pegel>
+      </pegel:PegelMember>
+      <pegel:PegelMember>
+        <pegel:Gebiet fid="ID579014">
+          <pegel:PNR/>
+          <pegel:Name/>
+          <pegel:Gewaesser/>
+          <pegel:ZG>0</pegel:ZG>
+          <pegel:Land/>
+          <pegel:WN1/>
+          <pegel:WN2/>
+          <pegel:WN3/>
+          <pegel:WN4/>
+          <pegel:WN5/>
+          <pegel:W1>0</pegel:W1>
+          <pegel:W2>0</pegel:W2>
+          <pegel:W3>0</pegel:W3>
+          <pegel:W4>0</pegel:W4>
+          <pegel:W5>0</pegel:W5>
+          <pegel:BezqGmin/>
+          <pegel:QGMIN>0</pegel:QGMIN>
+          <pegel:BEZQGMAX/>
+          <pegel:QGMAX>0</pegel:QGMAX>
+          <pegel:Vorsp>0</pegel:Vorsp>
+          <pegel:WDAT>0</pegel:WDAT>
+          <pegel:QDAT>0</pegel:QDAT>
+          <pegel:VORGP>0</pegel:VORGP>
+          <pegel:KUM>0</pegel:KUM>
+          <pegel:WMIN>0</pegel:WMIN>
+          <pegel:WMAX>0</pegel:WMAX>
+          <pegel:QMAX>0</pegel:QMAX>
+          <pegel:DWMAX>0</pegel:DWMAX>
+          <pegel:DQMAX>0</pegel:DQMAX>
+          <pegel:NNW>0</pegel:NNW>
+          <pegel:MNW>0</pegel:MNW>
+          <pegel:MW>0</pegel:MW>
+          <pegel:MHW>0</pegel:MHW>
+          <pegel:HHW>0</pegel:HHW>
+          <pegel:NNQ>0</pegel:NNQ>
+          <pegel:MNQ>0</pegel:MNQ>
+          <pegel:MQ>0</pegel:MQ>
+          <pegel:MHQ>0</pegel:MHQ>
+          <pegel:HHQ>0</pegel:HHQ>
+          <gml:location/>
+          <pegel:Durchfluß>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579014.zml"/>
+          </pegel:Durchfluß>
+          <pegel:Durchfluß_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579014.zml"/>
+          </pegel:Durchfluß_gerechnet>
+          <pegel:AE>0.0</pegel:AE>
+          <pegel:Stat1/>
+          <pegel:Fakt1>0.0</pegel:Fakt1>
+          <pegel:Stat2/>
+          <pegel:Fakt2>0.0</pegel:Fakt2>
+          <pegel:Stat3/>
+          <pegel:Fakt3>0.0</pegel:Fakt3>
+          <pegel:Stat4/>
+          <pegel:Fakt4>0.0</pegel:Fakt4>
+          <pegel:Stat5/>
+          <pegel:Fakt5>0.0</pegel:Fakt5>
+          <pegel:Snownr>0</pegel:Snownr>
+          <pegel:QuantNr./>
+          <pegel:Region/>
+          <pegel:LM1>0</pegel:LM1>
+          <pegel:LM2>0</pegel:LM2>
+          <pegel:LM3>0</pegel:LM3>
+          <pegel:LM4>0</pegel:LM4>
+          <pegel:L>12</pegel:L>
+          <pegel:N>15</pegel:N>
+          <pegel:M>48</pegel:M>
+          <pegel:IWE>72</pegel:IWE>
+          <pegel:ISOA>132</pegel:ISOA>
+          <pegel:ISOE>282</pegel:ISOE>
+          <pegel:IWA>342</pegel:IWA>
+          <pegel:NRH>2</pegel:NRH>
+          <pegel:IP9>3</pegel:IP9>
+          <pegel:IP10>0</pegel:IP10>
+          <pegel:PAR_1>0.9987</pegel:PAR_1>
+          <pegel:PAR_2>0.0018</pegel:PAR_2>
+          <pegel:PAR_3>6.0E-4</pegel:PAR_3>
+          <pegel:PAR_4>3.0</pegel:PAR_4>
+          <pegel:PAR_5>12.0</pegel:PAR_5>
+          <pegel:PAR_6>0.4</pegel:PAR_6>
+          <pegel:PAR_7>0.05</pegel:PAR_7>
+          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_9>3.0</pegel:PAR_9>
+          <pegel:PAR_10>0.7</pegel:PAR_10>
+          <pegel:G_1>0.107</pegel:G_1>
+          <pegel:G_2>0.123</pegel:G_2>
+          <pegel:G_3>0.138</pegel:G_3>
+          <pegel:G_4>0.153</pegel:G_4>
+          <pegel:G_5>0.169</pegel:G_5>
+          <pegel:G_6>0.031</pegel:G_6>
+          <pegel:G_7>0.0</pegel:G_7>
+          <pegel:G_8>0.0</pegel:G_8>
+          <pegel:G_9>0.0</pegel:G_9>
+          <pegel:G_10>0.0</pegel:G_10>
+          <pegel:G_11>0.0</pegel:G_11>
+          <pegel:G_12>0.0</pegel:G_12>
+          <pegel:G_13>0.0</pegel:G_13>
+          <pegel:G_14>0.0</pegel:G_14>
+          <pegel:G_15>0.0</pegel:G_15>
+          <pegel:G_16>0.0</pegel:G_16>
+          <pegel:G_17>0.0</pegel:G_17>
+          <pegel:G_18>0.0</pegel:G_18>
+          <pegel:H_1>0.0010</pegel:H_1>
+          <pegel:H_2>0.0</pegel:H_2>
+          <pegel:H_3>0.0</pegel:H_3>
+          <pegel:H_4>0.0</pegel:H_4>
+          <pegel:H_5>0.0</pegel:H_5>
+          <pegel:H_6>0.0</pegel:H_6>
+          <pegel:H_7>0.0</pegel:H_7>
+          <pegel:H_8>0.0</pegel:H_8>
+          <pegel:H_9>0.0</pegel:H_9>
+          <pegel:H_10>0.0</pegel:H_10>
+          <pegel:H_11>0.0</pegel:H_11>
+          <pegel:H_12>0.0</pegel:H_12>
+          <pegel:H_13>0.0</pegel:H_13>
+          <pegel:H_14>0.0</pegel:H_14>
+          <pegel:H_15>0.0</pegel:H_15>
+          <pegel:H_16>0.0</pegel:H_16>
+          <pegel:H_17>0.0</pegel:H_17>
+          <pegel:H_18>0.0</pegel:H_18>
+          <pegel:H_19>0.0</pegel:H_19>
+          <pegel:H_20>0.0</pegel:H_20>
+          <pegel:H_21>0.0</pegel:H_21>
+          <pegel:H_22>0.0</pegel:H_22>
+          <pegel:H_23>0.0</pegel:H_23>
+          <pegel:H_24>0.0</pegel:H_24>
+          <pegel:H_25>0.0</pegel:H_25>
+          <pegel:H_26>0.0</pegel:H_26>
+          <pegel:H_27>0.0</pegel:H_27>
+          <pegel:H_28>0.0</pegel:H_28>
+          <pegel:H_29>0.0</pegel:H_29>
+          <pegel:H_30>0.0</pegel:H_30>
+          <pegel:H_31>0.0</pegel:H_31>
+          <pegel:H_32>0.0</pegel:H_32>
+          <pegel:H_33>0.0</pegel:H_33>
+          <pegel:H_34>0.0</pegel:H_34>
+          <pegel:H_35>0.0</pegel:H_35>
+          <pegel:H_36>0.0</pegel:H_36>
+          <pegel:Niederschlag>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579014.zml"/>
+          </pegel:Niederschlag>
+          <pegel:Schnee>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579014.zml"/>
+          </pegel:Schnee>
+        </pegel:Gebiet>
       </pegel:PegelMember>
     </pegel:PegelCollection>
   </pegel:PegelCollectionAssociation>
@@ -10681,7 +9601,7 @@
         <wlm:WLM fid="ID570340">
           <wlm:PNR>570340</wlm:PNR>
           <wlm:IP_1>24</wlm:IP_1>
-          <wlm:IP_2>-1</wlm:IP_2>
+          <wlm:IP_2>0</wlm:IP_2>
           <wlm:IP_3>24</wlm:IP_3>
           <wlm:IP_4>0</wlm:IP_4>
           <wlm:IP_5>0</wlm:IP_5>
@@ -15951,45 +14871,45 @@
           <wlm:PAR_6>0.0</wlm:PAR_6>
           <wlm:PAR_7>0.0</wlm:PAR_7>
           <wlm:STUF_1>2.5</wlm:STUF_1>
-          <wlm:STUF_2>13.0</wlm:STUF_2>
+          <wlm:STUF_2>12.0</wlm:STUF_2>
           <wlm:STUF_3>0.0</wlm:STUF_3>
           <wlm:H1_0>0.0</wlm:H1_0>
           <wlm:H1_1>0.0</wlm:H1_1>
           <wlm:H1_2>0.0</wlm:H1_2>
           <wlm:H1_3>0.0</wlm:H1_3>
           <wlm:H1_4>0.0</wlm:H1_4>
-          <wlm:H1_5>0.0010</wlm:H1_5>
-          <wlm:H1_6>0.0090</wlm:H1_6>
-          <wlm:H1_7>0.027</wlm:H1_7>
-          <wlm:H1_8>0.054</wlm:H1_8>
-          <wlm:H1_9>0.082</wlm:H1_9>
-          <wlm:H1_10>0.103</wlm:H1_10>
-          <wlm:H1_11>0.113</wlm:H1_11>
-          <wlm:H1_12>0.113</wlm:H1_12>
-          <wlm:H1_13>0.104</wlm:H1_13>
-          <wlm:H1_14>0.09</wlm:H1_14>
-          <wlm:H1_15>0.074</wlm:H1_15>
-          <wlm:H1_16>0.059</wlm:H1_16>
-          <wlm:H1_17>0.046</wlm:H1_17>
-          <wlm:H1_18>0.034</wlm:H1_18>
-          <wlm:H1_19>0.026</wlm:H1_19>
-          <wlm:H1_20>0.019</wlm:H1_20>
-          <wlm:H1_21>0.013</wlm:H1_21>
-          <wlm:H1_22>0.0090</wlm:H1_22>
-          <wlm:H1_23>0.0070</wlm:H1_23>
-          <wlm:H1_24>0.0040</wlm:H1_24>
-          <wlm:H1_25>0.0030</wlm:H1_25>
-          <wlm:H1_26>0.0020</wlm:H1_26>
-          <wlm:H1_27>0.0010</wlm:H1_27>
-          <wlm:H1_28>0.0010</wlm:H1_28>
-          <wlm:H1_29>0.0010</wlm:H1_29>
-          <wlm:H1_30>0.0</wlm:H1_30>
-          <wlm:H1_31>0.0</wlm:H1_31>
-          <wlm:H1_32>0.0</wlm:H1_32>
-          <wlm:H1_33>0.0</wlm:H1_33>
-          <wlm:H1_34>0.0</wlm:H1_34>
-          <wlm:H1_35>0.0</wlm:H1_35>
-          <wlm:H1_36>0.0</wlm:H1_36>
+          <wlm:H1_5>0.0</wlm:H1_5>
+          <wlm:H1_6>0.0</wlm:H1_6>
+          <wlm:H1_7>0.0</wlm:H1_7>
+          <wlm:H1_8>0.0</wlm:H1_8>
+          <wlm:H1_9>0.0</wlm:H1_9>
+          <wlm:H1_10>0.0010</wlm:H1_10>
+          <wlm:H1_11>0.0030</wlm:H1_11>
+          <wlm:H1_12>0.0090</wlm:H1_12>
+          <wlm:H1_13>0.02</wlm:H1_13>
+          <wlm:H1_14>0.035</wlm:H1_14>
+          <wlm:H1_15>0.054</wlm:H1_15>
+          <wlm:H1_16>0.071</wlm:H1_16>
+          <wlm:H1_17>0.086</wlm:H1_17>
+          <wlm:H1_18>0.094</wlm:H1_18>
+          <wlm:H1_19>0.095</wlm:H1_19>
+          <wlm:H1_20>0.091</wlm:H1_20>
+          <wlm:H1_21>0.082</wlm:H1_21>
+          <wlm:H1_22>0.071</wlm:H1_22>
+          <wlm:H1_23>0.059</wlm:H1_23>
+          <wlm:H1_24>0.047</wlm:H1_24>
+          <wlm:H1_25>0.037</wlm:H1_25>
+          <wlm:H1_26>0.028</wlm:H1_26>
+          <wlm:H1_27>0.02</wlm:H1_27>
+          <wlm:H1_28>0.015</wlm:H1_28>
+          <wlm:H1_29>0.01</wlm:H1_29>
+          <wlm:H1_30>0.0070</wlm:H1_30>
+          <wlm:H1_31>0.0050</wlm:H1_31>
+          <wlm:H1_32>0.0030</wlm:H1_32>
+          <wlm:H1_33>0.0020</wlm:H1_33>
+          <wlm:H1_34>0.0010</wlm:H1_34>
+          <wlm:H1_35>0.0010</wlm:H1_35>
+          <wlm:H1_36>0.0010</wlm:H1_36>
           <wlm:H1_37>0.0</wlm:H1_37>
           <wlm:H1_38>0.0</wlm:H1_38>
           <wlm:H1_39>0.0</wlm:H1_39>
@@ -16029,39 +14949,39 @@
           <wlm:H2_0>0.0</wlm:H2_0>
           <wlm:H2_1>0.0</wlm:H2_1>
           <wlm:H2_2>0.0</wlm:H2_2>
-          <wlm:H2_3>0.0010</wlm:H2_3>
-          <wlm:H2_4>0.016</wlm:H2_4>
-          <wlm:H2_5>0.068</wlm:H2_5>
-          <wlm:H2_6>0.132</wlm:H2_6>
-          <wlm:H2_7>0.171</wlm:H2_7>
-          <wlm:H2_8>0.171</wlm:H2_8>
-          <wlm:H2_9>0.143</wlm:H2_9>
-          <wlm:H2_10>0.107</wlm:H2_10>
-          <wlm:H2_11>0.073</wlm:H2_11>
-          <wlm:H2_12>0.048</wlm:H2_12>
-          <wlm:H2_13>0.029</wlm:H2_13>
-          <wlm:H2_14>0.018</wlm:H2_14>
-          <wlm:H2_15>0.01</wlm:H2_15>
-          <wlm:H2_16>0.0060</wlm:H2_16>
-          <wlm:H2_17>0.0030</wlm:H2_17>
-          <wlm:H2_18>0.0020</wlm:H2_18>
-          <wlm:H2_19>0.0010</wlm:H2_19>
-          <wlm:H2_20>0.0</wlm:H2_20>
-          <wlm:H2_21>0.0</wlm:H2_21>
-          <wlm:H2_22>0.0</wlm:H2_22>
-          <wlm:H2_23>0.0</wlm:H2_23>
-          <wlm:H2_24>0.0</wlm:H2_24>
-          <wlm:H2_25>0.0</wlm:H2_25>
-          <wlm:H2_26>0.0</wlm:H2_26>
-          <wlm:H2_27>0.0</wlm:H2_27>
-          <wlm:H2_28>0.0</wlm:H2_28>
-          <wlm:H2_29>0.0</wlm:H2_29>
-          <wlm:H2_30>0.0</wlm:H2_30>
-          <wlm:H2_31>0.0</wlm:H2_31>
-          <wlm:H2_32>0.0</wlm:H2_32>
-          <wlm:H2_33>0.0</wlm:H2_33>
-          <wlm:H2_34>0.0</wlm:H2_34>
-          <wlm:H2_35>0.0</wlm:H2_35>
+          <wlm:H2_3>0.0</wlm:H2_3>
+          <wlm:H2_4>0.0</wlm:H2_4>
+          <wlm:H2_5>0.0</wlm:H2_5>
+          <wlm:H2_6>0.0</wlm:H2_6>
+          <wlm:H2_7>0.0010</wlm:H2_7>
+          <wlm:H2_8>0.0040</wlm:H2_8>
+          <wlm:H2_9>0.011</wlm:H2_9>
+          <wlm:H2_10>0.024</wlm:H2_10>
+          <wlm:H2_11>0.042</wlm:H2_11>
+          <wlm:H2_12>0.06</wlm:H2_12>
+          <wlm:H2_13>0.077</wlm:H2_13>
+          <wlm:H2_14>0.088</wlm:H2_14>
+          <wlm:H2_15>0.093</wlm:H2_15>
+          <wlm:H2_16>0.092</wlm:H2_16>
+          <wlm:H2_17>0.086</wlm:H2_17>
+          <wlm:H2_18>0.077</wlm:H2_18>
+          <wlm:H2_19>0.067</wlm:H2_19>
+          <wlm:H2_20>0.056</wlm:H2_20>
+          <wlm:H2_21>0.046</wlm:H2_21>
+          <wlm:H2_22>0.036</wlm:H2_22>
+          <wlm:H2_23>0.028</wlm:H2_23>
+          <wlm:H2_24>0.022</wlm:H2_24>
+          <wlm:H2_25>0.016</wlm:H2_25>
+          <wlm:H2_26>0.012</wlm:H2_26>
+          <wlm:H2_27>0.0090</wlm:H2_27>
+          <wlm:H2_28>0.0070</wlm:H2_28>
+          <wlm:H2_29>0.0050</wlm:H2_29>
+          <wlm:H2_30>0.0030</wlm:H2_30>
+          <wlm:H2_31>0.0020</wlm:H2_31>
+          <wlm:H2_32>0.0020</wlm:H2_32>
+          <wlm:H2_33>0.0010</wlm:H2_33>
+          <wlm:H2_34>0.0010</wlm:H2_34>
+          <wlm:H2_35>0.0010</wlm:H2_35>
           <wlm:H2_36>0.0</wlm:H2_36>
           <wlm:H2_37>0.0</wlm:H2_37>
           <wlm:H2_38>0.0</wlm:H2_38>
@@ -16106,311 +15026,72 @@
           <wlm:H3_4>0.0</wlm:H3_4>
           <wlm:H3_5>0.0</wlm:H3_5>
           <wlm:H3_6>0.0</wlm:H3_6>
-          <wlm:H3_7>0.0020</wlm:H3_7>
-          <wlm:H3_8>0.0040</wlm:H3_8>
-          <wlm:H3_9>0.0080</wlm:H3_9>
-          <wlm:H3_10>0.013</wlm:H3_10>
-          <wlm:H3_11>0.018</wlm:H3_11>
-          <wlm:H3_12>0.024</wlm:H3_12>
-          <wlm:H3_13>0.03</wlm:H3_13>
-          <wlm:H3_14>0.034</wlm:H3_14>
-          <wlm:H3_15>0.038</wlm:H3_15>
-          <wlm:H3_16>0.041</wlm:H3_16>
-          <wlm:H3_17>0.043</wlm:H3_17>
-          <wlm:H3_18>0.044</wlm:H3_18>
-          <wlm:H3_19>0.044</wlm:H3_19>
-          <wlm:H3_20>0.043</wlm:H3_20>
-          <wlm:H3_21>0.042</wlm:H3_21>
-          <wlm:H3_22>0.04</wlm:H3_22>
-          <wlm:H3_23>0.038</wlm:H3_23>
-          <wlm:H3_24>0.036</wlm:H3_24>
-          <wlm:H3_25>0.034</wlm:H3_25>
-          <wlm:H3_26>0.031</wlm:H3_26>
-          <wlm:H3_27>0.029</wlm:H3_27>
-          <wlm:H3_28>0.027</wlm:H3_28>
-          <wlm:H3_29>0.024</wlm:H3_29>
-          <wlm:H3_30>0.022</wlm:H3_30>
-          <wlm:H3_31>0.02</wlm:H3_31>
-          <wlm:H3_32>0.018</wlm:H3_32>
-          <wlm:H3_33>0.017</wlm:H3_33>
-          <wlm:H3_34>0.015</wlm:H3_34>
-          <wlm:H3_35>0.013</wlm:H3_35>
-          <wlm:H3_36>0.012</wlm:H3_36>
-          <wlm:H3_37>0.011</wlm:H3_37>
-          <wlm:H3_38>0.01</wlm:H3_38>
-          <wlm:H3_39>0.0090</wlm:H3_39>
-          <wlm:H3_40>0.0080</wlm:H3_40>
-          <wlm:H3_41>0.0070</wlm:H3_41>
-          <wlm:H3_42>0.0060</wlm:H3_42>
-          <wlm:H3_43>0.0050</wlm:H3_43>
-          <wlm:H3_44>0.0050</wlm:H3_44>
-          <wlm:H3_45>0.0040</wlm:H3_45>
-          <wlm:H3_46>0.0040</wlm:H3_46>
-          <wlm:H3_47>0.0030</wlm:H3_47>
-          <wlm:H3_48>0.0030</wlm:H3_48>
-          <wlm:H3_49>0.0030</wlm:H3_49>
-          <wlm:H3_50>0.0020</wlm:H3_50>
-          <wlm:H3_51>0.0020</wlm:H3_51>
-          <wlm:H3_52>0.0020</wlm:H3_52>
-          <wlm:H3_53>0.0020</wlm:H3_53>
-          <wlm:H3_54>0.0010</wlm:H3_54>
-          <wlm:H3_55>0.0010</wlm:H3_55>
-          <wlm:H3_56>0.0010</wlm:H3_56>
-          <wlm:H3_57>0.0010</wlm:H3_57>
-          <wlm:H3_58>0.0010</wlm:H3_58>
-          <wlm:H3_59>0.0010</wlm:H3_59>
-          <wlm:H3_60>0.0010</wlm:H3_60>
-          <wlm:H3_61>0.0010</wlm:H3_61>
-          <wlm:H3_62>0.0010</wlm:H3_62>
-          <wlm:H3_63>0.0</wlm:H3_63>
-          <wlm:H3_64>0.0</wlm:H3_64>
-          <wlm:H3_65>0.0</wlm:H3_65>
-          <wlm:H3_66>0.0</wlm:H3_66>
-          <wlm:H3_67>0.0</wlm:H3_67>
-          <wlm:H3_68>0.0</wlm:H3_68>
-          <wlm:H3_69>0.0</wlm:H3_69>
-          <wlm:H3_70>0.0</wlm:H3_70>
-          <wlm:H3_71>0.0</wlm:H3_71>
-          <wlm:H3_72>0.0</wlm:H3_72>
-        </wlm:WLM>
-      </wlm:WLMMember>
-      <wlm:WLMMember>
-        <wlm:WLM fid="ID579621">
-          <wlm:PNR>579621</wlm:PNR>
-          <wlm:IP_1>72</wlm:IP_1>
-          <wlm:IP_2>0</wlm:IP_2>
-          <wlm:IP_3>24</wlm:IP_3>
-          <wlm:IP_4>0</wlm:IP_4>
-          <wlm:IP_5>0</wlm:IP_5>
-          <wlm:PAR_1>0.998</wlm:PAR_1>
-          <wlm:PAR_2>0.0</wlm:PAR_2>
-          <wlm:PAR_3>0.0</wlm:PAR_3>
-          <wlm:PAR_4>1.0</wlm:PAR_4>
-          <wlm:PAR_5>0.0</wlm:PAR_5>
-          <wlm:PAR_6>0.0</wlm:PAR_6>
-          <wlm:PAR_7>0.0</wlm:PAR_7>
-          <wlm:STUF_1>2.5</wlm:STUF_1>
-          <wlm:STUF_2>15.0</wlm:STUF_2>
-          <wlm:STUF_3>0.0</wlm:STUF_3>
-          <wlm:H1_0>0.0</wlm:H1_0>
-          <wlm:H1_1>0.251</wlm:H1_1>
-          <wlm:H1_2>0.286</wlm:H1_2>
-          <wlm:H1_3>0.184</wlm:H1_3>
-          <wlm:H1_4>0.11</wlm:H1_4>
-          <wlm:H1_5>0.065</wlm:H1_5>
-          <wlm:H1_6>0.039</wlm:H1_6>
-          <wlm:H1_7>0.024</wlm:H1_7>
-          <wlm:H1_8>0.015</wlm:H1_8>
-          <wlm:H1_9>0.0090</wlm:H1_9>
-          <wlm:H1_10>0.0060</wlm:H1_10>
-          <wlm:H1_11>0.0040</wlm:H1_11>
-          <wlm:H1_12>0.0020</wlm:H1_12>
-          <wlm:H1_13>0.0020</wlm:H1_13>
-          <wlm:H1_14>0.0010</wlm:H1_14>
-          <wlm:H1_15>0.0010</wlm:H1_15>
-          <wlm:H1_16>0.0</wlm:H1_16>
-          <wlm:H1_17>0.0</wlm:H1_17>
-          <wlm:H1_18>0.0</wlm:H1_18>
-          <wlm:H1_19>0.0</wlm:H1_19>
-          <wlm:H1_20>0.0</wlm:H1_20>
-          <wlm:H1_21>0.0</wlm:H1_21>
-          <wlm:H1_22>0.0</wlm:H1_22>
-          <wlm:H1_23>0.0</wlm:H1_23>
-          <wlm:H1_24>0.0</wlm:H1_24>
-          <wlm:H1_25>0.0</wlm:H1_25>
-          <wlm:H1_26>0.0</wlm:H1_26>
-          <wlm:H1_27>0.0</wlm:H1_27>
-          <wlm:H1_28>0.0</wlm:H1_28>
-          <wlm:H1_29>0.0</wlm:H1_29>
-          <wlm:H1_30>0.0</wlm:H1_30>
-          <wlm:H1_31>0.0</wlm:H1_31>
-          <wlm:H1_32>0.0</wlm:H1_32>
-          <wlm:H1_33>0.0</wlm:H1_33>
-          <wlm:H1_34>0.0</wlm:H1_34>
-          <wlm:H1_35>0.0</wlm:H1_35>
-          <wlm:H1_36>0.0</wlm:H1_36>
-          <wlm:H1_37>0.0</wlm:H1_37>
-          <wlm:H1_38>0.0</wlm:H1_38>
-          <wlm:H1_39>0.0</wlm:H1_39>
-          <wlm:H1_40>0.0</wlm:H1_40>
-          <wlm:H1_41>0.0</wlm:H1_41>
-          <wlm:H1_42>0.0</wlm:H1_42>
-          <wlm:H1_43>0.0</wlm:H1_43>
-          <wlm:H1_44>0.0</wlm:H1_44>
-          <wlm:H1_45>0.0</wlm:H1_45>
-          <wlm:H1_46>0.0</wlm:H1_46>
-          <wlm:H1_47>0.0</wlm:H1_47>
-          <wlm:H1_48>0.0</wlm:H1_48>
-          <wlm:H1_49>0.0</wlm:H1_49>
-          <wlm:H1_50>0.0</wlm:H1_50>
-          <wlm:H1_51>0.0</wlm:H1_51>
-          <wlm:H1_52>0.0</wlm:H1_52>
-          <wlm:H1_53>0.0</wlm:H1_53>
-          <wlm:H1_54>0.0</wlm:H1_54>
-          <wlm:H1_55>0.0</wlm:H1_55>
-          <wlm:H1_56>0.0</wlm:H1_56>
-          <wlm:H1_57>0.0</wlm:H1_57>
-          <wlm:H1_58>0.0</wlm:H1_58>
-          <wlm:H1_59>0.0</wlm:H1_59>
-          <wlm:H1_60>0.0</wlm:H1_60>
-          <wlm:H1_61>0.0</wlm:H1_61>
-          <wlm:H1_62>0.0</wlm:H1_62>
-          <wlm:H1_63>0.0</wlm:H1_63>
-          <wlm:H1_64>0.0</wlm:H1_64>
-          <wlm:H1_65>0.0</wlm:H1_65>
-          <wlm:H1_66>0.0</wlm:H1_66>
-          <wlm:H1_67>0.0</wlm:H1_67>
-          <wlm:H1_68>0.0</wlm:H1_68>
-          <wlm:H1_69>0.0</wlm:H1_69>
-          <wlm:H1_70>0.0</wlm:H1_70>
-          <wlm:H1_71>0.0</wlm:H1_71>
-          <wlm:H1_72>0.0</wlm:H1_72>
-          <wlm:H2_0>0.0</wlm:H2_0>
-          <wlm:H2_1>0.251</wlm:H2_1>
-          <wlm:H2_2>0.286</wlm:H2_2>
-          <wlm:H2_3>0.184</wlm:H2_3>
-          <wlm:H2_4>0.11</wlm:H2_4>
-          <wlm:H2_5>0.065</wlm:H2_5>
-          <wlm:H2_6>0.039</wlm:H2_6>
-          <wlm:H2_7>0.024</wlm:H2_7>
-          <wlm:H2_8>0.015</wlm:H2_8>
-          <wlm:H2_9>0.0090</wlm:H2_9>
-          <wlm:H2_10>0.0060</wlm:H2_10>
-          <wlm:H2_11>0.0040</wlm:H2_11>
-          <wlm:H2_12>0.0020</wlm:H2_12>
-          <wlm:H2_13>0.0020</wlm:H2_13>
-          <wlm:H2_14>0.0010</wlm:H2_14>
-          <wlm:H2_15>0.0010</wlm:H2_15>
-          <wlm:H2_16>0.0</wlm:H2_16>
-          <wlm:H2_17>0.0</wlm:H2_17>
-          <wlm:H2_18>0.0</wlm:H2_18>
-          <wlm:H2_19>0.0</wlm:H2_19>
-          <wlm:H2_20>0.0</wlm:H2_20>
-          <wlm:H2_21>0.0</wlm:H2_21>
-          <wlm:H2_22>0.0</wlm:H2_22>
-          <wlm:H2_23>0.0</wlm:H2_23>
-          <wlm:H2_24>0.0</wlm:H2_24>
-          <wlm:H2_25>0.0</wlm:H2_25>
-          <wlm:H2_26>0.0</wlm:H2_26>
-          <wlm:H2_27>0.0</wlm:H2_27>
-          <wlm:H2_28>0.0</wlm:H2_28>
-          <wlm:H2_29>0.0</wlm:H2_29>
-          <wlm:H2_30>0.0</wlm:H2_30>
-          <wlm:H2_31>0.0</wlm:H2_31>
-          <wlm:H2_32>0.0</wlm:H2_32>
-          <wlm:H2_33>0.0</wlm:H2_33>
-          <wlm:H2_34>0.0</wlm:H2_34>
-          <wlm:H2_35>0.0</wlm:H2_35>
-          <wlm:H2_36>0.0</wlm:H2_36>
-          <wlm:H2_37>0.0</wlm:H2_37>
-          <wlm:H2_38>0.0</wlm:H2_38>
-          <wlm:H2_39>0.0</wlm:H2_39>
-          <wlm:H2_40>0.0</wlm:H2_40>
-          <wlm:H2_41>0.0</wlm:H2_41>
-          <wlm:H2_42>0.0</wlm:H2_42>
-          <wlm:H2_43>0.0</wlm:H2_43>
-          <wlm:H2_44>0.0</wlm:H2_44>
-          <wlm:H2_45>0.0</wlm:H2_45>
-          <wlm:H2_46>0.0</wlm:H2_46>
-          <wlm:H2_47>0.0</wlm:H2_47>
-          <wlm:H2_48>0.0</wlm:H2_48>
-          <wlm:H2_49>0.0</wlm:H2_49>
-          <wlm:H2_50>0.0</wlm:H2_50>
-          <wlm:H2_51>0.0</wlm:H2_51>
-          <wlm:H2_52>0.0</wlm:H2_52>
-          <wlm:H2_53>0.0</wlm:H2_53>
-          <wlm:H2_54>0.0</wlm:H2_54>
-          <wlm:H2_55>0.0</wlm:H2_55>
-          <wlm:H2_56>0.0</wlm:H2_56>
-          <wlm:H2_57>0.0</wlm:H2_57>
-          <wlm:H2_58>0.0</wlm:H2_58>
-          <wlm:H2_59>0.0</wlm:H2_59>
-          <wlm:H2_60>0.0</wlm:H2_60>
-          <wlm:H2_61>0.0</wlm:H2_61>
-          <wlm:H2_62>0.0</wlm:H2_62>
-          <wlm:H2_63>0.0</wlm:H2_63>
-          <wlm:H2_64>0.0</wlm:H2_64>
-          <wlm:H2_65>0.0</wlm:H2_65>
-          <wlm:H2_66>0.0</wlm:H2_66>
-          <wlm:H2_67>0.0</wlm:H2_67>
-          <wlm:H2_68>0.0</wlm:H2_68>
-          <wlm:H2_69>0.0</wlm:H2_69>
-          <wlm:H2_70>0.0</wlm:H2_70>
-          <wlm:H2_71>0.0</wlm:H2_71>
-          <wlm:H2_72>0.0</wlm:H2_72>
-          <wlm:H3_0>0.0</wlm:H3_0>
-          <wlm:H3_1>0.027</wlm:H3_1>
-          <wlm:H3_2>0.12</wlm:H3_2>
-          <wlm:H3_3>0.141</wlm:H3_3>
-          <wlm:H3_4>0.127</wlm:H3_4>
-          <wlm:H3_5>0.106</wlm:H3_5>
-          <wlm:H3_6>0.086</wlm:H3_6>
-          <wlm:H3_7>0.07</wlm:H3_7>
-          <wlm:H3_8>0.056</wlm:H3_8>
-          <wlm:H3_9>0.046</wlm:H3_9>
-          <wlm:H3_10>0.037</wlm:H3_10>
-          <wlm:H3_11>0.03</wlm:H3_11>
-          <wlm:H3_12>0.025</wlm:H3_12>
-          <wlm:H3_13>0.021</wlm:H3_13>
-          <wlm:H3_14>0.017</wlm:H3_14>
-          <wlm:H3_15>0.014</wlm:H3_15>
-          <wlm:H3_16>0.012</wlm:H3_16>
-          <wlm:H3_17>0.01</wlm:H3_17>
-          <wlm:H3_18>0.0080</wlm:H3_18>
-          <wlm:H3_19>0.0070</wlm:H3_19>
-          <wlm:H3_20>0.0060</wlm:H3_20>
-          <wlm:H3_21>0.0050</wlm:H3_21>
-          <wlm:H3_22>0.0040</wlm:H3_22>
-          <wlm:H3_23>0.0040</wlm:H3_23>
-          <wlm:H3_24>0.0030</wlm:H3_24>
-          <wlm:H3_25>0.0030</wlm:H3_25>
-          <wlm:H3_26>0.0020</wlm:H3_26>
-          <wlm:H3_27>0.0020</wlm:H3_27>
-          <wlm:H3_28>0.0020</wlm:H3_28>
-          <wlm:H3_29>0.0010</wlm:H3_29>
-          <wlm:H3_30>0.0010</wlm:H3_30>
-          <wlm:H3_31>0.0010</wlm:H3_31>
-          <wlm:H3_32>0.0010</wlm:H3_32>
-          <wlm:H3_33>0.0010</wlm:H3_33>
-          <wlm:H3_34>0.0010</wlm:H3_34>
-          <wlm:H3_35>0.0010</wlm:H3_35>
-          <wlm:H3_36>0.0</wlm:H3_36>
-          <wlm:H3_37>0.0</wlm:H3_37>
-          <wlm:H3_38>0.0</wlm:H3_38>
-          <wlm:H3_39>0.0</wlm:H3_39>
-          <wlm:H3_40>0.0</wlm:H3_40>
-          <wlm:H3_41>0.0</wlm:H3_41>
-          <wlm:H3_42>0.0</wlm:H3_42>
-          <wlm:H3_43>0.0</wlm:H3_43>
-          <wlm:H3_44>0.0</wlm:H3_44>
-          <wlm:H3_45>0.0</wlm:H3_45>
-          <wlm:H3_46>0.0</wlm:H3_46>
-          <wlm:H3_47>0.0</wlm:H3_47>
-          <wlm:H3_48>0.0</wlm:H3_48>
-          <wlm:H3_49>0.0</wlm:H3_49>
-          <wlm:H3_50>0.0</wlm:H3_50>
-          <wlm:H3_51>0.0</wlm:H3_51>
-          <wlm:H3_52>0.0</wlm:H3_52>
-          <wlm:H3_53>0.0</wlm:H3_53>
-          <wlm:H3_54>0.0</wlm:H3_54>
-          <wlm:H3_55>0.0</wlm:H3_55>
-          <wlm:H3_56>0.0</wlm:H3_56>
-          <wlm:H3_57>0.0</wlm:H3_57>
-          <wlm:H3_58>0.0</wlm:H3_58>
-          <wlm:H3_59>0.0</wlm:H3_59>
-          <wlm:H3_60>0.0</wlm:H3_60>
-          <wlm:H3_61>0.0</wlm:H3_61>
-          <wlm:H3_62>0.0</wlm:H3_62>
-          <wlm:H3_63>0.0</wlm:H3_63>
-          <wlm:H3_64>0.0</wlm:H3_64>
-          <wlm:H3_65>0.0</wlm:H3_65>
-          <wlm:H3_66>0.0</wlm:H3_66>
-          <wlm:H3_67>0.0</wlm:H3_67>
-          <wlm:H3_68>0.0</wlm:H3_68>
-          <wlm:H3_69>0.0</wlm:H3_69>
-          <wlm:H3_70>0.0</wlm:H3_70>
-          <wlm:H3_71>0.0</wlm:H3_71>
-          <wlm:H3_72>0.0</wlm:H3_72>
+          <wlm:H3_7>0.0</wlm:H3_7>
+          <wlm:H3_8>0.0010</wlm:H3_8>
+          <wlm:H3_9>0.0020</wlm:H3_9>
+          <wlm:H3_10>0.0030</wlm:H3_10>
+          <wlm:H3_11>0.0060</wlm:H3_11>
+          <wlm:H3_12>0.0090</wlm:H3_12>
+          <wlm:H3_13>0.012</wlm:H3_13>
+          <wlm:H3_14>0.016</wlm:H3_14>
+          <wlm:H3_15>0.019</wlm:H3_15>
+          <wlm:H3_16>0.023</wlm:H3_16>
+          <wlm:H3_17>0.026</wlm:H3_17>
+          <wlm:H3_18>0.029</wlm:H3_18>
+          <wlm:H3_19>0.031</wlm:H3_19>
+          <wlm:H3_20>0.033</wlm:H3_20>
+          <wlm:H3_21>0.034</wlm:H3_21>
+          <wlm:H3_22>0.035</wlm:H3_22>
+          <wlm:H3_23>0.035</wlm:H3_23>
+          <wlm:H3_24>0.035</wlm:H3_24>
+          <wlm:H3_25>0.035</wlm:H3_25>
+          <wlm:H3_26>0.034</wlm:H3_26>
+          <wlm:H3_27>0.033</wlm:H3_27>
+          <wlm:H3_28>0.032</wlm:H3_28>
+          <wlm:H3_29>0.03</wlm:H3_29>
+          <wlm:H3_30>0.029</wlm:H3_30>
+          <wlm:H3_31>0.027</wlm:H3_31>
+          <wlm:H3_32>0.026</wlm:H3_32>
+          <wlm:H3_33>0.024</wlm:H3_33>
+          <wlm:H3_34>0.023</wlm:H3_34>
+          <wlm:H3_35>0.021</wlm:H3_35>
+          <wlm:H3_36>0.02</wlm:H3_36>
+          <wlm:H3_37>0.019</wlm:H3_37>
+          <wlm:H3_38>0.017</wlm:H3_38>
+          <wlm:H3_39>0.016</wlm:H3_39>
+          <wlm:H3_40>0.015</wlm:H3_40>
+          <wlm:H3_41>0.014</wlm:H3_41>
+          <wlm:H3_42>0.013</wlm:H3_42>
+          <wlm:H3_43>0.012</wlm:H3_43>
+          <wlm:H3_44>0.011</wlm:H3_44>
+          <wlm:H3_45>0.01</wlm:H3_45>
+          <wlm:H3_46>0.0090</wlm:H3_46>
+          <wlm:H3_47>0.0080</wlm:H3_47>
+          <wlm:H3_48>0.0070</wlm:H3_48>
+          <wlm:H3_49>0.0070</wlm:H3_49>
+          <wlm:H3_50>0.0060</wlm:H3_50>
+          <wlm:H3_51>0.0060</wlm:H3_51>
+          <wlm:H3_52>0.0050</wlm:H3_52>
+          <wlm:H3_53>0.0050</wlm:H3_53>
+          <wlm:H3_54>0.0040</wlm:H3_54>
+          <wlm:H3_55>0.0040</wlm:H3_55>
+          <wlm:H3_56>0.0040</wlm:H3_56>
+          <wlm:H3_57>0.0030</wlm:H3_57>
+          <wlm:H3_58>0.0030</wlm:H3_58>
+          <wlm:H3_59>0.0030</wlm:H3_59>
+          <wlm:H3_60>0.0020</wlm:H3_60>
+          <wlm:H3_61>0.0020</wlm:H3_61>
+          <wlm:H3_62>0.0020</wlm:H3_62>
+          <wlm:H3_63>0.0020</wlm:H3_63>
+          <wlm:H3_64>0.0020</wlm:H3_64>
+          <wlm:H3_65>0.0010</wlm:H3_65>
+          <wlm:H3_66>0.0010</wlm:H3_66>
+          <wlm:H3_67>0.0010</wlm:H3_67>
+          <wlm:H3_68>0.0010</wlm:H3_68>
+          <wlm:H3_69>0.0010</wlm:H3_69>
+          <wlm:H3_70>0.0010</wlm:H3_70>
+          <wlm:H3_71>0.0010</wlm:H3_71>
+          <wlm:H3_72>0.0010</wlm:H3_72>
         </wlm:WLM>
       </wlm:WLMMember>
       <wlm:WLMMember>
@@ -16664,7 +15345,7 @@
           <wlm:PAR_2>0.0</wlm:PAR_2>
           <wlm:PAR_3>1.0</wlm:PAR_3>
           <wlm:PAR_4>1.1</wlm:PAR_4>
-          <wlm:PAR_5>0.6</wlm:PAR_5>
+          <wlm:PAR_5>0.2</wlm:PAR_5>
           <wlm:PAR_6>0.0</wlm:PAR_6>
           <wlm:PAR_7>0.0</wlm:PAR_7>
           <wlm:STUF_1>2.0</wlm:STUF_1>
@@ -17373,7 +16054,7 @@
         <wlm:WLM fid="ID579015">
           <wlm:PNR>579015</wlm:PNR>
           <wlm:IP_1>72</wlm:IP_1>
-          <wlm:IP_2>1</wlm:IP_2>
+          <wlm:IP_2>0</wlm:IP_2>
           <wlm:IP_3>24</wlm:IP_3>
           <wlm:IP_4>0</wlm:IP_4>
           <wlm:IP_5>0</wlm:IP_5>
@@ -17620,7 +16301,7 @@
           <wlm:PAR_2>2.0</wlm:PAR_2>
           <wlm:PAR_3>1.0</wlm:PAR_3>
           <wlm:PAR_4>0.0</wlm:PAR_4>
-          <wlm:PAR_5>1.0</wlm:PAR_5>
+          <wlm:PAR_5>0.95</wlm:PAR_5>
           <wlm:PAR_6>0.0</wlm:PAR_6>
           <wlm:PAR_7>0.0</wlm:PAR_7>
           <wlm:STUF_1>5.0</wlm:STUF_1>
@@ -17848,55 +16529,55 @@
         </wlm:WLM>
       </wlm:WLMMember>
       <wlm:WLMMember>
-        <wlm:WLM fid="ID579713">
-          <wlm:PNR>579713</wlm:PNR>
+        <wlm:WLM fid="ID579070">
+          <wlm:PNR>579070</wlm:PNR>
           <wlm:IP_1>72</wlm:IP_1>
-          <wlm:IP_2>0</wlm:IP_2>
+          <wlm:IP_2>1</wlm:IP_2>
           <wlm:IP_3>24</wlm:IP_3>
           <wlm:IP_4>0</wlm:IP_4>
           <wlm:IP_5>0</wlm:IP_5>
           <wlm:PAR_1>0.998</wlm:PAR_1>
-          <wlm:PAR_2>0.0</wlm:PAR_2>
-          <wlm:PAR_3>0.0</wlm:PAR_3>
-          <wlm:PAR_4>0.9</wlm:PAR_4>
+          <wlm:PAR_2>2.0</wlm:PAR_2>
+          <wlm:PAR_3>1.0</wlm:PAR_3>
+          <wlm:PAR_4>1.0</wlm:PAR_4>
           <wlm:PAR_5>0.0</wlm:PAR_5>
           <wlm:PAR_6>0.0</wlm:PAR_6>
           <wlm:PAR_7>0.0</wlm:PAR_7>
-          <wlm:STUF_1>7.0</wlm:STUF_1>
-          <wlm:STUF_2>25.0</wlm:STUF_2>
+          <wlm:STUF_1>5.5</wlm:STUF_1>
+          <wlm:STUF_2>55.0</wlm:STUF_2>
           <wlm:STUF_3>0.0</wlm:STUF_3>
           <wlm:H1_0>0.0</wlm:H1_0>
           <wlm:H1_1>0.0</wlm:H1_1>
           <wlm:H1_2>0.0</wlm:H1_2>
-          <wlm:H1_3>0.0090</wlm:H1_3>
-          <wlm:H1_4>0.061</wlm:H1_4>
-          <wlm:H1_5>0.136</wlm:H1_5>
-          <wlm:H1_6>0.181</wlm:H1_6>
-          <wlm:H1_7>0.178</wlm:H1_7>
-          <wlm:H1_8>0.146</wlm:H1_8>
-          <wlm:H1_9>0.106</wlm:H1_9>
-          <wlm:H1_10>0.072</wlm:H1_10>
-          <wlm:H1_11>0.046</wlm:H1_11>
-          <wlm:H1_12>0.028</wlm:H1_12>
-          <wlm:H1_13>0.016</wlm:H1_13>
-          <wlm:H1_14>0.01</wlm:H1_14>
-          <wlm:H1_15>0.0050</wlm:H1_15>
-          <wlm:H1_16>0.0030</wlm:H1_16>
-          <wlm:H1_17>0.0020</wlm:H1_17>
-          <wlm:H1_18>0.0010</wlm:H1_18>
-          <wlm:H1_19>0.0</wlm:H1_19>
-          <wlm:H1_20>0.0</wlm:H1_20>
-          <wlm:H1_21>0.0</wlm:H1_21>
-          <wlm:H1_22>0.0</wlm:H1_22>
-          <wlm:H1_23>0.0</wlm:H1_23>
-          <wlm:H1_24>0.0</wlm:H1_24>
-          <wlm:H1_25>0.0</wlm:H1_25>
-          <wlm:H1_26>0.0</wlm:H1_26>
-          <wlm:H1_27>0.0</wlm:H1_27>
-          <wlm:H1_28>0.0</wlm:H1_28>
-          <wlm:H1_29>0.0</wlm:H1_29>
-          <wlm:H1_30>0.0</wlm:H1_30>
-          <wlm:H1_31>0.0</wlm:H1_31>
+          <wlm:H1_3>0.0</wlm:H1_3>
+          <wlm:H1_4>0.0</wlm:H1_4>
+          <wlm:H1_5>0.0</wlm:H1_5>
+          <wlm:H1_6>0.0</wlm:H1_6>
+          <wlm:H1_7>0.0010</wlm:H1_7>
+          <wlm:H1_8>0.0040</wlm:H1_8>
+          <wlm:H1_9>0.013</wlm:H1_9>
+          <wlm:H1_10>0.029</wlm:H1_10>
+          <wlm:H1_11>0.053</wlm:H1_11>
+          <wlm:H1_12>0.077</wlm:H1_12>
+          <wlm:H1_13>0.098</wlm:H1_13>
+          <wlm:H1_14>0.109</wlm:H1_14>
+          <wlm:H1_15>0.111</wlm:H1_15>
+          <wlm:H1_16>0.104</wlm:H1_16>
+          <wlm:H1_17>0.092</wlm:H1_17>
+          <wlm:H1_18>0.077</wlm:H1_18>
+          <wlm:H1_19>0.062</wlm:H1_19>
+          <wlm:H1_20>0.048</wlm:H1_20>
+          <wlm:H1_21>0.036</wlm:H1_21>
+          <wlm:H1_22>0.026</wlm:H1_22>
+          <wlm:H1_23>0.019</wlm:H1_23>
+          <wlm:H1_24>0.013</wlm:H1_24>
+          <wlm:H1_25>0.0090</wlm:H1_25>
+          <wlm:H1_26>0.0060</wlm:H1_26>
+          <wlm:H1_27>0.0040</wlm:H1_27>
+          <wlm:H1_28>0.0030</wlm:H1_28>
+          <wlm:H1_29>0.0020</wlm:H1_29>
+          <wlm:H1_30>0.0010</wlm:H1_30>
+          <wlm:H1_31>0.0010</wlm:H1_31>
           <wlm:H1_32>0.0</wlm:H1_32>
           <wlm:H1_33>0.0</wlm:H1_33>
           <wlm:H1_34>0.0</wlm:H1_34>
@@ -17940,26 +16621,26 @@
           <wlm:H1_72>0.0</wlm:H1_72>
           <wlm:H2_0>0.0</wlm:H2_0>
           <wlm:H2_1>0.0</wlm:H2_1>
-          <wlm:H2_2>0.0050</wlm:H2_2>
-          <wlm:H2_3>0.092</wlm:H2_3>
-          <wlm:H2_4>0.222</wlm:H2_4>
-          <wlm:H2_5>0.247</wlm:H2_5>
-          <wlm:H2_6>0.189</wlm:H2_6>
-          <wlm:H2_7>0.118</wlm:H2_7>
-          <wlm:H2_8>0.065</wlm:H2_8>
-          <wlm:H2_9>0.033</wlm:H2_9>
-          <wlm:H2_10>0.016</wlm:H2_10>
-          <wlm:H2_11>0.0070</wlm:H2_11>
-          <wlm:H2_12>0.0030</wlm:H2_12>
-          <wlm:H2_13>0.0010</wlm:H2_13>
-          <wlm:H2_14>0.0010</wlm:H2_14>
-          <wlm:H2_15>0.0</wlm:H2_15>
-          <wlm:H2_16>0.0</wlm:H2_16>
-          <wlm:H2_17>0.0</wlm:H2_17>
-          <wlm:H2_18>0.0</wlm:H2_18>
-          <wlm:H2_19>0.0</wlm:H2_19>
-          <wlm:H2_20>0.0</wlm:H2_20>
-          <wlm:H2_21>0.0</wlm:H2_21>
+          <wlm:H2_2>0.0</wlm:H2_2>
+          <wlm:H2_3>0.0</wlm:H2_3>
+          <wlm:H2_4>0.0010</wlm:H2_4>
+          <wlm:H2_5>0.013</wlm:H2_5>
+          <wlm:H2_6>0.05</wlm:H2_6>
+          <wlm:H2_7>0.104</wlm:H2_7>
+          <wlm:H2_8>0.147</wlm:H2_8>
+          <wlm:H2_9>0.162</wlm:H2_9>
+          <wlm:H2_10>0.149</wlm:H2_10>
+          <wlm:H2_11>0.121</wlm:H2_11>
+          <wlm:H2_12>0.09</wlm:H2_12>
+          <wlm:H2_13>0.062</wlm:H2_13>
+          <wlm:H2_14>0.04</wlm:H2_14>
+          <wlm:H2_15>0.025</wlm:H2_15>
+          <wlm:H2_16>0.015</wlm:H2_16>
+          <wlm:H2_17>0.0090</wlm:H2_17>
+          <wlm:H2_18>0.0050</wlm:H2_18>
+          <wlm:H2_19>0.0030</wlm:H2_19>
+          <wlm:H2_20>0.0020</wlm:H2_20>
+          <wlm:H2_21>0.0010</wlm:H2_21>
           <wlm:H2_22>0.0</wlm:H2_22>
           <wlm:H2_23>0.0</wlm:H2_23>
           <wlm:H2_24>0.0</wlm:H2_24>
@@ -18014,554 +16695,76 @@
           <wlm:H3_0>0.0</wlm:H3_0>
           <wlm:H3_1>0.0</wlm:H3_1>
           <wlm:H3_2>0.0</wlm:H3_2>
-          <wlm:H3_3>0.0010</wlm:H3_3>
-          <wlm:H3_4>0.01</wlm:H3_4>
-          <wlm:H3_5>0.038</wlm:H3_5>
-          <wlm:H3_6>0.08</wlm:H3_6>
-          <wlm:H3_7>0.115</wlm:H3_7>
-          <wlm:H3_8>0.132</wlm:H3_8>
-          <wlm:H3_9>0.131</wlm:H3_9>
-          <wlm:H3_10>0.117</wlm:H3_10>
-          <wlm:H3_11>0.098</wlm:H3_11>
-          <wlm:H3_12>0.077</wlm:H3_12>
-          <wlm:H3_13>0.059</wlm:H3_13>
-          <wlm:H3_14>0.043</wlm:H3_14>
-          <wlm:H3_15>0.031</wlm:H3_15>
-          <wlm:H3_16>0.022</wlm:H3_16>
-          <wlm:H3_17>0.015</wlm:H3_17>
-          <wlm:H3_18>0.01</wlm:H3_18>
-          <wlm:H3_19>0.0070</wlm:H3_19>
-          <wlm:H3_20>0.0050</wlm:H3_20>
-          <wlm:H3_21>0.0030</wlm:H3_21>
-          <wlm:H3_22>0.0020</wlm:H3_22>
-          <wlm:H3_23>0.0010</wlm:H3_23>
-          <wlm:H3_24>0.0010</wlm:H3_24>
-          <wlm:H3_25>0.0010</wlm:H3_25>
-          <wlm:H3_26>0.0</wlm:H3_26>
-          <wlm:H3_27>0.0</wlm:H3_27>
-          <wlm:H3_28>0.0</wlm:H3_28>
-          <wlm:H3_29>0.0</wlm:H3_29>
-          <wlm:H3_30>0.0</wlm:H3_30>
-          <wlm:H3_31>0.0</wlm:H3_31>
-          <wlm:H3_32>0.0</wlm:H3_32>
-          <wlm:H3_33>0.0</wlm:H3_33>
-          <wlm:H3_34>0.0</wlm:H3_34>
-          <wlm:H3_35>0.0</wlm:H3_35>
-          <wlm:H3_36>0.0</wlm:H3_36>
-          <wlm:H3_37>0.0</wlm:H3_37>
-          <wlm:H3_38>0.0</wlm:H3_38>
-          <wlm:H3_39>0.0</wlm:H3_39>
-          <wlm:H3_40>0.0</wlm:H3_40>
-          <wlm:H3_41>0.0</wlm:H3_41>
-          <wlm:H3_42>0.0</wlm:H3_42>
-          <wlm:H3_43>0.0</wlm:H3_43>
-          <wlm:H3_44>0.0</wlm:H3_44>
-          <wlm:H3_45>0.0</wlm:H3_45>
-          <wlm:H3_46>0.0</wlm:H3_46>
-          <wlm:H3_47>0.0</wlm:H3_47>
-          <wlm:H3_48>0.0</wlm:H3_48>
-          <wlm:H3_49>0.0</wlm:H3_49>
-          <wlm:H3_50>0.0</wlm:H3_50>
-          <wlm:H3_51>0.0</wlm:H3_51>
-          <wlm:H3_52>0.0</wlm:H3_52>
-          <wlm:H3_53>0.0</wlm:H3_53>
-          <wlm:H3_54>0.0</wlm:H3_54>
-          <wlm:H3_55>0.0</wlm:H3_55>
-          <wlm:H3_56>0.0</wlm:H3_56>
-          <wlm:H3_57>0.0</wlm:H3_57>
-          <wlm:H3_58>0.0</wlm:H3_58>
-          <wlm:H3_59>0.0</wlm:H3_59>
-          <wlm:H3_60>0.0</wlm:H3_60>
-          <wlm:H3_61>0.0</wlm:H3_61>
-          <wlm:H3_62>0.0</wlm:H3_62>
-          <wlm:H3_63>0.0</wlm:H3_63>
-          <wlm:H3_64>0.0</wlm:H3_64>
-          <wlm:H3_65>0.0</wlm:H3_65>
-          <wlm:H3_66>0.0</wlm:H3_66>
-          <wlm:H3_67>0.0</wlm:H3_67>
-          <wlm:H3_68>0.0</wlm:H3_68>
-          <wlm:H3_69>0.0</wlm:H3_69>
-          <wlm:H3_70>0.0</wlm:H3_70>
-          <wlm:H3_71>0.0</wlm:H3_71>
-          <wlm:H3_72>0.0</wlm:H3_72>
-        </wlm:WLM>
-      </wlm:WLMMember>
-      <wlm:WLMMember>
-        <wlm:WLM fid="ID579069">
-          <wlm:PNR>579069</wlm:PNR>
-          <wlm:IP_1>72</wlm:IP_1>
-          <wlm:IP_2>0</wlm:IP_2>
-          <wlm:IP_3>24</wlm:IP_3>
-          <wlm:IP_4>0</wlm:IP_4>
-          <wlm:IP_5>0</wlm:IP_5>
-          <wlm:PAR_1>0.998</wlm:PAR_1>
-          <wlm:PAR_2>0.0</wlm:PAR_2>
-          <wlm:PAR_3>1.0</wlm:PAR_3>
-          <wlm:PAR_4>0.0</wlm:PAR_4>
-          <wlm:PAR_5>0.0</wlm:PAR_5>
-          <wlm:PAR_6>0.0</wlm:PAR_6>
-          <wlm:PAR_7>0.0</wlm:PAR_7>
-          <wlm:STUF_1>30.0</wlm:STUF_1>
-          <wlm:STUF_2>60.0</wlm:STUF_2>
-          <wlm:STUF_3>0.0</wlm:STUF_3>
-          <wlm:H1_0>0.0</wlm:H1_0>
-          <wlm:H1_1>0.0010</wlm:H1_1>
-          <wlm:H1_2>0.074</wlm:H1_2>
-          <wlm:H1_3>0.197</wlm:H1_3>
-          <wlm:H1_4>0.22</wlm:H1_4>
-          <wlm:H1_5>0.178</wlm:H1_5>
-          <wlm:H1_6>0.125</wlm:H1_6>
-          <wlm:H1_7>0.081</wlm:H1_7>
-          <wlm:H1_8>0.05</wlm:H1_8>
-          <wlm:H1_9>0.03</wlm:H1_9>
-          <wlm:H1_10>0.018</wlm:H1_10>
-          <wlm:H1_11>0.011</wlm:H1_11>
-          <wlm:H1_12>0.0060</wlm:H1_12>
-          <wlm:H1_13>0.0040</wlm:H1_13>
-          <wlm:H1_14>0.0020</wlm:H1_14>
-          <wlm:H1_15>0.0010</wlm:H1_15>
-          <wlm:H1_16>0.0010</wlm:H1_16>
-          <wlm:H1_17>0.0</wlm:H1_17>
-          <wlm:H1_18>0.0</wlm:H1_18>
-          <wlm:H1_19>0.0</wlm:H1_19>
-          <wlm:H1_20>0.0</wlm:H1_20>
-          <wlm:H1_21>0.0</wlm:H1_21>
-          <wlm:H1_22>0.0</wlm:H1_22>
-          <wlm:H1_23>0.0</wlm:H1_23>
-          <wlm:H1_24>0.0</wlm:H1_24>
-          <wlm:H1_25>0.0</wlm:H1_25>
-          <wlm:H1_26>0.0</wlm:H1_26>
-          <wlm:H1_27>0.0</wlm:H1_27>
-          <wlm:H1_28>0.0</wlm:H1_28>
-          <wlm:H1_29>0.0</wlm:H1_29>
-          <wlm:H1_30>0.0</wlm:H1_30>
-          <wlm:H1_31>0.0</wlm:H1_31>
-          <wlm:H1_32>0.0</wlm:H1_32>
-          <wlm:H1_33>0.0</wlm:H1_33>
-          <wlm:H1_34>0.0</wlm:H1_34>
-          <wlm:H1_35>0.0</wlm:H1_35>
-          <wlm:H1_36>0.0</wlm:H1_36>
-          <wlm:H1_37>0.0</wlm:H1_37>
-          <wlm:H1_38>0.0</wlm:H1_38>
-          <wlm:H1_39>0.0</wlm:H1_39>
-          <wlm:H1_40>0.0</wlm:H1_40>
-          <wlm:H1_41>0.0</wlm:H1_41>
-          <wlm:H1_42>0.0</wlm:H1_42>
-          <wlm:H1_43>0.0</wlm:H1_43>
-          <wlm:H1_44>0.0</wlm:H1_44>
-          <wlm:H1_45>0.0</wlm:H1_45>
-          <wlm:H1_46>0.0</wlm:H1_46>
-          <wlm:H1_47>0.0</wlm:H1_47>
-          <wlm:H1_48>0.0</wlm:H1_48>
-          <wlm:H1_49>0.0</wlm:H1_49>
-          <wlm:H1_50>0.0</wlm:H1_50>
-          <wlm:H1_51>0.0</wlm:H1_51>
-          <wlm:H1_52>0.0</wlm:H1_52>
-          <wlm:H1_53>0.0</wlm:H1_53>
-          <wlm:H1_54>0.0</wlm:H1_54>
-          <wlm:H1_55>0.0</wlm:H1_55>
-          <wlm:H1_56>0.0</wlm:H1_56>
-          <wlm:H1_57>0.0</wlm:H1_57>
-          <wlm:H1_58>0.0</wlm:H1_58>
-          <wlm:H1_59>0.0</wlm:H1_59>
-          <wlm:H1_60>0.0</wlm:H1_60>
-          <wlm:H1_61>0.0</wlm:H1_61>
-          <wlm:H1_62>0.0</wlm:H1_62>
-          <wlm:H1_63>0.0</wlm:H1_63>
-          <wlm:H1_64>0.0</wlm:H1_64>
-          <wlm:H1_65>0.0</wlm:H1_65>
-          <wlm:H1_66>0.0</wlm:H1_66>
-          <wlm:H1_67>0.0</wlm:H1_67>
-          <wlm:H1_68>0.0</wlm:H1_68>
-          <wlm:H1_69>0.0</wlm:H1_69>
-          <wlm:H1_70>0.0</wlm:H1_70>
-          <wlm:H1_71>0.0</wlm:H1_71>
-          <wlm:H1_72>0.0</wlm:H1_72>
-          <wlm:H2_0>0.0</wlm:H2_0>
-          <wlm:H2_1>0.0</wlm:H2_1>
-          <wlm:H2_2>0.0</wlm:H2_2>
-          <wlm:H2_3>0.0040</wlm:H2_3>
-          <wlm:H2_4>0.023</wlm:H2_4>
-          <wlm:H2_5>0.052</wlm:H2_5>
-          <wlm:H2_6>0.078</wlm:H2_6>
-          <wlm:H2_7>0.095</wlm:H2_7>
-          <wlm:H2_8>0.101</wlm:H2_8>
-          <wlm:H2_9>0.099</wlm:H2_9>
-          <wlm:H2_10>0.091</wlm:H2_10>
-          <wlm:H2_11>0.081</wlm:H2_11>
-          <wlm:H2_12>0.07</wlm:H2_12>
-          <wlm:H2_13>0.059</wlm:H2_13>
-          <wlm:H2_14>0.049</wlm:H2_14>
-          <wlm:H2_15>0.04</wlm:H2_15>
-          <wlm:H2_16>0.032</wlm:H2_16>
-          <wlm:H2_17>0.026</wlm:H2_17>
-          <wlm:H2_18>0.021</wlm:H2_18>
-          <wlm:H2_19>0.017</wlm:H2_19>
-          <wlm:H2_20>0.013</wlm:H2_20>
-          <wlm:H2_21>0.01</wlm:H2_21>
-          <wlm:H2_22>0.0080</wlm:H2_22>
-          <wlm:H2_23>0.0060</wlm:H2_23>
-          <wlm:H2_24>0.0050</wlm:H2_24>
-          <wlm:H2_25>0.0040</wlm:H2_25>
-          <wlm:H2_26>0.0030</wlm:H2_26>
-          <wlm:H2_27>0.0020</wlm:H2_27>
-          <wlm:H2_28>0.0020</wlm:H2_28>
-          <wlm:H2_29>0.0010</wlm:H2_29>
-          <wlm:H2_30>0.0010</wlm:H2_30>
-          <wlm:H2_31>0.0010</wlm:H2_31>
-          <wlm:H2_32>0.0010</wlm:H2_32>
-          <wlm:H2_33>0.0010</wlm:H2_33>
-          <wlm:H2_34>0.0</wlm:H2_34>
-          <wlm:H2_35>0.0</wlm:H2_35>
-          <wlm:H2_36>0.0</wlm:H2_36>
-          <wlm:H2_37>0.0</wlm:H2_37>
-          <wlm:H2_38>0.0</wlm:H2_38>
-          <wlm:H2_39>0.0</wlm:H2_39>
-          <wlm:H2_40>0.0</wlm:H2_40>
-          <wlm:H2_41>0.0</wlm:H2_41>
-          <wlm:H2_42>0.0</wlm:H2_42>
-          <wlm:H2_43>0.0</wlm:H2_43>
-          <wlm:H2_44>0.0</wlm:H2_44>
-          <wlm:H2_45>0.0</wlm:H2_45>
-          <wlm:H2_46>0.0</wlm:H2_46>
-          <wlm:H2_47>0.0</wlm:H2_47>
-          <wlm:H2_48>0.0</wlm:H2_48>
-          <wlm:H2_49>0.0</wlm:H2_49>
-          <wlm:H2_50>0.0</wlm:H2_50>
-          <wlm:H2_51>0.0</wlm:H2_51>
-          <wlm:H2_52>0.0</wlm:H2_52>
-          <wlm:H2_53>0.0</wlm:H2_53>
-          <wlm:H2_54>0.0</wlm:H2_54>
-          <wlm:H2_55>0.0</wlm:H2_55>
-          <wlm:H2_56>0.0</wlm:H2_56>
-          <wlm:H2_57>0.0</wlm:H2_57>
-          <wlm:H2_58>0.0</wlm:H2_58>
-          <wlm:H2_59>0.0</wlm:H2_59>
-          <wlm:H2_60>0.0</wlm:H2_60>
-          <wlm:H2_61>0.0</wlm:H2_61>
-          <wlm:H2_62>0.0</wlm:H2_62>
-          <wlm:H2_63>0.0</wlm:H2_63>
-          <wlm:H2_64>0.0</wlm:H2_64>
-          <wlm:H2_65>0.0</wlm:H2_65>
-          <wlm:H2_66>0.0</wlm:H2_66>
-          <wlm:H2_67>0.0</wlm:H2_67>
-          <wlm:H2_68>0.0</wlm:H2_68>
-          <wlm:H2_69>0.0</wlm:H2_69>
-          <wlm:H2_70>0.0</wlm:H2_70>
-          <wlm:H2_71>0.0</wlm:H2_71>
-          <wlm:H2_72>0.0</wlm:H2_72>
-          <wlm:H3_0>0.0</wlm:H3_0>
-          <wlm:H3_1>0.0</wlm:H3_1>
-          <wlm:H3_2>0.0</wlm:H3_2>
-          <wlm:H3_3>0.0</wlm:H3_3>
-          <wlm:H3_4>0.0040</wlm:H3_4>
-          <wlm:H3_5>0.014</wlm:H3_5>
-          <wlm:H3_6>0.029</wlm:H3_6>
-          <wlm:H3_7>0.045</wlm:H3_7>
-          <wlm:H3_8>0.058</wlm:H3_8>
-          <wlm:H3_9>0.067</wlm:H3_9>
-          <wlm:H3_10>0.071</wlm:H3_10>
-          <wlm:H3_11>0.072</wlm:H3_11>
-          <wlm:H3_12>0.071</wlm:H3_12>
-          <wlm:H3_13>0.067</wlm:H3_13>
-          <wlm:H3_14>0.062</wlm:H3_14>
-          <wlm:H3_15>0.057</wlm:H3_15>
-          <wlm:H3_16>0.051</wlm:H3_16>
-          <wlm:H3_17>0.045</wlm:H3_17>
-          <wlm:H3_18>0.04</wlm:H3_18>
-          <wlm:H3_19>0.035</wlm:H3_19>
-          <wlm:H3_20>0.03</wlm:H3_20>
-          <wlm:H3_21>0.026</wlm:H3_21>
-          <wlm:H3_22>0.023</wlm:H3_22>
-          <wlm:H3_23>0.02</wlm:H3_23>
-          <wlm:H3_24>0.017</wlm:H3_24>
-          <wlm:H3_25>0.014</wlm:H3_25>
-          <wlm:H3_26>0.012</wlm:H3_26>
-          <wlm:H3_27>0.01</wlm:H3_27>
-          <wlm:H3_28>0.0090</wlm:H3_28>
-          <wlm:H3_29>0.0080</wlm:H3_29>
-          <wlm:H3_30>0.0060</wlm:H3_30>
-          <wlm:H3_31>0.0050</wlm:H3_31>
-          <wlm:H3_32>0.0050</wlm:H3_32>
-          <wlm:H3_33>0.0040</wlm:H3_33>
-          <wlm:H3_34>0.0030</wlm:H3_34>
-          <wlm:H3_35>0.0030</wlm:H3_35>
-          <wlm:H3_36>0.0020</wlm:H3_36>
-          <wlm:H3_37>0.0020</wlm:H3_37>
-          <wlm:H3_38>0.0020</wlm:H3_38>
-          <wlm:H3_39>0.0010</wlm:H3_39>
-          <wlm:H3_40>0.0010</wlm:H3_40>
-          <wlm:H3_41>0.0010</wlm:H3_41>
-          <wlm:H3_42>0.0010</wlm:H3_42>
-          <wlm:H3_43>0.0010</wlm:H3_43>
-          <wlm:H3_44>0.0010</wlm:H3_44>
-          <wlm:H3_45>0.0010</wlm:H3_45>
-          <wlm:H3_46>0.0</wlm:H3_46>
-          <wlm:H3_47>0.0</wlm:H3_47>
-          <wlm:H3_48>0.0</wlm:H3_48>
-          <wlm:H3_49>0.0</wlm:H3_49>
-          <wlm:H3_50>0.0</wlm:H3_50>
-          <wlm:H3_51>0.0</wlm:H3_51>
-          <wlm:H3_52>0.0</wlm:H3_52>
-          <wlm:H3_53>0.0</wlm:H3_53>
-          <wlm:H3_54>0.0</wlm:H3_54>
-          <wlm:H3_55>0.0</wlm:H3_55>
-          <wlm:H3_56>0.0</wlm:H3_56>
-          <wlm:H3_57>0.0</wlm:H3_57>
-          <wlm:H3_58>0.0</wlm:H3_58>
-          <wlm:H3_59>0.0</wlm:H3_59>
-          <wlm:H3_60>0.0</wlm:H3_60>
-          <wlm:H3_61>0.0</wlm:H3_61>
-          <wlm:H3_62>0.0</wlm:H3_62>
-          <wlm:H3_63>0.0</wlm:H3_63>
-          <wlm:H3_64>0.0</wlm:H3_64>
-          <wlm:H3_65>0.0</wlm:H3_65>
-          <wlm:H3_66>0.0</wlm:H3_66>
-          <wlm:H3_67>0.0</wlm:H3_67>
-          <wlm:H3_68>0.0</wlm:H3_68>
-          <wlm:H3_69>0.0</wlm:H3_69>
-          <wlm:H3_70>0.0</wlm:H3_70>
-          <wlm:H3_71>0.0</wlm:H3_71>
-          <wlm:H3_72>0.0</wlm:H3_72>
-        </wlm:WLM>
-      </wlm:WLMMember>
-      <wlm:WLMMember>
-        <wlm:WLM fid="ID579070">
-          <wlm:PNR>579070</wlm:PNR>
-          <wlm:IP_1>72</wlm:IP_1>
-          <wlm:IP_2>1</wlm:IP_2>
-          <wlm:IP_3>24</wlm:IP_3>
-          <wlm:IP_4>0</wlm:IP_4>
-          <wlm:IP_5>0</wlm:IP_5>
-          <wlm:PAR_1>0.998</wlm:PAR_1>
-          <wlm:PAR_2>2.0</wlm:PAR_2>
-          <wlm:PAR_3>1.0</wlm:PAR_3>
-          <wlm:PAR_4>1.0</wlm:PAR_4>
-          <wlm:PAR_5>0.0</wlm:PAR_5>
-          <wlm:PAR_6>0.0</wlm:PAR_6>
-          <wlm:PAR_7>0.0</wlm:PAR_7>
-          <wlm:STUF_1>52.0</wlm:STUF_1>
-          <wlm:STUF_2>70.0</wlm:STUF_2>
-          <wlm:STUF_3>0.0</wlm:STUF_3>
-          <wlm:H1_0>0.0</wlm:H1_0>
-          <wlm:H1_1>0.0</wlm:H1_1>
-          <wlm:H1_2>0.0070</wlm:H1_2>
-          <wlm:H1_3>0.098</wlm:H1_3>
-          <wlm:H1_4>0.221</wlm:H1_4>
-          <wlm:H1_5>0.241</wlm:H1_5>
-          <wlm:H1_6>0.185</wlm:H1_6>
-          <wlm:H1_7>0.117</wlm:H1_7>
-          <wlm:H1_8>0.065</wlm:H1_8>
-          <wlm:H1_9>0.034</wlm:H1_9>
-          <wlm:H1_10>0.017</wlm:H1_10>
-          <wlm:H1_11>0.0080</wlm:H1_11>
-          <wlm:H1_12>0.0040</wlm:H1_12>
-          <wlm:H1_13>0.0020</wlm:H1_13>
-          <wlm:H1_14>0.0010</wlm:H1_14>
-          <wlm:H1_15>0.0</wlm:H1_15>
-          <wlm:H1_16>0.0</wlm:H1_16>
-          <wlm:H1_17>0.0</wlm:H1_17>
-          <wlm:H1_18>0.0</wlm:H1_18>
-          <wlm:H1_19>0.0</wlm:H1_19>
-          <wlm:H1_20>0.0</wlm:H1_20>
-          <wlm:H1_21>0.0</wlm:H1_21>
-          <wlm:H1_22>0.0</wlm:H1_22>
-          <wlm:H1_23>0.0</wlm:H1_23>
-          <wlm:H1_24>0.0</wlm:H1_24>
-          <wlm:H1_25>0.0</wlm:H1_25>
-          <wlm:H1_26>0.0</wlm:H1_26>
-          <wlm:H1_27>0.0</wlm:H1_27>
-          <wlm:H1_28>0.0</wlm:H1_28>
-          <wlm:H1_29>0.0</wlm:H1_29>
-          <wlm:H1_30>0.0</wlm:H1_30>
-          <wlm:H1_31>0.0</wlm:H1_31>
-          <wlm:H1_32>0.0</wlm:H1_32>
-          <wlm:H1_33>0.0</wlm:H1_33>
-          <wlm:H1_34>0.0</wlm:H1_34>
-          <wlm:H1_35>0.0</wlm:H1_35>
-          <wlm:H1_36>0.0</wlm:H1_36>
-          <wlm:H1_37>0.0</wlm:H1_37>
-          <wlm:H1_38>0.0</wlm:H1_38>
-          <wlm:H1_39>0.0</wlm:H1_39>
-          <wlm:H1_40>0.0</wlm:H1_40>
-          <wlm:H1_41>0.0</wlm:H1_41>
-          <wlm:H1_42>0.0</wlm:H1_42>
-          <wlm:H1_43>0.0</wlm:H1_43>
-          <wlm:H1_44>0.0</wlm:H1_44>
-          <wlm:H1_45>0.0</wlm:H1_45>
-          <wlm:H1_46>0.0</wlm:H1_46>
-          <wlm:H1_47>0.0</wlm:H1_47>
-          <wlm:H1_48>0.0</wlm:H1_48>
-          <wlm:H1_49>0.0</wlm:H1_49>
-          <wlm:H1_50>0.0</wlm:H1_50>
-          <wlm:H1_51>0.0</wlm:H1_51>
-          <wlm:H1_52>0.0</wlm:H1_52>
-          <wlm:H1_53>0.0</wlm:H1_53>
-          <wlm:H1_54>0.0</wlm:H1_54>
-          <wlm:H1_55>0.0</wlm:H1_55>
-          <wlm:H1_56>0.0</wlm:H1_56>
-          <wlm:H1_57>0.0</wlm:H1_57>
-          <wlm:H1_58>0.0</wlm:H1_58>
-          <wlm:H1_59>0.0</wlm:H1_59>
-          <wlm:H1_60>0.0</wlm:H1_60>
-          <wlm:H1_61>0.0</wlm:H1_61>
-          <wlm:H1_62>0.0</wlm:H1_62>
-          <wlm:H1_63>0.0</wlm:H1_63>
-          <wlm:H1_64>0.0</wlm:H1_64>
-          <wlm:H1_65>0.0</wlm:H1_65>
-          <wlm:H1_66>0.0</wlm:H1_66>
-          <wlm:H1_67>0.0</wlm:H1_67>
-          <wlm:H1_68>0.0</wlm:H1_68>
-          <wlm:H1_69>0.0</wlm:H1_69>
-          <wlm:H1_70>0.0</wlm:H1_70>
-          <wlm:H1_71>0.0</wlm:H1_71>
-          <wlm:H1_72>0.0</wlm:H1_72>
-          <wlm:H2_0>0.0</wlm:H2_0>
-          <wlm:H2_1>0.0</wlm:H2_1>
-          <wlm:H2_2>0.0</wlm:H2_2>
-          <wlm:H2_3>0.0</wlm:H2_3>
-          <wlm:H2_4>0.0</wlm:H2_4>
-          <wlm:H2_5>0.0</wlm:H2_5>
-          <wlm:H2_6>0.0</wlm:H2_6>
-          <wlm:H2_7>0.0020</wlm:H2_7>
-          <wlm:H2_8>0.0070</wlm:H2_8>
-          <wlm:H2_9>0.015</wlm:H2_9>
-          <wlm:H2_10>0.026</wlm:H2_10>
-          <wlm:H2_11>0.038</wlm:H2_11>
-          <wlm:H2_12>0.05</wlm:H2_12>
-          <wlm:H2_13>0.06</wlm:H2_13>
-          <wlm:H2_14>0.067</wlm:H2_14>
-          <wlm:H2_15>0.07</wlm:H2_15>
-          <wlm:H2_16>0.07</wlm:H2_16>
-          <wlm:H2_17>0.068</wlm:H2_17>
-          <wlm:H2_18>0.063</wlm:H2_18>
-          <wlm:H2_19>0.057</wlm:H2_19>
-          <wlm:H2_20>0.051</wlm:H2_20>
-          <wlm:H2_21>0.044</wlm:H2_21>
-          <wlm:H2_22>0.038</wlm:H2_22>
-          <wlm:H2_23>0.032</wlm:H2_23>
-          <wlm:H2_24>0.027</wlm:H2_24>
-          <wlm:H2_25>0.022</wlm:H2_25>
-          <wlm:H2_26>0.018</wlm:H2_26>
-          <wlm:H2_27>0.015</wlm:H2_27>
-          <wlm:H2_28>0.012</wlm:H2_28>
-          <wlm:H2_29>0.01</wlm:H2_29>
-          <wlm:H2_30>0.0080</wlm:H2_30>
-          <wlm:H2_31>0.0060</wlm:H2_31>
-          <wlm:H2_32>0.0050</wlm:H2_32>
-          <wlm:H2_33>0.0040</wlm:H2_33>
-          <wlm:H2_34>0.0040</wlm:H2_34>
-          <wlm:H2_35>0.0040</wlm:H2_35>
-          <wlm:H2_36>0.0040</wlm:H2_36>
-          <wlm:H2_37>0.0040</wlm:H2_37>
-          <wlm:H2_38>0.0040</wlm:H2_38>
-          <wlm:H2_39>0.0030</wlm:H2_39>
-          <wlm:H2_40>0.0030</wlm:H2_40>
-          <wlm:H2_41>0.0030</wlm:H2_41>
-          <wlm:H2_42>0.0030</wlm:H2_42>
-          <wlm:H2_43>0.0030</wlm:H2_43>
-          <wlm:H2_44>0.0030</wlm:H2_44>
-          <wlm:H2_45>0.0030</wlm:H2_45>
-          <wlm:H2_46>0.0030</wlm:H2_46>
-          <wlm:H2_47>0.0030</wlm:H2_47>
-          <wlm:H2_48>0.0030</wlm:H2_48>
-          <wlm:H2_49>0.0030</wlm:H2_49>
-          <wlm:H2_50>0.0030</wlm:H2_50>
-          <wlm:H2_51>0.0030</wlm:H2_51>
-          <wlm:H2_52>0.0030</wlm:H2_52>
-          <wlm:H2_53>0.0030</wlm:H2_53>
-          <wlm:H2_54>0.0030</wlm:H2_54>
-          <wlm:H2_55>0.0030</wlm:H2_55>
-          <wlm:H2_56>0.0030</wlm:H2_56>
-          <wlm:H2_57>0.0030</wlm:H2_57>
-          <wlm:H2_58>0.0030</wlm:H2_58>
-          <wlm:H2_59>0.0030</wlm:H2_59>
-          <wlm:H2_60>0.0030</wlm:H2_60>
-          <wlm:H2_61>0.0030</wlm:H2_61>
-          <wlm:H2_62>0.0030</wlm:H2_62>
-          <wlm:H2_63>0.0030</wlm:H2_63>
-          <wlm:H2_64>0.0030</wlm:H2_64>
-          <wlm:H2_65>0.0030</wlm:H2_65>
-          <wlm:H2_66>0.0030</wlm:H2_66>
-          <wlm:H2_67>0.0030</wlm:H2_67>
-          <wlm:H2_68>0.0030</wlm:H2_68>
-          <wlm:H2_69>0.0030</wlm:H2_69>
-          <wlm:H2_70>0.0020</wlm:H2_70>
-          <wlm:H2_71>0.0020</wlm:H2_71>
-          <wlm:H2_72>0.0010</wlm:H2_72>
-          <wlm:H3_0>0.0</wlm:H3_0>
-          <wlm:H3_1>0.0</wlm:H3_1>
-          <wlm:H3_2>0.0</wlm:H3_2>
           <wlm:H3_3>0.0</wlm:H3_3>
           <wlm:H3_4>0.0</wlm:H3_4>
           <wlm:H3_5>0.0</wlm:H3_5>
           <wlm:H3_6>0.0</wlm:H3_6>
           <wlm:H3_7>0.0</wlm:H3_7>
           <wlm:H3_8>0.0</wlm:H3_8>
-          <wlm:H3_9>0.0010</wlm:H3_9>
-          <wlm:H3_10>0.0020</wlm:H3_10>
-          <wlm:H3_11>0.0040</wlm:H3_11>
-          <wlm:H3_12>0.0080</wlm:H3_12>
-          <wlm:H3_13>0.013</wlm:H3_13>
-          <wlm:H3_14>0.019</wlm:H3_14>
-          <wlm:H3_15>0.026</wlm:H3_15>
-          <wlm:H3_16>0.032</wlm:H3_16>
-          <wlm:H3_17>0.038</wlm:H3_17>
-          <wlm:H3_18>0.043</wlm:H3_18>
-          <wlm:H3_19>0.047</wlm:H3_19>
-          <wlm:H3_20>0.049</wlm:H3_20>
-          <wlm:H3_21>0.051</wlm:H3_21>
-          <wlm:H3_22>0.051</wlm:H3_22>
-          <wlm:H3_23>0.05</wlm:H3_23>
-          <wlm:H3_24>0.048</wlm:H3_24>
-          <wlm:H3_25>0.045</wlm:H3_25>
-          <wlm:H3_26>0.042</wlm:H3_26>
-          <wlm:H3_27>0.039</wlm:H3_27>
-          <wlm:H3_28>0.036</wlm:H3_28>
-          <wlm:H3_29>0.033</wlm:H3_29>
-          <wlm:H3_30>0.029</wlm:H3_30>
-          <wlm:H3_31>0.026</wlm:H3_31>
-          <wlm:H3_32>0.023</wlm:H3_32>
-          <wlm:H3_33>0.02</wlm:H3_33>
-          <wlm:H3_34>0.018</wlm:H3_34>
-          <wlm:H3_35>0.015</wlm:H3_35>
-          <wlm:H3_36>0.013</wlm:H3_36>
-          <wlm:H3_37>0.012</wlm:H3_37>
-          <wlm:H3_38>0.01</wlm:H3_38>
-          <wlm:H3_39>0.0090</wlm:H3_39>
-          <wlm:H3_40>0.0070</wlm:H3_40>
-          <wlm:H3_41>0.0060</wlm:H3_41>
-          <wlm:H3_42>0.0050</wlm:H3_42>
-          <wlm:H3_43>0.0050</wlm:H3_43>
-          <wlm:H3_44>0.0050</wlm:H3_44>
-          <wlm:H3_45>0.0050</wlm:H3_45>
-          <wlm:H3_46>0.0050</wlm:H3_46>
-          <wlm:H3_47>0.0050</wlm:H3_47>
-          <wlm:H3_48>0.0050</wlm:H3_48>
-          <wlm:H3_49>0.0050</wlm:H3_49>
-          <wlm:H3_50>0.0050</wlm:H3_50>
-          <wlm:H3_51>0.0050</wlm:H3_51>
-          <wlm:H3_52>0.0050</wlm:H3_52>
-          <wlm:H3_53>0.0040</wlm:H3_53>
-          <wlm:H3_54>0.0040</wlm:H3_54>
-          <wlm:H3_55>0.0040</wlm:H3_55>
-          <wlm:H3_56>0.0040</wlm:H3_56>
-          <wlm:H3_57>0.0040</wlm:H3_57>
-          <wlm:H3_58>0.0040</wlm:H3_58>
-          <wlm:H3_59>0.0040</wlm:H3_59>
-          <wlm:H3_60>0.0040</wlm:H3_60>
-          <wlm:H3_61>0.0040</wlm:H3_61>
-          <wlm:H3_62>0.0040</wlm:H3_62>
-          <wlm:H3_63>0.0040</wlm:H3_63>
-          <wlm:H3_64>0.0040</wlm:H3_64>
-          <wlm:H3_65>0.0040</wlm:H3_65>
+          <wlm:H3_9>0.0</wlm:H3_9>
+          <wlm:H3_10>0.0</wlm:H3_10>
+          <wlm:H3_11>0.0</wlm:H3_11>
+          <wlm:H3_12>0.0</wlm:H3_12>
+          <wlm:H3_13>0.0</wlm:H3_13>
+          <wlm:H3_14>0.0010</wlm:H3_14>
+          <wlm:H3_15>0.0010</wlm:H3_15>
+          <wlm:H3_16>0.0020</wlm:H3_16>
+          <wlm:H3_17>0.0030</wlm:H3_17>
+          <wlm:H3_18>0.0040</wlm:H3_18>
+          <wlm:H3_19>0.0060</wlm:H3_19>
+          <wlm:H3_20>0.0090</wlm:H3_20>
+          <wlm:H3_21>0.011</wlm:H3_21>
+          <wlm:H3_22>0.014</wlm:H3_22>
+          <wlm:H3_23>0.016</wlm:H3_23>
+          <wlm:H3_24>0.019</wlm:H3_24>
+          <wlm:H3_25>0.022</wlm:H3_25>
+          <wlm:H3_26>0.025</wlm:H3_26>
+          <wlm:H3_27>0.027</wlm:H3_27>
+          <wlm:H3_28>0.029</wlm:H3_28>
+          <wlm:H3_29>0.031</wlm:H3_29>
+          <wlm:H3_30>0.032</wlm:H3_30>
+          <wlm:H3_31>0.034</wlm:H3_31>
+          <wlm:H3_32>0.034</wlm:H3_32>
+          <wlm:H3_33>0.035</wlm:H3_33>
+          <wlm:H3_34>0.035</wlm:H3_34>
+          <wlm:H3_35>0.035</wlm:H3_35>
+          <wlm:H3_36>0.035</wlm:H3_36>
+          <wlm:H3_37>0.034</wlm:H3_37>
+          <wlm:H3_38>0.033</wlm:H3_38>
+          <wlm:H3_39>0.032</wlm:H3_39>
+          <wlm:H3_40>0.031</wlm:H3_40>
+          <wlm:H3_41>0.03</wlm:H3_41>
+          <wlm:H3_42>0.029</wlm:H3_42>
+          <wlm:H3_43>0.027</wlm:H3_43>
+          <wlm:H3_44>0.026</wlm:H3_44>
+          <wlm:H3_45>0.024</wlm:H3_45>
+          <wlm:H3_46>0.023</wlm:H3_46>
+          <wlm:H3_47>0.022</wlm:H3_47>
+          <wlm:H3_48>0.02</wlm:H3_48>
+          <wlm:H3_49>0.019</wlm:H3_49>
+          <wlm:H3_50>0.018</wlm:H3_50>
+          <wlm:H3_51>0.016</wlm:H3_51>
+          <wlm:H3_52>0.015</wlm:H3_52>
+          <wlm:H3_53>0.014</wlm:H3_53>
+          <wlm:H3_54>0.013</wlm:H3_54>
+          <wlm:H3_55>0.012</wlm:H3_55>
+          <wlm:H3_56>0.011</wlm:H3_56>
+          <wlm:H3_57>0.01</wlm:H3_57>
+          <wlm:H3_58>0.0090</wlm:H3_58>
+          <wlm:H3_59>0.0090</wlm:H3_59>
+          <wlm:H3_60>0.0080</wlm:H3_60>
+          <wlm:H3_61>0.0070</wlm:H3_61>
+          <wlm:H3_62>0.0060</wlm:H3_62>
+          <wlm:H3_63>0.0060</wlm:H3_63>
+          <wlm:H3_64>0.0050</wlm:H3_64>
+          <wlm:H3_65>0.0050</wlm:H3_65>
           <wlm:H3_66>0.0040</wlm:H3_66>
           <wlm:H3_67>0.0040</wlm:H3_67>
           <wlm:H3_68>0.0040</wlm:H3_68>
           <wlm:H3_69>0.0030</wlm:H3_69>
           <wlm:H3_70>0.0030</wlm:H3_70>
-          <wlm:H3_71>0.0020</wlm:H3_71>
-          <wlm:H3_72>0.0010</wlm:H3_72>
+          <wlm:H3_71>0.0030</wlm:H3_71>
+          <wlm:H3_72>0.0020</wlm:H3_72>
         </wlm:WLM>
       </wlm:WLMMember>
       <wlm:WLMMember>
@@ -18579,34 +16782,34 @@
           <wlm:PAR_5>0.0</wlm:PAR_5>
           <wlm:PAR_6>0.0</wlm:PAR_6>
           <wlm:PAR_7>0.0</wlm:PAR_7>
-          <wlm:STUF_1>40.0</wlm:STUF_1>
-          <wlm:STUF_2>60.0</wlm:STUF_2>
+          <wlm:STUF_1>60.0</wlm:STUF_1>
+          <wlm:STUF_2>80.0</wlm:STUF_2>
           <wlm:STUF_3>0.0</wlm:STUF_3>
           <wlm:H1_0>0.0</wlm:H1_0>
           <wlm:H1_1>0.0</wlm:H1_1>
-          <wlm:H1_2>0.061</wlm:H1_2>
-          <wlm:H1_3>0.239</wlm:H1_3>
-          <wlm:H1_4>0.275</wlm:H1_4>
-          <wlm:H1_5>0.199</wlm:H1_5>
-          <wlm:H1_6>0.115</wlm:H1_6>
-          <wlm:H1_7>0.059</wlm:H1_7>
-          <wlm:H1_8>0.029</wlm:H1_8>
-          <wlm:H1_9>0.013</wlm:H1_9>
-          <wlm:H1_10>0.0060</wlm:H1_10>
-          <wlm:H1_11>0.0030</wlm:H1_11>
-          <wlm:H1_12>0.0010</wlm:H1_12>
-          <wlm:H1_13>0.0</wlm:H1_13>
-          <wlm:H1_14>0.0</wlm:H1_14>
-          <wlm:H1_15>0.0</wlm:H1_15>
-          <wlm:H1_16>0.0</wlm:H1_16>
-          <wlm:H1_17>0.0</wlm:H1_17>
-          <wlm:H1_18>0.0</wlm:H1_18>
-          <wlm:H1_19>0.0</wlm:H1_19>
-          <wlm:H1_20>0.0</wlm:H1_20>
-          <wlm:H1_21>0.0</wlm:H1_21>
-          <wlm:H1_22>0.0</wlm:H1_22>
-          <wlm:H1_23>0.0</wlm:H1_23>
-          <wlm:H1_24>0.0</wlm:H1_24>
+          <wlm:H1_2>0.0</wlm:H1_2>
+          <wlm:H1_3>0.0040</wlm:H1_3>
+          <wlm:H1_4>0.03</wlm:H1_4>
+          <wlm:H1_5>0.077</wlm:H1_5>
+          <wlm:H1_6>0.119</wlm:H1_6>
+          <wlm:H1_7>0.139</wlm:H1_7>
+          <wlm:H1_8>0.138</wlm:H1_8>
+          <wlm:H1_9>0.121</wlm:H1_9>
+          <wlm:H1_10>0.099</wlm:H1_10>
+          <wlm:H1_11>0.077</wlm:H1_11>
+          <wlm:H1_12>0.058</wlm:H1_12>
+          <wlm:H1_13>0.042</wlm:H1_13>
+          <wlm:H1_14>0.03</wlm:H1_14>
+          <wlm:H1_15>0.021</wlm:H1_15>
+          <wlm:H1_16>0.014</wlm:H1_16>
+          <wlm:H1_17>0.01</wlm:H1_17>
+          <wlm:H1_18>0.0070</wlm:H1_18>
+          <wlm:H1_19>0.0040</wlm:H1_19>
+          <wlm:H1_20>0.0030</wlm:H1_20>
+          <wlm:H1_21>0.0020</wlm:H1_21>
+          <wlm:H1_22>0.0010</wlm:H1_22>
+          <wlm:H1_23>0.0010</wlm:H1_23>
+          <wlm:H1_24>0.0010</wlm:H1_24>
           <wlm:H1_25>0.0</wlm:H1_25>
           <wlm:H1_26>0.0</wlm:H1_26>
           <wlm:H1_27>0.0</wlm:H1_27>
@@ -18656,52 +16859,52 @@
           <wlm:H1_71>0.0</wlm:H1_71>
           <wlm:H1_72>0.0</wlm:H1_72>
           <wlm:H2_0>0.0</wlm:H2_0>
-          <wlm:H2_1>0.016</wlm:H2_1>
-          <wlm:H2_2>0.086</wlm:H2_2>
-          <wlm:H2_3>0.112</wlm:H2_3>
-          <wlm:H2_4>0.108</wlm:H2_4>
-          <wlm:H2_5>0.096</wlm:H2_5>
-          <wlm:H2_6>0.082</wlm:H2_6>
-          <wlm:H2_7>0.07</wlm:H2_7>
-          <wlm:H2_8>0.059</wlm:H2_8>
-          <wlm:H2_9>0.05</wlm:H2_9>
-          <wlm:H2_10>0.042</wlm:H2_10>
-          <wlm:H2_11>0.036</wlm:H2_11>
+          <wlm:H2_1>0.0</wlm:H2_1>
+          <wlm:H2_2>0.0010</wlm:H2_2>
+          <wlm:H2_3>0.02</wlm:H2_3>
+          <wlm:H2_4>0.081</wlm:H2_4>
+          <wlm:H2_5>0.143</wlm:H2_5>
+          <wlm:H2_6>0.169</wlm:H2_6>
+          <wlm:H2_7>0.159</wlm:H2_7>
+          <wlm:H2_8>0.13</wlm:H2_8>
+          <wlm:H2_9>0.098</wlm:H2_9>
+          <wlm:H2_10>0.069</wlm:H2_10>
+          <wlm:H2_11>0.047</wlm:H2_11>
           <wlm:H2_12>0.031</wlm:H2_12>
-          <wlm:H2_13>0.026</wlm:H2_13>
-          <wlm:H2_14>0.023</wlm:H2_14>
-          <wlm:H2_15>0.02</wlm:H2_15>
-          <wlm:H2_16>0.017</wlm:H2_16>
-          <wlm:H2_17>0.015</wlm:H2_17>
-          <wlm:H2_18>0.013</wlm:H2_18>
-          <wlm:H2_19>0.011</wlm:H2_19>
-          <wlm:H2_20>0.01</wlm:H2_20>
-          <wlm:H2_21>0.0090</wlm:H2_21>
-          <wlm:H2_22>0.0080</wlm:H2_22>
-          <wlm:H2_23>0.0070</wlm:H2_23>
-          <wlm:H2_24>0.0060</wlm:H2_24>
-          <wlm:H2_25>0.0050</wlm:H2_25>
-          <wlm:H2_26>0.0050</wlm:H2_26>
-          <wlm:H2_27>0.0040</wlm:H2_27>
-          <wlm:H2_28>0.0040</wlm:H2_28>
-          <wlm:H2_29>0.0030</wlm:H2_29>
-          <wlm:H2_30>0.0030</wlm:H2_30>
-          <wlm:H2_31>0.0030</wlm:H2_31>
-          <wlm:H2_32>0.0020</wlm:H2_32>
-          <wlm:H2_33>0.0020</wlm:H2_33>
-          <wlm:H2_34>0.0020</wlm:H2_34>
-          <wlm:H2_35>0.0020</wlm:H2_35>
-          <wlm:H2_36>0.0020</wlm:H2_36>
-          <wlm:H2_37>0.0010</wlm:H2_37>
-          <wlm:H2_38>0.0010</wlm:H2_38>
-          <wlm:H2_39>0.0010</wlm:H2_39>
-          <wlm:H2_40>0.0010</wlm:H2_40>
-          <wlm:H2_41>0.0010</wlm:H2_41>
-          <wlm:H2_42>0.0010</wlm:H2_42>
-          <wlm:H2_43>0.0010</wlm:H2_43>
-          <wlm:H2_44>0.0010</wlm:H2_44>
-          <wlm:H2_45>0.0010</wlm:H2_45>
-          <wlm:H2_46>0.0010</wlm:H2_46>
+          <wlm:H2_13>0.02</wlm:H2_13>
+          <wlm:H2_14>0.013</wlm:H2_14>
+          <wlm:H2_15>0.0080</wlm:H2_15>
+          <wlm:H2_16>0.0050</wlm:H2_16>
+          <wlm:H2_17>0.0030</wlm:H2_17>
+          <wlm:H2_18>0.0020</wlm:H2_18>
+          <wlm:H2_19>0.0010</wlm:H2_19>
+          <wlm:H2_20>0.0010</wlm:H2_20>
+          <wlm:H2_21>0.0</wlm:H2_21>
+          <wlm:H2_22>0.0</wlm:H2_22>
+          <wlm:H2_23>0.0</wlm:H2_23>
+          <wlm:H2_24>0.0</wlm:H2_24>
+          <wlm:H2_25>0.0</wlm:H2_25>
+          <wlm:H2_26>0.0</wlm:H2_26>
+          <wlm:H2_27>0.0</wlm:H2_27>
+          <wlm:H2_28>0.0</wlm:H2_28>
+          <wlm:H2_29>0.0</wlm:H2_29>
+          <wlm:H2_30>0.0</wlm:H2_30>
+          <wlm:H2_31>0.0</wlm:H2_31>
+          <wlm:H2_32>0.0</wlm:H2_32>
+          <wlm:H2_33>0.0</wlm:H2_33>
+          <wlm:H2_34>0.0</wlm:H2_34>
+          <wlm:H2_35>0.0</wlm:H2_35>
+          <wlm:H2_36>0.0</wlm:H2_36>
+          <wlm:H2_37>0.0</wlm:H2_37>
+          <wlm:H2_38>0.0</wlm:H2_38>
+          <wlm:H2_39>0.0</wlm:H2_39>
+          <wlm:H2_40>0.0</wlm:H2_40>
+          <wlm:H2_41>0.0</wlm:H2_41>
+          <wlm:H2_42>0.0</wlm:H2_42>
+          <wlm:H2_43>0.0</wlm:H2_43>
+          <wlm:H2_44>0.0</wlm:H2_44>
+          <wlm:H2_45>0.0</wlm:H2_45>
+          <wlm:H2_46>0.0</wlm:H2_46>
           <wlm:H2_47>0.0</wlm:H2_47>
           <wlm:H2_48>0.0</wlm:H2_48>
           <wlm:H2_49>0.0</wlm:H2_49>
@@ -18818,34 +17021,34 @@
           <wlm:PAR_5>0.0</wlm:PAR_5>
           <wlm:PAR_6>0.0</wlm:PAR_6>
           <wlm:PAR_7>0.0</wlm:PAR_7>
-          <wlm:STUF_1>40.0</wlm:STUF_1>
+          <wlm:STUF_1>60.0</wlm:STUF_1>
           <wlm:STUF_2>80.0</wlm:STUF_2>
           <wlm:STUF_3>0.0</wlm:STUF_3>
           <wlm:H1_0>0.0</wlm:H1_0>
           <wlm:H1_1>0.0</wlm:H1_1>
-          <wlm:H1_2>0.061</wlm:H1_2>
-          <wlm:H1_3>0.239</wlm:H1_3>
-          <wlm:H1_4>0.275</wlm:H1_4>
-          <wlm:H1_5>0.199</wlm:H1_5>
-          <wlm:H1_6>0.115</wlm:H1_6>
-          <wlm:H1_7>0.059</wlm:H1_7>
-          <wlm:H1_8>0.029</wlm:H1_8>
-          <wlm:H1_9>0.013</wlm:H1_9>
-          <wlm:H1_10>0.0060</wlm:H1_10>
-          <wlm:H1_11>0.0030</wlm:H1_11>
-          <wlm:H1_12>0.0010</wlm:H1_12>
-          <wlm:H1_13>0.0</wlm:H1_13>
-          <wlm:H1_14>0.0</wlm:H1_14>
-          <wlm:H1_15>0.0</wlm:H1_15>
-          <wlm:H1_16>0.0</wlm:H1_16>
-          <wlm:H1_17>0.0</wlm:H1_17>
-          <wlm:H1_18>0.0</wlm:H1_18>
-          <wlm:H1_19>0.0</wlm:H1_19>
-          <wlm:H1_20>0.0</wlm:H1_20>
-          <wlm:H1_21>0.0</wlm:H1_21>
-          <wlm:H1_22>0.0</wlm:H1_22>
-          <wlm:H1_23>0.0</wlm:H1_23>
-          <wlm:H1_24>0.0</wlm:H1_24>
+          <wlm:H1_2>0.0</wlm:H1_2>
+          <wlm:H1_3>0.0040</wlm:H1_3>
+          <wlm:H1_4>0.03</wlm:H1_4>
+          <wlm:H1_5>0.077</wlm:H1_5>
+          <wlm:H1_6>0.119</wlm:H1_6>
+          <wlm:H1_7>0.139</wlm:H1_7>
+          <wlm:H1_8>0.138</wlm:H1_8>
+          <wlm:H1_9>0.121</wlm:H1_9>
+          <wlm:H1_10>0.099</wlm:H1_10>
+          <wlm:H1_11>0.077</wlm:H1_11>
+          <wlm:H1_12>0.058</wlm:H1_12>
+          <wlm:H1_13>0.042</wlm:H1_13>
+          <wlm:H1_14>0.03</wlm:H1_14>
+          <wlm:H1_15>0.021</wlm:H1_15>
+          <wlm:H1_16>0.014</wlm:H1_16>
+          <wlm:H1_17>0.01</wlm:H1_17>
+          <wlm:H1_18>0.0070</wlm:H1_18>
+          <wlm:H1_19>0.0040</wlm:H1_19>
+          <wlm:H1_20>0.0030</wlm:H1_20>
+          <wlm:H1_21>0.0020</wlm:H1_21>
+          <wlm:H1_22>0.0010</wlm:H1_22>
+          <wlm:H1_23>0.0010</wlm:H1_23>
+          <wlm:H1_24>0.0010</wlm:H1_24>
           <wlm:H1_25>0.0</wlm:H1_25>
           <wlm:H1_26>0.0</wlm:H1_26>
           <wlm:H1_27>0.0</wlm:H1_27>
@@ -18895,52 +17098,52 @@
           <wlm:H1_71>0.0</wlm:H1_71>
           <wlm:H1_72>0.0</wlm:H1_72>
           <wlm:H2_0>0.0</wlm:H2_0>
-          <wlm:H2_1>0.016</wlm:H2_1>
-          <wlm:H2_2>0.086</wlm:H2_2>
-          <wlm:H2_3>0.112</wlm:H2_3>
-          <wlm:H2_4>0.108</wlm:H2_4>
-          <wlm:H2_5>0.096</wlm:H2_5>
-          <wlm:H2_6>0.082</wlm:H2_6>
-          <wlm:H2_7>0.07</wlm:H2_7>
-          <wlm:H2_8>0.059</wlm:H2_8>
-          <wlm:H2_9>0.05</wlm:H2_9>
-          <wlm:H2_10>0.042</wlm:H2_10>
-          <wlm:H2_11>0.036</wlm:H2_11>
+          <wlm:H2_1>0.0</wlm:H2_1>
+          <wlm:H2_2>0.0010</wlm:H2_2>
+          <wlm:H2_3>0.02</wlm:H2_3>
+          <wlm:H2_4>0.081</wlm:H2_4>
+          <wlm:H2_5>0.143</wlm:H2_5>
+          <wlm:H2_6>0.169</wlm:H2_6>
+          <wlm:H2_7>0.159</wlm:H2_7>
+          <wlm:H2_8>0.13</wlm:H2_8>
+          <wlm:H2_9>0.098</wlm:H2_9>
+          <wlm:H2_10>0.069</wlm:H2_10>
+          <wlm:H2_11>0.047</wlm:H2_11>
           <wlm:H2_12>0.031</wlm:H2_12>
-          <wlm:H2_13>0.026</wlm:H2_13>
-          <wlm:H2_14>0.023</wlm:H2_14>
-          <wlm:H2_15>0.02</wlm:H2_15>
-          <wlm:H2_16>0.017</wlm:H2_16>
-          <wlm:H2_17>0.015</wlm:H2_17>
-          <wlm:H2_18>0.013</wlm:H2_18>
-          <wlm:H2_19>0.011</wlm:H2_19>
-          <wlm:H2_20>0.01</wlm:H2_20>
-          <wlm:H2_21>0.0090</wlm:H2_21>
-          <wlm:H2_22>0.0080</wlm:H2_22>
-          <wlm:H2_23>0.0070</wlm:H2_23>
-          <wlm:H2_24>0.0060</wlm:H2_24>
-          <wlm:H2_25>0.0050</wlm:H2_25>
-          <wlm:H2_26>0.0050</wlm:H2_26>
-          <wlm:H2_27>0.0040</wlm:H2_27>
-          <wlm:H2_28>0.0040</wlm:H2_28>
-          <wlm:H2_29>0.0030</wlm:H2_29>
-          <wlm:H2_30>0.0030</wlm:H2_30>
-          <wlm:H2_31>0.0030</wlm:H2_31>
-          <wlm:H2_32>0.0020</wlm:H2_32>
-          <wlm:H2_33>0.0020</wlm:H2_33>
-          <wlm:H2_34>0.0020</wlm:H2_34>
-          <wlm:H2_35>0.0020</wlm:H2_35>
-          <wlm:H2_36>0.0020</wlm:H2_36>
-          <wlm:H2_37>0.0010</wlm:H2_37>
-          <wlm:H2_38>0.0010</wlm:H2_38>
-          <wlm:H2_39>0.0010</wlm:H2_39>
-          <wlm:H2_40>0.0010</wlm:H2_40>
-          <wlm:H2_41>0.0010</wlm:H2_41>
-          <wlm:H2_42>0.0010</wlm:H2_42>
-          <wlm:H2_43>0.0010</wlm:H2_43>
-          <wlm:H2_44>0.0010</wlm:H2_44>
-          <wlm:H2_45>0.0010</wlm:H2_45>
-          <wlm:H2_46>0.0010</wlm:H2_46>
+          <wlm:H2_13>0.02</wlm:H2_13>
+          <wlm:H2_14>0.013</wlm:H2_14>
+          <wlm:H2_15>0.0080</wlm:H2_15>
+          <wlm:H2_16>0.0050</wlm:H2_16>
+          <wlm:H2_17>0.0030</wlm:H2_17>
+          <wlm:H2_18>0.0020</wlm:H2_18>
+          <wlm:H2_19>0.0010</wlm:H2_19>
+          <wlm:H2_20>0.0010</wlm:H2_20>
+          <wlm:H2_21>0.0</wlm:H2_21>
+          <wlm:H2_22>0.0</wlm:H2_22>
+          <wlm:H2_23>0.0</wlm:H2_23>
+          <wlm:H2_24>0.0</wlm:H2_24>
+          <wlm:H2_25>0.0</wlm:H2_25>
+          <wlm:H2_26>0.0</wlm:H2_26>
+          <wlm:H2_27>0.0</wlm:H2_27>
+          <wlm:H2_28>0.0</wlm:H2_28>
+          <wlm:H2_29>0.0</wlm:H2_29>
+          <wlm:H2_30>0.0</wlm:H2_30>
+          <wlm:H2_31>0.0</wlm:H2_31>
+          <wlm:H2_32>0.0</wlm:H2_32>
+          <wlm:H2_33>0.0</wlm:H2_33>
+          <wlm:H2_34>0.0</wlm:H2_34>
+          <wlm:H2_35>0.0</wlm:H2_35>
+          <wlm:H2_36>0.0</wlm:H2_36>
+          <wlm:H2_37>0.0</wlm:H2_37>
+          <wlm:H2_38>0.0</wlm:H2_38>
+          <wlm:H2_39>0.0</wlm:H2_39>
+          <wlm:H2_40>0.0</wlm:H2_40>
+          <wlm:H2_41>0.0</wlm:H2_41>
+          <wlm:H2_42>0.0</wlm:H2_42>
+          <wlm:H2_43>0.0</wlm:H2_43>
+          <wlm:H2_44>0.0</wlm:H2_44>
+          <wlm:H2_45>0.0</wlm:H2_45>
+          <wlm:H2_46>0.0</wlm:H2_46>
           <wlm:H2_47>0.0</wlm:H2_47>
           <wlm:H2_48>0.0</wlm:H2_48>
           <wlm:H2_49>0.0</wlm:H2_49>
@@ -19531,43 +17734,6 @@
           <speicher:Gewaesser>Saale</speicher:Gewaesser>
           <speicher:MaxInhalt>411.4</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>570000</speicher:PNR-Zufluss>
-          <speicher:PNR_ST>570270</speicher:PNR_ST>
-          <speicher:PNR_NA>-1</speicher:PNR_NA>
-          <speicher:TS_NAME>Saale-Talsperren</speicher:TS_NAME>
-          <speicher:STEUNAME>Rudolstadt</speicher:STEUNAME>
-          <speicher:UELNAME>ohne</speicher:UELNAME>
-          <speicher:DATEINAME/>
-          <speicher:ST_Art>2</speicher:ST_Art>
-          <speicher:QG1>120</speicher:QG1>
-          <speicher:T1>5</speicher:T1>
-          <speicher:T2>9</speicher:T2>
-          <speicher:Q2>0</speicher:Q2>
-          <speicher:QF3>0</speicher:QF3>
-          <speicher:IKOR>0</speicher:IKOR>
-          <speicher:INHALT_min>1.1</speicher:INHALT_min>
-          <speicher:INHALT_max>411.4</speicher:INHALT_max>
-          <speicher:I1>414.7</speicher:I1>
-          <speicher:QUE1>0</speicher:QUE1>
-          <speicher:I2>418</speicher:I2>
-          <speicher:QUE2>115</speicher:QUE2>
-          <speicher:I3>423.2</speicher:I3>
-          <speicher:QUE3>200</speicher:QUE3>
-          <speicher:I4>0</speicher:I4>
-          <speicher:QUE4>0</speicher:QUE4>
-          <speicher:I5>0</speicher:I5>
-          <speicher:QUE5>0</speicher:QUE5>
-          <speicher:I6>0</speicher:I6>
-          <speicher:QUE6>0</speicher:QUE6>
-          <speicher:I7>0</speicher:I7>
-          <speicher:QUE7>0</speicher:QUE7>
-          <speicher:I8>0</speicher:I8>
-          <speicher:QUE8>0</speicher:QUE8>
-          <speicher:I9>0</speicher:I9>
-          <speicher:QUE9>0</speicher:QUE9>
-          <speicher:I10>0</speicher:I10>
-          <speicher:QUE10>0</speicher:QUE10>
-          <speicher:NAmax>0</speicher:NAmax>
-          <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location/>
           <speicher:Inhalt>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID570250.zml"/>
@@ -19585,43 +17751,6 @@
           <speicher:Gewaesser>Unstrut</speicher:Gewaesser>
           <speicher:MaxInhalt>18.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>573090</speicher:PNR-Zufluss>
-          <speicher:PNR_ST>573110</speicher:PNR_ST>
-          <speicher:PNR_NA>-1</speicher:PNR_NA>
-          <speicher:TS_NAME>TS Straußfurt</speicher:TS_NAME>
-          <speicher:STEUNAME>Oldisleben</speicher:STEUNAME>
-          <speicher:UELNAME>ohne</speicher:UELNAME>
-          <speicher:DATEINAME/>
-          <speicher:ST_Art>1</speicher:ST_Art>
-          <speicher:QG1>75</speicher:QG1>
-          <speicher:T1>7</speicher:T1>
-          <speicher:T2>12</speicher:T2>
-          <speicher:Q2>0</speicher:Q2>
-          <speicher:QF3>0</speicher:QF3>
-          <speicher:IKOR>0</speicher:IKOR>
-          <speicher:INHALT_min>0</speicher:INHALT_min>
-          <speicher:INHALT_max>18.6</speicher:INHALT_max>
-          <speicher:I1>24.2</speicher:I1>
-          <speicher:QUE1>60</speicher:QUE1>
-          <speicher:I2>0</speicher:I2>
-          <speicher:QUE2>0</speicher:QUE2>
-          <speicher:I3>0</speicher:I3>
-          <speicher:QUE3>0</speicher:QUE3>
-          <speicher:I4>0</speicher:I4>
-          <speicher:QUE4>0</speicher:QUE4>
-          <speicher:I5>0</speicher:I5>
-          <speicher:QUE5>0</speicher:QUE5>
-          <speicher:I6>0</speicher:I6>
-          <speicher:QUE6>0</speicher:QUE6>
-          <speicher:I7>0</speicher:I7>
-          <speicher:QUE7>0</speicher:QUE7>
-          <speicher:I8>0</speicher:I8>
-          <speicher:QUE8>0</speicher:QUE8>
-          <speicher:I9>0</speicher:I9>
-          <speicher:QUE9>0</speicher:QUE9>
-          <speicher:I10>0</speicher:I10>
-          <speicher:QUE10>0</speicher:QUE10>
-          <speicher:NAmax>0</speicher:NAmax>
-          <speicher:RE_KOR>11</speicher:RE_KOR>
           <gml:location/>
           <speicher:Inhalt>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID573100.zml"/>
@@ -19639,43 +17768,6 @@
           <speicher:Gewaesser>Helme</speicher:Gewaesser>
           <speicher:MaxInhalt>35.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>575402</speicher:PNR-Zufluss>
-          <speicher:PNR_ST>575410</speicher:PNR_ST>
-          <speicher:PNR_NA>-1</speicher:PNR_NA>
-          <speicher:TS_NAME>TS Kelbra</speicher:TS_NAME>
-          <speicher:STEUNAME>Bennungen</speicher:STEUNAME>
-          <speicher:UELNAME>ohne</speicher:UELNAME>
-          <speicher:DATEINAME/>
-          <speicher:ST_Art>1</speicher:ST_Art>
-          <speicher:QG1>40</speicher:QG1>
-          <speicher:T1>5</speicher:T1>
-          <speicher:T2>6</speicher:T2>
-          <speicher:Q2>0</speicher:Q2>
-          <speicher:QF3>0</speicher:QF3>
-          <speicher:IKOR>0</speicher:IKOR>
-          <speicher:INHALT_min>0</speicher:INHALT_min>
-          <speicher:INHALT_max>35.6</speicher:INHALT_max>
-          <speicher:I1>36</speicher:I1>
-          <speicher:QUE1>82</speicher:QUE1>
-          <speicher:I2>0</speicher:I2>
-          <speicher:QUE2>0</speicher:QUE2>
-          <speicher:I3>0</speicher:I3>
-          <speicher:QUE3>0</speicher:QUE3>
-          <speicher:I4>0</speicher:I4>
-          <speicher:QUE4>0</speicher:QUE4>
-          <speicher:I5>0</speicher:I5>
-          <speicher:QUE5>0</speicher:QUE5>
-          <speicher:I6>0</speicher:I6>
-          <speicher:QUE6>0</speicher:QUE6>
-          <speicher:I7>0</speicher:I7>
-          <speicher:QUE7>0</speicher:QUE7>
-          <speicher:I8>0</speicher:I8>
-          <speicher:QUE8>0</speicher:QUE8>
-          <speicher:I9>0</speicher:I9>
-          <speicher:QUE9>0</speicher:QUE9>
-          <speicher:I10>0</speicher:I10>
-          <speicher:QUE10>0</speicher:QUE10>
-          <speicher:NAmax>0</speicher:NAmax>
-          <speicher:RE_KOR>21</speicher:RE_KOR>
           <gml:location/>
           <speicher:Inhalt>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID575406.zml"/>
@@ -19693,43 +17785,6 @@
           <speicher:Gewaesser>Kalte Bode</speicher:Gewaesser>
           <speicher:MaxInhalt>4.47</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579306</speicher:PNR-Zufluss>
-          <speicher:PNR_ST>579000</speicher:PNR_ST>
-          <speicher:PNR_NA>-1</speicher:PNR_NA>
-          <speicher:TS_NAME>HWS Kalte Bode</speicher:TS_NAME>
-          <speicher:STEUNAME>Überleitungssperre, Zulauf</speicher:STEUNAME>
-          <speicher:UELNAME>ohne</speicher:UELNAME>
-          <speicher:DATEINAME/>
-          <speicher:ST_Art>1</speicher:ST_Art>
-          <speicher:QG1>23</speicher:QG1>
-          <speicher:T1>3</speicher:T1>
-          <speicher:T2>5</speicher:T2>
-          <speicher:Q2>0</speicher:Q2>
-          <speicher:QF3>0</speicher:QF3>
-          <speicher:IKOR>0</speicher:IKOR>
-          <speicher:INHALT_min>0.2</speicher:INHALT_min>
-          <speicher:INHALT_max>4.47</speicher:INHALT_max>
-          <speicher:I1>4.95</speicher:I1>
-          <speicher:QUE1>95</speicher:QUE1>
-          <speicher:I2>0</speicher:I2>
-          <speicher:QUE2>0</speicher:QUE2>
-          <speicher:I3>0</speicher:I3>
-          <speicher:QUE3>0</speicher:QUE3>
-          <speicher:I4>0</speicher:I4>
-          <speicher:QUE4>0</speicher:QUE4>
-          <speicher:I5>0</speicher:I5>
-          <speicher:QUE5>0</speicher:QUE5>
-          <speicher:I6>0</speicher:I6>
-          <speicher:QUE6>0</speicher:QUE6>
-          <speicher:I7>0</speicher:I7>
-          <speicher:QUE7>0</speicher:QUE7>
-          <speicher:I8>0</speicher:I8>
-          <speicher:QUE8>0</speicher:QUE8>
-          <speicher:I9>0</speicher:I9>
-          <speicher:QUE9>0</speicher:QUE9>
-          <speicher:I10>0</speicher:I10>
-          <speicher:QUE10>0</speicher:QUE10>
-          <speicher:NAmax>0</speicher:NAmax>
-          <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location/>
           <speicher:Inhalt>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579330.zml"/>
@@ -19747,43 +17802,6 @@
           <speicher:Gewaesser>Bode</speicher:Gewaesser>
           <speicher:MaxInhalt>1.2</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579000</speicher:PNR-Zufluss>
-          <speicher:PNR_ST>579014</speicher:PNR_ST>
-          <speicher:PNR_NA>579999</speicher:PNR_NA>
-          <speicher:TS_NAME>Überleitungssperre Königshütte</speicher:TS_NAME>
-          <speicher:STEUNAME>TS-Wendefurth, Bode-Anteil</speicher:STEUNAME>
-          <speicher:UELNAME>Überleitung Rappbode</speicher:UELNAME>
-          <speicher:DATEINAME/>
-          <speicher:ST_Art>-1</speicher:ST_Art>
-          <speicher:QG1>25</speicher:QG1>
-          <speicher:T1>4</speicher:T1>
-          <speicher:T2>6</speicher:T2>
-          <speicher:Q2>1</speicher:Q2>
-          <speicher:QF3>0</speicher:QF3>
-          <speicher:IKOR>1</speicher:IKOR>
-          <speicher:INHALT_min>0.01</speicher:INHALT_min>
-          <speicher:INHALT_max>1.2</speicher:INHALT_max>
-          <speicher:I1>1.45</speicher:I1>
-          <speicher:QUE1>98</speicher:QUE1>
-          <speicher:I2>0</speicher:I2>
-          <speicher:QUE2>0</speicher:QUE2>
-          <speicher:I3>0</speicher:I3>
-          <speicher:QUE3>0</speicher:QUE3>
-          <speicher:I4>0</speicher:I4>
-          <speicher:QUE4>0</speicher:QUE4>
-          <speicher:I5>0</speicher:I5>
-          <speicher:QUE5>0</speicher:QUE5>
-          <speicher:I6>0</speicher:I6>
-          <speicher:QUE6>0</speicher:QUE6>
-          <speicher:I7>0</speicher:I7>
-          <speicher:QUE7>0</speicher:QUE7>
-          <speicher:I8>0</speicher:I8>
-          <speicher:QUE8>0</speicher:QUE8>
-          <speicher:I9>0</speicher:I9>
-          <speicher:QUE9>0</speicher:QUE9>
-          <speicher:I10>0</speicher:I10>
-          <speicher:QUE10>0</speicher:QUE10>
-          <speicher:NAmax>13.5</speicher:NAmax>
-          <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location/>
           <speicher:Inhalt>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579001.zml"/>
@@ -19801,43 +17819,6 @@
           <speicher:Gewaesser>Rappbode</speicher:Gewaesser>
           <speicher:MaxInhalt>109.08</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579011</speicher:PNR-Zufluss>
-          <speicher:PNR_ST>579015</speicher:PNR_ST>
-          <speicher:PNR_NA>579013</speicher:PNR_NA>
-          <speicher:TS_NAME>TS Rappbode</speicher:TS_NAME>
-          <speicher:STEUNAME>Zulauf TS Wendefuth</speicher:STEUNAME>
-          <speicher:UELNAME>TWA</speicher:UELNAME>
-          <speicher:DATEINAME/>
-          <speicher:ST_Art>2</speicher:ST_Art>
-          <speicher:QG1>100</speicher:QG1>
-          <speicher:T1>0</speicher:T1>
-          <speicher:T2>0</speicher:T2>
-          <speicher:Q2>1.65</speicher:Q2>
-          <speicher:QF3>0</speicher:QF3>
-          <speicher:IKOR>1</speicher:IKOR>
-          <speicher:INHALT_min>0.34</speicher:INHALT_min>
-          <speicher:INHALT_max>109.08</speicher:INHALT_max>
-          <speicher:I1>113.4</speicher:I1>
-          <speicher:QUE1>120</speicher:QUE1>
-          <speicher:I2>0</speicher:I2>
-          <speicher:QUE2>0</speicher:QUE2>
-          <speicher:I3>0</speicher:I3>
-          <speicher:QUE3>0</speicher:QUE3>
-          <speicher:I4>0</speicher:I4>
-          <speicher:QUE4>0</speicher:QUE4>
-          <speicher:I5>0</speicher:I5>
-          <speicher:QUE5>0</speicher:QUE5>
-          <speicher:I6>0</speicher:I6>
-          <speicher:QUE6>0</speicher:QUE6>
-          <speicher:I7>0</speicher:I7>
-          <speicher:QUE7>0</speicher:QUE7>
-          <speicher:I8>0</speicher:I8>
-          <speicher:QUE8>0</speicher:QUE8>
-          <speicher:I9>0</speicher:I9>
-          <speicher:QUE9>0</speicher:QUE9>
-          <speicher:I10>0</speicher:I10>
-          <speicher:QUE10>0</speicher:QUE10>
-          <speicher:NAmax>3</speicher:NAmax>
-          <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location/>
           <speicher:Inhalt>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579012.zml"/>
@@ -19855,43 +17836,6 @@
           <speicher:Gewaesser>Bode</speicher:Gewaesser>
           <speicher:MaxInhalt>9.22</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579015</speicher:PNR-Zufluss>
-          <speicher:PNR_ST>579045</speicher:PNR_ST>
-          <speicher:PNR_NA>-1</speicher:PNR_NA>
-          <speicher:TS_NAME>TS Wendefurth</speicher:TS_NAME>
-          <speicher:STEUNAME>Wegeleben</speicher:STEUNAME>
-          <speicher:UELNAME>ohne</speicher:UELNAME>
-          <speicher:DATEINAME/>
-          <speicher:ST_Art>2</speicher:ST_Art>
-          <speicher:QG1>35</speicher:QG1>
-          <speicher:T1>11</speicher:T1>
-          <speicher:T2>16</speicher:T2>
-          <speicher:Q2>0</speicher:Q2>
-          <speicher:QF3>0</speicher:QF3>
-          <speicher:IKOR>0</speicher:IKOR>
-          <speicher:INHALT_min>1.85</speicher:INHALT_min>
-          <speicher:INHALT_max>8.54</speicher:INHALT_max>
-          <speicher:I1>9.22</speicher:I1>
-          <speicher:QUE1>132</speicher:QUE1>
-          <speicher:I2>0</speicher:I2>
-          <speicher:QUE2>0</speicher:QUE2>
-          <speicher:I3>0</speicher:I3>
-          <speicher:QUE3>0</speicher:QUE3>
-          <speicher:I4>0</speicher:I4>
-          <speicher:QUE4>0</speicher:QUE4>
-          <speicher:I5>0</speicher:I5>
-          <speicher:QUE5>0</speicher:QUE5>
-          <speicher:I6>0</speicher:I6>
-          <speicher:QUE6>0</speicher:QUE6>
-          <speicher:I7>0</speicher:I7>
-          <speicher:QUE7>0</speicher:QUE7>
-          <speicher:I8>0</speicher:I8>
-          <speicher:QUE8>0</speicher:QUE8>
-          <speicher:I9>0</speicher:I9>
-          <speicher:QUE9>0</speicher:QUE9>
-          <speicher:I10>0</speicher:I10>
-          <speicher:QUE10>0</speicher:QUE10>
-          <speicher:NAmax>0</speicher:NAmax>
-          <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location/>
           <speicher:Inhalt>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579006.zml"/>
@@ -19905,6 +17849,31 @@
     </speicher:SpeicherCollection>
   </speicher:SpeicherCollectionAssociation>
   <temp:TempCollectionAssociation>
-    <temp:TempCollection fid="Temperatur"/>
+    <temp:TempCollection fid="Temperatur">
+      <temp:TempMember>
+        <temp:Temp fid="ID1">
+          <temp:PNR>1</temp:PNR>
+          <temp:Name>Flachland</temp:Name>
+          <temp:Höhe>0 m NN</temp:Höhe>
+          <temp:Max>40</temp:Max>
+          <gml:location/>
+          <temp:Temperatur>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Temperatur/ID1.zml"/>
+          </temp:Temperatur>
+        </temp:Temp>
+      </temp:TempMember>
+      <temp:TempMember>
+        <temp:Temp fid="ID1000">
+          <temp:PNR>1000</temp:PNR>
+          <temp:Name>Mittelgebirge</temp:Name>
+          <temp:Höhe>1000 m NN</temp:Höhe>
+          <temp:Max>40</temp:Max>
+          <gml:location/>
+          <temp:Temperatur>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Temperatur/ID1000.zml"/>
+          </temp:Temperatur>
+        </temp:Temp>
+      </temp:TempMember>
+    </temp:TempCollection>
   </temp:TempCollectionAssociation>
 </SaaleModell>

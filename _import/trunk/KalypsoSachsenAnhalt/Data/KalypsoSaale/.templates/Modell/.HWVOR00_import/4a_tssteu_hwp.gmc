@@ -1,0 +1,86 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
+	<featuremapping>
+		<csvsource xlink:href="Stammdat/tssteu.hwp"  comment="*" delemiter="&#9;" lineskip="1">
+			<featureproperty name="PNR_ST" type="java.lang.String" format=""><column>0</column></featureproperty>
+			<featureproperty name="PNR_TS" type="java.lang.String" format=""><column>1</column></featureproperty>
+			<featureproperty name="PNR_NA" type="java.lang.String" format=""><column>2</column></featureproperty>
+			<featureproperty name="TS_NAME" type="java.lang.String" format=""><column>3</column></featureproperty>
+			<featureproperty name="STEUNAME" type="java.lang.String" format=""><column>4</column></featureproperty>
+			<featureproperty name="UELNAME" type="java.lang.String" format=""><column>5</column></featureproperty>
+			<featureproperty name="DATEINAME" type="java.lang.String" format=""><column>6</column></featureproperty>
+			<featureproperty name="ST_Art" type="java.lang.String" format=""><column>7</column></featureproperty>
+			<featureproperty name="QG1" type="java.lang.String" format=""><column>8</column></featureproperty>
+			<featureproperty name="T1" type="java.lang.String" format=""><column>9</column></featureproperty>
+			<featureproperty name="T2" type="java.lang.String" format=""><column>10</column></featureproperty>
+			<featureproperty name="Q2" type="java.lang.String" format=""><column>11</column></featureproperty>
+			<featureproperty name="QF3" type="java.lang.String" format=""><column>12</column></featureproperty>
+			<featureproperty name="IKOR" type="java.lang.String" format=""><column>13</column></featureproperty>
+			<featureproperty name="INHALT_min" type="java.lang.String" format=""><column>14</column></featureproperty>
+			<featureproperty name="INHALT_max" type="java.lang.String" format=""><column>15</column></featureproperty>
+			<featureproperty name="I1" type="java.lang.String" format=""><column>16</column></featureproperty>
+			<featureproperty name="QUE1" type="java.lang.String" format=""><column>17</column></featureproperty>
+			<featureproperty name="I2" type="java.lang.String" format=""><column>18</column></featureproperty>
+			<featureproperty name="QUE2" type="java.lang.String" format=""><column>19</column></featureproperty>
+			<featureproperty name="I3" type="java.lang.String" format=""><column>20</column></featureproperty>
+			<featureproperty name="QUE3" type="java.lang.String" format=""><column>21</column></featureproperty>
+			<featureproperty name="I4" type="java.lang.String" format=""><column>22</column></featureproperty>
+			<featureproperty name="QUE4" type="java.lang.String" format=""><column>23</column></featureproperty>
+			<featureproperty name="I5" type="java.lang.String" format=""><column>24</column></featureproperty>
+			<featureproperty name="QUE5" type="java.lang.String" format=""><column>25</column></featureproperty>
+			<featureproperty name="I6" type="java.lang.String" format=""><column>26</column></featureproperty>
+			<featureproperty name="QUE6" type="java.lang.String" format=""><column>27</column></featureproperty>
+			<featureproperty name="I7" type="java.lang.String" format=""><column>28</column></featureproperty>
+			<featureproperty name="QUE7" type="java.lang.String" format=""><column>29</column></featureproperty>
+			<featureproperty name="I8" type="java.lang.String" format=""><column>30</column></featureproperty>
+			<featureproperty name="QUE8" type="java.lang.String" format=""><column>31</column></featureproperty>
+			<featureproperty name="I9" type="java.lang.String" format=""><column>32</column></featureproperty>
+			<featureproperty name="QUE9" type="java.lang.String" format=""><column>33</column></featureproperty>
+			<featureproperty name="I10" type="java.lang.String" format=""><column>34</column></featureproperty>
+			<featureproperty name="QUE10" type="java.lang.String" format=""><column>35</column></featureproperty>
+			<featureproperty name="NAmax" type="java.lang.String" format=""><column>36</column></featureproperty>
+			<featureproperty name="RE_KOR" type="java.lang.String" format=""><column>37</column></featureproperty>
+		</csvsource>
+		<gmlsource xlink:href="../modell.gml"/>
+		<addFeaturesMapping fromPath="featureMember" fromID="PNR_TS" toPath="SpeicherCollectionAssociation/SpeicherMember" toID="PNR" fid="${fromID}" handleExisting="change">
+			<map from="PNR_ST" to="PNR_ST"/>
+			<map from="PNR_NA" to="PNR_NA"/>
+			<map from="TS_NAME" to="TS_NAME"/>
+			<map from="STEUNAME" to="STEUNAME"/>
+			<map from="UELNAME" to="UELNAME"/>
+			<map from="DATEINAME" to="DATEINAME"/>
+			<map from="ST_Art" to="ST_Art"/>
+			<map from="QG1" to="QG1"/>
+			<map from="T1" to="T1"/>
+			<map from="T2" to="T2"/>
+			<map from="Q2" to="Q2"/>
+			<map from="QF3" to="QF3"/>
+			<map from="IKOR" to="IKOR"/>
+			<map from="INHALT_min" to="INHALT_min"/>
+			<map from="INHALT_max" to="INHALT_max"/>
+			<map from="I1" to="I1"/>
+			<map from="QUE1" to="QUE1"/>
+			<map from="I2" to="I2"/>
+			<map from="QUE2" to="QUE2"/>
+			<map from="I3" to="I3"/>
+			<map from="QUE3" to="QUE3"/>
+			<map from="I4" to="I4"/>
+			<map from="QUE4" to="QUE4"/>
+			<map from="I5" to="I5"/>
+			<map from="QUE5" to="QUE5"/>
+			<map from="I6" to="I6"/>
+			<map from="QUE6" to="QUE6"/>
+			<map from="I7" to="I7"/>
+			<map from="QUE7" to="QUE7"/>
+			<map from="I8" to="I8"/>
+			<map from="QUE8" to="QUE8"/>
+			<map from="I9" to="I9"/>
+			<map from="QUE9" to="QUE9"/>
+			<map from="I10" to="I10"/>
+			<map from="QUE10" to="QUE10"/>
+			<map from="NAmax" to="NAmax"/>
+			<map from="RE_KOR" to="RE_KOR"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>

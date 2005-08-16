@@ -1,0 +1,70 @@
+PNR	Bodenfrost	Feuchte	Schnee	Steuerung	Variante	STATUS	Reserve2	Reserve3	Reserve4	Reserve5	Reserve6	Reserve7	Reserve8	Reserve9	Reserve10
+570210	0	-11	0	0	Test	0	0	0	0	0	0	0	0	0	Blankenstein
+572010	0	10	0	0	Test	0	0	0	0	0	0	0	0	0	Kaulsdorf-Eichicht
+570000	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Saale-TS-Zulauf
+572115	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Schwarzburg
+570270	0	0	0	3	Test	0	0	0	0	0	0	0	0	0	Rudolstadt
+570330	0	2	0	0	Test	0	0	0	0	0	0	0	0	0	Camburg-Stöben
+572890	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Gräfinau-Angstedt
+572920	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Niedertrebra
+574210	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Erfurt - Möbisburg
+573010	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Nägelstedt
+573090	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Straußfurt Zulauf
+575110	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Wasserthaleben
+575240	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Hachelbich
+573110	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Oldisleben
+575660	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Ilfeld
+575500	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Nordhausen
+575400	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Sundhausen
+575700	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Stolberg
+575710	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Berga
+573360	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Laucha
+570500	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Naumburg
+576470	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Greiz
+576520	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Gera-Langenberg
+576610	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Zeitz
+577570	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Böhlen
+576900	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Oberthau
+570810	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Halle-Trotha
+578410	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Wippra
+578420	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Mansfeld-Leimbach
+578430	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Großschierstedt
+570910	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Bernburg
+579305	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Elend
+579205	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Tanne
+579405	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Trautenstein
+579011	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Rappbode-TS-Zulauf
+579015	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	TS-Wendefurth-Zulauf
+579610	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Meisdorf
+579620	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Hausneindorf
+579045	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Wegeleben
+579712	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Mahndorf
+579070	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Hadmersleben
+579085	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Stassfurt
+570930	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Calbe
+553050	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Bad Liebenwerda
+553061	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Löben
+570250	0	8	0	0	Test	0	0	0	0	0	0	0	0	0	Kaulsdorf
+570340	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Saaleck
+573100	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Straußfurt Abgabe
+575245	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Wippermündung
+573200	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	oh. Bretleben
+575402	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Kelbra Zulauf
+575406	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Kelbra-Abgabe
+575410	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Bennungen
+575450	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Nikolausrieth
+576631	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Kleindalzig
+576950	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Elstermündung
+579621	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Mündung
+579306	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	HWR Kalte Bode -Zulauf
+579330	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Königsh./HWR - Abgabe
+579000	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Ül-Spere, Zulauf
+579999	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	ÜL zur Rappbode
+579012	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Rappbode-TS-Abgabe
+579013	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Rappbode-TS, TWA
+579001	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Hirtenstieg/ÜL-Abgabe
+579014	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	TS-Wendefurth, Bode-Anteil
+579006	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	TS-Wendefurth-Abgabe
+579713	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Mdg Holtemme
+579069	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	an Holtemme
+579084	0	0	0	0	Test	0	0	0	0	0	0	0	0	0	Hilfspunkt

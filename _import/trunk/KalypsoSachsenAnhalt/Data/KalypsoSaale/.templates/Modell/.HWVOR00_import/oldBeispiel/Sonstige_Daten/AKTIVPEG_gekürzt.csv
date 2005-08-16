@@ -1,0 +1,392 @@
+Lfd.Nr.;Pegelname;Gewässer;Gewässerfolge;Gebiet;Gebietskennz.;TK 25;HW;RW;LS;Stationierung;Lage am Gewässer;Gemeindekennzahl;AEO (km2);PNP1;PNP2;PNP3;Messstellennummer1;Messstellennummer2;Messstellennummer3;Messnetzart;WO;W1;WZ;Q;B;F;Tw;2;3;4;5;GJ;OrB;eingest.;gepl.;Betreiber;Daten abrufbar bei;Veröffentlichung der Daten;sonstige Bemerkungen
+1;Ummendorf;Aller;Weser;Aller;48131;3833;5779500;4444640;;248,0;links;;56,0;;124,71;HN76;440003;440002;440004;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+2;Alleringersleben;Aller;Weser;Aller;481113;3732;5786930;4440920;;237,0;links;;152;113,21;;n S;440004;440003;440006;G;WO;W1;;Q;;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausfallzeiten, Ausbau 1963, PNÄ 1955/64
+3;Walbeck;Aller;Weser;Aller;48115;3732;5794250;4436520;;228,5;Mitte;;231;;94,32;HN76;440008;440006;440010;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+4;Weferlingen;Aller;Weser;Aller;48115;3632;5798320;4435574;;222,5;rechts;;249;84,27;;n S;440010;440008;440020;G;WO;W1;;Q;;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausfallzeiten, Ausbau 1937/38, 1964
+5;Hödingen;Schölecke;Aller, Weser;Aller;48116;3632;5796880;4438750;;1,7;rechts;;27,0;;;;441201;440030;441203;G;;W1;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+6;Etingen Zillbeck;Spetze;Aller, Weser;Aller;48127;3633;5806020;4443640;;7,0;links;;83,0;;74,41;HN76;441303;441203;444205;G;;W1;WZ;Q;B;;;;;;;;;;;STAU MD;STAU MD;;
+7;Breitenrode;Aller;Weser;Aller;;3531;5815770;4427720;;1,5;;;;55,85;;;441405;;;;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+8;Ilsenburg;Ilse;Oker, Aller, Weser;Aller;48241;4129;5746440;4407420;;36,4;rechts;;21,4;351,28;;n S;444205;441303;444210;G;WO;W1;;Q;B;;;;;;;;;;;STAU MD;STAU MD;;
+9;Bühne-Hoppenstedt;Ilse;Oker, Aller, Weser;Aller;48245;4029;5763200;4407550;;11,3;rechts;;160;97,76;;n S;444210;444205;444220;G;WO;W1;;Q;;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+10;Pretzsch-Mauken;Elbe;;Mittlere Elbe bis Havel;;4242;5731734;4557003;;184,4;links;;55764;69,32;;n S;501330;;;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+11;Elster;Elbe;;Mittlere Elbe bis Havel;;4142;5743960;4557150;;200,2;rechts;;61575;66,76;;n S;501390;;;S;;;WZ;;;;;2;;;;;OrB;;;;;;
+12;Wittenberg;Elbe;;Mittlere Elbe bis Havel;53939;4141;5747138;4544634;;214,1;links;;61879;62,48;;;501420;;;G;WO;W1;;Q;;F;;;;;;GJ;;;;WSA DD;WSA DD;DGJ;
+13;Coswig;Elbe;;Mittlere Elbe bis Havel;;4140;5749352;4531196;;236,4;links;;62054;57,62;;;501470;;;S;;;WZ;;;;;2;;;;;OrB;;;WSA DD;WSA DD;;
+14;Roßlau;Elbe;;Mittlere Elbe bis Havel;;4139;5749733;4516399;;257,8;Mitte;;62600;53,86;;;501490;;;S;;;WZ;;B;;;;;;;;OrB;;;WSA DD;WSA DD;;
+15;Dessau-Leopoldshafen;Elbe;;Mittlere Elbe bis Havel;;4139;5746975;4515230;;261,2;links;;69781;52,99;;;502000;;502010;G;WO;W1;;;;;;;;;;;;;;WSA DD;WSA DD;;
+16;Aken;Elbe;;Mittlere Elbe bis Havel;55951;4138;5747089;4504180;;274,7;links;;70093;50,24;;;502010;502000;502030;G;WO;W1;;Q;;;;;;;;GJ;;;;WSA DD;WSA DD;DGJ;
+17;Steckby;Elbe;;Mittlere Elbe bis Havel;5719;4138;5750740;4500650;;280,8;;;;50,11;;;502030;502010;502040;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+18;Breitenhagen I;Elbe;;Mittlere Elbe bis Havel;5719;4037;5753190;4497880;;284,3;;;;49,34;;;502040;502030;502050;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+19;Breitenhagen II;Elbe;;Mittlere Elbe bis Havel;5719;4037;5755480;4496480;;287,3;;;;48,68;;;502050;502040;502060;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+20;Breitenhagen III;Elbe;;Mittlere Elbe bis Havel;5719;4037;5756220;4495810;;288,3;;;;48,44;;;502060;502050;502070;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+21;Barby;Elbe;;Mittlere Elbe bis Havel;5719;4037;5761900;4492050;;295,5;links;;94060;46,00;;n S;502070;502060;502100;G;WO;W1;;Q;B;;;;;;;GJ;;;;WSA MD;WSA MD;DGJ;2/1973 Pegelstandortänderung 1973
+22;Barby-Schaftränke;Elbe;;Mittlere Elbe bis Havel;;4037;5760650;4492050;;294,7;;;;47,10;;;502080;502070;502020;;;;;;;;;2;;;;;;;;;;;
+23;Dornburg;Elbe;;Mittlere Elbe bis Havel;;3937;5765100;4491920;;299,0;;;;46,16;;;502090;502080;502100;;;;;;;;;2;;;;;;;;;;;
+24;Glinde;Elbe;;Mittlere Elbe bis Havel;5719;3937;5765500;4490360;;302,1;;;;45,59;;;502100;502070;502110;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+25;Schönebeck Zackmünde;Elbe;;Mittlere Elbe bis Havel;5719;3936;5764540;4486940;;305,6;;;;44,87;;;502110;502100;502120;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+26;Schönebeck Grünewalde;Elbe;;Mittlere Elbe bis Havel;5719;3936;5765960;4483940;;310,0;;;;44,12;;;502120;502110;502130;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+27;Schönebeck;Elbe;;Mittlere Elbe bis Havel;5719;3936;;;;311,2;;;94571;44,69;;;502130;502120;502140;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+28;Magdeb.-Buckau,Hubbrücke;Elbe;;Mittlere Elbe bis Havel;57391;3835;5776380;4475240;;325,5;;;94940;40,41;;;502170;502160;502180;;;;;;;;;;;;;;;;;;;;
+29;Magdeburg Strombrücke;Elbe;;Mittlere Elbe bis Havel;57391;3835;5777950;4475750;;326,6;links;;94942;39,92;;n S;502180;502170;502190;G;WO;;;Q;B;;;;;;;;;;;WSA MD;WSA MD;;5 mal Pegelstandortänderung 1817 - 1862
+30;Magdeburg Herrenkrug;Elbe;;Mittlere Elbe bis Havel;57394;3836;5781360;4478400;;330,3;;;;39,68;;;502200;502190;502210;V;;;;;;;;2;;;;;;;;STAU MD;STAU MD;;
+31;Elbabstiegskanal-Rothensee;Abstiegskanal;Elbe;Mittlere Elbe bis Havel;57393;3736;5787820;4477800;;332,7;;;94950;0,00;;;502211;502210;502220;;;;;;;;;;;;;;;;;;;;
+32;Hohenwarthe;Elbe;;Mittlere Elbe bis Havel;;3736;;;;339,0;;;;38,16;;;502220;502211;502230;;;;;;;;;2;;;;;;;;;;;
+33;Neubensdorf-Herrenhölzer;Elbe;;Mittlere Elbe bis Havel;;;;;;341,0;;;;37,73;;;502230;502220;502240;;;;;;;;;2;;;;;;;;;;;
+34;Niegripp Neue Schleuse AP;Elbe;;Mittlere Elbe bis Havel;57592;3736;5790700;4482310;;343,6;;;95515;34,44;;;502240;502230;502243;G;WO;W1;;;B;;;;;;;;;;;WSA MD;WSA MD;;
+35;Rogätz;Elbe;;Mittlere Elbe bis Havel;;3636;5797900;4484400;;350,7;;;;35,04;;;502250;502243;502260;;;;;;;;;2;;;;;;;;;;;
+36;Burg-Blumenthal;Elbe;;Mittlere Elbe bis Havel;;3736;;;;356,3;;;;35,04;;;502260;502250;502270;;;;;;;;;2;;;;;;;;;;;
+37;Schopsdorf-Sandfurth;Elbe;;Mittlere Elbe bis Havel;;3637;;;;362,2;;;;33,90;;;502270;502260;502280;;;;;;;;;2;;;;;;;;;;;
+38;Zerben;Elbe;;Mittlere Elbe bis Havel;;3637;;;;364,5;;;;33,25;;;502280;502270;502290;;;;;;;;;2;;;;;;;;;;;
+39;Bittkau-Polte;Elbe;;Mittlere Elbe bis Havel;;3537;;;;367,8;;;;32,42;;;502290;502280;502300;;;;;;;;;2;;;;;;;;;;;
+40;Parey Schleuse AP;Pareyer Verbindungskanal;Elbe;Mittlere Elbe bis Havel;5772;3537;5807850;4498540;;371,2;;;97264;30,92;;;502300;502290;502310;;;;;;;;;;;;5;;;;;;;;
+41;Ferchland;Alte Elbe;Elbe;Mittlere Elbe bis Havel;57792;3537;5811250;4499810;;374,8;;;97272;29,94;;;502310;502300;502320;;;;;;;;;2;;;;;;;;;;;
+42;Schelldorf;Elbe;;Mittlere Elbe bis Havel;;3537;5815670;4498870;;379,8;;;;30,33;;;502320;502310;502330;;;;;;;;;2;;;;;;;;;;;
+43;Buch I;Elbe;;Mittlere Elbe bis Havel;;3537;5817280;4498640;;381,5;;;;30,24;;;502330;502320;502340;;;;;;;;;2;;;;;;;;;;;
+44;Buch II;Elbe;;Mittlere Elbe bis Havel;;3537;5818230;4497870;;382,7;;;;29,79;;;502340;502330;502350;;;;;;;;;2;;;;;;;;;;;
+45;Tangermünde;Elbe;;Mittlere Elbe bis Havel;57799;3437;5823750;4498650;;388,2;links;;97780;27,59;;n S;502350;502340;502360;G;WO;W1;;Q;B;;;;;;;GJ;;;;WSA MD;WSA MD;DGJ;
+46;Tangermünde-Karlbau;Elbe;;Mittlere Elbe bis Havel;;3437;5825770;4498900;;390,8;;;;28,05;;;502360;502350;502370;;;;;;;;;2;;;;;;;;;;;
+47;Storkau;Elbe;;Mittlere Elbe bis Havel;;3437;5831900;4500325;;396,2;;;97788;29,90;;;502370;502360;502380;;;;;;;;;;;;;;;;;WSA MD;WSA MD;;
+48;Storkau-Billberge;Elbe;;Mittlere Elbe bis Havel;;3338;5833640;4501320;;399,2;;;;26,53;;;502380;502370;502390;;;;;;;;;2;;;;;;;;;;;
+49;Arneburg;Elbe;;Mittlere Elbe bis Havel;;3338;5837970;4500750;;403,3;;;;25,76;;;502390;502380;502400;;;;;;;;;2;;;;;;;;;;;
+50;Dalchau;Elbe;;Mittlere Elbe bis Havel;;3238;5841710;4501640;;407,1;;;;25,02;;;502400;502390;502410;;;;;;;;;2;;;;;;;;;;;
+51;Schönfeld;Elbe;;Mittlere Elbe bis Havel;;3228;5843720;4502990;;409,3;;;;24,77;;;502410;502400;502420;;;;;;;;;2;;;;;;;;;;;
+52;Osterholz;Elbe;;Mittlere Elbe bis Havel;;3238;5846980;4503040;;412,6;;;;24,09;;;502420;502410;502430;;;;;;;;;2;;;;;;;;;;;
+53;Sandau;Elbe;;Mittlere Elbe bis Havel;57919;3238;5850200;4502180;;416,0;;;97827;22,47;;;502430;502420;502440;;;;;;;;;;;;;;;;;;;;
+54;Räbel;Elbe;;Mittlere Elbe bis Havel;;3138;5854140;4501380;;419,9;;;;22,76;;;502440;502430;502450;;;;;;;;;2;;;;;;;;;;;
+55;Havelberg-Dommühlenholz;Elbe;;Mittlere Elbe bis Havel;;3138;5855870;4503230;;422,1;;;97835;21,34;;;502450;502440;502460;;;;;;;;;2;;;;;;;;;;;
+56;Werben-Neuwerben;Elbe;;Mittlere Elbe bis Havel;;3138;5860230;4501460;;426,7;;;122249;21,56;;;502460;502450;502470;;;;;;;;;2;;;;;;;;;;;
+57;Werben Neuwerben AP;Elbe;;Mittlere Elbe uh. Havel;5911;3138;5860560;4500680;;427,7;;;24290;;;;502470;502460;502475;S;WO;;;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+58;Havelberg Schleuse AP;Elbe;;Mittlere Elbe uh. Havel;5911;3188;5855620;4503740;;422,5;;;122132;21,57;;;502475;;;S;WO;;;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+59;Werben-Havelmündung;Elbe;;Mittlere Elbe uh. Havel;;3138;5860450;4500570;;429,7;;;;21,00;;;502480;502470;502490;;;;;;;;;;;;5;;;;;;;;
+60;Werben-Neugoldbeck;Elbe;;Mittlere Elbe uh. Havel;5911;3137;5860260;4497410;;430.5;;;;20,77;;;502490;502480;502500;;;;;;;;;2;;;;;;;;;;;
+61;Abbendorf;Elbe;;Mittlere Elbe uh. Havel;;3137;5862340;4494180;;434,7;;;122196;20,57;;;502500;502490;;;;;;;;;;2;;;;;;;;;;;
+62;Pretzien-Ranies;Alte Elbe;Elbe;Mittlere Elbe uh. Havel;;3936;;;;2,5;;;;47,65;;;502800;;;;;;;;;;;2;;;;;;;;;;;
+63;Dornburger Siel OP;Alte Elbe;Elbe;Mittlere Elbe bis Havel;57314;3936;5767840;4488560;;2,6;;;;45,47;;;502810;502370;502820;S;;;;;;;;;;;5;;;;;STAU MD;STAU MD;;
+64;Dornburger Siel UP;Alte Elbe;Elbe;Mittlere Elbe bis Havel;57314;3936;5767800;4488480;;2,6;;;;45,47;;;502820;502810;502830;S;;;;;;;;;;;5;;;;;STAU MD;STAU MD;;
+65;Pretziener Wehr OP;Umflutkanal;Elbe;Mittlere Elbe bis Havel;57464;3936;5767480;4488340;;2,6;;;;45,49;;;502830;502820;502840;S;;;;;;;;;;;5;;;;;STAU MD;STAU MD;;
+66;Pretziener Wehr UP;Umflutkanal;Elbe;Mittlere Elbe bis Havel;57464;3936;5767380;4488300;;2,6;;;;45,49;;;502840;502830;502850;S;;;;;;;;;;;5;;;;;STAU MD;STAU MD;;
+67;Pechau Pechauer Siel;Umflutkanal;Elbe;Mittlere Elbe bis Havel;5746;3936;-;-;;12,7;;;;43,00;;;502850;502840;502860;S;;;;;;;;;;;5;;;;;STAU MD;STAU MD;;
+68;BiederitzHeyrothsb.Fried.br.;Umflutkanal;Elbe;Mittlere Elbe bis Havel;57459;3936;5778210;4481560;;18,0;;;;43,26;;;502860;502850;502870;V;;;;;;;;;3;;;;OrB;;;STAU MD;STAU MD;;
+69;Biederitz Eisenbahnbrücke;Umflutkanal;Elbe;Mittlere Elbe bis Havel;57459;3936;-;-;;20,1;;;;39,92;;;502870;502860;579000;V;;;;;;;;;;;;;OrB;;;STAU MD;STAU MD;;
+70;Lostau;;Elbe;Mittlere Elbe bis Havel;;3736;;;;;;;;39,04;;;502880;;;;;;;;;;;2;;;;;;;;;;;
+71;Magdeburg-Friedrichstadt;;Elbe;Mittlere Elbe bis Havel;;3835;;;;;;;;40,66;;;502900;;;;;;;;;;;2;;;;;;;;;;;
+72;Gnevsdorf;Elbe;;Mittlere Elbe uh. Havel;;3037;5864000;4492920;;437,9;;;;20,15;;;503000;;;;;;;;;;;2;;;;;;;;;;;
+73;Gnevsdorf Wehr AP;Elbe;;Mittlere Elbe uh. Havel;5911;3037;5863900;4492280;;438,0;;;122302;19,15;;;503010;502475;503050;S;WO;;;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+74;Beuster-Camps;Elbe;;Mittlere Elbe uh. Havel;;3036;5865820;4487530;;442,6;;;;19,40;;;503020;503010;503030;;;;;;;;;2;;;;;;;;;;;
+75;Scharleuk;Elbe;;Mittlere Elbe uh. Havel;;3037;5869200;4489540;;446,6;;;;18,85;;;503030;503020;503040;;;;;;;;;2;;;;;;;;;;;
+76;Steinfelde;Elbe;;Mittlere Elbe uh. Havel;;3036;5869850;4485190;;451,0;;;;18,21;;;503040;503030;503050;;;;;;;;;2;;;;;;;;;;;
+77;Wittenberge;Elbe;;Mittlere Elbe uh. Havel;5911;3036;5873130;4483465;;453,9;rechts;;123532;16,72;;;503050;503010;;G;WO;W1;;Q;B;;;;;;;GJ;;;;WSA MD;WSA MD;DGJ;
+78;Wahrenberg;Elbe;;Mittlere Elbe uh. Havel;59151;;;;;459,6;;;;16,79;;;503060;503050;;;;;;;;;;2;;;;;;;;;;;
+79;Lenzen;Elbe;;Mittlere Elbe uh. Havel;5917;2934;;;;484,6;;;125491;12,43;;;503120;;;G;;;;;;;;;;;;;;;;;;;
+80;Dömitz;Elbe;;Mittlere Elbe uh. Havel;5931;2833;5890068;4449441;;504,7;rechts;;129871;10,43;;;503160;;;G;WO;;;;;;;;;;;GJ;;;;WSA  Laubg.;WSA  Laubg.;DGJ;
+81;Darchau;Elbe;;Mittlere Elbe uh. Havel;;2751;;;;535,8;;;131950;5,78;;;503270;;;G;;;;Q;;;;;;;;;;;;;;;
+82;Boitzenburg;Elbe;;Mittlere Elbe uh. Havel;5937;2630;5916750;4414780;;559,5;rechts;;134512;3,80;;;503350;;;G;WO;;;;;;;;;;;GJ;;;;WSA  Laubg.;WSA  Laubg.;DGJ;
+83;Pretzsch;Pretzscher Bach;Elbe;Mittlere Elbe bis Havel;53796;4242;5731400;4555020;GKS;2,2;links;15144240;34,4;75,92;75,77;;552450;552440;;G;;;WZ;Q;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+84;Löben;Schwarze Elster;Elbe;Schwarze Elster;53877;4244;5737740;4574810;GKS;21,6;rechts;15124330;4327;73,07;72,91;;553060;553050;553070;G;WO;W1;;Q;B;;Tw;;;;;GJ;;;;LHW;LHW Halle;DGJ;
+85;Kleinkorga;Schweinitzer Fließ;Schwarze Elster, Elbe;Schwarze Elster;5388;4144;5742595;4574494;GKS;;links;15114230;;;73,46;;;;554830;V;;;WZ;;;;;;;;;;OrB;;;LHW;LHW Halle;;
+86;Schweinitz;Schweinitzer Fließ;Schwarze Elster, Elbe;Schwarze Elster;53889;4144;5741250;4571065;GKS;1,6;links;15124540;562;71,78;71,63;;554830;;;G;;;WZ;Q;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+87;Dietrichsdorf;Zahna;Elbe;Mittlere Elbe bis Havel;53927;4142;5747484;4553184;GKS;3,8;links;15144060;159;74,57;74,42;;555010;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;seit 1996 neuer Pegelstandort
+88;Iserbegka;Zugbach;Elbe;Mittlere Elbe bis Havel;53912;4142;5744610;4555270;GKS;1,4;;;29,9;;;;555020;555010;;V;;;;Q;;;;;3;;;;OrB;;;LHW;LHW Halle;;kein Lattenpegel
+89;Listerfehrda;Wiesenbach;Schwarze Elster, Elbe;Schwarze Elster;538989;4143;5743600;4558630;GKS;2,1;rechts;11124320;162;;69,54;;555050;;;V;;;WZ;Q;;;;;3;;;;OrB;;;LHW;LHW Halle;;
+90;Reinsdorf;Rischebach;Elbe;Mittlere Elbe bis Havel;53943;4141;5751000;4541900;GKS;5,0;rechts;15144290;55,5;78,50;;;555060;;;G;;;WZ;Q;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;Profilveränderung1986, Pegel 1998/99 neu (Brückenneubau)
+91;Weiden;Rossel;Elbe;Mittlere Elbe bis Havel;53985;4040;5759640;4526600;GKS;16,8;Mitte;;104;92,46;92,31;;555090;;555100;G;;;WZ;Q;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+92;Mühlstedt;Rossel;Elbe;Mittlere Elbe bis Havel;53987;4039;5754450;4517920;GKS;6,0;links;15134140;157;;67,48;;555100;555090;;G;;;WZ;Q;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;seit 1996 neuer Pegelstandort
+93;Priorau;Mulde;Elbe;Mulde;54975;4239;5733090;4520540;GKS;23,7;links;;6990;63,71;63,56;;560090;560080;560100;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;Seilkrananlage
+94;Dessau Wehr OP;Mulde;Elbe;Mulde;54979;4139;5744380;4517470;GKS;7,3;links;15101000;7155;;56,33;;;560100;;G;;;WZ;;;;;;;;;;;;;LHW;LHW Halle;;
+95;Dessau-Brücke UP;Mulde;Elbe;Mulde;54979;4139;5744420;4517480;GKS;7,3;Mitte/rechts;15101000;7155;56,20;;;560130;;;G;WO;W1;;;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;Radarmeßgerät zur W-Erfassung
+96;Roitzsch;Strengbach;Leine, Mulde;Mulde;549722;4439;5715720;4518250;GKS;1,0;links;15113340;93,6;87,03;86,88;;561130;;;G;;;WZ;;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;durch Bergbau kaum eigenes AEo, Wasserhaltung  TRL Freiheit II
+97;Wolfen;Fuhne;Mulde, Elbe;Mulde;549742;4339;5726400;4519500;GKS;;rechts;15113460;82,6;71,82;71,67;;561150;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;ab 1996 neuer Pegelstandort 
+98;Saaleck;Saale;Elbe;Obere Saale;56391;4836;5664025;4478940;GKS;180,40;rechts;15228200;5040;112,21;;;570340;570330;570500;G;WO;;;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;ab 11/1995 neue W-Statistik, da neuer Pegelstandort
+99;Naumburg/Grochlitz;Saale;Elbe;Untere Saale;5651;4836;5669090;4488330;GKS;158,01;rechts;15228270;11449;98,21;;;570500;570340;570510;G;WO;W1;;Q;;;Tw;;;;;GJ;;;;LHW;LHW Halle;DGJ;Seilkrananlage an Hennebrücke
+100;Öblitzschleuse OP;Saale;Elbe;Untere Saale;56533;4837;5672490;4491020;GKS;150,41;links;;11707;96,39;;;570510;570500;570520;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+101;Öblitzschleuse UP;Saale;Elbe;Untere Saale;56533;4837;5672440;4491100;GKS;150,40;links;;11707;95,39;;;570520;570510;570530;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+102;Beuditzschleuse OP;Saale;Elbe;Untere Saale;56537;4737;5674500;4496650;GKS;143,29;links;;11765;94,80;;;570530;570520;570540;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+103;Beuditzschleuse UP;Saale;Elbe;Untere Saale;56537;4737;5674500;4496740;GKS;143,28;links;;11765;94,80;;;570540;570530;570550;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+104;Brückenmühlschl. OP;Saale;Elbe;Untere Saale;56537;4737;5674540;4497300;GKS;142,51;links;;11767;93,81;;;570550;570540;570560;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+105;Brückenmühlschl. UP;Saale;Elbe;Untere Saale;56537;4737;5674480;4497340;GKS;142,50;links;;11767;92,81;;;570560;570550;570570;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+106;Herrenmühlschl. OP;Saale;Elbe;Untere Saale;56539;4737;5674500;4498530;GKS;141,07;rechts;;11781;92,24;;;570580;570570;570590;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+107;Herrenmühlschl. UP;Saale;Elbe;Untere Saale;56539;4737;5674450;4498535;GKS;140,80;rechts;;11781;90,24;;;570590;570580;570600;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+108;Bad Dürrenberg OP;Saale;Elbe;Untere Saale;56553;4738;5684480;4504250;GKS;126,18;rechts;;12076;;;;570600;570590;570610;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+109;Bad Dürrenberg UP;Saale;Elbe;Untere Saale;56553;4738;5684400;4504300;GKS;126,05;rechts;;12076;85,85;;;570610;570600;570611;V;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+110;Leuna-Kröllwitz;Saale;Elbe;Untere Saale;56553;4638;5685680;4503540;GKS;124,45;links;;12085;85,58;;;570611;570610;570620;V;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;Wiederinbetriebnahme des Pegels 1994
+111;Merseburg Rischm. OP;Saale;Elbe;Untere Saale;;4638;;;;120,7;;;12125;85,65;;;570620;570611;570630;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+112;Merseburg Rischm. UP;Saale;Elbe;Untere Saale;;4638;;;;120,6;;;12125;81,65;;;570630;570620;570640;G;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+113;Meuschau OP;Saale;Elbe;Untere Saale;56559;4638;;;;119,1;;;12127;81,00;;;570640;570630;570650;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+114;Meuschau UP;Saale;Elbe;Untere Saale;56559;4638;;;;119,0;;;12127;80,00;;;570650;570640;570670;G;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+115;Schkopau;Saale;Elbe;Untere Saale;;4537;;;;111,5;;;12500;79,02;;;570670;570650;570680;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+116;Korbetha;Saale;Elbe;Untere Saale;;4537;;;;110,5;;;12501;79,50;;;570680;570670;570690;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+117;Halle-Planena OP;Saale;Elbe;Untere Saale;56599;4537;;;;109,5;;;12502;77,92;;;570690;570680;570700;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+118;Halle-Planena UP;Saale;Elbe;Untere Saale;56599;4537;;;;109,5;;;12502;75,87;;;570700;570690;570710;G;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+119;Hohenweiden-Röpzig;Saale;Elbe;Untere Saale;;4537;;;;104,0;;;17891;77,08;;;570710;570700;570720;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+120;Halle-Böllberg OP;Saale;Elbe;Untere Saale;56711;4537;;;;98,1;;;17934;75,66;;;570720;570710;570730;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+121;Halle-Böllberg UP;Saale;Elbe;Untere Saale;56711;4537;;;;98,0;;;17934;74,41;;;570730;570720;570760;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+122;Halle Stadtschleuse OP;Saale;Elbe;Untere Saale;56713;4537;;;;96,0;;;17939;74,48;;;570760;570730;570770;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+123;Halle Stadtschleuse UP;Saale;Elbe;Untere Saale;56713;4537;;;;95,9;;;17939;72,86;;;570770;570760;570780;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+124;Halle-Gimritzschl. OP;Saale;Elbe;Untere Saale;56713;4537;;;;94,8;;;17962;72,92;;;570780;570770;570790;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+125;Halle-Gimritzschl. UP;Saale;Elbe;Untere Saale;56713;4537;;;;94,6;;;17962;71,01;;;570790;570780;570800;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+126;Halle-Trotha Schl. OP;Saale;Elbe;Untere Saale;56715;4437;;;;90,7;;;17979;71,26;;;570800;570790;570810;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+127;Halle-Trotha UP;Saale;Elbe;Untere Saale;56715;4437;5709575;4496950;;89,1;rechts;;17979;69,37;;;570810;570800;570830;G;WO;W1;;Q;;F;;;;;;GJ;;;;WSA DD;WSA DD;DGJ;
+128;Wettin Schleuse OP;Saale;Elbe;Untere Saale;56735;4436;;;;71,6;;;18690;67,16;;;570830;570810;570840;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+129;Wettin Schleuse UP;Saale;Elbe;Untere Saale;56735;4436;;;;71,5;;;18690;64,28;;;570840;570830;570850;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+130;Rothenburg N. Schl. OP;Saale;Elbe;Untere Saale;56751;4336;;;;59,6;;;18853;64,15;;;570850;570940;570860;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+131;Rothenburg N. Schl. UP;Saale;Elbe;Untere Saale;56751;4336;;;;59,5;;;18853;61,05;;;570860;570850;570870;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+132;Alsleben Schl. OP;Saale;Elbe;Untere Saale;56753;4236;;;;51,3;;;18916;61,94;;;570870;570860;570880;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+133;Alsleben Schl. UP;Saale;Elbe;Untere Saale;56753;4236;;;;51,1;;;18916;59,05;;;570880;570870;570900;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+134;Bernburg Schl. OP;Saale;Elbe;Untere Saale;5677;4236;;;;37,0;;;19639;55,14;;;570900;570880;570910;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+135;Bernburg UP;Saale;Elbe;Untere Saale;5677;4236;5741000;4481900;;36,0;rechts;;19639;55,14;;;570910;570900;570920;G;WO;W1;;Q;;F;;;;;;GJ;;;;WSA DD;WSA DD;DGJ;
+136;Calbe Schl. OP;Saale;Elbe;Untere Saale;56913;4036;;;;20,3;;;23681;52,26;;;570920;570910;570930;S;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+137;Calbe Schl. UP;Saale;Elbe;Untere Saale;56913;4036;;;;20,0;;;23681;48,13;;;570930;570920;570940;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+138;Calbe-Grizehne ;Saale;Elbe;Untere Saale;56913;4036;5753640;4487030;;17,6;links;;23719;49,39;;;570940;570930;570950;G;WO;W1;;Q;;F;;;;;;GJ;;;;WSA DD;WSA DD;DGJ;
+139;Großrosenburg;Saale;Elbe;Untere Saale;;4037;;;;9,5;;;23718;47,82;;;570950;570940;;;;;;;;;;;;;;;;;;WSA DD;WSA DD;;
+140;Wangen;Unstrut;Saale, Elbe;Unstrut;56493;4735;5681900;4468420;GKS;36,66;links;15229270;6025;109,54;;;573260;;573360;G;;W1;;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+141;Laucha;Unstrut;Saale, Elbe;Unstrut;56497;4736;5676890;4478080;GKS;12,82;rechts;15229180;6218;104,50;;;573360;573260;;G;WO;W1;;Q;;;;;;;;GJ;;;;LHW;LHW Halle;DGJ;Seilkrananlage
+142;Brücken;Kleine Helme;Helme, Unstrut,Saale, Elbe;Unstrut;56476;4533;5701440;4444530;GKS;17,4;Mitte;15237100;1,3;134,95;;;575310;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;Abschlag aus Helme, nur sehr kleines eigenes AEo
+143;Aumühle/Görsbach;Helme;Unstrut, Saale, Elbe;Unstrut;56483;4531;5702050;4426820;GKS;42,2;links;;628;149,00;;;575402;575400;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;neuer Pegelstandort und neuer PNP 1999, Ultraschallanlage zur Q-Erfasssung
+144;TS Kelbra BP I;TS Dauerstau;Helme, Unstrut, Saale, Elbe;Unstrut;56483;4532;;;GKS;;BW I;15237270;660;149,00;;;;;;G;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;;
+145;TS Kelbra BP II;TS Dauerstau;Helme, Unstrut, Saale, Elbe;Unstrut;56483;4532;;;GKS;;BW II;15237270;660;149,00;;;;;;G;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;;
+146;TS Kelbra BP III;TS nördl. HWSR;Helme, Unstrut, Saale, Elbe;Unstrut;56483;4532;;;GKS;;BW III;15237270;660;149,00;;;;;;G;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;;
+147;TS Kelbra Auslauf I;Solgraben;Helme, Unstrut, Saale, Elbe;Unstrut;56483;4532;;;GKS;;links;15237270;660;149,00;;;;;;;;;WZ;;;;;;3;;5;;;;;LHW;LHW Halle;;
+148;TS Kelbra Auslauf II;Helme;Unstrut, Saale, Elbe;Unstrut;56483;4532;;;GKS;;rechts;15237270;660;149,00;;;;;;;;;WZ;;;;;;3;;5;;;;;LHW;LHW Halle;;
+149;TS Kelbra Auslauf III;Sielgraben;Helme, Unstrut, Saale, Elbe;Unstrut;56483;4532;;;GKS;;links;15237270;660;149,00;;;;;;;;;WZ;;;;;;3;;5;;;;;LHW;LHW Halle;;
+150;Saukopf;Helme;Unstrut, Saale, Elbe;Unstrut;56485;4532;5701500;4433480;GKS;;rechts;15237270;;147,52;;;;;575410;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;;
+151;Bennungen;Helme;Unstrut, Saale, Elbe;Unstrut;564855;4532;5702720;4438870;GKS;27,5;links;15237020;902;141,23;;;575410;;;G;WO;W1;;Q;;;Tw;;;;;GJ;;;;LHW;LHW Halle;DGJ;
+152;Stolberg;Thyra;Helme, Ustrut, Saale, Elbe;Unstrut;564843;4431;5714940;4427829;GKS;16,7;rechts;15237490;31,7;275,22;;;575700;;575710;G;;W1;;Q;;;;;;;;GJ;;;;LHW;LHW Halle;DGJ;bewegliches Schlauchwehr
+153;Berga;Thyra;Helme, Unstrut, Saale, Elbe;Unstrut;564849;4532;5702078;4430911;GKS;1,2;rechts;15237030;157;152,00;;;575710;575700;;G;;;WZ;Q;;;;;;;;GJ;;;;LHW;LHW Halle;DGJ;
+154;Wickerode;Nasse;Leine, Helme, Unstrut, Saale, Elbe;Unstrut;564856;4532;5705380;4439400;GKS;1,5;rechts;15237550;12,5;179,58;;;575810;;;G;;;WZ;Q;;;;;;;; ;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+155;Wickerode;Leine;Helme, Unstrut, Saale, Elbe;Unstrut;564856;4532;5704280;4439617;GKS;1,7;rechts;15237550;61,9;155,26;;;575820;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+156;Sangerhausen;Gonna;Helme, Unstrut, Saale, Elbe;Unstrut;564869;4533;5704160;4449520;GKS;3,0;links;15237460;87,0;138,04;;;575850;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;neuer Pegelstandort 1997
+157;Allstedt;Rohne;Helme, Unstrut, Saale, Elbe;Unstrut;564889;4534;5796520;4457800;GKS;3,0;links;15237010;119;129,54;;;575870;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;Pegelreko und Profilausbau 1997
+158;Thalwinkel;Biberbach;Unstrut, Saale, Elbe;Unstrut;56496;4735;5676450;4472840;GKS;3,9;links;15229260;54,5;129,24;;;575970;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;neuer PNP 1998
+159;Mertendorf;Wethau;Saale, Elbe;Untere Saale;56527;4837;5664725;4490014;GKS;8,0;rechts;15228240;205;117,12;;;576000;;;G;;;WZ;Q;;;;;;;;GJ;;;;LHW;LHW Halle;DGJ;
+160;Rippach;Rippach;Saale, Elbe;Untere Saale;56549;4738;5676655;4504458;GKS;3,5;rechts;15242160;173;102,91;;;576100;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;starke Beeinflussung W+Q durch Bergbausümpfungswassereinltg.
+161;Frankleben;Geisel;Saale, Elbe;Untere Saale;56567;4637;5686430;4495285;GKS;8,1;rechts;15227070;208;97,19;;;576210;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+162;Schkopau;Laucha;Saale, Elbe;Untere Saale;565929;4637;5694930;4498860;GKS;0,8;rechts;15227350;119;83,69;;;576240;;;G;;;WZ;Q;;;Tw;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+163;Zeitz;Weiße Elster;Saale, Elbe;Weiße Elster;566559;4938;5658010;4510230;GKS;89,48;links;15246390;2504;146,44;;;576610;576520;576900;G;WO;W1;;Q;;;;;;;;GJ;;;;LHW;LHW Halle;DGJ;
+164;Oberthau;Weiße Elster;Saale, Elbe;Weiße Elster;56693;4638;5694580;4510300;GKS;17,8;rechts;;4939;87,27;;;576900;576610;;G;WO;W1;;Q;;;Tw;;;;;GJ;;;;LHW;LHW Halle;DGJ;Übernahme der Durchflußwerte vom ehem. Pegel Lochau
+165;Ölsen;Schnauder;Weiße Elster, Saale, Elbe;Weiße Elster;566583;4939;5655530;4517350;GKS;31,9;rechts;;70,3;181,09;;;577450;;;G;;;WZ;;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+166;Bruckdorf;Reide;Weiße Elster, Saale, Elbe;Weiße Elster;566949;4538;5701110;4502370;GKS;4,5;links;15202000;120;88,16;;;578180;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+167;Sennewitz;Götsche;Saale, Elbe;Untere Saale;56716;4437;5711200;4496400;GKS;2,5;links;15235470;47,3;78,10;;;578220;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;ab 1995 neuer Pegelstandort
+168;Zappendorf;Salza;Saale, Elbe;Untere Saale;56729;4436;5708060;4486830;GKS;3,4;links;15235550;547;75,03;;;578310;;;G;;;WZ;Q;;;Tw;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;ab 3.10.1972 neuer Pegel
+169;Unterrißdorf;Böse Sieben;Salza, Saale, Elbe;Untere Saale;567247;4435;5709335;4471975;GKS;3,7;links;15215310;104;100,83;;;578350;;;G;;;WZ;Q;B;F;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+170;Querfurt;Querne;Salza, Saale, Elbe;Untere Saale;56721;4635;5693840;4471460;GKS;;rechts;15233210;;;;;578370;;;G;;;WZ;;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;PNP nicht eingemessen
+171;Stedten;Weida;Salza, Saale, Elbe;Untere Saale;56723;4536;5700824;4477698;GKS;11,3;rechts;15215300;173;104,07;;;578380;578370;;G;;;WZ;Q;B;F;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+172;Friedeburg;Schlenze;Saale, Elbe;Untere Saale;56749;4336;5720473;4482188;GKS;1,3;rechts;15222100;110;70,82;;;578390;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+173;Zulauf VS Wippra;Wipper;Saale, Elbe;Untere Saale;5676;4433;5715100;4443400;GKS;;links;15222400;;292,03;;;;;;G;;;WZ;;;;;;3;;5;;;;;LHW;LHW Halle;;Fernübertragung zur VS Wippra
+174;VS Wippra Beckenp..;Wipper;Saale, Elbe;Untere Saale;5676;4433;5714970;4445060;GKS;72,01;rechts;15222400;71,4;;;;;;578400;G;;;WZ;;;;;;;;5;;;;;LHW;LHW Halle;;Fernübertragung zur VS Wippra
+175;Auslauf VS Wippra;Wipper;Saale, Elbe;Untere Saale;56763;4433;5714920;4445080;GKS;71,76;rechts;15222400;71,4;273,59;;;578400;;578410;G;WO;;;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+176;Wippra;Wipper;Saale, Elbe;Untere Saale;56765;4433;5715940;4450100;GKS;63,92;links;15222400;136;242,62;;;578410;578400;578420;G;WO;W1;;Q;;;Tw;;;;;GJ;;;;LHW;LHW Halle;DGJ;
+177;Mansfeld-Leimbach;Wipper;Saale, Elbe;Untere Saale;567671;4334;5719145;4463690;GKS;44,10;links;15222210;210;167,25;;;578420;578410;578430;G;WO;W1;;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+178;Großschierstedt;Wipper;Saale, Elbe;Untere Saale;56769;4235;5735500;4467540;GKS;17,77;links;15211090;544;91,23;;;578430;578420;;G;WO;W1;;Q;;;;;;;;GJ;;;;LHW;LHW Halle;DGJ;
+179;Stangerode;Eine;Wipper, Saale, Elbe;Untere Saale;567683;4334;5725194;4455608;GKS;21,0;links;15222310;75,3;197,62;;;578500;;578510;G;;W1;;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;neue W-Reihe ab 1975 (Profilausb.)
+180;Aschersleben;Eine;Wipper, Saale, Elbe;Untere Saale;567689;4234;5735160;4461221;GKS;5,5;links;15211010;167;118,75;;;578510;578500;;G;;;WZ;Q;;;Tw;;;;;GJ;;;;LHW;LHW Halle;DGJ;
+181;Baalberge;Fuhne;Saale, Elbe;Untere Saale;56789;4236;5736660;4485870;GKS;5,3;links;15112030;681;;59,50;;578600;;;G;;;WZ;Q;;;Tw;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;Profilausbau in1969
+182;Köthen;Ziethe;Fuhne,Saale, Elbe;Untere Saale;567885;4237;5736300;4499120;GKS;16,8;Mitte;15126250;51,9;;70,61;;578610;;578620;G;;;WZ;Q;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+183;Kleinpaschleben;Ziethe;Fuhne, Saale, Elbe;Untere Saale;567885;4237;5738550;4492380;GKS;9,1;Mitte;;83;;67,72;;578620;578610;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+184;Chörau;Taube-Landgraben;Saale, Elbe;Untere Saale;5692;4138;5743650;4507600;GKS;;links;15126040;;;53,11;;578640;;578650;V;;;WZ;;;;;;3;;;;;;;LHW;LHW Halle;;
+185;Aken;Taube-Landgraben;Saale, Elbe;Untere Saale;56923;4138;5745600;4502100;GKS;15,2;links;15126010;151;52,226;;;578650;578640;;G;;;WZ;;;;;;3;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+186;Überleitungssp. Königshütte BP;Bode;Saale, Elbe;Bode;56831;4230;5734200;4417540;;141,0;;;154;0,13;;;579000;503050;579001;S;WO;;;;;;;;;;5;;;;;TSB;TSB;;
+187;Hirtenstieg;Bode;Saale, Elbe;Bode;56831;4230;5734180;4417500;;140,7;;;158;412,69;;;579001;579000;579003;S;WO;;;Q;;;;;;4;;;;;;TSB;TSB;;
+188;Wendefurt Oberbecken;Bode;Saale, Elbe;Bode;56831;;;;;;;;;;;;579004;579003;579005;S;;;WZ;;;;;;;;;;;;;TSB;TSB;;
+189;Talsperre Wendefurth Beckenpegel;Bode;Saale, Elbe;Bode;56831;4231;5734830;4425400;;125,0;;;309;;;;579005;579003;579006;S;WO;;;;;;;;;;5;;;;;TSB;TSB;;
+190;Wendefurth;Bode;Saale, Elbe;Bode;56833;4231;5734720;4425440;;125,0;rechts;;309;322,00;;n S;579006;579005;579010;G;WO;;;Q;;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+191;Treseburg;Bode;Saale, Elbe;Bode;56833;4231;5731790;4428960;;115,0;links;;333;268,31;;;579010;579006;579020;G;;;WZ;;B;;Tw;;3;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+192;Thale;Bode;Saale, Elbe;Bode;568351;4232;5734180;4432640;;106,0;links;;386;80,70;;;579020;579010;579030;G;WO;W1;;;B;;;;;;;;;;;STAU MD;STAU MD;;
+193;Quedlinburg;Bode;Saale, Elbe;Bode;568359;4232;5739600;4441780;;93,0;links;;526;116,82;;;579030;579020;579040;G;;;WZ;;B;;;;3;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+194;Ditfurt;Bode;Saale, Elbe;Bode;56839;4133;5744630;4445490;;86,0;links;;710;105,90;;n S;579040;579030;579049;G;WO;W1;;Q;B;;Tw;;;;;;;;;STAU MD;STAU MD;;
+195;Wegeleben;Bode;Saale, Elbe;Bode;568529;4133;5750710;4444290;;75,2;rechts;;1215;93,75;;;579049;579040;579050;G;WO;W1;;Q;B;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+196;Hadmersleben;Bode;Saale, Elbe;Bode;56893;3933;5763720;4453380;;46,9;links;;2758;72,87;;;579070;579060;579080;G;WO;W1;;Q;B;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausfallzeiten
+197;Staßfurt;Bode;Saale, Elbe;Bode;568997;4135;5746740;4471760;;16,8;rechts;;3200;61,27;;;579085;579080;579090;G;WO;W1;;Q;B;;Tw;;;;;;;;;STAU MD;STAU MD;;
+198;Neugattersleben;Bode;Saale, Elbe;Bode;568999;4136;5745820;4479810;;3,0;links;;3275;58,25;;;579090;579085;579205;G;;;WZ;;B;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+199;Nienburg;Saale (Bodemündung;Elbe;Bode;5679;4136;;;;27,9;;;20366;54,60;;;579100;;;;;;;;;;;;;;;;;;;;;;
+200;Tanne;Warme Bode;Bode, Saale, Elbe;Bode;56817;4230;5730240;4412230;;6,6;links;;71,5;458,56;;;579205;579090;579209;G;WO;W1;;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+201;Königshütte;Warme Bode;Bode, Saale, Elbe;Bode;56819;4230;5734500;4414850;;0,4;rechts;;100;425,75;;n S;579209;579205;579210;G;WO;;;Q;B;;;;;4;;;;;;TSB;TSB;;
+202;Elend;Kalte Bode;Bode, Saale, Elbe;Bode;56823;4230;5735160;4409180;;7,4;links;;25,7;489,80;;;579305;579210;579310;G;WO;W1;;Q;;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausfallzeiten
+203;HWS Königshütte Beckenp.;Kalte Bode;Bode, Saale, Elbe;Bode;56827;4230;5735640;4413200;;2,7;;;34,5;441,45;;;579320;579310;579330;S;WO;;;;;;;;;;5;;;;;TSB;TSB;;
+204;HWS Königshütte ;Kalte Bode;Bode, Saale, Elbe;Bode;56827;4230;5735760;4413680;;2,3;links;;43,7;441,45;;n S;579330;579320;579340;S;WO;;;Q;B;;;;;4;;;;;;TSB;TSB;;
+205;Königshütte (Bahnhof);Kalte Bode;Bode, Saale, Elbe;Bode;56829;4230;5735350;4414550;;1,0;links;;49,0;430,62;;;579342;579340;579350;V;;;WZ;;B;;;;3;;;;;;;STAU MD;STAU MD;;
+206;Trautenstein;Rappbode;Bode, Saale, Elbe;Bode;568327;4330;5729450;4416480;;15,0;Mitte;;39,1;442,90;;n S;579405;579380;579410;G;WO;;;Q;B;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+207;Rappbode Vorsperre Beckenp.;Rappbode;Bode, Saale, Elbe;Bode;56832;4230;5731300;4417100;;11,3;;;44,0;438,87;;;579420;579410;579430;S;WO;;;;;;;;;;5;;;;;TSB;TSB;;
+208;Rappbodetalsperre Beckenp.;Rappbode;Bode, Saale, Elbe;Bode;56832;4231;5736600;4423680;;0,0;;;115;;;;579430;579420;579504;S;WO;;;;;;;;;;5;;;;;TSB;TSB;;
+209;Hasselfelde;Hassel;Rappbode, Bode, Saale, Elbe;Bode;568328;4331;5729300;4421200;;4,7;;;29,9;;;;579504;579430;579505;G;;W1;;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+210;Hassel Vorsperre Beckenpegel;Hassel;Rappbode, Bode, Saale, Elbe;Bode;5683;4230;5731160;4419300;;1,2;links;;44,1;433,02;;;579530;579515;579549;S;WO;;;;;;;;;;5;;;;;TSB;TSB;;
+210;Treseburg;Luppbode;Bode, Saale, Elbe;Bode;56834;4231;5731560;4429170;;0,5;;;41,3;0,00;;n S;579549;579530;579550;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+212;Elbingstal-Teich;Elbingerstalbach;Selke, Bode, Saale, Elbe;Bode;5684;4332;5723080;4431760;;;;;8,5;;;;579600;579550;579601;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+213;Frankenteich;Rödelbach;Selke, Bode, Saale, Elbe;Bode;56841;4332;5718860;4432560;;;;;3,7;;;;579601;579600;579602;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+214;Kiliansteich;SilberhütterKunstgraben;Rödelbach, Selke, Bode, Saale, Elbe;Bode;56841;4332;5719460;4432580;;;;;;;;;579602;579601;579603;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+215;Fürstenteich;Bach a. d.Teufelsgrund;Selke, Bode, Saale, Elbe;Bode;56844;4332;5721700;4437470;;;;;6,7;;;;579603;579602;579604;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+216;Teufelsteich;Bach a. d.Teufelsgrund;Selke, Bode, Saale, Elbe;Bode;56844;4332;5721060;4438900;;;;;5,0;;;;579604;579603;579605;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+217;Silberhütte;Selke;Bode, Saale, Elbe;Bode;568451;4332;5722320;4437590;;50,7;rechts;;105;329,88;;n S;579605;579604;579606;G;WO;W1;;Q;B;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+218;Gondelteich;Uhlenbach;Selke, Bode, Saale, Elbe;Bode;56842;4332;5727620;4433950;;;;;2,5;;;;579606;579605;579607;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+219;Erichsburger Teich;Friedenstalbach;Selke, Bode, Saale, Elbe;Bode;568452;4332;5727160;4435520;;;;;1,7;;;;579607;579606;579608;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+220;Bergrat-Müller-Teich;Friedenstalbach;Selke, Bode, Saale, Elbe;Bode;568452;4332;5727640;4435370;;;;;1,2;;;;579608;579607;579610;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+221;Meisdorf;Selke;Bode, Saale, Elbe;Bode;568455;4333;5728800;4450580;;29,4;rechts;;184;189,13;;n S;579610;579608;579620;G;WO;W1;;Q;;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+222;Hausneindorf;Selke;Bode, Saale, Elbe;Bode;56849;4133;5745250;4449660;;5,5;rechts;;456;104,58;;n S;579620;579610;579630;G;WO;W1;;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+223;Pfeifenkrug;Goldbach;Bode, Saale, Elbe;Bode;568525;4131;5743660;4426650;;23,0;rechts;;27,8;180,97;;n S;579652;579630;579654;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+224;Harsleben;Goldbach;Bode, Saale, Elbe;Bode;568527;4132;5749200;4440040;;5,2;rechts;;81,0;101,65;;;579655;579654;579656;G;;;WZ;;;;;;3;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+225;Hanneckenbruch;Holtemme;Bode, Saale, Elbe;Bode;56861;4130;5741900;4410040;;44,0;links;;9,4;568,45;;n S;579703;579656;579705;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+226;Wernigerode St.Renne;Holtemme;Bode, Saale, Elbe;Bode;56861;4130;5743420;4412480;;41,0;links;;15,7;298,85;;n S;579705;579703;579708;G;WO;W1;;Q;B;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausfallzeiten
+227;Mahndorf;Holtemme;Bode, Saale, Elbe;Bode;56865;4131;5750600;4428700;;19,3;rechts;;168;132,87;;n S;579712;579711;579720;G;WO;W1;;Q;;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+228;Nienhagen;Holtemme;Bode, Saale, Elbe;Bode;56869;4032;5756780;4442300;;3,0;rechts;;271;89,25;;n S;579745;579740;579753;G;WO;;;Q;B;;Tw;;;;;;;;;STAU MD;STAU MD;;
+229;Drei Annenhohne;Zillierbach;Holtemme, Bode, Saale, Elbe;Bode;56862;4230;5738280;4412400;;13,3;rechts;;3,9;541,72;;;579753;579753;579754;G;;;WZ;Q;;;Tw;;;;;;;;;STAU MD;STAU MD;;
+230;TS Zillierbach Zufluß-Pegel;Zillierbach;Holtemme, Bode, Saale, Elbe;Bode;56862;4230;5739380;4414600;;10,1;links;;8,0;474,38;;n S;579754;579753;579755;G;WO;;;Q;;;;;;4;;;;;;TSB;TSB;;
+231;TS Zillierbach Einlauf-Pegel;Zillierbach;Holtemme, Bode, Saale, Elbe;Bode;56862;4230;5739420;4414950;;10,4;;;10,4;;;;579755;579754;579756;S;WO;;;;;;;;;;5;;;;;TSB;TSB;;
+232;TS Zillierbach Beckenpegel;Zillierbach;Holtemme, Bode, Saale, Elbe;Bode;56862;4230;5740420;4415840;;9,0;;;10,7;;;;579756;579755;579758;S;WO;;;;;;;;;;5;;;;;TSB;TSB;;
+233;Wernigerode;Zillierbach;Holtemme, Bode, Saale, Elbe;Bode;56862;4130;5744760;4416380;;0,6;rechts;;32,4;242,74;;n S;579758;579756;579767;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+234;Silstedt;Silstedter Bach;Holtemme, Bode, Saale, Elbe;Bode;56863;4131;5747840;4420200;;1,2;links;;12,6;189,63;;;579767;579758;579768;G;;;WZ;;;;;;3;;;;;;;STAU MD;STAU MD;;
+235;Minsleben;Barrenbach;Holtemme, Bode, Saale, Elbe;Bode;56863;4130;5748700;4418960;;1,0;links;;13,7;195,99;;n S;579775;579768;579782;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+236;Benzingerode;Hellbach;Holtemme, Bode, Saale, Elbe;Bode;56864;4131;5743800;4422900;;9,8;rechts;;3,4;279,03;;n S;579782;579775;579785;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+237;Derenburg;Hellbach;Holtemme, Bode, Saale, Elbe;Bode;56864;4131;5748350;4424830;;0,5;links;;26,7;157,00;;n S;579785;579782;579787;G;;;WZ;Q;B;;;;;;;;;;;STAU MD;STAU MD;;
+238;Ströbeck;Ströbecker Fließ;Holtemme, Bode, Saale, Elbe;Bode;56866;4031;5753680;4427850;;5,1;rechts;;13,6;140.04;;n S;579794;579787;579795;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+239;Neuwegersleben;Gr. Graben;Bode, Saale, Elbe;Bode;56885;3932;5767040;4437960;;10,0;links;;530;78,76;;;579805;579797;579810;G;;;WZ;;B;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+240;Oschersleben;Gr. Graben;Bode, Saale, Elbe;Bode;56889;3933;5765820;4446920;;6,0;rechts;;838;76,56;;n S;579810;579805;579811;G;WO;W1;;Q;B;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+241;Ohrsleben;Schöninger Aue;Gr. Graben, Bode, Saale, Elbe;Bode;568884;;;;;5,6;;;169;;;;579848;579845;579855;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+242;Peseckendorf;Geesgraben;Bode, Saale, Elbe;Bode;568927;3933;5764760;4453300;;0,9;links;;85,0;75,39;;n S;579906;579905;579955;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+243;Gr. Germersleben;Sarre;Bode, Saale, Elbe;Bode;56894;3934;5763940;4456880;;2,5;links;;67,5;;;;579960;579955;580700;;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+244;Rathenow Stadtschl. OP;Havel;Elbe;Untere Havel;58773;;;;;58,0;;;19329;24,53;24,38;;580680;;;S;;;;;;;;;;;;;;;;;;;
+245;Rathenow Stadtschl. UP;Havel;Elbe;Untere Havel;58773;;;;;58,0;;;19329;24,53;24,38;;580690;;;;;;;;;;;;;;;;;;;;;;
+246;Grütz OP;Havel;Elbe;Untere Havel;58799;;;;;117,3;;;;23,83;;;580700;57996;580710;S;WO;;;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+247;Grütz UP;Havel;Elbe;Untere Havel;58799;3239;;;;117,3;;;;23,83;;;580710;57996;580710;S;WO;;;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+248;Molkenberg Wehr OP;Havel;Elbe;Untere Havel;58797;3239;;;;;;;;23,20;23,04;;580720;;;S;;;;;;;;;;;;;;;;;;;
+249;Molkenberg Wehr UP;Havel;Elbe;Untere Havel;58797;3239;;;;;;;;23,20;23,04;;580730;;;S;;;;;;;;;;;;;;;;;;;
+250;Gülpe Wehr OP;Havel;Elbe;Untere Havel;58799;3239;;;;;;;;22,18;22,02;;580740;;;S;;;;;;;;;;;;;;;;;;;
+251;Warnau Garz Schleuse OP;Havel;Elbe;Untere Havel;58799;3239;5846010;4514550;;128,9;;;22411;22,18;;;580750;580710;580760;S;WO;;;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+252;Warnau Garz Schleuse UP;Havel;Elbe;Untere Havel;58799;3239;5846200;4514480;;128,9;;;22411;22,18;;;580760;580750;580790;S;WO;;;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+253;Havelberg Stadt Stromm.;Havel;Elbe;Untere Havel;58991;3138;5854480;4505230;;145,2;links;;24297;21,57;;n S;580790;580760;580810;G;WO;W1;;Q;;;;;;;;GJ;;;;WSA BRB;WSA BRB;DGJ;
+254;Havelberg Schl. BP;Elbe-Havel-Verb.kanal;Havel, Elbe;Untere Havel;58992;3138;5855380;4503950;;147,0;;;24398;21,57;21,40;;580800;;;;;;;;;;;;;;;;;;;;;;
+255;Neuwerben Wehr BP;Havel;Elbe;Untere Havel;58995;3138;5860600;4500720;;156,0;;;24350;20,40;;;580810;580790;580820;S;;;WZ;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+256;Quitzöbel Wehr BP;Wehrgruppe Quitzöbel;Havel, Elbe;Untere Havel;58996;3138;5860930;4500520;;156,0;;;24531;19,57;;;580820;580810;580830;S;;;WZ;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+257;Quitzöbel Wehr AP;Wehrgruppe Quitzöbel;Havel, Elbe;Untere Havel;58996;3138;5860920;4500430;;156,0;;;24531;19,57;;;580830;580820;580840;S;;;WZ;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+258;Gnevsdorf Wehr BP;Gnevsdorfer Vorfluter;Havel, Elbe;Untere Havel;58997;3137;5863910;4492230;;165,5;;;;19,15;;;580840;580830;587600;S;;;WZ;;;;;;;;;;;;;WSA BRB;WSA BRB;;
+259;Niegripp N.Schl. BP;Elbe-Havel-Kanal;Elbe;Untere Havel;58741;3736;5790590;4482520;;0,5;;;0,0;34,44;;;587500;;;S;;;;;;;;;;;;;;;;;;;
+260;Zerben Schl. OP;Elbe-Havel-Kanal;Elbe;Untere Havel;587433;3637;5801220;4497530;;19,0;;;296;34,44;;;587510;;;S;;;;;;;;;;;;;;;;;;;
+261;Zerben Schl. UP;Elbe-Havel-Kanal;Elbe;Untere Havel;587433;3637;5801410;4497640;;19,0;;;297;29,24;;;587520;;;S;;;;;;;;;;;;;;;;;;;
+262;Parey Schl. BP;Pareyer Verbindungskanal;EHK, Havel, Elbe;Untere Havel;587434;3537;5807760;4498700;;1,0;;;0,0;29,24;;;587530;;;S;;;;;;;;;;;;;;;;;;;
+263;Groß Wusterwitz Schl.OP;Elbe-Havel-Kanal;Havel, Elbe;Untere Havel;587479;3640;5806660;4524420;;52,0;;;243;29,24;;;587540;;;S;;;;;;;;;;;;;;;;;;;
+264;Groß Wusterwitz Schl.UP;Elbe-Havel-Kanal;Havel, Elbe;Untere Havel;587479;3640;5806660;4524420;;52,0;;;243;25,24;;;587550;;;S;;;;;;;;;;;;;;;;;;;
+265;Grabow;Ihle;Havel, Elbe;Untere Havel;587425;3737;5790540;4497250;;11,3;rechts;;147;47,66;;n S;587600;580840;587610;G;;;WZ;Q;;;;;3;;;GJ;;;;STAU MD;STAU MD;DGJ;
+266;Burg;Ihle;Havel, Elbe;Untere Havel;587429;3737;5793980;4490040;;1,9;rechts;;190;38,45;;n S;587610;587600;587620;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+267;Tuchheim;Parchener Bach;Elbe-Havel-Kanal, Elbe;Untere Havel;587445;3739;5792900;4512040;;23,5;links;;132;42,00;;n S;587620;587610;587630;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+268;Parchen;Parchener Bach;Elbe-Havel-Kanal, Elbe;Untere Havel;587447;3638;5802530;4505640;;8,7;links;;200;33,97;;n S;587630;587620;587640;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+269;Genthin - Hagen;Parchener Bach;Elbe-Havel-Kanal, Elbe;Untere Havel;587449;3638;5806810;4507240;;3,3;rechts;;300;32,40;;n S;587640;587630;587650;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+270;Mützel Verteiler Wehr OP;Fiener Hauptvorfluter;Elbe-Havel-Kanal, Elbe;Untere Havel;587469;3639;5804200;4513120;;4,0;;;;33,40;;;587650;587640;587660;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+271;Mützel Verteiler Wehr UP;Fiener Hauptvorfluter;Elbe-Havel-Kanal, Elbe;Untere Havel;587469;3639;5804200;4513120;;4,0;;;;33,14;;;587660;587650;587670;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+272;Mützel Verteiler Wehr UP;Torfschifffahrtskanal;Elbe-Havel-Kanal, Elbe;Untere Havel;587469;3639;5804200;4513120;;6,8;;;;33,14;;;587670;587660;587705;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+273;Zabakuck;Hauptstremme;Havel, Elbe;Untere Havel;58766;3539;5813450;4515275;;4,7;links;;161;;;;587705;587670;587720;S;;;WZ;;;;;;3;;;;;;;STAU MD;STAU MD;;
+274;Gülpe Auslasswehr OP;Abzweig Gülper Havel;Havel, Elbe;Untere Havel;58798;3239;;;;;;;;22,65;22,49;;588230;;;S;;;;;;;;;;;;;;;;;;;
+275;Rehberg Mittelwehr OP;Warnauer Vorfluter;Havel, Elbe;Untere Havel;58912;3239;;;;5,0;;;;23,18;23,02;;588320;;;S;;;;;;;;;;;;;;;;;;;
+276;Warnau-Garz Auslasswehr OP;Warnauer Vorfluter;Havel, Elbe;Untere Havel;58912;3239;5846180;4514440;;0,0;;;;22,18;22,02;;588330;;;S;;;;;;;;;;;;;;;;;;;
+277;Schönfeld I;Trübengraben;Havel, Elbe;Untere Havel;58967;3238;5843140;4506040;;13,7;;;216;25,14;24,97;;588390;;;S;;;;;;;;;;;;;;;;;;;
+278;Scharlibbe;Trübengraben;Havel, Elbe;Untere Havel;58967;3238;;;;16,2;;;199;26,45;26,28;;588400;;;;;;;;;;;;;;;;;;;;;;
+279;Schönhauser Damm;Hauptgraben;Trübengraben, Havel, Elbe;Untere Havel;5896;3338;5830050;4506850;;4,5;links;;53;;;;588402;588310;588404;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+280;Klietz;Trübengraben;Havel, Elbe;Untere Havel;5896;3338;5837060;4504270;;20,9;links;;178;27,57;;n S;588404;588402;588406;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+281;Scharlibbe;Trübengraben;Havel, Elbe;Untere Havel;58967;3238;5840480;4504720;;16,9;rechts;;199;26,45;;;588406;588404;588408;S;;;WZ;;;;;;3;;;;;;;STAU MD;STAU MD;;
+282;Schönfeld I;Trübengraben;Havel, Elbe;Untere Havel;5896;3238;5843140;4506040;;13,8;links;;216;25,14;;n S;588408;588406;588410;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+283;Jederitz Schöpfwerk AP;Schöpfwerksgraben;Trübengraben, Havel, Elbe;Untere Havel;58972;3138;5852190;4509430;;1,8;;;305;22,45;;;588421;588420;588422;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+284;Jederitz Schöpfwerk BP;Schöpfwerksgraben;Trübengraben, Havel, Elbe;Untere Havel;58972;3138;5852160;4509430;;1,8;;;305;22,45;;;588422;588421;588423;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+285;Jederitz;Havel;Elbe;Untere Havel;58979;3138;5852170;4509460;;;rechts;;;21,45;;;588423;588422;588440;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+286;Schönhauser Damm;Klinkgraben;Hauptgraben, Trübengraben, Havel, Elbe;Untere Havel;5896;3338;5829675;4506100;;2,8;Mitte;;50,0;;;;588440;588423;588450;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+287;Schönfeld II;Land-und Weidegr.;Trübengraben, Havel, Elbe;Untere Havel;58968;3238;5843680;4504710;;1,7;rechts;;32,8;25,25;;;588450;588440;590005;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+288;Nutha;Nuthe;Elbe;Mittlere Elbe bis Havel;57273;4038;5758390;4501170;;12,4;rechts;;509;54,61;;;590005;588450;590023;G;WO;;;Q;;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausfallzeiten
+289;Deetz;Lindauer Nuthe;Nuthe, Elbe;Mittlere Elbe bis Havel;57211;3939;5768960;4511650;;9,0;;;87,0;82,64;;;590023;590005;590026;G;;;WZ;;;;;;3;;;;;;;STAU MD;STAU MD;;
+290;Kuhberge;Lindauer Nuthe;Nuthe, Elbe;Mittlere Elbe bis Havel;57219;3938;5765140;4506340;;1,5;;;144;;;;590026;590023;590037;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+291;Strinum;Grimmauer Nuthe;Nuthe, Elbe;Mittlere Elbe bis Havel;57229;3938;5763770;4506620;;5,0;;;85,0;;;;590037;590026;590045;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+292;Pulsforde;Boner Nuthe;Nuthe, Elbe;Mittlere Elbe bis Havel;572419;4038;5760020;4510080;;8,0;;;135;69,77;;n S;590045;590037;590055;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+293;Dodendorf;Sülze;Elbe;Mittlere Elbe bis Havel;57349;3935;5767610;4478770;;9,5;;;118;55,48;;n S;590105;590055;590120;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+294;Magdeburg Salbke;Sülze;Elbe;Mittlere Elbe bis Havel;57394;;;;;;;;;;;;590110;;;;;;;;;;;;;;;;;;;;;;
+295;Magdeburg Karl-Miller-Str.;Klinke;Elbe;Mittlere Elbe bis Havel;57369;3835;5775900;4474380;;2,2;;;;;;;590120;590105;590205;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+296;Loburg;Ehle;Elbe;Mittlere Elbe bis Havel;57415;3838;5775790;4504680;;29,5;links;;69,0;70,88;;n S;590205;590120;590210;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+297;Dannigkow;Ehle;Elbe;Mittlere Elbe bis Havel;57453;3937;5770850;4491230;;9,4;links;;260;51,70;;n S;590210;590205;591005;G;WO;;;Q;;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+298;Biederitz Heyrothsberge UP;Ehle;Elbe;Mittlere Elbe bis Havel;57459;3836;5778200;4481540;;9,0;;;310;41,77;;;590230;;;;;;;;;;;2;;;;;;;;;;;
+299;Jahrstedt;Ohre;Elbe;Mittlere Elbe bis Havel;57613;3431;5825900;4431120;;82,1;;;140;;;;591005;590210;591010;G;;;WZ;Q;B;;;;;;;;;;;STAU MD;STAU MD;;Ausbau 1964/1990
+300;Miesterhorst Taterberg;Ohre;Elbe;Mittlere Elbe bis Havel;57617;3532;5814900;4438170;;68,0;;;260;55,16;;;591020;591010;591030;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+301;Calvörde;Ohre;Elbe;Mittlere Elbe bis Havel;57639;3633;5807030;4452920;;49,2;links;;732;52,02;;n S;591040;591030;591043;G;WO;;;Q;B;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausfallzeiten, Ausbau 1985
+302;Satuelle;Ohre;Elbe;Mittlere Elbe bis Havel;57655;3634;5799500;4456880;;40,2;;;1016;51,23;;n S;591043;591040;591046;G;WO;;;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+303;Satuelle Pumpspeicherwerk;Ohre;Elbe;Mittlere Elbe bis Havel;57655;3634;5799200;4457860;;40,2;;;;51,88;;;591046;591043;591050;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+304;Wolmirstedt;Ohre;Elbe;Mittlere Elbe bis Havel;57679;3735;5790330;4474380;;17,0;links;;1503;40,28;;;591070;591060;591105;G;WO;;;Q;B;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;
+305;Dannefeld-Kahnstieg;Friedrichskanal;Ohre, Elbe;Mittlere Elbe bis Havel;57629;3532;;;;10,2;;;119,0;55,80;;;591205;591105;591210;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+306;Bergfriede ;Allerkanal;Ohre, Elbe;Mittlere Elbe bis Havel;57632;3532;5813540;4436330;;18,0;;;29,0;55,23;;;591405;591305;591410;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+307;Magdeburg Diesdorf;Schrote;Ohre, Elbe;Mittlere Elbe bis Havel;57685;3835;5777350;4470430;;27,0;;;54,0;;;;591605;591505;591606;S;;;WZ;;;;;;;;;;OrB;;;STAU MD;STAU MD;;
+308;Demker;Tanger;Elbe;Mittlere Elbe bis Havel;57879;3537;5817730;4490660;;9,6;rechts;;356;32,05;;;592002;591606;592004;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+309;Tangerhütte;Mahlwinkler Tanger;Tanger, Elbe;Mittlere Elbe bis Havel;5784;3536;5811400;4487660;;7,5;rechts;;170;;35,17;HN76;592055;592004;592085;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, Ausbau 1969, 1971
+310;Schönwalde;Lüderitzer Tanger;Tanger, Elbe;Mittlere Elbe bis Havel;57865;3536;5815750;4485800;;5,1;rechts;;96,0;34,28;;n S;592085;592055;592105;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, Ausbau 1967, 1975
+311;Bölsdorf I OP;Bölsdorfer Tanger;Tanger, Elbe;Mittlere Elbe bis Havel;57883;3437;;;;0,8;;;43,0;31,50;;;592105;592085;592110;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+312;Bölsdorf I UP;Bölsdorfer Tanger;Tanger, Elbe;Mittlere Elbe bis Havel;57883;3437;;;;0,7;;;43,0;31,50;;;592110;592105;594003;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+313;Bölsdorf II OP;Bölsdorfer Tanger;Tanger, Elbe;Mittlere Elbe bis Havel;5788;3437;;;;;;;;30,89;;;592125;;;S;;;;;;;;;;;5;;;;;;;;
+314;Bölsdorf II ;Bölsdorfer Tanger;Tanger, Elbe;Mittlere Elbe bis Havel;5788;3437;;;;;;;;30,89;;;592130;;;S;;;;;;;;;;;5;;;;;;;;
+315;Hagenau;Biese;Aland, Elbe;Aland;591659;3235;5846910;4469700;;693,4;links;;59,5;;23,59;;594005;594003;594008;G;WO;;;Q;;;;;3;;;;;;;STAU MD;STAU MD;;
+316;Dobbrun;Biese;Aland, Elbe;Aland;591693;3136;5855580;4484950;;36,7;rechts;;1597;18,08;;n S;594010;594008;594020;G;WO;;;Q;;;Tw;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausbau 1909, 1929/30, 1934
+317;Seehausen;Aland;Elbe;Aland;5916991;3036;5862240;4483800;;26,4;links;;1762;;16,52;;594020;594010;594030;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;Ausbau 1909, 1929/30, 1982
+318;Geestgottberg;Aland;Elbe;Aland;5916999;3036;5867200;4482400;;21,2;Mitte;;1856;;16,71;;594030;594020;594040;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, Ausbau 1933/34, PNÄ1972
+319;Wanzer Abschlußbauw. OP;Aland;Elbe;Aland;5916;;5775425;4472910;;3,6;;;1947;;;;59405;594040;594051;G;WO;;;;;;;;;;;;;;;STAU MD;STAU MD;;
+320;Wanzer Abschlußbauw. UP;Aland;Elbe;Aland;5916;;5775425;4472910;;3,6;;;1947;;;;594051;59405;594102;G;WO;;;;;;;;;;;;;;;STAU MD;STAU MD;;
+321;Polvitz Neue Mühle;Milde;Biese, Aland, Elbe;Aland;591611;3534;5816090;4459940;;100,0;links;;32,3;57,30;;;594102;594051;594104;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten
+322;Gardelegen;Milde;Biese, Aland, Elbe;Aland;591615;3434;5823000;4458670;;90,3;links;;154;36,76;;n S;594104;594102;594105;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+323;Zienau;Laugenbach;Milde, Biese, Aland, Elbe;Aland;591614;3434;5821640;4461560;;3,8;links;;50,8;;;;594135;594105;594137;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, Ausbau 1976/77
+324;Karritz;Secantsgraben;Milde, Biese, Aland, Elbe;Mittlere Elbe;57632;3334;5836350;4463350;;2,1;links;;191;;;;594137;594135;594143;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+325;Kalbe;Untermilde;Milde, Biese, Aland, Elbe;Aland;591649;3334;5837130;4457780;;12,2;links;;135;;27,50;HN76;594143;594137;594155;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+326;Deetz;Uchte;Biese, Aland, Elbe;Aland;5916811;3436;5827880;4477400;;44,7;rechts;;38,1;;40,47;HN76;594155;594143;594160;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, Ausbau 1976/77, 1985
+327;Tornau;Uchte;Biese, Aland, Elbe;Aland;5916816;3436;5827540;4485740;;34,8;links;;94,5;;31,26;HN76;594160;594155;594161;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, Ausbau 1952/68/83, PNÄ 1954
+328;Stendal;Uchte;Biese, Aland, Elbe;Aland;591683;3337;5830150;4491140;;27,1;links;;142;;28,93;HN76;594171;594170;594173;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+329;Goldbeck;Uchte;Biese, Aland, Elbe;Aland;591687;3237;5842800;4490210;;14,0;rechts;;430;24,31;;n S;594180;594173;594205;G;WO;;;Q;;;Tw;;;;;;;;;STAU MD;STAU MD;;Ausbau 1954, 1966, PNÄ 1986
+330;Lindenberg;Zehrengraben;Seege, Elbe;Aland;591817;3035;5863860;4477070;;14,7;links;;113;;17,99;;594953;594305;594960;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;PNÄ 1981, 1983
+331;Bömenzien;Zehrengraben;Seege, Elbe;Aland;59185;3035;;;;;;;;;;;594961;594960;597005;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+332;Gr. Gischau;Jeetze;Elbe;Jeetze (Jeetzel);593415;3232;5846660;4439300;;23,3;rechts;;186;;24,68;HN76;597005;594961;597007;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+333;Sienau OP;Jeetze;Elbe;Jeetze (Jeetzel);593435;3232;5855120;4444600;;;rechts;;;;;;597007;597005;597008;S;WO;;;;;;Tw;;;;;;;;;STAU MD;STAU MD;;
+334;Sienau UP;Jeetze;Elbe;Jeetze (Jeetzel);593435;3232;5855120;4444600;;43,3;rechts;;438;;18,13;HN76;597008;597007;597010;S;WO;;;;;;Tw;;;;;;;;;STAU MD;STAU MD;;
+335;Salzwedel;Jeetze;Elbe;Jeetze (Jeetzel);59343;3132;5858660;4443050;;6,0;links;;676;17,35;;n S;597010;597008;597011;G;WO;;;Q;;;;;;;;GJ;;;;STAU MD;STAU MD;DGJ;Ausbau 1933/1974, PNÄ 1966/1980
+336;Hagen;Purnitz;Jeetze, Elbe;Jeetze (Jeetzel);5934169;3232;5847200;4443620;;5,1;links;;136;;23,94;HN76;597105;597013;597205;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;
+337;Tylsen;Salzwedler Dumme;Jeetze, Elbe;Jeetze (Jeetzel);59342;3132;5854500;4434540;;10,3;rechts;;194;;27,93;HN76;597205;597105;597210;G;WO;;;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, Ausbau 1977/78, PNÄ 1943/83
+338;Salzwedel;Salzwedler Dumme(Jeetze, Elbe);Jeetze, Elbe;Jeetze (Jeetzel);59342;3132;5858070;4442760;;0,6;rechts;;228;19,18;;;597210;597205;597305;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, Ausbau 1963
+339;Ritzleben;Mühlengraben;Landgraben, Grenzgraben, Jeetze, Elbe;Jeetze (Jeetzel);5934164;3134;5858100;4456800;;5,1;rechts;;114;;22,32;HN76;597305;597210;597400;G;;;WZ;Q;;;;;;;;;;;;STAU MD;STAU MD;;Ausfallzeiten, SP-Neubau 1983
+340;Arendsee See-P.Schrampe;Arendsee;Landgraben, Grenzgraben, Jeetze, Elbe;Jeetze (Jeetzel);5934;3134;5862200;4463320;;0,0;;;29,8;;22,61;;597500;597400;597570;G;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+341;Arendsee Auslauf;Jeetze;Elbe;Jeetze (Jeetzel);;3134;5862200;4463310;;0,0;;;;;;;597510;;;;;;;;;;;;;;;;;;;;;;
+342;Arendsee Auslauf;Arendsee;Landgraben, Grenzgraben, Jeetze, Elbe;Jeetze (Jeetzel);5934;3134;5862200;4463310;;0,0;;;29,8;;21,83;;597570;597500;440002;S;;;WZ;;;;;;;;;;;;;STAU MD;STAU MD;;
+343;Deichsiel Dornburg;Elbe;Elbe;Mittlere Elbe bis Havel;539;3937;5767227;4491916;GKS;;;15147080;;;48,82;;;;;V;;;WZ;;;;;;;;5;;OrB;;;LHW;FB WB;;
+344;Stauanlage OW uh.Zahna;Zahna;Elbe;Mittlere Elbe bis Havel;5392;4042;5752714;4554914;GKS;;rechts;15144390;;;81,85;;;;;V;;;WZ;;;;;;;;5;;OrB;;;LHW;FB WB;;
+345;Stauanlage UW uh.Zahna;Zahna;Elbe;Mittlere Elbe bis Havel;5392;4042;5752635;4554907;GKS;;rechts;15144390;;;81,30;;;;;V;;;WZ;;;;;;;;5;;OrB;;;LHW;FB WB;;
+346;uh. Abschlag Zahna;Greybach (Taubengr.);Zahna, Elbe;Mittlere Elbe bis Havel;53928;4142;5747021;4552507;GKS;;Mitte;;;;71,51;;;;;V;;;WZ;;;;;;;;;;OrB;;;LHW;FB WB;;
+347;Meinsdorf;Freibach;Rossel, Elbe;Mittlere Elbe bis Havel;53987;4039;5751820;4517270;GKS;;rechts;;;;65,11;;;;;V;;;WZ;;;;;;;;5;;OrB;;;LHW;FB WB;;
+348;Auslauf Stausee OP;Mulde;Elbe;Mulde;54971;4340;5724468;4524937;GKS;;links;15113200;6709;;;;;;;G;;;WZ;;;;;;;;;;;;;LHW;LHW Halle;;
+349;Auslauf Stausee UP;Mulde;Elbe;Mulde;54971;4340;5724526;4524847;GKS;;links;15113200;6709;;74,67;;;;;G;;;WZ;;;;;;;;;;;;;LHW;LHW Halle;;
+350;Jonitzer Mühle OP;Jonitzer Mulde;Mulde, Elbe;Mulde;54978;4139;5744764;4518479;GKS;;links;15101000;;;;;;;;S;;;WZ;;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+351;Jonitzer Mühle UP;Jonitzer Mulde;Mulde, Elbe;Mulde;54978;4139;5744819;4518487;GKS;;rechts;15101000;;;;;;;;S;;;WZ;;;;;;;;;;;;;LHW;LHW Halle;Jahrb. LHW Halle;
+352;Dessau Schöpfwerk;Lorkgraben Sielauslauf;Mulde, Elbe;Mulde;5497;4139;5742277;4517443;GKS;;;1511000;;;59,91;;;;;S;;;WZ;;;;;;;;5;;OrB;;;LHW;FB WB;;
+353;Kunstteich Wettelrode BP;Schönbach;Ziegental, Leine, Helme, Unstrut, Saale, Elbe;Unstrut;564856;4533;;;GKS;;;15237540;;;;;;;;G;;;WZ;;;;;;;;;;OrB;;;LHW;FB SGH;;
+354;Klosterhäseler;Hasselbach;Unstrut, Saale, Elbe;Unstrut;56498;4835;5670050;4473950;GKS;;links;15228190;;;;;;;;S;;;;;;;;;3;;;;;;;LHW;LHW Halle;;induktive Messsonde
+355;Wehr Wetterzeube;Weiße Elster;Saale, Elbe;Weiße Elster;566553;4938;;;GKS;102,8;;15246350;;160,00;;;;;;S;;;WZ;;;;;2;;;;;OrB;;5;LHW;FB MER;;
+356;Profen;Weiße Elster;Saale, Elbe;Weiße Elster;566591;4839;5665523;4516259;GKS;72,7;links;15246240;;130,00;;;;;;V;;;WZ;;;;;;;;;;OrB;;;LHW;FB MER;;
+357;Gefällestufe Profen;Weiße Elster;Saale, Elbe;Weiße Elster;566591;4839;;;GKS;72,1;rechts;15246240;;130,00;;;;;;S;;;WZ;;;;;;;;;;OrB;;5;LHW;FB MER;;Forderung RP
+358;Bornitz;Weiße Elster;Saale, Elbe;Weiße Elster;566591;4939;5660778;4512008;GKS;84,6;rechts;15246020;;140,00;;;;;;S;;;WZ;;;;;;;;;;OrB;;;LHW;FB MER;;Forderung RP
+359;Hydrierwerk Zeitz;Weiße Elster;Saale, Elbe;Weiße Elster;566559;4939;5658924;4511947;GKS;87,2;rechts;15246390;;144,90;;;;;;;;;;;;;;2;;;;;OrB;;;Hydrierwerk;;;
+360;Großosida;Weiße Elster;Saale, Elbe;Weiße Elster;566559;4938;5655419;4507394;GKS;94,0;rechts;;;150,00;;;;;;V;;;;;;;;2;;;;;OrB;;;LHW;FB MER;;Forderung RP
+361;Schöpfwerk Lochau;Weiße Elster;Saale, Elbe;Weiße Elster;56693;4638;5695630;4503910;GKS;12,2;Mitte;15235280;;;;;;;;S;;;;;;;;2;;;5;;OrB;;;LHW;FB MER;;
+362;Schöpfwerk Raßnitz;Weiße Elster;Saale, Elbe;Weiße Elster;56693;4638;5695010;4506780;GKS;13,9;rechts;15227300;;;;;;;;S;;;;;;;;2;;;5;;OrB;;;LHW;FB MER;;
+363;Schöpfwerk Oberthau;Weiße Elster;Saale, Elbe;Weiße Elster;56693;4638;5694520;4509630;GKS;16,9;rechts;;;;;;;;;S;;;;;;;;2;;;5;;OrB;;;LHW;FB MER;;
+364;Hubschütz Döllnitz;Weiße Elster;Saale, Elbe;Weiße Elster;56693;4538;5696180;4502470;GKS;9,2;links;15235100;;;;;;;;S;;;WZ;;;;;;;4;;;OrB;;;LHW;FB MER;;
+365;Gotthardteich - FKA;Geisel;Saale, Elbe;Untere Saale;56569;4637;5690230;4498920;GKS;;links;15227240;;;;;;;;S;;;WZ;;;;;;;;;;OrB;;;LHW;FB MER;;
+366;Pumpwerk Kreypau;Der Bach;Saale, Elbe;Untere Saale;56556;4638;5687740;4503160;GKS;0,0;rechts;15227190;;;;;;;;S;;;;;;;;2;;;;;OrB;;;LHW;FB MER;;
+367;Gotthardteich - Wehr;Gotthardteich;Geisel, Saale, Elbe;Untere Saale;56569;4637;5691060;4499610;GKS;;rechts;15227240;;;;;;;;S;;;WZ;;;;;;;4;;;OrB;;;LHW;FB MER;;
+368;Flußw.aufbereit.anlage;Böse Sieben;Salza, Saale, Elbe;Untere Saale;567247;4435;5707740;4474860;GKS;;links;15215190;;;;;;;;G;;;WZ;;;;;;;4;;;;;;LHW;FB MER;;
+369;Flußw.aufbereit.anlage;Salzgraben;Salza, Saale, Elbe;Untere Saale;567247;4435;5707740;4474860;GKS;;;15215190;;;;;;;;S;;;;Q;;;;;;;;;;;;LHW;FB MER;;kein Lattenpegel, induktive Messsonde
+370;See-Pegel am Zulauf;Süßer See;Salza, Saale, Elbe;Untere Sale;56724;4435;5707740;4474860;GKS;;;15215190;;92,21;;;;;;G;;;WZ;;;;;;;;;;;;;LHW;FB MER;;
+371;See-Pegel am Ablauf;Süßer See;Salza, Saale, Elbe;Untere Saale;56724;4536;5705940;4479380;GKS;;;15215270;;92,21;;;;;;G;;;WZ;;;;;;;;;;;;;LHW;FB MER;;
+372;Südschleuse Süßer See;Salza;Saale, Elbe;Untere Saale;5672;4536;5705940;4479380;GKS;;links;15215270;;;;;;;;G;;;WZ;Q;;;;;;;;;;;;LHW;FB MER;;
+373;Nordschleuse Süßer See;Rollsdorfer Mühlgr.;Salza, Saale, Elbe;Untere Saale;5672;4536;5706620;4479280;GKS;;links;15215270;;92,30;;;;;;G;;;WZ;;;;;;3;;;;;;;LHW;FB MER;;induktive Messsonde
+374;See-Pegel am Ablauf;Bindersee;Salza, Saale, Elbe;Untere Saale;5672;4536;5705720;4481060;GKS;;;;;79,25;;;;;;G;;;WZ;;;;;;;;;;;;;LHW;FB MER;;
+375;Ablaufpegel Bindersee;Verbindungsgraben;Salza, Saale, Elbe;Untere Saale;5672;4536;5705720;4481061;GKS;;rechts;;;;;;;;;S;;;WZ;Q;;;;;;;;;;;;LHW;FB MER;;
+376;See-Pegel am Ablauf;Kerrnersee;Salza, Saale, Elbe;Untere Saale;5672;4536;5705720;4482140;GKS;;;;;77,23;;;;;;G;;;WZ;;;;;;;;;;;;;LHW;FB MER;;
+377;See-Pegel Salziger See;Teufe;;Untere Saale;5672;4536;5704060;4477380;GKS;;;15215230;;;;;;;;S;;;WZ;;;;;;;;;;;;;LHW;FB MER;;
+378;UP Pumpw.Wansleben;Mittelgraben;Salza, Saale, Elbe;Untere Saale;5672;4536;5704840;4482220;GKS;;;15215330;;75,70;;;;;;G;;;WZ;;;;;;;;5;;;;;LHW;FB MER;;
+379;OP Pumpw.Wansleben;Südlicher Ringkanal;Salza, Saale, Elbe;Untere Saale;5672;4536;5704800;4482320;GKS;;;15215330;;85,36;;;;;;G;;;WZ;;;;;;;;5;;;;;LHW;FB MER;;
+380;Wansleben;Salza;Saale, Elbe;Untere Saale;5672;4536;5705760;4482100;GKS;;links;15215330;;;;;;;;G;;;WZ;Q;;;;;;;;;;;;LHW;LHW Halle;;
+381;Deichsiel Predel;Weiße Elster;Saale, Elbe;Weiße Elster;56659;4839;5664741;4514589;GKS;;;;;130,00;;;;;;S;;;;;;;;2;;;;;;;;LHW;FB MER;;
+382;Deichsiel Profen;Weiße Elster;Saale, Elbe;Weiße Elster;56659;4839;5665931;4515486;GKS;;;15246240;;130,00;;;;;;S;;;;;;;;2;;;;;;;;LHW;FB MER;;
+383;Göbitz;MG Göbitz;Weiße Elster, Saale, Elbe;Weiße Elster;5665;4939;5660791;4512251;GKS;;rechts;15246100;;140,00;;;;;;S;;;WZ;;;;;;;4;;;OrB;;;LHW;FB MER;;
+384;Mühle Göbitz;MG Göbitz;Weiße Elster, Saale, Elbe;Weiße Elster;5665;4939;5661188;4512798;GKS;;rechts;15246100;;;;;;;;S;;;WZ;;;;;;;;;;OrB;;;LHW;FB MER;;
+385;Mühle Göbitz;MG Göbitz;Weiße Elster, Saale, Elbe;Weiße Elster;5665;4939;5661185;4512865;GKS;;links;15246100;;;;;;;;S;;;WZ;;;;;;;;;;OrB;;;LHW;FB MER;;
+386;Mühle Ostrau;MG Göbitz;Weiße Elster, Saale, Elbe;Weiße Elster;5665;4939;5662580;4513665;GKS;;rechts;;;140,00;;;;;;S;;;WZ;;;;;;;;;;OrB;;;LHW;FB MER;;
+387;Mühle Ostrau;MG Göbitz;Weiße Elster, Saale, Elbe;Weiße Elster;5665;4939;5662603;4513679;GKS;;rechts;;;140,00;;;;;;S;;;;;;;;2;;;;;;;;LHW;FB MER;;
+389;Schützenanlage;MG Profen;Weiße Elster, Saale, Elbe;Weiße Elster;5665;4839;5665540;4516266;GKS;;rechts;15246240;;130,00;;;;;;S;;;WZ;;;;;;;4;;;OrB;;;LHW;FB MER;;
+390;Brücke Beersdorf;MG Profen;Weiße Elster, Saale, Elbe;Weiße Elster;5665;4839;5666657;4516087;GKS;;rechts;;;;;;;;;S;;;WZ;;;;;;;;;;OrB;;;LHW;FB MER;;
+391;Großosida;MG Zeitz;Weiße Elster, Saale, Elbe;Weiße Elster;5665;4938;5655443;4507411;GKS;;rechts;;;150,00;;;;;;S;;;WZ;;;;;;;4;;;OrB;;;LHW;FB MER;;
+392;Zörbig;Strengbach;Fuhne, Saale, Elbe;Untere Saale;;;;;;;;15113470;;;;;;;;G;;;WZ;Q;;;;;;;;;;;gepl.;LHW;;;

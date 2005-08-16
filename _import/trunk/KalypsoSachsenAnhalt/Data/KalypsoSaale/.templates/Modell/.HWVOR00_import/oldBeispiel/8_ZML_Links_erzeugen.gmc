@@ -1,0 +1,46 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
+	<changesource>
+		<gmlsource xlink:href="../modell.gml"/>
+		
+<!-- Pegel -->		
+		<visitor featurePath="PegelCollectionAssociation/PegelMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Durchfluß"/>
+			<argument name="href" value="Durchfluß/${fid}.zml"/>
+		</visitor>
+		<visitor featurePath="PegelCollectionAssociation/PegelMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Durchfluß_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluß/${fid}.zml"/>
+		</visitor>
+		<visitor featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Niederschlag"/>
+			<argument name="href" value="Niederschlag/${fid}.zml"/>
+		</visitor>
+		<visitor featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Schnee"/>
+			<argument name="href" value="Schnee/${fid}.zml"/>
+		</visitor>
+		
+<!-- Speicher -->		
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Inhalt"/>
+			<argument name="href" value="Speicherinhalt/${fid}.zml"/>
+		</visitor>
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Inhalt_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Speicherinhalt/${fid}.zml"/>
+		</visitor>
+
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Zufluß_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluß/${fid}.zml"/>
+		</visitor>
+
+<!-- Temperatur -->
+		<visitor featurePath="TempCollectionAssociation/TempMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Temperatur"/>
+			<argument name="href" value="./Temperatur/${fid}.zml"/>
+		</visitor>
+	</changesource>
+</gmlconvert>
