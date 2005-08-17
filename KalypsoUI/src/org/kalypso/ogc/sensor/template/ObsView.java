@@ -44,12 +44,15 @@ import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectWaiter;
@@ -79,6 +82,17 @@ public abstract class ObsView implements IObsViewEventProvider
 
   private final List m_listeners = new ArrayList();
 
+  private final Set m_enabledFeatures = new HashSet();
+
+  /**
+   * Default constructor: enables all the features
+   */
+  public ObsView()
+  {
+    m_enabledFeatures.add( TimeserieConstants.FEATURE_ALARMLEVEL );
+    m_enabledFeatures.add( TimeserieConstants.FEATURE_FORECAST );
+  }
+  
   public void dispose()
   {
     removeAllItems();
@@ -263,5 +277,32 @@ public abstract class ObsView implements IObsViewEventProvider
     }
 
     return obsmap;
+  }
+  
+  /**
+   * Sets the given feature as enabled or not
+   */
+  public void setFeatureEnabled( final String featureName, final boolean enabled )
+  {
+    if( enabled )
+      m_enabledFeatures.add( featureName );
+    else
+      m_enabledFeatures.remove( featureName );
+  }
+  
+  /**
+   * @return true if the given feature is enabled in this view
+   */
+  public boolean isFeatureEnabled( final String featureName )
+  {
+    return m_enabledFeatures.contains( featureName );
+  }
+  
+  /**
+   * @return the list of enabled features
+   */
+  public String[] getEnabledFeatures()
+  {
+    return (String[])m_enabledFeatures.toArray(new String[m_enabledFeatures.size()]);
   }
 }

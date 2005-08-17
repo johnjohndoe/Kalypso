@@ -84,7 +84,11 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   {
     final IObservation obs = (IObservation)newValue;
 
-    final IAxis keyAxis = ObservationUtilities.findAxesByKey( obs.getAxisList() )[0];
+    final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
+    if( keyAxes.length == 0 )
+      throw new IllegalStateException( "Die Zeitreihe verfügt über keiner Schlüssel-Achse" );
+      
+    final IAxis keyAxis = keyAxes[0];
 
     final TypeObservation xmlObs = (TypeObservation)m_data[1];
     final TableView m_view = (TableView)m_data[0];
@@ -98,7 +102,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
       final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
       final String name = NameUtils.replaceTokens( colName, obs, valueAxis );
 
-      final IObsProvider provider = key == null ? (IObsProvider)new PlainObsProvider( obs, null )
+      final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
           : new PooledObsProvider( key, null );
       final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol.getWidth(),
           keyAxis, valueAxis );

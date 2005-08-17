@@ -55,6 +55,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -185,14 +186,14 @@ public class TableViewUtils
   /**
    * Builds the xml binding object using the given the table view template
    * 
-   * @param template
    * @return xml binding object (ready for marshalling for instance)
-   * @throws JAXBException
    */
   public static ObstableviewType buildTableTemplateXML( final TableView template ) throws JAXBException
   {
     final ObstableviewType xmlTemplate = OTT_OF.createObstableview();
 
+    xmlTemplate.setFeatures( StringUtils.join( template.getEnabledFeatures(), ';' ) );
+    
     // rendering rules
     final RulesType xmlRulesType = OTT_OF.createObstableviewTypeRulesType();
     xmlTemplate.setRules( xmlRulesType );
@@ -264,6 +265,14 @@ public class TableViewUtils
   {
     view.removeAllItems();
 
+    // features-list is optional
+    if( xml.getFeatures() != null )
+    {
+      final String[] featureNames = xml.getFeatures().split( ";" );
+      for( int i = 0; i < featureNames.length; i++ )
+        view.setFeatureEnabled( featureNames[i], true );
+    }
+    
     final RulesType trules = xml.getRules();
     if( trules != null )
     {
@@ -285,6 +294,6 @@ public class TableViewUtils
       stati.add( loader.getResult() );
     }
 
-    return StatusUtilities.createStatus( stati, "Ladevorgang nicht erfoglreich abgeschlossen" );
+    return StatusUtilities.createStatus( stati, "Tabellenvorlage konnte nicht vollständig aktualisiert werden" );
   }
 }

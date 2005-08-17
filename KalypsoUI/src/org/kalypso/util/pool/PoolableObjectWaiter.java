@@ -9,7 +9,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * Waits for a key to load
+ * Waits for a key to load. The object-loading can be performed synchronuously, in which case the caller will not get
+ * access until objectLoaded is called internally.
+ * <p>
+ * In sychronuous mode and if there isn't already such a key in the pool, a new key will only be created for loading
+ * purposes. Once done the key is removed.
  * 
  * @author belger
  */
@@ -21,16 +25,20 @@ public abstract class PoolableObjectWaiter implements IPoolListener
 
   private IStatus m_result = Status.OK_STATUS;
 
+  private final boolean m_synchron;
+
   /**
    * TRICKY: inherited classes may NOT use own fields, because calling this constructor via super() may immediately call
    * {@link #objectLoaded(IPoolableObjectType, Object)}
    * 
    * @param synchron
-   *          Falls true, wird die Obersvation sofort geladen und im gleichen thread objectLoaded ausgeführt
+   *          when true the object-loading is done synchronuously and the caller of this constructor will only take
+   *          control back once the object is loaded internally.
    */
   public PoolableObjectWaiter( final PoolableObjectType key, final Object[] data, final boolean synchron )
   {
     m_data = data;
+    m_synchron = synchron;
 
     if( synchron )
     {
@@ -38,7 +46,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       try
       {
         value = m_pool.getObject( key );
-        
+
         objectLoaded( key, value, m_result );
       }
       catch( final CoreException ce )
@@ -47,7 +55,8 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       }
       catch( final Exception e )
       {
-        m_result = StatusUtilities.statusFromThrowable( e, "Fehler beim Laden eines Objektes" );
+        //e.printStackTrace();
+        m_result = StatusUtilities.statusFromThrowable( e, "Fehler beim Laden von: " + key );
       }
     }
     else
@@ -88,6 +97,11 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   protected void dispose()
   {
     m_pool.removePoolListener( this );
+  }
+
+  protected boolean isSynchron()
+  {
+    return m_synchron;
   }
 
   public IStatus getResult()

@@ -56,6 +56,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -205,6 +206,8 @@ public class DiagViewUtils
 
       xmlAxes.add( xmlAxis );
     }
+    
+    xmlTemplate.setFeatures( StringUtils.join( view.getEnabledFeatures(), ';' ) );
 
     int ixCurve = 1;
 
@@ -320,6 +323,14 @@ public class DiagViewUtils
     view.setTitle( xml.getTitle() );
     view.setLegendName( xml.getLegend() == null ? "" : xml.getLegend().getTitle() );
     view.setShowLegend( xml.getLegend() == null ? false : xml.getLegend().isVisible() );
+    
+    // features-list is optional
+    if( xml.getFeatures() != null )
+    {
+      final String[] featureNames = xml.getFeatures().split( ";" );
+      for( int i = 0; i < featureNames.length; i++ )
+        view.setFeatureEnabled( featureNames[i], true );
+    }
 
     // axes spec is optional
     if( xml.getAxis() != null )
@@ -353,6 +364,6 @@ public class DiagViewUtils
       stati.add( loader.getResult() );
     }
 
-    return StatusUtilities.createStatus( stati, "Ladevorgang nicht erfoglreich abgeschlossen" );
+    return StatusUtilities.createStatus( stati, "Diagrammvorlage konnte nicht vollständig aktualisiert werden" );
   }
 }

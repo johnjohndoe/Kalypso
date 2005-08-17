@@ -111,13 +111,14 @@ public final class ExportWizard extends Wizard
       protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
           InterruptedException
       {
+        final List stati = new ArrayList( );
+          
         try
         {
           final IExportableObject[] objects = factory.createExportableObjects( configuration );
 
           monitor.beginTask( "Export", objects.length );
 
-          final List stati = new ArrayList( objects.length );
           for( int i = 0; i < objects.length; i++ )
           {
             if( monitor.isCanceled() )
@@ -135,20 +136,24 @@ public final class ExportWizard extends Wizard
 
             stati.add( status );
           }
-
-          final IStatus status;
-          if( stati.size() == 0 )
-            status = new Status( IStatus.INFO, KalypsoMetaDocPlugin.getId(), 0, "Es wurden keine Dokumente erzeugt.",
-                null );
-          else
-            status = StatusUtilities.createStatus( stati, "Siehe Details" );
-          if( !status.isOK() )
-            throw new CoreException( status );
+        }
+        catch( final CoreException e )
+        {
+          stati.add( e.getStatus() ); 
         }
         finally
         {
           monitor.done();
         }
+        
+        final IStatus status;
+        if( stati.size() == 0 )
+          status = new Status( IStatus.INFO, KalypsoMetaDocPlugin.getId(), 0, "Es wurden keine Dokumente erzeugt.",
+              null );
+        else
+          status = StatusUtilities.createStatus( stati, "Siehe Details" );
+        if( !status.isOK() )
+          throw new CoreException( status );
       }
     };
   }
@@ -165,12 +170,12 @@ public final class ExportWizard extends Wizard
 
   public boolean performFinish()
   {
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, m_operation );
     final Throwable exception = status.getException();
     if( exception != null && !status.isOK() )
       exception.printStackTrace();
-    ErrorDialog.openError( m_shell, m_target.getName(), "Probleme beim Export", status );
+    ErrorDialog.openError( m_shell, m_target.getName(), "Export-Probleme", status );
 
-    return status.isOK();
+    return !status.matches( IStatus.ERROR );
   }
 }

@@ -139,6 +139,12 @@ public class ObservationPlot extends XYPlot
   /** is true as soon as one background image has been set */
   private boolean m_bgImageSet = false;
 
+  /** flag indicating whether or not to show the forecast marker */
+  private final boolean m_checkForecast;
+
+  /** flag indicating whether or not to show the alarm levels */
+  private final boolean m_checkAlarmLevels;
+
   /**
    * Constructor.
    */
@@ -164,6 +170,9 @@ public class ObservationPlot extends XYPlot
       addCurve( (DiagViewCurve)curves[i] );
 
     setNoDataMessage( "Keine Daten vorhanden" );
+    
+    m_checkForecast = view.isFeatureEnabled( TimeserieConstants.FEATURE_FORECAST );
+    m_checkAlarmLevels = view.isFeatureEnabled( TimeserieConstants.FEATURE_ALARMLEVEL );
   }
 
   public void dispose()
@@ -277,9 +286,6 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Adds a curve to the plot
-   * 
-   * @param curve
-   * @throws SensorException
    */
   public synchronized void addCurve( final DiagViewCurve curve ) throws SensorException
   {
@@ -354,20 +360,23 @@ public class ObservationPlot extends XYPlot
 
     final IObservation obs = curve.getObservation();
 
-    // add a marker if the obs is a forecast
-    final DateRange fr = TimeserieUtils.isForecast( obs );
-    if( fr != null )
+    if( m_checkForecast )
     {
-      final Long begin = new Long( fr.getFrom().getTime() );
-      if( !m_markers.containsKey( begin ) )
+      // add a marker if the obs is a forecast
+      final DateRange fr = TimeserieUtils.isForecast( obs );
+      if( fr != null )
       {
-        final long end = fr.getTo().getTime();
-        final Marker marker = createMarker( begin.doubleValue(), end, TimeserieConstants.MD_VORHERSAGE, TimeserieUtils
-            .getColorForMD( TimeserieConstants.MD_VORHERSAGE ) );
+        final Long begin = new Long( fr.getFrom().getTime() );
+        if( !m_markers.containsKey( begin ) )
+        {
+          final long end = fr.getTo().getTime();
+          final Marker marker = createMarker( begin.doubleValue(), end, TimeserieConstants.MD_VORHERSAGE,
+              TimeserieUtils.getColorForMD( TimeserieConstants.MD_VORHERSAGE ) );
 
-        addDomainMarker( marker, Layer.BACKGROUND );
+          addDomainMarker( marker, Layer.BACKGROUND );
 
-        m_markers.put( begin, marker );
+          m_markers.put( begin, marker );
+        }
       }
     }
 
@@ -403,7 +412,7 @@ public class ObservationPlot extends XYPlot
       }
 
       // add a constant Y line if obs has alarmstufen
-      if( yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      if( m_checkAlarmLevels && yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       {
         final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( obs );
         for( int i = 0; i < alarms.length; i++ )

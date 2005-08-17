@@ -138,4 +138,9 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   public final static String MD_DATE_END = "Datum-Bis";
 
+  /** the forecast feature is used in some of the views to mark the forecast date-range */
+  public static final String FEATURE_FORECAST = "Vorhersage";
+  
+  /** the alarm-level feature used to show the alarm-levels in some views */
+  public static final String FEATURE_ALARMLEVEL = "Alarmstufen";
 }
