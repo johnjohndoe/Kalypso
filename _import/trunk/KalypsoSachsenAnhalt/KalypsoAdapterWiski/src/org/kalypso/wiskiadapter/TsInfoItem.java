@@ -124,6 +124,9 @@ public class TsInfoItem implements IRepositoryItem
 
       return m_ts;
     }
+    
+    if( anotherClass == Properties.class )
+      return new WiskiTimeserie( this ).getMetadataList();
 
     return null;
   }
@@ -180,6 +183,12 @@ public class TsInfoItem implements IRepositoryItem
   {
     return m_map.getProperty( "station_id", "<?>" );
   }
+
+  // TODO pegel-id auch auslesen
+//  String getPegelId()
+//  {
+//    return m_map.getProperty( "", "<?>" );
+//  }
 
   /**
    * Helper: finds a sibling timeserie (under same station) of the given otherType. For instance if 'this' is a

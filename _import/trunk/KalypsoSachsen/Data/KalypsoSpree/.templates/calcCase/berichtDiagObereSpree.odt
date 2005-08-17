@@ -3,10 +3,11 @@
 	<title>Obere Spree</title>
 	<legend title="" visible="true"/>
 
+	<!-- remove all displayed-features such as forecast-marker, alarm-levels -->
+	<features></features>
+
 	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="W" datatype="double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
-
-	<!--<features></features>-->
 
    	<observation linktype="zml" xlink:href="./Ergebnisse/Zeitreihen/QV_SCHIRG.zml">
 		<curve id="C1" name="Schirgiswalde" >

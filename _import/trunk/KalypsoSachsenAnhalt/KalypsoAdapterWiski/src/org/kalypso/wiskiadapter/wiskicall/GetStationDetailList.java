@@ -19,6 +19,7 @@ public class GetStationDetailList implements IWiskiCall
   {
       "station_carteasting",
       "station_cartnorthing",
+      "station_no",
       "river_name",
       "river_longname",
       "catchment_name" };
