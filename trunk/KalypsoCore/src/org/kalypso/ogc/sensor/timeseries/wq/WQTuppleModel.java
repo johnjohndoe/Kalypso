@@ -201,7 +201,7 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
       catch( final WQException e )
       {
-        Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsfehler: " + e.getLocalizedMessage() );
+        Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
 
         value = ZERO;
         status = KalypsoStati.STATUS_DERIVATION_ERROR;
@@ -244,7 +244,7 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
       catch( final WQException e )
       {
-        Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsfehler weil: " + e.getLocalizedMessage() );
+        Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
 
         value = ZERO;
         status = KalypsoStati.STATUS_CHECK;

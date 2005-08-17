@@ -117,7 +117,8 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       final IStatus status = document.exportObject( outputStream, new SubProgressMonitor( monitor, 1 ) );
       outputStream.close();
 
-      if( !status.isOK() )
+      // in the case of an error, and just in this case, break export. In other cases, continue.
+      if( status.matches( IStatus.ERROR ) )
         return status;
 
       final IMetaDocService metadocService = getMetadocService();
@@ -128,7 +129,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
       monitor.worked( 1 );
 
-      return Status.OK_STATUS;
+      return status;
     }
     catch( final CoreException e )
     {
@@ -189,7 +190,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     catch( final RemoteException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Serverseitige Fehler", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Serverseitige Fehler (Berichtsablage)", e ) );
     }
 
     configuration.setProperty( CONF_METADATA, metadata );

@@ -184,6 +184,14 @@ public class ResourcePool
     return (KeyInfo[])m_keyInfos.values().toArray( new KeyInfo[0] );
   }
 
+  /**
+   * Specific method for synchron-loading. If the given key is already present, the associated object is returned. Else
+   * a new key is temporary created for the purpose of loading. Once done, the key is disposed.
+   * <p>
+   * Use this method if you want direct-loading (synchronuous).
+   * <p>
+   * Bear in mind that the pool-listener mechanism is bypassed here.
+   */
   public Object getObject( final PoolableObjectType key ) throws CoreException
   {
     final KeyInfo info = (KeyInfo)m_keyInfos.get( key );

@@ -1,4 +1,4 @@
-#Wed Jul 06 15:43:27 CEST 2005
+#Tue Aug 16 18:16:59 CEST 2005
 encoding//schema/nativeObsAdapter.exsd=UTF-8
 encoding//etc/schemas/zml/beispiel-metadata.zml=UTF-8
 encoding//src/org/kalypso/ogc/gml/convert/resources=UTF-8
@@ -8,4 +8,5 @@ encoding//src/org/kalypso/ogc/sensor/filter/test/Niederschlag.zml=UTF-8
 encoding//etc/schemas/zml/beispiel.zml=UTF-8
 eclipse.preferences.version=1
 encoding//etc/schemas/zml/inline.zml=UTF-8
+encoding//etc/schemas/template/obsdiagview_example.odt=UTF-8
 encoding//etc/schemas/zml/inline_ex.zml=UTF-8

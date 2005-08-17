@@ -59,7 +59,6 @@ import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
-import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
  * @author schlienger
@@ -161,17 +160,28 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
         switch( et )
         {
           case ObsViewEvent.TYPE_ADD:
+            obsPlot.addCurve( (DiagViewCurve)evt.getObject() );
+            break;
+
           case ObsViewEvent.TYPE_REMOVE:
-          case ObsViewEvent.TYPE_REFRESH_ITEMS:
+            obsPlot.removeCurve( (DiagViewCurve)evt.getObject() );
+            break;
+
           case ObsViewEvent.TYPE_REMOVE_ALL:
             clearChart();
+            break;
 
-            final ObsViewItem[] items = view.getItems();
-            for( int i = 0; i < items.length; i++ )
-            {
-              final DiagViewCurve curve = (DiagViewCurve)items[i];
-              obsPlot.addCurve( curve );
-            }
+          case ObsViewEvent.TYPE_REFRESH_ITEMS:
+            obsPlot.removeCurve( (DiagViewCurve)evt.getObject() );
+            obsPlot.addCurve( (DiagViewCurve)evt.getObject() );
+//            clearChart();
+//
+//            final ObsViewItem[] items = view.getItems();
+//            for( int i = 0; i < items.length; i++ )
+//            {
+//              final DiagViewCurve curve = (DiagViewCurve)items[i];
+//              obsPlot.addCurve( curve );
+//            }
             break;
 
           case ObsViewEvent.TYPE_REFRESH:

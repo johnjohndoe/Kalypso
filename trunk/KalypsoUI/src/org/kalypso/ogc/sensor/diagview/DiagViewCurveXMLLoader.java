@@ -63,7 +63,9 @@ import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectWaiter;
 
 /**
- * DefaultTableViewTheme
+ * Waits for the observation to be loaded and creates a diagram-curve using the xml-template information.
+ * 
+ * @see org.kalypso.util.pool.PoolableObjectWaiter 
  * 
  * @author schlienger
  */
@@ -73,13 +75,12 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       final boolean synchron )
   {
     super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]
-    {
-        view,
-        xmlObs }, synchron );
+    { view, xmlObs }, synchron );
   }
 
   /**
-   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
+   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object)
    */
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
@@ -134,10 +135,10 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 
       final String curveName = tcurve.getName();
 
-      // each curve gets its own provider as the curve disposes the provider,
-      // when disposed
-      final IObsProvider provider = key == null ? (IObsProvider)new PlainObsProvider( obs, null )
+      // each curve gets its own provider since the curve disposes its provider, when it get disposed
+      final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
           : new PooledObsProvider( key, null );
+            
       final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, (AxisMapping[])mappings
           .toArray( new AxisMapping[0] ) );
       curve.setShown( tcurve.isShown() );
