@@ -57,9 +57,12 @@ public class ObsViewEvent extends EventObject
 
   public final static int TYPE_REFRESH_ITEMS = 16;
 
+  public final static int TYPE_REFRESH_FEATURES = 32;
+  
   private final Object m_obj;
 
   private final int m_type;
+
 
   public ObsViewEvent( final Object obj, final int type )
   {

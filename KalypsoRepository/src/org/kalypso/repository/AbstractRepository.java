@@ -48,6 +48,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.java.util.PropertiesHelper;
 
 /**
  * Abstract implementation of <code>IRepository</code> to provide basic functionality.
@@ -240,7 +241,14 @@ public abstract class AbstractRepository implements IRepository
     
     try
     {
-      writer.write( indent + item.toString() );
+      // let's look if the item can be adapted to properties. In the positive,
+      // we dump the properties too.
+      final Properties props = (Properties)item.getAdapter( Properties.class );
+      if( props != null )
+        writer.write( indent + item.toString() + " Properties: " + PropertiesHelper.format( props, ';' ) );
+      else
+        writer.write( indent + item.toString() );
+      
       writer.write( "\n" );
     }
     catch( final IOException e )

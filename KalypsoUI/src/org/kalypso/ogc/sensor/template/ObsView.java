@@ -58,6 +58,11 @@ import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectWaiter;
 
 /**
+ * A kind of view over observations.
+ * <p>
+ * The view supports enabled features, which might dictate some of the aspects of the appearance. By default, features
+ * are enabled.
+ * 
  * @author schlienger
  */
 public abstract class ObsView implements IObsViewEventProvider
@@ -92,7 +97,7 @@ public abstract class ObsView implements IObsViewEventProvider
     m_enabledFeatures.add( TimeserieConstants.FEATURE_ALARMLEVEL );
     m_enabledFeatures.add( TimeserieConstants.FEATURE_FORECAST );
   }
-  
+
   public void dispose()
   {
     removeAllItems();
@@ -202,7 +207,7 @@ public abstract class ObsView implements IObsViewEventProvider
     {
       final Object[] listeners = m_listeners.toArray();
       for( int i = 0; i < listeners.length; i++ )
-        ((IObsViewEventListener)listeners[i]).onObsViewChanged( evt );
+        ( (IObsViewEventListener)listeners[i] ).onObsViewChanged( evt );
     }
   }
 
@@ -232,11 +237,7 @@ public abstract class ObsView implements IObsViewEventProvider
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
     final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
-    {
-        this,
-        data,
-        ignoreType,
-        tokenizedName }, synchron )
+    { this, data, ignoreType, tokenizedName }, synchron )
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
@@ -278,7 +279,7 @@ public abstract class ObsView implements IObsViewEventProvider
 
     return obsmap;
   }
-  
+
   /**
    * Sets the given feature as enabled or not
    */
@@ -288,8 +289,10 @@ public abstract class ObsView implements IObsViewEventProvider
       m_enabledFeatures.add( featureName );
     else
       m_enabledFeatures.remove( featureName );
+
+    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_REFRESH_FEATURES ) );
   }
-  
+
   /**
    * @return true if the given feature is enabled in this view
    */
@@ -297,12 +300,20 @@ public abstract class ObsView implements IObsViewEventProvider
   {
     return m_enabledFeatures.contains( featureName );
   }
-  
+
   /**
    * @return the list of enabled features
    */
   public String[] getEnabledFeatures()
   {
-    return (String[])m_enabledFeatures.toArray(new String[m_enabledFeatures.size()]);
+    return (String[])m_enabledFeatures.toArray( new String[m_enabledFeatures.size()] );
+  }
+
+  /**
+   * Clears all enabled features
+   */
+  public void clearFeatures()
+  {
+    m_enabledFeatures.clear();
   }
 }
