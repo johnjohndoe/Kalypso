@@ -162,7 +162,7 @@ public final class StatusUtilities
    * <p>
    * If the exception is a {@link CoreException}its status is returned.
    * </p>
-   *
+   * 
    * @throws NullPointerException
    *           If <code>t</code> is null.
    */
@@ -170,7 +170,7 @@ public final class StatusUtilities
   {
     return statusFromThrowable( t, null );
   }
-  
+
   /**
    * Transforms any exception into an {@link IStatus}object.
    * <p>
@@ -179,9 +179,10 @@ public final class StatusUtilities
    * <p>
    * If the exception is a {@link CoreException}its status is returned.
    * </p>
-   *
-   * @param message [optional] used as message for newly created status if specified
-   *  
+   * 
+   * @param message
+   *          [optional] used as message for newly created status if specified
+   * 
    * @throws NullPointerException
    *           If <code>t</code> is null.
    */
@@ -192,13 +193,13 @@ public final class StatusUtilities
     if( t instanceof CoreException )
       return ( (CoreException)t ).getStatus();
 
-    String msg = message;
+    String msg = t.getLocalizedMessage();
     if( msg == null )
-    {
-      final String locmsg = t.getLocalizedMessage();
-      msg = locmsg == null ? "<Keine Information vorhanden>" : locmsg;
-    }
-    
+      msg = "<Keine weitere Information vorhanden>";
+
+    if( message != null )
+      msg = message + ". " + msg;
+
     return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
   }
 
@@ -207,7 +208,8 @@ public final class StatusUtilities
    * If the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus
    * is returned.
    * 
-   * @param message only used when creating the MultiStatus
+   * @param message
+   *          only used when creating the MultiStatus
    */
   public static IStatus createStatus( final List stati, final String message )
   {
@@ -226,13 +228,14 @@ public final class StatusUtilities
    * If the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus
    * is returned.
    * 
-   * @param message only used when creating the MultiStatus
+   * @param message
+   *          only used when creating the MultiStatus
    */
   public static IStatus createStatus( final IStatus[] stati, final String message )
   {
     return createStatus( Arrays.asList( stati ), message );
   }
-  
+
   /**
    * Creates a status with given severity, message, and throwable
    */
@@ -240,7 +243,7 @@ public final class StatusUtilities
   {
     return new Status( severity, EclipseRCPContributionsPlugin.getID(), 0, message, t );
   }
-  
+
   /**
    * Creates an error-status with given message and null throwable.
    */
@@ -248,7 +251,7 @@ public final class StatusUtilities
   {
     return createStatus( IStatus.ERROR, errorMessage, null );
   }
-  
+
   /**
    * Creates an info-status with given message and null throwable.
    */
@@ -256,12 +259,52 @@ public final class StatusUtilities
   {
     return createStatus( IStatus.INFO, infoMessage, null );
   }
-  
+
   /**
    * Creates a warning-status with given message and null throwable.
    */
   public static IStatus createWarningStatus( final String warningMessage )
   {
     return createStatus( IStatus.WARNING, warningMessage, null );
+  }
+
+  /**
+   * Wraps the given status in a new status with the given severity. If the given status has already the given severity,
+   * then it is simply returned.
+   * 
+   * @param status the status to wrap
+   * @param severity the desired severity
+   * @param severityMask the severity-mask for which the wrapping takes place. If the given status does not match this severity-mask, no wrap takes place
+   */
+  public static IStatus wrapStatus( final IStatus status, final int severity, final int severityMask )
+  {
+    if( status.matches( severity ) || !status.matches( severityMask ) )
+      return status;
+
+    final IStatus newStatus;
+    if( status.isMultiStatus() )
+    {
+      newStatus = new MultiStatus( status.getPlugin(), status.getCode(), ( (MultiStatus)status ).getChildren(), status
+          .getMessage(), status.getException() )
+      {
+        public int getSeverity()
+        {
+          return severity;
+        }
+      };
+    }
+    else
+    {
+      newStatus = new Status( severity, status.getPlugin(), status.getCode(), status.getMessage(), status
+          .getException() )
+      {
+        public int getSeverity()
+        {
+          return severity;
+        }
+      };
+    }
+
+    return newStatus;
   }
 }
