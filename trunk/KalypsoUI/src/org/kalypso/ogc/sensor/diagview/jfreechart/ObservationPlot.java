@@ -89,6 +89,7 @@ import org.kalypso.ogc.sensor.diagview.AxisMapping;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
+import org.kalypso.ogc.sensor.diagview.DiagViewCurve.AlarmLevel;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -139,12 +140,6 @@ public class ObservationPlot extends XYPlot
   /** is true as soon as one background image has been set */
   private boolean m_bgImageSet = false;
 
-  /** flag indicating whether or not to show the forecast marker */
-  private final boolean m_checkForecast;
-
-  /** flag indicating whether or not to show the alarm levels */
-  private final boolean m_checkAlarmLevels;
-
   /**
    * Constructor.
    */
@@ -170,23 +165,17 @@ public class ObservationPlot extends XYPlot
       addCurve( (DiagViewCurve)curves[i] );
 
     setNoDataMessage( "Keine Daten vorhanden" );
-    
-    m_checkForecast = view.isFeatureEnabled( TimeserieConstants.FEATURE_FORECAST );
-    m_checkAlarmLevels = view.isFeatureEnabled( TimeserieConstants.FEATURE_ALARMLEVEL );
   }
 
   public void dispose()
   {
     clearCurves();
   }
-
+  
   /**
    * Adds a diagram axis and configures it for the use in this plot.
-   * 
-   * @param diagAxis
-   * @throws SensorException
    */
-  private synchronized final void addDiagramAxis( DiagramAxis diagAxis ) throws SensorException
+  private synchronized final void addDiagramAxis( final DiagramAxis diagAxis ) throws SensorException
   {
     final ValueAxis vAxis;
 
@@ -287,7 +276,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Adds a curve to the plot
    */
-  public synchronized void addCurve( final DiagViewCurve curve ) throws SensorException
+  public synchronized final void addCurve( final DiagViewCurve curve ) throws SensorException
   {
     if( curve == null || !curve.isShown() || m_curve2serie.containsKey( curve ) )
       return;
@@ -357,10 +346,15 @@ public class ObservationPlot extends XYPlot
     cds.addCurveSerie( xyc, curveColor, getRenderer( indexOf( cds ) ) );
 
     m_serie2dataset.put( xyc, cds );
-
+    
+    analyseCurve( curve );
+  }
+  
+  private void analyseCurve( final DiagViewCurve curve ) throws SensorException
+  {
     final IObservation obs = curve.getObservation();
 
-    if( m_checkForecast )
+    if( curve.getView().isFeatureEnabled( TimeserieConstants.FEATURE_FORECAST ) )
     {
       // add a marker if the obs is a forecast
       final DateRange fr = TimeserieUtils.isForecast( obs );
@@ -412,30 +406,53 @@ public class ObservationPlot extends XYPlot
       }
 
       // add a constant Y line if obs has alarmstufen
-      if( m_checkAlarmLevels && yAxis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      if( curve.isDisplayAlarmLevel() )
       {
-        final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( obs );
+        final AlarmLevel[] alarms = curve.getAlarmLevels();
         for( int i = 0; i < alarms.length; i++ )
         {
-          final Double value = new Double( mdl.getProperty( alarms[i] ) );
+          final Double value = new Double( alarms[i].value );
           if( !m_yConsts.containsKey( value ) )
           {
-            final Color color = TimeserieUtils.getColorForAlarmLevel( alarms[i] );
-
+            final XYCurveSerie xyc = (XYCurveSerie)m_curve2serie.get( curve );
             final double x;
             if( xyc.getItemCount() > 1 )
               x = xyc.getXValue( 1 ).doubleValue();
             else
               x = getDomainAxis().getLowerBound();
-            final XYTextAnnotation ann = new XYTextAnnotation( alarms[i], x, value.doubleValue() );
-            ann.setPaint( color );
 
-            final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( alarms[i] + " (" + value.doubleValue() + ")",
-                value.doubleValue(), color, ann, yDiagAxis );
-
+            final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( alarms[i], x, xyc.getYDiagAxis() );
             m_yConsts.put( value, vac );
           }
         }
+      }
+    }
+  }
+  
+  /**
+   * Refreshes the plot in order to take the enabled features of the view into account
+   */
+  public void refreshMetaInformation(  )
+  {
+    // clear all markers and extra informations
+    clearDomainMarkers();
+    clearAnnotations();
+    m_yConsts.clear();
+    m_markers.clear();
+    
+    // step through curves and analyse them
+    
+    for( Iterator it = m_curve2serie.keySet().iterator(); it.hasNext(); )
+    {
+      final DiagViewCurve curve = (DiagViewCurve)it.next();
+      
+      try
+      {
+        analyseCurve( curve );
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
       }
     }
   }
@@ -565,11 +582,11 @@ public class ObservationPlot extends XYPlot
       if( axis == null )
         continue;
 
-      if( axis.getRange().contains( vac.value ) )
+      if( axis.getRange().contains( vac.alarm.value ) )
       {
-        final double yy = axis.valueToJava2D( vac.value, dataArea, RectangleEdge.LEFT );
+        final double yy = axis.valueToJava2D( vac.alarm.value, dataArea, RectangleEdge.LEFT );
         final Line2D line = new Line2D.Double( dataArea.getMinX(), yy, dataArea.getMaxX(), yy );
-        g2.setPaint( vac.color );
+        g2.setPaint( vac.alarm.color );
         g2.draw( line );
 
         // and draw the text annotation
@@ -580,12 +597,6 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Helper that creates a marker
-   * 
-   * @param start
-   * @param end
-   * @param label
-   * @param color
-   * @return marker
    */
   private final static Marker createMarker( double start, double end, String label, Color color )
   {
@@ -658,32 +669,23 @@ public class ObservationPlot extends XYPlot
    */
   private final static class AlarmLevelPlotElement
   {
-    final double value;
-
-    final Color color;
-
+    final AlarmLevel alarm;
     final String label;
-
     final DiagramAxis axis;
-
     final XYTextAnnotation annotation;
 
-    public AlarmLevelPlotElement( final String lbl, final double val, final Color col, XYTextAnnotation ann,
-        final DiagramAxis diagAxis )
+    public AlarmLevelPlotElement( final AlarmLevel al, final double xCoord, final DiagramAxis diagAxis )
     {
-      this.label = lbl;
-      this.value = val;
-      this.color = col;
-      this.annotation = ann;
+      this.alarm = al;
+      this.label = al.label + " (" + al.value + ")";
       this.axis = diagAxis;
+      this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
+      this.annotation.setPaint( al.color );
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     public String toString()
     {
-      return getClass().getName() + ": " + this.label + " " + this.value + " " + this.color + " "
+      return getClass().getName() + ": " + this.label + " " + this.alarm + " "
           + this.axis.getLabel();
     }
   }

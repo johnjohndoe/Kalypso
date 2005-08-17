@@ -174,19 +174,23 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
           case ObsViewEvent.TYPE_REFRESH_ITEMS:
             obsPlot.removeCurve( (DiagViewCurve)evt.getObject() );
             obsPlot.addCurve( (DiagViewCurve)evt.getObject() );
-//            clearChart();
-//
-//            final ObsViewItem[] items = view.getItems();
-//            for( int i = 0; i < items.length; i++ )
-//            {
-//              final DiagViewCurve curve = (DiagViewCurve)items[i];
-//              obsPlot.addCurve( curve );
-//            }
+            //            clearChart();
+            //
+            //            final ObsViewItem[] items = view.getItems();
+            //            for( int i = 0; i < items.length; i++ )
+            //            {
+            //              final DiagViewCurve curve = (DiagViewCurve)items[i];
+            //              obsPlot.addCurve( curve );
+            //            }
             break;
 
           case ObsViewEvent.TYPE_REFRESH:
             setTitle( view.getTitle() );
             setLegendProperties( view.getLegendName(), view.isShowLegend() );
+            break;
+
+          case ObsViewEvent.TYPE_REFRESH_FEATURES:
+            obsPlot.refreshMetaInformation();
             break;
         }
       }

@@ -42,8 +42,11 @@ package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
 
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface
@@ -73,5 +76,68 @@ public class DiagViewCurve extends ObsViewItem
   public Color getColor()
   {
     return m_color;
+  }
+
+  /**
+   * @return true when this curve represents a Water-Level and the Water-Level-Feature is activated in the view
+   */
+  public boolean isDisplayAlarmLevel()
+  {
+    boolean hasWaterLevelAxis = false;
+    for( int i = 0; i < m_mappings.length; i++ )
+    {
+      if( m_mappings[i].getObservationAxis().getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      {
+        hasWaterLevelAxis = true;
+        break;
+      }
+    }
+
+    return hasWaterLevelAxis && getView().isFeatureEnabled( TimeserieConstants.FEATURE_ALARMLEVEL );
+  }
+
+  /**
+   * @return the list of alarm-levels, or an empty array if nothing found
+   */
+  public AlarmLevel[] getAlarmLevels()
+  {
+    final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( getObservation() );
+    final AlarmLevel[] als = new AlarmLevel[alarms.length];
+    
+    final MetadataList mdl = getObservation().getMetadataList();
+    
+    for( int i = 0; i < alarms.length; i++ )
+    {
+      final Double value = new Double( mdl.getProperty( alarms[i] ) );
+
+      als[i] = new AlarmLevel( value.doubleValue(), alarms[i] );
+    }
+    
+    return als;
+  }
+
+  /**
+   * Simple structre holding the alarm-level information
+   *
+   * @author schlienger
+   */
+  public static class AlarmLevel
+  {
+    public final double value;
+    public final String label;
+    public final Color color;
+
+    public AlarmLevel( final double val, final String lbl )
+    {
+      this.value = val;
+      this.label = lbl;
+
+      this.color = TimeserieUtils.getColorForAlarmLevel( lbl );
+    }
+
+    public String toString()
+    {
+      return label;
+    }
   }
 }

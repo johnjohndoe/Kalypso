@@ -327,6 +327,9 @@ public class DiagViewUtils
     // features-list is optional
     if( xml.getFeatures() != null )
     {
+      // features list specified, so clear before enabling the ones sepcified
+      view.clearFeatures();
+      
       final String[] featureNames = xml.getFeatures().split( ";" );
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
