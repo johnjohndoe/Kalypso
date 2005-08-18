@@ -71,6 +71,7 @@ import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -93,6 +94,21 @@ import org.xml.sax.InputSource;
 
 /**
  * Kalypso Observation Service.
+ * 
+ * <p>
+ * This service is configured by a properties-file which has following syntax:
+ * 
+ * <pre>
+ * # Set the timezone into which the kalypso-clients are used. Data that is 
+ * # transferred to and from the clients will be located in this timezone.
+ * # 
+ * # This property is optional and if omitted, kalypso makes no conversion 
+ * # internally (null is used as timezone name in that case).
+ * # 
+ * # The name of the timezone should be compatible with the specification of
+ * # TimeZone.getTimeZone( String ) 
+ * TIMEZONE_NAME=Europe/Berlin
+ * </pre>
  * 
  * @author schlienger
  */
@@ -264,7 +280,7 @@ public class KalypsoObservationService implements IObservationService
     final String hereHref = ZmlURL.removeServerSideId( href );
     final String obsId = ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
-    
+
     FileOutputStream fos = null;
 
     try
@@ -292,17 +308,17 @@ public class KalypsoObservationService implements IObservationService
 
       // request part specified?
       IRequest request = null;
-      
+
       final RequestType requestType = RequestFactory.parseRequest( hereHref );
-      if( requestType != null)
+      if( requestType != null )
       {
         request = ObservationRequest.createWith( requestType );
-      	
+
         m_logger.info( "Reading data for observation: " + obs.getName() + " Request: " + request );
       }
       else
         m_logger.info( "Reading data for observation: " + obs.getName() );
-        
+
       updateObservation( obs, obean.getId() );
 
       // tricky: maybe make a filtered observation out of this one
@@ -380,7 +396,18 @@ public class KalypsoObservationService implements IObservationService
 
       final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), obs.getIdentifier(), null );
 
-      obs.setValues( zml.getValues( null ) );
+      synchronized( obs )
+      {
+        // HACK: we need a way to tell the observation which timezone we are in
+        // this should be removed once the server-side IObservation stuff is refactored
+        obs.getMetadataList().setProperty( "_SERVER_SIDE_TIMEZONE_",
+            zml.getMetadataList().getProperty( TimeserieConstants.MD_TIMEZONE ) );
+
+        obs.setValues( zml.getValues( null ) );
+
+        // HACK cont'd: remove it afterwards from the metadatalist in order not to pollute it
+        obs.getMetadataList().remove( "_SERVER_SIDE_TIMEZONE_" );
+      }
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {

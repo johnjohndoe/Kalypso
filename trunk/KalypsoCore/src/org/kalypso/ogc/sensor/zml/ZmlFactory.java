@@ -175,7 +175,6 @@ public class ZmlFactory
    * 
    * TODO: noch das default format (_format) hinzufügen und eventuell die xs: Zeugs wegmachen Siehe properties datei
    * 
-   * @param className
    * @return the XSD-Type for the given Java-Class
    */
   public static String getXSDTypeFor( final String className )
@@ -448,8 +447,6 @@ public class ZmlFactory
   /**
    * Create an XML-Observation ready for marshalling.
    * 
-   * TODO: complete for target property
-   * 
    * @param timezone
    *          the timezone into which dates should be converted before serialized
    */
@@ -488,7 +485,7 @@ public class ZmlFactory
         metadataList.add( mdType );
       }
 
-      // insert timezone in the metadata is specified
+      // insert timezone in the metadata if specified
       if( timezone != null )
       {
         final MetadataType mdType = OF.createMetadataType();
