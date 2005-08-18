@@ -7,6 +7,10 @@
 			<xs:element name="table" type="RatingTable" minOccurs="0" 
 				maxOccurs="unbounded"/>
 		</xs:sequence>
+
+		<!-- this information is important because if the observation needs to be
+			auto-proxied, it allows kalypso to know what kind of proxy-axis it should 
+			generate -->		
 		<xs:attribute name="fromType" type="xs:string" use="required"/>
 		<xs:attribute name="toType" type="xs:string" use="required"/>
 	</xs:complexType>
