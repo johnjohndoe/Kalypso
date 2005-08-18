@@ -236,7 +236,7 @@ public class WiskiTimeserie implements IObservation
           useType = TimeserieConstants.TYPE_VOLUME;
         else
           useType = TimeserieConstants.TYPE_RUNOFF;
-        
+
         // fetch WQTable now since we know the time-range
         fetchWQTable( getMetadataList(), dr.getFrom(), dr.getTo(), useType );
       }
@@ -340,7 +340,7 @@ public class WiskiTimeserie implements IObservation
 
     if( !call.isSuccess() )
       throw new SensorException( "Konnte Daten nicht zurückschreiben." );
-    
+
     m_evtPrv.fireChangedEvent();
   }
 
@@ -376,7 +376,7 @@ public class WiskiTimeserie implements IObservation
   {
     m_evtPrv.clearListeners();
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent()
    */
