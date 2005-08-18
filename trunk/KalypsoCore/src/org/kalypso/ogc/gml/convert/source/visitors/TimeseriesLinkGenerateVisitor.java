@@ -58,12 +58,14 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * </p>
  * <ul>
  * <li>${fid} Die Feature-ID</li>
+ * <li><${wiski_sim:link_property} Erstellt die Href anhand der Href der angegebenen Property. Diese wird nach dem Wiski-Simulations Pattern abgeändert. </li>
  * </ul>
  * 
  * @author belger
  */
 public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
 {
+  private static final String WISKI_SIM_PATTERN = "${wiski_sim:";
   private final ObjectFactory m_linkFactory = new ObjectFactory();
 
   private final String m_hrefPattern;
@@ -89,9 +91,8 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    // hrefPattern durch angaben ersetzen
-    final String href = m_hrefPattern.replaceAll( "\\Q${fid}\\E", f.getId() );
-
+    final String href = applyPatterns( f );
+    
     try
     {
       final TimeseriesLinkType link = m_linkFactory.createTimeseriesLink();
@@ -105,5 +106,69 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     }
 
     return true;
+  }
+
+  private String applyPatterns( final Feature f )
+  {
+    // hrefPattern durch angaben ersetzen
+    String href = m_hrefPattern;
+    
+    // Feature ID
+    href = href.replaceAll( "\\Q${fid}\\E", f.getId() );
+
+    // wiski pattern
+    href = applyWiskiSim( href, f );
+
+    return href;
+  }
+
+  private String applyWiskiSim( final String href, final Feature f )
+  {
+    String result = href;
+    
+    int index;
+    while( ( index = result.indexOf( WISKI_SIM_PATTERN ) ) != -1 )
+    {
+      final int index2 = result.indexOf( "}", index + 1 );
+      if( index2 == -1 )
+        throw new IllegalArgumentException( "Pattern " + WISKI_SIM_PATTERN + "property} endet nicht mit }" );
+
+      final String propertyName = result.substring( index + WISKI_SIM_PATTERN.length(), index2 );
+      final Object property = f.getProperty( propertyName );
+      
+      final String simId;
+      
+      if( property == null )
+        simId = "";
+      else if( !( property instanceof TimeseriesLinkType ) )
+        throw new IllegalArgumentException( "Property ist kein TimeseriesLinkType: " + propertyName );
+      else
+      {
+        final TimeseriesLinkType link = (TimeseriesLinkType)property;
+        final String oldHref = link.getHref();
+        simId = makeWiskiSimHref( oldHref );
+      }
+      
+      result = result.substring( 0, index ) + simId + result.substring( index2 + 1 );
+    }
+    
+    return result;
+  }
+
+  /** Aus 'blubb.X.nn' wird 'blubb.Sim.X.nn' */
+  private String makeWiskiSimHref( final String href )
+  {
+    final int lastPoint = href.lastIndexOf( '.' );
+    if( lastPoint == -1 )
+      return "";
+    
+    final int lastLastPoint = href.lastIndexOf( '.', lastPoint -1 );
+    if( lastLastPoint == -1 )
+      return "";
+    
+    final String name = href.substring( 0, lastLastPoint );
+    final String tail = href.substring( lastLastPoint );
+    
+    return name + ".Sim" + tail;
   }
 }
