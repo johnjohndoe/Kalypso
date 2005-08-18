@@ -35,14 +35,10 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public abstract class TreeSelection implements IStructuredSelection
 {
-
   private final IStructuredSelection m_selection;
 
   public TreeSelection( final IStructuredSelection selection )

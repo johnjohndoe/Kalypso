@@ -38,14 +38,10 @@ import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class CreateOGCComplexFilter implements IActionDelegate
 {
-
   private IStructuredSelection m_selection;
 
   /**
@@ -93,7 +89,5 @@ public class CreateOGCComplexFilter implements IActionDelegate
         action.setEnabled( false );
       }
     }
-
   }
-
 }

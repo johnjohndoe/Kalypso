@@ -34,15 +34,11 @@ import java.io.InputStream;
 import org.kalypso.contribs.java.io.StreamUtilities;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public abstract class AbstractDiffObject implements IDiffObject
 {
   /**
-   * 
    * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
   public IDiffComparator getDiffComparator( final String path )
@@ -54,7 +50,6 @@ public abstract class AbstractDiffObject implements IDiffObject
     return new IDiffComparator()
     {
       /**
-       * 
        * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
        *      java.lang.Object)
        */

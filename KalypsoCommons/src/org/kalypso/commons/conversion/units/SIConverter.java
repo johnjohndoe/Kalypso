@@ -34,12 +34,9 @@ public class SIConverter implements IValueConverter
   }
 
   /**
-   * TODO: complete the list!
-   * 
    * Returns the factor associated to the given unit
-   * 
-   * @param unit
-   * @return factor
+   * <p>
+   * Note to developers: complete the list!
    */
   private final static double factor( final String unit )
   {

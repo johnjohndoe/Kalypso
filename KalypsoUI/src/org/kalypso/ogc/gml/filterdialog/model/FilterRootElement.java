@@ -43,14 +43,10 @@ import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class FilterRootElement implements Filter
 {
-
   private transient ListenerList m_listeners = null;
 
   private final String m_name = "FILTER";

@@ -151,21 +151,14 @@ public class WQTuppleModel extends AbstractTuppleModel
       {
         final Number[] res = read( objIndex, axis, number );
 
-        // in the case there were some errors during computation, the numbers
-        // will differ and so we overwrite the underlying model
-        //        if( ! computed.equals( number ) )
-        //          m_model.setElement( objIndex.intValue(), computed, m_srcAxis );
-        //      }
         m_values.put( objIndex, res[0] );
         m_stati.put( objIndex, res[1] );
       }
 
       if( bDestAxis )
         return m_values.get( objIndex );
-      //return res[0];
 
       return m_stati.get( objIndex );
-      //      return res[1];
     }
 
     return m_model.getElement( index, axis );
@@ -192,7 +185,7 @@ public class WQTuppleModel extends AbstractTuppleModel
           final double w = number.doubleValue();
           double q = m_converter.computeQ( d, w );
 
-          // just leave 3 decimals TODO Q only has 3 decimals, is this ok?
+          // just leave 3 decimals
           q = ( (double)( (int)( q * 1000 ) ) ) / 1000;
           value = new Double( q );
         }
@@ -208,8 +201,6 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
     }
 
-    //    m_values.put( objIndex, value );
-    //    m_stati.put( objIndex, status );
     return new Number[]
     {
         value,
@@ -270,8 +261,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( axis.equals( m_destAxis ) )
-      return -1; // TODO: check if ok, always returning -1 here. Should be ok,
-    // since indexOf only makes sense for key axes
+      return -1; // indexOf only makes sense for key axes
 
     return m_model.indexOf( element, axis );
   }

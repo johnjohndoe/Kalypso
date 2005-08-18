@@ -41,6 +41,8 @@
 package org.kalypso.services.ocs.repository;
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.rpc.ServiceException;
 
@@ -63,9 +65,9 @@ public class ObservationServiceRepository extends AbstractRepository
 
   private final IObservationService m_srv;
 
+  private final Map m_foundItems = new HashMap();
+
   /**
-   * Constructor
-   * 
    * @throws ServiceException
    *           when the underlying service is not available
    */
@@ -143,6 +145,8 @@ public class ObservationServiceRepository extends AbstractRepository
    */
   public void reload() throws RepositoryException
   {
+    m_foundItems.clear();
+    
     try
     {
       m_srv.reload();
@@ -165,26 +169,36 @@ public class ObservationServiceRepository extends AbstractRepository
 
   /**
    * Helper: finds item using recursion
-   * <p>
-   * TODO: better performance by caching items that were already found? do not forget to clear the cache in reload()
    * 
    * @return item if found, otherwise null.
-   * @throws RepositoryException
    */
   private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item ) throws RepositoryException
   {
+    IRepositoryItem foundItem = null;
+
+    // first lookup in the cache
+    foundItem = (IRepositoryItem)m_foundItems.get( id );
+    if( foundItem != null )
+      return foundItem;
+
+    // either this is the item, or find recursive
     if( item.getIdentifier().equalsIgnoreCase( id ) )
-      return item;
-
-    final IRepositoryItem[] items = item.getChildren();
-    for( int i = 0; i < items.length; i++ )
+      foundItem = item;
+    else
     {
-      final IRepositoryItem item2 = findItemRecursive( id, items[i] );
+      final IRepositoryItem[] items = item.getChildren();
+      for( int i = 0; i < items.length; i++ )
+      {
+        foundItem = findItemRecursive( id, items[i] );
 
-      if( item2 != null )
-        return item2;
+        if( foundItem != null )
+          break;
+      }
     }
 
-    return null;
+    if( foundItem != null )
+      m_foundItems.put( id, foundItem );
+    
+    return foundItem;
   }
 }

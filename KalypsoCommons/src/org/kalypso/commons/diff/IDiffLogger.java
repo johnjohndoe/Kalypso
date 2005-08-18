@@ -30,9 +30,6 @@
 package org.kalypso.commons.diff;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public interface IDiffLogger
@@ -41,5 +38,5 @@ public interface IDiffLogger
 
   public void block();
 
-  public void unblock(boolean keepLastLog);
+  public void unblock( boolean keepLastLog );
 }

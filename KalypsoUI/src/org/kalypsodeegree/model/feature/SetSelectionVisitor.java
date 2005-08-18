@@ -35,24 +35,17 @@ import java.util.List;
 import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public class SetSelectionVisitor implements FeatureVisitor
 {
-
   private final List m_listOfFeatureIds;
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  /**
-   *  
-   */
   public SetSelectionVisitor( List listOfFeatureIds, IFeatureSelectionManager selectionManager )
   {
-    m_listOfFeatureIds = listOfFeatureIds==null ? new ArrayList(): listOfFeatureIds;
+    m_listOfFeatureIds = listOfFeatureIds == null ? new ArrayList() : listOfFeatureIds;
     m_selectionManager = selectionManager;
   }
 

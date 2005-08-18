@@ -40,33 +40,10 @@ import java.util.zip.ZipException;
 import org.kalypso.contribs.java.util.logging.ILogger;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public class DiffUtils
 {
-
-  /**
-   *  
-   */
-  public DiffUtils()
-  {
-    super();
-    // TODO Auto-generated constructor stub
-  }
-
-  /**
-   * 
-   * @param zip1
-   * @param zip2
-   * @return log
-   * @throws IOException
-   * @throws ZipException
-   * @throws ZipException
-   * @throws IOException
-   */
   public static boolean diffZips( final ILogger logger, File zip1, File zip2, String[] ignorePath )
       throws ZipException, IOException
   {
@@ -109,14 +86,6 @@ public class DiffUtils
     return result;
   }
 
-  /**
-   * 
-   * @param logger
-   * @param list1
-   * @param list2
-   * @param infoMessage
-   * @return boolean
-   */
   public static boolean diffIgnoreOrder( IDiffLogger logger, List list1, List list2, String infoMessage )
   {
     logger.block();

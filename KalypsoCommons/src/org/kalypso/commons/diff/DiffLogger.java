@@ -34,9 +34,6 @@ import java.util.Stack;
 import org.kalypso.contribs.java.util.logging.ILogger;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public class DiffLogger implements IDiffLogger
@@ -52,7 +49,6 @@ public class DiffLogger implements IDiffLogger
   }
 
   /**
-   * 
    * @see org.kalypso.commons.diff.IDiffLogger#log(int, java.lang.String)
    */
   public void log( int status, String message )
@@ -60,30 +56,30 @@ public class DiffLogger implements IDiffLogger
     final String diff;
     switch( status )
     {
-    case IDiffComparator.DIFF_CONTENT:
-      diff = "<-> ";
-      break;
-    case IDiffComparator.DIFF_REMOVED:
-      diff = "--- ";
-      break;
-    case IDiffComparator.DIFF_ADDED:
-      diff = "+++ ";
-      break;
-    case IDiffComparator.DIFF_UNCOMPAREABLE:
-      diff = "??? ";
-      break;
-    //    case IDiffComparator.DIFF_INFO:
-    case IDiffComparator.DIFF_OK:
-      return;
-    //        case IDiffComparator.DIFF_OK:
-    //          diff = "=== ";
-    //          break;
-    case IDiffComparator.DIFF_INFO:
-      diff = "# ";
-      break;
-    default:
-      diff = "unknown ";
-      break;
+      case IDiffComparator.DIFF_CONTENT:
+        diff = "<-> ";
+        break;
+      case IDiffComparator.DIFF_REMOVED:
+        diff = "--- ";
+        break;
+      case IDiffComparator.DIFF_ADDED:
+        diff = "+++ ";
+        break;
+      case IDiffComparator.DIFF_UNCOMPAREABLE:
+        diff = "??? ";
+        break;
+      //    case IDiffComparator.DIFF_INFO:
+      case IDiffComparator.DIFF_OK:
+        return;
+      //        case IDiffComparator.DIFF_OK:
+      //          diff = "=== ";
+      //          break;
+      case IDiffComparator.DIFF_INFO:
+        diff = "# ";
+        break;
+      default:
+        diff = "unknown ";
+        break;
     }
     int offset = m_buffers.size();
     StringBuffer tab = new StringBuffer();
@@ -115,7 +111,6 @@ public class DiffLogger implements IDiffLogger
   }
 
   /**
-   * 
    * @see org.kalypso.commons.diff.IDiffLogger#unblock(boolean)
    */
   public void unblock( boolean keepLastLog )

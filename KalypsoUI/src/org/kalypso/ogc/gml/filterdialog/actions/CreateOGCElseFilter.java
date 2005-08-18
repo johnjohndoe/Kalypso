@@ -39,14 +39,10 @@ import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class CreateOGCElseFilter implements IActionDelegate
 {
-
   private IStructuredSelection m_selection;
 
   /**
@@ -94,5 +90,4 @@ public class CreateOGCElseFilter implements IActionDelegate
       }
     }
   }
-
 }

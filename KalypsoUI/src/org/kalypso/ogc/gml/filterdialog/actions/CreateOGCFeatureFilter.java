@@ -39,14 +39,10 @@ import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class CreateOGCFeatureFilter implements IActionDelegate
 {
-
   private IStructuredSelection m_selection;
 
   /**
@@ -96,5 +92,4 @@ public class CreateOGCFeatureFilter implements IActionDelegate
     }
 
   }
-
 }

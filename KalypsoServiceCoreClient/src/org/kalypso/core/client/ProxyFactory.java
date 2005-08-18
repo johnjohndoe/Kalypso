@@ -72,10 +72,10 @@ public class ProxyFactory
 
   /** contains the proxies that were already created */
   private final Map m_proxies;
-  
+
   /** used for instanciating the proxy implementations provided through extensions */
   private final ServiceProxies m_proxyImpls;
-  
+
   /**
    * configuration of the factory
    * <p>
@@ -221,14 +221,12 @@ public class ProxyFactory
     if( m_proxies.containsKey( strEndPoint ) )
       return (Stub)m_proxies.get( strEndPoint );
 
-    // TODO TRICKY: we set the classloader because of a problem using jaxrpc at
-    // runtime
-    // under Eclipse. It seems that the system class loader is explicitely used
-    // by the jaxrpc jars and that's bad because it doesn't find the plugins
+    // TRICKY: we set the classloader because of a problem using jaxrpc at
+    // runtime under Eclipse. It seems that the system class loader is explicitely
+    // used by the jaxrpc jars and that's bad because it doesn't find the plugins
     // runtime libs.
-    // if( Thread.currentThread().getContextClassLoader() !=
-    // getClass().getClassLoader() )
-    Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
+    if( Thread.currentThread().getContextClassLoader() != getClass().getClassLoader() )
+      Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
 
     try
     {

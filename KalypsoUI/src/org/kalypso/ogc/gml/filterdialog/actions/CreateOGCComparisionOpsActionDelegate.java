@@ -43,14 +43,10 @@ import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsCOMPOperation;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class CreateOGCComparisionOpsActionDelegate implements IActionDelegate
 {
-
   private IStructuredSelection m_selection;
 
   /**
@@ -79,7 +75,6 @@ public class CreateOGCComparisionOpsActionDelegate implements IActionDelegate
         ( (TreeSelection)m_selection ).contentChanged();
       }
     }
-
   }
 
   /**
@@ -108,9 +103,7 @@ public class CreateOGCComparisionOpsActionDelegate implements IActionDelegate
           action.setEnabled( true );
         if( arguments == null || arguments.size() < 1 && operatorId == OperationDefines.NOT )
           action.setEnabled( true );
-
       }
     }
   }
-
 }

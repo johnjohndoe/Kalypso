@@ -46,9 +46,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class FilterReader
@@ -86,5 +83,4 @@ public class FilterReader
     Filter filter = AbstractFilter.buildFromDOM( element );
     return filter;
   }
-
 }

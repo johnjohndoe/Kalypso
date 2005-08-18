@@ -29,12 +29,8 @@
  */
 package org.kalypso.commons.diff;
 
-import java.io.IOException;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public interface IDiffComparator
@@ -51,13 +47,5 @@ public interface IDiffComparator
 
   public static final int DIFF_INFO = 6;
 
-  /**
-   * @param content
-   * @param content2
-   * @return diffstatus
-   * @throws IOException
-   * @throws Exception
-   */
   public boolean diff( IDiffLogger logger, Object content, Object content2 ) throws Exception;
-
 }

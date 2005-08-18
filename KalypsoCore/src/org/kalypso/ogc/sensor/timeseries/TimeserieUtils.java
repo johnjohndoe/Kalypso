@@ -229,9 +229,11 @@ public class TimeserieUtils
   }
 
   /**
-   * TODO fill the names in the config.properties file
+   * Returns a user-friendly name for the given type.
    * 
-   * @param type
+   * <p>
+   * Note to Developer: keep the config.properties file up-to-date
+   * 
    * @return corresponding name (user friendly)
    */
   public static String getName( final String type )
@@ -242,7 +244,11 @@ public class TimeserieUtils
   }
 
   /**
-   * @param type
+   * Returns a color for the given type.
+   * 
+   * <p>
+   * Note to Developer: keep the config.properties file up-to-date
+   * 
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
   public static Color getColorFor( final String type )

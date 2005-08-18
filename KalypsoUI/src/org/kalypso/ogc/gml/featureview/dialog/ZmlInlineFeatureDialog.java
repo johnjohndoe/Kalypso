@@ -40,9 +40,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class ZmlInlineFeatureDialog implements IFeatureDialog
@@ -95,5 +92,4 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   {
     return "X-Y Diagram...";
   }
-
 }
