@@ -92,7 +92,8 @@ public class ColorUtilities
    * color are derived as many times as distance. Thus, if distance is 0, the original color is returned. The same alpha
    * value is kept between the original color and the newly created one.
    * 
-   * TODO: ameliorate the algorithm for finding derivate color
+   * <p>
+   * Note to developer: ameliorate the algorithm for finding derivate color
    */
   public static Color derivateColor( final Color c, int distance )
   {

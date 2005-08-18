@@ -184,12 +184,6 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "station_id", "<?>" );
   }
 
-  // TODO pegel-id auch auslesen
-//  String getPegelId()
-//  {
-//    return m_map.getProperty( "", "<?>" );
-//  }
-
   /**
    * Helper: finds a sibling timeserie (under same station) of the given otherType. For instance if 'this' is a
    * timeserie named MyStation.Type.XX, then the timeserie named MyStation.otherType.XX is looked for.

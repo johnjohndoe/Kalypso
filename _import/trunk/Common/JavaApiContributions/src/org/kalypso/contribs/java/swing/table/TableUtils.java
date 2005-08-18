@@ -69,7 +69,7 @@ public class TableUtils
       {
         final Object value = table.getValueAt( row, col );
 
-        // TODO formatter?
+        // Better: use a formatter?
         writer.write( value.toString() );
 
         if( col != colCount - 1 )
