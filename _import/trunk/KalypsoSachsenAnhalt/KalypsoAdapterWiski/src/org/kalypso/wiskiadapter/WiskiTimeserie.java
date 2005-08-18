@@ -3,13 +3,15 @@ package org.kalypso.wiskiadapter;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.TimeZone;
 
+import org.kalypso.commons.conversion.units.SIConverter;
+import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -34,8 +36,6 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.commons.conversion.units.SIConverter;
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.wiskiadapter.wiskicall.GetAlarmLevelList;
 import org.kalypso.wiskiadapter.wiskicall.GetRatingTables;
 import org.kalypso.wiskiadapter.wiskicall.GetStationDetailList;
@@ -240,7 +240,7 @@ public class WiskiTimeserie implements IObservation
         // fetch WQTable now since we know the time-range
         fetchWQTable( getMetadataList(), dr.getFrom(), dr.getTo(), useType );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -255,7 +255,7 @@ public class WiskiTimeserie implements IObservation
 
       return m_cachedValues;
     }
-    catch( Exception e ) // RepositoryException, RemoteException, KiWWException
+    catch( final Exception e ) // RepositoryException, RemoteException, KiWWException
     {
       e.printStackTrace();
       throw new SensorException( e );
@@ -276,9 +276,9 @@ public class WiskiTimeserie implements IObservation
     obs.setValues( values );
 
     // filter values in order to comply with the wiski specification
-    // TODO: currently only 1 HOUR Archive is supported - make it wiski-spec
-    // dependent!
-    final InterpolationFilter intfil = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, false, 0,
+    final int timeUnit = m_tsinfo.getWiskiDistUnitAsCalendarField();
+    final int timeStep = m_tsinfo.getWiskiDistValue();
+    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, 0,
         KalypsoStati.STATUS_USERMOD.intValue() );
     intfil.initFilter( null, obs, null );
 
@@ -313,9 +313,16 @@ public class WiskiTimeserie implements IObservation
       value_tsdata_ll.add( row );
     }
 
-    //compose setTsData HashMap
-    // TODO utcoffset
-    //value_tsinfo_map.put( "utcoffset", );
+    // compose setTsData HashMap
+    
+    // HACK: retrieve the server-side-timezone, if specified, from our metadatalist
+    final String strtz = getMetadataList().getProperty( "_SERVER_SIDE_TIMEZONE_" );
+    final TimeZone tz = strtz != null ? TimeZone.getTimeZone( strtz ) : TimeZone.getDefault();
+    final int utcOffset  = tz.getOffset( new Date().getTime() ) / 1000 / 60 / 60;
+    // END-HACK
+
+    value_tsinfo_map.put( "utcoffset", new Integer( utcOffset ) );
+    
     ts_values_map.put( KiWWDataProviderInterface.KEY_TSINFO, value_tsinfo_map );
 
     value_tscoldesc_ll.add( value_tscoldesc_map );

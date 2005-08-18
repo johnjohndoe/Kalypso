@@ -58,13 +58,8 @@ public class PSICompactObservationItem implements IObservation
   /**
    * Constructor
    * 
-   * @param name
-   * @param id
-   * @param info
    * @param valueType
    *          aus PSICompact Sicht (type 'measurement' or type 'value')
-   * 
-   * @throws ECommException
    */
   public PSICompactObservationItem( final String name, final String id, final PSICompact.ObjectInfo info,
       final int valueType ) throws ECommException
@@ -84,7 +79,6 @@ public class PSICompactObservationItem implements IObservation
   }
 
   /**
-   * @param psiMD
    * @return axis list
    */
   private IAxis[] prepareAxes( PSICompact.ObjectMetaData psiMD )
@@ -114,12 +108,6 @@ public class PSICompactObservationItem implements IObservation
 
   /**
    * Helper für die Erzeugung der Metadaten
-   * 
-   * @param psiMD
-   * @param psiWQ
-   * @return metadata
-   * 
-   * @throws ECommException
    */
   private final MetadataList prepareMetadata( final PSICompact.ObjectMetaData psiMD, final PSICompact.WQParamSet[] psiWQ )
       throws ECommException
@@ -161,7 +149,7 @@ public class PSICompactObservationItem implements IObservation
         metadata.put( TimeserieConstants.MD_WQWECHMANN, xml );
       }
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       e.printStackTrace();
 
@@ -198,7 +186,7 @@ public class PSICompactObservationItem implements IObservation
     {
       measType = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() );
     }
-    catch( ECommException e )
+    catch( final ECommException e )
     {
       e.printStackTrace();
     }
@@ -217,7 +205,7 @@ public class PSICompactObservationItem implements IObservation
     {
       measType = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() );
     }
-    catch( ECommException e )
+    catch( final ECommException e )
     {
       e.printStackTrace();
     }
@@ -294,7 +282,7 @@ public class PSICompactObservationItem implements IObservation
       m_values = new PSICompactTuppleModel( data, getAxisList(), m_vc );
       return m_values;
     }
-    catch( ECommException e )
+    catch( final ECommException e )
     {
       throw new SensorException( e );
     }
@@ -305,25 +293,20 @@ public class PSICompactObservationItem implements IObservation
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
-    PSICompactTuppleModel model = null;
-
-    if( values instanceof PSICompactTuppleModel )
-      model = (PSICompactTuppleModel)values;
-    else
-      model = PSICompactTuppleModel.copyModel( values, m_vc );
-
+    // always make a copy of the tupple model, takes care of the correct timezone for PSICompact
+    final PSICompactTuppleModel model = PSICompactTuppleModel.copyModel( values, m_vc );
+    
     if( model.getCount() > 0 )
     {
       try
       {
-        // TODO untere und obere Umhüllende setzen
         PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), measureTypeToArchiveType(),
             model.getData()[0].getTimestamp(), model.getData() );
 
         // this observation has changed
         m_evtPrv.fireChangedEvent();
       }
-      catch( ECommException e )
+      catch( final ECommException e )
       {
         throw new SensorException( e );
       }
@@ -362,7 +345,7 @@ public class PSICompactObservationItem implements IObservation
   {
     m_evtPrv.clearListeners();
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent()
    */

@@ -1,7 +1,9 @@
 package org.kalypso.psiadapter;
 
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -22,6 +24,10 @@ public final class PSICompactFactory
   protected static PSICompact m_psiCompact = null;
 
   private static Properties m_factoryProperties = null;
+
+  private static Calendar m_psiCalendar = null;
+
+  private static final String TIMEZONE_ID = "TIMEZONE_ID";
 
   /**
    * Returns the connection to the PSI-Interface implementation.
@@ -76,5 +82,13 @@ public final class PSICompactFactory
       getConnection();
 
     return m_factoryProperties;
+  }
+
+  public final static Calendar getCalendarForPSICompact()
+  {
+    if( m_psiCalendar == null )
+      m_psiCalendar = Calendar.getInstance( TimeZone.getTimeZone( getProperties().getProperty( TIMEZONE_ID ) ) );
+
+    return m_psiCalendar;
   }
 }

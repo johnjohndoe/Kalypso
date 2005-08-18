@@ -1,6 +1,7 @@
 package org.kalypso.psiadapter.repository;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.NoSuchElementException;
 
@@ -11,6 +12,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.psiadapter.util.ArchiveDataDateComparator;
 import org.kalypso.commons.conversion.units.IValueConverter;
 
@@ -18,8 +20,6 @@ import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ArchiveData;
 
 /**
- * Adapter von ArchiveData für ITupple.
- * 
  * @author schlienger
  */
 public class PSICompactTuppleModel extends AbstractTuppleModel
@@ -35,7 +35,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   /**
    * Constructor with ArchiveData[]
    * 
-   * @param data
    * @param axes
    *          list of axes (0: date, 1:value, 2:status)
    */
@@ -47,7 +46,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   /**
    * Constructor with ArchiveData[] and a value converter
    * 
-   * @param data
    * @param axes
    *          list of axes (0: date, 1:value, 2:status)
    * @param vc
@@ -70,13 +68,10 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   /**
    * Create a new model based on an existing one.
    * 
-   * @param model
-   * @param vc
    * @return TuppleModel
    * 
    * @throws NoSuchElementException
    *           when axis was not found
-   * @throws SensorException
    */
   public static PSICompactTuppleModel copyModel( final ITuppleModel model, final IValueConverter vc )
       throws NoSuchElementException, SensorException
@@ -99,20 +94,17 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   /**
    * Helper that creates ArchiveData[] having a ITuppleModel
    * 
-   * @param model
-   * @param dateAxis
-   * @param valueAxis
    * @param vc
    *          optional converter
    * @return ArchiveData[]
-   * 
-   * @throws SensorException
    */
   private final static ArchiveData[] constructData( final ITuppleModel model, final IAxis dateAxis,
       final IAxis valueAxis, final IValueConverter vc ) throws SensorException
   {
     final ArchiveData[] data = new ArchiveData[model.getCount()];
 
+    final Calendar cal = PSICompactFactory.getCalendarForPSICompact();
+    
     for( int i = 0; i < data.length; i++ )
     {
       Date date = (Date)model.getElement( i, dateAxis );
@@ -122,8 +114,11 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
       // convert the value if necessary
       if( vc != null )
         value = vc.reverse( value );
-
-      data[i] = new ArchiveData( date, status, value );
+      
+      // use calendar to fit timezone
+      cal.setTime( date );
+      
+      data[i] = new ArchiveData( cal.getTime(), status, value );
     }
 
     return data;

@@ -1,5 +1,6 @@
 package org.kalypso.wiskiadapter;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -124,7 +125,7 @@ public class TsInfoItem implements IRepositoryItem
 
       return m_ts;
     }
-    
+
     if( anotherClass == Properties.class )
       return new WiskiTimeserie( this ).getMetadataList();
 
@@ -184,6 +185,37 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "station_id", "<?>" );
   }
 
+  int getWiskiDistUnitAsCalendarField()
+  {
+    final String strWiskiUnit = m_map.getProperty( "tsinfo_distunit" );
+    if( strWiskiUnit == null )
+      throw new IllegalStateException( "Wiski does not deliver which time-unit to use (Property: tsinfo_distunit)" );
+
+    final int wiskiUnit = Integer.valueOf( strWiskiUnit ).intValue();
+    switch( wiskiUnit )
+    {
+      case 1:
+        return Calendar.SECOND;
+      case 2:
+        return Calendar.MINUTE;
+      case 3:
+        return Calendar.HOUR_OF_DAY;
+      case 4:
+        return Calendar.DAY_OF_YEAR;
+      default:
+        throw new IllegalStateException( "Cannot translate Wiski property tsinfo_distunit into Calendar-Field" );
+    }
+  }
+
+  int getWiskiDistValue()
+  {
+    final String strWiskiValue = m_map.getProperty( "tsinfo_distvalue" );
+    if( strWiskiValue == null )
+      throw new IllegalStateException( "Wiski does not deliver which amount of the given time-unit to use (Property: tsinfo_distvalue)" );
+    
+    return Integer.valueOf( strWiskiValue ).intValue();
+  }
+  
   /**
    * Helper: finds a sibling timeserie (under same station) of the given otherType. For instance if 'this' is a
    * timeserie named MyStation.Type.XX, then the timeserie named MyStation.otherType.XX is looked for.
