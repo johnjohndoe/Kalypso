@@ -186,4 +186,12 @@ public class ButtonModifier implements IFeatureModifier
   {
   // nichts zu tun
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
+   */
+  public boolean equals( final Object newData, final Object oldData )
+  {
+    return newData.equals( oldData );
+  }
 }

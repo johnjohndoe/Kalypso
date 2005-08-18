@@ -80,4 +80,7 @@ public interface IFeatureModifier extends ICellEditorValidator
   public String isValid( final Object value );
 
   public FeatureTypeProperty getFeatureTypeProperty();
+
+  /** Compares two object using the represantation by this modifier. Used to determine, if a feature should really be changed. */
+  public boolean equals( final Object newData, final Object oldData );
 }

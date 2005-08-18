@@ -51,8 +51,11 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
 
 /**
  * @author belger
@@ -65,9 +68,14 @@ public class StringModifier implements IFeatureModifier
 
   private final FeatureTypeProperty m_ftp;
 
+  private final IGuiTypeHandler m_typeHandler;
+
   public StringModifier( final FeatureTypeProperty ftp )
   {
     m_ftp = ftp;
+
+    final ITypeRegistry typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    m_typeHandler = (IGuiTypeHandler)typeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
   }
 
   /**
@@ -87,6 +95,15 @@ public class StringModifier implements IFeatureModifier
       return null;
 
     final Object data = f.getProperty( m_ftp.getName() );
+
+    return toText( data );
+  }
+  
+  private String toText( final Object data )
+  {
+    if( m_typeHandler != null )
+      return m_typeHandler.getText( data );
+
     if( data instanceof Date )
       return DATE_FORMATTER.format( data );
     else if( data instanceof Number )
@@ -123,25 +140,25 @@ public class StringModifier implements IFeatureModifier
 
   private Object parseData( final String text ) throws ParseException
   {
-    Object result = null;
-    // Exception
     final String typeName = m_ftp.getType();
-    if( typeName.equals( "java.lang.String" ) )
-      result = text;
+    if( m_typeHandler != null )
+      return m_typeHandler.parseType( text );
+    else if( typeName.equals( "java.lang.String" ) )
+      return text;
     else if( typeName.equals( "java.lang.Boolean" ) )
-      result = new Boolean( text );
+      return new Boolean( text );
     else if( typeName.equals( "java.util.Date" ) )
-      result = DATE_FORMATTER.parse( text );
+      return DATE_FORMATTER.parse( text );
     else if( typeName.equals( "java.lang.Double" ) )
-      result = new Double( NUMBER_FORMAT.parse( text ).doubleValue() );
+      return new Double( NUMBER_FORMAT.parse( text ).doubleValue() );
     else if( typeName.equals( "java.lang.Integer" ) )
-      result = new Integer( NUMBER_FORMAT.parse( text ).intValue() );
+      return new Integer( NUMBER_FORMAT.parse( text ).intValue() );
     else if( typeName.equals( "java.lang.Float" ) )
-      result = new Float( NUMBER_FORMAT.parse( text ).floatValue() );
+      return new Float( NUMBER_FORMAT.parse( text ).floatValue() );
     else if( typeName.equals( "java.lang.Long" ) )
-      result = new Long( NUMBER_FORMAT.parse( text ).longValue() );
-    // TODO any other types ??
-    return result;
+      return new Long( NUMBER_FORMAT.parse( text ).longValue() );
+    
+    return null;
   }
 
   /**
@@ -184,7 +201,7 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
    */
-  public String getLabel( Feature f )
+  public String getLabel( final Feature f )
   {
     final Object value = getValue( f );
     return value == null ? "" : value.toString();
@@ -193,8 +210,21 @@ public class StringModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
    */
-  public Image getImage( Feature f )
+  public Image getImage( final Feature f )
   {
+    if( m_typeHandler != null )
+      return m_typeHandler.getImage( getValue( f ) );
+
     return null;
+  }
+  
+  /**
+   * Zwei Objekte sind gleich, wenn ihre String-Representation gleich sind.
+   * 
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
+   */
+  public boolean equals( final Object newData, final Object oldData )
+  {
+    return toText( newData ).equals( toText( oldData ) );
   }
 }

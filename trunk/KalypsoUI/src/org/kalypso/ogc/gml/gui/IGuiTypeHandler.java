@@ -40,6 +40,8 @@
  ------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
+import java.text.ParseException;
+
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -65,4 +67,7 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
   public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException;
 
   public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp );
+
+  /** Creeates an instance of my type from a string */
+  public Object parseType( final String text ) throws ParseException;
 }

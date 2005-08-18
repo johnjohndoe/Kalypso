@@ -144,6 +144,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       return new FeatureDialog( workspace, linkedFeature );
     }
 
+    // TODO: use GUITypeHandler for those two!
     if( RectifiedGridDomain.class.getName().equals( typename ) )
       return new RectifiedGridDomainFeatureDialog( feature, ftp );
 

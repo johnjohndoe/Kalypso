@@ -50,12 +50,14 @@ import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
+import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featureview;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayoutType;
 import org.kalypso.template.featureview.Group;
 import org.kalypso.template.featureview.LabelType;
+import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Subcomposite;
 import org.kalypso.template.featureview.TableType;
@@ -71,6 +73,8 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public class FeatureviewHelper
 {
+  public final static int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
+  
   private FeatureviewHelper()
   {
   // wird nicht instantiiert
@@ -111,7 +115,10 @@ public class FeatureviewHelper
       editor.setEditable( true );
       editor.setProperty( name );
 
-      griddata.setHorizontalAlignment( "GridData.FILL" );
+      griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+      griddata.setHorizontalSpan( 1 );
+      griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
+      
       editor.setLayoutData( griddata );
 
       type = editor;
@@ -124,6 +131,8 @@ public class FeatureviewHelper
       checkbox.setProperty( name );
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+      griddata.setHorizontalSpan( 1 );
+      griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
       checkbox.setLayoutData( griddata );
 
       type = checkbox;
@@ -132,6 +141,13 @@ public class FeatureviewHelper
     {
       final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
       type = handler.createFeatureviewControl( name, FACTORY );
+      
+      griddata.setHorizontalAlignment( "GridData.FILL" );
+      griddata.setGrabExcessHorizontalSpace( true );
+      
+      griddata.setHorizontalSpan( type instanceof CompositeType ? 2 : 1 );
+      
+      type.setLayoutData( griddata );
     }
     else if( "FeatureAssociationType".equals( typename ) )
     {
@@ -145,7 +161,7 @@ public class FeatureviewHelper
         griddata.setVerticalAlignment( "GridData.FILL" );
         griddata.setGrabExcessHorizontalSpace( true );
         griddata.setGrabExcessVerticalSpace( true );
-        griddata.setHorizontalSpan( 2 );
+        griddata.setHorizontalSpan( 3 );
         griddata.setHeightHint( 200 );
 
         table.setLayoutData( griddata );
@@ -173,9 +189,10 @@ public class FeatureviewHelper
         groupdata.setGrabExcessVerticalSpace( true );
         groupdata.setHorizontalAlignment( "GridData.FILL" );
         groupdata.setVerticalAlignment( "GridData.FILL" );
-        groupdata.setHorizontalSpan( 2 );
+        groupdata.setHorizontalSpan( 3 );
 
         //        final String lang = Locale.getDefault().getLanguage();
+        // TODO: ugly! use the eclipse locale settings
         final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
             IKalypsoPreferences.LANGUAGE );
         final Annotation annotation = ftp.getAnnotation( lang );
@@ -207,6 +224,7 @@ public class FeatureviewHelper
 
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       button.setLayoutData( griddata );
+      griddata.setHorizontalSpan( 2 );
 
       type = button;
     }
@@ -220,8 +238,11 @@ public class FeatureviewHelper
     if( type != null )
       type.setTooltip( tooltip );
 
+    int cellCount = 0;
     if( addLabel )
     {
+      cellCount++;
+      
       final LabelType label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
 
@@ -238,7 +259,30 @@ public class FeatureviewHelper
     }
 
     if( type != null )
+    {
+      final LayoutDataType layoutData = type.getLayoutData();
+      if( layoutData instanceof GridDataType )
+        cellCount += ((GridDataType)layoutData).getHorizontalSpan();
+      
       controlList.add( type );
+    }
+    
+    for( int i = cellCount; i < 3; i++ )
+    {
+      final LabelType label = FACTORY.createLabel();
+      label.setStyle( "SWT.NONE" );
+
+//      label.setText( "" );
+      label.setVisible( false );
+
+      final GridDataType labelGridData = FACTORY.createGridData();
+      labelGridData.setGrabExcessHorizontalSpace( false );
+      labelGridData.setHorizontalAlignment( "GridData.BEGINNING" );
+      label.setLayoutData( labelGridData );
+
+      controlList.add( label );
+    }
+    
   }
 
   /**
@@ -256,7 +300,7 @@ public class FeatureviewHelper
       featureview.setStyle( "SWT.NONE" );
 
       final GridLayoutType gridLayout = FACTORY.createGridLayout();
-      gridLayout.setNumColumns( 2 );
+      gridLayout.setNumColumns( 3 );
       featureview.setLayout( gridLayout );
       final GridDataType griddata = FACTORY.createGridData();
       griddata.setGrabExcessHorizontalSpace( true );

@@ -179,7 +179,8 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   public String toString()
   {
-    return m_modifier.getValue( getFeature() ).toString();
+    return m_modifier.getLabel( getFeature() );
+//    return m_modifier.getValue( getFeature() ).toString();
   }
 
   protected FeatureChange getChange()
@@ -198,7 +199,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     final Object oldData = feature.getProperty( name );
 
     // nur ändern, wenn sich wirklich was geändert hat
-    if( ( newData == null && oldData != null ) || ( newData != null && !newData.equals( oldData ) ) )
+    if( ( newData == null && oldData != null ) || ( newData != null && !m_modifier.equals( newData, oldData ) ) )
       return new FeatureChange( feature, name, newData );
 
     return null;

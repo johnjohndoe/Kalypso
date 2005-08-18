@@ -29,6 +29,8 @@
  */
 package org.kalypso.ogc.gml.gui;
 
+import java.text.ParseException;
+
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -108,5 +110,14 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
       return "";
 
     return ( (ZmlInlineTypeHandler)o ).getShortname();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text ) throws ParseException
+  {
+    // TODO implement it
+    return null;
   }
 }

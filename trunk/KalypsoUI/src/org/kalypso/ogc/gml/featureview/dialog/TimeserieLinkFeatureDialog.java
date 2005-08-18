@@ -45,7 +45,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * TimeserieLinkFeatureDialog
- * <p>
  * 
  * @author schlienger (23.05.2005)
  */
@@ -113,6 +112,6 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
    */
   public String getLabel()
   {
-    return "Zeitreihenlink...";
+    return "...";
   }
 }

@@ -160,4 +160,11 @@ public class BooleanModifier implements IFeatureModifier
     m_uncheckedImage.dispose();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
+   */
+  public boolean equals( final Object newData, final Object oldData )
+  {
+    return newData.equals( oldData );
+  }
 }
