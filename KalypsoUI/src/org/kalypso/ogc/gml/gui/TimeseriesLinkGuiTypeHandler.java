@@ -40,18 +40,25 @@
  ------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
+import java.text.ParseException;
+import java.util.List;
+
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.template.featureview.ButtonType;
+import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
+import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
+import org.kalypso.template.featureview.TextType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -91,7 +98,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element == null )
       return "";
@@ -102,26 +109,72 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
 
   /**
    * @throws JAXBException
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(java.lang.String, org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(java.lang.String,
+   *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public ControlType createFeatureviewControl( String propertyName, final ObjectFactory factory ) throws JAXBException
+  public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException
   {
+    final CompositeType composite = factory.createComposite();
+
+    final GridLayout layout = factory.createGridLayout();
+    layout.setNumColumns( 2 );
+    layout.setMakeColumnsEqualWidth( false );
+    layout.setMarginWidth( 0 );
+    composite.setLayout( layout );
+    composite.setStyle( "SWT.NONE" );
+
+    // Text
+    final TextType text = factory.createText();
+    text.setStyle( "SWT.NONE" );
+    text.setProperty( propertyName );
+
+    final GridDataType textData = factory.createGridData();
+    textData.setHorizontalAlignment( "GridData.BEGINNING" );
+    textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
+    text.setLayoutData( textData );
+
+    // Knopf
     final ButtonType button = factory.createButton();
-    final GridDataType griddata = factory.createGridData();
+    final GridDataType buttonData = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( propertyName );
 
-    griddata.setHorizontalAlignment( "GridData.BEGINNING" );
-    button.setLayoutData( griddata );
+    buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
+    button.setLayoutData( buttonData );
 
-    return button;
+    final List children = composite.getControl();
+    children.add( text );
+    children.add( button );
+
+    return composite;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
+   *      org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
   public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
   {
     return new ButtonModifier( workspace, ftp );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text ) throws ParseException
+  {
+    final org.kalypso.zml.obslink.ObjectFactory factory = new org.kalypso.zml.obslink.ObjectFactory();
+    try
+    {
+      final TimeseriesLink link = factory.createTimeseriesLink();
+      link.setHref( text );
+      return link;
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+      
+      throw new ParseException( e.getLocalizedMessage(), 1 );
+    }
   }
 }

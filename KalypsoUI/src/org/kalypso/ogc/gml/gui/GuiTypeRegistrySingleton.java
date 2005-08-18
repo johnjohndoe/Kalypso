@@ -12,21 +12,6 @@ public class GuiTypeRegistrySingleton
 {
   private static ITypeRegistry m_typeRegistry = null;
 
-  // load default types
-//  static
-//  {
-//    ITypeRegistry typeRegistry = getTypeRegistry();
-//    try
-//    {
-//      typeRegistry.registerTypeHandler( new GMLBoundingShapeTypeHandler() );
-//    }
-//    catch( TypeRegistryException e )
-//    {
-//      e.printStackTrace();
-//    }
-//
-//  }
-
   private GuiTypeRegistrySingleton()
   {
   // wird nicht instantiiert

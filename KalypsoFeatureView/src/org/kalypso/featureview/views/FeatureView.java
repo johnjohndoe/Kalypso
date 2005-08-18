@@ -147,7 +147,7 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
     } );
 
     page.getWorkbenchWindow().getSelectionService().addSelectionListener( FeatureView.this );
-
+// TODO: not necessary; instead of adapting to ISelectionProvider; the editor should simply register at its site as selection-provider
     final IEditorReference[] editorReferences = page.getEditorReferences();
     for( int i = 0; i < editorReferences.length; i++ )
     {

@@ -31,8 +31,6 @@ package org.kalypso.commons.diff;
 
 import java.util.HashMap;
 
-import org.eclipse.core.internal.dtree.IComparator;
-
 /**
  * 
  * @author doemming
