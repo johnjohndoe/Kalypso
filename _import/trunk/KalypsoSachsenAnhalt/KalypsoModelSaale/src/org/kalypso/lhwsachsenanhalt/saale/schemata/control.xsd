@@ -12,6 +12,15 @@
 		<complexContent>
 			<extension base="saale:_saaleControlBaseType">
 				<sequence>
+					<element ref="saale:ScenarioAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario</label>
+								<tooltip>Szenario der Modellrechnung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
 					<element ref="saale:ControlAssociation">
 						<annotation>
 							<documentation xml:lang="de">
@@ -34,8 +43,53 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="ControlAssociation" type="saale:ControlAssociationType">
-	</element>
+	<element name="ScenarioAssociation" type="saale:ScenarioAssociationType"/>
+	<complexType name="ScenarioAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="saale:Scenario"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Scenario" type="saale:ScenarioType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ScenarioType">
+		<complexContent>
+			<extension base="saalecommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="scenarioId" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario Id</label>
+								<tooltip>Id des Szenario in welchem die Modellrechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="scenarioName" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario</label>
+								<tooltip>Name des Szenario in welchem dieModellrechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="scenarioDescription" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario Beschreibung</label>
+								<tooltip>Beschreibung des Szenario in welchem die Modellrechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="ControlAssociation" type="saale:ControlAssociationType"/>
 	<complexType name="ControlAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -50,15 +104,6 @@
 		<complexContent>
 			<extension base="saalecommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="startsimulation" type="dateTime">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Start der Simulation</label>
-								<tooltip>Startzeitpunkt der Modellrechung</tooltip>
-								<description/>
-							</documentation>
-						</annotation>
-					</element>
 					<element name="startforecast" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
