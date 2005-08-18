@@ -65,7 +65,7 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
 
     if( m_exportActions == null )
       m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.tableeditor.menu/tabelle",
-          "tabelle" );
+          "edit" );
     
     for( int i = 0; i < m_exportActions.length; i++ )
       m_exportActions[i].setActivePart( targetEditor );
