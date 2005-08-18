@@ -101,28 +101,29 @@ public class AutoProxyFactory implements IProxyFactory
         tableList = WQTableFactory.parseSimple( new InputSource( sr ) );
         sr.close();
 
-        final String source = tableList.getFromType();
-        final String dest = tableList.getToType();
+        final String type1 = tableList.getFromType();
+        final String type2 = tableList.getToType();
 
-        boolean foundSource = false;
-        boolean foundDest = false;
+        boolean foundType1 = false;
+        boolean foundType2 = false;
 
         final IAxis[] axes = obs.getAxisList();
-
         for( int i = 0; i < axes.length; i++ )
         {
-          if( axes[i].getType().equals( source ) )
-            foundSource = true;
-          else if( axes[i].getType().equals( dest ) )
-            foundDest = true;
+          if( axes[i].getType().equals( type1 ) )
+            foundType1 = true;
+          else if( axes[i].getType().equals( type2 ) )
+            foundType2 = true;
         }
 
-        // directly return original observation if no W nor Q or if both
-        // already present
-        if( !foundSource && !foundDest || foundSource && foundDest )
+        // directly return original observation if none or all of the types found
+        if( !foundType1 && !foundType2 || foundType1 && foundType2 )
           return obs;
 
-        final WQTimeserieProxy wqf = new WQTimeserieProxy( source, dest, obs );
+        final String realAxisType = foundType1 ? type1 : type2;
+        final String proxyAxisType = foundType1 ? type2 : type1;
+        
+        final WQTimeserieProxy wqf = new WQTimeserieProxy( realAxisType, proxyAxisType, obs );
         return wqf;
       }
       catch( final Exception e )

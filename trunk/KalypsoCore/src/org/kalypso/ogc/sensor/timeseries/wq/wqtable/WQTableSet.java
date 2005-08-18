@@ -23,6 +23,13 @@ public class WQTableSet implements IWQConverter
 
   private final String m_toType;
 
+  /**
+   * Constructor
+   * 
+   * @param tables the WQ-Tables depending with validity information
+   * @param fromType just used for information purposes
+   * @param toType just used for information purposes
+   */
   public WQTableSet( final WQTable[] tables, final String fromType, final String toType )
   {
     m_fromType = fromType;
@@ -35,7 +42,6 @@ public class WQTableSet implements IWQConverter
   }
 
   /**
-   * @param date
    * @return a WQ-Table that is valid for the given date. This is the table such as: Validity( Table ) &lt;= date
    */
   public WQTable getFor( final Date date )
