@@ -43,14 +43,10 @@ import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class CreateOGCSpatialOperationDelegate implements IActionDelegate
 {
-
   private IStructuredSelection m_selection;
 
   /**
@@ -111,5 +107,4 @@ public class CreateOGCSpatialOperationDelegate implements IActionDelegate
       }
     }
   }
-
 }

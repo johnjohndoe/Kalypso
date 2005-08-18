@@ -46,7 +46,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 
 /**
- * 
  * @author doemming
  */
 public class SWTUtilities
@@ -76,26 +75,23 @@ public class SWTUtilities
   static final HashMap m_swtMap = new HashMap();
   static
   {
-    putSWT( "SWT.FILL", SWT.FILL );
-    putSWT( "SWT.NONE", SWT.NONE );
     putSWT( "SWT.BEGINNING", SWT.BEGINNING );
-    putSWT( "SWT.TRAIL", SWT.TRAIL );
-    putSWT( "SWT.LEAD", SWT.LEAD );
-    putSWT( "SWT.LEFT", SWT.LEFT );
-    putSWT( "SWT.RIGHT", SWT.RIGHT );
-    putSWT( "SWT.END", SWT.END );
-    putSWT( "SWT.CENTER", SWT.CENTER );
-    putSWT( "SWT.FILL", SWT.FILL );
-    putSWT( "SWT.HORIZONTAL", SWT.HORIZONTAL );
-    putSWT( "SWT.VERTICAL", SWT.VERTICAL );
-    putSWT( "SWT.RADIO", SWT.RADIO );
     putSWT( "SWT.BOLD", SWT.BOLD );
     putSWT( "SWT.BORDER", SWT.BORDER );
-    putSWT( "SWT.PUSH", SWT.PUSH );
+    putSWT( "SWT.CENTER", SWT.CENTER );
     putSWT( "SWT.CHECK", SWT.CHECK );
-    putSWT( "SWT.CHECK", SWT.CHECK );
+    putSWT( "SWT.END", SWT.END );
+    putSWT( "SWT.FILL", SWT.FILL );
+    putSWT( "SWT.HORIZONTAL", SWT.HORIZONTAL );
+    putSWT( "SWT.LEAD", SWT.LEAD );
+    putSWT( "SWT.LEFT", SWT.LEFT );
     putSWT( "SWT.MULTI", SWT.MULTI );
-    putSWT( "SWT.BEGINNING", SWT.BEGINNING );
+    putSWT( "SWT.NONE", SWT.NONE );
+    putSWT( "SWT.PUSH", SWT.PUSH );
+    putSWT( "SWT.RADIO", SWT.RADIO );
+    putSWT( "SWT.RIGHT", SWT.RIGHT );
+    putSWT( "SWT.TRAIL", SWT.TRAIL );
+    putSWT( "SWT.VERTICAL", SWT.VERTICAL );
     // TODO really a lot to complete SWT keys
   }
 

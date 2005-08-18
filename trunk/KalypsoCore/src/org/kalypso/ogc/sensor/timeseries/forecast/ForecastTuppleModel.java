@@ -79,7 +79,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
 
     m_model = new SimpleTuppleModel( models[0].getAxisList() );
 
-    // let them sort, so order does not matter (siehe TODO in Klassenkommentar)
+    // let them sort, so order does not matter (TODO siehe Klassenkommentar)
     Arrays.sort( models, new Comparator()
     {
       public boolean equals( Object obj )

@@ -137,8 +137,7 @@ public class WQTable
     final SortedSet tailSet = m_qSortedPairs.tailSet( p );
 
     if( headSet.isEmpty() || tailSet.isEmpty() )
-      throw CANNOT_INTERPOLATE_EXCEPTION; // TODO check if exception should be
-    // thrown or a value be returned
+      throw CANNOT_INTERPOLATE_EXCEPTION; // should exception be thrown or a value returned?
 
     final WQPair p1 = (WQPair)headSet.last();
     final WQPair p2 = (WQPair)tailSet.first();
@@ -162,8 +161,7 @@ public class WQTable
     final SortedSet tailSet = m_wSortedPairs.tailSet( p );
 
     if( headSet.isEmpty() || tailSet.isEmpty() )
-      throw CANNOT_INTERPOLATE_EXCEPTION; // TODO check if exception should be
-    // thrown or a value be returned
+      throw CANNOT_INTERPOLATE_EXCEPTION; // should exception be thrown or a value returned?
 
     final WQPair p1 = (WQPair)headSet.last();
     final WQPair p2 = (WQPair)tailSet.first();

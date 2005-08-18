@@ -80,9 +80,6 @@ import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class FilterDialog extends Dialog
@@ -116,9 +113,6 @@ public class FilterDialog extends Dialog
     setShellStyle( getShellStyle() | SWT.MAX );
   }
 
-  /**
-   *  
-   */
   protected Control createDialogArea( Composite parent )
   {
     m_main = (Composite)super.createDialogArea( parent );
@@ -132,16 +126,10 @@ public class FilterDialog extends Dialog
     //tree-viewer
     m_viewer2 = new TreeViewer( m_treeGroup, SWT.FILL )
     {
-      /**
-       * @see org.eclipse.jface.viewers.StructuredViewer#getSelection()
-       */
       public ISelection getSelection()
       {
         return new TreeSelection( (IStructuredSelection)super.getSelection() )
         {
-          /**
-           * @see org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection#contentChanged()
-           */
           public void contentChanged()
           {
             refresh( true );
@@ -149,9 +137,6 @@ public class FilterDialog extends Dialog
             expandAll();
           }
 
-          /**
-           * @see org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection#structureChanged()
-           */
           public void structureChanged()
           {
             refresh( true );
@@ -171,7 +156,6 @@ public class FilterDialog extends Dialog
     m_viewer2.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_viewer2.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       public void selectionChanged( SelectionChangedEvent event )
       {
         ISelection selection = event.getSelection();
@@ -231,7 +215,6 @@ public class FilterDialog extends Dialog
     m_loadFilterItem.setImage( ImageProvider.IMAGE_UTIL_IMPORT_WIZARD.createImage() );
     m_loadFilterItem.addSelectionListener( new SelectionListener()
     {
-
       public void widgetSelected( SelectionEvent e )
       {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -260,13 +243,11 @@ public class FilterDialog extends Dialog
           { m_root } );
           m_viewer2.expandAll();
         }
-
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );
-
       }
     } );
     ToolItem m_saveFilterItem = new ToolItem( m_toolBar, SWT.NONE );
@@ -274,7 +255,6 @@ public class FilterDialog extends Dialog
     m_saveFilterItem.setImage( ImageProvider.IMAGE_STYLEEDITOR_SAVE.createImage() );
     m_saveFilterItem.addSelectionListener( new SelectionListener()
     {
-
       public void widgetSelected( SelectionEvent e )
       {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -294,13 +274,11 @@ public class FilterDialog extends Dialog
             e1.printStackTrace();
           }
         }
-
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );
-
       }
     } );
     createContextMenu();
@@ -326,9 +304,6 @@ public class FilterDialog extends Dialog
 //    m_viewer2.getControl().setMenu( menu );
 //  }
 
-  /**
-   *  
-   */
   private void createContextMenu()
   {
     final MenuManager menuManager = new MenuManager();
@@ -361,7 +336,6 @@ public class FilterDialog extends Dialog
       site.registerContextMenu( menuManager, m_viewer2 );
       m_viewer2.getControl().setMenu( menu );
     }
-
   }
 
   protected void okPressed()

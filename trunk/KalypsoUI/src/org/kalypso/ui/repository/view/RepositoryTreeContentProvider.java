@@ -56,9 +56,8 @@ import org.kalypso.repository.container.IRepositoryContainer;
 public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
   /**
-   * helper
+   * Helper
    * 
-   * @param arg
    * @return item or throws IllegalArgumentException if type is not an IRepositoryItem
    */
   private IRepositoryItem testArg( Object arg )
@@ -159,6 +158,6 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-  // TODO
+    // empty
   }
 }

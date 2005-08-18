@@ -201,12 +201,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
         final Object[] o = ObservationUtilities.getElements( m_baseModel, srcRow, m_statusAxis );
         final Integer[] stati = new Integer[o.length];
         for( int i = 0; i < o.length; i++ )
-        {
-          if( o[i] instanceof Integer )
-            stati[i] = ( (Integer)o[i] );
-          if( o[i] instanceof Long ) // TODO when reciving obs from PSI it is a Long
-            stati[i] = new Integer( ( (Long)o[i] ).intValue() );
-        }
+          stati[i] = new Integer( ( (Number)o[i] ).intValue() );
 
         final Object[] valueOs = ObservationUtilities.getElements( m_baseModel, srcRow, m_valueAxis );
         final Double[] values = new Double[valueOs.length];
@@ -344,10 +339,10 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
+    // TODO: better than this test: should test if axis.isKey() is true
     if( element instanceof Date )
       return m_baseModel.indexOf( element, axis );
     throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Axe "
         + axis.getName() + " nicht." );
-    // TODO support it
   }
 }

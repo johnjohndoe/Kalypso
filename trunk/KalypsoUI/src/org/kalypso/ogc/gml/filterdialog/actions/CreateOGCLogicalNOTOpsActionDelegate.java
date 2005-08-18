@@ -43,14 +43,10 @@ import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class CreateOGCLogicalNOTOpsActionDelegate implements IActionDelegate
 {
-
   private IStructuredSelection m_selection;
 
   /**
@@ -113,5 +109,4 @@ public class CreateOGCLogicalNOTOpsActionDelegate implements IActionDelegate
       }
     }
   }
-
 }

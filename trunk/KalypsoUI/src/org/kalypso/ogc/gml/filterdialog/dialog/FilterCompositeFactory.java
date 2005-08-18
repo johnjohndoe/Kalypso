@@ -71,9 +71,6 @@ import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class FilterCompositeFactory
@@ -112,16 +109,14 @@ public class FilterCompositeFactory
     }
     if( m_allSupportedCompOps.size() == 0 )
     {
-//      m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISBETWEEN ) );
+      //      m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISBETWEEN ) );
       m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISGREATERTHAN ) );
       m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISGREATERTHANOREQUALTO ) );
       m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISLESSTHAN ) );
       m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISLESSTHANOREQUALTO ) );
-//      m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISLIKE ) );
-//      m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISNULL ) );
-      
-     
-      
+      //      m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISLIKE ) );
+      //      m_allSupportedCompOps.add( OperationDefines.getNameById( OperationDefines.PROPERTYISNULL ) );
+
     }
   }
 
@@ -129,7 +124,7 @@ public class FilterCompositeFactory
   {
     return m_allsupportedSpatialOps;
   }
-  
+
   protected TreeSet getSupportedCOMPOperations()
   {
     return m_allSupportedCompOps;
@@ -141,7 +136,7 @@ public class FilterCompositeFactory
 
     return m_factory;
   }
-  
+
   protected Operation getOperation()
   {
     return m_operation;
@@ -218,7 +213,8 @@ public class FilterCompositeFactory
       String[] namesOps = null;
       if( m_supportedOperations == null )
       {
-        namesOps = (String[])getSupportedSpatialOperations().toArray( new String[getSupportedSpatialOperations().size()] );
+        namesOps = (String[])getSupportedSpatialOperations().toArray(
+            new String[getSupportedSpatialOperations().size()] );
       }
       else
         namesOps = (String[])getSupportedSpatialOperations().toArray();
@@ -338,10 +334,7 @@ public class FilterCompositeFactory
       } );
       m_scrabLayerCombo = new Combo( this, SWT.NULL );
       m_scrabLayerCombo.setItems( new String[]
-      {
-          "ScrabPolygon_1",
-          "ScrabLine_2",
-          "ScrabPoint_3" } );
+      { "ScrabPolygon_1", "ScrabLine_2", "ScrabPoint_3" } );
       m_scrabLayerCombo.select( 0 );
       m_scrabLayerCombo.setVisible( false );
       this.setFocus();
@@ -427,14 +420,16 @@ public class FilterCompositeFactory
           int newOperationId = OperationDefines.getIdByName( item );
           //TODO only implemented with propery name and liteal ?? is that all ??
           ( (PropertyIsCOMPOperation)m_operation ).setOperatorId( newOperationId );
-          ( (PropertyIsCOMPOperation)m_operation).setFirstExperssion( new PropertyName(m_firstRowCombo.getText().trim()));
-          ( (PropertyIsCOMPOperation)m_operation).setSecondExperssion( new Literal(m_secondRowText.getText().trim()));
-          System.out.println("test");
+          ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( new PropertyName( m_firstRowCombo.getText()
+              .trim() ) );
+          ( (PropertyIsCOMPOperation)m_operation )
+              .setSecondExperssion( new Literal( m_secondRowText.getText().trim() ) );
+          System.out.println( "test" );
         }
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-          //widgetSelected( e );
+        //widgetSelected( e );
         }
       } );
       m_firstRowLabel = new Label( this, SWT.FILL );
@@ -471,7 +466,7 @@ public class FilterCompositeFactory
             ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( pn );
             Literal l = new Literal( m_secondRowText.getText().trim() );
             ( (PropertyIsCOMPOperation)m_operation ).setSecondExperssion( l );
-            System.out.print("");
+            System.out.print( "" );
           }
         }
       } );
@@ -709,11 +704,11 @@ public class FilterCompositeFactory
       else if( m_operation == null )
         expression = new PropertyName( EMPTY_VALUE );
 
-//      String value = null;
-//      if( expression instanceof PropertyName )
-//        value = ( (PropertyName)expression ).getValue();
-//      if( expression instanceof Literal )
-//        value = ( (Literal)expression ).getValue();
+      //      String value = null;
+      //      if( expression instanceof PropertyName )
+      //        value = ( (PropertyName)expression ).getValue();
+      //      if( expression instanceof Literal )
+      //        value = ( (Literal)expression ).getValue();
 
       m_firstRowLabel = new Label( this, SWT.NULL );
       m_firstRowLabel.setText( expression.getExpressionName().trim() );
@@ -725,41 +720,34 @@ public class FilterCompositeFactory
       }
       m_fristRowCombo.addSelectionListener( new SelectionListener()
       {
-
         public void widgetSelected( SelectionEvent e )
         {
-
+          // empty
         }
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-        // TODO Auto-generated method stub
-
+        // empty
         }
       } );
-
     }
-
   }
 
   class PropertyIsBetweenComposite extends Composite
   {
-
     public PropertyIsBetweenComposite( Composite parent, int style )
     {
       super( parent, style );
-      // TODO Auto-generated constructor stub
     }
-
   }
 
   protected class TextFieldValidator implements IInputValidator
   {
     private FeatureTypeProperty ftp = null;
 
-    public TextFieldValidator( FeatureTypeProperty ftp )
+    public TextFieldValidator( FeatureTypeProperty featureTypeProperty )
     {
-      this.ftp = ftp;
+      this.ftp = featureTypeProperty;
     }
 
     /**
@@ -789,5 +777,4 @@ public class FilterCompositeFactory
       return null;
     }
   }
-
 }

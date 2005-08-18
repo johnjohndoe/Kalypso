@@ -86,10 +86,10 @@ public class OperationTupplemodel extends AbstractTuppleModel
 
   public Object getElement( int index, IAxis axis ) throws SensorException
   {
-    // Andreas: ObservationUtilities already has this function so I removed FilterHelper
     IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
     if( index >= m_baseModel.getCount() )
       return null;
+    
     Object object = m_baseModel.getElement( index, a );
     if( object == null || object instanceof Date || KalypsoStatusUtils.isStatusAxis(axis))
       return object;
@@ -112,20 +112,12 @@ public class OperationTupplemodel extends AbstractTuppleModel
         + object.getClass().getName() + " nicht." );
   }
 
-  /*
-   * 
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
   public void setElement( int index, Object element, IAxis axis )
   {
     throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt setElement() nicht." );
     // TODO support it
   }
 
-  /*
-   * 
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     if( element instanceof Date )
@@ -134,5 +126,4 @@ public class OperationTupplemodel extends AbstractTuppleModel
         + axis.getName() + " nicht." );
     // TODO support it
   }
-
 }

@@ -51,9 +51,12 @@ import org.jfree.data.xy.AbstractIntervalXYDataset;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
- * TODO: inserted synchronized at some places because if pages are switched too fast in kalypso wizzard then I presume
- * that many swing ui threads are trying to update the chart, thus leading to possible array out of bound exceptions
- * because of concurrent accesses.
+ * A CurveDataset contains XYCurveSerie objects for the purpose of being displayed within a JFreeChart.
+ * 
+ * <p>
+ * Inserted synchronized at some places because if pages are switched too fast in kalypso wizard then I presume that
+ * many swing ui threads are trying to update the chart, thus leading to possible array out of bound exceptions because
+ * of concurrent accesses.
  * 
  * @author schlienger
  */

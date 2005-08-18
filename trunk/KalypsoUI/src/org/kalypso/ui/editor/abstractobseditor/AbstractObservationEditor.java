@@ -175,7 +175,6 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
       monitor.done();
     }
 
-    // TODO: checken ob dies in die richtige thread ausgeführt wird
     if( status != null && !status.isOK() )
       ErrorDialog.openError( getSite().getShell(), "Vorlage öffnen", "Siehe Details", status );
   }

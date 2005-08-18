@@ -247,7 +247,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
    */
   public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
-    // TODO: for debug purposes! once problem with "null" is solved remove?
+    // for debug purposes! once problem with "null" is solved remove?
     if( element == null )
       Logger.getLogger( SimpleTuppleModel.class.getName() ).warning(
           "Setting a null element at index= " + index + " for axis " + axis );

@@ -61,14 +61,6 @@ public class LogStatus extends Status
 
   private IStatus[] m_children = null;
 
-  /**
-   * @param severity
-   * @param pluginId
-   * @param code
-   * @param message
-   * @param exception
-   * @param logFile
-   */
   public LogStatus( final int severity, final String pluginId, final int code, final String message,
       final Throwable exception, final IFile logFile )
   {
@@ -118,7 +110,7 @@ public class LogStatus extends Status
       m_children = new IStatus[lines.size()];
       for( int i = 0; i < m_children.length; i++ )
       {
-        String str = lines.get( i ).toString();
+        final String str = lines.get( i ).toString();
         m_children[i] = new Status( getSeverity(), getPlugin(), getCode(), str, null );
       }
 

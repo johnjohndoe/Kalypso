@@ -160,10 +160,10 @@ public class NOperationTupplemodel extends AbstractTuppleModel
 
   public int indexOf( Object element, IAxis axis ) throws SensorException
   {
+    // TODO: better than this test: should test if axis.isKey() is true
     if( element instanceof Date )
       return m_baseModels[0].indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Axe "
+    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Achse "
         + axis.getName() + " nicht." );
-    // TODO support it
   }
 }
