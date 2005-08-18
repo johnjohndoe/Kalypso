@@ -4,7 +4,7 @@
 	<featuremapping>
 		<gmlsource xlink:href="../modell.gml"/>
 		<gmlsource xlink:href="wiskiimport_leer.gml"/>
-		<addFeaturesMapping fromPath="PegelCollectionAssociation/PegelMember[Pegel]" toPath="WiskiMember" fromID="PNR">
+		<addFeaturesMapping fromPath="PegelCollectionAssociation/PegelMember[Pegel]" toPath="WiskiMember" fromID="PNR" handleExisting="change">
 			<map from="Durchfluß" to="lokal"/>
 		</addFeaturesMapping>
 	</featuremapping>

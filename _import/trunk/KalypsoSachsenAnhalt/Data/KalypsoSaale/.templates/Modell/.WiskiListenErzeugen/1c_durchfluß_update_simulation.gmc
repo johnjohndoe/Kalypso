@@ -1,0 +1,11 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../wiskiimport_durchfluß.gml"/>
+	<changesource>
+		<gmlsource xlink:href="../wiskiimport_durchfluß.gml"/>
+		<visitor featurePath="WiskiMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="wiski_simulation_vergangenheit"/>
+			<argument name="href" value="${wiski_sim:wiski_vergangenheit}"/>
+		</visitor>
+	</changesource>
+</gmlconvert>

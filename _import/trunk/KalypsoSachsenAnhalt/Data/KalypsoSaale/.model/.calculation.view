@@ -3,11 +3,16 @@
 C:\Programme_inst\eclipse\workspace\KalypsoCore\etc\schemas\template\featureview.xsd">
 <layer xlink:href=".calculation.template.xml" featurePath="" linktype="gml" id="blubb"/>
 <view typename="SaaleControl"  style="SWT.NONE">
-
 	<gridData grabExcessHorizontalSpace="false"/>
 	<gridLayout numColumns="1" horizontalSpacing="10"/>
 	
-	<label text="Steuerparameter eingeben" style="0"/>
+	<group style="SWT.NONE" text="Szenario">
+		<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
+		<gridLayout numColumns="2" horizontalSpacing="0" verticalSpacing="0"/>
+		<subcomposite property="ScenarioAssociation" style="SWT.NONE">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
+		</subcomposite>
+	</group>
 	<group style="SWT.NONE" text="Steuerparameter">
 		<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
 		<gridLayout numColumns="2" horizontalSpacing="0" verticalSpacing="0"/>
@@ -15,8 +20,6 @@ C:\Programme_inst\eclipse\workspace\KalypsoCore\etc\schemas\template\featureview
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
 		</subcomposite>
 	</group>
-	<label text="Metadaten eingeben" style="0"/>
-
 	<group style="0" text="Metadaten">
 		<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 		<gridLayout numColumns="2" horizontalSpacing="0" verticalSpacing="0"/>
@@ -25,12 +28,15 @@ C:\Programme_inst\eclipse\workspace\KalypsoCore\etc\schemas\template\featureview
 		</subcomposite>
 	</group>
 </view>
-<view typename="Control" style="SWT.NONE">
+<view typename="Scenario" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
-		<label property="startsimulation" style="0"/>
-		<text property="startsimulation" style="2048">
+		<label property="scenarioName" style="0"/>
+		<text property="scenarioName" style="2048" editable="false">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
+</view>
+<view typename="Control" style="SWT.NONE">
+		<gridLayout numColumns="2" horizontalSpacing="10"/>
 		<label property="startforecast" style="0"/>
 		<text property="startforecast" style="2048">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+    <layer featurePath="PegelCollectionAssociation/PegelMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column alignment="16384" editable="true" format="" name="PNR" width="97"/>
+        <column alignment="16777216" editable="true" format="" name="Name" width="148"/>
+        <column alignment="16384" editable="true" format="" name="Durchfluß" width="128"/>
+    </layer>
+</gistableview>
+

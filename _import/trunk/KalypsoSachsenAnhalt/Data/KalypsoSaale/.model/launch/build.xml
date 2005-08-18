@@ -26,23 +26,48 @@
 	<target name="update" description="Aktualisiert eine Rechenvariante">
 		<echo message="Zeitreihen von WISKI laden: ${calc.dir}" />
 
-		<gmlProperty gmlURL="${calc.url}/.calculation">
-			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
+		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast" />
+			<!-- startsim = startforecast - 120h -->
+			<property name="startsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="-120" dateoffsetfield="11"/>
 			<!-- stopsim = startforecast + 48h -->
 			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11" />
-		</gmlProperty>
+			
+			<property name="scenarioId" featurepath="ScenarioAssociation" featureProperty="scenarioId" defaultValue=""/>
+		</kalypso.gmlProperty>
+		
+		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+		
+		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
+		<kalypso.multiequals arg1="${scenarioId}" arg2="test">
+			<!-- Links fürs Abholen der Vorhersage-Zeitreihen -->
+			<property name="pegelMessungLink" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit"/>
+<!--			
+			<property name="niederschlagMessungLink" valueThen="in2ObservationLink" valueElse="inObservationLink"/>
+			<property name="niederschlagVorhersageLink" valueThen="in3ObservationLink" valueElse="in1ObservationLink"/>
+			<property name="talsperreLink" valueThen="in1ObservationLink" valueElse="inObservationLink"/>
+			<property name="vorgabeLink" valueThen="in1ObservationLink" valueElse="inObservationLink"/>
+-->			
+			<!-- Links für die Ablage der Vorhersage-Zeitreihen -->
+<!--			
+			<property name="vorhersageLinkNormal" valueThen="out3ObservationLink" valueElse="outObservationLink"/>
+			<property name="vorhersageLinkOben" valueThen="out4ObservationLink" valueElse="out1ObservationLink"/>
+			<property name="vorhersageLinkUnten" valueThen="out5ObservationLink" valueElse="out2ObservationLink"/>
+-->			
+		</kalypso.multiequals>
 
 		<echo message="Verzeichnisse werden erstellt" />
 		<mkdir dir="${calc.dir}/Durchfluß" />
 		<mkdir dir="${calc.dir}/Niederschlag" />
+<!--		
 		<mkdir dir="${calc.dir}/Schnee" />
 		<mkdir dir="${calc.dir}/Speicherinhalt" />
 		<mkdir dir="${calc.dir}/Temperatur" />
+-->		
 
-		<copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" />
-		</copyObservation>
+		</kalypso.copyObservation>
 
 		<!-- TODO: alle anderen auch holen -->
 	</target>

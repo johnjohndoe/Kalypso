@@ -5,7 +5,11 @@
 		<gmlsource xlink:href="../wiskiimport_durchfluß.gml"/>
 		<visitor featurePath="WiskiMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
 			<argument name="link" value="wiski_vergangenheit"/>
-			<argument name="href" value="kalypso-ocs:wiski://blubb.W.15?&lt;request xmlns=&quot;request.zml.kalypso.org&quot;>&lt;name&gt;Test&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;"/>
+			<argument name="href" value="kalypso-ocs:wiski://"/>
+		</visitor>
+		<visitor featurePath="WiskiMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="wiski_simulation_vergangenheit"/>
+			<argument name="href" value="kalypso-ocs:wiski://"/>
 		</visitor>
 	</changesource>
 </gmlconvert>
