@@ -100,6 +100,11 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    */
   private Properties m_metadata = new Properties();
 
+  public CopyObservationTask(  )
+  {
+    super( false );
+  }
+
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */

@@ -41,6 +41,7 @@
 package org.kalypso.ant;
 
 import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -98,6 +99,21 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   private String m_gml;
 
   /**
+   * Depth for visiting features.
+   * <p>
+   * Supported values are:
+   * <ul>
+   * <li>zero</li>
+   * <li>infinite</li>
+   * <li>infinite_links</li>
+   * </ul>
+   * </p>
+   * 
+   * @see FeatureVisitor
+   */
+  private String m_depth = "infinite";
+
+  /**
    * Feature-Path innerhalb des GMLs. Alle durch diesen Pfad denotierten Features werden behandelt.
    */
   private String[] m_featurePath;
@@ -108,6 +124,16 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   /** if true, the task is executed whithin a progress dialog */
   private boolean m_runAsync;
 
+  private boolean m_doSaveGml = false;
+
+  /**
+   * @param doSaveGml If true, the read gml will be safed at the end of the process.
+   */
+  public AbstractFeatureVisitorTask( final boolean doSaveGml )
+  {
+    m_doSaveGml = doSaveGml;
+  }
+  
   public void setRunAsync( final boolean runAsync )
   {
     m_runAsync = runAsync;
@@ -126,6 +152,11 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   public final void setGml( final String gml )
   {
     m_gml = gml;
+  }
+
+  public void setDepth( String depth )
+  {
+    m_depth = depth;
   }
 
   /**
@@ -180,6 +211,16 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
 
       validateInput();
 
+      final int depth;
+      if( m_depth.compareToIgnoreCase( "infinite" ) == 0 )
+        depth = FeatureVisitor.DEPTH_INFINITE;
+      else if( m_depth.compareToIgnoreCase( "infinite_links" ) == 0 )
+        depth = FeatureVisitor.DEPTH_INFINITE;
+      else if( m_depth.compareToIgnoreCase( "zero" ) == 0 )
+        depth = FeatureVisitor.DEPTH_ZERO;
+      else
+        throw new BuildException( "Unsupported value of 'depth': " + m_depth );
+
       final IUrlResolver resolver = new UrlResolver();
       final URL gmlURL = resolver.resolveURL( m_context, m_gml );
 
@@ -197,7 +238,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
           final FeatureVisitor visitor = createVisitor( m_context, resolver, logPW, subProgressMonitor );
 
           final String fp = m_featurePath[i];
-          workspace.accept( visitor, fp, FeatureVisitor.DEPTH_INFINITE );
+          workspace.accept( visitor, fp, depth );
 
           stati.add( statusFromVisitor( visitor ) );
         }
@@ -211,6 +252,13 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
         {
           subProgressMonitor.done();
         }
+      }
+      
+      if( m_doSaveGml )
+      {
+        final OutputStreamWriter writer = resolver.createWriter( gmlURL );
+        GmlSerializer.serializeWorkspace( writer, workspace );
+        writer.close();
       }
 
       logPW.close();
@@ -253,7 +301,6 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     {
       // only, to avoid yellow thingies
     }
-    ;
 
     return Status.OK_STATUS;
   }

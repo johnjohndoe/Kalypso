@@ -173,11 +173,15 @@ public class Info implements Serializable
    *          specified locale, an arbitrary locale is used.
    * 
    * @see org.opengis.cs.CS_Info#getName()
-   * 
-   * TODO: use interface to get rid of yellow thingis
    */
   public String getName( final Locale locale )
   {
+    if( locale == null )
+    {
+      // ugly, but gets rid of yellow thingies
+      // todo: use interface instead
+    }
+    
     return name;
   }
 
@@ -195,6 +199,12 @@ public class Info implements Serializable
    */
   public String getAuthority( final Locale locale )
   {
+    if( locale == null )
+    {
+      // ugly, but gets rid of yellow thingies
+      // todo: use interface instead
+    }
+
     return ( properties != null ) ? (String)properties.get( "authority" ) : null;
   }
 
@@ -212,6 +222,12 @@ public class Info implements Serializable
    */
   public String getAuthorityCode( final Locale locale )
   {
+    if( locale == null )
+    {
+      // ugly, but gets rid of yellow thingies
+      // todo: use interface instead
+    }
+
     return ( properties != null ) ? (String)properties.get( "authorityCode" ) : null;
   }
 
@@ -226,6 +242,12 @@ public class Info implements Serializable
    */
   public String getAlias( final Locale locale )
   {
+    if( locale == null )
+    {
+      // ugly, but gets rid of yellow thingies
+      // todo: use interface instead
+    }
+
     return ( properties != null ) ? (String)properties.get( "alias" ) : null;
   }
 
@@ -240,6 +262,12 @@ public class Info implements Serializable
    */
   public String getAbbreviation( final Locale locale )
   {
+    if( locale == null )
+    {
+      // ugly, but gets rid of yellow thingies
+      // todo: use interface instead
+    }
+
     return ( properties != null ) ? (String)properties.get( "abbreviation" ) : null;
   }
 
@@ -254,6 +282,12 @@ public class Info implements Serializable
    */
   public String getRemarks( final Locale locale )
   {
+    if( locale == null )
+    {
+      // ugly, but gets rid of yellow thingies
+      // todo: use interface instead
+    }
+
     return ( properties != null ) ? (String)properties.get( "remarks" ) : null;
   }
 

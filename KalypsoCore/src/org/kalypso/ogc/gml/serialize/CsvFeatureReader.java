@@ -13,12 +13,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
+import org.kalypsodeegree_impl.tools.FeatureUtils;
 
 /**
  * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}.
@@ -129,42 +126,21 @@ public final class CsvFeatureReader
     return FeatureFactory.createFeature( index, featureType, data );
   }
 
-  private Object parseColumns( final String type, final String format, final int[] columns, final String[] tokens,
+  private static Object parseColumns( final String type, final String format, final int[] columns, final String[] tokens,
       final boolean ignoreFormatExceptions ) throws CsvException
   {
     try
     {
-      final int col0 = columns[0];
-      if( String.class.getName().equals( type ) )
-        return tokens[col0];
+      final String[] input = new String[columns.length];
+      for( int i = 0; i < input.length; i++ )
+        input[i] = tokens[columns[i]];
 
-      if( Integer.class.getName().equals( type ) )
-        return new Integer( tokens[col0] );
-
-      if( Long.class.getName().equals( type ) )
-        return new Long( tokens[col0] );
-
-      if( Float.class.getName().equals( type ) )
-        return new Float( tokens[col0] );
-
-      if( Double.class.getName().equals( type ) )
-        return new Double( tokens[col0].replace( ',', '.' ) );
-
-      if( GM_Point.class.getName().equals( type ) )
-      {
-        final int col1 = columns[1];
-        final String rwString = tokens[col0].trim();
-        final String hwString = tokens[col1].trim();
-        if( rwString == null || rwString.length() == 0 || hwString == null || hwString.length() == 0 )
-          return null;
-
-        final double rw = Double.parseDouble( rwString );
-        final double hw = Double.parseDouble( hwString );
-
-        final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( format );
-
-        return GeometryFactory.createGM_Point( rw, hw, crs );
-      }
+      final Object data = FeatureUtils.createFeaturePropertyFromStrings( type, format, input );
+      
+      if( data == null )
+        throw new CsvException( "Unbekannter Datentyp: " + type );
+      
+      return data;
     }
     catch( final NumberFormatException nfe )
     {
@@ -173,7 +149,5 @@ public final class CsvFeatureReader
 
       throw new CsvException( "Formatfehler beim Lesen der Spalten: " + columns, nfe );
     }
-
-    throw new CsvException( "Unbekannter Datentyp: " + type );
   }
 }
