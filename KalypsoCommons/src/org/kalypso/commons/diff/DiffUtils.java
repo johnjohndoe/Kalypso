@@ -65,7 +65,8 @@ public class DiffUtils
       final String path = pathesA[i];
       try
       {
-        if( !ignores.contains( path ) )
+
+        if( !ignore( ignores, path ) )
           result |= visitor.diff( diffLogger, path, b );
       }
       catch( Exception e )
@@ -77,7 +78,7 @@ public class DiffUtils
     for( int i = 0; i < pathesB.length; i++ )
     {
       final String path = pathesB[i];
-      if( ( !ignores.contains( path ) ) && !a.exists( path ) )
+      if( !ignore( ignores, path ) && !a.exists( path ) )
       {
         diffLogger.log( IDiffComparator.DIFF_ADDED, path );
         result = true;
@@ -86,6 +87,41 @@ public class DiffUtils
     return result;
   }
 
+  /**
+   * @param ignores
+   * @param path
+   * @return true if path should be ignored
+   */
+  private static boolean ignore( List ignores, String path )
+  {
+    if( ignores.contains( path ) )
+      return true;
+    // check for jokers '*'
+    for( Iterator iter = ignores.iterator(); iter.hasNext(); )
+    {
+      final String ignorePath = (String)iter.next();
+      if( ignorePath.startsWith( "*" ) ) // *foo
+      {
+        if( path.endsWith( ignorePath.substring( 1 ) ) )
+          return true;
+      }
+      if( ignorePath.endsWith( "*" ) )
+      {
+        if( path.startsWith( ignorePath.substring( 0, ignorePath.length() - 1 ) ) )
+          return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 
+   * @param logger
+   * @param list1
+   * @param list2
+   * @param infoMessage
+   * @return boolean
+   */
   public static boolean diffIgnoreOrder( IDiffLogger logger, List list1, List list2, String infoMessage )
   {
     logger.block();
