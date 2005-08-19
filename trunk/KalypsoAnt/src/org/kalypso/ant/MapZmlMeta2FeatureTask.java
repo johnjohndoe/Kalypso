@@ -44,84 +44,65 @@ package org.kalypso.ant;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.rpc.ServiceException;
-
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.services.proxy.IObservationService;
-import org.kalypso.simulation.ui.wizards.calculation.modelpages.CommitPrognoseFeatureVisitor;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor;
+import org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.Mapping;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * Ant task to call the {@link org.kalypso.simulation.ui.wizards.calculation.modelpages.CommitPrognoseFeatureVisitor}.
+ * Reads data from a zml (linked into the visited features) and puts it as property into the same feature.
  * 
- * @author schlienger
+ * @see org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor
+ * 
+ * @author belger
  */
-public class CommitObservationsTask extends AbstractFeatureVisitorTask
+public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
 {
-  private String m_localObs;
-  private String m_remoteObs;
+  /** FeatureProperty which holds the Zml-Link */
+  private String m_zmlLink;
+  
+  /** List of mapoings to perform */
+  private List m_mappings = new ArrayList( 5 );
 
-  public void setLocalObs( String localObs )
+  public MapZmlMeta2FeatureTask(  )
   {
-    m_localObs = localObs;
+    super( true );
   }
-
-  public void setRemoteObs( String remoteObs )
+  
+  public void setZmlLink( final String zmlLink )
   {
-    m_remoteObs = remoteObs;
+    m_zmlLink = zmlLink;
   }
-
-  public CommitObservationsTask()
+  
+  public void addConfiguredMapping( final MapZmlMeta2FeatureVisitor.Mapping mapping )
   {
-    super( false );
+    m_mappings.add( mapping ); 
   }
   
   /**
-   * @throws InvocationTargetException
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
    */
   protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter,
-      final IProgressMonitor monitor ) throws InvocationTargetException
+      final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-    try
-    {
-      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
-
-      return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, monitor );
-    }
-    catch( final ServiceException e )
-    {
-      throw new InvocationTargetException( e );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#statusFromVisitor(org.kalypsodeegree.model.feature.FeatureVisitor)
-   */
-  protected IStatus statusFromVisitor( final FeatureVisitor visitor )
-  {
-    final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor)visitor;
-    if( v.getStati().length > 0 )
-      return new MultiStatus( KalypsoGisPlugin.getId(), 0, v.getStati(), "", null );
-    
-    return Status.OK_STATUS;
+    return new MapZmlMeta2FeatureVisitor( context, resolver, m_zmlLink, (Mapping[])m_mappings.toArray( new MapZmlMeta2FeatureVisitor.Mapping[m_mappings.size()] ) );
   }
 
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
    */
   protected void validateInput()
-  {}
+  {
+  // nothing to validate
+  }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
@@ -129,7 +110,6 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
    */
   public void handleError( final Shell shell, final IStatus status )
   {
-    ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ),
-        "Fehler beim Zurückschreiben der Zeitreihen", status );
+  // TODO Auto-generated method stub
   }
 }
