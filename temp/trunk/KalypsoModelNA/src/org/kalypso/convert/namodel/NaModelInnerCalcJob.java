@@ -41,6 +41,8 @@
 package org.kalypso.convert.namodel;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -328,7 +330,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
 
     updateModelWithExtraVChannel( modellWorkspace );
-//     TODO update model with extra virtual channel
     //  model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
 
@@ -583,6 +584,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       final File outputDir, ICalcResultEater resultEater, final IDManager idManager ) throws Exception
   {
     loadTSResults( inputDir, modellWorkspace, logger, outputDir, idManager );
+    loadTextFileResults( inputDir, logger, outputDir );
     loadLogs( inputDir, logger, resultEater );
     File[] files = outputDir.listFiles();
     if( files != null )
@@ -602,36 +604,57 @@ public class NaModelInnerCalcJob implements ICalcJob
 
   private String getTitleForSuffix( String suffix )
   {
-    //    j Gesamtabfluss Knoten .qgs
-    if( suffix.equalsIgnoreCase( "qgs" ) )
-      return "Abfluss";
+    //    j Temperatur .tmp
+    if( suffix.equalsIgnoreCase( "tmp" ) )
+      return "Temperatur TG";
+    //    j Niederschlag .pre
+    if( suffix.equalsIgnoreCase( "pre" ) )
+      return "Niederschlag TG";
     //    n Schnee .sch
     if( suffix.equalsIgnoreCase( "sch" ) )
-      return "Schnee";
+      return "Schneehöhe TG";
+    //    j Bodenfeuchte .bof
+    if( suffix.equalsIgnoreCase( "bof" ) )
+      return "Bodenfeuchte";
     //    n Bodenspeicher .bsp
     if( suffix.equalsIgnoreCase( "bsp" ) )
-      return "Bodenspeicher";
+      return "Bodenspeicherbilanz";
+    //    n Grundwasserstand .gws
+    if( suffix.equalsIgnoreCase( "gws" ) )
+      return "Grundwasserstand TG";
+    //    j Gesamtabfluss Knoten .qgs
+    if( suffix.equalsIgnoreCase( "qgs" ) )
+      return "Gesamtabfluss Knoten";
     //    n Gesamtabfluss TG .qgg
     if( suffix.equalsIgnoreCase( "qgg" ) )
       return "Gesamtabfluss TG";
+    //    n Oberflaechenabfluss .qna
+    if( suffix.equalsIgnoreCase( "qna" ) )
+      return "Oberflaechenabfluss nat. Flaechen TG";
+    //    n Interflow .qif
+    if( suffix.equalsIgnoreCase( "qif" ) )
+      return "Interflow TG";
+    //    n Abfluss vers. Flaechen .qvs
+    if( suffix.equalsIgnoreCase( "qvs" ) )
+      return "Abfluss vers. Flaechen TG";
+    //    n Basisabfluss .qbs
+    if( suffix.equalsIgnoreCase( "qbs" ) )
+      return "Basisabfluss TG";
     //    n Kluftgrundw1 .qt1
     if( suffix.equalsIgnoreCase( "qt1" ) )
-      return "Kluftgrundw1";
+      return "Abfluss Kluftgrundw1";
     //    n Kluftgrundw .qtg
     if( suffix.equalsIgnoreCase( "qtg" ) )
-      return "Kluftgrundw";
+      return "Abfluss KluftGW";
     //    n Grundwasser .qgw
     if( suffix.equalsIgnoreCase( "qgw" ) )
-      return "Grundwasser";
-    //    n Kapil.Aufstieg/Perkolation .kap
-    if( suffix.equalsIgnoreCase( "kap" ) )
-      return "Kapil.Aufstieg/Perkolation";
+      return "Grundwasserabfluss TG";
     //    n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) )
       return "Evapotranspiration";
     //    n Ausgabe hydrotope .hyd
     if( suffix.equalsIgnoreCase( "hyd" ) )
-      return "Ausgabe hydrotope";
+      return "Ausgabe Hydrotope";
     //    n Abflussbilanz .bil
     if( suffix.equalsIgnoreCase( "bil" ) )
       return "Abflussbilanz";
@@ -641,45 +664,24 @@ public class NaModelInnerCalcJob implements ICalcJob
     //    n Speicherinhalt .spi
     if( suffix.equalsIgnoreCase( "spi" ) )
       return "Speicherinhalt";
+    //    n Wasserspiegelhöhe .sph
+    if( suffix.equalsIgnoreCase( "sph" ) )
+      return "Wasserspiegelhöhe";
+    //    n Verdunstung aus Talsperre .spv
+    if( suffix.equalsIgnoreCase( "spv" ) )
+      return "Talsperrenverdunstung";
+    //    n Niederschlag in Talsperre .spn
+    if( suffix.equalsIgnoreCase( "spn" ) )
+      return "Niederschlag Talsperre";
+    //    n Zehrung .spb
+    if( suffix.equalsIgnoreCase( "spb" ) )
+      return "Zehrung";
     //    n Speicherueberlauf .sup
     if( suffix.equalsIgnoreCase( "sup" ) )
       return "Speicherueberlauf";
-    //    n Wasserstand Speicher .sph
-    if( suffix.equalsIgnoreCase( "sph" ) )
-      return "Wasserstand Speicher";
-    //    n Talsperrenverdunstung .spv
-    if( suffix.equalsIgnoreCase( "spv" ) )
-      return "Talsperrenverdunstung";
-    //    n Zehrung .spn
-    if( suffix.equalsIgnoreCase( "spn" ) )
-      return "Zehrung";
-    //    n Evaporation .vep
-    if( suffix.equalsIgnoreCase( "vep" ) )
-      return "Evaporation";
-    //    j Temperatur .tmp
-    if( suffix.equalsIgnoreCase( "tmp" ) )
-      return "Temperatur";
-    //    j Bodenfeuchte .bof
-    if( suffix.equalsIgnoreCase( "bof" ) )
-      return "Bodenfeuchte";
-    //    n Grundwasserstand .gws
-    if( suffix.equalsIgnoreCase( "gws" ) )
-      return "Grundwasserstand";
-    //    n Basisabfluss .qbs
-    if( suffix.equalsIgnoreCase( "qbs" ) )
-      return "Basisabfluss";
-    //    n Oberflaechenabfluss .qna
-    if( suffix.equalsIgnoreCase( "qna" ) )
-      return "Oberflaechenabfluss";
-    //    n Abfluss vers. Flaechen .qvs
-    if( suffix.equalsIgnoreCase( "qvs" ) )
-      return "Abfluss vers. Flaechen";
-    //    j Niederschlag .pre
-    if( suffix.equalsIgnoreCase( "pre" ) )
-      return "Niederschlag";
-    //    n Interflow .qif
-    if( suffix.equalsIgnoreCase( "qif" ) )
-      return "Interflow";
+    //    n Kapil.Aufstieg/Perkolation .kap - not available, because not used in the calculation core
+    //    if( suffix.equalsIgnoreCase( "kap" ) )
+    //      return "Kapil.Aufstieg/Perkolation";
     return suffix;
   }
 
@@ -690,21 +692,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     loadTSResults( "qgs", nodeFT, "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir,
         modellWorkspace, logger, outputDir, 1.0d, idManager );
-    //    n Schnee .sch
-    //    n Bodenspeicher .bsp
-    //    n Kluftgrundw1 .qt1
-    //    n Kluftgrundw .qtg
-    //    n Kapil.Aufstieg/Perkolation .kap
-    //    n Evapotranspiration .vet
-    //    n Ausgabe hydrotope .hyd
-    //    n Abflussbilanz .bil
-    //    n Statistische Abflusswerte .nmq
-    //    n Speicherinhalt .spi
-    //    n Speicherueberlauf .sup
-    //    n Talsperrenverdunstung .spv
-    //    n Zehrung .spn
-    //    n Evaporation .vep
-    //    j Bodenfeuchte .bof
 
     FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
     //    j Niederschlag .pre
@@ -713,22 +700,16 @@ public class NaModelInnerCalcJob implements ICalcJob
     //    j Temperatur .tmp
     loadTSResults( "tmp", catchmentFT, "name", TimeserieConstants.TYPE_TEMPERATURE, null, null, inputDir,
         modellWorkspace, logger, outputDir, 1.0d, idManager );
-
     //    n Interflow .qif
     loadTSResults( "qif", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
         logger, outputDir, 1.0d, idManager );
-
     //    n Grundwasser .qgw
     loadTSResults( "qgw", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
         logger, outputDir, 1.0d, idManager );
-    //    n Wasserstand Speicher .sph
-    loadTSResults( "shp", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
     //    n Gesamtabfluss TG .qgg
     loadTSResults( "qgg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
         logger, outputDir, 1.0d, idManager );
-
-    //    n Grundwasserstand .gws
+    //    n Grundwasserstand .gws - Umrechnung von m auf cm
     loadTSResults( "gws", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
         modellWorkspace, logger, outputDir, 100.0d, idManager );
     //    n Basisabfluss .qbs
@@ -740,6 +721,45 @@ public class NaModelInnerCalcJob implements ICalcJob
     //    n Abfluss vers. Flaechen .qvs
     loadTSResults( "qvs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
         logger, outputDir, 1.0d, idManager );
+    //TODO:check output for the next time series
+    //    n Schnee .sch [mm]
+    loadTSResults( "sch", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+        modellWorkspace, logger, outputDir, 0.1d, idManager );
+    //    n Kluftgrundw1 .qt1
+    loadTSResults( "qt1", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
+    //    n Kluftgrundw .qtg
+    loadTSResults( "qtg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
+    //    n Evapotranspiration .vet [mm]
+    loadTSResults( "vet", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+        modellWorkspace, logger, outputDir, 0.1d, idManager );
+    //    j Bodenfeuchte .bof [mm]
+    loadTSResults( "bof", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+        modellWorkspace, logger, outputDir, 0.1d, idManager );
+
+    //    n Wasserstand Speicher .sph [muNN]
+    loadTSResults( "sph", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+        modellWorkspace, logger, outputDir, 100.0d, idManager );
+    //    n Speicherueberlauf .sup [m³/s]
+    loadTSResults( "sup", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, idManager );
+    //    n Talsperrenverdunstung .spv [m³/d]
+    //    loadTSResults( "spv", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
+    //        modellWorkspace, logger, outputDir, 1.0d , idManager);
+    //    n Zehrung .spn [m³/d]
+    //    loadTSResults( "spn", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
+    //        modellWorkspace, logger, outputDir, 1.0d , idManager);
+    //    n Speicherinhalt .spi [hm³]
+    //    loadTSResults( "spi", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+    //        modellWorkspace, logger, outputDir, 1.0d , idManager);
+
+    //    n Kapil.Aufstieg/Perkolation .kap [mm]
+    //    loadTSResults( "kap", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+    //        modellWorkspace, logger, outputDir, 0.1d , idManager);
+    //    n Ausgabe hydrotope .hyd
+    //    loadTSResults( "hyd", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
+    //        modellWorkspace, logger, outputDir, 1.0d , idManager);
   }
 
   private void loadTSResults( String suffix, FeatureType resultFT, String titlePropName, String resultType,
@@ -782,7 +802,6 @@ public class NaModelInnerCalcJob implements ICalcJob
         logger.info( "lese berechnetes Ergebnis fuer #" + key + "\n" );
 
         // transform data to tuppelmodel
-
         final SortedMap data = ts.getTimeSerie( key );
         final Object[][] tupelData = new Object[data.size()][3];
         final Set dataSet = data.entrySet();
@@ -889,6 +908,54 @@ public class NaModelInnerCalcJob implements ICalcJob
         marshaller.marshal( observationType, writer );
         IOUtils.closeQuietly( writer );
         IOUtils.closeQuietly( stream );
+      }
+    }
+  }
+
+  private void loadTextFileResults( File inputDir, Logger logger, File outputDir )
+  {
+    // ASCII-Files
+    // kopiere statistische Ergebnis-Dateien
+    final String[] wildcards = new String[]
+    {
+        "*" + "bil" + "*",
+        "*" + "txt" + "*",
+        "*" + "nmq" + "*",
+        "*" + "bsp" + "*" };
+    final File ascciResultDir = new File( inputDir, "out_we.nat" );
+    MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
+
+    File[] qgsFiles = ascciResultDir.listFiles( filter );
+    if( qgsFiles.length != 0 )
+
+    {
+      for( int i = 0; i < qgsFiles.length; i++ )
+      {
+        // read ascii result file
+        logger.info( "kopiere Ergebnissdatei " + qgsFiles[i].getName() + "\n" );
+
+        String resultPathRelative = "Ergebnisse/Berechnet/Bilanz/" + qgsFiles[i].getName();
+        final String inputPath = inputDir.getName() + qgsFiles[i].getName();
+        final File resultFile = new File( outputDir, resultPathRelative );
+        resultFile.getParentFile().mkdirs();
+        FileInputStream FileIS = null;
+        try
+        {
+          FileIS = new FileInputStream( qgsFiles[i] );
+        }
+        catch( FileNotFoundException e1 )
+        {
+          e1.printStackTrace();
+        }
+        try
+        {
+          FileUtilities.makeFileFromStream( false, resultFile, FileIS );
+        }
+        catch( IOException e )
+        {
+          e.printStackTrace();
+          System.out.println( "ERR: " + inputPath + " may not exist" );
+        }
       }
     }
   }
