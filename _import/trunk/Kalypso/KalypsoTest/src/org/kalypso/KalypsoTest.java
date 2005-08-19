@@ -34,12 +34,14 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import org.kalypso.commons.diff.DiffComparatorRegistry;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.MultiUrlCatalog;
 import org.kalypso.convert.namodel.schema.UrlCatalogNA;
 import org.kalypso.lhwsachsenanhalt.tubig.TubigUrlCatalog;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
@@ -83,6 +85,8 @@ public class KalypsoTest
     cacheDir.mkdir();
 
     GMLSchemaCatalog.init( theCatalog, cacheDir );
+    
+    DiffComparatorRegistry.getInstance().register(".zml",new ZMLDiffComparator());
 
   }
 }
