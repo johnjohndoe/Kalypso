@@ -509,8 +509,6 @@
 		<!-- -->
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
-		<!--Wiski-Id müsste hierhin -->
-		<arg name="prognoseProperty" value="Wasserstand_vorhersageAblage"/>
 		<arg name="exporter2">
 			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
 			<arg name="name" value="Tabelle"/>

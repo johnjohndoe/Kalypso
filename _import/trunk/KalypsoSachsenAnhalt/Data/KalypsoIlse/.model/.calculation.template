@@ -18,6 +18,9 @@ project:/.model/schema/control.xsd">
 	</ControlAssociation>
 	<MetadataAssociation>
 		<Metadata fid="IlseMetaData">
+	        <scenarioId>:scenarioId:</scenarioId>
+	        <scenarioName>:scenarioName:</scenarioName>
+	        <scenarioDescription>:scenarioDescription:</scenarioDescription>
 			<editor>:user:</editor>
 			<description>- bitte ausfüllen -</description>
 			<comment>- bitte ausfüllen -</comment>

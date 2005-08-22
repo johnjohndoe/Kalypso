@@ -37,6 +37,10 @@
 </view>
 <view typename="Metadata" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
+		<label property="scenarioName" style="0"/>
+		<text property="scenarioName" style="SWT.BORDER" editable="false">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
 		<label property="editor" style="0"/>
 		<text property="editor" style="2048">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>

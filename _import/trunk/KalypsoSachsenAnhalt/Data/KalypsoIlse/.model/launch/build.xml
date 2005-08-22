@@ -2,9 +2,9 @@
 
 	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
 
-	<!-- - - - - - - - - - - - - - - - - - 
+	<!-- ================================= 
           target: fake                      nur damit das Projekt nicht schreit
-         - - - - - - - - - - - - - - - - - -->
+          ================================= -->
 	<target name="fake" />
 
 	<!-- ================================= 
@@ -35,17 +35,35 @@
 	</target>
 
 	<!-- ================================= 
-          target: gebietsniederschlag              
+          target: calculationProperties                      Initializes properties from .calculation
          ================================= -->
-	<target name="gebietsniederschlag" description="Umrechnung in Gebietsniederschlag">
-		<property name="HOURS_OF_DAY" value="11" />
-		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
+    <target name="calculationProperties">
+		<property name="HOURS_OF_DAY" value="11"/>
+
+    	<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
-			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast" />
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
 			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}" />
 			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}" />
+			<property name="scenarioId" featurepath="MetadataAssociation" featureProperty="scenarioId" defaultValue=""/>
 		</kalypso.gmlProperty>
+		
+		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+		
+		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
+		<kalypso.multiequals arg1="${scenarioId}" arg2="test">
+			<!-- Links fürs Abholen der Vorhersage-Zeitreihen -->
+			<property name="wiski_vergangenheit_link" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit"/>
+			
+			<!-- Links für die Ablage der Vorhersage-Zeitreihen -->
+			<property name="wiski_zukunft_link" valueThen="wiski_simulation_zukunft" valueElse="wiski_zukunft"/>
+		</kalypso.multiequals>
+    </target>
 
+	<!-- ================================= 
+          target: gebietsniederschlag              
+         ================================= -->
+	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
 		<kalypso.gmlWeight modelurl="${calc.url}/modell.gml" 
 			               	featurepathtarget="PegelCollectionAssociation/PegelMember[Niederschlagsgebiet]" 
 							propzmltarget="Niederschlag" 
@@ -68,43 +86,33 @@
           target: update              
          ================================= -->
 
-	<target name="update" description="Holt die Zeitreihen vom Zeitreihendienst">
+	<target name="update" depends="calculationProperties" description="Holt die Zeitreihen vom Zeitreihendienst">
 
 		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
-
-		<property name="HOURS_OF_DAY" value="11"/>
-		
-		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
-			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
-			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
-			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}"/>
-			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}"/>
-		</kalypso.gmlProperty>
-
 		<echo message="Zeitreihen werden von WISKI geladen" />
 		
 		<kalypso.copyObservation gml="${calc.url}/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim_48}"/>
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_48}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<kalypso.copyObservation gml="${calc.url}/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
-			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<kalypso.copyObservation gml="${calc.url}/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}"/>
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<kalypso.copyObservation gml="${calc.url}/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="wiski_vergangenheit" from="${startforecast}" to="${stopsim_48}"/>
+			<source property="${wiski_vergangenheit_link}" from="${startforecast}" to="${stopsim_48}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 	</target>
 
-	<!-- ================================= 
-          target: afterCalc              
-         ================================= -->
-	<target name="afterCalc" description="wird nach Beendigung der Berechnung ausgeführt" />
 
 	<!-- ================================= 
           target: runCalculation              
@@ -155,4 +163,16 @@
     	<antcall target="runCalculation"/>
     </target>
 
+    <!-- ================================= 
+          target: exportVorhersagen              
+         ================================= -->
+	<echo message="exportVorhersagen muss noch konfiguriert werden!!!"/>
+<!--
+    <target name="exportVorhersagen" depends="calculationProperties" description="Export der Prognosen">
+        <echo message="Vorhersagezeitreihen werden exportiert"/>
+		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="inObservationLink" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
+    </target>
+-->
 </project>

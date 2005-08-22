@@ -2,11 +2,11 @@
 <launchConfiguration type="org.eclipse.ant.AntLaunchConfigurationType">
 <stringAttribute key="process_factory_id" value="org.eclipse.ant.ui.remoteAntProcessFactory"/>
 <booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-q -e -logfile ${calc.dir}/afterCalc.log"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-e -logfile ${calc.dir}/exportVorhersagen.log"/>
 <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_CAPTURE_OUTPUT" value="false"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${simulation_project_loc}/.model/launch/build.xml"/>
 <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
 <stringAttribute key="org.eclipse.ant.ui.ATTR_BUILD_SCOPE" value="${none}"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="afterCalc,"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="exportVorhersagen,"/>
 </launchConfiguration>
