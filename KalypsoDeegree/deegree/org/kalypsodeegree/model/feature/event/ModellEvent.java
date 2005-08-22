@@ -24,6 +24,8 @@ public class ModellEvent
   public static final long SELECTION_CHANGED = 1 << 7;
 
   public static final long EDITING_CHANGED = 1 << 8;
+  
+  public static final long TREE_SELECTION_CHANGED = 1 << 9;
 
   private final ModellEventProvider m_eventSource;
 

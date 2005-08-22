@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="gistreeview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org">
+	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+	<xs:element name="gistreeview">
+<!-- gis tree view schema
+ -->
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="input" type="kalypso:layerType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

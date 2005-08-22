@@ -318,6 +318,14 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature, java.lang.String, int)
+   */
+  public boolean isAggrigatedLink( Feature parent, String linkPropName, int pos )
+  {
+    return m_workspace.isAggrigatedLink( parent, linkPropName, pos );
+  }
+
+  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature, boolean)
    */
@@ -325,5 +333,13 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
       throws Exception
   {
     m_workspace.setFeatureAsComposition( parentFE, linkPropName, linkedFE, overwrite );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getParentFeature(org.kalypsodeegree.model.feature.Feature)
+   */
+  public Feature getParentFeature( Feature toFindParentFrom )
+  {
+    return m_workspace.getParentFeature( toFindParentFrom );
   }
 }
