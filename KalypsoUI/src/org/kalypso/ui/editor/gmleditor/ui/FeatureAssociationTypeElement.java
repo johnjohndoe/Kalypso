@@ -27,54 +27,46 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ogc.gml.filterdialog.dialog;
+package org.kalypso.ui.editor.gmleditor.ui;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public abstract class TreeSelection implements IStructuredSelection, IChangeListener
+public class FeatureAssociationTypeElement
 {
-  private final IStructuredSelection m_selection;
 
-  public TreeSelection( final IStructuredSelection selection )
+  private final FeatureAssociationTypeProperty m_featureAssociattionTypeProp;
+
+  private final Feature m_parent;
+
+  /**
+   *  
+   */
+
+  public FeatureAssociationTypeElement( final Feature parent, final FeatureAssociationTypeProperty property )
   {
-    m_selection = selection;
+    m_parent = parent;
+    m_featureAssociattionTypeProp = property;
   }
 
-  public Object getFirstElement()
+  public Feature getParentFeature()
   {
-    return m_selection.getFirstElement();
+    return m_parent;
+
   }
 
-  public boolean isEmpty()
+  public FeatureAssociationTypeProperty getAssociationTypeProperty()
   {
-    return m_selection.isEmpty();
+    return m_featureAssociattionTypeProp;
   }
-
-  public Iterator iterator()
-  {
-    return m_selection.iterator();
-  }
-
-  public int size()
-  {
-    return m_selection.size();
-  }
-
-  public Object[] toArray()
-  {
-    return m_selection.toArray();
-  }
-
-  public List toList()
-  {
-    return m_selection.toList();
-  }
-  
-  public abstract Object getModel();
 }

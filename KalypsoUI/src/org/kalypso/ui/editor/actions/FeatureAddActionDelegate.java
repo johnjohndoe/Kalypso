@@ -31,14 +31,18 @@ package org.kalypso.ui.editor.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureThemeSelection;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * FeatureRemoveActionDelegate
@@ -51,7 +55,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 public class FeatureAddActionDelegate implements IActionDelegate
 {
 
-  private IFeatureThemeSelection m_selection = null;
+  private IStructuredSelection m_selection = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -60,25 +64,61 @@ public class FeatureAddActionDelegate implements IActionDelegate
   {
     if( action.isEnabled() && m_selection != null )
     {
-      final IKalypsoFeatureTheme theme = m_selection.getKalypsoFeatureTheme();
-      final CommandableWorkspace workspace = theme.getWorkspace();
-      final FeatureList featureList = theme.getFeatureList();
+      if( m_selection instanceof IFeatureThemeSelection )
+      {
+        final IKalypsoFeatureTheme theme = ( (IFeatureThemeSelection)m_selection ).getKalypsoFeatureTheme();
+        final CommandableWorkspace workspace = theme.getWorkspace();
+        final FeatureList featureList = theme.getFeatureList();
 
-      final Feature parentFeature = featureList.getParentFeature();
-      // TODO change featurelist and remove cast
-      // TODO ask for FeatureType (substitutiongroup)
-      final FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)featureList
-          .getParentFeatureTypeProperty();
-      int pos = 0; // TODO get pos from somewhere
-      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getAssociationFeatureType(),
-          parentFeature, ftp.getName(), pos );
-      try
-      {
-        workspace.postCommand( command );
+        final Feature parentFeature = featureList.getParentFeature();
+        // TODO change featurelist and remove cast
+        // TODO ask for FeatureType (substitutiongroup)
+        final FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)featureList
+            .getParentFeatureTypeProperty();
+        int pos = 0; // TODO get pos from somewhere
+        final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getAssociationFeatureType(),
+            parentFeature, ftp.getName(), pos );
+        try
+        {
+          workspace.postCommand( command );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
-      catch( Exception e )
+      else if( m_selection instanceof CommandableFeatureSelection )
       {
-        e.printStackTrace();
+        CommandableFeatureSelection selection = (CommandableFeatureSelection)m_selection;
+        CommandableWorkspace cWorkspace = selection.getCommandableWorkspace();
+        //is always a Feature since object contribution points to feature
+        Feature selectedFeature = (Feature)m_selection.getFirstElement();
+        FeatureType featureType = selectedFeature.getFeatureType();
+        Feature parentFeature = cWorkspace.getParentFeature( selectedFeature );
+        FeatureType parentFtp = parentFeature.getFeatureType();
+        FeatureTypeProperty[] properties = parentFtp.getProperties();
+        String propName = null;
+        FeatureType ftp = null;
+        for( int i = 0; i < properties.length; i++ )
+        {
+          FeatureTypeProperty property = properties[i];
+          if( property instanceof FeatureAssociationTypeProperty )
+          {
+            propName = property.getName();
+            ftp = ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureType();
+          }
+          if( ftp != null && ftp.equals( featureType ) )
+            break;
+        }
+        AddFeatureCommand command = new AddFeatureCommand( cWorkspace, ftp, parentFeature, propName, 0 );
+        try
+        {
+          cWorkspace.postCommand( command );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
     }
 
@@ -90,13 +130,21 @@ public class FeatureAddActionDelegate implements IActionDelegate
    */
   public void selectionChanged( IAction action, ISelection selection )
   {
-    if( selection instanceof IFeatureThemeSelection )
+    action.setEnabled( false );
+    if( selection instanceof IStructuredSelection )
     {
-      m_selection = (IFeatureThemeSelection)selection;
-      // TODO check maxOccurs
-      action.setEnabled( true );
+      m_selection = (IStructuredSelection)selection;
+      if( selection instanceof IFeatureThemeSelection )
+      {
+        //        m_selection = (IFeatureThemeSelection)selection;
+        // TODO check maxOccurs
+        action.setEnabled( true );
+      }
+      else if( m_selection instanceof CommandableFeatureSelection )
+      {
+        if( m_selection.getFirstElement() instanceof Feature )
+          action.setEnabled( true );
+      }
     }
-    else
-      action.setEnabled( false );
   }
 }

@@ -507,13 +507,9 @@
                style="push"
                id="org.kalypso.objectclass.feature.action.remove"/>
          <action
-               enablesFor="1"
-               label="Feature hervorheben"
-               tooltip="Feature hervorheben um es z.B. in der zu finden"
-               icon="icons/feature/feature_highlight.gif"
-               class="org.kalypso.ui.editor.actions.FeatureHighlightActionDelegate"
-               style="push"
-               id="org.kalypso.objectclass.feature.action.highlight"/>
+               label="Feature editieren"
+               class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature"
+               id="org.kalypso.objectclass.feature.editfeature"/>
       </objectContribution>
        <objectContribution
              adaptable="false"
@@ -613,6 +609,16 @@
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
                 id="org.kalypso.objcetclass.filterencoding.create.comparisonoperation"/>
        </objectContribution>
+       <objectContribution
+             adaptable="false"
+             objectClass="org.kalypso.ui.editor.gmleditor.util.model.FeatureElement"
+             id="org.kalypso.objectclass.FeatureElement">
+          <action
+                label="Testaction"
+                icon="icons/kalypso16.gif"
+                class="org.kalypso.ui.editor.gmleditor.util.actions.TestElementAction"
+                id="testaction"/>
+       </objectContribution>
    </extension>
    <extension
          id="resourceFilters"
@@ -698,10 +704,6 @@
            class="org.kalypso.ant.MultiEqualsTask"
            library="lib/kalypsoAnt.jar"
            name="kalypso.multiequals"/>
-     <antTask
-           class="org.kalypso.ant.MapZmlMeta2FeatureTask"
-           library="lib/kalypsoAnt.jar"
-           name="kalypso.mapZmlMeta2Feature"/>
    </extension>
       <extension
          point="org.kalypso.services.core.client.serviceproxy">

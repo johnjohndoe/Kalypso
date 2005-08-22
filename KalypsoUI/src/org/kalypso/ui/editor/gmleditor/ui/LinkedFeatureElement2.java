@@ -27,54 +27,28 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ogc.gml.filterdialog.dialog;
+package org.kalypso.ui.editor.gmleditor.ui;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public abstract class TreeSelection implements IStructuredSelection, IChangeListener
+public class LinkedFeatureElement2
 {
-  private final IStructuredSelection m_selection;
+  private final Feature m_feature;
 
-  public TreeSelection( final IStructuredSelection selection )
+  public LinkedFeatureElement2( final Feature feature )
   {
-    m_selection = selection;
-  }
-
-  public Object getFirstElement()
-  {
-    return m_selection.getFirstElement();
-  }
-
-  public boolean isEmpty()
-  {
-    return m_selection.isEmpty();
-  }
-
-  public Iterator iterator()
-  {
-    return m_selection.iterator();
-  }
-
-  public int size()
-  {
-    return m_selection.size();
-  }
-
-  public Object[] toArray()
-  {
-    return m_selection.toArray();
-  }
-
-  public List toList()
-  {
-    return m_selection.toList();
+    m_feature = feature;
   }
   
-  public abstract Object getModel();
+  public Feature getDecoratedFeature()
+  {
+    return m_feature;
+  }
+
 }

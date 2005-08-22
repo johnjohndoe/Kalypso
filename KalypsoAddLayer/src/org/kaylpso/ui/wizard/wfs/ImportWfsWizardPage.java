@@ -1,5 +1,6 @@
 package org.kaylpso.ui.wizard.wfs;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -641,6 +642,8 @@ public class ImportWfsWizardPage extends WizardPage implements
       wfsCapabilites = WFSCapabilitiesFactory
           .createCapabilities( new InputStreamReader( isGetCap ) );
       //search all availabele layers on this service
+//      FileWriter fw = new FileWriter("d://temp//caps.xml");
+//      fw.write( wfsCapabilites.exportAsXML());
       return wfsCapabilites.getFeatureTypeList().getFeatureTypes();
 
     }

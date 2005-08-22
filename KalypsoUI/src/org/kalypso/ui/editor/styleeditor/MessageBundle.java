@@ -224,6 +224,8 @@ public class MessageBundle
   public static final String STYLE_EDITOR_FILTER_FEATURE_ID = "FeatureID";
 
   public static final String STYLE_EDITOR_PROPERTY = "Property";
+  
+  public static final String STYLE_EDITOR_GEOM_PROPERTY = "Geometry";
 
   public static final String STYLE_EDITOR_FILTER_VALUE = "Wert";
 
@@ -250,4 +252,12 @@ public class MessageBundle
   public static final String STYLE_EDITOR_PATTERN_UPPER_LOWER_ERROR = "UpperBoundary darf nicht kleiner als LowerBoundary sein";
 
   public static final String STYLE_EDITOR_COLORMAP = "ColorMap";
+
+  public static final String STYLE_EDITOR_FILTER_SPATIAL = "Spatial:";
+
+  public static final String STYLE_EDITOR_GEOMETRY_IN_MAP = "zeichen";
+  
+  public static final String STYLE_EDITOR_CHOOSE_EXTERNAL_GEOMETRY = "laden";
+
+  public static final String STYLE_GET_GEOMETRY = "Select geom";
 }

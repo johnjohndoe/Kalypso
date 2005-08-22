@@ -61,18 +61,21 @@ public class SelectFeaturesCommand implements ICommand
 
   private Feature[] m_selectedFeaturesOriginal;
 
+  private long m_selectionType;
+
   public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature selection,
-      final IFeatureSelectionManager selectionManager )
+      final IFeatureSelectionManager selectionManager, long selectionType )
   {
     this( workspace, new Feature[]
-    { selection }, selectionManager );
+    { selection }, selectionManager, selectionType );
   }
 
   public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature[] selection,
-      final IFeatureSelectionManager selectionManager )
+      final IFeatureSelectionManager selectionManager, long selectionType )
   {
     m_workspace = workspace;
     m_selection = selection;
+    m_selectionType = selectionType;
     if( selectionManager != null )
       m_selectionManager = selectionManager;
     else
@@ -94,7 +97,7 @@ public class SelectFeaturesCommand implements ICommand
   public void process() throws Exception
   {
     m_selectionManager.setSelection( m_selection );
-    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace ) );
+    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace, m_selectionType ) );
   }
 
   /**
@@ -111,7 +114,7 @@ public class SelectFeaturesCommand implements ICommand
   public void undo() throws Exception
   {
     m_selectionManager.setSelection( m_selectedFeaturesOriginal );
-    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace ) );
+    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace, m_selectionType ) );
   }
 
   /**
