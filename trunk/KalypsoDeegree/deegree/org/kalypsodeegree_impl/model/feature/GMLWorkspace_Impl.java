@@ -614,4 +614,79 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     return m_selectionManager;
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, int)
+   */
+  public boolean isAggrigatedLink( Feature parent, String linkPropName, int pos )
+  {
+    final boolean undefined = false;
+    final Object value = parent.getProperty( linkPropName );
+    if( parent.getFeatureType().getMaxOccurs( linkPropName ) == 1 )
+    {
+      if( value instanceof Feature )
+        return false;
+      if( value instanceof String )
+        return true;
+      return undefined;
+    }
+    // else must be a list
+    final List list = (List)value;
+    final Object object = list.get( pos );
+    if( object instanceof Feature )
+      return false;
+    if( object instanceof String )
+      return true;
+    return undefined;
+  }
+
+  /**
+   * Finds the parent feature of a feature
+   * 
+   * @param toFindParentFrom
+   *          the feature to find the parent from
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getParentFeature(org.kalypsodeegree.model.feature.Feature)
+   */
+  public Feature getParentFeature( Feature toFindParentFrom )
+  {
+      //skip root feature
+    if( getRootFeature().equals( toFindParentFrom ))
+      return null;
+    Collection collection = m_indexMap.values();
+    Iterator iterator = collection.iterator();
+    while( iterator.hasNext() )
+    {
+      Feature f = (Feature)iterator.next();
+      //skips itself
+      if( f.equals( toFindParentFrom ))
+        continue;
+      FeatureType featureType = f.getFeatureType();
+      FeatureTypeProperty[] ftp = featureType.getProperties();
+      for( int i = 0; i < ftp.length; i++ )
+      {
+        FeatureTypeProperty property = ftp[i];
+        if( property instanceof FeatureAssociationTypeProperty )
+        {
+          String name = property.getName();
+          if( featureType.isListProperty( name ) )
+          {
+            List list = (List)f.getProperty( name );
+            for( int j = 0; j < list.size(); j++ )
+            {
+              Object childFromList = list.get( j );
+              if( childFromList != null && childFromList.equals( toFindParentFrom ) )
+                return f;
+            }
+          }
+          if( property.equals( toFindParentFrom ) )
+            return f;
+        }
+        if( property.equals( toFindParentFrom ) )
+          return f;
+      }
+    }
+    //TODO throw exception instead of returning null
+    return null;
+  }
 }

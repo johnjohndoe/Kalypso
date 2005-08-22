@@ -47,14 +47,15 @@ public class FeatureSelectionChangedModellEvent extends ModellEvent implements I
 {
 
   private final GMLWorkspace m_workspace;
-
+  
+  
   /*
    * 
    * @author doemming
    */
-  public FeatureSelectionChangedModellEvent( GMLWorkspace workspace )
+  public FeatureSelectionChangedModellEvent( GMLWorkspace workspace, long type )
   {
-    super( workspace, SELECTION_CHANGED );
+    super( workspace, type );
     m_workspace = workspace;
   }
 

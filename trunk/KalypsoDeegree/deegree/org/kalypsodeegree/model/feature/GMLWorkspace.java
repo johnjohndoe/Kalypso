@@ -17,7 +17,7 @@ public interface GMLWorkspace extends ModellEventProvider
 
   /**
    * 
-   * @return all FeatureTypes that can be used somewhere in the schema 
+   * @return all FeatureTypes that can be used somewhere in the schema
    */
   public FeatureType[] getFeatureTypes();
 
@@ -68,6 +68,8 @@ public interface GMLWorkspace extends ModellEventProvider
   public String getSchemaNamespace();
 
   public Feature createFeature( FeatureType type );
+  
+  public Feature getParentFeature( Feature toFindParentFrom );
 
   public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature ) throws Exception;
 
@@ -94,8 +96,19 @@ public interface GMLWorkspace extends ModellEventProvider
    * return true if these feature are related
    */
   public boolean isExistingRelation( Feature f1, Feature f2, String relationPropertyName );
-  
+
   public IFeatureSelectionManager getSelectionManager();
+
+  /**
+   * 
+   * @param parent
+   * @param linkPropName
+   * @param pos
+   * @return <code>true</code> if it is a aggregation <br>
+   *         <code>false</code> if it is a composition <br>
+   *         caution: is link is <code>null</code> return value is undefined
+   */
+  public boolean isAggrigatedLink( Feature parent, String linkPropName, int pos );
 
   /**
    * 

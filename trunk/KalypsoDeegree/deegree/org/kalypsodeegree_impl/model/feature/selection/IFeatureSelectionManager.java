@@ -38,7 +38,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author doemming
  */
-public interface IFeatureSelectionManager 
+public interface IFeatureSelectionManager
 {
   public boolean addToSelection( final Feature feature );
 
