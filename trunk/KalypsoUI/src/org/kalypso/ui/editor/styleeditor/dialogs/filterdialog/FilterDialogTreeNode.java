@@ -47,6 +47,7 @@ package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 import java.util.ArrayList;
 
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.panels.SpatialOperationPanel;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 
 /**
@@ -67,6 +68,8 @@ public class FilterDialogTreeNode
 
   // or PARAMETER_TYPE SUCH AS LITERAL, PROPERTY_NAME
   public static final int PARAMETER_TYPE = 4;
+
+  public static final int SPATIAL_NODE_TYPE = 5;
 
   public static final int LOCICAL_NOT = OperationDefines.NOT;
 
@@ -89,6 +92,26 @@ public class FilterDialogTreeNode
   public static final int COMPARISON_LESSTHANOREQUALTO = OperationDefines.PROPERTYISLESSTHANOREQUALTO;
 
   public static final int COMPARISON_GREATERTHANOREQUALTO = OperationDefines.PROPERTYISGREATERTHANOREQUALTO;
+
+  public static final int SPATIAL_INTERSECTS = OperationDefines.INTERSECTS;
+
+  public static final int SPATIAL_DWITHIN = OperationDefines.DWITHIN;
+
+  public static final int SPATIAL_DISJOINT = OperationDefines.DISJOINT;
+
+  public static final int SPATIAL_CROSSES = OperationDefines.CROSSES;
+
+  public static final int SPATIAL_CONTAINS = OperationDefines.CONTAINS;
+
+  public static final int SPATIAL_BBOX = OperationDefines.BBOX;
+
+  public static final int SPATIAL_BEYOND = OperationDefines.BEYOND;
+
+  public static final int SPATIAL_TOUCHES = OperationDefines.TOUCHES;
+
+  public static final int SPATIAL_EQUALS = OperationDefines.EQUALS;
+
+  public static final int SPATIAL_OVERLAPS = OperationDefines.OVERLAPS;
 
   // not implemented yet
   //public static final int PROPERTYISNOTEQUALTO = 108;
@@ -145,6 +168,29 @@ public class FilterDialogTreeNode
       else if( string.equals( "GREATER_THAN_OR_EQUAL_TO" ) )
         subtype = COMPARISON_GREATERTHANOREQUALTO;
     }
+    case SPATIAL_NODE_TYPE:
+    {
+      if( string.equals( SpatialOperationPanel.INTERSECTS ) )
+        subtype = SPATIAL_INTERSECTS;
+      if( string.equals( SpatialOperationPanel.BBOX ) )
+        subtype = SPATIAL_BBOX;
+      if( string.equals( SpatialOperationPanel.BEYOND ) )
+        subtype = SPATIAL_BEYOND;
+      if( string.equals( SpatialOperationPanel.CONTAINS ) )
+        subtype = SPATIAL_CONTAINS;
+      if( string.equals( SpatialOperationPanel.CROSSES ) )
+        subtype = SPATIAL_CROSSES;
+      if( string.equals( SpatialOperationPanel.DWITHIN ) )
+        subtype = SPATIAL_DWITHIN;
+      if( string.equals( SpatialOperationPanel.DISJOINT ) )
+        subtype = SPATIAL_DISJOINT;
+      if( string.equals( SpatialOperationPanel.EQUALS ) )
+        subtype = SPATIAL_EQUALS;
+      if( string.equals( SpatialOperationPanel.OVERLAPS ) )
+        subtype = SPATIAL_OVERLAPS;
+      if( string.equals( SpatialOperationPanel.TOUCHES ) )
+        subtype = SPATIAL_TOUCHES;
+    }
     default:
       break;
     }
@@ -156,6 +202,13 @@ public class FilterDialogTreeNode
   public static boolean isBinaryComparisonType( int type )
   {
     if( type >= OperationDefines.PROPERTYISEQUALTO && type <= OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
+      return true;
+    return false;
+  }
+
+  public static boolean isBinarySpatialType( int type )
+  {
+    if( type >= OperationDefines.EQUALS && type <= OperationDefines.OVERLAPS )
       return true;
     return false;
   }
@@ -180,6 +233,11 @@ public class FilterDialogTreeNode
         return true;
       throw new FilterDialogException( new FilterDialogError( this, MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILDREN ) );
 
+    }
+    // Spatial stuff
+    else if( type == SPATIAL_NODE_TYPE )
+    {
+      return true;
     }
 
     if( data != null )

@@ -27,54 +27,76 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ogc.gml.filterdialog.dialog;
+package org.kalypso.ui.editor.styleeditor.panels;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Composite;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public abstract class TreeSelection implements IStructuredSelection, IChangeListener
+public class SpatialOperationPanel extends FilterComboPanel
 {
-  private final IStructuredSelection m_selection;
 
-  public TreeSelection( final IStructuredSelection selection )
+  public static final String EQUALS = "EQUALS";
+
+  public static final String TOUCHES = "TOUCHES";
+
+  public static final String WITHIN = "WITHIN";
+
+  public static final String OVERLAPS = "OVERLAPS";
+
+  public static final String CROSSES = "CROSSES";
+
+  public static final String INTERSECTS = "INTERSECTS";
+
+  public static final String CONTAINS = "CONTAINS";
+
+  public static final String DWITHIN = "DWITHIN";
+
+  public static final String BEYOND = "BEYOND";
+
+  public static final String BBOX = "BBOX";
+
+  public static final String DISJOINT = "DISJOINT";
+
+  public SpatialOperationPanel( Composite parent )
   {
-    m_selection = selection;
+    super( parent );
+    items = new String[]
+    {
+        EQUALS,
+        TOUCHES,
+        WITHIN,
+        OVERLAPS,
+        CROSSES,
+        INTERSECTS,
+        CONTAINS,
+        DWITHIN,
+        DISJOINT,
+        BEYOND,
+        BBOX };
+    init();
   }
 
-  public Object getFirstElement()
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.panels.FilterComboPanel#setSelection(int)
+   */
+  public void setSelection( int index )
   {
-    return m_selection.getFirstElement();
+    selection_index = index;
+    comboBox.select( index );
+
   }
 
-  public boolean isEmpty()
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.panels.FilterComboPanel#getSelection()
+   */
+  public int getSelection()
   {
-    return m_selection.isEmpty();
+    return selection_index;
   }
 
-  public Iterator iterator()
-  {
-    return m_selection.iterator();
-  }
-
-  public int size()
-  {
-    return m_selection.size();
-  }
-
-  public Object[] toArray()
-  {
-    return m_selection.toArray();
-  }
-
-  public List toList()
-  {
-    return m_selection.toList();
-  }
-  
-  public abstract Object getModel();
 }

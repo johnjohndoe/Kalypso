@@ -27,54 +27,47 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ogc.gml.filterdialog.dialog;
+package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
-import java.util.Iterator;
-import java.util.List;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public abstract class TreeSelection implements IStructuredSelection, IChangeListener
+public abstract class AbstractSpatialData extends AbstractData
 {
-  private final IStructuredSelection m_selection;
 
-  public TreeSelection( final IStructuredSelection selection )
+  protected String m_geomPropertyName = null;
+
+  protected GM_Object m_geomType = null;
+
+ 
+  public String getGeometryPropertyName()
   {
-    m_selection = selection;
+    return m_geomPropertyName;
   }
 
-  public Object getFirstElement()
+  public void setGeometryPropertyName( String m_propertyName )
   {
-    return m_selection.getFirstElement();
+    m_geomPropertyName = m_propertyName.trim();
   }
 
-  public boolean isEmpty()
+  public GM_Object getGeomType()
   {
-    return m_selection.isEmpty();
+    return m_geomType;
   }
 
-  public Iterator iterator()
+  public void setGeomType( GM_Object type )
   {
-    return m_selection.iterator();
+    m_geomType = type;
   }
 
-  public int size()
-  {
-    return m_selection.size();
-  }
-
-  public Object[] toArray()
-  {
-    return m_selection.toArray();
-  }
-
-  public List toList()
-  {
-    return m_selection.toList();
-  }
-  
-  public abstract Object getModel();
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.AbstractData#verify()
+   */
+  abstract public boolean verify() throws FilterDialogException;
 }

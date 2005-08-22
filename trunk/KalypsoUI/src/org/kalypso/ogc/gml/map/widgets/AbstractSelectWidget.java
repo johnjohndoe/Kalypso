@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.command.SelectFeaturesCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -210,11 +211,11 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     if( allowOnlyOneSelectedFeature() )
     {
       final Feature fe = (Feature)features.get( 0 );
-      command = new SelectFeaturesCommand( activeTheme.getWorkspace(), fe, activeTheme.getSelectionManager() );
+      command = new SelectFeaturesCommand( activeTheme.getWorkspace(), fe, activeTheme.getSelectionManager(),ModellEvent.SELECTION_CHANGED );
     }
     else
       command = new SelectFeaturesCommand( activeTheme.getWorkspace(), (Feature[])features
-          .toArray( new Feature[features.size()] ), activeTheme.getSelectionManager() );
+          .toArray( new Feature[features.size()] ), activeTheme.getSelectionManager(), ModellEvent.SELECTION_CHANGED );
     //      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, getSelectionMode() );
 
     postViewCommand( command, null );

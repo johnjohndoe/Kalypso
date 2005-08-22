@@ -40,13 +40,24 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditor;
+import org.kalypso.contribs.eclipse.core.resources.StringStorage;
+import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.template.gistreeview.Gistreeview;
+import org.kalypso.template.types.LayerType;
+import org.kalypso.template.types.ObjectFactory;
 
 /**
  * Launcher, um ein GML im Baum (GmlEditor) anzusehen.
@@ -65,7 +76,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
    */
   public String getFilename()
   {
-    return "<Standard Baumansicht>";
+    return "<Standard Baumansicht>.gmv";
   }
 
   /**
@@ -83,8 +94,46 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
    */
   public IEditorInput createInput( final IFile file )
   {
-    // todo: determine linktype by extension of file
+    final IPath projectRelativePath = file.getProjectRelativePath();
 
-    return new GMLEditor.GmlEditorInput( "gml", file );
+    org.kalypso.template.gistreeview.ObjectFactory gisViewFact = new org.kalypso.template.gistreeview.ObjectFactory();
+    ObjectFactory typesFac = new ObjectFactory();
+    try
+    {
+      LayerType type = typesFac.createLayerType();
+      Gistreeview gistreeview = gisViewFact.createGistreeview();
+      gistreeview.setInput( type );
+      type.setFeaturePath( "" );
+      //      type.setHref( "project:/" + file.getFullPath().removeFirstSegments( 1 ).toString() );
+      type.setHref( "project:/" + projectRelativePath );
+      type.setLinktype( "gml" );
+      type.setType( "simple" );
+      type.setId( "1" );
+      Marshaller marshaller = gisViewFact.createMarshaller();
+
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+
+      final StringWriter w = new StringWriter();
+      marshaller.marshal( gistreeview, w );
+      w.close();
+
+      final String string = w.toString();
+
+      // als StorageInput zurückgeben
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( file.getName(), string, file
+          .getFullPath() ) );
+
+      return input;
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

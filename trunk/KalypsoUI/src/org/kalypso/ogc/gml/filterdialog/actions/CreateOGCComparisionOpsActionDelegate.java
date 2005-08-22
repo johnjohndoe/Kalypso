@@ -72,7 +72,7 @@ public class CreateOGCComparisionOpsActionDelegate implements IActionDelegate
           logicalOps.setArguments( arguments );
 
         }
-        ( (TreeSelection)m_selection ).contentChanged();
+        ( (TreeSelection)m_selection ).structureChanged();
       }
     }
   }

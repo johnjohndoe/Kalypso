@@ -27,54 +27,35 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ogc.gml.filterdialog.dialog;
+package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypsodeegree.model.geometry.GM_Aggregate;
+import org.kalypsodeegree.model.geometry.GM_Boundary;
+import org.kalypsodeegree.model.geometry.GM_Complex;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Primitive;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public abstract class TreeSelection implements IStructuredSelection, IChangeListener
+public class BinarySpatialData extends AbstractSpatialData
 {
-  private final IStructuredSelection m_selection;
 
-  public TreeSelection( final IStructuredSelection selection )
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.AbstractData#verify()
+   */
+  public boolean verify() throws FilterDialogException
   {
-    m_selection = selection;
+    Object type = getGeomType();
+
+    if( type != null || type instanceof GM_Object || type instanceof GM_Aggregate || type instanceof GM_Boundary
+        || type instanceof GM_Complex || type instanceof GM_Primitive || type instanceof GM_Envelope )
+      return true;
+    return false;
   }
 
-  public Object getFirstElement()
-  {
-    return m_selection.getFirstElement();
-  }
-
-  public boolean isEmpty()
-  {
-    return m_selection.isEmpty();
-  }
-
-  public Iterator iterator()
-  {
-    return m_selection.iterator();
-  }
-
-  public int size()
-  {
-    return m_selection.size();
-  }
-
-  public Object[] toArray()
-  {
-    return m_selection.toArray();
-  }
-
-  public List toList()
-  {
-    return m_selection.toList();
-  }
-  
-  public abstract Object getModel();
 }

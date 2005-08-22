@@ -1,40 +1,43 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypso.ui.editor.gmleditor.util.GMLReader;
 
 /**
- * @author F.Lindemann
+ * @author Küpferle
  */
 public class GMLEditor extends AbstractEditorPart implements ICommandTarget
 {
   protected GMLEditorTreeView m_viewer = null;
 
-  protected GMLReader m_gmlReader = null;
-
   public void dispose()
   {
-    if( m_gmlReader != null )
-      m_gmlReader.dispose();
-
     if( m_viewer != null )
       m_viewer.dispose();
 
@@ -54,66 +57,55 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception,
       CoreException
   {
-    monitor.beginTask( "Vorlage wird geladen", 1000 );
-    if( m_gmlReader != null )
-    {
-      m_gmlReader.dispose();
-      m_gmlReader = null;
-    }
 
+    if( !( input instanceof IStorageEditorInput ) )
+      throw new IllegalArgumentException( "Only IStorageEditorInput supported" );
+
+    monitor.beginTask( "Vorlage wird geladen", 1000 );
     try
     {
-      m_gmlReader = createReaderFromInput( input );
+      final IStorage storage = input.getStorage();
+
+      final Reader r;
+      if( storage instanceof IEncodedStorage )
+        r = new InputStreamReader( storage.getContents(), ( (IEncodedStorage)storage ).getCharset() );
+      else
+        r = new InputStreamReader( storage.getContents() );
+
+      final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
+      final URL context = ResourceUtilities.createURL( file );
 
       getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
       {
+
         public void run()
         {
-          if( m_viewer != null )
-            m_viewer.setGmlReader( m_gmlReader );
+          try
+          {
+            if( m_viewer != null )
+              m_viewer.loadInput( r, context, monitor );
+          }
+          catch( CoreException e )
+          {
+            e.printStackTrace();
+          }
+
         }
       } );
     }
-    finally
+    catch( final MalformedURLException e )
     {
-      monitor.done();
+      e.printStackTrace();
+
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen der Context-URL") );
     }
-
-  }
-
-  private GMLReader createReaderFromInput( final IStorageEditorInput input ) throws CoreException
-  {
-    BufferedReader br = null;
-
-    try
+    catch( final UnsupportedEncodingException e )
     {
-      final IFile inputFile = ( (IFileEditorInput)input ).getFile();
-      final String extension = inputFile.getFileExtension();
-      final URL context = ResourceUtilities.createURL( inputFile );
+      e.printStackTrace();
 
-      final String gmlType;
-      final String gmlSource;
-      if( input instanceof GmlEditorInput )
-      {
-        final GmlEditorInput gmlEditorInput = (GmlEditorInput)input;
-        gmlType = gmlEditorInput.getLinktype();
-        gmlSource = context.toString();
-      }
-      else if( extension.compareToIgnoreCase( "gml" ) == 0 )
-      {
-        gmlType = "gml";
-        gmlSource = ResourceUtilities.createURL( inputFile ).toString();
-      }
-      else
-      {
-        br = new BufferedReader( new InputStreamReader( inputFile.getContents() ) );
-        gmlType = br.readLine();
-        gmlSource = br.readLine();
-      }
-
-      return new GMLReader( gmlType, gmlSource, context );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen von XML" ) );
     }
-    catch( final IOException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
 
@@ -121,31 +113,41 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
     }
     finally
     {
-      IOUtils.closeQuietly( br );
+      monitor.done();
     }
   }
 
   public synchronized void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
-    m_viewer = new GMLEditorTreeView( parent );//, this );
-    m_viewer.setGmlReader( m_gmlReader );
+    m_viewer = new GMLEditorTreeView( parent );
+    getSite().setSelectionProvider( m_viewer );
+    createContextMenu();
   }
 
-  public final static class GmlEditorInput extends FileEditorInput
+  /**
+   *  
+   */
+  private void createContextMenu()
   {
-    private final String m_linktype;
-
-    public GmlEditorInput( final String linktype, final IFile file )
+    //  create context menu for editor
+    final MenuManager menuManager = new MenuManager();
+    menuManager.setRemoveAllWhenShown( true );
+    menuManager.addMenuListener( new IMenuListener()
     {
-      super( file );
-      m_linktype = linktype;
-    }
+      public void menuAboutToShow( IMenuManager manager )
+      {
+        manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+        manager.add( new Separator() );
+      }
+    } );
+    TreeViewer treeViewer = m_viewer.getTreeViewer();
+    Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
+    getSite().registerContextMenu( menuManager, m_viewer );
+//    getSite().registerContextMenu( menuManager, m_viewer );
+    treeViewer.getControl().setMenu( menu );
+//    m_viewer.getControl().setMenu( menu );
 
-    public String getLinktype()
-    {
-      return m_linktype;
-    }
   }
 
   /**
@@ -168,4 +170,7 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
   {
     m_viewer.getTreeViewer().getControl().setFocus();
   }
+
+
+
 }

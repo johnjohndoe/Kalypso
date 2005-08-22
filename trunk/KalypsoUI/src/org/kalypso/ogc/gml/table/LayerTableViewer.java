@@ -76,6 +76,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Widget;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -106,6 +107,8 @@ import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureSelectionChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
@@ -259,7 +262,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         final IKalypsoFeatureTheme theme = getTheme();
         final CommandableWorkspace workspace = theme.getWorkspace();
         final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
-        SelectFeaturesCommand command = new SelectFeaturesCommand( workspace, selectedFeatures, selectionManager );
+        SelectFeaturesCommand command = new SelectFeaturesCommand( workspace, selectedFeatures, selectionManager, ModellEvent.SELECTION_CHANGED );
         postCommand( command, null );
       }
     } );
@@ -639,6 +642,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       if( ( (FeatureStructureChangeModellEvent)event ).getParentFeature() == theme.getFeatureList().getParentFeature() )
         refresh();
     }
+    if( event instanceof FeatureSelectionChangedModellEvent )
+      {
+      GMLWorkspace workspace = ((FeatureSelectionChangedModellEvent)event).getGMLWorkspace();
+      Feature[] selection = ((FeatureSelectionChangedModellEvent)event).getGMLWorkspace().getSelectionManager().getSelection();
+      Widget widget = doFindInputItem( selection[0]);
+      //TODO to make shure external selection changed is reflected in the table
+      Feature[] selection2 = getTheme().getSelectionManager().getSelection();
+      System.out.println("");
+      }
   }
 
   public boolean isDisposed()

@@ -68,9 +68,8 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider;
-import org.kalypso.ui.editor.gmleditor.util.GMLReader;
+import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.IModel;
 import org.kalypso.ui.editor.gmleditor.util.model.Model;
@@ -157,8 +156,8 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     m_viewerComposite.setLayout( layout );
     m_treeViewer = new TreeViewer( m_viewerComposite );
     m_treeViewer.addSelectionChangedListener( this );
-    m_treeViewer.setContentProvider( new GMLEditorContentProvider() );
-    m_treeViewer.setLabelProvider( new GMLEditorLabelProvider() );
+    m_treeViewer.setContentProvider( new GMLEditorContentProvider2() );
+    m_treeViewer.setLabelProvider( new GMLEditorLabelProvider2() );
     m_treeViewer.setUseHashlookup( true );
 
     GridData layoutData = new GridData();
@@ -231,21 +230,17 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       {
         final URL gmlURL = m_urlResolver.resolveURL( m_activeMapContext, m_source );
         m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
-        //        System.out.println( "selection: " + selection + "\tsource:" +
-        // m_source );
+
       }
       catch( Exception e1 )
       {
         e1.printStackTrace();
       }
-      final FeatureElement root = GMLReader.getGMLDocument( m_workspace );
+      //      final FeatureElement root = GMLReader.getGMLDocument( m_workspace );
       m_treeViewer.getTree().setVisible( false );
-      m_treeViewer.setInput( root );
+      m_treeViewer.setInput( m_workspace );
       // need to expand in order to load all elements into the treeviewers
       // cache
-      m_treeViewer.expandAll();
-      m_treeViewer.collapseAll();
-
       m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
       m_treeViewer.getTree().setVisible( true );
     }

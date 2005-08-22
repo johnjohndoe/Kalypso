@@ -44,16 +44,20 @@ import java.util.ArrayList;
 
 import javax.swing.event.EventListenerList;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableTreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.MouseEvent;
@@ -73,11 +77,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypso.ui.editor.styleeditor.dialogs.filterencoding.ElseFilter;
 import org.kalypso.ui.editor.styleeditor.panels.ComparisonFilterComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LogicalFilterComboPanel;
+import org.kalypso.ui.editor.styleeditor.panels.SpatialOperationPanel;
+import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -99,6 +107,7 @@ import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class FilterDialog extends Dialog implements ISelectionChangedListener
 {
@@ -142,6 +151,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   private EventListenerList listenerList = new EventListenerList();
 
   private Rule historyRule = null;
+
+  private SpatialOperationPanel m_spatialCombo = null;
+
+  private boolean m_loadGeomSelection = false;
+
+  private boolean m_drawGeomSelection = false;
+
+  private Label spatialButton;
 
   public FilterDialog( Shell parent, FeatureType m_featureType, Rule m_rule )
   {
@@ -245,22 +262,22 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   protected Control createDialogArea( Composite parent )
   {
     returnFilter = null;
-    Composite composite = (Composite)super.createDialogArea( parent );
-    composite.setSize( 500, 300 );
-    composite.setLayout( new GridLayout( 1, true ) );
-    composite.layout();
-    applyDialogFont( composite );
+    Composite main = (Composite)super.createDialogArea( parent );
+    main.setSize( 500, 300 );
+    main.setLayout( new GridLayout( 1, true ) );
+    main.layout();
+    applyDialogFont( main );
 
     // **** TITLE/NAME of rule
-    Label nameLabel = new Label( composite, 0 );
+    Label nameLabel = new Label( main, 0 );
     if( rule.getTitle() != null )
       nameLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_FOR_RULE + rule.getTitle() );
     else
       nameLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_FOR_RULE + rule.getName() );
     nameLabel.setFont( new Font( null, "Arial", 10, SWT.BOLD ) );
 
-    // ****
-    Label titleLabel = new Label( composite, SWT.NULL );
+    // **** Titel
+    Label titleLabel = new Label( main, SWT.NULL );
     titleLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_AVAILABLE );
     titleLabel.setFont( new Font( null, "Arial", 8, SWT.BOLD ) );
     GridData titleLabelData = new GridData();
@@ -269,151 +286,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     titleLabel.setLayoutData( titleLabelData );
 
     // **** THIRD ROW - FUNCTION MENU
-    Composite functionComposite = new Composite( composite, SWT.NULL );
-    GridData ogcGroupData = new GridData();
-    ogcGroupData.widthHint = 235;
-    ogcGroupData.heightHint = 100;
+    Composite functionComposite = new Composite( main, SWT.NULL );
     functionComposite.setLayout( new GridLayout( 2, false ) );
-    Group ogcFilter = new Group( functionComposite, SWT.NULL );
-    ogcFilter.setText( MessageBundle.STYLE_EDITOR_FILTER_OGC );
-    ogcFilter.setLayoutData( ogcGroupData );
-    Group sldFilter = new Group( functionComposite, SWT.NULL );
-    sldFilter.setText( MessageBundle.STYLE_EDITOR_FILTER_SLD );
-    GridData sldGroupData = new GridData();
-    sldGroupData.widthHint = 210;
-    sldGroupData.heightHint = 100;
-    sldFilter.setLayoutData( sldGroupData );
-
-    // ----- OGC Filter
-    ogcFilter.setLayout( new GridLayout( 3, false ) );
-    // ++++ Logical filter line
-    Label logicalLabel = new Label( ogcFilter, SWT.NULL );
-    logicalLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_LOGICAL );
-    logicalCombo = new LogicalFilterComboPanel( ogcFilter );
-    logicalButton = new Label( ogcFilter, SWT.NULL );
-    logicalButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
-    logicalButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
-    logicalButton.addMouseListener( new MouseListener()
-    {
-      public void mouseDoubleClick( MouseEvent e )
-      {
-        FilterDialogTreeNode childNode = new FilterDialogTreeNode( getLogicalCombo().getSelectionName(
-            getLogicalCombo().getSelection() ), FilterDialogTreeNode.LOGICAL_NODE_TYPE );
-        getCurrentNode().addNode( childNode );
-        getM_viewer().expandAll();
-        if( childNode != null )
-          getM_viewer().setSelection( new StructuredSelection( childNode ) );
-        getM_viewer().refresh( true );
-        setFilterInvalid();
-      }
-
-      public void mouseDown( MouseEvent e )
-      {
-        mouseDoubleClick( e );
-      }
-
-      public void mouseUp( MouseEvent e )
-      {
-      // nothing
-      }
-    } );
-
-    // ++++ Comparison filter line
-    Label comparisonLabel = new Label( ogcFilter, SWT.NULL );
-    comparisonLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_COMPARISON );
-    comparisonCombo = new ComparisonFilterComboPanel( ogcFilter );
-    compButton = new Label( ogcFilter, SWT.NULL );
-    compButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
-    compButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
-    compButton.addMouseListener( new MouseListener()
-    {
-      public void mouseDoubleClick( MouseEvent e )
-      {
-        FilterDialogTreeNode childNode = new FilterDialogTreeNode( getComparisonCombo().getSelectionName(
-            getComparisonCombo().getSelection() ), FilterDialogTreeNode.COMPARISON_NODE_TYPE );
-        getCurrentNode().addNode( childNode );
-        getM_viewer().expandAll();
-        if( getCurrentNode() != null )
-          getM_viewer().setSelection( new StructuredSelection( getCurrentNode() ) );
-        getM_viewer().refresh( true );
-        setFilterInvalid();
-      }
-
-      public void mouseDown( MouseEvent e )
-      {
-        mouseDoubleClick( e );
-      }
-
-      public void mouseUp( MouseEvent e )
-      {
-      // nothing
-      }
-    } );
-
-    //	++++ Comparison FilterFilter line
-    Label featureFilterLabel = new Label( ogcFilter, SWT.NULL );
-    featureFilterLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_FEATURE );
-    featureIdButton = new Label( ogcFilter, SWT.NULL );
-    featureIdButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
-    featureIdButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
-    featureIdButton.addMouseListener( new MouseListener()
-    {
-      public void mouseDoubleClick( MouseEvent e )
-      {
-        FilterDialogTreeNode childNode = new FilterDialogTreeNode( "FT_ID", FilterDialogTreeNode.FEATUREID_NODE_TYPE );
-        getCurrentNode().addNode( childNode );
-        getM_viewer().expandAll();
-        if( getCurrentNode() != null )
-          getM_viewer().setSelection( new StructuredSelection( getCurrentNode() ) );
-        getM_viewer().refresh( true );
-        setFilterInvalid();
-      }
-
-      public void mouseDown( MouseEvent e )
-      {
-        mouseDoubleClick( e );
-      }
-
-      public void mouseUp( MouseEvent e )
-      {
-      // nothing
-      }
-    } );
-
-    // ----- SLD Filter
-    sldFilter.setLayout( new GridLayout( 2, false ) );
-    //	++++ Comparison ElseFilter line
-    Label elseFilterLabel = new Label( sldFilter, SWT.NULL );
-    elseFilterLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_ELSE );
-    elseFilterButton = new Label( sldFilter, SWT.NULL );
-    elseFilterButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
-    elseFilterButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
-    elseFilterButton.addMouseListener( new MouseListener()
-    {
-      public void mouseDoubleClick( MouseEvent e )
-      {
-        FilterDialogTreeNode childNode = new FilterDialogTreeNode( "ElseFilter", FilterDialogTreeNode.ELSEFILTER_TYPE );
-        getCurrentNode().addNode( childNode );
-        getM_viewer().expandAll();
-        if( getCurrentNode() != null )
-          getM_viewer().setSelection( new StructuredSelection( getCurrentNode() ) );
-        getM_viewer().refresh( true );
-        setFilterInvalid();
-      }
-
-      public void mouseDown( MouseEvent e )
-      {
-        mouseDoubleClick( e );
-      }
-
-      public void mouseUp( MouseEvent e )
-      {
-      // nothing
-      }
-    } );
+    createOGCFilterPanel( functionComposite );
+    createSLDFilterPanel( functionComposite );
 
     // **** FOURTH ROW
-    Composite secondRowComposite = new Composite( composite, SWT.NULL );
+    Composite secondRowComposite = new Composite( main, SWT.NULL );
     secondRowComposite.setLayout( new GridLayout( 2, true ) );
 
     Label treeLabel = new Label( secondRowComposite, SWT.NULL );
@@ -433,7 +312,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     inputLabel.setLayoutData( inputLabelData );
 
     //  **** FIFTH ROW - TREE
-    final TableTree tree = new TableTree( secondRowComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL
+     final TableTree tree = new TableTree( secondRowComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL
         | SWT.BORDER );
     GridData tableTreeData = new GridData();
     tableTreeData.widthHint = 224;
@@ -461,7 +340,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     innerConfigureComposite = new Composite( globalConfigureComposite, SWT.NULL );
 
     // **** THIRD ROW - SAVE FILTER
-    Composite thirdRowComposite = new Composite( composite, SWT.NULL );
+    Composite thirdRowComposite = new Composite( main, SWT.NULL );
     thirdRowComposite.setLayout( new GridLayout( 2, false ) );
     validateFilterButton = new Button( thirdRowComposite, SWT.NULL );
     validateFilterButton.setText( MessageBundle.STYLE_EDITOR_FILTER_VALIDATE );
@@ -542,7 +421,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     errorLabelData.widthHint = 350;
     errorLabel.setLayoutData( errorLabelData );
 
-    return composite;
+    return main;
   }
 
   private FilterDialogTreeNode parseFilterIntoTree( AbstractFilter filter )
@@ -793,6 +672,15 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
       }
     }
+    else if( ( (FilterDialogTreeNode)children[0] ).getType() == FilterDialogTreeNode.SPATIAL_NODE_TYPE )
+    {
+      FilterDialogTreeNode child = (FilterDialogTreeNode)children[0];
+      if( child.getSubType() == FilterDialogTreeNode.SPATIAL_INTERSECTS )
+      {
+
+      }
+
+    }
     else if( ( (FilterDialogTreeNode)children[0] ).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
     {
       FilterDialogTreeNode child = (FilterDialogTreeNode)children[0];
@@ -870,6 +758,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       return true;
     }
     else if( ( (FilterDialogTreeNode)children[0] ).getType() == FilterDialogTreeNode.COMPARISON_NODE_TYPE )
+    {
+      FilterDialogTreeNode currentChild = (FilterDialogTreeNode)children[0];
+      if( !currentChild.validate() )
+        return false;
+      return true;
+    }
+    // ck 28.7.05
+    else if( ( (FilterDialogTreeNode)children[0] ).getType() == FilterDialogTreeNode.SPATIAL_NODE_TYPE )
     {
       FilterDialogTreeNode currentChild = (FilterDialogTreeNode)children[0];
       if( !currentChild.validate() )
@@ -971,6 +867,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       switch( currentNode.getType() )
       {
       case FilterDialogTreeNode.ROOT_TYPE:
+
       {
         // no first element -> all options available
         if( children.length == 0 )
@@ -979,6 +876,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           enableFeatureOperations();
           enableLogicalOperations();
           enableElseFilter();
+          enableSpatialOperations();
         }
         // first element: featureId -> only featureId available
         else if( ( (FilterDialogTreeNode)children[0] ).getType() == FilterDialogTreeNode.FEATUREID_NODE_TYPE )
@@ -986,6 +884,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           disableComparisonOperations();
           enableFeatureOperations();
           disableLogicalOperations();
+          disableSpatialOperations();
         }
         // first element: logic or comparision -> no options
         else
@@ -993,6 +892,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           disableComparisonOperations();
           disableFeatureOperations();
           disableLogicalOperations();
+          disableSpatialOperations();
         }
         break;
       }
@@ -1001,6 +901,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         disableComparisonOperations();
         disableFeatureOperations();
         disableLogicalOperations();
+        disableSpatialOperations();
         break;
       }
       case FilterDialogTreeNode.LOGICAL_NODE_TYPE:
@@ -1014,11 +915,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           {
             enableComparisonOperations();
             enableLogicalOperations();
+            enableSpatialOperations();
           }
           else
           {
             disableComparisonOperations();
             disableLogicalOperations();
+            enableSpatialOperations();
           }
         }
         // else (AND,OR)-> unbounded number of children possible
@@ -1026,6 +929,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         {
           enableComparisonOperations();
           enableLogicalOperations();
+          enableSpatialOperations();
         }
         break;
       }
@@ -1034,6 +938,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         disableComparisonOperations();
         disableFeatureOperations();
         disableLogicalOperations();
+        disableSpatialOperations();
         if( FilterDialogTreeNode.isBinaryComparisonType( currentNode.getSubType() ) )
           drawBinaryComparisonOpTypeGroup( currentNode.getData(), currentNode.getSubType() );
         else if( currentNode.getSubType() == FilterDialogTreeNode.COMPARISON_BETWEEN )
@@ -1049,8 +954,17 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         disableComparisonOperations();
         disableFeatureOperations();
         disableLogicalOperations();
+        disableSpatialOperations();
         drawFeatureIdTypeGroup( (FeatureIDData)currentNode.getData() );
         break;
+      }
+      case FilterDialogTreeNode.SPATIAL_NODE_TYPE:
+      {
+        enableComparisonOperations();
+        disableFeatureOperations();
+        enableLogicalOperations();
+        drawSpatialOpsTypeGroup( currentNode.getData(), currentNode.getSubType() );
+
       }
 
       default:
@@ -1059,6 +973,24 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
       }
     }
+  }
+
+  /**
+   *  
+   */
+  private void enableSpatialOperations()
+  {
+    m_spatialCombo.enable();
+    spatialButton.setVisible( true );
+  }
+
+  /**
+   *  
+   */
+  private void disableSpatialOperations()
+  {
+    m_spatialCombo.disable();
+    spatialButton.setVisible( false );
   }
 
   private void disableLogicalOperations()
@@ -1097,12 +1029,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
   private void disableElseFilter()
   {
-    elseFilterButton.setVisible( false );
+    if( elseFilterButton != null )
+      elseFilterButton.setVisible( false );
   }
 
   private void enableElseFilter()
   {
-    elseFilterButton.setVisible( true );
+    if( elseFilterButton != null )
+      elseFilterButton.setVisible( true );
   }
 
   private void createContextMenu( Control menuControl )
@@ -1119,6 +1053,193 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
     Menu menu = menuMgr.createContextMenu( menuControl );
     menuControl.setMenu( menu );
+  }
+
+  private void drawSpatialOpsTypeGroup( AbstractData data, final int subType )
+  {
+    String propertyName = null;
+    Object literal = null;
+    int type = subType;
+
+    if( data instanceof BinarySpatialData )
+    {
+      propertyName = ( (BinarySpatialData)data ).getGeometryPropertyName();
+      literal = ( (BinarySpatialData)data ).getGeomType();
+    }
+    else if( data instanceof BBoxSpatialData )
+    {
+      propertyName = ( (BBoxSpatialData)data ).getGeometryPropertyName();
+      literal = ( (BBoxSpatialData)data ).getGeomType();
+    }
+    if( innerConfigureComposite != null )
+      innerConfigureComposite.dispose();
+    innerConfigureComposite = new Composite( globalConfigureComposite, SWT.NULL );
+    innerConfigureComposite.setLayout( new GridLayout() );
+    GridData formData = new GridData( 224, 127 );
+    innerConfigureComposite.setLayoutData( formData );
+
+    //		 **** Configuration
+    configureGroup = new Group( innerConfigureComposite, SWT.NULL );
+    configureGroup.setLayout( new GridLayout( 2, false ) );
+    configureGroup.setText( MessageBundle.STYLE_EDITOR_FILTER_CONFIG_FILTER );
+    GridData groupCompositeData = new GridData();
+    groupCompositeData.widthHint = 200;
+    groupCompositeData.heightHint = 100;
+    configureGroup.setLayoutData( groupCompositeData );
+
+    Label propertyLabel = new Label( configureGroup, SWT.NULL );
+    propertyLabel.setText( MessageBundle.STYLE_EDITOR_GEOM_PROPERTY );
+    final Combo propertyNameCombo = new Combo( configureGroup, SWT.NULL );
+    GridData propertyNameComboData = new GridData( 75, 30 );
+    propertyNameCombo.setLayoutData( propertyNameComboData );
+    // get all PropertyNames to use for filter
+    ArrayList labelStringItems = new ArrayList();
+    FeatureTypeProperty[] ftp = featureType.getProperties();
+    for( int i = 0; i < ftp.length; i++ )
+    {
+      FeatureTypeProperty geomProperty = ftp[i];
+      if( geomProperty.isGeometryProperty() )
+        labelStringItems.add( geomProperty.getName() );
+    }
+    final String[] items = new String[labelStringItems.size()];
+    for( int j = 0; j < items.length; j++ )
+      items[j] = (String)labelStringItems.get( j );
+    propertyNameCombo.setItems( items );
+    propertyNameCombo.setText( "..." );
+    Button geomMapButton = new Button( configureGroup, SWT.RADIO );
+    geomMapButton.setSelection( false );
+    geomMapButton.setText( MessageBundle.STYLE_EDITOR_GEOMETRY_IN_MAP );
+    geomMapButton.addSelectionListener( new SelectionListener()
+    {
+
+      public void widgetSelected( SelectionEvent e )
+      {
+        Object o = e.widget;
+        if( o instanceof Button )
+        {
+          Button radio = (Button)o;
+          m_drawGeomSelection = radio.getSelection();
+          if( m_drawGeomSelection )
+          {
+            MessageDialog.openInformation( getShell(), "Dummy Dialog", "Draw a Geometry in the Map" );
+          }
+        }
+
+      }
+
+      public void widgetDefaultSelected( SelectionEvent e )
+      {
+        widgetSelected( e );
+
+      }
+    } );
+
+    Button geomFileButton = new Button( configureGroup, SWT.RADIO );
+    geomFileButton.setSelection( false );
+    geomFileButton.setText( MessageBundle.STYLE_EDITOR_CHOOSE_EXTERNAL_GEOMETRY );
+    geomFileButton.addSelectionListener( new SelectionListener()
+    {
+
+      public void widgetSelected( SelectionEvent e )
+      {
+        Object o = e.widget;
+        if( o instanceof Button )
+        {
+          Button radio = (Button)o;
+          m_loadGeomSelection = radio.getSelection();
+          if( m_loadGeomSelection )
+          {
+            IProject project = ProjectUtilities.getSelectedProjects()[0];
+            KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), project,
+                "Auswählen der Geometry für den Räumlichen Filter", new String[]
+                {
+                    "shp",
+                    "gml" }, project );
+            int open = dialog.open();
+            if( open == Window.OK )
+            {
+              IPath result = (IPath)dialog.getResult()[0];
+              if( result.getFileExtension().equals( "shp" ) )
+                ;
+              if( result.getFileExtension().equals( "gml" ) )
+                ;
+              System.out.println( "test geometry aus file " + result );
+            }
+          }
+        }
+      }
+
+      public void widgetDefaultSelected( SelectionEvent e )
+      {
+        widgetSelected( e );
+
+      }
+    } );
+
+    if( propertyName != null && propertyName.trim().length() > 0 )
+      propertyNameCombo.select( labelStringItems.indexOf( propertyName ) );
+
+    Button addButton = new Button( configureGroup, SWT.NULL );
+    addButton.setText( MessageBundle.STYLE_EDITOR_SET );
+    if( labelStringItems.size() == 0 )
+      addButton.setEnabled( false );
+    if( labelStringItems.size() == 0 )
+      addButton.setEnabled( false );
+    if( labelStringItems.size() == 0 )
+      addButton.setEnabled( false );
+    addButton.addSelectionListener( new SelectionListener()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        AbstractData addata = null;
+        int index = propertyNameCombo.getSelectionIndex();
+        int type = subType;
+        if( subType != FilterDialogTreeNode.SPATIAL_CROSSES && subType != FilterDialogTreeNode.SPATIAL_OVERLAPS
+            && subType != FilterDialogTreeNode.SPATIAL_TOUCHES )
+        {
+          addata = new BinarySpatialData();
+          if( index >= 0 && index < items.length )
+            ( (BinarySpatialData)addata ).setGeometryPropertyName( items[index] );
+          ( (BinarySpatialData)addata ).setGeomType( GeometryFactory.createGM_Point( 120, 200, KalypsoGisPlugin
+              .getDefault().getCoordinatesSystem() ) );
+        }
+        else
+        {
+          MessageDialog.openError( getShell(), "Filter Fehler", "Diese gewünschete Operation ("
+              + OperationDefines.getNameById( subType ) + ") ist nicht verfügbar!" );
+          return;
+        }
+
+        boolean validInput = false;
+        try
+        {
+          validInput = addata.verify();
+          if( validInput && ( ( m_drawGeomSelection && !m_loadGeomSelection )  || (!m_drawGeomSelection && m_loadGeomSelection ) ) )
+          {
+            getCurrentNode().setData( addata );
+            setFilterInvalid();
+          }
+          getErrorLabel().setText( "" );
+        }
+        catch( FilterDialogException e1 )
+        {
+          getErrorLabel().setText( e1.getError().getFaultCode() );
+          if( getCurrentNode().getData() != null )
+          {
+            //TODO was passiert hier
+            System.out.println( "Error !!!" );
+          }
+        }
+      }
+
+      public void widgetDefaultSelected( SelectionEvent e )
+      {
+        widgetSelected( e );
+      }
+    } );
+
+    innerConfigureComposite.pack( true );
+    globalConfigureComposite.setVisible( true );
   }
 
   private void drawFeatureIdTypeGroup( FeatureIDData data )
@@ -1647,6 +1768,184 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     globalConfigureComposite.setVisible( true );
   }
 
+  private void createOGCFilterPanel( Composite top )
+  {
+    //  ----- OGC Filter
+    GridData ogcGroupData = new GridData();
+    ogcGroupData.widthHint = 235;
+    ogcGroupData.heightHint = 100;
+    Group ogcFilter = new Group( top, SWT.NULL );
+    ogcFilter.setLayout( new GridLayout( 3, false ) );
+    ogcFilter.setText( MessageBundle.STYLE_EDITOR_FILTER_OGC );
+    ogcFilter.setLayoutData( ogcGroupData );
+    //  ++++ Logical filter line
+    Label logicalLabel = new Label( ogcFilter, SWT.NULL );
+    logicalLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_LOGICAL );
+    logicalCombo = new LogicalFilterComboPanel( ogcFilter );
+    logicalButton = new Label( ogcFilter, SWT.NULL );
+    logicalButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    logicalButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    logicalButton.addMouseListener( new MouseListener()
+    {
+      public void mouseDoubleClick( MouseEvent e )
+      {
+        FilterDialogTreeNode childNode = new FilterDialogTreeNode( getLogicalCombo().getSelectionName(
+            getLogicalCombo().getSelection() ), FilterDialogTreeNode.LOGICAL_NODE_TYPE );
+        getCurrentNode().addNode( childNode );
+        getM_viewer().expandAll();
+        if( childNode != null )
+          getM_viewer().setSelection( new StructuredSelection( childNode ) );
+        getM_viewer().refresh( true );
+        setFilterInvalid();
+      }
+
+      public void mouseDown( MouseEvent e )
+      {
+        mouseDoubleClick( e );
+      }
+
+      public void mouseUp( MouseEvent e )
+      {
+      // nothing
+      }
+    } );
+
+    // ++++ Comparison filter line
+    Label comparisonLabel = new Label( ogcFilter, SWT.NULL );
+    comparisonLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_COMPARISON );
+    comparisonCombo = new ComparisonFilterComboPanel( ogcFilter );
+    compButton = new Label( ogcFilter, SWT.NULL );
+    compButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    compButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    compButton.addMouseListener( new MouseListener()
+    {
+      public void mouseDoubleClick( MouseEvent e )
+      {
+        FilterDialogTreeNode childNode = new FilterDialogTreeNode( getComparisonCombo().getSelectionName(
+            getComparisonCombo().getSelection() ), FilterDialogTreeNode.COMPARISON_NODE_TYPE );
+        getCurrentNode().addNode( childNode );
+        getM_viewer().expandAll();
+        if( getCurrentNode() != null )
+          getM_viewer().setSelection( new StructuredSelection( getCurrentNode() ) );
+        getM_viewer().refresh( true );
+        setFilterInvalid();
+      }
+
+      public void mouseDown( MouseEvent e )
+      {
+        mouseDoubleClick( e );
+      }
+
+      public void mouseUp( MouseEvent e )
+      {
+      // nothing
+      }
+    } );
+
+    //  ++++ Spatial filter line
+    Label spatialFilterLabel = new Label( ogcFilter, SWT.NULL );
+    spatialFilterLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_SPATIAL );
+    m_spatialCombo = new SpatialOperationPanel( ogcFilter );
+    spatialButton = new Label( ogcFilter, SWT.NULL );
+    spatialButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    spatialButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    spatialButton.addMouseListener( new MouseListener()
+    {
+      public void mouseDoubleClick( MouseEvent e )
+      {
+        FilterDialogTreeNode childNode = new FilterDialogTreeNode( getSpatialCombo().getSelectionName(
+            getSpatialCombo().getSelection() ), FilterDialogTreeNode.SPATIAL_NODE_TYPE );
+        getCurrentNode().addNode( childNode );
+        getM_viewer().expandAll();
+        if( getCurrentNode() != null )
+          getM_viewer().setSelection( new StructuredSelection( getCurrentNode() ) );
+        getM_viewer().refresh( true );
+        setFilterInvalid();
+      }
+
+      public void mouseDown( MouseEvent e )
+      {
+        mouseDoubleClick( e );
+      }
+
+      public void mouseUp( MouseEvent e )
+      {
+      // nothing
+      }
+    } );
+
+    //	++++ Comparison FilterFilter line
+    Label featureFilterLabel = new Label( ogcFilter, SWT.NULL );
+    featureFilterLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_FEATURE );
+    featureIdButton = new Label( ogcFilter, SWT.NULL );
+    featureIdButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    featureIdButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    featureIdButton.addMouseListener( new MouseListener()
+    {
+      public void mouseDoubleClick( MouseEvent e )
+      {
+        FilterDialogTreeNode childNode = new FilterDialogTreeNode( "FT_ID", FilterDialogTreeNode.FEATUREID_NODE_TYPE );
+        getCurrentNode().addNode( childNode );
+        getM_viewer().expandAll();
+        if( getCurrentNode() != null )
+          getM_viewer().setSelection( new StructuredSelection( getCurrentNode() ) );
+        getM_viewer().refresh( true );
+        setFilterInvalid();
+      }
+
+      public void mouseDown( MouseEvent e )
+      {
+        mouseDoubleClick( e );
+      }
+
+      public void mouseUp( MouseEvent e )
+      {
+      // nothing
+      }
+    } );
+  }
+
+  private void createSLDFilterPanel( Composite top )
+  {
+    // ----- SLD Filter
+    Group sldFilter = new Group( top, SWT.NULL );
+    GridData sldGroupData = new GridData();
+    sldGroupData.widthHint = 210;
+    sldGroupData.heightHint = 100;
+    sldFilter.setText( MessageBundle.STYLE_EDITOR_FILTER_SLD );
+    sldFilter.setLayoutData( sldGroupData );
+    sldFilter.setLayout( new GridLayout( 2, false ) );
+    //	++++ Comparison ElseFilter line
+    Label elseFilterLabel = new Label( sldFilter, SWT.NULL );
+    elseFilterLabel.setText( MessageBundle.STYLE_EDITOR_FILTER_ELSE );
+    elseFilterButton = new Label( sldFilter, SWT.NULL );
+    elseFilterButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
+    elseFilterButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
+    elseFilterButton.addMouseListener( new MouseListener()
+    {
+      public void mouseDoubleClick( MouseEvent e )
+      {
+        FilterDialogTreeNode childNode = new FilterDialogTreeNode( "ElseFilter", FilterDialogTreeNode.ELSEFILTER_TYPE );
+        getCurrentNode().addNode( childNode );
+        getM_viewer().expandAll();
+        if( getCurrentNode() != null )
+          getM_viewer().setSelection( new StructuredSelection( getCurrentNode() ) );
+        getM_viewer().refresh( true );
+        setFilterInvalid();
+      }
+
+      public void mouseDown( MouseEvent e )
+      {
+        mouseDoubleClick( e );
+      }
+
+      public void mouseUp( MouseEvent e )
+      {
+      // nothing
+      }
+    } );
+  }
+
   Filter getFilter()
   {
     return returnFilter;
@@ -1730,6 +2029,16 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   public void setComparisonCombo( ComparisonFilterComboPanel m_comparisonCombo )
   {
     this.comparisonCombo = m_comparisonCombo;
+  }
+
+  public SpatialOperationPanel getSpatialCombo()
+  {
+    return m_spatialCombo;
+  }
+
+  public void setSpatialCombo( SpatialOperationPanel spatialCombo )
+  {
+    this.m_spatialCombo = spatialCombo;
   }
 
   public TableTreeViewer getM_viewer()

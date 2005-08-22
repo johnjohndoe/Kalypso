@@ -167,7 +167,6 @@ public class FilterRootElement implements Filter
             parentCast.setArguments( null );
           return;
         }
-        ;
       }
       if( element instanceof LogicalOperation )
       {

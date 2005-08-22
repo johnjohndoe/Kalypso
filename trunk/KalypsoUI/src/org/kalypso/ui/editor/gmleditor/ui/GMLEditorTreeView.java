@@ -1,15 +1,24 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import java.io.Reader;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
@@ -19,14 +28,22 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
+import org.kalypso.ogc.gml.command.SelectFeaturesCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
+import org.kalypso.template.gistreeview.Gistreeview;
+import org.kalypso.template.gistreeview.ObjectFactory;
+import org.kalypso.template.types.LayerType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.ui.editor.gmleditor.util.GMLReader;
 import org.kalypso.ui.editor.gmleditor.util.actions.AddFeatureAction;
@@ -34,7 +51,6 @@ import org.kalypso.ui.editor.gmleditor.util.actions.AddLinkAction;
 import org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction;
 import org.kalypso.ui.editor.gmleditor.util.actions.EditFeatureAction;
 import org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction;
-import org.kalypso.ui.editor.gmleditor.util.command.DeleteFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.GMLDocumentEvent;
@@ -44,12 +60,22 @@ import org.kalypso.ui.editor.gmleditor.util.model.LinkedFeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.Model;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
 import org.kalypso.ui.editor.gmleditor.util.model.visitors.FindDataElementsVisitor;
+import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.KeyComparator;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureSelectionChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
+import org.xml.sax.InputSource;
 
 /**
  * Is among others a {@link org.eclipse.jface.viewers.IPostSelectionProvider}. The returned selection consists of
@@ -59,14 +85,14 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  * 
  * @author <verschiedene>
  */
-public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLDocumentListener, ModellEventListener,
-    ModellEventProvider, IPostSelectionProvider
+public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLDocumentListener, // 
+    IPostSelectionProvider, IPoolListener, ModellEventProvider, ModellEventListener//, ISelectionChangedListener
 {
   private final static int DEFAULT_EXPANSION_LEVEL = 3;
 
-  protected TreeViewer m_treeViewer;
+  protected GMLEditorLabelProvider2 m_labelProvider = new GMLEditorLabelProvider2();
 
-  protected GMLEditorLabelProvider m_labelProvider;
+  protected GMLEditorContentProvider2 m_contentProvider = new GMLEditorContentProvider2();
 
   protected FeatureElement m_root;
 
@@ -94,12 +120,53 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
 
   protected Clipboard clipboard = new Clipboard();
 
-  private final ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
+  private final ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
+
+  private PoolableObjectType m_key;
+
+  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
+
+  private final ObjectFactory m_factory = new ObjectFactory();
+
+  private final Marshaller m_marshaller;
+
+  private final Unmarshaller m_unmarshaller;
+
+  public final static String INTERNAL = "INTERNAL";
+
+  public final static String EXTERNAL = "EXTERNAL";
+
+  private String m_selectionSource = null;
+
+  private IFeatureSelectionManager m_workspaceSelectionManager;
+
+  private TreeViewer m_treeViewer;
 
   public GMLEditorTreeView( final Composite composite )
   {
     m_composite = composite;
+    try
+    {
+      m_marshaller = m_factory.createMarshaller();
+      m_unmarshaller = m_factory.createUnmarshaller();
+      m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+      throw new RuntimeException( e );
+    }
+
+    setUpTreeViewer();
+
+    hookListeners();
+    //    createActions();
+    //    createMenu( m_treeViewer.getControl() );
+  }
+
+  private void setUpTreeViewer()
+  {
     final GridLayout layout = new GridLayout();
     layout.numColumns = 1;
     layout.verticalSpacing = 2;
@@ -108,10 +175,12 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
     m_composite.setLayout( layout );
 
     m_treeViewer = new TreeViewer( m_composite );
-    m_treeViewer.setContentProvider( new GMLEditorContentProvider() );
-    m_labelProvider = new GMLEditorLabelProvider();
+    m_treeViewer.setContentProvider( m_contentProvider );
+    //    setContentProvider( m_contentProvider );
     m_treeViewer.setLabelProvider( m_labelProvider );
+    //    setLabelProvider( m_labelProvider );
     m_treeViewer.setUseHashlookup( true );
+    //    setUseHashlookup( true );
 
     final GridData layoutData = new GridData();
     layoutData.grabExcessHorizontalSpace = true;
@@ -119,78 +188,61 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
     layoutData.horizontalAlignment = GridData.FILL;
     layoutData.verticalAlignment = GridData.FILL;
     m_treeViewer.getControl().setLayoutData( layoutData );
-
-    hookListeners();
-    createActions();
-    createMenu( m_treeViewer.getControl() );
-  }
-
-  public void setGmlReader( final GMLReader reader )
-  {
-    if( m_reader != null )
-      m_reader.removeGMLDocuentListener( this );
-
-    m_reader = reader;
-
-    if( m_reader != null )
-    {
-      m_reader.addGMLDocumentListener( this );
-      onChange( new GMLDocumentEvent( GMLReader.getGMLDocument( getWorkspace() ), m_reader.getGMLWorkspace() ) );
-    }
+    //    getControl().setLayoutData( layoutData );
   }
 
   protected void createActions()
   {
-    deleteFeatureAction = new Action( "Löschen" )
-    {
-      public void run()
-      {
-        if( m_treeViewer.getSelection().isEmpty() )
-          return;
-        IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
-        for( Iterator iterator = selection.iterator(); iterator.hasNext(); )
-        {
-          Model model = (Model)iterator.next();
-
-          if( model instanceof FeatureElement || model instanceof LinkedFeatureElement )
-          {
-            Object childItem = null;
-            Feature parentFeature = null;
-
-            if( model instanceof FeatureElement )
-            {
-              childItem = ( (FeatureElement)model ).getFeature();
-              parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();
-            }
-            else
-            {
-              childItem = ( (LinkedFeatureElement)model ).getName();
-              parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();
-            }
-            DeleteFeatureCommand command = new DeleteFeatureCommand( m_workspace, parentFeature,
-                ( (PropertyElement)model.getParent() ).getProperty().getName(), childItem );
-            try
-            {
-              m_workspace.postCommand( command );
-              //m_gmlEditor.postCommand(command, null);
-              return;
-            }
-            catch( Exception e )
-            {
-              e.printStackTrace();
-            }
-          }
-        }
-      }
-    };
+    //    deleteFeatureAction = new Action( "Löschen" )
+    //    {
+    //      public void run()
+    //      {
+    //        if( m_treeViewer.getSelection().isEmpty() )
+    //          return;
+    //        IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
+    //        for( Iterator iterator = selection.iterator(); iterator.hasNext(); )
+    //        {
+    //          Model model = (Model)iterator.next();
+    //
+    //          if( model instanceof FeatureElement || model instanceof LinkedFeatureElement )
+    //          {
+    //            Object childItem = null;
+    //            Feature parentFeature = null;
+    //
+    //            if( model instanceof FeatureElement )
+    //            {
+    //              childItem = ( (FeatureElement)model ).getFeature();
+    //              parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();
+    //            }
+    //            else
+    //            {
+    //              childItem = ( (LinkedFeatureElement)model ).getName();
+    //              parentFeature = ( (FeatureElement)model.getParent().getParent() ).getFeature();
+    //            }
+    //            DeleteFeatureCommand command = new DeleteFeatureCommand( m_workspace, parentFeature,
+    //                ( (PropertyElement)model.getParent() ).getProperty().getName(), childItem );
+    //            try
+    //            {
+    //              m_workspace.postCommand( command );
+    //              //m_gmlEditor.postCommand(command, null);
+    //              return;
+    //            }
+    //            catch( Exception e )
+    //            {
+    //              e.printStackTrace();
+    //            }
+    //          }
+    //        }
+    //      }
+    //    };
 
     moveFeatureUpAction = new Action( "Nach oben verschieben" )
     {
       public void run()
       {
-        if( m_treeViewer.getSelection().isEmpty() )
+        if( getSelection().isEmpty() )
           return;
-        IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)getSelection();
         for( Iterator iterator = selection.iterator(); iterator.hasNext(); )
         {
           Model model = (Model)iterator.next();
@@ -231,9 +283,9 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
     {
       public void run()
       {
-        if( m_treeViewer.getSelection().isEmpty() )
+        if( getSelection().isEmpty() )
           return;
-        IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)getSelection();
         for( Iterator iterator = selection.iterator(); iterator.hasNext(); )
         {
           Model model = (Model)iterator.next();
@@ -280,6 +332,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
     {
       public void menuAboutToShow( IMenuManager mgr )
       {
+        mgr.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
         if( editFeatureAction != null )
           mgr.add( editFeatureAction );
         mgr.add( deleteFeatureAction );
@@ -307,38 +360,91 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
 
   protected void hookListeners()
   {
-    m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
-    {
-      public void doubleClick( final DoubleClickEvent event )
-      {
-        if( event.getSelection() instanceof IStructuredSelection )
+    m_treeViewer.addDoubleClickListener( new IDoubleClickListener() //m_treeViewer
         {
-          final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-          final Object obj = selection.getFirstElement();
-          if( obj instanceof LinkedFeatureElement )
+          public void doubleClick( final DoubleClickEvent event )
           {
-            final StructuredSelection ss = new StructuredSelection( findFeatureElement( (LinkedFeatureElement)obj ) );
-            m_treeViewer.setSelection( ss, true );
+            if( event.getSelection() instanceof IStructuredSelection )
+            {
+              final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+              final Object obj = selection.getFirstElement();
+              if( obj instanceof LinkedFeatureElement2 )
+              {
+                final Feature feature = ( (LinkedFeatureElement2)obj ).getDecoratedFeature();
+                final StructuredSelection ss = new StructuredSelection( feature );
+                m_treeViewer.setSelection( ss, true );
+                //            setSelection( ss, true );
+                m_treeViewer.expandToLevel( feature, 1 );
+                //            expandToLevel( feature, 1 );
+                m_treeViewer.reveal( feature );
+                //            reveal( feature );
+              }
+            }
           }
-        }
-      }
-    } );
+        } );
 
-    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        onTreeSelectionChanged( event );
-      }
-    } );
+    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener() //m_treeViewer.
+        {
 
-    m_treeViewer.addPostSelectionChangedListener( new ISelectionChangedListener()
-    {
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        firePostSelectionChanged();
-      }
-    } );
+          public void selectionChanged( final SelectionChangedEvent event )
+          {
+            //        onTreeSelectionChanged( event );
+            if( m_selectionSource == null )
+              m_selectionSource = INTERNAL;
+            else if( m_selectionSource.equals( EXTERNAL ) )
+            {
+              m_selectionSource = INTERNAL;
+              return;
+            }
+            ISelection selection = event.getSelection();
+
+            if( selection instanceof IStructuredSelection )
+            {
+              Object input = m_treeViewer.getInput();
+              //          Object input = getInput();
+              Object[] selectedTreeItems = ( (IStructuredSelection)selection ).toArray();
+              ArrayList selectedFeatures = new ArrayList();
+              for( int i = 0; i < selectedTreeItems.length; i++ )
+              {
+                Object treeElement = selectedTreeItems[i];
+                //                if( treeElement instanceof FeatureAssociationTypeElement )
+                //                  selectedFeatures.add( ( (FeatureAssociationTypeElement)treeElement ).getAssociationTypeProperty() );
+                if( treeElement instanceof LinkedFeatureElement2 )
+                  selectedFeatures.add( ( (LinkedFeatureElement2)treeElement ).getDecoratedFeature() );
+                else if( treeElement instanceof GMLWorkspace )
+                  selectedFeatures.add( ( (GMLWorkspace)treeElement ).getRootFeature() );
+                else if( treeElement instanceof Feature )
+                  selectedFeatures.add( treeElement );
+              }
+              if( input instanceof GMLWorkspace )
+              {
+                final IFeatureSelectionManager selectionManager = ( (GMLWorkspace)input ).getSelectionManager();
+                final CommandableWorkspace workspace = (CommandableWorkspace)input;
+                final Feature[] features = (Feature[])selectedFeatures.toArray( new Feature[selectedFeatures.size()] );
+                final SelectFeaturesCommand command = new SelectFeaturesCommand( workspace, features, selectionManager,
+                    ModellEvent.TREE_SELECTION_CHANGED );
+                try
+                {
+                  m_selectionSource = INTERNAL;
+                  workspace.postCommand( command );
+                }
+                catch( Exception e )
+                {
+                  e.printStackTrace();
+                }
+              }
+            }
+          }
+        } );
+
+    //    m_treeViewer.addPostSelectionChangedListener( new ISelectionChangedListener()
+    //    {
+    //      public void selectionChanged( final SelectionChangedEvent event )
+    //      {
+    //        firePostSelectionChanged();
+    //      }
+    //    } );
+
   }
 
   protected void onTreeSelectionChanged( final SelectionChangedEvent event )
@@ -346,9 +452,8 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
     // first inform my listeners
     final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     final ISelection unwrappedSelection = new CommandableFeatureSelection( getWorkspace(), new StructuredSelection(
-        getDataFromElements( selection.toArray() ) ), null, null);
+        getDataFromElements( selection.toArray() ) ), null, null );
     setSelection( unwrappedSelection );
-
     // now update actions
 
     final Object obj = selection.getFirstElement();
@@ -397,8 +502,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
         editFeatureAction.setEnabled( false );
       if( obj instanceof FeatureElement )
       {
-        editFeatureAction = new EditFeatureAction( m_workspace, m_reader,
-            m_composite.getShell() );
+        editFeatureAction = new EditFeatureAction( m_workspace, m_reader, m_composite.getShell() );
         editFeatureAction.setEnabled( true );
         copyFeatureAction = new CopyFeatureAction( ( (FeatureElement)obj ).getFeature(), m_workspace, clipboard );
         copyFeatureAction.setEnabled( true );
@@ -440,41 +544,42 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
    */
   public void onChange( GMLDocumentEvent event )
   {
-    m_root = event.getGmlDocument();
-    if( m_workspace != null )
-      m_workspace.removeModellListener( this );
-    m_workspace = event.getWorkspace();
-    if( m_workspace == null )
-      return;
-
-    m_workspace.addModellListener( this );
-
-    if( m_composite == null || m_composite.isDisposed() )
-      return;
-
-    m_composite.getDisplay().asyncExec( new Runnable()
-    {
-      public void run()
-      {
-        m_treeViewer.getTree().setVisible( false );
-        m_treeViewer.setInput( m_root );
-        // need to expand in order to load all elements into the treeviewers
-        // cache
-        m_treeViewer.expandAll();
-        m_treeViewer.collapseAll();
-
-        m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
-        m_treeViewer.getTree().setVisible( true );
-
-        fireModellEvent( new ModellEvent( GMLEditorTreeView.this, ModellEvent.FULL_CHANGE ) );
-      }
-    } );
+  //    m_root = event.getGmlDocument();
+  //    if( m_workspace != null )
+  //      m_workspace.removeModellListener( this );
+  //    m_workspace = event.getWorkspace();
+  //    if( m_workspace == null )
+  //      return;
+  //
+  //    m_workspace.addModellListener( this );
+  //
+  //    if( m_composite == null || m_composite.isDisposed() )
+  //      return;
+  //
+  //    m_composite.getDisplay().asyncExec( new Runnable()
+  //    {
+  //      public void run()
+  //      {
+  //        m_treeViewer.getTree().setVisible( false );
+  //        m_treeViewer.setInput( m_root );
+  //        // need to expand in order to load all elements into the treeviewers
+  //        // cache
+  //        m_treeViewer.expandAll();
+  //        m_treeViewer.collapseAll();
+  //
+  //        m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
+  //        m_treeViewer.getTree().setVisible( true );
+  //
+  //        fireModellEvent( new ModellEvent( GMLEditorTreeView.this, ModellEvent.FULL_CHANGE ) );
+  //      }
+  //    } );
 
   }
 
   public void dispose()
   {
     m_composite.dispose();
+    m_pool.removePoolListener( this );
   }
 
   /**
@@ -482,34 +587,62 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent.getEventSource() instanceof CommandableWorkspace )
+    if( modellEvent instanceof FeatureSelectionChangedModellEvent )
     {
-      if( !m_composite.isDisposed() )
-        m_composite.getDisplay().asyncExec( new Runnable()
+      FeatureSelectionChangedModellEvent event = (FeatureSelectionChangedModellEvent)modellEvent;
+      if( event.isType( ModellEvent.TREE_SELECTION_CHANGED ) )
+        return;
+      if( event.isType( ModellEvent.SELECTION_CHANGED ) )
+        m_treeViewer.getControl().getDisplay().asyncExec( new Runnable()
         {
+
           public void run()
           {
-            // das selektierte Feature merken und dann wieder anzeigen
-            final Object[] expandedElements = m_treeViewer.getExpandedElements();
-            final Object[] expandedData = getDataFromElements( expandedElements );
-
-            final IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
-            final Object[] selecteddata = getDataFromElements( selection.toArray() );
-
-            final FeatureElement root = GMLReader.getGMLDocument( (CommandableWorkspace)modellEvent.getEventSource() );
-            if( root != m_root )
-            {
-              m_root = root;
-              m_treeViewer.setInput( root );
-
-              m_treeViewer.setExpandedElements( findDataElements( expandedData ) );
-              m_treeViewer.setSelection( new StructuredSelection( findDataElements( selecteddata ) ) );
-            }
-
-            fireModellEvent( modellEvent );
+            //TODO dies ist nur ein hack um eine endlos schleife mit der selectionChanged Methode zu
+            //vermeiden evtuel mit TreeSelection zu ersezten
+            m_selectionSource = EXTERNAL;
+            final CommandableFeatureSelection selection = new CommandableFeatureSelection( m_workspace, m_workspace
+                .getSelectionManager().getStructuredSelection(), null, null );
+            m_treeViewer.setSelection( selection, true );
           }
         } );
     }
+
+    if( modellEvent instanceof FeatureStructureChangeModellEvent )
+    {
+      Feature parentFeature = ((FeatureStructureChangeModellEvent)modellEvent).getParentFeature();
+      m_treeViewer.update( parentFeature, null);
+      m_treeViewer.refresh();
+    }
+    //    if( modellEvent.getEventSource() instanceof CommandableWorkspace )
+    //    {
+    //      if( !m_composite.isDisposed() )
+    //        m_composite.getDisplay().asyncExec( new Runnable()
+    //        {
+    //          public void run()
+    //          {
+    // das selektierte Feature merken und dann wieder anzeigen
+    //            final Object[] expandedElements = m_treeViewer.getExpandedElements();
+    //            final Object[] expandedData = getDataFromElements( expandedElements );
+    //
+    //            final IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
+    //            final Object[] selecteddata = getDataFromElements( selection.toArray() );
+    //
+    //            final FeatureElement root = GMLReader.getGMLDocument( (CommandableWorkspace)modellEvent.getEventSource()
+    // );
+    //            if( root != m_root )
+    //            {
+    //              m_root = root;
+    //              m_treeViewer.setInput( root );
+    //
+    //              m_treeViewer.setExpandedElements( findDataElements( expandedData ) );
+    //              m_treeViewer.setSelection( new StructuredSelection( findDataElements( selecteddata ) ) );
+    //            }
+    //
+    //            fireModellEvent( modellEvent );
+    //          }
+    //        } );
+    //    }
   }
 
   protected static Object[] getDataFromElements( final Object[] elements )
@@ -549,7 +682,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
    */
   public void addModellListener( ModellEventListener listener )
   {
-    myEventProvider.addModellListener( listener );
+    m_eventProvider.addModellListener( listener );
   }
 
   /**
@@ -557,7 +690,7 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
    */
   public void removeModellListener( ModellEventListener listener )
   {
-    myEventProvider.removeModellListener( listener );
+    m_eventProvider.removeModellListener( listener );
   }
 
   /**
@@ -565,11 +698,158 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
    */
   public void fireModellEvent( ModellEvent event )
   {
-    myEventProvider.fireModellEvent( event );
+    m_eventProvider.fireModellEvent( event );
   }
 
   public TreeViewer getTreeViewer()
   {
     return m_treeViewer;
   }
+
+  public ISelection getSelection()
+  {
+    if( m_workspace == null )
+      return super.getSelection();
+    final IFeatureSelectionManager selectionManager = m_workspace.getSelectionManager();
+    final IStructuredSelection ss = selectionManager.getStructuredSelection();
+    return new CommandableFeatureSelection( m_workspace, ss, null, null );
+  }
+
+  /**
+   * @param workspace
+   */
+  //  public void setInput( GMLWorkspace workspace )
+  //  {
+  //    m_treeViewer.setInput( workspace );
+  //  }
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
+   *      org.eclipse.core.runtime.IStatus)
+   */
+  public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
+  {
+
+    if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
+    {
+      if( m_workspace != null )
+      {
+        m_workspace.removeModellListener( this );
+        m_workspace = null;
+      }
+      m_workspace = ( (CommandableWorkspace)newValue );
+      m_workspace.addModellListener( this );
+      m_treeViewer.getControl().getDisplay().asyncExec( new Runnable() //m_treeViewer.
+          {
+            public void run()
+            {
+
+              m_treeViewer.setInput( m_workspace );
+              //            setInput( m_workspace );
+            }
+          } );
+    }
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
+   */
+  public void objectInvalid( IPoolableObjectType key, Object oldValue )
+  {
+  // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @param r
+   * @param context
+   * @param monitor
+   * @param properties
+   * @throws CoreException
+   */
+  protected void loadInput( Reader r, URL context, IProgressMonitor monitor ) throws CoreException
+  {
+
+    monitor.beginTask( "Ansicht laden", 1000 );
+    try
+    {
+      final InputSource is = new InputSource( r );
+
+      Gistreeview gisTreeview = (Gistreeview)m_unmarshaller.unmarshal( is );
+
+      LayerType input = gisTreeview.getInput();
+      String href = input.getHref();
+      String linktype = input.getLinktype();
+      input.getFeaturePath();
+
+      m_key = new PoolableObjectType( linktype, href, context );
+      m_pool.addPoolListener( this, m_key );
+
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Vorlage" ) );
+    }
+    finally
+    {
+      monitor.done();
+    }
+
+  }
+
+  //  /**
+  //   * @see
+  // org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+  //   */
+  //  public void selectionChanged( SelectionChangedEvent event )
+  //  {
+  //    // onTreeSelectionChanged( event );
+  //    if( m_selectionSource == null )
+  //      m_selectionSource = INTERNAL;
+  //    else if( m_selectionSource.equals( EXTERNAL ) )
+  //    {
+  //      m_selectionSource = INTERNAL;
+  //      return;
+  //    }
+  //    ISelection selection = event.getSelection();
+  //
+  //    if( selection instanceof IStructuredSelection )
+  //    {
+  //// Object input = m_treeViewer.getInput();
+  //      Object input = getInput();
+  //      Object[] selectedTreeItems = ( (IStructuredSelection)selection ).toArray();
+  //      ArrayList selectedFeatures = new ArrayList();
+  //      for( int i = 0; i < selectedTreeItems.length; i++ )
+  //      {
+  //        Object treeElement = selectedTreeItems[i];
+  //        if( treeElement instanceof FeatureAssociationTypeElement )
+  //          selectedFeatures.add( ( (FeatureAssociationTypeElement)treeElement ).getParentFeature() );
+  //        else if( treeElement instanceof LinkedFeatureElement2 )
+  //          selectedFeatures.add( ( (LinkedFeatureElement2)treeElement ).getDecoratedFeature() );
+  //        else if( treeElement instanceof GMLWorkspace )
+  //          selectedFeatures.add( ( (GMLWorkspace)treeElement ).getRootFeature() );
+  //        else if( treeElement instanceof Feature )
+  //          selectedFeatures.add( treeElement );
+  //      }
+  //      if( input instanceof GMLWorkspace )
+  //      {
+  //        final IFeatureSelectionManager selectionManager = ( (GMLWorkspace)input ).getSelectionManager();
+  //        final CommandableWorkspace workspace = (CommandableWorkspace)input;
+  //        final Feature[] features = (Feature[])selectedFeatures.toArray( new Feature[selectedFeatures.size()] );
+  //        final SelectFeaturesCommand command = new SelectFeaturesCommand( workspace, features, selectionManager,
+  //            ModellEvent.TREE_SELECTION_CHANGED );
+  //        try
+  //        {
+  //          m_selectionSource = INTERNAL;
+  //          workspace.postCommand( command );
+  //        }
+  //        catch( Exception e )
+  //        {
+  //          e.printStackTrace();
+  //        }
+  //      }
+  //    }
+  //    
+  //  }
+
 }
