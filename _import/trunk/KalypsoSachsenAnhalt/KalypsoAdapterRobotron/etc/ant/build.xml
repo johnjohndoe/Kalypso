@@ -10,6 +10,7 @@
 		<fileset dir="${project.lib}" includes="**/*.jar" />
 		
 		<fileset dir="${workspace}/KalypsoAuth/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoMetaDoc/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoServiceUser/build/deploy" includes="**/*.jar" />
 	</path>
 	
