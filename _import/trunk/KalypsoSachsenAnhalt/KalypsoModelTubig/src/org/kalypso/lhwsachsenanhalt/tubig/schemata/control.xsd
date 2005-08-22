@@ -50,6 +50,33 @@
 		<complexContent>
 			<extension base="tubigcommon:EmptyFeatureBaseType">
 				<sequence>
+					<element name="scenarioId" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario Id</label>
+								<tooltip>Id des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="scenarioName" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario</label>
+								<tooltip>Name des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="scenarioDescription" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario Beschreibung</label>
+								<tooltip>Beschreibung des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="startsimulation" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
