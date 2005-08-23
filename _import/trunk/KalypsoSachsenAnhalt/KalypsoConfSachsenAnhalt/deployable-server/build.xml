@@ -195,9 +195,9 @@
 
     <target name="build-MetaDocService" depends="build-basic">
         <!-- First clean -->
-        <!--ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="clean" inheritAll="false">
+        <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="clean" inheritAll="false">
             <property file="deploy.properties" />
-        </ant-->
+        </ant>
 
         <!-- Copy RobotronAdapter to MetaDocService -->
         <!--copy todir="${workspace}/KalypsoServiceMetaDoc/build/build-war/WEB-INF/lib">
@@ -205,7 +205,7 @@
         </copy-->
 
         <!-- Finally build MetaDocService WAR -->
-        <!--ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="build-war" inheritAll="false" /-->
+        <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="build-war" inheritAll="false" />
     </target>
 
     <target name="build-services" depends="build-CalcService,build-MetaDocService,build-ObsService,build-UserService">
@@ -253,9 +253,9 @@
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml" target="deploy" inheritAll="false">
             <property file="deploy.properties" />
         </ant>
-        <!--ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="deploy" inheritAll="false">
+        <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="deploy" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant-->
+		</ant>
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml" target="deploy" inheritAll="false">
             <property file="deploy.properties" />
         </ant>
@@ -285,10 +285,10 @@
     <target name="redeploy-MetaDocService"
             depends="build-MetaDocService,deploy-allconf"
             description="Redeploy service and configuration">
-        <!--echo message="Redeploying MetaDoc Service" />
+        <echo message="Redeploying MetaDoc Service" />
 		<ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="redeploy" inheritAll="false">
 			<property file="deploy.properties" />
-		</ant-->
+		</ant>
     </target>
 
     <target name="redeploy-CalcService"
