@@ -61,8 +61,6 @@ import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaNodeResultProvider;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
-import org.kalypso.convert.namodel.net.visitors.DownStreamVisitor;
-import org.kalypso.convert.namodel.net.visitors.RemoveResultsVisitor;
 import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
 import org.kalypso.convert.namodel.net.visitors.SimulationVisitor;
 import org.kalypso.convert.namodel.net.visitors.WriteAsciiVisitor;
@@ -101,8 +99,6 @@ public class NetFileManager extends AbstractManager
 
   final public NAConfiguration m_conf;
 
-  //private static final String BranchingPropName = "BranchingMember";
-
   private final UrlUtilities m_urlUtilities;
 
   public NetFileManager( NAConfiguration conf ) throws IOException
@@ -110,7 +106,6 @@ public class NetFileManager extends AbstractManager
     super( conf.getNetFormatURL() );
     m_conf = conf;
     m_urlUtilities = new UrlUtilities();
-    NetElement.setNetAsciiFormats( getAsciiFormats() );
   }
 
   public String mapID( int id, FeatureType ft )
@@ -183,8 +178,7 @@ public class NetFileManager extends AbstractManager
         line = reader.readLine();
         System.out.println( 6 + ": " + line );
         // da nur izuf==5 unterstuetzt wird ist zeile 6 nicht relevant
-        //  createProperties( propCollector, line, 6 );// nzufKnoten (Knoten aus
-        // zuflussdatei)
+
         line = reader.readLine();
         System.out.println( 7 + ": " + line );
         createProperties( propCollector, line, 7 );// nzufPfad
@@ -320,15 +314,18 @@ public class NetFileManager extends AbstractManager
   }
 
   /*
-   * generate ascii netfile from gml workspace
-   * 
-   * @see org.kalypso.convert.namodel.AbstractManager#writeFile(java.io.Writer,
-   *      org.kalypsodeegree.model.feature.GMLWorkspace)
+   *  
    */
-  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
+  public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace, final NaNodeResultProvider nodeResultProvider )
+      throws Exception
   {
-    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( workspace );
+    // to remove yellow thing ;-)
+    nodeResultProvider.getClass();
 
+    final FeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
+    //    final FeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
+    final FeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
+    final FeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
     //    x -> rootNode
     //    |
     //    O -> virtueller Strang generiert NR xxx
@@ -353,29 +350,34 @@ public class NetFileManager extends AbstractManager
     // generate net elements, each channel represents a netelement
     final Feature[] channelFEs = (Feature[])channelList.toArray( new Feature[channelList.size()] );
     for( int i = 0; i < channelFEs.length; i++ )
-      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace, channelFEs[i], nodeResultProvider ,m_conf) );
+      netElements.put( channelFEs[i].getId(), new NetElement( this, workspace, channelFEs[i], m_conf ) );
 
     // find dependencies
     //   dependency: node - node
     final Feature[] nodeFEs = workspace.getFeatures( m_conf.getNodeFT() );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
-      Feature upStreamNodeFE = nodeFEs[i];
-      Feature upStreamChannelFE = workspace.resolveLink( upStreamNodeFE, "downStreamChannelMember" );
-      Feature downStreamNodeFE = workspace.resolveLink( upStreamNodeFE, "verzweigungNodeMember" );
-      if( downStreamNodeFE == null )
-        continue;
-      Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, "downStreamChannelMember" );
-      // search upstreamchannel
-      // set dependency
-      if( upStreamChannelFE == downStreamChannelFE )
+      final Feature upStreamNodeFE = nodeFEs[i];
+      final Feature upStreamChannelFE = workspace.resolveLink( upStreamNodeFE, "downStreamChannelMember" );
+      final Feature branchingFE = workspace.resolveLink( upStreamNodeFE, "branchingMember" );
+      if( branchingFE != null )
       {
-        System.out.println( "impossible net at #" + upStreamChannelFE.getId() + "\n Node-Node relation to it self" );
-        continue;
+        final FeatureType branchingFT = branchingFE.getFeatureType();
+        if( branchingFT == kontEntnahmeFT || branchingFT == ueberlaufFT || branchingFT == verzweigungFT )
+        {
+          final Feature downStreamNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+          final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, "downStreamChannelMember" );
+          if( upStreamChannelFE == downStreamChannelFE )
+          {
+            System.out.println( "impossible net at #" + upStreamChannelFE.getId() + "\n Node-Node relation to it self" );
+            continue;
+          }
+          // set dependency
+          final NetElement upStreamElement = (NetElement)netElements.get( upStreamChannelFE.getId() );
+          final NetElement downStreamElement = (NetElement)netElements.get( downStreamChannelFE.getId() );
+          downStreamElement.addUpStream( upStreamElement );
+        }
       }
-      NetElement upStreamElement = (NetElement)netElements.get( upStreamChannelFE.getId() );
-      NetElement downStreamElement = (NetElement)netElements.get( downStreamChannelFE.getId() );
-      downStreamElement.addUpStream( upStreamElement );
     }
     //   dependency: channel - node
 
@@ -442,10 +444,8 @@ public class NetFileManager extends AbstractManager
 
         if( upStreamFE == downStreamChannelFE )
         {
-          //          System.out.println( "impossible net at #" + upStreamFE.getId() );
           // two catchments discharges to the same channel, no need to generate
           // dependency cause it is the same channel
-          // TODO check order of catchments in netfile
           continue;
         }
         downStreamElement.addUpStream( upStreamElement );
@@ -470,14 +470,6 @@ public class NetFileManager extends AbstractManager
     }
     final List rootNetElements = rootNodeVisitor.getRootNodeElements();
 
-    // remove all results of rootnetelements and also results downstream
-    final DownStreamVisitor visitor = new DownStreamVisitor( new RemoveResultsVisitor() );
-    for( Iterator iter = rootNetElements.iterator(); iter.hasNext(); )
-    {
-      NetElement element = (NetElement)iter.next();
-      element.accept( visitor );
-    }
-
     // write asciifiles: upstream-network of root nodes
     final WriteAsciiVisitor writeAsciiVisitor = new WriteAsciiVisitor( asciiBuffer );
     final SimulationVisitor simulationVisitor = new SimulationVisitor( writeAsciiVisitor );
@@ -497,112 +489,144 @@ public class NetFileManager extends AbstractManager
     }
     final List nodeCollector = writeAsciiVisitor.getNodeCollector();
     asciiBuffer.getNetBuffer().append( "99999\n" );
-    appendNodeList( workspace, nodeCollector, asciiBuffer, nodeResultProvider );
+    appendNodeList( workspace, nodeCollector, asciiBuffer );
     asciiBuffer.getNetBuffer().append( "99999\n" );
   }
 
-  public void appendNodeList( GMLWorkspace workspace, List nodeCollector, AsciiBuffer asciiBuffer,
-      NaNodeResultProvider nodeResultProvider ) throws Exception, Exception
+  public void appendNodeList( GMLWorkspace workspace, List nodeCollector, AsciiBuffer asciiBuffer ) throws Exception,
+      Exception
   {
+    final FeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
+    final FeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
+    final FeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
+    final FeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
+
     final IDManager idManager = m_conf.getIdManager();
     final Iterator iter = nodeCollector.iterator();
     while( iter.hasNext() )
     {
-      Feature nodeFE = (Feature)iter.next();
-
-      int izug = 0;
-      int iabg = 0;
-      int iueb = 0;
-      int izuf = 0;
-      int ivzwg = 0;
-
-      // verzweigung ?
-      final Feature linkedNodeFE = workspace.resolveLink( nodeFE, "verzweigungNodeMember" );
-      if( linkedNodeFE != null )
-        ivzwg = 1;
-
-      // zufluss ?
-      final TimeseriesLink zuflussLink;
-      final String zuflussFileName;
-
-      if( nodeResultProvider.resultExists( nodeFE ) )
-      {
-        zuflussLink = (TimeseriesLink)nodeFE.getProperty( "qberechnetZR" );
-        zuflussFileName = "result_" + nodeFE.getId();
-      }
-      else
-      {
-        zuflussLink = (TimeseriesLink)nodeFE.getProperty( "zuflussZR" );
-        zuflussFileName = getZuflussEingabeDateiString( nodeFE,m_conf );
-      }
-      if( zuflussLink != null )
-        izuf = 5;
-
-      //      asciiBuffer.getNetBuffer()
-      //          .append( FortranFormatHelper.printf( FeatureHelper.getAsString( nodeFE, "num" ), "i5" ) );
+      final Feature nodeFE = (Feature)iter.next();
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( izug ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( iabg ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( iueb ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( izuf ), "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( String.valueOf( ivzwg ), "i5" ) + "\n" );
 
-      if( ivzwg != 0 )
+      final int izug;
+      final int iabg;
+      final int iueb;
+      final int izuf;
+      final int ivzwg;
+
+      final StringBuffer specialBuffer = new StringBuffer();
+
+      final TimeseriesLink zuflussLink = (TimeseriesLink)nodeFE.getProperty( "zuflussZR" );
+      final Feature branchingFE = workspace.resolveLink( nodeFE, "branchingMember" );
+
+      if( branchingFE != null )
       {
-        asciiBuffer.getNetBuffer().append(
-            FortranFormatHelper.printf( FeatureHelper.getAsString( nodeFE, "zproz" ), "f10.3" ) );
-        asciiBuffer.getNetBuffer().append(
-            FortranFormatHelper.printf( idManager.getAsciiID( linkedNodeFE ), "i8" ) + "\n" );
-        //            FortranFormatHelper.printf( FeatureHelper.getAsString( linkedNodeFE, "num" ), "i8" ) + "\n" );
+        final FeatureType branchingFT = branchingFE.getFeatureType();
+        if( branchingFT == kontZuflussFT )
+        {
+          izug = 1;
+          iabg = 0;
+          iueb = 0;
+          izuf = 0;
+          ivzwg = 0;
+          final double qzug = FeatureHelper.getAsDouble( branchingFE, "qzug", 0d );
+          specialBuffer.append( FortranFormatHelper.printf( qzug, "f10.3" ) );
+        }
+        else if( branchingFT == verzweigungFT )
+        {
+          izug = 0;
+          iabg = 0;
+          iueb = 0;
+          izuf = 0;
+          ivzwg = 1;
+          final Feature targetNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+          final double zproz = FeatureHelper.getAsDouble( branchingFE, "zproz", 0d );
+          specialBuffer.append( FortranFormatHelper.printf( zproz, "f10.3" ) );
+          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );
+        }
+        else if( branchingFT == kontEntnahmeFT )
+        {
+          izug = 0;
+          iabg = 1;
+          iueb = 0;
+          izuf = 0;
+          ivzwg = 0;
+          final Feature targetNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+          final double qabg = FeatureHelper.getAsDouble( branchingFE, "qabg", 0d );
+          specialBuffer.append( FortranFormatHelper.printf( qabg, "f10.3" ) );
+          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );
+        }
+        else if( branchingFT == ueberlaufFT )
+        {
+          izug = 0;
+          iabg = 0;
+          iueb = 1;
+          izuf = 0;
+          ivzwg = 0;
+          final Feature targetNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+          final double queb = FeatureHelper.getAsDouble( branchingFE, "queb", 0d );
+          specialBuffer.append( FortranFormatHelper.printf( queb, "f10.3" ) );
+          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );
+        }
+        else
+        {
+          izug = 0;
+          iabg = 0;
+          iueb = 0;
+          izuf = 0;
+          ivzwg = 0;
+        }
       }
-      if( izuf != 0 )
+      else if( zuflussLink != null )
       {
+        izug = 0;
+        iabg = 0;
+        iueb = 0;
+        ivzwg = 0;
+        izuf = 5;
+        final String zuflussFileName = getZuflussEingabeDateiString( nodeFE, m_conf );
         final File targetFile = new File( m_conf.getAsciiBaseDir(), "zufluss/" + zuflussFileName );
         final File parent = targetFile.getParentFile();
         if( !parent.exists() )
           parent.mkdirs();
-        String zuflussFile = ZmlURL.getIdentifierPart( zuflussLink.getHref() );
+        final String zuflussFile = ZmlURL.getIdentifierPart( zuflussLink.getHref() );
         final URL linkURL = m_urlUtilities.resolveURL( workspace.getContext(), zuflussFile );
-
-        if( !DEBUG )
+        if( !targetFile.exists() )
         {
-          if( !targetFile.exists() )
-          {
-            final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
-            final FileWriter writer = new FileWriter( targetFile );
-            NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RUNOFF, observation );
-            IOUtils.closeQuietly( writer );
-          }
+          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
+          final FileWriter writer = new FileWriter( targetFile );
+          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RUNOFF, observation );
+          IOUtils.closeQuietly( writer );
         }
-        asciiBuffer.getNetBuffer().append( "    1234\n" ); // dummyLine
-        asciiBuffer.getNetBuffer().append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" );
+        specialBuffer.append( "    1234\n" ); // dummyLine
+        specialBuffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" );
       }
+      else
+      {
+        izug = 0;
+        iabg = 0;
+        iueb = 0;
+        izuf = 0;
+        ivzwg = 0;
+      }
+
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izug, "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( iabg, "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( iueb, "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izuf, "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( ivzwg, "i5" ) + "\n" );
+      asciiBuffer.getNetBuffer().append( specialBuffer.toString() );
+      // ENDKNOTEN
+
     }
-    // ENDKNOTEN
-    
     asciiBuffer.getNetBuffer().append( " 9001    0    0    0    0    0\n" );
     asciiBuffer.getNetBuffer().append( "10000    0    0    0    0    0\n" );
   }
 
-  private String getZuflussEingabeDateiString( Feature nodeFE ,NAConfiguration conf)
+  private String getZuflussEingabeDateiString( Feature nodeFE, NAConfiguration conf )
   {
-    int asciiID = conf.getIdManager().getAsciiID(nodeFE);
-    return "Z_" + Integer.toString(asciiID).trim() + ".zufluss";
+    int asciiID = conf.getIdManager().getAsciiID( nodeFE );
+    return "Z_" + Integer.toString( asciiID ).trim() + ".zufluss";
   }
-
-  //  public void removeResult( Feature nodeFE )
-  //  {
-  //    try
-  //    {
-  //      final File resultFile = NaModelHelper.getResultFile(
-  // m_conf.getGMLModelURL(), nodeFE );
-  //      if( resultFile != null && resultFile.exists() )
-  //        resultFile.delete();
-  //    }
-  //    catch( MalformedURLException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //  }
 
 }

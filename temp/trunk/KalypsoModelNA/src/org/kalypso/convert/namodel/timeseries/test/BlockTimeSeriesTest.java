@@ -30,7 +30,8 @@ public class BlockTimeSeriesTest extends TestCase
 
     TreeMap map = load( "./resources/test.dat", "103" );
     TreeMap map2 = load( "resources/qgs.dat", "103" );
-
+    assertNotNull(map);
+    assertNotNull(map2);
   }
 
   public TreeMap load( String resource, String key ) throws IOException

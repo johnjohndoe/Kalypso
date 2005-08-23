@@ -52,7 +52,6 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.convert.namodel.NaNodeResultProvider;
 import org.kalypso.convert.namodel.manager.AsciiBuffer;
 import org.kalypso.convert.namodel.manager.CatchmentManager;
 import org.kalypso.convert.namodel.manager.ChannelManager;
@@ -117,26 +116,18 @@ public class NetElement
 
   private final UrlUtilities m_urlUtils = new UrlUtilities();
 
-  private static String[] m_netAsciiFormat;
+  //  private static String[] m_netAsciiFormat;
 
   private final GMLWorkspace m_workspace;
 
-  private final NaNodeResultProvider m_nodeResultProvider;
 
   private final NAConfiguration m_conf;
 
-  public static void setNetAsciiFormats( String[] formats )
-  {
-    m_netAsciiFormat = formats;
-  }
-
-  public NetElement( NetFileManager manager, GMLWorkspace modellWorkspace, Feature channelFE,
-      NaNodeResultProvider nodeResultProvider, NAConfiguration conf )
+  public NetElement( NetFileManager manager, GMLWorkspace modellWorkspace, Feature channelFE, NAConfiguration conf )
   {
     m_channelFE = channelFE;
     m_manager = manager;
     m_workspace = modellWorkspace;
-    m_nodeResultProvider = nodeResultProvider;
     m_conf = conf;
   }
 
@@ -155,17 +146,6 @@ public class NetElement
     return m_calculated;
   }
 
-  public boolean resultExists()
-  {
-    return m_nodeResultProvider.resultExists( getDownStreamNode() );
-  }
-
-  public void removeResult()
-  {
-    final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
-    m_nodeResultProvider.removeResult( knotU );
-  }
-
   /**
    *  
    */
@@ -174,10 +154,7 @@ public class NetElement
     if( isCalculated() )
       return;
 
-    // if result does not exists, calculate upstrem
-    boolean resultExists = resultExists();
-    if( !resultExists )
-      berechneOberlauf( asciiBuffer, nodeList );
+    berechneOberlauf( asciiBuffer, nodeList );
 
     // calculate me
     write( asciiBuffer, nodeList );
@@ -309,13 +286,11 @@ public class NetElement
   public void write( AsciiBuffer asciiBuffer, List nodeList )
   {
     final IDManager idManager = m_conf.getIdManager();
-    boolean resultExists = resultExists();
     asciiBuffer.addFeatureToWrite( getChannel() );
     final Feature knotU = m_workspace.resolveLink( m_channelFE, "downStreamNodeMember" );
 
     //  append channel:
     asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( m_channelFE ), "i8" ) );
-    //    asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( m_channelFE, m_netAsciiFormat[12] ) );
 
     Feature[] features = m_workspace.getFeatures( m_manager.m_conf.getNodeFT() );
     Feature knotO = null;
@@ -338,31 +313,21 @@ public class NetElement
     }
 
     // append upstream node:
-    if( knotO != null && !resultExists )
+    if( knotO != null )
       asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( knotO ), "i8" ) );
     else
       asciiBuffer.getNetBuffer().append( ANFANGSKNOTEN );
 
     // append downstream node:
     asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( knotU ), "i8" ) );
-    //    asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( knotU, m_netAsciiFormat[11] ) );
 
-    // append catchments
-    if( !resultExists )
+    asciiBuffer.getNetBuffer().append( " " + catchmentList.size() + "\n" );
+    for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
     {
-      asciiBuffer.getNetBuffer().append( " " + catchmentList.size() + "\n" );
-      for( Iterator iter = catchmentList.iterator(); iter.hasNext(); )
-      {
-        Feature catchmentFE = (Feature)iter.next();
-        asciiBuffer.addFeatureToWrite( catchmentFE );
-        asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i8" ) );
-        asciiBuffer.getNetBuffer().append( "\n" );
-        //        asciiBuffer.getNetBuffer().append( ASCIIHelper.toAsciiLine( catchmentFE, m_netAsciiFormat[12] ) + "\n" );
-      }
-    }
-    else
-    {
-      asciiBuffer.getNetBuffer().append( " 0\n" ); // simulate no catchments
+      Feature catchmentFE = (Feature)iter.next();
+      asciiBuffer.addFeatureToWrite( catchmentFE );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i8" ) );
+      asciiBuffer.getNetBuffer().append( "\n" );
     }
     if( knotO != null && !nodeList.contains( knotO ) )
       nodeList.add( knotO );

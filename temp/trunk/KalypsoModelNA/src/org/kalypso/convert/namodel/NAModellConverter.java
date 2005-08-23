@@ -43,7 +43,6 @@ package org.kalypso.convert.namodel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -139,19 +138,6 @@ public class NAModellConverter
     }
   }
 
-  public static void gml2asciil() throws MalformedURLException, Exception
-  {
-
-    // export
-    final File gmlFile = new File( "/home/doemming/weisseElsterGML/naModel.gml" );
-    final File asciiBaseDir = FileUtilities.createNewTempDir( "NA_asciiBaseDir" );
-
-    final NAConfiguration conf = NAConfiguration.getGml2AsciiConfiguration( gmlFile.toURL(), asciiBaseDir );
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlFile.toURL() );
-    featureToAscii( conf, workspace, null, null );
-
-  }
-
   public static void completeascii2gml() throws Exception
   {
     final File gmlBaseDir = FileUtilities.createNewTempDir( "NA_gmlBaseDir" );
@@ -160,8 +146,6 @@ public class NAModellConverter
 
     NAConfiguration conf = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, gmlBaseDir );
     Feature modelRootFeature = modelAsciiToFeature( conf );
-    //    Feature parameterRootFeature = parameterAsciiToFeature( conf );
-    //    Feature hydrotopRootFeature = hydrotopShapeToFeature (conf);
 
     String shapeDir = "D:\\Kalypso_NA\\9-Programmtest\\Uebungsmodell\\Shapes";
     insertSHPGeometries( modelRootFeature, shapeDir );
@@ -274,13 +258,13 @@ public class NAModellConverter
     return m_parseManager;
   }
 
-  public void write( GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopeWorkspace )
+  public void write( GMLWorkspace modelWorkspace, GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopeWorkspace ,final NaNodeResultProvider nodeResultProvider)
       throws Exception
   {
 
     AsciiBuffer asciiBuffer = new AsciiBuffer();
 
-    m_nodeManager.writeFile( asciiBuffer, modelWorkspace );
+    m_nodeManager.writeFile( asciiBuffer, modelWorkspace,nodeResultProvider );
     m_catchmentManager.writeFile( asciiBuffer, modelWorkspace );
     m_gerinneManager.writeFile( asciiBuffer, modelWorkspace );
 
@@ -343,19 +327,9 @@ public class NAModellConverter
   }
 
   public static void featureToAscii( NAConfiguration conf, GMLWorkspace modelWorkspace,
-      GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopWorkspace ) throws Exception
+      GMLWorkspace parameterWorkspace, GMLWorkspace hydrotopWorkspace,final NaNodeResultProvider nodeResultProvider ) throws Exception
   {
     NAModellConverter main = new NAModellConverter( conf );
-    main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace );
+    main.write( modelWorkspace, parameterWorkspace, hydrotopWorkspace,nodeResultProvider );
   }
-
-  //    public static Writer getWriter(URL url) throws IOException
-  //    {
-  //        URLConnection connection = url.openConnection();
-  //        connection.setDoOutput(true);
-  //
-  //        connection.getOutputStream();
-  //        return new OutputStreamWriter(connection.getOutputStream());
-  //
-  //    }
 }

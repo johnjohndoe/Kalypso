@@ -74,8 +74,7 @@ public class WriteAsciiVisitor extends NetElementVisitor
     netElement.write( m_asciiBuffer, m_nodeCollector );
     try
     {
-      if( !netElement.resultExists() )
-        netElement.generateTimeSeries();
+      netElement.generateTimeSeries();
     }
     catch( Exception e )
     {

@@ -127,7 +127,8 @@ public class NaModelInnerCalcJob implements ICalcJob
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
-  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_WeisseElster.exe";
+  //  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_WeisseElster.exe";
+  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
 
   private final String EXE_FILE_2_01_3000 = "start/kalypso_2.01_3000.exe";
 
@@ -329,7 +330,9 @@ public class NaModelInnerCalcJob implements ICalcJob
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( newModellFile.toURL() );
     ( (GMLWorkspace_Impl)modellWorkspace ).setContext( dataProvider.getURLForID( NaModelConstants.IN_MODELL_ID ) );
 
-    updateModelWithExtraVChannel( modellWorkspace );
+    final NaNodeResultProvider nodeResultProvider = new NaNodeResultProvider( modellWorkspace, controlWorkspace );
+    updateModelWithExtraVChannel( modellWorkspace, nodeResultProvider );
+
     //  model Hydrotop
     final GMLWorkspace hydrotopWorkspace;
 
@@ -391,7 +394,8 @@ public class NaModelInnerCalcJob implements ICalcJob
     updateFactorParameter( modellWorkspace );
 
     // modell files
-    NAModellConverter.featureToAscii( conf, modellWorkspace, parameterWorkspace, hydrotopWorkspace );
+    NAModellConverter main = new NAModellConverter( conf );
+    main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, nodeResultProvider );
 
     // create temperatur und verdunstung timeseries
     final File klimaDir = new File( tmpDir, "klima.dat" );
@@ -424,15 +428,185 @@ public class NaModelInnerCalcJob implements ICalcJob
   }
 
   /**
+   * update workspace and do some tricks in order to fix some things the fortran-kernel can not handle for now
+   * 
+   * @param workspace
+   * @throws Exception
+   */
+  private void updateModelWithExtraVChannel( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultProvider )
+      throws Exception
+  {
+    updateGWNet( workspace );
+    updateNode2NodeNet( workspace );
+    updateZuflussNet( workspace );
+    updateResultAsZuflussNet( workspace, nodeResultProvider );
+  }
+
+  /**
+   * before: <br>
+   * <code>
+   *  
+   * Node1 O <---  O Node2
+   * 
+   * </code> after: <br>
+   * <code>
+   *  
+   * Node1 O <--- newVChannel <-- newNode O <-- newVChannel
+   *                                      A
+   *                                      |
+   *                                      O-- Node2
+   * 
+   * </code>
+   * 
+   * @param workspace
+   * @throws Exception
+   */
+  private void updateNode2NodeNet( final GMLWorkspace workspace ) throws Exception
+  {
+    final FeatureType kontEntnahmeFT = workspace.getFeatureType( "KontEntnahme" );
+    final FeatureType ueberlaufFT = workspace.getFeatureType( "Ueberlauf" );
+    final FeatureType verzweigungFT = workspace.getFeatureType( "Verzweigung" );
+    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final Feature[] features = workspace.getFeatures( nodeFT );
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature nodeFE = features[i];
+      final Feature branchingFE = workspace.resolveLink( nodeFE, "branchingMember" );
+      if( branchingFE != null )
+      {
+        final FeatureType branchFT = branchingFE.getFeatureType();
+        if( branchFT == kontEntnahmeFT || branchFT == ueberlaufFT || branchFT == verzweigungFT )
+        {
+          final Feature targetNodeFE = workspace.resolveLink( branchingFE, "branchingNodeMember" );
+          final Feature newNodeFE = buildVChannelNet( workspace, targetNodeFE );
+          workspace.setFeatureAsComposition( branchingFE, "branchingNodeMember", newNodeFE, true );
+        }
+      }
+    }
+  }
+
+  /**
+   * @param workspace
+   * @throws Exception
+   */
+  private void updateResultAsZuflussNet( final GMLWorkspace workspace, final NaNodeResultProvider nodeResultprovider )
+      throws Exception
+  {
+    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final FeatureType abstractChannelFT = workspace.getFeatureType( "_Channel" );
+    final Feature[] features = workspace.getFeatures( nodeFT );
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature nodeFE = features[i];
+      if( nodeResultprovider.resultExists( nodeFE ) )
+      {
+        final Object resultValue = nodeFE.getProperty( "qberechnetZR" );
+        // disconnect everything upstream (channel -> node)
+        final Feature[] channelFEs = workspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, "downStreamNodeMember" );
+        for( int j = 0; j < channelFEs.length; j++ )
+        {
+          final Feature newEndNodeFE = workspace.createFeature( nodeFT );
+          workspace.setFeatureAsComposition( channelFEs[i], "downStreamNodeMember", newEndNodeFE, true );
+        }
+        // add as zufluss
+        final Feature newNodeFE = buildVChannelNet( workspace, nodeFE );
+        final FeatureProperty zuflussProp = FeatureFactory.createFeatureProperty( "zuflussZR", resultValue );
+        newNodeFE.setProperty( zuflussProp );
+      }
+    }
+  }
+
+  /**
+   * put one more VChannel to each Q-source, so that this discharge will appear in the result of the connected node <br>
+   * zml inflow <br>
+   * before: <br>
+   * <code>
+   * |Channel| <- o(1) <- input.zml <br>
+   * </code><br>
+   * now: <br>
+   * <code>
+   * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)| 
+   *                                          A- input.zml <br>
+   * </code>
+   * 
+   * constant inflow <br>
+   * before: <br>
+   * <code>
+   * |Channel| <- o(1) <- Q(constant) <br>
+   * </code><br>
+   * now: <br>
+   * <code>
+   * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)| 
+   *                                          A- Q(constant)<br>
+   * </code>
+   * 
+   * @param workspace
+   * @throws Exception
+   */
+  private void updateZuflussNet( final GMLWorkspace workspace ) throws Exception
+  {
+
+    final FeatureType kontZuflussFT = workspace.getFeatureType( "KontZufluss" );
+    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final Feature[] features = workspace.getFeatures( nodeFT );
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature nodeFE = features[i];
+      final Object zuflussValue = nodeFE.getProperty( "zuflussZR" );
+      if( zuflussValue != null )
+      {
+        // update zufluss
+        Feature newNode = buildVChannelNet( workspace, nodeFE );
+        // nove zufluss-property to new node
+        nodeFE.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", null ) );
+        newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
+      }
+      final Feature branchingFE = workspace.resolveLink( nodeFE, "branchingMember" );
+      if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
+      {
+        // update zufluss
+        Feature newNode = buildVChannelNet( workspace, nodeFE );
+        // nove constant-inflow to new node
+        workspace.setFeatureAsComposition( nodeFE, "branchingMember", null, true );
+        workspace.setFeatureAsComposition( newNode, "branchingMember", branchingFE, true );
+      }
+    }
+  }
+
+  private Feature buildVChannelNet( final GMLWorkspace workspace, final Feature existingNode ) throws Exception
+  {
+    final FeatureType nodeFT = workspace.getFeatureType( "Node" );
+    final FeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
+    final Feature channelColFE = workspace.getFeatures( workspace.getFeatureType( "ChannelCollection" ) )[0];
+    final Feature nodeColFE = workspace.getFeatures( workspace.getFeatureType( "NodeCollection" ) )[0];
+
+    final Feature newChannelFE1 = workspace.createFeature( vChannelFT );
+    workspace.addFeatureAsComposition( channelColFE, "channelMember", 0, newChannelFE1 );
+    final Feature newChannelFE3 = workspace.createFeature( vChannelFT );
+    workspace.addFeatureAsComposition( channelColFE, "channelMember", 0, newChannelFE3 );
+    final Feature newNodeFE2 = workspace.createFeature( nodeFT );
+    workspace.addFeatureAsComposition( nodeColFE, "nodeMember", 0, newNodeFE2 );
+
+    // 3 -> 2
+    workspace.setFeatureAsAggregation( newChannelFE3, "downStreamNodeMember", newNodeFE2.getId(), true );
+    // 2 -> 1
+    workspace.setFeatureAsAggregation( newNodeFE2, "downStreamChannelMember", newChannelFE1.getId(), true );
+    // 1 -> existing
+    workspace.setFeatureAsAggregation( newChannelFE1, "downStreamNodeMember", existingNode.getId(), true );
+    return newNodeFE2;
+  }
+
+  /**
+   * updates workspace, so that interflow and channelflow dependencies gets optimized <br>
+   * groundwater flow can now run in opposite direction to channel flow
+   * 
    * @param workspace
    */
-  private void updateModelWithExtraVChannel( final GMLWorkspace workspace )
+  private void updateGWNet( final GMLWorkspace workspace )
   {
     final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );
-    //    final FeatureType channelColFT = workspace.getFeatureType( "ChannelCollection" );
     final FeatureType vChannelFT = workspace.getFeatureType( "VirtualChannel" );
     final Feature[] features = workspace.getFeatures( catchmentFT );
-    //    final Feature channelColFE = workspace.getFeatures( channelColFT )[0];
     for( int i = 0; i < features.length; i++ )
     {
       final Feature catchmentFE = features[i];

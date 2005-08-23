@@ -45,7 +45,6 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
-import org.kalypso.convert.namodel.schema.KalypsoNADefaultSchema;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -100,8 +99,7 @@ public class UpdateModell
 
   public void updateIt() throws Exception
   {
-    URL schemaURL = KalypsoNADefaultSchema.getDefaultNaModellSchemaURL();
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL, schemaURL );
+    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modellURL);
 
     // Catchments...
     final FeatureType catchmentFT = workspace.getFeatureType( "Catchment" );

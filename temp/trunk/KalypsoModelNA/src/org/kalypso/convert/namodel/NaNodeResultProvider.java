@@ -50,7 +50,9 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /*
  * class NaNodeResultProvider
@@ -59,17 +61,34 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NaNodeResultProvider
 {
-  private URL m_context;
+  private final URL m_context;
 
-  private List removedResults = new ArrayList();
+  private final List removedResults = new ArrayList();
 
-  /**
-   *  
-   */
+  private final boolean m_useResults;
 
-  public NaNodeResultProvider( GMLWorkspace modellWorkspace )
+  public NaNodeResultProvider( GMLWorkspace modellWorkspace, GMLWorkspace controlWorkspace )
   {
     m_context = modellWorkspace.getContext();
+    final Feature controlFE = controlWorkspace.getRootFeature();
+    m_useResults = FeatureHelper.booleanIsTrue( controlFE, "useResults", true );
+    final String resultNodeID = (String)controlFE.getProperty( "rootNode" );
+    // exclude some node from providing results
+    if( resultNodeID != null )
+    {
+      removeResult( modellWorkspace.getFeature( resultNodeID ) );
+    }
+    else
+    {
+      final FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
+      final Feature[] nodeFEs = modellWorkspace.getFeatures( nodeFT );
+      for( int i = 0; i < nodeFEs.length; i++ )
+      {
+        final Feature nodeFE = nodeFEs[i];
+        if( FeatureHelper.booleanIsTrue( nodeFE, "generateResult", false ) )
+          removeResult( nodeFE );
+      }
+    }
   }
 
   private URL getResultURL( final Feature nodeFE ) throws MalformedURLException
@@ -79,13 +98,14 @@ public class NaNodeResultProvider
       return null;
     // optionen loeschen
     final String href = link.getHref().replaceAll( "\\?.*", "" );
-
     IUrlResolver res = new UrlUtilities();
     return res.resolveURL( m_context, href );
   }
 
   public boolean resultExists( Feature nodeFE )
   {
+    if( !m_useResults )
+      return false;
     if( removedResults.contains( nodeFE ) )
       return false;
     try
@@ -100,7 +120,7 @@ public class NaNodeResultProvider
     return true;
   }
 
-  public void removeResult( Feature nodeFE )
+  private void removeResult( Feature nodeFE )
   {
     if( !removedResults.contains( nodeFE ) )
       removedResults.add( nodeFE );

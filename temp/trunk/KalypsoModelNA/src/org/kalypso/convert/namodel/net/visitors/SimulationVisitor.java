@@ -80,45 +80,28 @@ public class SimulationVisitor extends NetElementVisitor
     if( m_cycleTest.contains( netElement ) )
     {
       StringBuffer b = new StringBuffer( "Netzplan ist fehlerhaft - Wasser flieﬂt im Kreis\n" );
-    
+
       // check circle (shortest connection)
       final NetElementCircleFinder circlefinder = new NetElementCircleFinder( netElement );
       List[] circleList = circlefinder.findCircle();
-      b.append( "circle for : " + netElement +":\n");
+      b.append( "circle for : " + netElement + ":\n" );
 
       for( int i = 0; i < circleList.length; i++ )
       {
-        b.append( "StrangID: " + circleList[i]+"\n" );
+        b.append( "StrangID: " + circleList[i] + "\n" );
       }
-
-      //      
-      //            int start = m_cycleTest.indexOf( netElement );
-      //            for( int i = start; i < m_cycleTest.size(); i++ )
-      //            {
-      //              Feature element = ( (NetElement)m_cycleTest.get( i ) ).getChannel();
-      //              if( element.getProperty( "inum" ) != null )
-      //              {
-      //      
-      //                b.append( ( i - start + 1 ) + ". bei Strang Nr. " + element.getProperty( "inum" ).toString() + "(ID="
-      //                    + element.getId() + ")\n" );
-      //              }
-      //              else
-      //                b.append( ( i - start ) + ". bei " + element.getId() + "\n" );
-      //            }
       log( b.toString() );
       throw new Exception( b.toString() );
     }
     m_cycleTest.add( netElement );
 
     // first calculate upstream
-    if( !netElement.resultExists() )
+
+    final List upStreamNetElements = netElement.getUpStreamNetElements();
+    for( Iterator iter = upStreamNetElements.iterator(); iter.hasNext(); )
     {
-      final List upStreamNetElements = netElement.getUpStreamNetElements();
-      for( Iterator iter = upStreamNetElements.iterator(); iter.hasNext(); )
-      {
-        NetElement element = (NetElement)iter.next();
-        visit( element );
-      }
+      NetElement element = (NetElement)iter.next();
+      visit( element );
     }
     // then calculate current
     m_innerVisitor.visit( netElement );

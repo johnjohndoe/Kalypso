@@ -84,7 +84,7 @@ public abstract class AbstractManager
     String fId = mapID( asciiStringId, ft );
     if( !m_allFeatures.containsKey( fId ) )
     {
-      Feature feature = FeatureFactory.createFeature( fId, ft );
+      Feature feature = FeatureFactory.createFeature( fId, ft, false );
       m_allFeatures.put( fId, feature );
     }
     return (Feature)m_allFeatures.get( fId );
@@ -131,7 +131,7 @@ public abstract class AbstractManager
   public Feature createFeature( FeatureType ft )
   {
     String stringID = mapID( count++, ft );
-    return FeatureFactory.createFeature( stringID, ft );
+    return FeatureFactory.createFeature( stringID, ft, false );
 
   }
 
@@ -142,7 +142,7 @@ public abstract class AbstractManager
     Feature feature = null;
     try
     {
-      feature = FeatureFactory.createFeature( stringID, intID.getFeatureType() );
+      feature = FeatureFactory.createFeature( stringID, intID.getFeatureType(), false );
     }
     catch( Exception e )
     {

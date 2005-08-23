@@ -90,7 +90,7 @@ public class CompleteDownstreamNetAsciiWriterVisitor extends NetElementVisitor
     for( Iterator iter = downStreamNetElements.iterator(); iter.hasNext(); )
     {
       final NetElement childElement = (NetElement)iter.next();
-      if( childElement.getChannel() == downStreamChannel && childElement.isCalculated() && !childElement.resultExists() )
+      if( childElement.getChannel() == downStreamChannel && childElement.isCalculated() )
       {
         visit( childElement );
         needToComplete = false;

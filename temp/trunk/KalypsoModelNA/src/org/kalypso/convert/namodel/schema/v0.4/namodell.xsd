@@ -153,72 +153,23 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!--ab hier kann entfernt werden, falls Branching verwendet wird-->
 					<!-- ZR Zufluss falls zufluss vorhanden -->
-					<!--
-					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty">
+					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Zufluss Berechnung</label>
-								<tooltip>Verknuepfte Zuflusszeitreihe, Berechnungsdaten</tooltip>
-								<description>.</description>
+								<label>Zuflusskennlinie</label>
+								<tooltip>Verknuepfte Zuflusszeitreihe</tooltip>
+								<description>Verknuepfte Zuflusszeitreihe</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Inflow calculation</label>
-								<tooltip>Combined Inflow time series, calculated data</tooltip>
-								<description>.</description>
+								<label>inflow time series</label>
+								<tooltip>linked Inflow time series</tooltip>
+								<description>linked Inflow time series</description>
 							</documentation>
 						</annotation>
 					</element>
--->
-					<!-- verzweigung -->
-					<!--					
-					<element name="zproz" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Verzweigungsfaktor</label>
-								<tooltip>Abflussanteil zum Verzweigungsknoten (0-1)</tooltip>
-								<description>Anteil des Abflusses, der dem Verzweigungsknoten zugefuehrt wird (0-1)</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Branching factor</label>
-								<tooltip>Outflow part going to the branching nodes (0-1)</tooltip>
-								<description>The part of the outflow, which  is applied to the branching nodes (0-1)</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="verzweigungNodeMember" type="na:NodeAssociationType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Verzweigungsknoten</label>
-								<tooltip>Verknuepfung Zielknoten der Verzweigung</tooltip>
-								<description>Zielknoten, dem der angegebene Verzweigungsanteil des Abflusses zugefuehrt wird</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Branchingnode</label>
-								<tooltip>Connection aim nodes of the branching</tooltip>
-								<description>Aim nodes, to which the given part of the branching of the outflow is applied</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="qzug" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zugabemenge</label>
-								<tooltip>kont. Zugabemenge [m^3/s]</tooltip>
-								<description>kontinuierliche Zugabemenge [m^3/s] zum Knotenabfluss</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Additional discharge</label>
-								<tooltip>continuous additional discharge [m^3/s]</tooltip>
-								<description>continuous additional discharge [m^3/s] to the node outflow</description>
-							</documentation>
-						</annotation>
-					</element>
--->
-					<!--bis hier kann entfernt werden, falls Branching verwendet wird-->
 					<!-- branching ab hier aktivieren-->
-					<element name="BranchingMember" type="na:BranchingAssociationType" minOccurs="0">
+					<element name="branchingMember" type="na:BranchingAssociationType" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Knoten zu Knoten</label>
@@ -253,7 +204,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="kontZufluss" type="na:ContInflowFeatureType" substitutionGroup="na:_Branching"/>
+	<element name="KontZufluss" type="na:ContInflowFeatureType" substitutionGroup="na:_Branching"/>
 	<complexType name="ContInflowFeatureType">
 		<complexContent>
 			<extension base="na:AbstractBranchingType">
@@ -276,7 +227,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="kontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_Branching"/>
+	<element name="KontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_Branching"/>
 	<complexType name="ContExtractionFeatureType">
 		<complexContent>
 			<extension base="na:AbstractBranchingType">
@@ -350,29 +301,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="Zuflusspegel" type="na:InflowGageFeatureType" substitutionGroup="na:_Branching"/>
-	<complexType name="InflowGageFeatureType">
-		<complexContent>
-			<extension base="na:AbstractBranchingType">
-				<sequence>
-					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zuflusskennlinie</label>
-								<tooltip>Verknuepfte Zuflusszeitreihe</tooltip>
-								<description>Verknuepfte Zuflusszeitreihe</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>inflow time series</label>
-								<tooltip>linked Inflow time series</tooltip>
-								<description>linked Inflow time series</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
 	<element name="Verzweigung" type="na:BranchingFeatureType" substitutionGroup="na:_Branching"/>
 	<complexType name="BranchingFeatureType">
 		<complexContent>
@@ -406,7 +334,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!--hier branchin zu ende-->
 				</sequence>
 			</extension>
 		</complexContent>
@@ -1001,7 +928,7 @@ siehe bodenkorrekturmember...
 						</annotation>
 					</element>
 					<!--Zeitflächenfunktion-->
-					<element name="zft" type="zmlinline:ZmlInlineType">
+					<element name="zft" type="zmlinline:ZmlInlineTAType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zeitflächenfunktion</label>
@@ -1312,7 +1239,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="hvvsqd" type="zmlinline:ZmlInlineType">
+					<element name="hvvsqd" type="zmlinline:ZmlInlineWQVType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>WVQ-Beziehung</label>
