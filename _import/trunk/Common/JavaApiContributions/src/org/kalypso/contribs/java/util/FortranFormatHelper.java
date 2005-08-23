@@ -290,9 +290,8 @@ public class FortranFormatHelper
 
   }
 
-  /*
-   * 
-   * @author doemming
-   */
-
+  public static String printf( double value, String format )
+  {
+    return printf( decimalFormat.format( value ), format );
+  }
 }
