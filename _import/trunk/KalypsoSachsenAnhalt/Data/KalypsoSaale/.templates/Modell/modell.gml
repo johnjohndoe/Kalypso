@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SaaleModell fid="root" xmlns:steuerung="org.kalypso.saale.steuerung" xmlns:wlm="org.kalypso.saale.wlm" xmlns="org.kalypso.saale.modell" xmlns:pegel="org.kalypso.saale.pegel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:temp="org.kalypso.saale.temp" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:speicher="org.kalypso.saale.speicher" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.saale.modell file:///D:/Kalypso/KalypsoSaalePlugin/src/org/kalypso/lhwsachsenanhalt/saale/schemata/saalemodell.xsd">
+<SaaleModell fid="root" xmlns:steuerung="org.kalypso.saale.steuerung" xmlns:wlm="org.kalypso.saale.wlm" xmlns="org.kalypso.saale.modell" xmlns:pegel="org.kalypso.saale.pegel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ombrometer="org.kalypso.saale.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:speicher="org.kalypso.saale.speicher" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.saale.modell file:///D:/Kalypso/KalypsoSaalePlugin/src/org/kalypso/lhwsachsenanhalt/saale/schemata/saalemodell.xsd">
   <steuerung:SteuerungCollectionAssociation>
     <steuerung:SteuerungCollection fid="Steuerung">
       <steuerung:SteuerungMember>
@@ -19904,7 +19904,7 @@
       </speicher:SpeicherMember>
     </speicher:SpeicherCollection>
   </speicher:SpeicherCollectionAssociation>
-  <temp:TempCollectionAssociation>
-    <temp:TempCollection fid="Temperatur"/>
-  </temp:TempCollectionAssociation>
+  <ombrometer:OmbrometerCollectionAssociation>
+    <ombrometer:OmbrometerCollection fid="Ombrometer"/>
+  </ombrometer:OmbrometerCollectionAssociation>
 </SaaleModell>

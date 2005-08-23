@@ -43,7 +43,7 @@ public final class SaaleUrlCatalog extends AbstractUrlCatalog
     catalog.put( "org.kalypso.saale.modell", myClass.getResource( "schemata/saalemodell.xsd" ) );
     catalog.put( "org.kalypso.saale.pegel", myClass.getResource( "schemata/pegel.xsd" ) );
     catalog.put( "org.kalypso.saale.wlm", myClass.getResource( "schemata/wlm.xsd" ) );
-    //    catalog.put( "org.kalypso.bode.ombrometer", myClass.getResource( "schemata/ombrometer.xsd" ) );
+    catalog.put( "org.kalypso.saale.ombrometer", myClass.getResource( "schemata/ombrometer.xsd" ) );
     catalog.put( "org.kalypso.saale.speicher", myClass.getResource( "schemata/speicher.xsd" ) );
     catalog.put( "org.kalypso.saale.temp", myClass.getResource( "schemata/temp.xsd" ) );
     catalog.put( "org.kalypso.saale.common", myClass.getResource( "schemata/common.xsd" ) );

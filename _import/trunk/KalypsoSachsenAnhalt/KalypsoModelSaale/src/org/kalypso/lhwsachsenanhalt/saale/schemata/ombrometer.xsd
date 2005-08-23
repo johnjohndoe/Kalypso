@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.saale.ombrometer" version="0.1" xmlns:common="org.kalypso.saale.common" xmlns:ombrometer="org.kalypso.saale.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
+	<import namespace="org.kalypso.saale.common" schemaLocation="common.xsd"/>
+
+	<element name="OmbrometerCollectionAssociation" type="ombrometer:OmbrometerCollectionAssociationType"/>
+	<complexType name="OmbrometerCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="ombrometer:OmbrometerCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="OmbrometerCollection" type="ombrometer:OmbrometerCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="OmbrometerCollectionType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="ombrometer:OmbrometerMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="OmbrometerMember" type="ombrometer:OmbrometerAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="OmbrometerAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="ombrometer:Ombrometer"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Ombrometer" abstract="false" type="ombrometer:OmbrometerType" substitutionGroup="gml:_Feature"/>
+	<complexType name="OmbrometerType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element name="NR"  type="string"> <annotation><documentation xml:lang="de"><label>Pegelnummer</label><tooltip>Nummer</tooltip><description>Messstellennummer</description></documentation></annotation></element>
+					<element name="Name" type="string"/>
+					<element ref="gml:location"/>
+					<element name="Niederschlag" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
