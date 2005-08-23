@@ -174,23 +174,22 @@ public class ModelNACalcTest extends TestCase
       final File tmpResults = File.createTempFile( identification, "zip" );
       tmpResults.deleteOnExit();
       ZipUtilities.zip( tmpResults, tmpDir );
-      final String[] ignore = new String[] {
-      //          "inp.dat/we_nat.ntz",
-      //          "infolog.txt",
-      //          "*debug.txt",
-      //          "*exe",
-      //          "*err",
-      //          "*gml",
-      //          "*res",
-      //          "IdMap.txt",
-      //          "exe.log",
-      //          "start/we_nat_start.txt",
-      //          "inp.dat/we.hyd",
-      //          "out_we.nat/950825.qgs",
-      //          "inp.dat/we_nat.ger",
-      //          "inp.dat/we_nat.geb",
-      //          "zufluss/*",
-      };
+      final String[] ignore = new String[]
+      {
+          "inp.dat/we_nat.ntz",
+          "infolog.txt",
+          "*exe",
+          "*err",
+          "*gml",
+          "*res",
+          "IdMap.txt",
+          "exe.log",
+          //          "start/we_nat_start.txt",
+          //          "inp.dat/we.hyd",
+          //          "out_we.nat/950825.qgs",
+          "inp.dat/we_nat.ger",
+          //          "inp.dat/we_nat.geb",
+          "zufluss/*" };
       ILogger logger = new ILogger()
       {
         /**
