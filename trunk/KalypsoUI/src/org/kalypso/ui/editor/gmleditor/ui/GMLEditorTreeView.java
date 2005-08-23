@@ -28,7 +28,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -88,8 +87,6 @@ import org.xml.sax.InputSource;
 public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLDocumentListener, // 
     IPostSelectionProvider, IPoolListener, ModellEventProvider, ModellEventListener//, ISelectionChangedListener
 {
-  private final static int DEFAULT_EXPANSION_LEVEL = 3;
-
   protected GMLEditorLabelProvider2 m_labelProvider = new GMLEditorLabelProvider2();
 
   protected GMLEditorContentProvider2 m_contentProvider = new GMLEditorContentProvider2();
@@ -610,8 +607,8 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
 
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
-      Feature parentFeature = ((FeatureStructureChangeModellEvent)modellEvent).getParentFeature();
-      m_treeViewer.update( parentFeature, null);
+      Feature parentFeature = ( (FeatureStructureChangeModellEvent)modellEvent ).getParentFeature();
+      m_treeViewer.update( parentFeature, null );
       m_treeViewer.refresh();
     }
     //    if( modellEvent.getEventSource() instanceof CommandableWorkspace )
@@ -728,7 +725,6 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
    */
   public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
   {
-
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
     {
       if( m_workspace != null )
@@ -737,16 +733,18 @@ public class GMLEditorTreeView extends SelectionProviderAdapter implements IGMLD
         m_workspace = null;
       }
       m_workspace = ( (CommandableWorkspace)newValue );
-      m_workspace.addModellListener( this );
-      m_treeViewer.getControl().getDisplay().asyncExec( new Runnable() //m_treeViewer.
-          {
-            public void run()
-            {
 
-              m_treeViewer.setInput( m_workspace );
-              //            setInput( m_workspace );
-            }
-          } );
+      if( m_workspace != null )
+      {
+        m_workspace.addModellListener( this );
+        m_treeViewer.getControl().getDisplay().asyncExec( new Runnable()
+        {
+          public void run()
+          {
+            m_treeViewer.setInput( m_workspace );
+          }
+        } );
+      }
     }
   }
 

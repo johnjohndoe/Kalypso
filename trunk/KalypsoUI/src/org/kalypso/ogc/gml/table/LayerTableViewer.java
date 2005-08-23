@@ -262,7 +262,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         final IKalypsoFeatureTheme theme = getTheme();
         final CommandableWorkspace workspace = theme.getWorkspace();
         final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
-        SelectFeaturesCommand command = new SelectFeaturesCommand( workspace, selectedFeatures, selectionManager, ModellEvent.SELECTION_CHANGED );
+        SelectFeaturesCommand command = new SelectFeaturesCommand( workspace, selectedFeatures, selectionManager,
+            ModellEvent.SELECTION_CHANGED );
         postCommand( command, null );
       }
     } );
@@ -643,14 +644,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         refresh();
     }
     if( event instanceof FeatureSelectionChangedModellEvent )
-      {
-      GMLWorkspace workspace = ((FeatureSelectionChangedModellEvent)event).getGMLWorkspace();
-      Feature[] selection = ((FeatureSelectionChangedModellEvent)event).getGMLWorkspace().getSelectionManager().getSelection();
-      Widget widget = doFindInputItem( selection[0]);
+    {
+//      GMLWorkspace workspace = ( (FeatureSelectionChangedModellEvent)event ).getGMLWorkspace();
+//      Feature[] selection = ( (FeatureSelectionChangedModellEvent)event ).getGMLWorkspace().getSelectionManager()
+//          .getSelection();
+//      Widget widget = doFindInputItem( selection[0] );
       //TODO to make shure external selection changed is reflected in the table
-      Feature[] selection2 = getTheme().getSelectionManager().getSelection();
-      System.out.println("");
-      }
+//      Feature[] selection2 = getTheme().getSelectionManager().getSelection();
+//      System.out.println( "" );
+    }
   }
 
   public boolean isDisposed()

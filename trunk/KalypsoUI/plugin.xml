@@ -705,6 +705,10 @@
            class="org.kalypso.ant.MultiEqualsTask"
            library="lib/kalypsoAnt.jar"
            name="kalypso.multiequals"/>
+     <antTask
+           class="org.kalypso.ant.MapZmlMeta2FeatureTask"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.mapZmlMeta2Feature"/>
    </extension>
       <extension
          point="org.kalypso.services.core.client.serviceproxy">
