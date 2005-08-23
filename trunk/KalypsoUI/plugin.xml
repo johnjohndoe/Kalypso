@@ -64,7 +64,7 @@
          name="preferencePages"
          point="org.eclipse.ui.preferencePages">
       <page
-            name="Kalypso"
+            name="%Extension.PreferencesPage.name"
             class="org.kalypso.ui.preferences.KalypsoPreferencePage"
             id="org.kalypso.ui.preferences.KalypsoPreferencePage">
       </page>
@@ -78,13 +78,13 @@
             icon="icons/kalypso_gmt.gif"
             default="true"
             contributorClass="org.kalypso.ui.editor.mapeditor.GisMapEditorContributor"
-            name="Karten Editor"
+            name="%Extension.Editor.Map"
             id="org.kalypso.ui.editor.mapeditor.GisMapEditor"
             extensions="gmt">
       </editor>
       <editor
             default="true"
-            name="Tabellen Editor"
+            name="%Extension.Editor.Table"
             icon="icons/kalypso_gtt.gif"
             extensions="gtt"
             class="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
@@ -93,14 +93,14 @@
       </editor>
       <editor
             default="true"
-            name="Feature Editor"
+            name="%Extension.Editor.Feature"
             icon="icons/kalypso_gtt.gif"
             extensions="gft"
             class="org.kalypso.ui.editor.featureeditor.FeatureEditor"
             id="org.kalypso.ui.editor.FeatureEditor">
       </editor>
       <editor
-            name="GMLEditor"
+            name="%Extension.Editor.GML"
             default="true"
             extensions="gmv"
             icon="icons/kalypso_gtt.gif"
@@ -112,7 +112,7 @@
             icon="icons/kalypso_odt.gif"
             default="true"
             contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor"
-            name="Diagramm Editor"
+            name="%Extension.Editor.Diagramm"
             id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
             extensions="odt">
       </editor>
@@ -121,7 +121,7 @@
             icon="icons/kalypso_ott.gif"
             default="true"
             contributorClass="org.kalypso.ui.editor.obstableeditor.ObservationTableEditorContributor"
-            name="Zeitreihen Editor"
+            name="%Extension.Editor.Timeseries"
             id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
             extensions="ott">
       </editor>
@@ -129,7 +129,7 @@
             launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher"
             icon="icons/sample.gif"
             default="true"
-            name="Gis Vorlagenauswahl"
+            name="%Extension.Editior.GISPre"
             id="org.kalypso.ui.editor.GisEditor"
             extensions="gml,shp">
       </editor>
@@ -137,7 +137,7 @@
             launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher"
             icon="icons/sample.gif"
             default="false"
-            name="Zeitreihen Vorlagenauswahl"
+            name="%Extension.Editior.TimePre"
             id="org.kalypso.ui.editor.ObsEditor"
             extensions="zml">
       </editor>
@@ -145,7 +145,7 @@
             launcher="org.kalypso.ui.editorLauncher.GrafikEditorLauncher"
             icon="icons/observation/grafik-icon.gif"
             default="false"
-            name="Grafik Programm"
+            name="%Extension.Editor.Grafic"
             id="org.kalypso.zml.grafik"
             extensions="zml,tpl,odt"/>
    </extension>
@@ -158,28 +158,28 @@
             id="org.kalypso.ui.kalypso">
       </category>
       <view
-            name="Zeitreihenbrowser"
+            name="%Extension.Views.Timeseriesbrowser"
             icon="icons/repository/repository.gif"
             category="org.kalypso.ui.kalypso"
             class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
             id="org.kalypso.ui.repository.view.RepositoryExplorerPart">
       </view>
       <view
-            name="Diagram QuickView"
+            name="%Extension.Views.Diagram"
             icon="icons/kalypso_odt.gif"
             category="org.kalypso.ui.kalypso"
             class="org.kalypso.ogc.sensor.view.DiagramViewPart"
             id="org.kalypso.ogc.sensor.view.DiagramViewPart">
       </view>
       <view
-            name="Table QuickView"
+            name="%Extension.Views.Table"
             icon="icons/kalypso_ott.gif"
             category="org.kalypso.ui.kalypso"
             class="org.kalypso.ogc.sensor.view.TableViewPart"
             id="org.kalypso.ogc.sensor.view.TableViewPart">
       </view>
       <view
-            name="Style Editor"
+            name="%Extension.Views.StyleEditor"
             icon="icons/full/elcl16/kde_filter.gif"
             category="org.kalypso.ui.kalypso"
             class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart"
@@ -190,7 +190,7 @@
             icon="icons/kalypso16.gif"
             class="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
             category="org.kalypso.ui.kalypso"
-            name="Edit Optionen"
+            name="%Extension.Views.EditOptionen"
             id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
    </extension>
    <extension
@@ -226,8 +226,8 @@
                disabledIcon="icons/feature/save_GML_gray.gif"
                enablesFor="+"
                toolbarPath="edit"
-               label="Daten speichern"
-               tooltip="Speichert die Daten der Tabelle"
+               label="%Extension.EditorActions.saveData.label"
+               tooltip="%Extension.EditorActions.saveData.tooltip"
                icon="icons/feature/save_GML.gif"
                class="org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate"
                style="push"
@@ -235,20 +235,20 @@
                id="org.kalypso.ui.editor.gistableeditor.SaveDataAction">
          </action>
          <action
-               label="Rückgängig"
+               label="%Extension.EditorActions.undo.label"
                icon="icons/gistable/undo_edit.gif"
                style="push"
-               tooltip="Die letzte Änderung der Daten Rückgängig machen"
+               tooltip="%Extension.EditorActions.undo.tooltip"
                class="org.kalypso.ui.editor.gistableeditor.actions.UndoDelegate"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
                toolbarPath="edit"
                id="org.kalypso.ui.editor.gistableeditor.UndoActionDelegate">
          </action>
          <action
-               label="Wiederherstellen"
+               label="%Extension.EditorActions.redo.label"
                icon="icons/gistable/redo_edit.gif"
                style="push"
-               tooltip="Die letzte Korrektur wiederherstellen"
+               tooltip="%Extension.EditorActions.redo.tooltip"
                class="org.kalypso.ui.editor.gistableeditor.actions.RedoDelegate"
                menubarPath="org.kalypso.ui.editors.tableeditor.menu/edit"
                toolbarPath="edit"
@@ -267,8 +267,8 @@
          <action
                disabledIcon="icons/map/save_edit_disabled.gif"
                toolbarPath="Baum/edit"
-               label="Daten speichern"
-               tooltip="Speichert die Daten des Baums"
+               label="%extension.EditorActions.saveData.label"
+               tooltip="%extension.EditorActions.saveData.tooltip"
                icon="icons/feature/save_GML.gif"
                class="org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate"
                style="push"
@@ -302,20 +302,20 @@
             </groupMarker>
          </menu>
          <action
-               label="Ausschnitt verkleinern"
+               label="%Extension.EditorActions.GisMapEditor.minimize.label"
                icon="icons/map/zoomout.gif"
                style="push"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
-               tooltip="verkleinert den Kartenausschnitt"
+               tooltip="%Extension.EditorActions.GisMapEditor.minimize.tooltip"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
                toolbarPath="karte/actions"
                id="org.kalypso.ui.editor.mapeditor.action.ZoomOutAction">
          </action>
          <action
-               label="Ausschnitt maximieren"
+               label="%Extension.EditorActions.GisMapEditor.fullExtend.label"
                icon="icons/full/elcl16/kde_window_fullscreen.gif"
                style="push"
-               tooltip="maximiert den Kartenausschnitt"
+               tooltip="%Extension.EditorActions.GisMapEditor.fullExtend.tooltip"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
                toolbarPath="karte/actions"
@@ -328,9 +328,9 @@
                toolbarPath="karte/tools"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
                icon="icons/map/pan.gif"
-               label="Ausschnitt verschieben"
+               label="%Extension.EditorActions.GisMapEditor.pan.label"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-               tooltip="verschiebt den Kartenausschnitt">
+               tooltip="%Extension.EditorActions.GisMapEditor.pan.tooltip">
          </action>
          <action
                state="false"
@@ -339,25 +339,25 @@
                toolbarPath="karte/tools"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate"
                icon="icons/sample.gif"
-               label="Feature Selektieren"
+               label="%Extension.EditorActions.GisMapEditor.featureSelection.label"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-               tooltip="selektiert Feature">
+               tooltip="%Extension.EditorActions.GisMapEditor.featureSelection.tooltip">
          </action>
          <action
-               label="Objekt editieren"
+               label="%Extension.EditorActions.GisMapEditor.featureRequest.label"
                icon="icons/full/elcl16/kde_contexthelp.gif"
                style="radio"
-               tooltip="die Daten eines Objekts anzeigen/editieren"
+               tooltip="%Extension.EditorActions.GisMapEditor.featureRequest.tooltip"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureWidgetDelegate"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                toolbarPath="karte/tools"
                id="org.kalypso.ui.editor.mapeditor.action.EditFeatureAction">
          </action>
          <action
-               label="Ausschnitt vergrößern"
+               label="%Extension.EditorActions.GisMapEditor.maximize.label"
                icon="icons/map/zoomin.gif"
                style="radio"
-               tooltip="vergrößert den Kartenausschnitt"
+               tooltip="%Extension.EditorActions.GisMapEditor.maximize.tooltip"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                toolbarPath="karte/tools"
@@ -366,9 +366,9 @@
          <action
                disabledIcon="icons/map/edit_relation_gray.gif"
                toolbarPath="karte/tools"
-               label="Relationen setzen"
+               label="%Extension.EditorActions.GisMapEditor.setRelation.label"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate"
-               tooltip="setzen von Relationen"
+               tooltip="%Extension.EditorActions.GisMapEditor.setRelation.tooltip"
                icon="icons/map/edit_relation.gif"
                style="radio"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
@@ -377,9 +377,9 @@
              <action
                    disabledIcon="icons/map/geoInfo_gray.gif"
                    toolbarPath="karte/tools"
-                   label="Koordinaten Information"
+                   label="%Extension.EditorActions.GisMapEditor.coordInfo.label"
                    class="org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate"
-                   tooltip="Koordinaten Information"
+                   tooltip="%Extension.EditorActions.GisMapEditor.coordInfo.tooltip"
                    icon="icons/map/geoInfo.gif"
                    style="radio"
                    menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
@@ -388,8 +388,8 @@
          <action
                disabledIcon="icons/map/save_edit_disabled.gif"
                toolbarPath="karte/edit"
-               label="Thema speichern"
-               tooltip="Speichert die Daten des aktiven Themas"
+               label="%Extension.EditorActions.saveData.label"
+               tooltip="%Extension.EditorActions.saveData.tooltip"
                icon="icons/feature/save_GML.gif"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate"
                style="push"
@@ -398,22 +398,23 @@
          </action>
 
          <action
-               label="Rückgängig"
+               label="%Extension.EditorActions.undo.label"
                icon="icons/map/undo_edit.gif"
                style="push"
-               tooltip="letzte Änderung rückgängig machen"
+               tooltip="%Extension.EditorActions.undo.tooltip"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
                toolbarPath="karte/edit"
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
          </action>
          <action
-               label="Wiederherstellen"
+               toolbarPath="karte/edit"
+               label="%Extension.EditorActions.redo.label"
+               tooltip="%Extension.EditorActions.redo.tooltip"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate"
                icon="icons/map/redo_edit.gif"
                style="push"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               toolbarPath="karte/edit"
                id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
          </action>
       </editorContribution>
@@ -431,9 +432,9 @@
          <action
                disabledIcon="icons/feature/save_GML_gray.gif"
                toolbarPath="tabelle"
-               label="Daten speichern"
+               label="%Extension.EditorActions.saveData.label"
                icon="icons/feature/save_GML.gif"
-               tooltip="Speichert die grundliegende Daten"
+               tooltip="%Extension.EditorActions.saveData.tooltip"
                class="org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction"
                style="push"
                menubarPath="org.kalypso.ui.editor.obstableeditor.menu/tools"
@@ -453,8 +454,8 @@
          </menu>
          <action
                toolbarPath="diagramm"
-               label="Diagramm Eigenschaften"
-               tooltip="Öffnet das Dialog um die Diagramm-Eigenschaften setzen zu können"
+               label="%Extension.EditorActions.diagramEditor.preferences.label"
+               tooltip="%Extension.EditorActions.diagramEditor.preferences.tooltip"
                icon="icons/util/settings.gif"
                class="org.kalypso.ui.editor.diagrameditor.actions.DiagramPropertiesAction"
                style="push"
@@ -462,9 +463,9 @@
                id="org.kalypso.ui.editor.diagrameditor.actions.DiagramPropertiesAction"/>
          <action
                toolbarPath="diagramm"
-               label="Im Grafikprogramm öffnen"
+               label="%Extension.EditorActions.diagramEditor.openGrafikTool.label"
                icon="icons/observation/grafik-icon.gif"
-               tooltip="Öffnet das aktuelle Diagramm im Grafikprogramm"
+               tooltip="%Extension.EditorActions.diagramEditor.openGrafikTool.tooltip"
                class="org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction"
                style="push"
                menubarPath="org.kalypso.ui.editor.obsdiageditor.menu/tools"
@@ -482,8 +483,8 @@
             id="org.kalypso.objectclass.feature">
          <action
                enablesFor="1"
-               label="Feature löschen"
-               tooltip="löscht ein feature"
+               label="%Extension.popupMenus.feature.delete.label"
+               tooltip="%Extension.popupMenus.feature.delete.tooltip"
                class="org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate"
                icon="icons/gistable/rem_row.gif"
                style="push"
@@ -491,8 +492,8 @@
          </action>
          <action
                enablesFor="0"
-               label="Feature neu"
-               tooltip="erstellt neues feature"
+               label="%Extension.popupMenus.feature.new.label"
+               tooltip="%Extension.popupMenus.feature.new.tooltip"
                class="org.kalypso.ui.editor.actions.FeatureAddActionDelegate"
                icon="icons/gistable/add_row.gif"
                style="push"
@@ -500,14 +501,14 @@
          </action>
          <action
                enablesFor="1"
-               label="Wert übertragen "
-               tooltip="überträgt Parameter auf Auswahl"
+               label="%Extension.popupMenus.feature.setValue.label"
+               tooltip="%Extension.popupMenus.feature.setValue.tooltip"
                icon="icons/gistable/applyValues2.gif"
                class="org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate"
                style="push"
                id="org.kalypso.objectclass.feature.action.remove"/>
          <action
-               label="Feature editieren"
+               label="%Extension.popupMenus.feature.edit"
                class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature"
                id="org.kalypso.objectclass.feature.editfeature"/>
       </objectContribution>
@@ -546,7 +547,7 @@
                 menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
                 id="org.kalypso.objectclass.filterencoding.create.spatialoperation"/>
           <menu
-                label="Neue Operation..."
+                label="%Extension.popupMenus.filterencoding.newOperation"
                 id="org.kalypso.objectclass.filterencoding.filter.operation.menu">
              <separator name="operations"/>
           </menu>
@@ -582,7 +583,7 @@
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
                 id="org.kalypso.objectclass.filterencoding.create.operation.spatialopeation"/>
           <menu
-                label="Neue Operation..."
+                label="%Extension.popupMenus.filterencoding.newOperation"
                 id="org.kalypso.objectclass.filterencoding.operation.menu">
              <separator name="operations"/>
              <groupMarker name="logicalgroup"/>
@@ -634,13 +635,13 @@
          name="perspectives"
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Kalypso Zeitreihenbrowser"
+            name="%Extension.perspectives.timeseriesbrowser"
             icon="icons/perspective/zml_browser.gif"
             class="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"
             id="org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory">
       </perspective>
       <perspective
-            name="Kalypso Modeler"
+            name="%Extension.perspectives.modeler"
             icon="icons/perspective/expert.gif"
             fixed="false"
             class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
@@ -652,7 +653,7 @@
          name="exportWizards"
          point="org.eclipse.ui.exportWizards">
       <wizard
-            name="Export über Kalypso Zeitreihendienst"
+            name="%Extension.exportWizards.timesries"
             icon="icons/repository/zml_upload.gif"
             class="org.kalypso.ui.wizard.ocs.OcsExportWizard"
             id="org.kalypso.ui.wizard.ocs.OcsExportWizard">
@@ -666,11 +667,11 @@
          check if still everything works -->
       <repository
             factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory"
-            name="Lokales Verzeichnis">
+            name="%Extension.repository.factories.localDirectory">
       </repository>
       <repository
             factory="org.kalypso.services.ocs.repository.ObservationServiceRepositoryFactory"
-            name="Kalypso Zeitreihendienst">
+            name="%Extension.repository.factories.timeseriesService">
       </repository>
    </extension>
    <extension
