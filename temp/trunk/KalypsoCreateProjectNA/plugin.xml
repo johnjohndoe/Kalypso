@@ -30,7 +30,7 @@
             class="org.kalypso.wizard.KalypsoNAProjectWizard"
             icon="icons/kalypso16.gif"
             category="org.kalypso"
-            name="NA Projekt"
+            name="%NewWizard.name"
             id="org.kalypso.wizard.KalypsoNAProjectWizard"/>
    </extension>
 

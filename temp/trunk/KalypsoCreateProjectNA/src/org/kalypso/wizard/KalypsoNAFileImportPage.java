@@ -116,7 +116,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   private CS_CoordinateSystem customCS = null;
 
   private CS_CoordinateSystem defaultCS = ConvenienceCSFactory.getInstance().getOGCCSByName(
-      "EPSG:31467" );
+      "EPSG:31467" ); //$NON-NLS-1$
 
   private GMLWorkspace sourceWorkspace;
 
@@ -131,7 +131,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   public KalypsoNAFileImportPage( String pageName )
   {
     super( pageName );
-    setDescription( "Dieser Dialog liest eine ESRI Shape-Datei in den Workspace ein." );
+    setDescription( WizardMessages.getString("KalypsoNAFileImportPage.PageDescription") ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -143,7 +143,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   public KalypsoNAFileImportPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( "Dieser Dialog liest eine ESRI Shape-Datei in den Workspace ein." );
+    setDescription( WizardMessages.getString("KalypsoNAFileImportPage.PageDescription2") ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -154,7 +154,7 @@ public class KalypsoNAFileImportPage extends WizardPage
     if( dotLoc != -1 )
     {
       String ext = path.getText().substring( dotLoc + 1 );
-      if( ext.equalsIgnoreCase( "shp" ) == false )
+      if( ext.equalsIgnoreCase( "shp" ) == false ) //$NON-NLS-1$
         test = false;
       else
         test = true;
@@ -196,10 +196,10 @@ public class KalypsoNAFileImportPage extends WizardPage
     topGroupData.horizontalAlignment = GridData.FILL;
     fileGroup.setLayout( topGroupLayout );
     fileGroup.setLayoutData( topGroupData );
-    fileGroup.setText( "Shape-Datei" );
+    fileGroup.setText( WizardMessages.getString("KalypsoNAFileImportPage.FileGroupText") ); //$NON-NLS-1$
 
     fileLabel = new Label( fileGroup, SWT.NONE );
-    fileLabel.setText( "Dateiname :" );
+    fileLabel.setText( WizardMessages.getString("KalypsoNAFileImportPage.FileLabelText") ); //$NON-NLS-1$
 
     // Set width of Text fields
     GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
@@ -216,7 +216,7 @@ public class KalypsoNAFileImportPage extends WizardPage
     } );
 
     browseButton = new Button( fileGroup, SWT.PUSH );
-    browseButton.setText( "Durchsuchen..." );
+    browseButton.setText( WizardMessages.getString("KalypsoNAFileImportPage.BrowseButtonText") ); //$NON-NLS-1$
     browseButton.setLayoutData( new GridData( GridData.END ) );
     browseButton.addSelectionListener( new SelectionAdapter()
     {
@@ -228,7 +228,7 @@ public class KalypsoNAFileImportPage extends WizardPage
       }
     } );
     skipRadioButton = new Button( fileGroup, SWT.CHECK );
-    skipRadioButton.setText( "Diese Datei einlesen" );
+    skipRadioButton.setText( WizardMessages.getString("KalypsoNAFileImportPage.SkipRadioButtonText") ); //$NON-NLS-1$
     skipRadioButton.setSelection( true );
     skipRadioButton.addSelectionListener( new SelectionAdapter()
     {
@@ -290,17 +290,17 @@ public class KalypsoNAFileImportPage extends WizardPage
   {
     FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[]
-    { "shp" } );
-    fdialog.setText( "Wählen Sie eine ESRI Arc-View Shapedatei aus:" );
+    { "shp" } ); //$NON-NLS-1$
+    fdialog.setText( WizardMessages.getString("KalypsoNAFileImportPage.FileDialogText") ); //$NON-NLS-1$
     fdialog.setFilterNames( new String[]
     {
-        "Shape Files",
-        "All Files (*.*)" } );
+        "Shape Files", //$NON-NLS-1$
+        "All Files (*.*)" } ); //$NON-NLS-1$
     fdialog.setFilterExtensions( new String[]
     {
-        "*.shp",
-        "*.*" } );
-    fdialog.setFileName( "*.shp" );
+        "*.shp", //$NON-NLS-1$
+        "*.*" } ); //$NON-NLS-1$
+    fdialog.setFileName( "*.shp" ); //$NON-NLS-1$
     if( fdialog.open() != null )
     {
       String textStr;
@@ -342,19 +342,19 @@ public class KalypsoNAFileImportPage extends WizardPage
     //	 checks catchment field entry and file suffix
     if( textField.getText().length() == 0 )
     {
-      setErrorMessage( "Bitte eine Datei auswählen!" );
+      setErrorMessage( WizardMessages.getString("KalypsoNAFileImportPage.ErrorMessageNoFile") ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }
     else if( checkSuffix( textField ) == false )
     {
-      setErrorMessage( "Falscher Suffix Datei, muss \"shp\" sein!" );
+      setErrorMessage( WizardMessages.getString("KalypsoNAFileImportPage.ErrorMessageWrongSuffix") ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }
     else if( validateFile( fileURL ) == false )
     {
-      setErrorMessage( "Gewählte Shape-Datei nicht gültg" );
+      setErrorMessage( WizardMessages.getString("KalypsoNAFileImportPage.ErrorMessageFileNotValid") ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }
