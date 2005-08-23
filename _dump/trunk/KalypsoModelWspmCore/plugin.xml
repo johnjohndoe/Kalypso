@@ -17,18 +17,10 @@
    <requires>
       <import plugin="org.junit"/>
       <import plugin="org.eclipse.core.runtime" export="true"/>
-      <import plugin="org.eclipse.core.resources" export="true"/>
       <import plugin="org.bce.java.contributions"/>
    </requires>
    
    <extension-point id="validatorrule" name="validatorrule" schema="schema/validatorrule.exsd"/>
    <extension-point id="validatortype" name="validatortype" schema="schema/validatortype.exsd"/>
-   <extension
-         id="profilemarker"
-         name="Profil Validierung"
-         point="org.eclipse.core.resources.markers">
-      <super type="org.eclipse.core.resources.problemmarker"/>
-      <persistent value="false"/>
-   </extension>
-   
+   <extension-point id="reparatorrule" name="reparatorrule" schema="schema/reparatorrule.exsd"/>
 </plugin>

@@ -37,7 +37,7 @@ public class RuecksprungRule extends AbstractValidatorRule
           if( x2 < x1 )
             collector.createProfilMarker( true, "Gauss-Rücksprung", "Breite = "
                 + String.format( IProfilConstants.FMT_STATION, x2 ), profil.getPoints()
-                .indexOf( point ) );
+                .indexOf( point ), PointProperty.BREITE.toString() );
         }
 
         prevPoint = point;

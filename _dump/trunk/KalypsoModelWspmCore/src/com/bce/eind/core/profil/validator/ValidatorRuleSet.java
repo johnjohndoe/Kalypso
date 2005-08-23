@@ -1,13 +1,11 @@
 package com.bce.eind.core.profil.validator;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 
 import com.bce.eind.core.ProfilCorePlugin;
@@ -20,8 +18,6 @@ import com.bce.eind.core.profil.IProfil;
  */
 public class ValidatorRuleSet
 {
-  public static final String MARKER_ID = ProfilCorePlugin.getID() + ".profilemarker";
-
   private final IValidatorRule[] m_rules;
 
   public ValidatorRuleSet( final IValidatorRule[] rules )
@@ -29,64 +25,46 @@ public class ValidatorRuleSet
     m_rules = rules;
   }
 
-  public void validateProfile( final IProfil profil, final IResource resource, final boolean validate, final String[] excludeIDs )
+  public IStatus validateProfile( final IProfil profil, final IValidatorMarkerCollector collector,
+      final boolean validate, final String[] excludeIDs )
   {
     final IValidatorRule[] rules = m_rules;
-
-    final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( resource );
-    
+    final List<IStatus> stati = new ArrayList<IStatus>( rules.length );
     final List<String> excludeRules = java.util.Arrays.asList( excludeIDs );
-    
-    final WorkspaceJob job = new WorkspaceJob( "Profil wird validiert" )
-    {
-      @Override
-      public IStatus runInWorkspace( IProgressMonitor monitor ) throws CoreException
-      {
-        resource.deleteMarkers( MARKER_ID, true, IResource.DEPTH_ZERO );
 
-        if( validate && rules != null )
+    try
+    {
+      collector.reset();
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+
+    if( validate && rules != null )
+    {
+      for( final IValidatorRule r : rules )
+      {
+        if( !excludeRules.contains( r.getID() ) )
         {
-          for( final IValidatorRule r : rules )
+          try
           {
-            if( !excludeRules.contains( r.getID() ) ) 
-                r.validate( profil, collector );
+            r.validate( profil, collector );
+          }
+          catch( final CoreException e )
+          {
+            stati.add( e.getStatus() );
           }
         }
-
-        return Status.OK_STATUS;
       }
-    };
-    job.schedule();
-  }
-
-  private static final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
-  {
-    private final IResource m_resource;
-
-    private final static String[] USED_ATTRIBUTES = new String[]
-                                                         { IMarker.MESSAGE, IMarker.LOCATION, IMarker.SEVERITY, IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS };
-    
-    public ResourceValidatorMarkerCollector( final IResource resource )
-    {
-      m_resource = resource;
     }
 
-    /**
-     * Creates a (profile-)marker on the given resource. All validation rules should use this method,
-     * so changes in the implementation (e.g. the type of the marker) are reflekted on all rules.
-     * 
-     * @throws CoreException
-     */
-    public void createProfilMarker( boolean isSevere,
-        final String message, final String location, final int pointPos ) throws CoreException
-    {
-      final IMarker marker = m_resource.createMarker( MARKER_ID );
+    if( stati.size() == 0 )
+      return Status.OK_STATUS;
 
-      final Object[] values = new Object[]
-      { message, location, isSevere ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING, pointPos };
-
-      marker.setAttributes( USED_ATTRIBUTES, values );
-    }
+    return new MultiStatus( ProfilCorePlugin.getID(), 0,
+        stati.toArray( new IStatus[stati.size()] ),
+        "Ein oder mehr Fehler sind bei der Validierung des Profils aufgetreten.", null );
   }
 
   public IValidatorRule[] getRules( )

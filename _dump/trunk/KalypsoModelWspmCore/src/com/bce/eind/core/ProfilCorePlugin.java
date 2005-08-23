@@ -3,6 +3,8 @@ package com.bce.eind.core;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
+import com.bce.eind.core.profil.reparator.IProfilReparator;
+import com.bce.eind.core.profil.reparator.ReparatorRuleSet;
 import com.bce.eind.core.profil.validator.IValidatorRule;
 import com.bce.eind.core.profil.validator.ValidatorFactory;
 import com.bce.eind.core.profil.validator.ValidatorRuleSet;
@@ -22,6 +24,9 @@ public class ProfilCorePlugin extends Plugin
     return getDefault().getBundle().getSymbolicName();
   }
   
+  /** The rules will will created (laziliy) only once and used in every rule set. */
+  private IProfilReparator[] m_reparatorRules;
+
   private ValidatorFactory m_validatorFactory = null;
 
   @Override
@@ -55,4 +60,13 @@ public class ProfilCorePlugin extends Plugin
     
     return m_validatorFactory;
   }
+  
+  public final ReparatorRuleSet createReparatorRuleSet( )
+  {
+    if( m_reparatorRules == null )
+      m_reparatorRules = ProfilCoreExtensions.createReaparatorRules();
+
+    return new ReparatorRuleSet( m_reparatorRules );
+  }
+
 }
