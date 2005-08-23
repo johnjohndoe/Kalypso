@@ -5,7 +5,7 @@
    name="KalypsoLocalCalculation Plug-in"
    version="1.0.0"
    provider-name="kalypso.org"
-   class="org.kalypso.services.calculation.local.KalypsoLocalCalulationPlugin">
+   class="org.kalypso.services.calculation.local.KalypsoLocalCalculationPlugin">
 
    <runtime>
       <library name="kalypsoCalculationLocal.jar">
