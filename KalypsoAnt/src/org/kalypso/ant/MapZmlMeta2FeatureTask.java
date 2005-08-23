@@ -50,6 +50,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor;
@@ -110,6 +111,6 @@ public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
    */
   public void handleError( final Shell shell, final IStatus status )
   {
-  // TODO Auto-generated method stub
+    ErrorDialog.openError(shell, "MapZmlMeta2Feature", "Fehler beim Erzeugen der Feature-Properties.", status );
   }
 }
