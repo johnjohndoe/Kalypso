@@ -244,7 +244,7 @@ public class TsInfoItem implements IRepositoryItem
     if( call.getResultList().size() > 0 )
     {
       final HashMap map = (HashMap)call.getResultList().get( 0 );
-      return new TsInfoItem( m_group, map );
+      return new TsInfoItem( m_rep/*m_group*/, map );
     }
 
     return null;

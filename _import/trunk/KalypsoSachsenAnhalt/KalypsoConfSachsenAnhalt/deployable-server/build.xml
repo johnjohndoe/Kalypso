@@ -55,7 +55,7 @@
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml" target="clean" inheritAll="false" />
         <!--ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml" target="clean" inheritAll="false" /-->
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml" target="clean" inheritAll="false" />
-        <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" />
+        <!--ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml" target="clean" inheritAll="false" /-->
         <ant antfile="${workspace}/KalypsoModelTubig/etc/ant/build.xml" target="clean" inheritAll="false" />
         <!--ant antfile="${workspace}/KalypsoModelSaale/etc/ant/build.xml" target="clean" inheritAll="false" /-->
     </target>
