@@ -259,7 +259,15 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     final String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
     final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
 
-    return ZmlFactory.parseXML( sourceURL, feature.getId() );
+    try
+    {
+      return ZmlFactory.parseXML( sourceURL, feature.getId() );
+    }
+    catch( final SensorException e )
+    {
+      // tricky: wrap the exception with timeserie-link as text to have a better error message
+      throw new SensorException( "Konnte Zeitreihe nicht laden: " + sourceref, e );
+    }
   }
 
   public final static class Source
