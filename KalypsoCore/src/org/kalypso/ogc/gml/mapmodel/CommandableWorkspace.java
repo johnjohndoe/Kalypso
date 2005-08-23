@@ -336,6 +336,16 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, java.lang.String, boolean)
+   */
+  public void setFeatureAsAggregation( Feature parent, String propName, String featureID, boolean overwrite )
+      throws Exception
+  {
+    m_workspace.setFeatureAsAggregation( parent, propName, featureID, overwrite );
+  }
+  
+  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getParentFeature(org.kalypsodeegree.model.feature.Feature)
    */
   public Feature getParentFeature( Feature toFindParentFrom )

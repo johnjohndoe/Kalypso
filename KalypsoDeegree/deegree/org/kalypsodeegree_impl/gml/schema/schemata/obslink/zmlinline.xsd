@@ -3,4 +3,13 @@
 	<simpleType name="ZmlInlineType">
 		<restriction base="string"/>
 	</simpleType>
+
+    <!-- W Q v z.B. RHB-->
+    <simpleType name="ZmlInlineWQVType">
+		<restriction base="string"/>
+	</simpleType>
+    <!-- T A z.B. Zeit-Flächenfunktion-->
+    <simpleType name="ZmlInlineTAType">
+		<restriction base="string"/>
+	</simpleType>
 </schema>

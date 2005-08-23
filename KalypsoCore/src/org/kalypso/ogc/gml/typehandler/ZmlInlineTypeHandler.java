@@ -55,11 +55,18 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
 {
   public static final String NAMESPACE = "inline.zml.kalypso.org";
 
-  private static final String NAME = "ZmlInlineType";
 
   public static final String CLASS_NAME = IObservation.class.getName();
 
-  public static final String TYPE_NAME = NAMESPACE + ":" + NAME;
+  public  final String m_typeName;
+
+  protected final String[] m_axisTypes;
+
+  public ZmlInlineTypeHandler( final String name,final String[] axisTypes )
+  {
+    m_axisTypes = axisTypes;
+    m_typeName = NAMESPACE + ":" + name;
+  }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
@@ -135,6 +142,6 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
    */
   public String getTypeName()
   {
-    return TYPE_NAME;
+    return m_typeName;
   }
 }

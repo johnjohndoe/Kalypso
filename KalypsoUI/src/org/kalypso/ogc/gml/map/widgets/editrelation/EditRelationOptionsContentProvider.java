@@ -144,31 +144,32 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
         FeatureTypeProperty property = properties[i];
         if( property instanceof FeatureAssociationTypeProperty )
         {
-          // test is heavy relationship
           FeatureAssociationTypeProperty linkFTP1 = (FeatureAssociationTypeProperty)property;
           FeatureType ft2 = linkFTP1.getAssociationFeatureType();
           // leight: FT,Prop,FT
           // heavy: FT,Prop,FT,PropFT
           // leight relationship ?
           if( ft2.getDefaultGeometryProperty() != null )
-          {
             result.add( new RelationType( ft1, linkFTP1, ft2 ) );
-          }
-          // heavy relationship?
           else
           {
-            FeatureTypeProperty[] properties2 = ft2.getProperties();
-            for( int l = 0; l < properties2.length; l++ )
+            // heavy relationship ?
+            FeatureType[] ft2s = linkFTP1.getAssociationFeatureTypes();
+            for( int j = 0; j < ft2s.length; j++ )
             {
-              FeatureTypeProperty property2 = properties2[l];
-              if( property2 instanceof FeatureAssociationTypeProperty )
+              FeatureTypeProperty[] properties2 = ft2s[j].getProperties();
+              for( int l = 0; l < properties2.length; l++ )
               {
-                FeatureAssociationTypeProperty linkFTP2 = (FeatureAssociationTypeProperty)property2;
-                FeatureType ft3 = linkFTP2.getAssociationFeatureType();
-                if( ft3.getDefaultGeometryProperty() != null )
+                FeatureTypeProperty property2 = properties2[l];
+                if( property2 instanceof FeatureAssociationTypeProperty )
                 {
-                  // it is a heavy relationship;
-                  result.add( new HeavyRelationType( ft1, linkFTP1, ft2, linkFTP2, ft3 ) );
+                  FeatureAssociationTypeProperty linkFTP2 = (FeatureAssociationTypeProperty)property2;
+                  FeatureType ft3 = linkFTP2.getAssociationFeatureType();
+                  if( ft3.getDefaultGeometryProperty() != null )
+                  {
+                    // it is a heavy relationship;
+                    result.add( new HeavyRelationType( ft1, linkFTP1, ft2s[j], linkFTP2, ft3 ) );
+                  }
                 }
               }
             }
