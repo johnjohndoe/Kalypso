@@ -66,30 +66,39 @@ import org.kalypso.services.calculation.service.impl.ICalcJobFactory;
 public class CalcPluginExtensionPointReader implements IUrlCatalog, ICalcJobFactory
 {
   /** typeID -> configurationElement */
-  private Map m_elementHash = new HashMap();
+  private final Map m_elementHash = new HashMap();
 
   private MultiUrlCatalog m_catalog;
 
   public CalcPluginExtensionPointReader()
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IExtensionPoint point = registry.getExtensionPoint( KalypsoLocalCalulationPlugin.getDefault().getId(),
+    final IExtensionPoint point = registry.getExtensionPoint( KalypsoLocalCalculationPlugin.getDefault().getId(),
         IKalypsoLocalCalculationConstants.EXT_ELEMENT_CALCJOB );
+    //System.out.println( getClass().getName() + " ist extensionpoint da ?" );
     if( point == null )
+    {
+      //System.out.println( getClass().getName() + " ... NEE" );
       return;
+    }
+//    System.out.println( getClass().getName() + " ... OK" );
 
     final List catalogs = new LinkedList();
 
     final IExtension[] extensions = point.getExtensions();
+  //  System.out.println( getClass().getName() + "size extensions:"+extensions.length );
     for( int i = 0; i < extensions.length; i++ )
     {
       final IExtension extension = extensions[i];
       final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
+    //  System.out.println( getClass().getName() + "size confElements:"+configurationElements.length );
       for( int j = 0; j < configurationElements.length; j++ )
       {
         final IConfigurationElement element = configurationElements[j];
+      //  System.out.println( getClass().getName() + "element :"+element.getName());
         final String typeID = element.getAttribute( IKalypsoLocalCalculationConstants.EXT_ATTRIB_ID );
-
+        
+        //System.out.println( getClass().getName() + "typeID :"+typeID);
         m_elementHash.put( typeID, element );
 
         try

@@ -9,10 +9,10 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoLocalCalulationPlugin extends AbstractUIPlugin
+public class KalypsoLocalCalculationPlugin extends AbstractUIPlugin
 {
   //The shared instance.
-  private static KalypsoLocalCalulationPlugin plugin;
+  private static KalypsoLocalCalculationPlugin plugin;
 
   //Resource bundle.
   private ResourceBundle resourceBundle;
@@ -20,7 +20,7 @@ public class KalypsoLocalCalulationPlugin extends AbstractUIPlugin
   /**
    * The constructor.
    */
-  public KalypsoLocalCalulationPlugin()
+  public KalypsoLocalCalculationPlugin()
   {
     super();
     plugin = this;
@@ -54,7 +54,7 @@ public class KalypsoLocalCalulationPlugin extends AbstractUIPlugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoLocalCalulationPlugin getDefault()
+  public static KalypsoLocalCalculationPlugin getDefault()
   {
     return plugin;
   }
@@ -64,7 +64,7 @@ public class KalypsoLocalCalulationPlugin extends AbstractUIPlugin
    */
   public static String getResourceString( String key )
   {
-    ResourceBundle bundle = KalypsoLocalCalulationPlugin.getDefault().getResourceBundle();
+    ResourceBundle bundle = KalypsoLocalCalculationPlugin.getDefault().getResourceBundle();
     try
     {
       return ( bundle != null ) ? bundle.getString( key ) : key;
