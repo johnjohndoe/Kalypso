@@ -51,16 +51,5 @@
     <observation linktype="zml" ns17:href="Wasserstand_Pegel/Elend.zml" xmlns:ns17="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c17" name="Elend" width="50"/>
     </observation>
-    <rules>
-        <renderingrule mask="2">
-            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
-        </renderingrule>
-        <renderingrule mask="4">
-            <tooltip>Eingabe erforderlich</tooltip>
-        </renderingrule>
-        <renderingrule mask="8">
-            <tooltip>Vom Benutzer geändert</tooltip>
-        </renderingrule>
-    </rules>
 </obstableview>
 

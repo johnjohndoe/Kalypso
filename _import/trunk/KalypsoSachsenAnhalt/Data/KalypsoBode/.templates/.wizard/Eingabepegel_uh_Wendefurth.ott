@@ -2,61 +2,55 @@
 <obstableview xmlns="obstableview.template.kalypso.org">
     <observation linktype="zml" ns1:href="Zeitreihen/Pegel/Messung/Meisdorf.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c1" name="Meisdorf" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c1a" name="Meisdorf" width="50"/>
     </observation>
     <observation linktype="zml" ns2:href="Zeitreihen/Pegel/Messung/Ditfurt.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c2" name="Ditfurt" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c2a" name="Ditfurt" width="50"/>
     </observation>
     <observation linktype="zml" ns3:href="Zeitreihen/Pegel/Messung/Wendefurth.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c3" name="Wendefurth" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c3a" name="Wendefurth" width="50"/>
     </observation>
     <observation linktype="zml" ns4:href="Zeitreihen/Pegel/Messung/Nienhagen.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c4" name="Nienhagen" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c4a" name="Nienhagen" width="50"/>
     </observation>
     <observation linktype="zml" ns5:href="Zeitreihen/Pegel/Messung/Oschersleben.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c5" name="Oschersleben" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c5a" name="Oschersleben" width="50"/>
     </observation>
     <observation linktype="zml" ns6:href="Zeitreihen/Pegel/Messung/Staßfurt.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c6" name="Staßfurt" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c6a" name="Staßfurt" width="50"/>
     </observation>
     <observation linktype="zml" ns7:href="Zeitreihen/Pegel/Messung/Hadmersleben.zml" xmlns:ns7="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c7" name="Hadmersleben" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c7a" name="Hadmersleben" width="50"/>
     </observation>
     <observation linktype="zml" ns8:href="Zeitreihen/Pegel/Messung/Thale.zml" xmlns:ns8="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c8" name="Thale" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c8a" name="Thale" width="50"/>
     </observation>
     <observation linktype="zml" ns9:href="Zeitreihen/Pegel/Messung/Wegeleben.zml" xmlns:ns9="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c9" name="Wegeleben" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c9a" name="Wegeleben" width="50"/>
     </observation>
     <observation linktype="zml" ns10:href="Zeitreihen/Pegel/Messung/Hausneindorf.zml" xmlns:ns10="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c10" name="Hausneindorf" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c10a" name="Hausneindorf" width="50"/>
     </observation>
     <observation linktype="zml" ns11:href="Zeitreihen/Pegel/Messung/Mahndorf.zml" xmlns:ns11="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c11" name="Mahndorf" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c11a" name="Mahndorf" width="50"/>
     </observation>
     <observation linktype="zml" ns12:href="Zeitreihen/Pegel/Messung/Silberhütte.zml" xmlns:ns12="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c12" name="Silberhütte" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c12a" name="Silberhütte" width="50"/>
     </observation>
     <observation linktype="zml" ns13:href="Zeitreihen/Pegel/Messung/Steinerne_Renne.zml" xmlns:ns13="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c13" name="Steinerne Renne" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c13a" name="Steinerne Renne" width="50"/>
     </observation>
-    <rules>
-        <renderingrule mask="2">
-            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
-        </renderingrule>
-        <renderingrule mask="4">
-            <tooltip>Eingabe erforderlich</tooltip>
-        </renderingrule>
-        <renderingrule mask="8">
-            <tooltip>Vom Benutzer geändert</tooltip>
-        </renderingrule>
-        <renderingrule mask="32">
-            <backgroundcolor>248;243;192</backgroundcolor>
-            <tooltip>Wert wurde abgeleitet</tooltip>
-        </renderingrule>
-        <renderingrule mask="16">
-            <backgroundcolor>248;243;192</backgroundcolor>
-            <tooltip>Wert konnte nicht abgeleitet werden</tooltip>
-        </renderingrule>
-    </rules>
 </obstableview>
 

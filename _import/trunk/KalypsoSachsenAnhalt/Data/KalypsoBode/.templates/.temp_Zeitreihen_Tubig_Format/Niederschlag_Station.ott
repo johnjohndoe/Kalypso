@@ -18,16 +18,5 @@
     <observation linktype="zml" ns6:href="Niederschlag_Station/Silberhütte.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c6" name="Silberhütte" width="50"/>
     </observation>
-    <rules>
-        <renderingrule mask="2">
-            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
-        </renderingrule>
-        <renderingrule mask="4">
-            <tooltip>Eingabe erforderlich</tooltip>
-        </renderingrule>
-        <renderingrule mask="8">
-            <tooltip>Vom Benutzer geändert</tooltip>
-        </renderingrule>
-    </rules>
 </obstableview>
 

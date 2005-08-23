@@ -51,7 +51,7 @@
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
 		
 		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
-		<kalypso.multiequals arg1="${scenarioId}" arg2="test">
+		<kalypso.multiequals arg1="${scenarioId}" arg2="katastrophentest">
 			<!-- Links fürs Abholen der Vorhersage-Zeitreihen -->
 			<property name="wiski_vergangenheit_link" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit"/>
 			

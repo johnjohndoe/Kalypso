@@ -2,34 +2,19 @@
 <obstableview xmlns="obstableview.template.kalypso.org">
     <observation linktype="zml" ns1:href="Zeitreihen/Pegel/Messung/Elend.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c1" name="Elend" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c1a" name="Elend" width="50"/>
     </observation>
     <observation linktype="zml" ns2:href="Zeitreihen/Pegel/Messung/Königshütte.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c2" name="Königshütte" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c2a" name="Königshütte" width="50"/>
     </observation>
     <observation linktype="zml" ns3:href="Zeitreihen/Pegel/Messung/Trautenstein.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c3" name="Trautenstein" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c3a" name="Trautenstein" width="50"/>
     </observation>
     <observation linktype="zml" ns4:href="Zeitreihen/Pegel/Messung/Hasselfelde.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c4" name="Hasselfelde" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c4a" name="Hasselfelde" width="50"/>
     </observation>
-    <rules>
-        <renderingrule mask="2">
-            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
-        </renderingrule>
-        <renderingrule mask="4">
-            <tooltip>Eingabe erforderlich</tooltip>
-        </renderingrule>
-        <renderingrule mask="8">
-            <tooltip>Vom Benutzer geändert</tooltip>
-        </renderingrule>
-        <renderingrule mask="32">
-            <backgroundcolor>248;243;192</backgroundcolor>
-            <tooltip>Wert wurde abgeleitet</tooltip>
-        </renderingrule>
-        <renderingrule mask="16">
-            <backgroundcolor>248;243;192</backgroundcolor>
-            <tooltip>Wert konnte nicht abgeleitet werden</tooltip>
-        </renderingrule>
-    </rules>
 </obstableview>
 

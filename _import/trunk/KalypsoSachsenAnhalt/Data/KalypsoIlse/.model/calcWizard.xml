@@ -149,7 +149,7 @@
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
-		<arg name="rightSash" value="25"/>
+		<arg name="rightSash" value="26"/>
 		<!-- 
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Berichtsablage.gmt"/>
@@ -168,47 +168,5 @@
 		<!-- 
         Tabelle -->
 		<!-- -->
-		<arg name="pegelNameProperty" value="Name"/>
-		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
-		<arg name="exporter2">
-			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.ZmlTableExporter"/>
-			<arg name="name" value="Tabelle"/>
-			<arg name="nameproperty" value="Name"/>
-			<arg name="template" value="project:/.templates/calcCase/berichtTabelle.ott"/>
-			<arg name="tokens">
-				<arg name="title" value="Name"/>
-				<arg name="href1" value="Wasserstand_vorhersage"/>
-			</arg>
-		</arg>
-		<arg name="exporter3">
-			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
-			<arg name="name" value="Abflussgrafik"/>
-			<arg name="nameproperty" value="Name"/>
-			<arg name="template" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
-			<arg name="width" value="1024"/>
-			<arg name="height" value="768"/>
-			<arg name="tokens">
-				<arg name="title" value="Name"/>
-				<arg name="href1" value="Wasserstand_gemessen"/>
-				<arg name="href2" value="Wasserstand_gerechnet"/>
-				<arg name="href3" value="Wasserstand_vorhersage"/>
-				<arg name="href4" value="Niederschlag_rechnung"/>
-			</arg>
-		</arg>
-		<arg name="exporter4">
-			<arg name="class" value="org.kalypso.ui.calcwizard.bericht.DiagrammExporter"/>
-			<arg name="name" value="Wasserstandsgrafik"/>
-			<arg name="nameproperty" value="Name"/>
-			<arg name="template" value="project:/.templates/calcCase/berichtDiagW.odt"/>
-			<arg name="width" value="1024"/>
-			<arg name="height" value="768"/>
-			<arg name="tokens">
-				<arg name="title" value="Name"/>
-				<arg name="href1" value="Wasserstand_gemessen"/>
-				<arg name="href2" value="Wasserstand_gerechnet"/>
-				<arg name="href3" value="Wasserstand_vorhersage"/>
-				<arg name="href4" value="Niederschlag_rechnung"/>
-			</arg>
-		</arg>
 	</page>
 </calcwizard>

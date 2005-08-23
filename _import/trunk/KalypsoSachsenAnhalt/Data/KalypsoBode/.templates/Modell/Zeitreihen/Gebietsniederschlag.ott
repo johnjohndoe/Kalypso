@@ -27,16 +27,5 @@
     <observation linktype="zml" ns9:href="Gebietsniederschlag/Oschersleben.zml" xmlns:ns9="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c9" name="Oschersleben" width="50"/>
     </observation>
-    <rules>
-        <renderingrule mask="2">
-            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
-        </renderingrule>
-        <renderingrule mask="4">
-            <tooltip>Eingabe erforderlich</tooltip>
-        </renderingrule>
-        <renderingrule mask="8">
-            <tooltip>Vom Benutzer geändert</tooltip>
-        </renderingrule>
-    </rules>
 </obstableview>
 
