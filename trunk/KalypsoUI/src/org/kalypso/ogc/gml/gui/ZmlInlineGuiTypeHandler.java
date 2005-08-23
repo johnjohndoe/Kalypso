@@ -52,6 +52,14 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
+  
+  private final ZmlInlineTypeHandler m_typeHandler;
+
+  public ZmlInlineGuiTypeHandler(ZmlInlineTypeHandler typeHandler)
+  {
+    m_typeHandler = typeHandler;
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
@@ -93,7 +101,8 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    */
   public String getClassName()
   {
-    return ZmlInlineTypeHandler.CLASS_NAME;
+    return m_typeHandler.getClassName();
+    //    ZmlInlineTypeHandler.CLASS_NAME;
   }
 
   /**
@@ -101,7 +110,8 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    */
   public String getTypeName()
   {
-    return ZmlInlineTypeHandler.TYPE_NAME;
+    return m_typeHandler.getTypeName();
+//    return ZmlInlineTypeHandler.TYPE_NAME;
   }
 
   public String getText( Object o )

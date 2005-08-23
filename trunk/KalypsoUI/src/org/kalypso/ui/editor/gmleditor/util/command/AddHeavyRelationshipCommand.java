@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.commons.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -69,15 +70,18 @@ public class AddHeavyRelationshipCommand implements ICommand
 
   private Feature m_newFeature;
 
+  private final FeatureType m_bodyFT;
+
   /**
    *  
    */
   public AddHeavyRelationshipCommand( GMLWorkspace workspace, Feature srcFE, FeatureAssociationTypeProperty linkFT1,
-      FeatureAssociationTypeProperty linkFT2, Feature targetFE )
+      FeatureType bodyFT,FeatureAssociationTypeProperty linkFT2, Feature targetFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;
     m_linkFT1 = linkFT1;
+    m_bodyFT = bodyFT;
     m_linkFT2 = linkFT2;
     m_targetFE = targetFE;
   }
@@ -97,7 +101,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   public void process() throws Exception
   {
     // create relation feature
-    m_newFeature = m_workspace.createFeature( m_linkFT1.getAssociationFeatureType() );
+    m_newFeature = m_workspace.createFeature( m_bodyFT );
     // create first link
     final String linkName1 = m_linkFT1.getName();
     m_workspace.addFeatureAsComposition( m_srcFE, linkName1, 0, m_newFeature );

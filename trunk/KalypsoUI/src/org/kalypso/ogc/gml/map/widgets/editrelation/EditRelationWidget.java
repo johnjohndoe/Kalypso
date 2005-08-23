@@ -46,7 +46,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -59,6 +62,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -130,6 +134,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public static final int MODE_REMOVE = 1;
 
   int m_modificationMode = MODE_ADD;
+
+  EditRelationOptionsLabelProvider m_labelProvider = null;
 
   public EditRelationWidget( String name, String toolTip )
   {
@@ -206,7 +212,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     return fitList;
   }
 
-  private int getModificationMode()
+  int getModificationMode()
   {
     return m_modificationMode;
   }
@@ -336,65 +342,119 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public void perform()
   {
     final List fitList = getFitList( m_srcFE, m_targetFE );
-    for( Iterator iter = fitList.iterator(); iter.hasNext(); )
+    m_topLevel.getDisplay().asyncExec( new Runnable()
     {
-      IRelationType element = (IRelationType)iter.next();
-      System.out.println( element.toString() );
-    }
-    // TODO handle fitList.size()>1 with dialog
-    if( fitList.size() < 1 )
-      return;
-    final IRelationType relation = (IRelationType)fitList.get( 0 );
-    CommandableWorkspace workspace = ( (IKalypsoFeatureTheme)getActiveTheme() ).getWorkspace();
-    final ICommand command;
-    switch( getModificationMode() )
-    {
-    case MODE_ADD:
-      if( relation instanceof HeavyRelationType )
+      public void run()
       {
-        final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
-        command = new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink1(), heavyRealtion
-            .getLink2(), m_targetFE );
-      }
-      else
-      {
-        final RelationType normalRelation = (RelationType)relation;
-        command = new AddRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), 0, m_targetFE );
-      }
-      break;
-    case MODE_REMOVE:
-      if( relation instanceof HeavyRelationType )
-      {
-        final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
-
-        FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace,
-            heavyRealtion );
-        visitor.visit( m_srcFE );
-        Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( m_targetFE );
-        if( bodyFeatureFor.length > 0 )
-          command = new RemoveHeavyRelationCommand( workspace, m_srcFE, heavyRealtion.getLink1().getName(),
-              bodyFeatureFor[0], heavyRealtion.getLink2().getName(), m_targetFE );
+        for( Iterator iter = fitList.iterator(); iter.hasNext(); )
+        {
+          IRelationType element = (IRelationType)iter.next();
+          System.out.println( element.toString() );
+        }
+        // TODO handle fitList.size()>1 with dialog
+        if( fitList.size() < 1 )
+          return;
+        final IRelationType relation;
+        if( fitList.size() == 1 )
+        {
+          relation = (IRelationType)fitList.get( 0 );
+        }
         else
+        {
+          final IStructuredContentProvider cProvider = new IStructuredContentProvider()
+          {
+            //        private Object m_input = null;
+
+            public Object[] getElements( Object inputElement )
+            {
+              if( inputElement instanceof List )
+              {
+                return ( (List)inputElement ).toArray();
+              }
+              return null;
+            }
+
+            public void dispose()
+            {
+            //          m_input = null;
+            }
+
+            public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+            {
+            //          m_input = newInput;
+            }
+          };
+
+          final ListSelectionDialog dialog = new ListSelectionDialog( m_topLevel.getShell(), fitList, cProvider,
+              m_labelProvider, fitList.size() + " Relationen möglich, bitte EINE auswählen" );
+          dialog.setInitialSelections( new Object[]
+          { fitList.get( 0 ) } );
+          dialog.setBlockOnOpen( true );
+          boolean correct = false;
+          Object[] result = null;
+          while( !correct )
+          {
+            int answer = dialog.open();
+            if( answer == Window.CANCEL )
+              return;
+            result = dialog.getResult();
+            correct = result.length == 1;
+          }
+          relation = (IRelationType)result[0];
+        }
+
+        CommandableWorkspace workspace = ( (IKalypsoFeatureTheme)getActiveTheme() ).getWorkspace();
+        final ICommand command;
+        switch( getModificationMode() )
+        {
+        case MODE_ADD:
+          if( relation instanceof HeavyRelationType )
+          {
+            final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
+
+            command = new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink1(), heavyRealtion
+                .getBodyFT(), heavyRealtion.getLink2(), m_targetFE );
+          }
+          else
+          {
+            final RelationType normalRelation = (RelationType)relation;
+            command = new AddRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), 0, m_targetFE );
+          }
+          break;
+        case MODE_REMOVE:
+          if( relation instanceof HeavyRelationType )
+          {
+            final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
+
+            FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace,
+                heavyRealtion );
+            visitor.visit( m_srcFE );
+            Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( m_targetFE );
+            if( bodyFeatureFor.length > 0 )
+              command = new RemoveHeavyRelationCommand( workspace, m_srcFE, heavyRealtion.getLink1().getName(),
+                  bodyFeatureFor[0], heavyRealtion.getLink2().getName(), m_targetFE );
+            else
+              command = null;
+          }
+          else
+          {
+            final RelationType normalRelation = (RelationType)relation;
+            command = new RemoveRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), m_targetFE );
+          }
+          break;
+        default:
           command = null;
+        }
+        try
+        {
+          workspace.postCommand( command );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
-      else
-      {
-        final RelationType normalRelation = (RelationType)relation;
-        command = new RemoveRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), m_targetFE );
-      }
-      break;
-    default:
-      command = null;
-    }
-    try
-    {
-      workspace.postCommand( command );
-    }
-    catch( Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    } );
   }
 
   private void updateProblemsText()
@@ -555,7 +615,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     m_viewer = new TreeViewer( m_topLevel, SWT.FILL );
     m_viewer.getControl().setLayoutData( data2 );
     m_viewer.setContentProvider( m_contentProvider );
-    m_viewer.setLabelProvider( new EditRelationOptionsLabelProvider( m_contentProvider ) );
+    m_labelProvider = new EditRelationOptionsLabelProvider( m_contentProvider );
+    m_viewer.setLabelProvider( m_labelProvider );
 
     m_textInfo = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
     m_textInfo.setText( "Info" );

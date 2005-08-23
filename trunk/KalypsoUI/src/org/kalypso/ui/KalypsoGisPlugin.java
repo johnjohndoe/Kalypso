@@ -94,6 +94,7 @@ import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
@@ -593,7 +594,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       // TODO wohin sonst
       final IUrlCatalog updateObs = new UrlCatalogUpdateObservationMapping();
-      // TODO @Andreas wieso war dieser Katalog nicht mehr hier wird der Serverseitig hinzugefügt? 
+      // TODO @Andreas wieso war dieser Katalog nicht mehr hier wird der Serverseitig hinzugefügt?
       // der Client sollte diese auf jedenfall zur Verfügung haben deshalb habe ich den wieder eingefügt. (CK) 20.7.2005
       final IUrlCatalog deegreeCatalog = new DeegreeUrlCatalog();
       final IUrlCatalog theCatalog = new MultiUrlCatalog( new IUrlCatalog[]
@@ -629,7 +630,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     // clear the observation cache
     ObservationCache.clearCache();
-    
+
     // clear the default styles
     m_defaultStyleFactory.clear();
 
@@ -730,15 +731,51 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       // TODO: read TypeHandler from property-file
       registry.registerTypeHandler( new ObservationLinkHandler() );
       // TODO: make new NA-project and move registration to it
+      // TODO delete next
       registry.registerTypeHandler( new DiagramTypeHandler() );
+
       registry.registerTypeHandler( new RangeSetTypeHandler() );
       registry.registerTypeHandler( new RectifiedGridDomainTypeHandler() );
       registry.registerTypeHandler( new ResourceFileTypeHandler() );
-      registry.registerTypeHandler( new ZmlInlineTypeHandler() );
 
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
       guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler() );
+      // register inlines
+
+      final String[] wqvAxis = new String[]
+      {
+          TimeserieConstants.TYPE_WATERLEVEL,
+          TimeserieConstants.TYPE_RUNOFF,
+          TimeserieConstants.TYPE_VOLUME };
+      final String[] taAxis = new String[]
+      {
+          TimeserieConstants.TYPE_DATE,
+          TimeserieConstants.TYPE_AREA, };
+      final ZmlInlineTypeHandler wqvInline = new ZmlInlineTypeHandler( "ZmlInlineWQVType", wqvAxis )
+      {
+        /**
+         * @see org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler#getClassName()
+         */
+        public String getClassName()
+        {
+          return super.getClassName() + "WQV";
+        }
+      };
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis )
+      {
+        /**
+         * @see org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler#getClassName()
+         */
+        public String getClassName()
+        {
+          return super.getClassName()+ "TA";
+        }
+      };
+
+      registry.registerTypeHandler( wqvInline );
+      registry.registerTypeHandler( taInline );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wqvInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
     }
     catch( Exception e ) // generic exception caught for simplicity
     {

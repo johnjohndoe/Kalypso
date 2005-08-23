@@ -516,6 +516,19 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, java.lang.String, boolean)
+   */
+  public void setFeatureAsAggregation( Feature srcFE, String propName, String featureID, boolean overwrite )
+      throws Exception
+  {
+    if( srcFE.getProperty( propName ) == null || overwrite )
+      srcFE.setProperty( FeatureFactory.createFeatureProperty( propName, featureID ) );
+    else
+      throw new Exception( "feature is allready set" );
+  }
+
+  /**
    * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsAggregationFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, java.lang.String)

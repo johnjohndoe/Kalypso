@@ -75,6 +75,8 @@ public interface GMLWorkspace extends ModellEventProvider
 
   public void addFeatureAsAggregation( Feature parent, String propName, int pos, String featureID ) throws Exception;
 
+  public void setFeatureAsAggregation( Feature parent, String propName, String featureID ,boolean overwrite) throws Exception; 
+
   /**
    * removes a related feature from the parent. Works only if the child is linked <br>
    * <i>and the relation is not a composition </i> see also
