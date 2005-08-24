@@ -100,7 +100,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
   public final static String CONF_METADATA = MetaDocServiceExportTarget.class.getName() + ".METADATA";
 
   public IStatus commitDocument( final IExportableObject document, final Configuration conf,
-      final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+      final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     File file = null;
     OutputStream outputStream = null;

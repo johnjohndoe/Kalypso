@@ -54,6 +54,7 @@ public class DefaultMetaDocCommitter implements IMetaDocCommiter
   }
 
   /**
+   * 
    * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File)
    */
   public void commitDocument( final Properties serviceProps, final Map metadata, final File doc )

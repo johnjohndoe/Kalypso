@@ -42,9 +42,11 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -132,14 +134,9 @@ public class MapModellHelper
 
       final double scale = calcScale( model, bbox, bounds.width, bounds.height );
       model.paintUnselected( gr, p, bbox, scale );
-      gr.setXORMode( Color.yellow );
-      model.paintSelected( gr, p, bbox, scale );
-      //      gr.setPaintMode();
-
-      //            Graphics hg = new HighlightGraphics( (Graphics2D)gr,
-      //       Color.YELLOW.getRed() / 2, Color.YELLOW.getGreen() / 2,
-      //       Color.YELLOW.getBlue() / 2,
-      //          Colo//r.YELLOW.getAlpha() / 2 );
+      final HighlightGraphics highlightGraphics = new HighlightGraphics((Graphics2D)gr); 
+//      gr.setXORMode( Color.yellow );
+      model.paintSelected( highlightGraphics, p, bbox, scale );
     }
     finally
     {
