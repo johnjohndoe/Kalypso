@@ -102,10 +102,17 @@ public class ColorUtilities
 
     // get color components
     final int a = c.getAlpha();
-    final int[] rgb = {c.getRed(), c.getGreen(), c.getBlue()};
+    final int[] rgb =
+    {
+        c.getRed(),
+        c.getGreen(),
+        c.getBlue() };
 
     // test if components are all 0 or all 255
-    final int[] range = { 0, 255 };
+    final int[] range =
+    {
+        0,
+        255 };
     for( int i = 0; i < range.length; i++ )
     {
       if( rgb[0] == range[i] && rgb[1] == range[i] && rgb[2] == range[i] )
@@ -115,18 +122,30 @@ public class ColorUtilities
         rgb[2] = (int)( Math.random() * 255 );
       }
     }
-    
+
     final int pos = Arrays.indexOfMin( rgb );
-    
+
     // derivate color
     for( int i = 0; i < distance; i++ )
     {
       rgb[pos] += 51;
-      
+
       if( rgb[pos] > 255 )
         rgb[pos] = rgb[pos] - 255;
     }
-    
+
     return new Color( rgb[0], rgb[1], rgb[2], a );
+  }
+
+  /**
+   * 
+   * @param color
+   * @param alpha
+   *          0 - 255
+   * @return transparent color
+   */
+  public static Color createTransarent( final Color color, final int alpha )
+  {
+    return new Color( color.getRed(), color.getGreen(), color.getBlue(), alpha );
   }
 }
