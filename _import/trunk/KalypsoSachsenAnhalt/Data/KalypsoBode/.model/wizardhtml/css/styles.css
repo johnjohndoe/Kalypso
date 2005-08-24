@@ -1,10 +1,13 @@
 
 html, body {
+      
     text-align:center;
-    margin:0;
+    margin:15px 0 0 0;
     padding:0;
     height:100%;
     overflow:hidden;
+    scroll:auto;
+    vertical-align:middle;
 }
 
 
@@ -12,6 +15,7 @@ html, body {
     padding:5px 0 0 0;
     height:95%;
     overflow:auto;
+    vertical-align:middle;
 }
 
 
@@ -24,26 +28,24 @@ html, body {
     text-align:center;
     padding:5px 25px 5px 5px;
     width:100%;
-    background:#69c;
-    border-top:1px solid black;
+    background:#fff;
+    border-top:1px solid #096;
 }
 
 
 
 
-/* Festlegung des Button-Layouts  */
+/* Button-Layouts  */
 
 
 
-/* Einfacher Button (1 Zeile=1 Button*/
+/* Einfacher Button (1 Zeile=1 Button)*/
 #button {
 height:35px;
 width:200px;
 margin:0;
 padding:0;
 display:block;
-font-family:tahoma, arial, sans-serif;
-font-size:9px;
 }
 
 /* Verzweigte Button (1 Zeile=mehrere Button) */
@@ -53,24 +55,23 @@ padding:0 0 0 3px;
 margin:0;
 display:inline;
 vertical-align:bottom;
-font-family:tahoma, arial, sans-serif;
-font-size:9px;
 }
-
 
 
 /* Grundlayout BUTTON bei Verlinkungen: einfache und verzweigte Button */
 #button a,  #button_bypass a {
 
 margin:0px;
-padding: 2px;
-font-family:tahoma, arial, sans-serif;
-font-size:9px;
+padding:3px 2px 2px 2px;
+font-family:arial, sans-serif;
+font-size:8px;
+line-height:85%;
 font-weight:normal;
 background:url(a_hi.gif) no-repeat 100%;
-color:#333;
+color:#fff;
 text-decoration:none;
-width:100px;
+width:81px;
+height:20px;
 }
 
 
@@ -142,9 +143,9 @@ background:url(bypass_r_b.gif) no-repeat center bottom #fff;
 /* Footer-Button, selberklärend */
 
 #footer a {
-padding: 0 0 0 10px;
-width:52px;
-heigth:34px;
+padding:2px 10px 0 2px;
+width:50px;
+heigth:20px;
 display:inline;
 }
 
@@ -153,6 +154,14 @@ background:url(back.gif) no-repeat center;
 }
 #footer a:hover.back {
 background:url(back_hover.gif) no-repeat center;
+}
+
+
+#footer a.first {
+background:url(first.gif) no-repeat center;
+}
+#footer a:hover.first {
+background:url(first_hover.gif) no-repeat center;
 }
 
 
@@ -175,6 +184,7 @@ background:url(last_hover.gif) no-repeat center;
 #footer a.finish {
 background:url(finish.gif) no-repeat center;
 }
+
 #footer a:hover.finish {
 background:url(finish_hover.gif) no-repeat center;
 }

@@ -1,4 +1,4 @@
-#Mon Aug 22 15:44:15 CEST 2005
+#Wed Aug 24 18:24:21 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -187,6 +187,7 @@ encoding//.prognose/prognose13/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_LIESKE.zml=UTF-8
 encoding//.prognose/prognose3/results.gml=UTF-8
+encoding//.prognose/Vorhersage-2005-08-24_18h24/.calculation=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SPWITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/zeitreihen/Diagramm.odt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_LIESKE.zml=UTF-8
@@ -206,8 +207,8 @@ encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-2005-06-03_11h17/Zeitreihen/Pegel/Messung/B\u00FChne_Hoppenstedt.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gmv=Cp1252
