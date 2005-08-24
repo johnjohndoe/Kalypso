@@ -24,8 +24,8 @@
   <property name="project.path" value="${workspace}/KalypsoConfLocalhost" />
   <property name="dist" value="${workspace}/KalypsoConfLocalhost/deploy" />
   <property name="dist.client" value="${dist}/client" />
-  <!--  <property name="eclipse.base" value="${workspace}/KalypsoBuild" /> -->
-  <!--old ist jetzt in eigenes Plugin gewandert-->
+
+
   <property name="eclipse.base" value="${workspace}/EclipseBaseClient" />
 
   <target name="prepare" description="Creates the build directory">
