@@ -89,11 +89,6 @@ public class ImportNA extends TestCase
     importParameter( gmlBaseDir, asciiBaseDir );
   }
 
-  int malZwei( int x )
-  {
-    return 2 * x;
-  }
-
   public void importParameter( File gmlBaseDir, File asciiBaseDir ) throws Exception
   {
     final File parameterGmlFile = new File( gmlBaseDir, "parameter.gml" );
@@ -104,5 +99,6 @@ public class ImportNA extends TestCase
     final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( paraGmlSchema.getFeatureTypes(), parameterRootFeature, null,
         " project:/.model/schema/parameter.xsd", paraSchema.getNamespaceURI(), paraGmlSchema.getNamespaceMap() );
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
+    System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath());
   }
 }

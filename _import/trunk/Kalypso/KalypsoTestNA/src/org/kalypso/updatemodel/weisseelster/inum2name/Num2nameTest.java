@@ -69,7 +69,7 @@ public class Num2nameTest extends TestCase
     updateName( workspace, "inum", workspace.getFeatureType( "KMChannel" ) );
     updateName( workspace, "inum", workspace.getFeatureType( "StorageChannel" ) );
     updateName( workspace, "num", workspace.getFeatureType( "Node" ) );
-    final Writer writer = new FileWriter( new File( "C:\\TMP\\modell_out.gml" ) );
+    final Writer writer = new FileWriter( new File( "C:\\TMP\\modell_name.gml" ) );
     GmlSerializer.serializeWorkspace( writer, workspace, "UTF-8" );
     IOUtils.closeQuietly( writer );
   }
@@ -90,9 +90,17 @@ public class Num2nameTest extends TestCase
       if( value != null )
       {
         final String orgName = (String)feature.getProperty( "name" );
+        final String addName = feature.getProperty( propName ).toString();
+        final String newName = orgName + "_" + addName;
         if( orgName == null || orgName.length() == 0 )
         {
-          final FeatureProperty property = FeatureFactory.createFeatureProperty( "name", value );
+          //          final FeatureProperty property = FeatureFactory.createFeatureProperty( "name", value );
+          final FeatureProperty property = FeatureFactory.createFeatureProperty( "name", addName );
+          feature.setProperty( property );
+        }
+        else
+        {
+          final FeatureProperty property = FeatureFactory.createFeatureProperty( "name", newName );
           feature.setProperty( property );
         }
       }
