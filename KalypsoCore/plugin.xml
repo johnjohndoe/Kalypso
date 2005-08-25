@@ -28,28 +28,28 @@
    <extension
          point="org.kalypso.core.nativeObsAdapter">
       <adapter
+            label="Niederschlag (grap)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="N"/>
+      <adapter
             label="Niederschlag (csv)"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter"
-            axisType="N"/>
-      <adapter
-            label="Abfluss (csv)"
-            class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter"
-            axisType="Q"/>
-      <adapter
-            label="Niederschlag (grap)"
-            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
-            axisType="N"/>
-      <adapter
-            label="Niederschlag (grap)"
-            class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
             axisType="N"/>
       <adapter
             label="Abfluss (grap)"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
             axisType="Q"/>
       <adapter
+            label="Abfluss (csv)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter"
+            axisType="Q"/>
+      <adapter
             label="Temperatur (grap)"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="T"/>
+      <adapter
+            label="Temperatur(ex2)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
             axisType="T"/>
       <adapter
             label="Volumen (grap)"
@@ -62,6 +62,10 @@
       <adapter
             label="Verdunstung (grap)"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
+            axisType="E"/>
+      <adapter
+            label="Verdunstung(ex2)"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
             axisType="E"/>
    </extension>
 
