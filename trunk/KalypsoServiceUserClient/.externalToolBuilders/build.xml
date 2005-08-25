@@ -21,8 +21,12 @@
 	
 	<target name="fake" description="fake target, does nothing">
 	</target>
-	
-	<target name="build-core">
+    
+    <target name="clean">
+    	<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="clean" inheritAll="false" />
+    </target>
+    	
+    <target name="build-core" depends="clean">
 		<echo message="Builds the most common project (needed for dependency from services projects)"/>
 		
 		<ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
