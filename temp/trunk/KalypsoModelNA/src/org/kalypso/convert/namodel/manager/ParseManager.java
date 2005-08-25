@@ -210,6 +210,7 @@ public class ParseManager
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
+      System.out.println("Nutzungsdatei: " + nutzFiles[i].toURL().toString());
       features = m_nutzManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
       {
@@ -218,6 +219,7 @@ public class ParseManager
         nutzungCollectionFe.addProperty( prop );
       }
     }
+    System.out.println("---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen");
 
     //complete Feature ParameterCollection - Schnee
     features = m_schneeManager.parseFile( m_conf.getSchneeFile().toURL() );
