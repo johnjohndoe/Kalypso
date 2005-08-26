@@ -31,6 +31,8 @@ package org.kalypsodeegree_impl.model.feature.selection;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -58,10 +60,10 @@ public class InverseFeatureSelectionManager implements IFeatureSelectionManager
     return !m_selectionManager.isSelected( feature );
   }
 
-//  public void addModellListener( ModellEventListener listener )
-//  {
-////    m_selectionManager.addModellListener( listener );
-//  }
+  //  public void addModellListener( ModellEventListener listener )
+  //  {
+  //// m_selectionManager.addModellListener( listener );
+  //  }
 
   public boolean addToSelection( Feature feature )
   {
@@ -82,20 +84,21 @@ public class InverseFeatureSelectionManager implements IFeatureSelectionManager
   {
     m_selectionManager.clear();
   }
-//
-//  public void fireModellEvent( ModellEvent event )
-//  {
-//    m_selectionManager.fireModellEvent( event );
-//  }
+
+  //
+  //  public void fireModellEvent( ModellEvent event )
+  //  {
+  //    m_selectionManager.fireModellEvent( event );
+  //  }
 
   public List getSelectedIds()
   {
     return m_selectionManager.getSelectedIds();
   }
 
-  public Feature[] getSelection()
+  public Feature[] getFeatureSelection()
   {
-    return m_selectionManager.getSelection();
+    return m_selectionManager.getFeatureSelection();
   }
 
   public IStructuredSelection getStructuredSelection()
@@ -108,18 +111,77 @@ public class InverseFeatureSelectionManager implements IFeatureSelectionManager
     return m_selectionManager.removeFromSelection( feature );
   }
 
-//  public void removeModellListener( ModellEventListener listener )
-//  {
-//    m_selectionManager.removeModellListener( listener );
-//  }
+  //  public void removeModellListener( ModellEventListener listener )
+  //  {
+  //    m_selectionManager.removeModellListener( listener );
+  //  }
 
-  public void setSelection( Feature[] feature )
+  public void setSelection( Object eventSource, Feature[] feature )
   {
-    m_selectionManager.setSelection( feature );
+    m_selectionManager.setSelection( eventSource, feature );
   }
 
-  public void setSelection( List listOfFeatures )
+  public void setSelection( Object eventSource, List listOfFeatures )
   {
-    m_selectionManager.setSelection( listOfFeatures );
+    m_selectionManager.setSelection( eventSource, listOfFeatures );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_selectionManager.addSelectionChangedListener( listener );
+
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
+  public ISelection getSelection()
+  {
+    return m_selectionManager.getSelection();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_selectionManager.removeSelectionChangedListener( listener );
+
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  public void setSelection( ISelection selection )
+  {
+    m_selectionManager.setSelection( selection );
+
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager#hasListeners()
+   */
+  public boolean hasListeners()
+  {
+    return m_selectionManager.hasListeners();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager#getListenerList()
+   */
+  public ISelectionChangedListener[] getListenerList()
+  {
+    return m_selectionManager.getListenerList();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager#moveListenersTo(org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager)
+   */
+  public void moveListenersTo( IFeatureSelectionManager source )
+  {
+    m_selectionManager.moveListenersTo( source );
   }
 }

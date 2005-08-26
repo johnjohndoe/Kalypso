@@ -38,22 +38,16 @@
  v.doemming@tuhh.de
   
 --------------------------------------------------------------------------------------------------- */
-package org.kalypso.ui.editor.mapeditor.actiondelegates;
-
-import org.kalypso.ogc.gml.map.widgets.SelectWidget;
+package org.kalypsodeegree.model.feature.event;
 
 /**
  *
- * TODO: insert type comment here
+ * 
  *
  * @author kuepfer
  */
-public class SelectFeatureWidgetDelegate extends AbstractGisMapEditorActionDelegate
+public interface IEventSourceProvider
 {
 
-  public SelectFeatureWidgetDelegate()
-  {
-    super( new SelectWidget("Selektieren", "Selektieren von Featuren in der Karte auf dem aktiven Thema") );
-  }
-
+  public Object getEventSource();
 }

@@ -122,7 +122,7 @@ public class AddLinkAction extends Action
     catch( final Exception e )
     {
       final String msg = e.getMessage();
-      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GMLEditor", 0, msg == null ? "" : msg,
+      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GmlEditor", 0, msg == null ? "" : msg,
           null );
       ErrorDialog.openError( m_shell, "ERROR", e.getMessage(), status );
       e.printStackTrace();

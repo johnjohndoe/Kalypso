@@ -29,6 +29,8 @@
  */
 package org.kalypso.ui.editor.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -110,7 +112,13 @@ public class FeatureAddActionDelegate implements IActionDelegate
           if( ftp != null && ftp.equals( featureType ) )
             break;
         }
-        AddFeatureCommand command = new AddFeatureCommand( cWorkspace, ftp, parentFeature, propName, 0 );
+        int pos = 0;
+        if( parentFtp.isListProperty( propName ) )
+        {
+          List list = (List)parentFeature.getProperty( propName );
+          pos = list.indexOf( selectedFeature );
+        }
+        AddFeatureCommand command = new AddFeatureCommand( cWorkspace, ftp, parentFeature, propName, pos );
         try
         {
           cWorkspace.postCommand( command );
@@ -136,7 +144,6 @@ public class FeatureAddActionDelegate implements IActionDelegate
       m_selection = (IStructuredSelection)selection;
       if( selection instanceof IFeatureThemeSelection )
       {
-        //        m_selection = (IFeatureThemeSelection)selection;
         // TODO check maxOccurs
         action.setEnabled( true );
       }

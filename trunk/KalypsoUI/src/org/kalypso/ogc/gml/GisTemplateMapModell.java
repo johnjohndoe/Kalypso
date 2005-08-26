@@ -99,6 +99,7 @@ public class GisTemplateMapModell implements IMapModell
       if( theme != null )
       {
         addTheme( theme );
+
         enableTheme( theme, layerType.isVisible() );
 
         if( layerType == activeLayer )
@@ -141,11 +142,11 @@ public class GisTemplateMapModell implements IMapModell
       return new KalypsoPictureTheme( layerName, layerType.getLinktype(), source, KalypsoGisPlugin.getDefault()
           .getCoordinatesSystem() );
     }
-    return new GisTemplateFeatureTheme( layerType, context );
+    return new GisTemplateFeatureTheme( layerType, context);
   }
 
   // Helper
-  public Gismapview createGismapTemplate( final GM_Envelope bbox ,final String srsName) throws JAXBException
+  public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName ) throws JAXBException
   {
     final ObjectFactory maptemplateFactory = new ObjectFactory();
     //
@@ -160,7 +161,7 @@ public class GisTemplateMapModell implements IMapModell
       extentType.setBottom( bbox.getMin().getY() );
       extentType.setLeft( bbox.getMin().getX() );
       extentType.setRight( bbox.getMax().getX() );
-      extentType.setSrs(srsName);
+      extentType.setSrs( srsName );
       gismapview.setExtent( extentType );
     }
 
@@ -345,6 +346,10 @@ public class GisTemplateMapModell implements IMapModell
     return m_context;
   }
 
+  public IMapModell getModell()
+  {
+    return m_modell;
+  }
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
    */
@@ -362,4 +367,5 @@ public class GisTemplateMapModell implements IMapModell
   {
     m_modell.paintUnselected( gr, p, bbox, scale );
   }
+
 }

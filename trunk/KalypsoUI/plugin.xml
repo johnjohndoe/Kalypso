@@ -104,8 +104,8 @@
             default="true"
             extensions="gmv"
             icon="icons/kalypso_gtt.gif"
-            class="org.kalypso.ui.editor.gmleditor.ui.GMLEditor"
-            id="org.kalypso.ui.editor.GMLEditor">
+            class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor"
+            id="org.kalypso.ui.editor.GmlEditor">
       </editor>
       <editor
             class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"

@@ -222,4 +222,29 @@ public class FeatureHelper
   {
     return type.startsWith( GM_Object.class.getPackage().getName() );
   }
+
+  /**
+   * Checks if one of the feature properties is a collection.
+   * 
+   * @param f
+   * @return It returns true after the first occurrenc of a list
+   */
+  public static boolean hasCollections( Feature f )
+  {
+    FeatureType featureType = f.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      FeatureTypeProperty property = properties[i];
+      if( featureType.isListProperty( property.getName() ) )
+        return true;
+    }
+    return false;
+
+  }
+
+  public static boolean isCollection( Feature f )
+  {
+    return false;
+  }
 }

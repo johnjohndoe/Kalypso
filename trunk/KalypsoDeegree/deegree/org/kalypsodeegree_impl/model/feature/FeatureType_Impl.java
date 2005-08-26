@@ -291,4 +291,20 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
     final int maxOccurs = getMaxOccurs( propName );
     return ( maxOccurs > 1 || maxOccurs == UNBOUND_OCCURENCY );
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureType#hasGeometryProperty()
+   */
+  public boolean hasGeometryProperty()
+  {
+    if( m_defaultGeometryPropPos != -1 )
+      return true;
+    for( int i = 0; i < m_properties.length; i++ )
+    {
+      FeatureTypeProperty property = m_properties[i];
+      if( property.isGeometryProperty() )
+        return true;
+    }
+    return false;
+  }
 }

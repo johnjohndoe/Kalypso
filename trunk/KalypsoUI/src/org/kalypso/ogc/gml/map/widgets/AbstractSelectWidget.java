@@ -211,11 +211,11 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     if( allowOnlyOneSelectedFeature() )
     {
       final Feature fe = (Feature)features.get( 0 );
-      command = new SelectFeaturesCommand( activeTheme.getWorkspace(), fe, activeTheme.getSelectionManager(),ModellEvent.SELECTION_CHANGED );
+      command = new SelectFeaturesCommand( activeTheme.getWorkspace(), fe, activeTheme.getSelectionManager(),getMapPanel());
     }
     else
       command = new SelectFeaturesCommand( activeTheme.getWorkspace(), (Feature[])features
-          .toArray( new Feature[features.size()] ), activeTheme.getSelectionManager(), ModellEvent.SELECTION_CHANGED );
+          .toArray( new Feature[features.size()] ), activeTheme.getSelectionManager(), getMapPanel() );
     //      command = new JMMarkSelectCommand( activeTheme.getWorkspace(), features, getSelectionMode() );
 
     postViewCommand( command, null );

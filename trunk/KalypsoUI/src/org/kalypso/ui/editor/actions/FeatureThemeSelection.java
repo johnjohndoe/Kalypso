@@ -54,11 +54,11 @@ public class FeatureThemeSelection extends CommandableFeatureSelection implement
 {
   private final IKalypsoFeatureTheme m_theme;
 
-  public FeatureThemeSelection( final IKalypsoFeatureTheme theme, final IStructuredSelection selection,
-      final FeatureTypeProperty ftp, final Feature selectedRow )
+  public FeatureThemeSelection( final IKalypsoFeatureTheme theme, Object eventSource,
+      final IStructuredSelection selection, final FeatureTypeProperty ftp, final Feature selectedRow )
   {
-    super( theme.getWorkspace(), selection, ftp, selectedRow);
-    
+    super( theme.getWorkspace(), eventSource, selection, ftp, selectedRow );
+
     m_theme = theme;
   }
 

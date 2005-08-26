@@ -659,12 +659,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * 
    * @param toFindParentFrom
    *          the feature to find the parent from
+   * @return this method returns the parent feature, if the parent feature is the root feature null is returned.
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getParentFeature(org.kalypsodeegree.model.feature.Feature)
    */
   public Feature getParentFeature( Feature toFindParentFrom )
   {
-      //skip root feature
-    if( getRootFeature().equals( toFindParentFrom ))
+    //skip root feature
+    if( getRootFeature().equals( toFindParentFrom ) )
       return null;
     Collection collection = m_indexMap.values();
     Iterator iterator = collection.iterator();
@@ -672,7 +673,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       Feature f = (Feature)iterator.next();
       //skips itself
-      if( f.equals( toFindParentFrom ))
+      if( f.equals( toFindParentFrom ) )
         continue;
       FeatureType featureType = f.getFeatureType();
       FeatureTypeProperty[] ftp = featureType.getProperties();
@@ -689,7 +690,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
             {
               Object childFromList = list.get( j );
               if( childFromList != null && childFromList.equals( toFindParentFrom ) )
+              {
+                String substitutionGroup = ((Feature)childFromList).getFeatureType().getSubstitutionGroup();
                 return f;
+              }
             }
           }
           if( property.equals( toFindParentFrom ) )

@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditor;
+import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -76,9 +76,9 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
       {
         ( (GisMapEditor)m_editor ).getMapPanel().removeModellListener( this );
       }
-      if( m_editor instanceof GMLEditor )
+      if( m_editor instanceof GmlEditor )
       {
-        ( (GMLEditor)m_editor ).getTreeView().removeModellListener( this );
+        ( (GmlEditor)m_editor ).getTreeView().removeModellListener( this );
       }
     }
     // remember new editor
@@ -92,9 +92,9 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
       {
         ( (GisMapEditor)m_editor ).getMapPanel().addModellListener( this );
       }
-      if( m_editor instanceof GMLEditor )
+      if( m_editor instanceof GmlEditor )
       {
-        ( (GMLEditor)m_editor ).getTreeView().addModellListener( this );
+        ( (GmlEditor)m_editor ).getTreeView().addModellListener( this );
       }
     }
     // update action state

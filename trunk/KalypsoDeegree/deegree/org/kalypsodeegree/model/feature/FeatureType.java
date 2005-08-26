@@ -147,5 +147,7 @@ public interface FeatureType
   public FeatureTypeProperty getVirtuelFeatureTypeProperty( String propName );
 
   public boolean isVirtuelProperty( String propertyName );
+  
+  public boolean hasGeometryProperty();
 
 }

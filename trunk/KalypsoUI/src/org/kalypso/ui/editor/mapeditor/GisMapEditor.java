@@ -97,6 +97,7 @@ import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * <p>
@@ -254,9 +255,20 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     composite.setMenu( mapMenu );
     // register it
     getSite().registerContextMenu( menuManager, this );
-
+    
     m_mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
-
+    
+//  add drag and drop support
+//    int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+//    Transfer[] transfers = new Transfer[]
+//    {
+//        LocalSelectionTransfer.getInstance(),
+//        PluginTransfer.getInstance() };
+//    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
+//    transfers = new Transfer[]
+//    { LocalSelectionTransfer.getInstance() };
+//    m_dropAdapter = new GmlTreeDropAdapter( this );
+//    m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
   }
 
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
@@ -280,6 +292,15 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault()
         .getCoordinatesSystem(), inputFile.getProject() );
     setMapModell( mapModell );
+    //register with all selection managers of the map model
+    IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+    for( int i = 0; i < allThemes.length; i++ )
+    {
+      IKalypsoTheme theme = allThemes[i];
+      IFeatureSelectionManager selectionManager = theme.getSelectionManager();
+      if( selectionManager != null )
+        selectionManager.addSelectionChangedListener( m_mapPanel );
+    }
 
     GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
 
@@ -332,6 +353,16 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     if( m_outlinePage != null )
       m_outlinePage.dispose();
 
+    //unregister from all selection managers 
+    IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
+    for( int i = 0; i < allThemes.length; i++ )
+    {
+      IKalypsoTheme theme = allThemes[i];
+      IFeatureSelectionManager selectionManager = theme.getSelectionManager();
+      if( selectionManager != null )
+        selectionManager.removeSelectionChangedListener( m_mapPanel );
+    }
+
     super.dispose();
   }
 
@@ -351,7 +382,7 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
     final IStructuredSelection selection = (IStructuredSelection)m_mapPanel.getSelection();
     if( !selection.isEmpty() && activeTheme instanceof IKalypsoFeatureTheme )
-      return new FeatureThemeSelection( (IKalypsoFeatureTheme)activeTheme, selection, null, (Feature)selection
+      return new FeatureThemeSelection( (IKalypsoFeatureTheme)activeTheme, this, selection, null, (Feature)selection
           .getFirstElement() );
     return selection;
   }

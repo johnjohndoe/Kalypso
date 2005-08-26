@@ -86,7 +86,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
-    return editorRegistry.findEditor( "org.kalypso.ui.editor.GMLEditor" );
+    return editorRegistry.findEditor( "org.kalypso.ui.editor.GmlEditor" );
   }
 
   /**
