@@ -464,4 +464,22 @@ public final class Arrays
       result[i - fromPos] = array[i];
     return result;
   }
+
+  /**
+   * 
+   * @param strings
+   * @param separator
+   * @return content as string
+   */
+  public static String toString( final String[] strings, final String separator )
+  {
+    final StringBuffer result = new StringBuffer();
+    for( int i = 0; i < strings.length; i++ )
+    {
+      result.append( strings[i] );
+      if( i + 1 < strings.length )
+        result.append( separator );
+    }
+    return result.toString();
+  }
 }
