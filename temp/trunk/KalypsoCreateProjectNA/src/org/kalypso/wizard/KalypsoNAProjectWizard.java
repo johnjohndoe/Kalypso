@@ -118,9 +118,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
                   null ),
               FeatureFactory.createFeatureTypeProperty( "description", "wizard.kalypso.na", String.class.getName(), //$NON-NLS-1$ //$NON-NLS-2$
                   false, null ),
-              FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class.getName(), false, //$NON-NLS-1$ //$NON-NLS-2$
-                  null ),
-              FeatureFactory.createFeatureTypeProperty( "StrangArt", "wizard.kalypso.na", Integer.class.getName(), //$NON-NLS-2$
+//              FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class.getName(), false, //$NON-NLS-1$ //$NON-NLS-2$
+//                  null ),
+              FeatureFactory.createFeatureTypeProperty( WizardMessages.getString("KalypsoNAProjectWizard.ChannelFeatureTypeProperty"), "wizard.kalypso.na", Integer.class.getName(),  //$NON-NLS-1$//$NON-NLS-2$
                   false, null ) }, new int[]
           {
               1,
@@ -414,9 +414,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     // find column for id
     final String idColKey;
-    if( mapping.containsKey( "inum" ) ) //$NON-NLS-1$
+    if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
     {
-      idColKey = (String)mapping.get( "inum" ); //$NON-NLS-1$
+      idColKey = (String)mapping.get( "name" ); //$NON-NLS-1$
     }
     else
       idColKey = null;
@@ -460,9 +460,9 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     // find column for id
     final String idColKey;
-    if( mapping.containsKey( "num" ) ) //$NON-NLS-1$
+    if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
     {
-      idColKey = (String)mapping.get( "num" ); //$NON-NLS-1$
+      idColKey = (String)mapping.get( "name" ); //$NON-NLS-1$
     }
     else
       idColKey = null;
@@ -501,15 +501,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     // find column for id
     final String idColKey;
-    if( mapping.containsKey( "inum" ) ) //$NON-NLS-1$
+    if( mapping.containsKey( "name" ) ) //$NON-NLS-1$
     {
-      idColKey = (String)mapping.get( "inum" ); //$NON-NLS-1$
+      idColKey = (String)mapping.get( "name" ); //$NON-NLS-1$
     }
     else
       idColKey = null;
 
     //StrangArt is defined in dummyFeatureType (member variable)
-    String typeKey = (String)mapping.get( "StrangArt" );
+    String typeKey = (String)mapping.get( WizardMessages.getString("KalypsoNAProjectWizard.ChannelFeatureTypeProperty") ); //$NON-NLS-1$
     //remove the channel type mapping (just needed once)
     mapping.remove( typeKey );
 
@@ -529,11 +529,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         throw new NumberFormatException(
             WizardMessages.getString("KalypsoNAProjectWizard.ExceptionStrangArt") ); //$NON-NLS-1$
       }
-      //      if( o instanceof String )
-      //        channelType = ( new Integer( (String)o ) ).intValue();
-      //      else if( o instanceof Integer )
-      //        channelType = ( (Integer)o ).intValue();
-      //      else
 
       Feature targetFeature = null;
       switch( channelType )
