@@ -53,8 +53,8 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditor;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorTreeView;
+import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
+import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
 
 public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
 {
@@ -73,7 +73,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
     if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des Baums gespeichert werden?" ) )
       return;
 
-    final GMLEditorTreeView treeViewer = ( (GMLEditor)getEditor() ).getTreeView();
+    final GmlTreeView treeViewer = ( (GmlEditor)getEditor() ).getTreeView();
     if( treeViewer != null )
     {
       final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -110,10 +110,10 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
   {
     boolean bEnabled = false;
 
-    final GMLEditor gmlEditor = (GMLEditor)getEditor();
+    final GmlEditor gmlEditor = (GmlEditor)getEditor();
     if( gmlEditor != null )
     {
-      final GMLEditorTreeView treeViewer = gmlEditor.getTreeView();
+      final GmlTreeView treeViewer = gmlEditor.getTreeView();
       if( treeViewer != null )
       {
         final CommandableWorkspace workspace = treeViewer.getWorkspace();

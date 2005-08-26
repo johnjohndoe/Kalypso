@@ -32,15 +32,16 @@ import org.kalypso.ui.editor.AbstractEditorPart;
 /**
  * @author Küpferle
  */
-public class GMLEditor extends AbstractEditorPart implements ICommandTarget
+public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 {
-  protected GMLEditorTreeView m_viewer = null;
+  protected GmlTreeView m_viewer = null;
 
   public void dispose()
   {
     if( m_viewer != null )
       m_viewer.dispose();
-
+    //unregister site selection provieder
+    getSite().setSelectionProvider( null );
     super.dispose();
   }
 
@@ -49,7 +50,7 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
   // not implemented
   }
 
-  public GMLEditorTreeView getTreeView()
+  public GmlTreeView getTreeView()
   {
     return m_viewer;
   }
@@ -120,7 +121,8 @@ public class GMLEditor extends AbstractEditorPart implements ICommandTarget
   public synchronized void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
-    m_viewer = new GMLEditorTreeView( parent );
+    m_viewer = new GmlTreeView( parent );
+    //register as site selection provider
     getSite().setSelectionProvider( m_viewer );
     createContextMenu();
   }

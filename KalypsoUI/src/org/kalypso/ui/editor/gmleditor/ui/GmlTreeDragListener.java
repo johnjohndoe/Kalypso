@@ -27,47 +27,60 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypsodeegree_impl.model.feature.selection;
+package org.kalypso.ui.editor.gmleditor.ui;
 
-import java.util.List;
+import java.awt.dnd.DragSourceAdapter;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
 
 /**
  * 
- * @author doemming
+ * TODO: insert type comment here
+ * 
+ * @author kuepfer
  */
-public interface IFeatureSelectionManager extends ISelectionProvider
+public class GmlTreeDragListener extends DragSourceAdapter implements DragSourceListener
 {
-  public boolean addToSelection( final Feature feature );
 
-  public void addToSelection( final List listOfFeatures );
+  private GmlTreeView m_viewer;
 
-  public void addToSelection( final Feature[] feature );
+  /**
+   *  
+   */
 
-  public void setSelection( final Object eventSource, final Feature[] feature );
+  public GmlTreeDragListener( GmlTreeView viewer )
+  {
+    m_viewer = viewer;
+  }
 
-  public void setSelection( final Object eventSource, final List listOfFeatures );
+  /**
+   * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
+   */
+  public void dragStart( DragSourceEvent event )
+  {
+    System.out.println( "Drag-Start" );
 
-  public boolean removeFromSelection( final Feature feature );
+  }
 
-  public Feature[] getFeatureSelection();
+  /**
+   * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
+   */
+  public void dragSetData( DragSourceEvent event )
+  {
+    Object source = event.getSource();
+    System.out.println( "\nDrag-SetData: " + source );
 
-  public void clear();
+  }
 
-  public IStructuredSelection getStructuredSelection();
+  /**
+   * @see org.eclipse.swt.dnd.DragSourceListener#dragFinished(org.eclipse.swt.dnd.DragSourceEvent)
+   */
+  public void dragFinished( DragSourceEvent event )
+  {
+    System.out.println( "Drag-Finished" );
 
-  public boolean isSelected( final Feature feature );
-
-  public List getSelectedIds();
-
-  public boolean hasListeners();
-
-  public ISelectionChangedListener[] getListenerList();
-
-  public void moveListenersTo( IFeatureSelectionManager source );
+  }
 
 }

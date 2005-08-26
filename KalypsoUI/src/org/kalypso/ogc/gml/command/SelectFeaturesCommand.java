@@ -44,6 +44,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureSelectionChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
@@ -61,26 +62,26 @@ public class SelectFeaturesCommand implements ICommand
 
   private Feature[] m_selectedFeaturesOriginal;
 
-  private long m_selectionType;
+  private Object m_eventSource;
 
   public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature selection,
-      final IFeatureSelectionManager selectionManager, long selectionType )
+      final IFeatureSelectionManager selectionManager, final Object eventSource )
   {
     this( workspace, new Feature[]
-    { selection }, selectionManager, selectionType );
+    { selection }, selectionManager, eventSource );
   }
 
   public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature[] selection,
-      final IFeatureSelectionManager selectionManager, long selectionType )
+      final IFeatureSelectionManager selectionManager, final Object eventSource )
   {
     m_workspace = workspace;
     m_selection = selection;
-    m_selectionType = selectionType;
+    m_eventSource = eventSource;
     if( selectionManager != null )
       m_selectionManager = selectionManager;
     else
       m_selectionManager = workspace.getSelectionManager();
-    m_selectedFeaturesOriginal = m_selectionManager.getSelection();
+    m_selectedFeaturesOriginal = m_selectionManager.getFeatureSelection();
   }
 
   /**
@@ -96,8 +97,8 @@ public class SelectFeaturesCommand implements ICommand
    */
   public void process() throws Exception
   {
-    m_selectionManager.setSelection( m_selection );
-    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace, m_selectionType ) );
+    m_selectionManager.setSelection( m_eventSource, m_selection );
+//    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace, ModellEvent.SELECTION_CHANGED ) );
   }
 
   /**
@@ -113,8 +114,8 @@ public class SelectFeaturesCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    m_selectionManager.setSelection( m_selectedFeaturesOriginal );
-    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace, m_selectionType ) );
+    m_selectionManager.setSelection( m_eventSource, m_selectedFeaturesOriginal );
+//    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace, ModellEvent.SELECTION_CHANGED ) );
   }
 
   /**
