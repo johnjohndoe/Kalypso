@@ -17,7 +17,10 @@ import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.IModel;
 import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kaylpso.ui.action.AddThemeCommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -79,13 +82,11 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   public void addPages()
   {
 
-    m_page = new GmlFileImportPage( "GML:importPage",
-        "Hinzufügen einer GML-Datei (im Workspace) zu einer Karte",
+    m_page = new GmlFileImportPage( "GML:importPage", "Hinzufügen einer GML-Datei (im Workspace) zu einer Karte",
         ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
     m_page.setProjectSelection( m_outlineviewer.getMapModell().getProject() );
     if( m_outlineviewer != null )
-      m_page.setMapContextURL( ( (GisTemplateMapModell)m_outlineviewer.getMapModell() )
-          .getContext() );
+      m_page.setMapContextURL( ( (GisTemplateMapModell)m_outlineviewer.getMapModell() ).getContext() );
     addPage( m_page );
   }
 
@@ -94,32 +95,59 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
    */
   public boolean performFinish()
   {
-    System.out.print( false );
-    IModel selection = m_page.getSelection();
-    IMapModell mapModell = m_outlineviewer.getMapModell();
-    String featurePath = buildFeaturePath( selection );
-    String featureName = null;
-    URL styleHref = null;
     try
     {
-      if( selection instanceof FeatureElement )
+      IMapModell mapModell = m_outlineviewer.getMapModell();
+      String featureName = null;
+      URL styleHref = null;
+      Feature[] features = m_page.getFeatures();
+      for( int i = 0; i < features.length; i++ )
       {
-        featureName = m_page.getFeature().getFeatureType().getName();
-        featurePath += "[" + featureName + "]";
-        styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
-            m_page.getFeature().getFeatureType(), null);
-      }
-      else if( selection instanceof PropertyElement )
-      {
-        featureName = m_page.getFatp().getName();
-        styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
-            (FeatureType)m_page.getFatp(), null);
-      }
+        Feature feature = features[i];
+        FeatureType featureType = feature.getFeatureType();
+        FeatureTypeProperty[] properties = featureType.getProperties();
+        for( int j = 0; j < properties.length; j++ )
+        {
+          FeatureTypeProperty property = properties[j];
+          if( property instanceof FeatureAssociationTypeProperty )
+          {
+            ((FeatureAssociationTypeProperty)property).getAssociationFeatureType();
+          }
+        }
+        featureName = feature.getFeatureType().getName();
 
-      AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName,
-          "gml", featurePath, m_page.getSource(), "sld", featureName, styleHref.toString(),
-          "simple" );
-      m_outlineviewer.postCommand( command, null );
+        String featureId = "#fid#" + feature.getId();
+        styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( featureType, null );
+        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml", featureId,
+            m_page.getSource(), "sld", featureName, styleHref.toString(), "simple" );
+        m_outlineviewer.postCommand( command, null );
+      }
+      FeatureAssociationTypeProperty[] featureAssociations = m_page.getFeatureAssociations();
+      for( int i = 0; i < featureAssociations.length; i++ )
+      {
+        FeatureAssociationTypeProperty property = featureAssociations[i];
+        String feaureName = property.getAssociationFeatureType().getName();
+        String featureId = "#fid#" + property.getName();
+        styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( property.getAssociationFeatureType(),
+            null );
+        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml", featureId,
+            m_page.getSource(), "sld", featureName, styleHref.toString(), "simple" );
+        m_outlineviewer.postCommand( command, null );
+      }
+      //      if( selection instanceof FeatureElement )
+      //      {
+      //        featureName = m_page.getFeature().getFeatureType().getName();
+      //        featurePath += "[" + featureName + "]";
+      //        styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
+      //            m_page.getFeature().getFeatureType(), null);
+      //      }
+      //      else if( selection instanceof PropertyElement )
+      //      {
+      //        featureName = m_page.getFatp().getName();
+      //        styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
+      //            (FeatureType)m_page.getFatp(), null);
+      //      }
+
     }
     catch( StyleNotDefinedException e )
     {

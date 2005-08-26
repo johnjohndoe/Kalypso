@@ -65,10 +65,13 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
 
   private final CommandableWorkspace m_workspace;
 
-  public CommandableFeatureSelection( final CommandableWorkspace workspace, final IStructuredSelection selection,
-      final FeatureTypeProperty ftp, final Feature selectedRow )
+  private final Object m_eventSource;
+
+  public CommandableFeatureSelection( final CommandableWorkspace workspace, final Object eventSource,
+      final IStructuredSelection selection, final FeatureTypeProperty ftp, final Feature selectedRow )
   {
     m_workspace = workspace;
+    m_eventSource = eventSource;
     m_selection = selection;
     m_ftp = ftp;
     m_selectedRow = selectedRow;
@@ -122,10 +125,18 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   }
 
   /**
-   * @see org.kalypso.ogc.gml.selection.ICommandableFeatureSelection#getCommandableWorkspace()
+   * @see org.kalypsodeegree_impl.model.feature.selection.ICommandableFeatureSelection#getCommandableWorkspace()
    */
   public CommandableWorkspace getCommandableWorkspace()
   {
     return m_workspace;
+  }
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.event.IEventSourceProvider#getEventSource()
+   */
+  public Object getEventSource()
+  {
+    return m_eventSource;
   }
 }

@@ -483,10 +483,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   public void setSelectionManager( final IFeatureSelectionManager selectionManager )
   {
-//    if( m_selectionManager != null )
-//      m_selectionManager.removeModellListener( this );
     m_selectionManager = selectionManager;
-//    m_selectionManager.addModellListener( this );
   }
 
   /**
@@ -494,6 +491,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public IFeatureSelectionManager getSelectionManager()
   {
-    return m_selectionManager;
+    if( m_selectionManager != null )
+      return m_selectionManager;
+    return m_workspace.getSelectionManager();
   }
 }

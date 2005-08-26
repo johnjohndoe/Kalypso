@@ -53,20 +53,18 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.jface.viewers.KalypsoSelectionChangedEvent;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureSelectionChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
@@ -84,7 +82,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  *  
  */
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider,
-    ISelectionProvider, IPostSelectionProvider
+    ISelectionProvider, IPostSelectionProvider, ISelectionChangedListener
 {
   private final ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
 
@@ -148,7 +146,10 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     removeMouseListener( m_widgetManager );
     removeMouseMotionListener( m_widgetManager );
     if( m_model != null )
+    {
       m_model.removeModellListener( this );
+    }
+
   }
 
   public void setOffset( int dx, int dy ) // used by pan method
@@ -163,7 +164,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   {
     xOffset = 0;
     yOffset = 0;
-
     repaint();
   }
 
@@ -172,8 +172,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void paint( Graphics g )
   {
-    paintMap( g );
 
+    paintMap( g );
     paintWidget( g );
   }
 
@@ -308,23 +308,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     clearOffset();
     // inform my listeners
     fireModellEvent( modellEvent );
-    if( modellEvent instanceof FeatureSelectionChangedModellEvent )
-    {
-      GMLWorkspace workspace = ( (FeatureSelectionChangedModellEvent)modellEvent ).getGMLWorkspace();
-      IKalypsoTheme activeTheme = m_model.getActiveTheme();
-      if( activeTheme instanceof IKalypsoFeatureTheme
-          && ( (IKalypsoFeatureTheme)activeTheme ).getWorkspace() == workspace )
-      {
-        IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
-        //            final CommandableWorkspace workspace = theme.getWorkspace();
-        final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
-        final IStructuredSelection selection = selectionManager.getStructuredSelection();
-        setSelection( new CommandableFeatureSelection( (CommandableWorkspace)workspace, selection, null, null ) );
-        //                  return ( (IKalypsoFeatureTheme)theme ).getSelectionManager().getStructuredSelection();
-        //        firePostSelectionChanged();
-        //        ( getSelection() );
-      }
-    }
   }
 
   public GM_Envelope getPanToPixelBoundingBox( double mx, double my )
@@ -518,11 +501,14 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   public void setSelection( ISelection selection )
   {
-    final IKalypsoTheme activeTheme = m_model.getActiveTheme();
-    if( selection instanceof IStructuredSelection && activeTheme instanceof IKalypsoFeatureTheme )
+    if( m_model != null )
     {
-      IFeatureSelectionManager selectionManager = ( (IKalypsoFeatureTheme)activeTheme ).getSelectionManager();
-      selectionManager.setSelection( ( (IStructuredSelection)selection ).toList() );
+      final IKalypsoTheme activeTheme = m_model.getActiveTheme();
+      if( selection instanceof IStructuredSelection && activeTheme instanceof IKalypsoFeatureTheme )
+      {
+        IFeatureSelectionManager selectionManager = ( (IKalypsoFeatureTheme)activeTheme ).getSelectionManager();
+        selectionManager.setSelection( this, ( (IStructuredSelection)selection ).toList() );
+      }
     }
     m_selectionProvider.setSelection( selection );
   }
@@ -532,6 +518,22 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public ISelection getSelection()
   {
-    return m_selectionProvider.getSelection();
+    return m_model.getActiveTheme().getSelectionManager().getSelection();
+    //TODO why would there be another selection porvider ?????
+//    return m_selectionProvider.getSelection();
   }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( SelectionChangedEvent event )
+  {
+    if( event instanceof KalypsoSelectionChangedEvent )
+    {
+      setValidAll( false );
+      repaint();
+    }
+
+  }
+
 }

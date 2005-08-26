@@ -6,3 +6,5 @@ wfs=http://134.28.87.75:8000/deegreewms/wfs
 wms=http://localhost:8080/deegreewms/wms
 wms=http://134.28.87.71:8080/deegreewms/wms
 wms=http://134.28.87.75:8000/deegreewms/wms
+wfs=http://134.28.67.65/wfsconnector/com.esri.wfs.Esrimap/polit_feature
+wms=http://134.28.67.65/wmsconnector/com.esri.wms.Esrimap
