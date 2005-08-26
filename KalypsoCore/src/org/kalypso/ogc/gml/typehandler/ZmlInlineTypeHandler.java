@@ -55,17 +55,17 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
 {
   public static final String NAMESPACE = "inline.zml.kalypso.org";
 
-
-  public static final String CLASS_NAME = IObservation.class.getName();
-
-  public  final String m_typeName;
+  public final String m_typeName;
 
   protected final String[] m_axisTypes;
 
-  public ZmlInlineTypeHandler( final String name,final String[] axisTypes )
+  private final String m_className;
+
+  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, String classNameSuffix )
   {
     m_axisTypes = axisTypes;
     m_typeName = NAMESPACE + ":" + name;
+    m_className = IObservation.class.getName() + "." + classNameSuffix;
   }
 
   /**
@@ -75,7 +75,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   public void marshall( final Object object, final Node node, final URL context ) throws TypeRegistryException
   {
     final StringWriter sw = new StringWriter();
-    
+
     try
     {
       final ObservationType xml = ZmlFactory.createXML( (IObservation)object, null, null );
@@ -99,7 +99,8 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
-  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver ) throws TypeRegistryException
+  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver )
+      throws TypeRegistryException
   {
     final String zmlStr = XMLTools.getStringValue( node );
     final StringReader reader = new StringReader( zmlStr.trim() );
@@ -111,13 +112,13 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
     }
     catch( final SensorException e )
     {
-      throw new TypeRegistryException(e);
+      throw new TypeRegistryException( e );
     }
     finally
     {
       IOUtils.closeQuietly( reader );
     }
-    
+
     return obs;
   }
 
@@ -134,7 +135,7 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
    */
   public String getClassName()
   {
-    return CLASS_NAME;
+    return m_className;
   }
 
   /**
@@ -143,5 +144,13 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   public String getTypeName()
   {
     return m_typeName;
+  }
+
+  /**
+   * @return axistypes as String[]
+   */
+  public String[] getAxisTypes()
+  {
+    return m_axisTypes;
   }
 }

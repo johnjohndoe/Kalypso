@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -376,5 +377,23 @@ public class TimeserieUtils
     {
       return null;
     }
+  }
+
+  /**
+   * 
+   * @param axisTypes
+   * @param fistWithKey
+   * @return axis as IAxis[]
+   */
+  public static IAxis[] createDefaultAxis( final String[] axisTypes, boolean fistWithKey )
+  {
+    final List axisList = new ArrayList();
+    if( axisTypes != null && axisTypes.length > 0 )
+    {
+      axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[0], fistWithKey ) );
+      for( int i = 1; i < axisTypes.length; i++ )
+        axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[i], false ) );
+    }
+    return (IAxis[])axisList.toArray( new IAxis[axisList.size()] );
   }
 }

@@ -147,7 +147,8 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
     } );
 
     page.getWorkbenchWindow().getSelectionService().addSelectionListener( FeatureView.this );
-// TODO: not necessary; instead of adapting to ISelectionProvider; the editor should simply register at its site as selection-provider
+    // TODO: not necessary; instead of adapting to ISelectionProvider; the editor should simply register at its site as
+    // selection-provider
     final IEditorReference[] editorReferences = page.getEditorReferences();
     for( int i = 0; i < editorReferences.length; i++ )
     {
@@ -432,7 +433,7 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
         m_featureComposite.setFeature( workspace, feature );
 
         final String groupLabel;
-        if( workspace != null && feature != null )
+        if( workspace != null && feature != null && mainGroup != null && ( !mainGroup.isDisposed() ) )
         {
           workspace.addModellListener( FeatureView.this );
 

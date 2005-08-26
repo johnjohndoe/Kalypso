@@ -63,6 +63,7 @@ import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.dialogs.DateRangeInputDialog;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
+import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
 import org.kalypso.ogc.sensor.DateRange;
@@ -118,28 +119,29 @@ public class ObservationViewer extends Composite
 
   private ObservationTable m_table;
 
-  URL m_context;
-
-  String m_href;
+  URL m_context = null;
 
   protected DateRange m_dr;
 
+  private Object m_input;
+
   public ObservationViewer( final Composite parent, final int style )
   {
-    this( parent, style, true, true, true );
+    this( parent, style, true, true, true, new ButtonControl[0] );
   }
 
   public ObservationViewer( final Composite parent, final int style, final boolean header, final boolean chart,
-      final boolean metaDataTable )
+      final boolean metaDataTable, final ButtonControl[] buttonControls )
   {
     super( parent, style );
 
     m_dr = DateRange.createFromPastDays( 5 );
 
-    createControl( header, metaDataTable, chart );
+    createControl( header, metaDataTable, chart, buttonControls );
   }
 
-  private final void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart )
+  private final void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart,
+      ButtonControl[] buttonControls )
   {
     final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
@@ -151,6 +153,7 @@ public class ObservationViewer extends Composite
       createHeaderForm( main );
     else
       new Label( main, SWT.NONE );
+    createControlsForm( main, buttonControls );
 
     final SashForm bottom = new SashForm( main, SWT.HORIZONTAL );
     bottom.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -164,14 +167,54 @@ public class ObservationViewer extends Composite
     else
       new Label( bottom, SWT.NONE );
 
-    main.setWeights( new int[]
+    if( withHeader )
     {
-        1,
-        4 } );
-    bottom.setWeights( new int[]
+      main.setWeights( new int[]
+      {
+          1,
+          1,
+          4 } );
+    }
+    else
     {
-        1,
-        3 } );
+      main.setWeights( new int[]
+      {
+          0,
+          1,
+          5 } );
+
+    }
+    if( withMetaAndTable )
+      bottom.setWeights( new int[]
+      {
+          1,
+          3 } );
+    else
+      bottom.setWeights( new int[]
+      {
+          0,
+          4 } );
+  }
+
+  /**
+   * 
+   * @param parent
+   * @param buttonControls
+   */
+  private void createControlsForm( final Composite parent, final ButtonControl[] buttonControls )
+  {
+    final Group group = new Group( parent, SWT.NONE );
+    group.setLayout( new GridLayout( buttonControls.length, false ) );
+
+    for( int i = 0; i < buttonControls.length; i++ )
+    {
+      final ButtonControl control = buttonControls[i];
+      final Button button = new Button( group, control.getStyle() );
+      button.setText( control.getLabel() );
+      button.setToolTipText( control.getTooltip() );
+      button.addSelectionListener( control.getSelectionListener() );
+      button.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
+    }
   }
 
   private void createHeaderForm( final Composite parent )
@@ -189,14 +232,6 @@ public class ObservationViewer extends Composite
     m_txtHref.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
         | GridData.GRAB_VERTICAL ) );
 
-    //    m_txtHref.addModifyListener( new ModifyListener()
-    //    {
-    //      public void modifyText( final ModifyEvent e )
-    //      {
-    //        setHref( m_txtHref.getText(), m_txtFilter.getText() );
-    //      }
-    //    } );
-
     m_txtHref.addFocusListener( new FocusListener()
     {
       public void focusGained( FocusEvent e )
@@ -206,7 +241,7 @@ public class ObservationViewer extends Composite
 
       public void focusLost( FocusEvent e )
       {
-        setHref( m_txtHref.getText(), m_txtFilter.getText() );
+        setInput( m_txtHref.getText(), m_txtFilter.getText() );
       }
     } );
 
@@ -243,7 +278,7 @@ public class ObservationViewer extends Composite
                 else
                   m_txtHref.setText( href );
                 // refresh...
-                setHref( m_txtHref.getText(), m_txtFilter.getText() );
+                setInput( m_txtHref.getText(), m_txtFilter.getText() );
               }
             }
           }
@@ -274,8 +309,7 @@ public class ObservationViewer extends Composite
           final String href = dlg.getSelectedObservation();
           if( href != null )
             m_txtHref.setText( href );
-          // doemming
-          setHref( m_txtHref.getText(), m_txtFilter.getText() );
+          setInput( m_txtHref.getText(), m_txtFilter.getText() );
         }
       }
 
@@ -296,14 +330,6 @@ public class ObservationViewer extends Composite
     m_txtFilter.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
         | GridData.GRAB_VERTICAL ) );
 
-    //    m_txtFilter.addModifyListener( new ModifyListener()
-    //    {
-    //      public void modifyText( final ModifyEvent e )
-    //      {
-    //        setHref( m_txtHref.getText(), m_txtFilter.getText() );
-    //      }
-    //    } );
-
     m_txtFilter.addFocusListener( new FocusListener()
     {
       public void focusGained( FocusEvent e )
@@ -313,7 +339,7 @@ public class ObservationViewer extends Composite
 
       public void focusLost( FocusEvent e )
       {
-        setHref( m_txtHref.getText(), m_txtFilter.getText() );
+        setInput( m_txtHref.getText(), m_txtFilter.getText() );
       }
     } );
 
@@ -331,7 +357,7 @@ public class ObservationViewer extends Composite
         {
           m_txtFilter.setText( dlg.getValue() );
           // doemming
-          setHref( m_txtHref.getText(), m_txtFilter.getText() );
+          setInput( m_txtHref.getText(), m_txtFilter.getText() );
         }
       }
 
@@ -370,7 +396,7 @@ public class ObservationViewer extends Composite
         {
           m_dr = createFrom( dlg.getStruct() );
           m_txtRange.setText( m_dr.toString() );
-          setHref( m_txtHref.getText(), m_txtFilter.getText() );
+          setInput( m_txtHref.getText(), m_txtFilter.getText() );
         }
       }
 
@@ -442,7 +468,7 @@ public class ObservationViewer extends Composite
     super.dispose();
   }
 
-  protected void setHref( final String href, final String filter )
+  void setInput( final String href, final String filter )
   {
     try
     {
@@ -457,24 +483,7 @@ public class ObservationViewer extends Composite
       if( href.length() > 0 )
         hereHref = ZmlURL.insertRequest( hereHref, new ObservationRequest( m_dr ) );
 
-      final URL url;
-      try
-      {
-        url = UrlResolverSingleton.resolveUrl( m_context, hereHref );
-      }
-      catch( final MalformedURLException e )
-      {
-        return;
-      }
-
-      if( href.length() > 0 )
-      {
-        final IObservation obs = ZmlFactory.parseXML( url, hereHref );
-        updateViewer( obs );
-      }
-      else
-        updateViewer( null );
-      m_href = href;
+      setInput( hereHref );
     }
     catch( final SensorException e )
     {
@@ -484,43 +493,66 @@ public class ObservationViewer extends Composite
     }
   }
 
-  public void setHref( final URL context, final String href )
+  private void updateViewer()
   {
-    m_context = context;
+    // check type of input
+    final IObservation obs;
+    if( m_input == null )
+      obs = null;
+    else if( m_input instanceof IObservation )
+    {
+      obs = (IObservation)m_input;
+    }
+    else if( m_input instanceof String )
+    {
+      String href = (String)m_input;
+      m_txtHref.setText( href );
+      final URL url;
+      try
+      {
+        url = UrlResolverSingleton.resolveUrl( m_context, href );
+      }
+      catch( final MalformedURLException e )
+      {
+        return;
+      }
 
-    m_txtHref.setText( href );
-
-    //setHref( href ); is called implicitely through m_txtHref.setText();
-  }
-
-  public void setObservation( final IObservation obs )
-  {
-    updateViewer( obs );
-  }
-
-  public String getHref()
-  {
-    return m_href;
-  }
-
-  private void updateViewer( final IObservation obs )
-  {
-    m_mdViewer.setInput( new ObservationPropertySource( obs ) );
-
-    // TODO when the date-range is specified in the form of a request,
-    // the observation returns a new tupplemodel for each call to getValues()
-    // which leads to unsaved changes when a value is set because the underlying
-    // (real) model isn't changed, just the copy of it (see setFrom and the calling
-    // constructors in SimpleTuppleModel).
-    final PlainObsProvider pop = new PlainObsProvider( obs, null );//new ObservationRequest( m_dr ) );
-
-    final ItemData itd = new ObsView.ItemData( obs.isEditable(), null );
-
+      if( href.length() > 0 )
+      {
+        try
+        {
+          obs = ZmlFactory.parseXML( url, href );
+        }
+        catch( SensorException e1 )
+        {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+          return;
+        }
+      }
+      else
+        obs = null;
+    }
+    else
+      return;
     m_diagView.removeAllItems();
-    m_diagView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, null, itd );
-
     m_tableView.removeAllItems();
-    m_tableView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, null, itd );
+    if( obs != null )
+    {
+      m_mdViewer.setInput( new ObservationPropertySource( obs ) );
+      // @marc: warum gibt es fehler wenn obs==null ist, wie setzt man den input denn auf null ?
+
+      // TODO when the date-range is specified in the form of a request,
+      // the observation returns a new tupplemodel for each call to getValues()
+      // which leads to unsaved changes when a value is set because the underlying
+      // (real) model isn't changed, just the copy of it (see setFrom and the calling
+      // constructors in SimpleTuppleModel).
+      final PlainObsProvider pop = new PlainObsProvider( obs, null );//new ObservationRequest( m_dr ) );
+
+      final ItemData itd = new ObsView.ItemData( obs.isEditable(), null );
+      m_diagView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, null, itd );
+      m_tableView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, null, itd );
+    }
   }
 
   protected static DateRange createFrom( final DateRangeInputControlStuct struct )
@@ -529,5 +561,22 @@ public class ObservationViewer extends Composite
       return new DateRange( struct.from, struct.to );
 
     return DateRange.createFromPastDays( struct.days );
+  }
+
+  /**
+   * @param context
+   */
+  public void setContext( URL context )
+  {
+    m_context = context;
+  }
+
+  /**
+   * @param input
+   */
+  public void setInput( Object input )
+  {
+    m_input = input;
+    updateViewer();
   }
 }

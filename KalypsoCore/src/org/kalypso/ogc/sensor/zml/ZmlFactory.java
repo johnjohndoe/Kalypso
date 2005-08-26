@@ -48,6 +48,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -76,12 +78,14 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationConstants;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
+import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
@@ -99,6 +103,7 @@ import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.AxisType.ValueArrayType;
 import org.kalypso.zml.AxisType.ValueLinkType;
 import org.kalypso.zml.request.RequestType;
+import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
 
 /**
@@ -586,7 +591,6 @@ public class ZmlFactory
 
       if( elt == null )
         LOG.warning( "Element " + i + " is null for Axis: " + axis );
-
       sb.append( elt ).append( ";" );
     }
 
@@ -655,5 +659,138 @@ public class ZmlFactory
     {
       IOUtils.closeQuietly( outs );
     }
+  }
+
+  /**
+   * 
+   * @param name
+   * @param content
+   * @param axis
+   * @return observation from the clipboardstring
+   */
+  public static Object createZMLFromClipboardString( final String name, final String content, final IAxis[] axis )
+  {
+    final NumberFormat numberFormat = NumberFormat.getInstance();
+    final String[] rows = content.split( "\\n" );
+    final List collector = new ArrayList();
+    for( int i = 0; i < rows.length; i++ )
+    {
+      final String row = rows[i];
+      final String[] cells = row.split( "\\t" );
+      final Object[] rowValues = new Object[axis.length];
+      for( int ax = 0; ax < axis.length; ax++ )
+      {
+
+        if( ax == 0 )
+        {
+          try
+          {
+            final String stringValue = cells[ax];
+            final Class dataClass = axis[ax].getDataClass();
+            final Object keyValue;
+            if( Number.class.isAssignableFrom( dataClass ) )
+              keyValue = numberFormat.parseObject( stringValue );
+            else
+              keyValue = SpecialPropertyMapper.cast( stringValue, dataClass, false, false );
+            if( collector.contains( keyValue ) )
+              break;
+            rowValues[ax] = keyValue;
+          }
+          catch( Exception e )
+          {
+            break; // ignore this row
+          }
+        }
+        else
+        {
+          try
+          {
+            if( cells.length > ax )
+            {
+              final String stringValue = cells[ax];
+              final Class dataClass = axis[ax].getDataClass();
+              if( Number.class.isAssignableFrom( dataClass ) )
+                rowValues[ax] = numberFormat.parseObject( stringValue );
+              else
+                rowValues[ax] = SpecialPropertyMapper.cast( stringValue, dataClass, true, false );
+            }
+            else
+              rowValues[ax] = null;
+          }
+          catch( Exception e )
+          {
+            rowValues[ax] = null;
+          }
+        }
+        if( ax + 1 == axis.length )
+          collector.add( rowValues );
+      }
+    }
+    // copy from list to array
+    final Object[][] values = new Object[collector.size()][axis.length];
+    int r = 0;
+    for( Iterator iter = collector.iterator(); iter.hasNext(); )
+    {
+      values[r] = (Object[])iter.next();
+      r++;
+    }
+    final ITuppleModel model = new SimpleTuppleModel( axis, values );
+    return new SimpleObservation( null, null, name, true, null, new MetadataList(), axis, model );
+  }
+
+  /**
+   * 
+   * @param observation
+   * @param request
+   *          may be <code>null</code>
+   * @return string made for clipboard
+   * @throws SensorException
+   */
+  public static String createClipboardStringFrom( final IObservation observation, final IRequest request )
+      throws SensorException
+  {
+    final NumberFormat numberformat = NumberFormat.getInstance();
+    final StringBuffer result = new StringBuffer();
+    final ITuppleModel values = observation.getValues( request );
+    final IAxis[] axes = values.getAxisList();
+    final int count = values.getCount();
+    // actually just the first key axis is relevant in our case
+    final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( axes );
+    List list = new ArrayList();
+    list.add( keyAxes[0] );
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( axes[i] != keyAxes[0] )
+        list.add( axes[i] );
+    }
+    final IAxis[] sortedAxes = (IAxis[])list.toArray( new IAxis[list.size()] );
+    for( int row = 0; row < count; row++ )
+    {
+      for( int col = 0; col < sortedAxes.length; col++ )
+      {
+        final Object value = values.getElement( row, sortedAxes[col] );
+        String stringValue;
+        try
+        {
+          if( value instanceof Number )
+          {
+            stringValue = numberformat.format( value );
+          }
+          else
+            stringValue = (String)SpecialPropertyMapper.cast( value, String.class, true, false );
+          result.append( stringValue != null ? stringValue : " " );
+        }
+        catch( Exception e )
+        {
+          result.append( "fehler" );
+          // ignore
+        }
+        if( col + 1 == sortedAxes.length )
+          result.append( "\r\n" );
+        else
+          result.append( "\t" );
+      }
+    }
+    return result.toString();
   }
 }

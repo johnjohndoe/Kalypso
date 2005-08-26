@@ -29,16 +29,16 @@
  */
 package org.kalypso.ogc.gml.gui;
 
-import java.text.ParseException;
-
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
@@ -52,21 +52,21 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-  
+
   private final ZmlInlineTypeHandler m_typeHandler;
 
-  public ZmlInlineGuiTypeHandler(ZmlInlineTypeHandler typeHandler)
+  public ZmlInlineGuiTypeHandler( ZmlInlineTypeHandler typeHandler )
   {
     m_typeHandler = typeHandler;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
   public IFeatureDialog createFeatureDialog( GMLWorkspace workspace, Feature feature, FeatureTypeProperty ftp )
   {
-    return new ZmlInlineFeatureDialog( feature, ftp);
+    return new ZmlInlineFeatureDialog( feature, ftp, m_typeHandler.getAxisTypes() );
   }
 
   /**
@@ -75,7 +75,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    */
   public ControlType createFeatureviewControl( String propertyName, ObjectFactory factory ) throws JAXBException
   {
-    
+
     final ButtonType button = factory.createButton();
     final GridDataType griddata = factory.createGridData();
     button.setStyle( "SWT.PUSH" );
@@ -102,7 +102,6 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   public String getClassName()
   {
     return m_typeHandler.getClassName();
-    //    ZmlInlineTypeHandler.CLASS_NAME;
   }
 
   /**
@@ -111,21 +110,20 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   public String getTypeName()
   {
     return m_typeHandler.getTypeName();
-//    return ZmlInlineTypeHandler.TYPE_NAME;
   }
 
   public String getText( Object o )
   {
+    final String prefix = Arrays.toString( m_typeHandler.getAxisTypes(), "" ) + ": ";
     if( o == null )
-      return "";
-
-    return ( (ZmlInlineTypeHandler)o ).getShortname();
+      return prefix + "-";
+    return prefix + ( (IObservation)o ).getName();
   }
 
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#parseType(java.lang.String)
    */
-  public Object parseType( final String text ) throws ParseException
+  public Object parseType( final String text )
   {
     // TODO implement it
     return null;

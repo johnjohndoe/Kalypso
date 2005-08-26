@@ -95,7 +95,8 @@ public class EditFeatureWidget extends AbstractWidget
 
         final FindNearestVisitor visitor = new FindNearestVisitor( position, gisRadius );
         final FeatureList featureList = featureTheme.getFeatureList();
-        featureList.accept( visitor );
+        if(featureList==null)
+return;
         final Feature result = visitor.getResult();
         if( result != null )
           editFeature( featureTheme, featureTheme.getWorkspace(), result );

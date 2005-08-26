@@ -72,14 +72,17 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   {
     ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
     final TimeseriesLink tslink = (TimeseriesLink)m_feature.getProperty( m_ftp.getName() );
-    dialog.setObservationHref( m_workspace.getContext(), tslink == null ? "" : tslink.getHref() );
+    dialog.setContext( m_workspace.getContext() );
+    dialog.setInput( tslink == null ? "" : tslink.getHref() );
 
     final int open = dialog.open();
     FeatureChange fChange = null;
     if( open == Window.OK )
     {
-      final String href = dialog.getObservationHref();
-      if( href != null && href.length() > 0 )
+      final String href = (String)dialog.getInput();
+      if( href == null )
+        fChange = new FeatureChange( m_feature, m_ftp.getName(), null );
+      else if( href != null && href.length() > 0 )
       {
         final ObjectFactory linkFactory = new ObjectFactory();
         try

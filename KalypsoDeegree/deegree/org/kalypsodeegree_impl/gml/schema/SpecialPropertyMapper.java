@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class SpecialPropertyMapper
 {
-
+  // TODO move to Kalypso-Commons, give a name like CastUtilities, work on Class objects instead of typenames
   private static SpecialPropertyMapper m_instance;
 
   private static HashMap m_map = new HashMap();
@@ -37,12 +37,12 @@ public class SpecialPropertyMapper
     } );
 
     m_instance.register( m_instance.new SpecialMapper( "java.lang.String", "java.lang.Float" )
-        {
-          public Object map( Object srcObject )
-          {
-            return new Float( ( (String)srcObject ).trim() );
-          }
-        } );
+    {
+      public Object map( Object srcObject )
+      {
+        return new Float( ( (String)srcObject ).trim() );
+      }
+    } );
     m_instance.register( m_instance.new SpecialMapper( "java.lang.Integer", "java.lang.Double" )
     {
       public Object map( Object srcObject )
@@ -87,6 +87,27 @@ public class SpecialPropertyMapper
       public Object map( Object srcObject )
       {
         return new Float( ( (Double)srcObject ).floatValue() );
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Double", "java.lang.String" )
+    {
+      public Object map( Object srcObject )
+      {
+        return srcObject.toString();
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Integer", "java.lang.String" )
+    {
+      public Object map( Object srcObject )
+      {
+        return srcObject.toString();
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Float", "java.lang.String" )
+    {
+      public Object map( Object srcObject )
+      {
+        return srcObject.toString();
       }
     } );
 
@@ -167,6 +188,30 @@ public class SpecialPropertyMapper
     if( isValid )
       return true;
     return false;
+  }
+
+  /**
+   * 
+   * @param value
+   * @param targetClass
+   * @param doCastNull
+   * @param mustClone
+   *          TODO mustClone not supported yet
+   * @return castedObject
+   * @throws Exception
+   */
+  public static Object cast( final Object value, final Class targetClass, boolean doCastNull, boolean mustClone )
+      throws Exception
+  {
+    if( value == null && !doCastNull )
+      throw new ClassCastException( "will not cast <null>" );
+    if( value == null )
+      return null;
+    String ty = value.getClass().getName();
+    String t2 = targetClass.getName();
+    if( !isValidMapping( ty, t2 ) )
+      throw new ClassCastException( "can not cast " + ty + " to " + t2 );
+    return map( ty, t2, value );
   }
 
   private abstract class SpecialMapper
