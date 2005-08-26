@@ -103,6 +103,8 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
       throws TypeRegistryException
   {
     final String zmlStr = XMLTools.getStringValue( node );
+    if( zmlStr == null || zmlStr.length() < 1 )
+      return null;
     final StringReader reader = new StringReader( zmlStr.trim() );
     IObservation obs = null;
     try
