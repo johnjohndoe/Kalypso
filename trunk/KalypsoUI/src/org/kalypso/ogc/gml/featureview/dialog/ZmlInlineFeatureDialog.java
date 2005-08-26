@@ -65,7 +65,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
   {
     final ObservationViewerDialog dialog = new ObservationViewerDialog( shell, false, true, true,
         ObservationViewerDialog.BUTTON_NEW | ObservationViewerDialog.BUTTON_REMOVE
-            | ObservationViewerDialog.BUTTON_EXEL_IMPORT, m_axisTypes );
+            | ObservationViewerDialog.BUTTON_EXEL_IMPORT | ObservationViewerDialog.BUTTON_EXEL_EXPORT, m_axisTypes );
 
     final Object o = m_feature.getProperty( m_ftp.getName() );
     dialog.setInput( o );

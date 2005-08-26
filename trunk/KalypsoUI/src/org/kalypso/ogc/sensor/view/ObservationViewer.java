@@ -506,7 +506,7 @@ public class ObservationViewer extends Composite
     else if( m_input instanceof String )
     {
       String href = (String)m_input;
-      m_txtHref.setText( href );
+      m_txtHref.setText( ZmlURL.getIdentifierPart( href ) );
       final URL url;
       try
       {
@@ -522,6 +522,7 @@ public class ObservationViewer extends Composite
         try
         {
           obs = ZmlFactory.parseXML( url, href );
+          System.out.println();
         }
         catch( SensorException e1 )
         {
@@ -576,7 +577,17 @@ public class ObservationViewer extends Composite
    */
   public void setInput( Object input )
   {
+    if( input != null && input.equals( m_input ) )
+      return;
     m_input = input;
     updateViewer();
+  }
+
+  /**
+   * @return the input
+   */
+  public Object getInput()
+  {
+    return m_input;
   }
 }

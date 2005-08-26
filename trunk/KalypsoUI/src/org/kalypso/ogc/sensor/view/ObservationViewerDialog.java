@@ -87,11 +87,11 @@ public class ObservationViewerDialog extends ResizableDialog
 
   public static final int BUTTON_EXEL_IMPORT = 4;
 
+  public static final int BUTTON_EXEL_EXPORT = 8;
+
   final String[] m_axisTypes;
 
   private Object m_input = null;
-
-  private static final int BUTTON_EXEL_EXPORT = 0;
 
   public ObservationViewerDialog( final Shell parent, boolean withHeaderForm, boolean withMetaDataAndTable,
       boolean withChart, final int buttonControls, final String[] axisTypes )
@@ -282,6 +282,8 @@ public class ObservationViewerDialog extends ResizableDialog
    */
   public Object getInput()
   {
+    if( m_viewer != null )
+      return m_viewer.getInput();
     return m_input;
   }
 

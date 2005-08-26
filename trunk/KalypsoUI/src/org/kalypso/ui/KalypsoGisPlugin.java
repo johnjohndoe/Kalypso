@@ -749,8 +749,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           TimeserieConstants.TYPE_VOLUME };
       final String[] taAxis = new String[]
       {
-          TimeserieConstants.TYPE_DATE,
-          TimeserieConstants.TYPE_AREA, };
+          TimeserieConstants.TYPE_HOURS,
+          TimeserieConstants.TYPE_NORM, };
       final ZmlInlineTypeHandler wqvInline = new ZmlInlineTypeHandler( "ZmlInlineWQVType", wqvAxis, "WQV" );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
       registry.registerTypeHandler( wqvInline );

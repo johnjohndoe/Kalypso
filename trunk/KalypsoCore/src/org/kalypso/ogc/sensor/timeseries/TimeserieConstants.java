@@ -76,10 +76,15 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Evaporation */
   public static final String TYPE_EVAPORATION = "E";
 
+  /** hours [h] */
+  public static final String TYPE_HOURS = "H";
 
-  /** AREA */
+  /** area as norm [A/Asum] */
+  public static final String TYPE_NORM = "n";
+
+  /** AREA [m^2] */
   public static final String TYPE_AREA = "A";
-  
+
   public static final String[] TYPES_ALL;
 
   /**
@@ -96,8 +101,10 @@ public abstract class TimeserieConstants implements ObservationConstants
         TYPE_TEMPERATURE,
         TYPE_VOLUME,
         TYPE_WATERLEVEL,
-        TYPE_AREA
-        };
+        TYPE_NORM,
+        TYPE_AREA,
+        TYPE_HOURS
+    };
     Arrays.sort( types );
     TYPES_ALL = types;
   }
@@ -146,7 +153,7 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   /** the forecast feature is used in some of the views to mark the forecast date-range */
   public static final String FEATURE_FORECAST = "Vorhersage";
-  
+
   /** the alarm-level feature used to show the alarm-levels in some views */
   public static final String FEATURE_ALARMLEVEL = "Alarmstufen";
 
