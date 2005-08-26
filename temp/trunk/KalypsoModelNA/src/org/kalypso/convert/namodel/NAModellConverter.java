@@ -284,6 +284,12 @@ public class NAModellConverter
     writer4.write( asciiBuffer.getRhbBuffer().toString() );
     writer4.close();
 
+    Writer writer9 = new FileWriter( m_conf.getZFTFile() );
+    writer9.write( asciiBuffer.getZFTBuffer().toString() );
+    writer9.close();
+    
+    
+
     if( hydrotopeWorkspace != null )
     {
       m_hydrotopManager.writeFile( asciiBuffer, hydrotopeWorkspace, modelWorkspace );

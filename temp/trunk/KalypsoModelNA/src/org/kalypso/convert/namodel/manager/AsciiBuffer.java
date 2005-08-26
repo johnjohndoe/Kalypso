@@ -68,6 +68,8 @@ public class AsciiBuffer
 
   private final List m_featuresToWrite = new ArrayList();
 
+  private final StringBuffer m_zftBuffer= new StringBuffer();
+
   public AsciiBuffer()
   {
   // nothing to do here
@@ -122,5 +124,10 @@ public class AsciiBuffer
   public StringBuffer getSnowBuffer()
   {
     return m_snowBuffer;
+  }
+
+  public StringBuffer getZFTBuffer()
+  {
+    return m_zftBuffer;
   }
 }

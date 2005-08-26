@@ -64,6 +64,8 @@ public class NAConfiguration
 
   private final File m_catchmentFile;
 
+  private final File m_zftFile;
+
   private final URL m_ChannelFormatURL;
 
   private final URL m_catchmentFormatURL;
@@ -130,6 +132,7 @@ public class NAConfiguration
   
   private final IDManager m_idManager=new IDManager();
 
+
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
     m_asciiBaseDir = asciiBaseDir;
@@ -169,6 +172,7 @@ public class NAConfiguration
     ( new File( asciiBaseDir, "inp.dat" ) ).mkdirs();
     ( new File( asciiBaseDir, "hydro.top" ) ).mkdirs();
     m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" );
+    m_zftFile = new File( asciiBaseDir, "inp.dat/we999.zfl" );
     m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" );
     m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" );
     m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" );
@@ -213,6 +217,11 @@ public class NAConfiguration
   public File getCatchmentFile()
   {
     return m_catchmentFile;
+  }
+  
+  public File getZFTFile()
+  {
+    return m_zftFile;
   }
 
   public URL getNetFormatURL()
@@ -392,4 +401,5 @@ public class NAConfiguration
   {
     return m_idManager;
   }
+
 }

@@ -51,9 +51,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
-import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
@@ -273,8 +278,17 @@ public class CatchmentManager extends AbstractManager
     //    b.append( " std.ver\n" );
     b.append( "\n" );
     asciiBuffer.getCatchmentBuffer().append( b.toString() );
-
+    // Zeitflächenfunktion
     asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" );
+    Object zftProp = feature.getProperty( "zft" );
+    if( zftProp instanceof IObservation )
+    {
+      writeZML( (IObservation)zftProp, asciiID, asciiBuffer.getZFTBuffer() );
+    }
+    else
+    {
+      System.out.println( "Es existiert keine (gültige) Zeitflächenfunktion für das Teilgebiet, ID: " + asciiID );
+    }
     asciiBuffer.getCatchmentBuffer().append( "we.hyd\n" );
 
     //7
@@ -374,11 +388,42 @@ public class CatchmentManager extends AbstractManager
     // KommentarZeile
     asciiBuffer.getCatchmentBuffer().append( "ende gebietsdatensatz" + "\n" );
 
-  } /*
-     * (non-Javadoc)
-     * 
-     * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
-     */
+  }
+
+  /**
+   * 
+   * @param observation
+   * @param asciiID
+   * @param zftBuffer
+   * @throws SensorException
+   */
+  private void writeZML( IObservation observation, int asciiID, StringBuffer zftBuffer ) throws SensorException
+  {
+    zftBuffer.append( FortranFormatHelper.printf( asciiID, "*" ) + "\n" );
+
+    IAxis[] axisList = observation.getAxisList();
+    IAxis hoursAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_HOURS );
+    IAxis normAreaAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_NORM );
+    ITuppleModel values = observation.getValues( null );
+    int count = values.getCount();
+    double t0 = ( (Double)values.getElement( 0, hoursAxis ) ).doubleValue();
+    double t1 = ( (Double)values.getElement( 1, hoursAxis ) ).doubleValue();
+    double dt = t1 - t0;
+    zftBuffer.append( FortranFormatHelper.printf( count, "*" ) + " " + FortranFormatHelper.printf( dt, "*" ) + " 2\n" );
+    for( int row = 0; row < count; row++ )
+    {
+      Double hoursValue = (Double)values.getElement( row, hoursAxis );
+      Double normAreaValue = (Double)values.getElement( row, normAreaAxis );
+      zftBuffer.append( FortranFormatHelper.printf( hoursValue, "*" ) + " "
+          + FortranFormatHelper.printf( normAreaValue, "*" ) + "\n" );
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.kalypso.convert.AbstractManager#mapID(int, org.kalypsodeegree.model.feature.FeatureType)
+   */
 
   public String mapID( int id, FeatureType ft )
   {

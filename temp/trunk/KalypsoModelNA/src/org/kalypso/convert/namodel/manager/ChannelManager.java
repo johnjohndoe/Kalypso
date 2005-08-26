@@ -51,9 +51,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.ogc.gml.typehandler.DiagramProperty;
+import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -102,8 +107,8 @@ public class ChannelManager extends AbstractManager
   {
     List result = new ArrayList();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
-                                                                                                                     // FileReader(
-                                                                                                                     // file
+    // FileReader(
+    // file
     // ) );
     Feature fe = null;
     while( ( fe = readNextFeature( reader ) ) != null )
@@ -167,10 +172,10 @@ public class ChannelManager extends AbstractManager
 
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace workspace ) throws Exception
   {
-    final List channelList=new ArrayList();
-    channelList.addAll(Arrays.asList(workspace.getFeatures(m_virtualChannelFT)));
-    channelList.addAll(Arrays.asList(workspace.getFeatures(m_kmChannelFT)));
-    channelList.addAll(Arrays.asList(workspace.getFeatures(m_storageChannelFT)));
+    final List channelList = new ArrayList();
+    channelList.addAll( Arrays.asList( workspace.getFeatures( m_virtualChannelFT ) ) );
+    channelList.addAll( Arrays.asList( workspace.getFeatures( m_kmChannelFT ) ) );
+    channelList.addAll( Arrays.asList( workspace.getFeatures( m_storageChannelFT ) ) );
     final Iterator iter = channelList.iterator();
     while( iter.hasNext() )
     {
@@ -180,10 +185,10 @@ public class ChannelManager extends AbstractManager
     }
   }
 
-  private void writeFeature( AsciiBuffer asciiBuffer,final Feature feature, GMLWorkspace workspace ) throws Exception
+  private void writeFeature( AsciiBuffer asciiBuffer, final Feature feature, GMLWorkspace workspace ) throws Exception
   {
-    IDManager idManager=m_conf.getIdManager();
-    asciiBuffer.getChannelBuffer().append( idManager.getAsciiID( feature) + "\n" );
+    IDManager idManager = m_conf.getIdManager();
+    asciiBuffer.getChannelBuffer().append( idManager.getAsciiID( feature ) + "\n" );
     //    asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
     FeatureType ft = feature.getFeatureType();
     if( "VirtualChannel".equals( ft.getName() ) )
@@ -207,15 +212,14 @@ public class ChannelManager extends AbstractManager
 
       // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2)
       // RHB 5-7
-      asciiBuffer.getRhbBuffer().append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID(feature), "i8" ) );
-//      asciiBuffer.getRhbBuffer().append( "SPEICHER" + toAscci( feature, 5 ) );
+      asciiBuffer.getRhbBuffer().append(
+          "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( feature ), "i8" ) );
       //Ueberlaufknoten optional
       Feature nodeFE = workspace.resolveLink( feature, "iknotNodeMember" );
       if( nodeFE == null )
         asciiBuffer.getRhbBuffer().append( "       0" );
       else
-        asciiBuffer.getRhbBuffer().append(FortranFormatHelper.printf(idManager.getAsciiID(nodeFE),"i8") );
-//        asciiBuffer.getRhbBuffer().append( toAscci( nodeFE, 6 ) );
+        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i8" ) );
       asciiBuffer.getRhbBuffer().append( toAscci( feature, 7 ) + "\n" );
 
       // (itext,a80)
@@ -225,34 +229,28 @@ public class ChannelManager extends AbstractManager
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
       Feature dnodeFE = workspace.resolveLink( feature, "downStreamNodeMember" );
-      asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf(idManager.getAsciiID(dnodeFE),"i4" ) );
-//      asciiBuffer.getRhbBuffer().append( toAscci( dnodeFE, 9 ) );
+      asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( dnodeFE ), "i4" ) );
       asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
-      DiagramProperty rhbDiagram = (DiagramProperty)feature.getProperty( "hvvsqd" );
-      asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( Integer.toString( rhbDiagram.size() ), "i4" ) );
-      if( rhbDiagram.size() > 24 )
-        throw new Exception(
-            "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rueckhaltebecken: #"
-                + FeatureHelper.getAsString( feature, "inum" ) );
+      Object wqvProp = feature.getProperty( "hvvsqd" );
+      if( wqvProp instanceof IObservation )
+      {
+        int size = ( ( (IObservation)wqvProp ).getValues( null ) ).getCount();
+        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( size, "i4" )+"\n" );
+        if( size > 24 )
+          throw new Exception(
+              "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rückhaltebecken: #"
+                  + FeatureHelper.getAsString( feature, "name" ) );
+      // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
+        writeWQV( (IObservation)wqvProp, asciiBuffer.getRhbBuffer() );
+      }
+      else
+      {
+        System.out.println( "Es existiert keine (gültige) WQV-Beziehung für das Rückhaltebecken, ID: "
+            + idManager.getAsciiID( feature ) );
+      }
       asciiBuffer.getRhbBuffer().append( "\n" );
 
-      // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
-      // RHB 11
-      for( int i = 0; i < rhbDiagram.size(); i++ )
-      {
-        Double w = rhbDiagram.getXValue( i );
-        Double v = rhbDiagram.getYValue( i );
-        Double q = rhbDiagram.getZValue( i );
-
-        asciiBuffer.getRhbBuffer().append( "    " );
-        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( w, "f8.2" ) );
-        asciiBuffer.getRhbBuffer().append( "        " );
-        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( v, "f9.6" ) );
-        asciiBuffer.getRhbBuffer().append( "      " );
-        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( q, "f8.3" ) );
-        asciiBuffer.getRhbBuffer().append( "\n" );
-      }
       // Kommentar Ende Speicher
       // RHB 12
       asciiBuffer.getRhbBuffer().append( "ENDE" + "\n" );
@@ -260,6 +258,30 @@ public class ChannelManager extends AbstractManager
     }
     else
       throw new UnsupportedOperationException( "can not write Feature to ascii" + feature.toString() );
+  }
+
+  /**
+   * @param observation
+   * @param rhbBuffer
+   * @throws SensorException
+   */
+  private void writeWQV( IObservation observation, StringBuffer rhbBuffer ) throws SensorException
+  {
+    IAxis[] axisList = observation.getAxisList();
+    IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_WATERLEVEL );
+    IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_VOLUME );
+    IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RUNOFF );
+    ITuppleModel values = observation.getValues( null );
+    int count = values.getCount();
+    for( int row = 0; row < count; row++ )
+    {
+      Double w = (Double)values.getElement( row, waterTableAxis );
+      Double v = (Double)values.getElement( row, volumeAxis );
+      Double q = (Double)values.getElement( row, dischargeAxis );
+      rhbBuffer.append( "    " + FortranFormatHelper.printf( w, "f8.2" ) );
+      rhbBuffer.append( "        " + FortranFormatHelper.printf( v, "f9.6" ) );
+      rhbBuffer.append( "      " + FortranFormatHelper.printf( q, "f8.3" ) + "\n" );
+    }
   }
 
   public String mapID( int id, FeatureType ft )
