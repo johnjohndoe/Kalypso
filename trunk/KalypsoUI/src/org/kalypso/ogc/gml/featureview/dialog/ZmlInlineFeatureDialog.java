@@ -34,7 +34,6 @@ import java.util.Collection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -48,12 +47,15 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
 
   private FeatureTypeProperty m_ftp;
 
-  private FeatureChange m_change;
+  private FeatureChange m_change = null;
 
-  public ZmlInlineFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
+  private final String[] m_axisTypes;
+
+  public ZmlInlineFeatureDialog( final Feature feature, final FeatureTypeProperty ftp, final String[] axisTypes )
   {
     m_feature = feature;
     m_ftp = ftp;
+    m_axisTypes = axisTypes;
   }
 
   /**
@@ -61,17 +63,20 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
    */
   public int open( Shell shell )
   {
-    final ObservationViewerDialog dialog = new ObservationViewerDialog( shell, false, true, true );
-    Object o = m_feature.getProperty( m_ftp.getName() );
-    if( o instanceof IObservation )
-      dialog.setObservation( (IObservation)o );
+    final ObservationViewerDialog dialog = new ObservationViewerDialog( shell, false, true, true,
+        ObservationViewerDialog.BUTTON_NEW | ObservationViewerDialog.BUTTON_REMOVE
+            | ObservationViewerDialog.BUTTON_EXEL_IMPORT, m_axisTypes );
+
+    final Object o = m_feature.getProperty( m_ftp.getName() );
+    dialog.setInput( o );
     int open = dialog.open();
-    FeatureChange fchange = null;
+    FeatureChange fChange = null;
     if( open == Window.OK )
     {
-      fchange = new FeatureChange( m_feature, m_ftp.getName(), o );
-      m_change = fchange;
+      final Object newValue = dialog.getInput();
+      fChange = new FeatureChange( m_feature, m_ftp.getName(), newValue );
     }
+    m_change = fChange;
     return open;
   }
 

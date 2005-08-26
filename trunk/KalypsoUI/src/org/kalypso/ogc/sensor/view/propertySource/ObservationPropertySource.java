@@ -67,6 +67,8 @@ public class ObservationPropertySource implements IPropertySource
    */
   public Object getEditableValue()
   {
+    if( m_observation == null )
+      return null;
     return m_observation.getName();
   }
 
@@ -99,6 +101,8 @@ public class ObservationPropertySource implements IPropertySource
    */
   public Object getPropertyValue( Object id )
   {
+    if( m_observation == null )
+      return null;
     return m_observation.getMetadataList().get( id );
   }
 

@@ -751,27 +751,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       {
           TimeserieConstants.TYPE_DATE,
           TimeserieConstants.TYPE_AREA, };
-      final ZmlInlineTypeHandler wqvInline = new ZmlInlineTypeHandler( "ZmlInlineWQVType", wqvAxis )
-      {
-        /**
-         * @see org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler#getClassName()
-         */
-        public String getClassName()
-        {
-          return super.getClassName() + "WQV";
-        }
-      };
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis )
-      {
-        /**
-         * @see org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler#getClassName()
-         */
-        public String getClassName()
-        {
-          return super.getClassName()+ "TA";
-        }
-      };
-
+      final ZmlInlineTypeHandler wqvInline = new ZmlInlineTypeHandler( "ZmlInlineWQVType", wqvAxis, "WQV" );
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
       registry.registerTypeHandler( wqvInline );
       registry.registerTypeHandler( taInline );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wqvInline ) );
