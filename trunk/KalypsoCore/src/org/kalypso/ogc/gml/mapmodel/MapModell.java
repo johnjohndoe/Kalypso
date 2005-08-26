@@ -60,17 +60,17 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MapModell implements IMapModell
 {
-  private final ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
-
+  private final ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
+   
   private final static Boolean THEME_ENABLED = Boolean.valueOf( true );
 
   private final static Boolean THEME_DISABLED = Boolean.valueOf( false );
 
-  private final Vector myThemes = new Vector();
+  private final Vector m_themes = new Vector();
 
-  private final Map myEnabledThemeStatus = new HashMap();
+  private final Map m_enabledThemeStatus = new HashMap();
 
-  private final CS_CoordinateSystem myCoordinatesSystem;
+  private final CS_CoordinateSystem m_coordinatesSystem;
 
   private IKalypsoTheme m_activeTheme = null;
 
@@ -78,16 +78,16 @@ public class MapModell implements IMapModell
 
   public MapModell( final CS_CoordinateSystem crs, IProject project )
   {
-    myCoordinatesSystem = crs;
+    m_coordinatesSystem = crs;
     m_project = project;
   }
 
   public void dispose()
   {
-    for( Iterator iter = myThemes.iterator(); iter.hasNext(); )
+    for( Iterator iter = m_themes.iterator(); iter.hasNext(); )
       ( (IKalypsoTheme)iter.next() ).dispose();
 
-    myThemes.clear();
+    m_themes.clear();
   }
 
   public void activateTheme( final IKalypsoTheme theme )
@@ -107,9 +107,9 @@ public class MapModell implements IMapModell
     if( m_activeTheme == null )
       m_activeTheme = theme;
 
-    myThemes.add( theme );
+    m_themes.add( theme );
 
-    myEnabledThemeStatus.put( theme, THEME_ENABLED );
+    m_enabledThemeStatus.put( theme, THEME_ENABLED );
 
     theme.addModellListener( this );
 
@@ -129,20 +129,20 @@ public class MapModell implements IMapModell
   {
     // TODO: check if theme is in this model?
     if( status )
-      myEnabledThemeStatus.put( theme, THEME_ENABLED );
+      m_enabledThemeStatus.put( theme, THEME_ENABLED );
     else
-      myEnabledThemeStatus.put( theme, THEME_DISABLED );
+      m_enabledThemeStatus.put( theme, THEME_DISABLED );
     fireModellEvent( null );
   }
 
   public IKalypsoTheme[] getAllThemes()
   {
-    return (IKalypsoTheme[])myThemes.toArray( new IKalypsoTheme[myThemes.size()] );
+    return (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
   }
 
   public CS_CoordinateSystem getCoordinatesSystem()
   {
-    return myCoordinatesSystem;
+    return m_coordinatesSystem;
   }
 
   //  /**
@@ -229,20 +229,20 @@ public class MapModell implements IMapModell
 
   public IKalypsoTheme getTheme( int pos )
   {
-    return (IKalypsoTheme)myThemes.elementAt( pos );
+    return (IKalypsoTheme)m_themes.elementAt( pos );
   }
 
   public IKalypsoTheme getTheme( String themeName )
   {
-    for( int i = 0; i < myThemes.size(); i++ )
-      if( themeName.equals( ( (IKalypsoTheme)myThemes.elementAt( i ) ).getName() ) )
-        return (IKalypsoTheme)myThemes.elementAt( i );
+    for( int i = 0; i < m_themes.size(); i++ )
+      if( themeName.equals( ( (IKalypsoTheme)m_themes.elementAt( i ) ).getName() ) )
+        return (IKalypsoTheme)m_themes.elementAt( i );
     return null;
   }
 
   public int getThemeSize()
   {
-    return myThemes.size();
+    return m_themes.size();
   }
 
   public boolean isThemeActivated( IKalypsoTheme theme )
@@ -252,26 +252,26 @@ public class MapModell implements IMapModell
 
   public boolean isThemeEnabled( IKalypsoTheme theme )
   {
-    return myEnabledThemeStatus.get( theme ) == THEME_ENABLED;
+    return m_enabledThemeStatus.get( theme ) == THEME_ENABLED;
   }
 
   public void moveDown( IKalypsoTheme theme )
   {
-    int pos = myThemes.indexOf( theme );
+    int pos = m_themes.indexOf( theme );
     if( pos > 0 )
       swapThemes( theme, getTheme( pos - 1 ) );
   }
 
   public void moveUp( IKalypsoTheme theme )
   {
-    int pos = myThemes.indexOf( theme );
-    if( pos + 1 < myThemes.size() )
+    int pos = m_themes.indexOf( theme );
+    if( pos + 1 < m_themes.size() )
       swapThemes( theme, getTheme( pos + 1 ) );
   }
 
   public void removeTheme( int pos )
   {
-    removeTheme( (IKalypsoTheme)myThemes.elementAt( pos ) );
+    removeTheme( (IKalypsoTheme)m_themes.elementAt( pos ) );
   }
 
   public void removeTheme( String themeName )
@@ -281,8 +281,8 @@ public class MapModell implements IMapModell
 
   public void removeTheme( IKalypsoTheme theme )
   {
-    myThemes.remove( theme );
-    myEnabledThemeStatus.remove( theme );
+    m_themes.remove( theme );
+    m_enabledThemeStatus.remove( theme );
     if( m_activeTheme == theme )
       m_activeTheme = null;
     fireModellEvent( null );
@@ -290,16 +290,16 @@ public class MapModell implements IMapModell
 
   public void setCoordinateSystem( CS_CoordinateSystem crs ) throws Exception
   {
-    if( crs.equals( myCoordinatesSystem ) )
+    if( crs.equals( m_coordinatesSystem ) )
       throw new UnsupportedOperationException();
   }
 
   public void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 )
   {
-    int pos1 = myThemes.indexOf( theme1 );
-    int pos2 = myThemes.indexOf( theme2 );
-    myThemes.set( pos1, theme2 );
-    myThemes.set( pos2, theme1 );
+    int pos1 = m_themes.indexOf( theme1 );
+    int pos2 = m_themes.indexOf( theme2 );
+    m_themes.set( pos1, theme2 );
+    m_themes.set( pos2, theme1 );
     fireModellEvent( null );
   }
 
@@ -332,17 +332,17 @@ public class MapModell implements IMapModell
 
   public void addModellListener( ModellEventListener listener )
   {
-    myEventProvider.addModellListener( listener );
+    m_eventProvider.addModellListener( listener );
   }
 
   public void fireModellEvent( ModellEvent event )
   {
-    myEventProvider.fireModellEvent( event );
+    m_eventProvider.fireModellEvent( event );
   }
 
   public void removeModellListener( ModellEventListener listener )
   {
-    myEventProvider.removeModellListener( listener );
+    m_eventProvider.removeModellListener( listener );
   }
 
   /**

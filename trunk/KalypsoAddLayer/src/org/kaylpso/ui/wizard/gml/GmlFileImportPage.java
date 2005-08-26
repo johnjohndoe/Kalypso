@@ -42,6 +42,8 @@
 package org.kaylpso.ui.wizard.gml;
 
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -67,15 +69,19 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
-import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
 import org.kalypso.ui.editor.gmleditor.util.model.IModel;
-import org.kalypso.ui.editor.gmleditor.util.model.Model;
-import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * @author Kuepferle
@@ -109,9 +115,13 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   private String m_source;
 
-  private Feature m_feature = null;
+  private HashSet m_feature = null;
 
   private FeatureAssociationTypeProperty m_fatp = null;
+
+  private HashSet m_featureAssTypeProp = null;
+
+  private FeatureType m_ft = null;
 
   public GmlFileImportPage( String pageName )
   {
@@ -226,17 +236,17 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       //create project path (Kalypso project-protocol)
       m_source = "project:/" + selection.removeFirstSegments( 1 ).toString();
       m_sourceFileText.setText( selection.toString() );
+      ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
       try
       {
-        final URL gmlURL = m_urlResolver.resolveURL( m_activeMapContext, m_source );
-        m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
+        m_workspace = (CommandableWorkspace)pool
+            .getObject( new PoolableObjectType( "gml", m_source, m_activeMapContext ) );
 
       }
       catch( Exception e1 )
       {
         e1.printStackTrace();
       }
-      //      final FeatureElement root = GMLReader.getGMLDocument( m_workspace );
       m_treeViewer.getTree().setVisible( false );
       m_treeViewer.setInput( m_workspace );
       // need to expand in order to load all elements into the treeviewers
@@ -269,44 +279,49 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
   {
     if( event.getSource() == m_treeViewer )
     {
-      ISelection selection = event.getSelection();
-      if( !selection.isEmpty() )
+      ISelection m_selection = event.getSelection();
+      //clear old selection
+      m_feature = new HashSet();
+      m_featureAssTypeProp = new HashSet();
+      setPageComplete( false );
+      if( !m_selection.isEmpty() )
       {
-        Object[] array = ( (IStructuredSelection)selection ).toArray();
+        Object[] array = ( (IStructuredSelection)m_selection ).toArray();
         for( int i = 0; i < array.length; i++ )
         {
           Object o = array[i];
-          if( o instanceof PropertyElement )
+          boolean hasGeometryProperty = false;
+          if( o instanceof Feature && !m_workspace.getRootFeature().equals( o ) )
           {
-            //            System.out.println( "PropertryElement" );
-            m_selection = (Model)o;
-            m_fatp = ( (PropertyElement)o ).getProperty();
-            m_feature = null;
-            setPageComplete( true );
-          }
-          else if( o instanceof FeatureElement )
-          {
-            //            System.out.println( "FeatureElement" );
-            m_selection = (Model)o;
-            m_feature = ( (FeatureElement)o ).getFeature();
-            m_fatp = null;
-            setPageComplete( true );
-          }
-          else
-          {
-            m_selection = null;
-            setPageComplete( false );
+            Feature feature = (Feature)o;
+            FeaturePath featurepathForFeature = m_workspace.getFeaturepathForFeature( feature );
+            FeatureType featureType = feature.getFeatureType();
+            FeatureTypeProperty[] properties = featureType.getProperties();
+            if( properties.length == 1 && properties[0] instanceof FeatureAssociationTypeProperty )
+            {
+              FeatureType aft = ( (FeatureAssociationTypeProperty)properties[0] ).getAssociationFeatureType();
+              hasGeometryProperty = aft.hasGeometryProperty();
+              m_ft = aft;
+              continue;
+            }
+
+            if( featureType.hasGeometryProperty() )
+            {
+              m_ft = featureType;
+            }
+            else
+            {
+//              FeatureTypeProperty[] properties = featureType.getProperties();
+            }
+            if( hasGeometryProperty )
+              m_feature.add( (Feature)o );
           }
 
         }//for
+        setPageComplete( true );
       }//if
     }//if
   }//selectionChanged
-
-  public IModel getSelection()
-  {
-    return m_selection;
-  }
 
   public String getSource()
   {
@@ -318,9 +333,9 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     return m_fatp;
   }
 
-  public Feature getFeature()
+  public Feature[] getFeatures()
   {
-    return m_feature;
+    return (Feature[])m_feature.toArray( new Feature[m_feature.size()] );
   }
 
   public void removerListeners()
@@ -328,5 +343,16 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     m_browseButton.removeSelectionListener( this );
     m_sourceFileText.removeModifyListener( this );
     m_treeViewer.removeSelectionChangedListener( this );
+  }
+
+  /**
+   * @return
+   *  
+   */
+  public FeatureAssociationTypeProperty[] getFeatureAssociations()
+  {
+    return (FeatureAssociationTypeProperty[])m_featureAssTypeProp
+        .toArray( new FeatureAssociationTypeProperty[m_featureAssTypeProp.size()] );
+
   }
 }

@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.IEventSourceProvider;
 
 /**
  * IFeatureThemeSelection
@@ -42,12 +43,12 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * 
  * @author belger
  */
-public interface ICommandableFeatureSelection extends IStructuredSelection
+public interface ICommandableFeatureSelection extends IStructuredSelection, IEventSourceProvider
 {
   public CommandableWorkspace getCommandableWorkspace();
 
   public FeatureTypeProperty getFocusedFeatureTypeProperty();
 
   public Feature getFocusedFeature();
-
+    
 }
