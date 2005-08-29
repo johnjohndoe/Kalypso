@@ -35,8 +35,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.SimpleTimeZone;
-import java.util.TimeZone;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -54,9 +52,9 @@ public class Ext2Writer
 {
   private final static long twelveHinMillis = 1000l * 60l * 60l * 12l;
 
-  private final static TimeZone m_timeZone = new SimpleTimeZone( 0, "ausgedacht" );
+  //  private final static TimeZone m_timeZone = new SimpleTimeZone( 0, "ausgedacht" );
 
-  private static DateFormat m_dateFormat = new SimpleDateFormat( "dd MM yyyy 12 " );
+  private final DateFormat m_dateFormat = new SimpleDateFormat( "dd MM yyyy 12 " );
 
   private final Date m_start;
 
@@ -64,6 +62,7 @@ public class Ext2Writer
 
   public Ext2Writer( final Date start, final Date end )
   {
+    NATimeSettings.getInstance().updateDateFormat( m_dateFormat );
     m_start = start;
     m_end = end;
   }
@@ -81,13 +80,13 @@ public class Ext2Writer
 
     //    TimeserieUtils.
     writer.write( "EX2\n" ); //header
-    final Calendar calendarStart = Calendar.getInstance( m_timeZone );
+    final Calendar calendarStart = NATimeSettings.getInstance().getCalendar();
     calendarStart.setTime( m_start );
     calendarStart.set( Calendar.DAY_OF_YEAR, 0 );
     calendarStart.set( Calendar.HOUR_OF_DAY, 7 );
     calendarStart.set( Calendar.MINUTE, 0 );
 
-    final Calendar calendarEnd = Calendar.getInstance( m_timeZone );
+    final Calendar calendarEnd = NATimeSettings.getInstance().getCalendar();
     calendarEnd.setTime( m_end );
     int writeTillYear = calendarEnd.get( Calendar.YEAR ) + 1;
     boolean goOn = true;

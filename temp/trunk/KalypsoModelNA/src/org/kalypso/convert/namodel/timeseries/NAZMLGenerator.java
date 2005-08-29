@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -201,15 +202,17 @@ public class NAZMLGenerator
     createGRAPFile( writer, axisValueType, observation );
   }
 
-  public static void createExt2File(final FileWriter writer, final IObservation observation, final Date start,final Date end,final String axisType, final String defaultValue) throws IOException, SensorException
+  public static void createExt2File( final FileWriter writer, final IObservation observation, final Date start,
+      final Date end, final String axisType, final String defaultValue ) throws IOException, SensorException
   {
-    final Ext2Writer extWriter = new Ext2Writer(start,end);
-    extWriter.write(observation,axisType, writer,defaultValue);
+    final Ext2Writer extWriter = new Ext2Writer( start, end );
+    extWriter.write( observation, axisType, writer, defaultValue );
   }
-  
+
   private static void createGRAPFile( Writer writer, String valueAxisType, IObservation observation ) throws Exception
   {
-    SimpleDateFormat sd = new SimpleDateFormat( "yyMMddHH" );
+    final DateFormat dateFormat = NATimeSettings.getInstance().updateDateFormat( new SimpleDateFormat( "yyMMddHH" ) );
+
     // write standard header
 
     // write data
@@ -227,7 +230,7 @@ public class NAZMLGenerator
       if( i == 0 )
       {
         writer.write( "\n" );
-        writer.write( "    " + sd.format( date ) + "000  0\n" );
+        writer.write( "    " + dateFormat.format( date ) + "000  0\n" );
         //    writer.write( " 95090100000 0\n" );
         writer.write( "grap\n" );
 

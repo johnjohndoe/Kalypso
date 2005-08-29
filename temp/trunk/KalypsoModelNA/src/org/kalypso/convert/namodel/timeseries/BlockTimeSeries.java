@@ -47,14 +47,11 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.SimpleTimeZone;
 import java.util.SortedMap;
-import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -62,9 +59,9 @@ import java.util.regex.Pattern;
 
 public class BlockTimeSeries
 {
-  private final static DateFormat m_dateFormat = new SimpleDateFormat( "yyMMdd" );
+  private final DateFormat m_dateFormat = new SimpleDateFormat( "yyMMdd" );
 
-  private final static DateFormat m_outputDateFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
+  //  private final DateFormat m_outputDateFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
   private final static int SEARCH_TIMEOFFSET = 0;
 
@@ -86,13 +83,9 @@ public class BlockTimeSeries
 
   private final Hashtable m_blocks;
 
-  private static TimeZone m_timeZone = new SimpleTimeZone( 1000 * 60 * 60 * 2, "OmbrometerTimeZone" );
-
   public BlockTimeSeries()
   {
-    Calendar calendar = Calendar.getInstance( m_timeZone );
-    m_dateFormat.setTimeZone( m_timeZone );
-    m_dateFormat.setCalendar( calendar );
+    NATimeSettings.getInstance().updateDateFormat( m_dateFormat );
     m_blocks = new Hashtable();
   }
 
@@ -215,7 +208,7 @@ public class BlockTimeSeries
     return m_blocks.keys();
   }
 
-  public void exportToFile( String key, File exportFile ) throws IOException
+  public void exportToFile( final String key, final File exportFile, DateFormat dateFormat ) throws IOException
   {
     if( m_blocks.containsKey( key ) )
     {
@@ -229,7 +222,7 @@ public class BlockTimeSeries
       {
         Object dateKey = it.next();
         Object value = (String)map.get( dateKey );
-        line = m_outputDateFormat.format( (Date)dateKey ) + " " + value;
+        line = dateFormat.format( (Date)dateKey ) + " " + value;
         writeln( writer, line );
       }
       writer.close();
