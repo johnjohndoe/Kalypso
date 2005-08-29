@@ -255,20 +255,20 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     composite.setMenu( mapMenu );
     // register it
     getSite().registerContextMenu( menuManager, this );
-    
+
     m_mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
-    
-//  add drag and drop support
-//    int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-//    Transfer[] transfers = new Transfer[]
-//    {
-//        LocalSelectionTransfer.getInstance(),
-//        PluginTransfer.getInstance() };
-//    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
-//    transfers = new Transfer[]
-//    { LocalSelectionTransfer.getInstance() };
-//    m_dropAdapter = new GmlTreeDropAdapter( this );
-//    m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
+
+    //  add drag and drop support
+    //    int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
+    //    Transfer[] transfers = new Transfer[]
+    //    {
+    //        LocalSelectionTransfer.getInstance(),
+    //        PluginTransfer.getInstance() };
+    //    m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
+    //    transfers = new Transfer[]
+    //    { LocalSelectionTransfer.getInstance() };
+    //    m_dropAdapter = new GmlTreeDropAdapter( this );
+    //    m_treeViewer.addDropSupport( ops, transfers, m_dropAdapter );
   }
 
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
@@ -344,7 +344,19 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   public void dispose()
   {
     if( m_mapModell != null )
+    {
+      // @CHRISTOPH sollte dies nicht besser in setMapModell() stehen ?
+      //unregister from all selection managers
+      final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
+      for( int i = 0; i < allThemes.length; i++ )
+      {
+        final IKalypsoTheme theme = allThemes[i];
+        final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
+        if( selectionManager != null )
+          selectionManager.removeSelectionChangedListener( m_mapPanel );
+      }
       m_mapModell.dispose();
+    }
 
     m_mapPanel.dispose();
 
@@ -352,16 +364,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     if( m_outlinePage != null )
       m_outlinePage.dispose();
-
-    //unregister from all selection managers 
-    IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
-    for( int i = 0; i < allThemes.length; i++ )
-    {
-      IKalypsoTheme theme = allThemes[i];
-      IFeatureSelectionManager selectionManager = theme.getSelectionManager();
-      if( selectionManager != null )
-        selectionManager.removeSelectionChangedListener( m_mapPanel );
-    }
 
     super.dispose();
   }
