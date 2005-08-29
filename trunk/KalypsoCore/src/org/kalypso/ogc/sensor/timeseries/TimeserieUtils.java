@@ -348,9 +348,21 @@ public class TimeserieUtils
 
       // for N
       final NumberFormat nf = NumberFormat.getInstance();
-      wf.setMinimumFractionDigits( Integer.valueOf(
+      nf.setMinimumFractionDigits( Integer.valueOf(
           getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
       m_formatMap.put( TimeserieConstants.TYPE_RAINFALL, nf );
+
+      // for n
+      final NumberFormat normf = NumberFormat.getInstance();
+      normf.setMinimumFractionDigits( Integer.valueOf(
+          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_NORM ) ).intValue() );
+      m_formatMap.put( TimeserieConstants.TYPE_NORM, normf );
+
+      // for V
+      final NumberFormat vf = NumberFormat.getInstance();
+      vf.setMinimumFractionDigits( Integer.valueOf(
+          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_VOLUME ) ).intValue() );
+      m_formatMap.put( TimeserieConstants.TYPE_VOLUME, vf );
     }
 
     return m_formatMap;
