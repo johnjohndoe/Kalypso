@@ -36,8 +36,8 @@
          <target
                icon="icons/elcl16/bericht.gif"
                class="org.kalypso.services.metadoc.client.MetaDocServiceExportTarget"
-               description="Export in die serverseitige Dokumentenablage"
-               name="Berichtsexport"
+               description="%metadocServiceTarget.description"
+               name="%metadocServiceTarget.name"
                id="metadocServiceTarget"/>
       </extension>
       <extension

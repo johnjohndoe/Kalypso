@@ -26,7 +26,7 @@
       <wizard
             icon="icons/sample.gif"
             class="org.kalypso.ui.wizard.sensor.ImportObservationWizard"
-            name="Zeitreihen aus externen Dateien"
+            name="%KalypsoNA_UI.wizard1.name"
             id="KalypsoNA_UI.wizard1"/>
    </extension>
 

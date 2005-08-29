@@ -25,7 +25,7 @@
             class="org.kalypso.featureview.views.FeatureView"
             icon="icons/sample.gif"
             category="org.kalypso.ui.kalypso"
-            name="Feature View"
+            name="%org.kalypso.featureview.views.FeatureView.name"
             id="org.kalypso.featureview.views.FeatureView"/>
    </extension>
 

@@ -21,15 +21,15 @@
             id="KalypsoGridInterpolation.actionSet1">
          <action
                toolbarPath="grid"
-               label="Netz auf Raster &amp;interpolieren"
-               icon="icons/sample.gif"
-               class="org.kalypso.interpolation.action.GridInterpolationAction"
+               label="%org.kalypso.interpolate.action.label"
                tooltip="Netz auf Raster interpolieren"
+               class="org.kalypso.interpolation.action.GridInterpolationAction"
+               icon="icons/sample.gif"
                style="push"
                menubarPath="org.kalypso.gistools/gird"
                id="org.kalypso.interpolate.action"/>
          <menu
-               label="Gis &amp;Tools"
+               label="%org.kalypso.gistools.label"
                id="org.kalypso.gistools">
             <separator name="grid"/>
          </menu>

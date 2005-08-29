@@ -33,8 +33,8 @@
       <target
             icon="icons/file_obj.gif"
             class="org.kalypso.metadoc.impl.FileExportTarget"
-            description="Exportiert Dokumente in Dateien"
-            name="Dateiexport"
+            description="%fileTarget.description"
+            name="%fileTarget.name"
             id="fileTarget"/>
    </extension>
    <extension
@@ -42,8 +42,8 @@
       <exporter
             icon="icons/sample.gif"
             class="org.kalypso.metadoc.impl.EmptyExporter"
-            description="Tut nix"
-            name="Leerer Exporter"
+            description="%emptyExporter.description"
+            name="%emptyExporter.name"
             id="emptyExporter"/>
    </extension>
 

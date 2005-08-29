@@ -41,32 +41,32 @@
       <wizard
             icon="icon/file_shp.GIF"
             class="org.kaylpso.ui.wizard.shape.ImportShapeSourceWizard"
-            name="ESRI (tm) Shape "
+            name="%org.kalypso.ui.wizard.shape.name"
             id="org.kalypso.ui.wizard.shape"/>
       <wizard
             icon="icon/Datastore_WMS.gif"
             class="org.kaylpso.ui.wizard.wms.ImportWmsSourceWizard"
-            name="Web Map Service"
+            name="%org.kalypso.ui.wizard.wms.name"
             id="org.kalypso.ui.wizard.wms"/>
       <wizard
             icon="icon/Datastore_WFS.gif"
             class="org.kaylpso.ui.wizard.wfs.ImportWfsSourceWizard"
-            name="Web Feature Service"
+            name="%org.kalypso.ui.wizard.wfs.name"
             id="org.kalypso.ui.wizard.wfs"/>
       <wizard
             icon="icon/fileGml.gif"
             class="org.kaylpso.ui.wizard.gml.KalypsoGmlImportWizard"
-            name="GML "
+            name="%gml.name"
             id="gml"/>
       <wizard
             icon="icon/raster.GIF"
             class="org.kaylpso.ui.wizard.raster.ImportRasterSourceWizard"
-            name="Raster"
+            name="%org.kalypso.ui.wizard.raster.name"
             id="org.kalypso.ui.wizard.raster"/>
       <wizard
             icon="icon/file_image.gif"
             class="org.kaylpso.ui.wizard.image.ImportImageSourceWizard"
-            name="Image (TIFF, JPG, PNG)"
+            name="%org.kalypso.ui.wizard.image.name"
             id="org.kalypso.ui.wizard.image"/>
    </extension>
    <extension
@@ -74,7 +74,7 @@
       <wizard
             class="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"
             icon="icon/kalypso_gmt.gif"
-            name="GisMapView"
+            name="%org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.name"
             id="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"/>
    </extension>
 
