@@ -36,16 +36,16 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="Start"
+            label="%KalypsoFloodRiskAnalysis.Start.label"
             visible="false"
             id="KalypsoFloodRiskAnalysis.Start">
          <menu
-               label="Risikoanalyse"
+               label="%KalypsoFloodRiskAnalysis.startMenu.label"
                id="KalypsoFloodRiskAnalysis.startMenu">
             <groupMarker name="start"/>
          </menu>
          <action
-               label="Berechnung(en) starten"
+               label="%KalypsoFloodRiskAnalysis.action.label"
                class="org.kalypso.floodrisk.action.StartCalculationActionDelegate"
                style="push"
                menubarPath="KalypsoFloodRiskAnalysis.startMenu/start"
@@ -57,22 +57,22 @@
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
-            name="Rasterung (Landnutzung)"
+            name="%RasterizeLanduseJob.name"
             id="RasterizeLanduseJob"/>
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob"
-            name="Schadensberechnung"
+            name="%CalculateDamageJob.name"
             id="CalculateDamageJob"/>
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.riskAnalysis.CalculateFloodRiskJob"
-            name="Ausweisung des Hochwasserrisikos"
+            name="%CalculateFloodRiskJob.name"
             id="CalculateFloodRiskJob"/>
       <KalypsoProcess
             type="local"
             class="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
-            name="Statistische Auswertung"
+            name="%CalculateStatisticJob.name"
             id="CalculateStatisticJob"/>
       <!--<KalypsoProcess
             type="local"

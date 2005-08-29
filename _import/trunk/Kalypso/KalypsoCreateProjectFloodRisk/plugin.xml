@@ -27,14 +27,14 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            name="Hochwasserrisiko Projekt"
+            name="%KalypsoCreateFloodRiskProject.name"
             id="KalypsoCreateFloodRiskProject"/>
       <wizard
             class="org.kalypso.wizard.KalypsoFloodRiskProjectWizard"
             project="true"
             icon="icons/kalypso16.gif"
             category="org.kalypso"
-            name="Hochwasserrisiko Projekt"
+            name="%org.kalypso.wizard.KalypsoFloodRiskProjectWizard.name"
             id="org.kalypso.wizard.KalypsoFloodRiskProjectWizard"/>
    </extension>
 
