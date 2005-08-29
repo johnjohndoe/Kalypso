@@ -80,6 +80,12 @@ public interface IPlainProfil
   public IProfilDevider[] getDevider( final DEVIDER_TYP deviderTyp );
 
   /**
+   * @param deviderTypes
+   * @return IProfilDevider[] mit allen Trennern sortiert nach breite, oder null bei leerem array
+   */
+  public IProfilDevider[] getDevider( final DEVIDER_TYP[] deviderTypes );
+
+  /**
    * @param filterNonVisible
    * @return LinkedList<PointProperty>
    */

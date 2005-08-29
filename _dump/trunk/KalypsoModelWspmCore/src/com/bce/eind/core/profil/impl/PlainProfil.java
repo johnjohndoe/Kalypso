@@ -31,10 +31,10 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 {
   private IProfilBuilding m_building;
 
-  private final ArrayList<IProfilDevider> m_devider =new ArrayList<IProfilDevider>();
+  private final ArrayList<IProfilDevider> m_devider = new ArrayList<IProfilDevider>();
 
-  //private final SortedSet<IProfilDevider> m_deviders = new TreeSet<IProfilDevider>();
-  
+  // private final SortedSet<IProfilDevider> m_deviders = new TreeSet<IProfilDevider>();
+
   private final ProfilPoints m_points;
 
   private final HashMap<Object, Object> m_profilMetaData;
@@ -57,7 +57,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   {
     IProfilDevider pd = new ProfilDevider( devider, point );
     m_devider.add( pd );
-//    Collections.sort(m_devider);
+    // Collections.sort(m_devider);
     return pd;
   }
 
@@ -137,10 +137,10 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   public IProfilPoint findPoint( int index, double breite, double delta )
   {
 
-    if((index >= m_points.size())||(index < 0) )
-        return findPoint( breite, delta );  
+    if( (index >= m_points.size()) || (index < 0) )
+      return findPoint( breite, delta );
     final IProfilPoint pkt = m_points.get( index );
-   
+
     if( pkt == null )
       return findPoint( breite, delta );
     try
@@ -166,21 +166,31 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profilinterface.IProfil#getDevider(com.bce.eind.core.profildata.tabledata.DeviderKey)
+   * @see com.bce.eind.core.profilinterface.IProfil#getDevider(DEVIDER_TYP[])
    */
-  public IProfilDevider[] getDevider( final DEVIDER_TYP deviderTyp )
+  public IProfilDevider[] getDevider( final DEVIDER_TYP[] deviderTypes )
   {
     final ArrayList<IProfilDevider> deviderList = new ArrayList<IProfilDevider>();
-    for( IProfilDevider devider : m_devider)
+    for( IProfilDevider devider : m_devider )
     {
-      if( devider.getTyp() == deviderTyp )
+      for( DEVIDER_TYP deviderTyp : deviderTypes )
       {
-        deviderList.add( devider );
+        if( devider.getTyp() == deviderTyp )
+        {
+          deviderList.add( devider );
+        }
       }
+
     }
-    Collections.sort(deviderList,new DeviderComparator());
+    Collections.sort( deviderList, new DeviderComparator() );
     return deviderList.isEmpty() ? null : deviderList.toArray( new IProfilDevider[deviderList
         .size()] );
+  }
+
+  public IProfilDevider[] getDevider( DEVIDER_TYP deviderTyp )
+  {
+    return getDevider( new DEVIDER_TYP[]
+    { deviderTyp } );
   }
 
   /**
@@ -277,9 +287,9 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
    */
   public IProfilPoint moveDevider( IProfilDevider devider, IProfilPoint newPosition )
   {
-final IProfilPoint oldPkt = ((ProfilDevider)devider).setPoint( newPosition );
-  
-return oldPkt;
+    final IProfilPoint oldPkt = ((ProfilDevider)devider).setPoint( newPosition );
+
+    return oldPkt;
   }
 
   /**
@@ -439,11 +449,10 @@ return oldPkt;
     { new PointChange( point, pointProperty, value ) } );
   }
 
-  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property)
+  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property )
   {
-    devider.setValueFor( DEVIDER_PROPERTY.class, property);
-    
-    
+    devider.setValueFor( DEVIDER_PROPERTY.class, property );
+
   }
 
 }

@@ -27,13 +27,12 @@ public class Profil implements IProfil
   public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider )
   {
 
-    final IProfilDevider result = m_profil.addDevider(point,devider);
-    fireDeviderChanged( point,result );
+    final IProfilDevider result = m_profil.addDevider( point, devider );
+    fireDeviderChanged( point, result );
     return result;
 
   }
 
- 
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#addPoint(double, double)
    */
@@ -47,40 +46,37 @@ public class Profil implements IProfil
     return addPoint;
   }
 
- 
-    /**
-     * @throws ProfilDataException
-     * @see com.bce.eind.core.profilinterface.IProfil#addColumn(com.bce.eind.core.profildata.tabledata.ColumnKey)
-     */
-    public PointProperty[] addPointProperty( final PointProperty pointProperty )
-    {
-      final PointProperty[] newProperties = m_profil.addPointProperty( pointProperty );
+  /**
+   * @throws ProfilDataException
+   * @see com.bce.eind.core.profilinterface.IProfil#addColumn(com.bce.eind.core.profildata.tabledata.ColumnKey)
+   */
+  public PointProperty[] addPointProperty( final PointProperty pointProperty )
+  {
+    final PointProperty[] newProperties = m_profil.addPointProperty( pointProperty );
 
-      firePointPropertiesAdded( newProperties );
+    firePointPropertiesAdded( newProperties );
 
-      return newProperties;
-    }
+    return newProperties;
+  }
 
+  public void addProfilListener( final IProfilListener pl )
+  {
+    m_listeners.add( pl );
+  }
 
-    public void addProfilListener( final IProfilListener pl )
-    {
-      m_listeners.add( pl );
-    }
-
- 
   public IProfilPoint findNearestPoint( final double breite )
   {
     return m_profil.findNearestPoint( breite );
   }
 
-  public IProfilPoint findPoint( final double breite,final double delta )
+  public IProfilPoint findPoint( final double breite, final double delta )
   {
-    return m_profil.findPoint( breite,delta );
+    return m_profil.findPoint( breite, delta );
   }
 
   public IProfilPoint findPoint( int index, double breite, double delta )
   {
-       return m_profil.findPoint(index, breite,delta );
+    return m_profil.findPoint( index, breite, delta );
   }
 
   public void fireBuildingChanged( )
@@ -94,10 +90,10 @@ public class Profil implements IProfil
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getPoint(double, double)
    */
- /* public IProfilPoint getPoint( final double breite, final double hoehe )
-  {
-    return m_profil.getPoint( breite, hoehe );
-  }*/
+  /*
+   * public IProfilPoint getPoint( final double breite, final double hoehe ) { return
+   * m_profil.getPoint( breite, hoehe ); }
+   */
 
   public void fireBuildingDataChanged( final IProfilBuilding building,
       final ProfilBuildingProperty buildingProperty, final double value )
@@ -121,7 +117,7 @@ public class Profil implements IProfil
     final IProfilListener[] listeners = m_listeners
         .toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener l : listeners )
-      l.onDeviderChanged(point,devider);
+      l.onDeviderChanged( point, devider );
   }
 
   public void fireMetaDataChanged( final Object key, final Object value )
@@ -147,6 +143,7 @@ public class Profil implements IProfil
     for( final IProfilListener l : listeners )
       l.onPointPropertiesRemoved( removeProperties );
   }
+
   public void firePointsAdded( final IProfilPoint[] newPoints )
   {
     final IProfilListener[] listeners = m_listeners
@@ -154,10 +151,6 @@ public class Profil implements IProfil
     for( final IProfilListener l : listeners )
       l.onPointsAdded( newPoints );
   }
-
- 
- 
- 
 
   public void firePointsRemoved( final IProfilPoint[] removedPoints )
   {
@@ -183,14 +176,18 @@ public class Profil implements IProfil
     return m_profil.getBuilding();
   }
 
- 
   /**
-   * @see com.bce.eind.core.profilinterface.IProfil#getDevider(com.bce.eind.core.profildata.tabledata.DeviderKey)
+   * @see com.bce.eind.core.profilinterface.IProfil#getDevider(DEVIDER_TYP[])
    */
+  public IProfilDevider[] getDevider( DEVIDER_TYP[] deviderTypes )
+  {
+    return m_profil.getDevider( deviderTypes );
+  }
+
   public IProfilDevider[] getDevider( DEVIDER_TYP deviderTyp )
- {
-  return m_profil.getDevider(deviderTyp) ;
- }
+  {
+    return m_profil.getDevider( deviderTyp );
+  }
 
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getTableDataKeys()
@@ -200,8 +197,6 @@ public class Profil implements IProfil
     return m_profil.getPointProperties( filterNonVisible );
   }
 
- 
-
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getPoints()
    */
@@ -210,7 +205,6 @@ public class Profil implements IProfil
     return m_profil.getPoints();
   }
 
- 
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getMetaData()
    */
@@ -219,9 +213,8 @@ public class Profil implements IProfil
     return m_profil.getProperty( key );
   }
 
- 
   /**
-   * @throws ProfilDataException 
+   * @throws ProfilDataException
    * @see com.bce.eind.core.profilinterface.IProfil#getValuesFor(com.bce.eind.core.profildata.tabledata.ColumnKey)
    */
   public double[] getValuesFor( final PointProperty pointProperty ) throws ProfilDataException
@@ -241,6 +234,7 @@ public class Profil implements IProfil
 
     return point;
   }
+
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#addPoint(com.bce.eind.core.profilinterface.IPoint,
    *      double, double)
@@ -255,6 +249,7 @@ public class Profil implements IProfil
 
     return point;
   }
+
   /**
    * @see com.bce.eind.core.profil.IProfil#insertPoint(com.bce.eind.core.profil.IProfilPoint,
    *      com.bce.eind.core.profil.IProfilPoint)
@@ -270,8 +265,6 @@ public class Profil implements IProfil
     return result;
   }
 
-  
-
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#moveDevider(com.bce.eind.core.profildata.tabledata.DeviderKey,
    *      com.bce.eind.core.profilinterface.IProfilPoint)
@@ -280,8 +273,8 @@ public class Profil implements IProfil
   {
     final IProfilPoint oldPkt = m_profil.moveDevider( devider, newPosition );
 
-    fireDeviderChanged(newPosition, devider );
-    
+    fireDeviderChanged( newPosition, devider );
+
     return oldPkt;
   }
 
@@ -299,9 +292,9 @@ public class Profil implements IProfil
 
   public IProfilDevider removeDevider( IProfilDevider devider )
   {
-    IProfilDevider removedDevider = m_profil.removeDevider(devider);
-    if (removedDevider != null)
-      fireDeviderChanged(null,removedDevider);
+    IProfilDevider removedDevider = m_profil.removeDevider( devider );
+    if( removedDevider != null )
+      fireDeviderChanged( null, removedDevider );
     return removedDevider;
   }
 
@@ -314,35 +307,32 @@ public class Profil implements IProfil
 
     firePointsRemoved( new IProfilPoint[]
     { point } );
-    
+
     return result;
   }
 
-  
   /**
    * @return
    * @see com.bce.eind.core.profilinterface.IProfil#removeColumn(com.bce.eind.core.profildata.tabledata.ColumnKey)
    */
   public PointProperty[] removePointProperty( final PointProperty pointProperty )
   {
-    final PointProperty[] removeProperties = m_profil
-        .removePointProperty( pointProperty );
+    final PointProperty[] removeProperties = m_profil.removePointProperty( pointProperty );
 
     firePointPropertiesRemoved( removeProperties );
 
     return removeProperties;
   }
 
- 
-
   public void removeProfilListener( final IProfilListener pl )
   {
     m_listeners.remove( pl );
   }
+
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#removeExtendedData(java.lang.String)
    */
-  public Object removeProperty( final Object key  )
+  public Object removeProperty( final Object key )
   {
     final Object result = m_profil.removeProperty( key );
 
@@ -350,21 +340,16 @@ public class Profil implements IProfil
     return result;
   }
 
- 
-
- 
   /**
    * @throws ProfilDataException
    * @see com.bce.eind.core.profilinterface.IProfil#setBuilding(com.bce.eind.core.profilinterface.IProfilBuilding)
    */
-  public void setBuilding( final IProfil.BUILDING_TYP buildingTyp )
-      throws ProfilDataException
+  public void setBuilding( final IProfil.BUILDING_TYP buildingTyp ) throws ProfilDataException
   {
     m_profil.setBuilding( buildingTyp );
 
     fireBuildingChanged();
   }
-
 
   /**
    * @see com.bce.eind.core.profil.IProfil#setProperty(com.bce.eind.core.profil.IProfil.METADATA,
@@ -374,9 +359,8 @@ public class Profil implements IProfil
   {
     m_profil.setProperty( key, value );
 
-    fireMetaDataChanged( key , value );
+    fireMetaDataChanged( key, value );
   }
-
 
   public void setValueFor( final IProfilPoint point, final PointProperty pointProperty,
       final double value ) throws ProfilDataException
@@ -385,7 +369,6 @@ public class Profil implements IProfil
     { new PointChange( point, pointProperty, value ) } );
   }
 
-
   /** Interne Methode die wirklich die Daten ändert. Schickt KEINEN event ! */
   public void setValues( final PointChange[] changes ) throws ProfilDataException
   {
@@ -393,7 +376,6 @@ public class Profil implements IProfil
 
     firePointValuesChanged( changes );
   }
-
 
   public void setValuesFor( final List<IProfilPoint> pointList, PointProperty pointProperty,
       double value ) throws ProfilDataException
@@ -405,20 +387,18 @@ public class Profil implements IProfil
     setValues( changes.toArray( new PointChange[changes.size()] ) );
   }
 
-
   public void setValuesFor( PointProperty pointProperty, double value ) throws ProfilDataException
   {
     final List<IProfilPoint> allPoints = getPoints();
     setValuesFor( allPoints, pointProperty, value );
-    
+
   }
 
-
-  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property)
+  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property )
   {
-    devider.setValueFor( DEVIDER_PROPERTY.class, property);
-    fireDeviderChanged(null,devider);
-    
+    devider.setValueFor( DEVIDER_PROPERTY.class, property );
+    fireDeviderChanged( null, devider );
+
   }
 
 }
