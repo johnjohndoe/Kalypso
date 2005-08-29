@@ -172,7 +172,7 @@ public class NAConfiguration
     ( new File( asciiBaseDir, "inp.dat" ) ).mkdirs();
     ( new File( asciiBaseDir, "hydro.top" ) ).mkdirs();
     m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" );
-    m_zftFile = new File( asciiBaseDir, "inp.dat/we999.zfl" );
+    m_zftFile = new File( asciiBaseDir, "inp.dat/we_nat.zft" );
     m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" );
     m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" );
     m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" );

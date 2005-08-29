@@ -279,15 +279,19 @@ public class CatchmentManager extends AbstractManager
     b.append( "\n" );
     asciiBuffer.getCatchmentBuffer().append( b.toString() );
     // Zeitflächenfunktion
-    asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" );
     Object zftProp = feature.getProperty( "zft" );
     if( zftProp instanceof IObservation )
     {
+      asciiBuffer.getCatchmentBuffer().append( "we_nat.zft\n" );
       writeZML( (IObservation)zftProp, asciiID, asciiBuffer.getZFTBuffer() );
     }
     else
     {
-      System.out.println( "Es existiert keine (gültige) Zeitflächenfunktion für das Teilgebiet, ID: " + asciiID );
+      System.out
+          .println( "Teilgebiet "
+              + asciiID
+              + " wird Standard-Zeitflächenfunktion zugeordnet (im Modell ist dem Teilgebiet keine Zeitflächenfunktion zugeordnet)" );
+      asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" );
     }
     asciiBuffer.getCatchmentBuffer().append( "we.hyd\n" );
 
