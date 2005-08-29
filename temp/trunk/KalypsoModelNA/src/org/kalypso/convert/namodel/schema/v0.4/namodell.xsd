@@ -1239,7 +1239,7 @@ siehe bodenkorrekturmember...
 							</documentation>
 						</annotation>
 					</element>
-					<element name="hvvsqd" type="zmlinline:ZmlInlineWQVType">
+					<element name="hvvsqd" type="zmlinline:ZmlInlineWVQType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>WVQ-Beziehung</label>

@@ -232,17 +232,17 @@ public class ChannelManager extends AbstractManager
       asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( dnodeFE ), "i4" ) );
       asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
-      Object wqvProp = feature.getProperty( "hvvsqd" );
-      if( wqvProp instanceof IObservation )
+      Object wvqProp = feature.getProperty( "hvvsqd" );
+      if( wvqProp instanceof IObservation )
       {
-        int size = ( ( (IObservation)wqvProp ).getValues( null ) ).getCount();
+        int size = ( ( (IObservation)wvqProp ).getValues( null ) ).getCount();
         asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( size, "i4" )+"\n" );
         if( size > 24 )
           throw new Exception(
               "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rückhaltebecken: #"
                   + FeatureHelper.getAsString( feature, "name" ) );
       // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
-        writeWQV( (IObservation)wqvProp, asciiBuffer.getRhbBuffer() );
+        writeWVQ( (IObservation)wvqProp, asciiBuffer.getRhbBuffer() );
       }
       else
       {
@@ -265,7 +265,7 @@ public class ChannelManager extends AbstractManager
    * @param rhbBuffer
    * @throws SensorException
    */
-  private void writeWQV( IObservation observation, StringBuffer rhbBuffer ) throws SensorException
+  private void writeWVQ( IObservation observation, StringBuffer rhbBuffer ) throws SensorException
   {
     IAxis[] axisList = observation.getAxisList();
     IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_WATERLEVEL );
