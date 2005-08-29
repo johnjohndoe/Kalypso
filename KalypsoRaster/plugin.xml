@@ -28,7 +28,7 @@
       <wizard
             icon="icons/sample.gif"
             class="KalypsoPluginRasterImport.ImportRasterWizard"
-            name="Rasterdaten aus externen Dateien"
+            name="%KalypsoPluginRasterImport.wizard1.name"
             id="KalypsoPluginRasterImport.wizard1"/>
    </extension>
    <extension
@@ -36,7 +36,7 @@
       <wizard
             icon="icons/sample.gif"
             class="KalypsoPluginRasterExport.ExportRasterWizard"
-            name="Rasterdaten in externe Dateien"
+            name="%KalypsoPluginRasterExport.wizard1.name"
             id="KalypsoPluginRasterExport.wizard1"/>
    </extension>
 
