@@ -47,12 +47,12 @@ public class ValueIterator implements Iterator
 
   private int m_pos = 0;
 
-  private final Object m_end;
+  private final Object m_int;
 
-  public ValueIterator( Object start, Object end, int rows )
+  public ValueIterator( Object start, Object intervall, int rows )
   {
     m_start = start;
-    m_end = end;
+    m_int = intervall;
     m_rows = rows;
   }
 
@@ -80,14 +80,12 @@ public class ValueIterator implements Iterator
     int n = m_pos;
     m_pos++;
     if( m_start instanceof Double )
-      return new Double( ( (Double)m_start ).doubleValue() + n
-          * ( ( (Double)m_end ).doubleValue() - ( (Double)m_start ).doubleValue() ) / m_rows );
+      return new Double( ( (Double)m_start ).doubleValue() + n * ( (Double)m_int ).doubleValue() );
     if( m_start instanceof Integer )
-      return new Integer( ( (Integer)m_start ).intValue() + n
-          * ( ( (Integer)m_end ).intValue() - ( (Integer)m_start ).intValue() ) / m_rows );
+      return new Integer( ( (Integer)m_start ).intValue() + n * ( (Integer)m_int ).intValue() );
+    // TODO: implement Date-Type in dialog
     if( m_start instanceof Date )
-      return new Date( ( (Date)m_start ).getTime() + n * ( ( (Date)m_end ).getTime() - ( (Date)m_start ).getTime() )
-          / m_rows );
+      return new Date( ( (Date)m_start ).getTime() + n * ( (Date)m_int ).getTime() );
 
     return new UnsupportedOperationException();
   }
