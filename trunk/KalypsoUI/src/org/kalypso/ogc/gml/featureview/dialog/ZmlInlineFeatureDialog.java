@@ -76,6 +76,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
       final Object newValue = dialog.getInput();
       fChange = new FeatureChange( m_feature, m_ftp.getName(), newValue );
     }
+    // TODO: implement real cancel
     m_change = fChange;
     return open;
   }
@@ -95,6 +96,6 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
    */
   public String getLabel()
   {
-    return "X-Y Diagram...";
+    return "X-Y Diagramm...";
   }
 }

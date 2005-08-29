@@ -194,20 +194,21 @@ public class ObservationViewerDialog extends ResizableDialog
           {
             if( !dialog.isValid() )
               return;// TODO messagebox
+            final String name = dialog.getName().toString();
             final Object min = dialog.getMin();
-            final Object max = dialog.getMax();
+            final Object intervall = dialog.getInt();
             final int rows = dialog.getCount();
 
             final Object[][] values = new Object[rows][axis.length];
-            final Iterator iterator = new ValueIterator( min, max, rows );
+            final Iterator iterator = new ValueIterator( min, intervall, rows );
             for( int row = 0; row < rows; row++ )
             {
               values[row][0] = iterator.next();
               for( int ax = 1; ax < axis.length; ax++ )
-                values[row][ax] = null;
+                values[row][ax] = dialog.getDefault();
             }
             final ITuppleModel model = new SimpleTuppleModel( axis, values );
-            setInput( new SimpleObservation( null, null, "name", true, null, new MetadataList(), axis, model ) );
+            setInput( new SimpleObservation( null, null, name, true, null, new MetadataList(), axis, model ) );
           }
         }
 
@@ -216,7 +217,7 @@ public class ObservationViewerDialog extends ResizableDialog
         // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( newListener, "neu", "neue zeitreihe anlegen", SWT.PUSH ) );
+      result.add( new ButtonControl( newListener, "neu", "Neue Zeitreihe anlegen", SWT.PUSH ) );
     }
     if( ( m_buttonControls & BUTTON_EXEL_IMPORT ) == BUTTON_EXEL_IMPORT )
     {

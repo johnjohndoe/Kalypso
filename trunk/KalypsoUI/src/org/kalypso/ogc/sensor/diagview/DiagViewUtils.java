@@ -282,7 +282,13 @@ public class DiagViewUtils
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
       return new DiagramAxis( axisType, "date", label, unit, direction, position, false );
 
+    if( axisType.equals( TimeserieConstants.TYPE_HOURS ) )
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+    
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+
+    if( axisType.equals( TimeserieConstants.TYPE_NORMNULL ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
@@ -290,6 +296,9 @@ public class DiagViewUtils
 
     if( axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+
+    if( axisType.equals( TimeserieConstants.TYPE_NORM ) )
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false);
 
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
