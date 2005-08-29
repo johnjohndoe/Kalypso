@@ -64,6 +64,9 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Wasserstand */
   public final static String TYPE_WATERLEVEL = "W";
 
+  /** Normal Null */
+  public final static String TYPE_NORMNULL = "NN";
+
   /** Temperatur */
   public final static String TYPE_TEMPERATURE = "T";
 
@@ -103,7 +106,8 @@ public abstract class TimeserieConstants implements ObservationConstants
         TYPE_WATERLEVEL,
         TYPE_NORM,
         TYPE_AREA,
-        TYPE_HOURS
+        TYPE_HOURS,
+        TYPE_NORMNULL
     };
     Arrays.sort( types );
     TYPES_ALL = types;
