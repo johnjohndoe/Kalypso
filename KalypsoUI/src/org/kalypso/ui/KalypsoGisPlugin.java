@@ -742,20 +742,20 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
       // register inlines
 
-      final String[] wqvAxis = new String[]
+      final String[] wvqAxis = new String[]
       {
-          TimeserieConstants.TYPE_WATERLEVEL,
-          TimeserieConstants.TYPE_RUNOFF,
-          TimeserieConstants.TYPE_VOLUME };
+          TimeserieConstants.TYPE_NORMNULL,
+          TimeserieConstants.TYPE_VOLUME,
+          TimeserieConstants.TYPE_RUNOFF };
       final String[] taAxis = new String[]
       {
           TimeserieConstants.TYPE_HOURS,
           TimeserieConstants.TYPE_NORM, };
-      final ZmlInlineTypeHandler wqvInline = new ZmlInlineTypeHandler( "ZmlInlineWQVType", wqvAxis, "WQV" );
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
-      registry.registerTypeHandler( wqvInline );
+      registry.registerTypeHandler( wvqInline );
       registry.registerTypeHandler( taInline );
-      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wqvInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
     }
     catch( Exception e ) // generic exception caught for simplicity
