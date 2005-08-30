@@ -8,10 +8,10 @@
 
 	<!-- Zeitreihen als Verzeichnisse -->
     <input id="NiederschlagDir" path="Niederschlag" relativeToCalcCase="true"/>
+    <input id="TemperaturDir" path="Temperatur" relativeToCalcCase="true"/>
     <input id="ZuflussDir" path="Zufluss" relativeToCalcCase="true"/>
     <input id="PegelDir" path="Pegel" relativeToCalcCase="true"/>
     <input id="ErgebnisDir" path="Ergebnisse" relativeToCalcCase="true"/>
-
 <!--
 	<input id="Hydrotop" path="hydrotop.gml" relativeToCalcCase="true"/>
 	<input id="Parameter" path="parameter.gml" relativeToCalcCase="true"/>

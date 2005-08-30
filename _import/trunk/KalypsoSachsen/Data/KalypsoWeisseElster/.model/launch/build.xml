@@ -39,6 +39,7 @@
     <target name="setProperties" depends="info">
         <echo message="Variablen einrichten" />
         <kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
+    		<property name="scenarioId" featurepath="" featureProperty="scenarioId" defaultValue=""/>
             <property name="startsim" featurepath="/" featureProperty="startsimulation" />
             <property name="startforecast" featurepath="/" featureProperty="startforecast" />
             <property name="hoursofforecast" featurepath="/" featureProperty="hoursforecast" />
@@ -118,6 +119,7 @@
                     from="${startsim}"
                     to="${startforecast}"
                     filter="${filterN}" />
+			<metadata name="Szenario" value="${scenarioId}"/>
         </kalypso.copyObservation>
     </target>
 
@@ -136,6 +138,7 @@
             <source property="inObservationLink" from="${startsim}" to="${startforecast}" />
             <!-- Vorhersage übernehmen -->
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+			<metadata name="Szenario" value="${scenarioId}"/>
         </kalypso.copyObservation>
     </target>
 
@@ -182,7 +185,8 @@
                     filter="${filterWQ}" />
             <!-- Vorhersage übernehmen -->
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
-        </kalypso.copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
     </target>
 
     <target name="updateZuflussVorhersage" depends="setProperties">
@@ -199,7 +203,8 @@
                     to="${stopsim}"
                     filter="${filterWQ}" />
             <!-- Vorhersage übernehmen -->
-        </kalypso.copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
     </target>
 
     <target name="updatePegelMessung" depends="setProperties">
@@ -216,7 +221,8 @@
                     filter="${filterWQ}" />
             <!-- Vorhersage übernehmen -->
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
-        </kalypso.copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
     </target>
 
     <target name="updateObsT" depends="setProperties">
@@ -233,7 +239,8 @@
                     filter="${filterT}" />
             <!-- Vorhersage übernehmen -->
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
-        </kalypso.copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
     </target>
 
     <target name="updateObsGebT" depends="setProperties">
@@ -247,7 +254,8 @@
             <source property="inObservationLink" from="${startsim}" to="${startforecast}" />
             <!-- Vorhersage übernehmen -->
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
-        </kalypso.copyObservation>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
     </target>
 
     <target name="updateForecastT" depends="setProperties">

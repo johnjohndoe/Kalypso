@@ -15,7 +15,7 @@
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:Not>
               <ogc:PropertyIsNull>
-                <ogc:PropertyName>pegelZRRepository</ogc:PropertyName>
+                <ogc:PropertyName>pegelZR</ogc:PropertyName>
               </ogc:PropertyIsNull>
             </ogc:Not>
           </ogc:Filter>
