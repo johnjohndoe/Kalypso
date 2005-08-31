@@ -343,7 +343,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     inputChanged( getInput(), null );
     applyTableTemplate( null, null );
-
     m_tableCursor.dispose();
   }
 
@@ -985,7 +984,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     if( oldInput != null && oldInput instanceof IKalypsoFeatureTheme )
       ( (IKalypsoFeatureTheme)oldInput ).getSelectionManager().removeSelectionChangedListener( m_selectionListener );
-    super.inputChanged( input, oldInput );
+    if( !isDisposed() )
+      super.inputChanged( input, oldInput );
     if( input != null && input instanceof IKalypsoFeatureTheme )
       ( (IKalypsoFeatureTheme)input ).getSelectionManager().addSelectionChangedListener( m_selectionListener );
 
