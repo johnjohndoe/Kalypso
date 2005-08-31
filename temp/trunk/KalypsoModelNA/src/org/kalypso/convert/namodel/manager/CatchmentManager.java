@@ -354,15 +354,27 @@ public class CatchmentManager extends AbstractManager
       if( linkedFE == null )
         throw new Exception( "Fehler!!! NA-Modell: Grundwasserabfluss in unbekanntes Teilgebiet: #"
             + FeatureHelper.getAsString( fe, "ngwzu" ) );
-
       line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ).trim() + " " );
       //      line13.append( toAscci( linkedFE, 17 ) + " " );
       line14.append( toAscci( fe, 14 ) + " " );
       sumGwwi += ( (Double)fe.getProperty( "gwwi" ) ).doubleValue();
     }
-    if( sumGwwi > 1.0 )
+    
+    if( sumGwwi > 1.001 )
       throw new Exception(
-          "Fehler!!! NA-Modell: Summe Grundwasserabgabe in Nachbargebiete > 1.0 (100%) in Teilgebiet: #" + asciiID );
+          "Fehler!!! NA-Modell: Summe Grundwasserabgabe in Nachbargebiete > 1.0 (100%) in Teilgebiet (Name: "
+              + feature.getProperty( "name" ) + ", AsciiID: " + asciiID );
+    if( sumGwwi < 0.999 )
+    {
+      // Restanteil in virtuelles Teilgebiet außerhalb des Einzugsgebietes
+      double delta = 1 - sumGwwi;
+      line13.append( "0 " );
+      line14.append( delta + " " );
+      System.out.println( "Achtung!!! Grundwasserabfluss aus Teilgebiet (Name: " + feature.getProperty( "name" )
+          + ", AsciiID: " + asciiID + ") beträgt nur " + delta * 100 + "%! /n" );
+      System.out.println( "Es müssen 100% abgeschlagen werden! /n Restanteil des Grundwasserabflusses (" + delta * 100
+          + "%) wird in virtuelles Teilgebiet außerhalb des Einzugsgebietes abgeschlagen." );
+    }
 
     if( gwList.size() > 0 )
     {
