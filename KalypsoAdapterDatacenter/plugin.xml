@@ -4,7 +4,7 @@
    id="org.kalypso.dcadapter"
    name="KalypsoDatacenterAdapter"
    version="0.0.5"
-   provider-name="org.kalypso"
+   provider-name="kalypso.org"
    class="org.kalypso.dcadapter.DataCenterPlugin">
 
    <runtime>

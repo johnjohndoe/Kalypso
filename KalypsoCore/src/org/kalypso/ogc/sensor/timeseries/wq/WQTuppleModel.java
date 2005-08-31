@@ -185,6 +185,7 @@ public class WQTuppleModel extends AbstractTuppleModel
           final double w = number.doubleValue();
           double q = m_converter.computeQ( d, w );
 
+          // TODO ist das nicht duch TimeserieUtils.getNumberFormatFor( String type ). Marc.
           // just leave 3 decimals
           q = ( (double)( (int)( q * 1000 ) ) ) / 1000;
           value = new Double( q );
