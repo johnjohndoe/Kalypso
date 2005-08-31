@@ -58,10 +58,6 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception,
       CoreException
   {
-
-    if( !( input instanceof IStorageEditorInput ) )
-      throw new IllegalArgumentException( "Only IStorageEditorInput supported" );
-
     monitor.beginTask( "Vorlage wird geladen", 1000 );
     try
     {

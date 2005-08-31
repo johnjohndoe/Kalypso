@@ -43,7 +43,6 @@ package org.kaylpso.ui.wizard.gml;
 
 import java.net.URL;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -70,15 +69,12 @@ import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
-import org.kalypso.ui.editor.gmleditor.util.model.IModel;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -108,8 +104,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
   private Composite m_viewerComposite;
 
   private UrlResolver m_urlResolver = new UrlResolver();
-
-  private IModel m_selection;
 
   private CommandableWorkspace m_workspace;
 

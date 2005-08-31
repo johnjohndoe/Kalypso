@@ -57,10 +57,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -92,10 +88,8 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypso.ui.editor.actions.FeatureThemeSelection;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
@@ -115,7 +109,7 @@ import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, ISelectionProvider,
+public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, 
     IExportableObjectFactory
 {
   private GisMapOutlinePage m_outlinePage = null;
@@ -254,7 +248,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final Menu mapMenu = menuManager.createContextMenu( composite );
     composite.setMenu( mapMenu );
     // register it
-    getSite().registerContextMenu( menuManager, this );
+    getSite().registerContextMenu( menuManager, m_mapPanel );
+    getSite().setSelectionProvider( m_mapPanel );
 
     m_mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
 
@@ -368,42 +363,30 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
-  {
-    m_mapPanel.addSelectionChangedListener( listener );
-  }
+//  /**
+//   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+//   */
+//  public ISelection getSelection()
+//  {
+//    // return emtpy selection if we have no model
+//    if( m_mapModell == null )
+//      return new StructuredSelection();
+//    
+//    final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
+//    final IStructuredSelection selection = (IStructuredSelection)m_mapPanel.getSelection();
+//    if( !selection.isEmpty() && activeTheme instanceof IKalypsoFeatureTheme )
+//      return new FeatureThemeSelection( (IKalypsoFeatureTheme)activeTheme, this, selection, null, (Feature)selection
+//          .getFirstElement() );
+//    return selection;
+//  }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
-  public ISelection getSelection()
-  {
-    final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-    final IStructuredSelection selection = (IStructuredSelection)m_mapPanel.getSelection();
-    if( !selection.isEmpty() && activeTheme instanceof IKalypsoFeatureTheme )
-      return new FeatureThemeSelection( (IKalypsoFeatureTheme)activeTheme, this, selection, null, (Feature)selection
-          .getFirstElement() );
-    return selection;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
-  {
-    m_mapPanel.removeSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  public void setSelection( ISelection selection )
-  {
-    m_mapPanel.setSelection( selection );
-  }
+//  /**
+//   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+//   */
+//  public void setSelection( ISelection selection )
+//  {
+//    m_mapPanel.setSelection( selection );
+//  }
 
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)

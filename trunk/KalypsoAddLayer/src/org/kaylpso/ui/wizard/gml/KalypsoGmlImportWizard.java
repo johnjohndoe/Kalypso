@@ -1,8 +1,6 @@
 package org.kaylpso.ui.wizard.gml;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.deegree.services.wms.StyleNotDefinedException;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -13,9 +11,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.gmleditor.util.model.FeatureElement;
-import org.kalypso.ui.editor.gmleditor.util.model.IModel;
-import org.kalypso.ui.editor.gmleditor.util.model.PropertyElement;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -126,7 +121,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       for( int i = 0; i < featureAssociations.length; i++ )
       {
         FeatureAssociationTypeProperty property = featureAssociations[i];
-        String feaureName = property.getAssociationFeatureType().getName();
+//        String feaureName = property.getAssociationFeatureType().getName();
         String featureId = "#fid#" + property.getName();
         styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( property.getAssociationFeatureType(),
             null );
@@ -180,41 +175,40 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   // nothing to initalize
   }
 
-  private boolean getParent( IModel element, List list )
-  {
-    if( element != null )
-    {
-      if( element instanceof FeatureElement )
-      {
-        getParent( element.getParent(), list );
-      }
-      else if( element instanceof PropertyElement )
-      {
-        list.add( element.getName() );
-        getParent( element.getParent(), list );
-      }
-      return true;
-    }
-    return false;
-  }
+//  private boolean getParent( IModel element, List list )
+//  {
+//    if( element != null )
+//    {
+//      if( element instanceof FeatureElement )
+//      {
+//        getParent( element.getParent(), list );
+//      }
+//      else if( element instanceof PropertyElement )
+//      {
+//        list.add( element.getName() );
+//        getParent( element.getParent(), list );
+//      }
+//      return true;
+//    }
+//    return false;
+//  }
 
-  public String buildFeaturePath( IModel selection )
-  {
-
-    List list = new ArrayList();
-    while( !getParent( selection, list ) )
-      break;
-
-    String featurePath = null;
-    for( int i = list.size(); i > 0; i-- )
-    {
-      String name = (String)list.get( i - 1 );
-      if( i < list.size() )
-        featurePath += "/" + name;
-      else
-        featurePath = name;
-    }
-    return featurePath;
-  }
+//  public String buildFeaturePath( IModel selection )
+//  {
+//    List list = new ArrayList();
+//    while( !getParent( selection, list ) )
+//      break;
+//
+//    String featurePath = null;
+//    for( int i = list.size(); i > 0; i-- )
+//    {
+//      String name = (String)list.get( i - 1 );
+//      if( i < list.size() )
+//        featurePath += "/" + name;
+//      else
+//        featurePath = name;
+//    }
+//    return featurePath;
+//  }
 
 }
