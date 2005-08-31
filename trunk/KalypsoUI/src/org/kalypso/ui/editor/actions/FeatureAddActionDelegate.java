@@ -104,23 +104,38 @@ public class FeatureAddActionDelegate implements IActionDelegate
         for( int i = 0; i < properties.length; i++ )
         {
           FeatureTypeProperty property = properties[i];
+          if( property.getName().equals( featureType.getName() ) )
+          {
+            ftp = featureType;
+          }
           if( property instanceof FeatureAssociationTypeProperty )
           {
             propName = property.getName();
-            ftp = ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureType();
+            FeatureType[] ftps = ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureTypes();
+            for( int j = 0; j < ftps.length; j++ )
+            {
+              FeatureType ft = ftps[j];
+              String name = ftps[j].getName();
+              if( name.equals( featureType.getName() ) )
+              {
+                ftp = ft;
+                break;
+              }
+            }
           }
-          if( ftp != null && ftp.equals( featureType ) )
+          if( ftp != null )
             break;
         }
+        //guess insert position in list
         int pos = 0;
         if( parentFtp.isListProperty( propName ) )
         {
           List list = (List)parentFeature.getProperty( propName );
           pos = list.indexOf( selectedFeature );
         }
-        AddFeatureCommand command = new AddFeatureCommand( cWorkspace, ftp, parentFeature, propName, pos );
         try
         {
+          AddFeatureCommand command = new AddFeatureCommand( cWorkspace, ftp, parentFeature, propName, pos );
           cWorkspace.postCommand( command );
         }
         catch( Exception e )

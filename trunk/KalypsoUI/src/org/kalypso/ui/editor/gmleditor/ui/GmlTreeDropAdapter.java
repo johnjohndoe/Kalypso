@@ -29,19 +29,15 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * 
@@ -71,33 +67,15 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
   {
     System.out.print( "performDrop - " );
 
-    Object currentTarget2 = getCurrentTarget();
-    Object selectedObject = getSelectedObject();
-    if( currentTarget2 instanceof Feature && selectedObject instanceof Feature )
-    {
-      Feature targetFeature = (Feature)currentTarget2;
-      Feature sourceFeature = (Feature)selectedObject;
-      ISelection selection = m_viewer.getSelection();
-      if( selection instanceof CommandableFeatureSelection )
-      {
-        CommandableFeatureSelection cfs = (CommandableFeatureSelection)selection;
-        CommandableWorkspace workspace = cfs.getCommandableWorkspace();
-        if( cfs.size() > 1 )
-          return false;
-        else
-        {
-          Feature element = (Feature)cfs.getFirstElement();
-          System.out.println( "" );
-        }
-      }
-    }
-    if( selectedObject instanceof Feature && currentTarget2 instanceof FeatureAssociationTypeElement )
-    {
-      Feature sourceFeature = (Feature)selectedObject;
-      FeatureAssociationTypeProperty fatpTarget = (FeatureAssociationTypeProperty)currentTarget2;
+    Object currentTargetObject = getCurrentTarget();
+    Object selectedSourceObject = getSelectedObject();
 
+    int currentOperation = getCurrentOperation();
+    if( currentOperation == DND.DROP_COPY )
+    {
+      
     }
-    return true;
+        return true;
   }
 
   /**
@@ -106,49 +84,104 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
    */
   public boolean validateDrop( Object target, int operation, TransferData transferType )
   {
-    String opsName = null;
-    ISelection currentSelection = m_viewer.getSelection();
-    GMLWorkspace workspace = null;
+    CommandableFeatureSelection structuredSelection = (CommandableFeatureSelection)m_viewer.getSelection();
+    Feature[] selectedFeatures = structuredSelection.getSelectedFeatures();
+    Feature selectedFeature = null;
     Feature sourceFeature = null;
     Feature targetFeature = null;
-    FeatureType targetFt = null;
+    FeatureType[] targetFt = null;
+    FeatureType[] linkedTargetFt = null;
+    FeatureType matchingFt = null;
     if( target instanceof FeatureAssociationTypeElement )
     {
       FeatureAssociationTypeElement targetFatElement = (FeatureAssociationTypeElement)target;
       FeatureAssociationTypeProperty associationTypeProperty = targetFatElement.getAssociationTypeProperty();
-      targetFt = associationTypeProperty.getAssociationFeatureType();
+      targetFt = associationTypeProperty.getAssociationFeatureTypes();
     }
     if( target instanceof Feature )
     {
       targetFeature = (Feature)target;
-      targetFt = targetFeature.getFeatureType();
+      targetFt = new FeatureType[]
+      { targetFeature.getFeatureType() };
     }
-    if( currentSelection instanceof CommandableFeatureSelection )
+    if( target instanceof LinkedFeatureElement2 )
     {
-      workspace = ( (CommandableFeatureSelection)currentSelection ).getCommandableWorkspace();
-      sourceFeature = (Feature)( (CommandableFeatureSelection)currentSelection ).getFirstElement();
+      linkedTargetFt = new FeatureType[]
+      { ( (LinkedFeatureElement2)target ).getDecoratedFeature().getFeatureType() };
     }
-    boolean valid = isCompatibleFeatureType( sourceFeature.getFeatureType(), targetFeature.getFeatureType() );
-    
-    if( !LocalSelectionTransfer.getInstance().isSupportedType( transferType ) && !valid)
+    if( !LocalSelectionTransfer.getInstance().isSupportedType( transferType ) )
       return false;
-    return true;
+
+    if( selectedFeatures.length == 0 )
+      return false;
+
+    if( selectedFeatures.length > 1 )
+    {
+      FeatureType baseFeatureType = null;
+      for( int i = 0; i < selectedFeatures.length; i++ )
+      {
+        FeatureType type = selectedFeatures[i].getFeatureType();
+        if( i == 0 )
+          baseFeatureType = selectedFeatures[i].getFeatureType();
+        if( !type.equals( baseFeatureType ) )
+          return false;
+      }
+      matchingFt = hasMatchingFeatureType( baseFeatureType, targetFt );
+    }
+    else
+    {
+      selectedFeature = selectedFeatures[0];
+      matchingFt = hasMatchingFeatureType( selectedFeature.getFeatureType(), targetFt );
+    }
+    if( targetFt == null )
+      return false;
+
+    if( matchingFt != null )
+    {
+      if( selectedFeatures.length > 1 )
+      {
+        FeatureType property = targetFeature.getFeatureType();
+        int maxOccurs = property.getMaxOccurs( matchingFt.getName() );
+        //      TODO add the already existing number of feature and compare to maxOccurs
+        if( maxOccurs >= selectedFeatures.length && ( operation == DND.DROP_COPY || operation == DND.DROP_MOVE ) )
+          return true;
+      }
+    }
+    if( selectedFeature != null && matchingFt != null )
+      return true;
+    return false;
   }
 
-  /**
-   * @param featureType
-   * @param featureType2
-   * @return
-   */
-  private boolean isCompatibleFeatureType( FeatureType sourceFt, FeatureType targetFt )
+  private FeatureType hasMatchingFeatureType( FeatureType sourceFT, FeatureType[] targetFT )
   {
-    FeatureTypeProperty[] properties = sourceFt.getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    for( int j = 0; j < targetFT.length; j++ )
     {
-      FeatureTypeProperty property = properties[i];
-      if( targetFt.equals( property ) )
-        return true;
+      FeatureType featureType = targetFT[j];
+      if( featureType.equals( sourceFT ) )
+        return featureType;
+      FeatureTypeProperty[] properties = featureType.getProperties();
+      for( int i = 0; i < properties.length; i++ )
+      {
+        FeatureTypeProperty property = properties[i];
+        if( property instanceof FeatureAssociationTypeProperty )
+        {
+          FeatureType[] associationFeatureTypes = ( (FeatureAssociationTypeProperty)property )
+              .getAssociationFeatureTypes();
+          for( int k = 0; k < associationFeatureTypes.length; k++ )
+          {
+            FeatureType type = associationFeatureTypes[k];
+            if( type.equals( null ) )
+              return featureType;
+          }
+        }
+      }
     }
+    return null;
+  }
+
+  private boolean checkOccurence( FeatureType sourceFt, FeatureType[] targetFt )
+  {
+
     return false;
   }
 }

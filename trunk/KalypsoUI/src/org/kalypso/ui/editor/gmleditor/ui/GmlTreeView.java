@@ -525,10 +525,7 @@ public class GmlTreeView extends SelectionProviderAdapter implements IPostSelect
     {
       FeatureStructureChangeModellEvent event = (FeatureStructureChangeModellEvent)modellEvent;
       Feature parentFeature = event.getParentFeature();
-      ISelection selection = m_treeViewer.getSelection();
-      m_treeViewer.getExpandedElements();
       m_treeViewer.refresh( parentFeature );
-      m_treeViewer.reveal( ( (IStructuredSelection)selection ).getFirstElement() );
     }
     //    if( modellEvent.getEventSource() instanceof CommandableWorkspace )
     //    {
