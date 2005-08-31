@@ -197,4 +197,13 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
     return "rectifiedGridDomain";
   }
 
+  /**
+   * @throws CloneNotSupportedException
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
+  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  {
+    throw new CloneNotSupportedException("Clone is not supported!");
+  }
+
 }

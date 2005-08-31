@@ -259,4 +259,9 @@ public class RectifiedGridDomain //implements GM_Object
 
     return gridExtent;
   }
+
+  public Object clone()
+  {
+    throw new UnsupportedOperationException( "To be implemented!" );
+  }
 }

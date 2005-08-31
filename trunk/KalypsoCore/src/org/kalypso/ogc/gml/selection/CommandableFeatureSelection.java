@@ -29,6 +29,7 @@
  */
 package org.kalypso.ogc.gml.selection;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -131,12 +132,26 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   {
     return m_workspace;
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.event.IEventSourceProvider#getEventSource()
    */
   public Object getEventSource()
   {
     return m_eventSource;
+  }
+
+  public Feature[] getSelectedFeatures()
+  {
+    ArrayList features = new ArrayList();
+    for( Iterator iter = m_selection.iterator(); iter.hasNext(); )
+    {
+      Object o = (Object)iter.next();
+      if( o instanceof Feature )
+      {
+        features.add( (Feature)o );
+      }
+    }
+    return (Feature[])features.toArray( new Feature[features.size()] );
   }
 }

@@ -61,4 +61,10 @@ public class RectifiedGridCoverage
   {
     this.rangeSet = rangeSet;
   }
+
+  public Object clone()
+  {
+    throw new UnsupportedOperationException( "To be implemented!" );
+  }
+
 }

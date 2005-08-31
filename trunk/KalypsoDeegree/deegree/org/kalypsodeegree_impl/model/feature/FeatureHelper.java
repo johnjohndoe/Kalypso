@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -245,6 +246,32 @@ public class FeatureHelper
 
   public static boolean isCollection( Feature f )
   {
+    System.out.println();
+    FeatureType featureType = f.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      FeatureTypeProperty property = properties[i];
+      if( featureType.isListProperty( property.getName() ) && properties.length == 1 )
+        return true;
+      else
+        break;
+    }
     return false;
   }
+
+  public static FeatureType[] getFeatureTypeFromCollection( Feature f )
+  {
+    FeatureType featureType = f.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
+    FeatureTypeProperty property = featureType.getProperty( properties[0].getName() );
+
+    if( property instanceof FeatureAssociationTypeProperty )
+    {
+      return ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureTypes();
+    }
+    return null;
+  }
+
+  
 }

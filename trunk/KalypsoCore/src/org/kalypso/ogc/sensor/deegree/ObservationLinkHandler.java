@@ -154,4 +154,33 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   {
     return "Zeitreihen Verknüpfung";
   }
+
+  /**
+   * @throws CloneNotSupportedException
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
+  public Object cloneObject( Object objectToClone )
+  {
+    TimeseriesLinkType link = (TimeseriesLinkType)objectToClone;
+    TimeseriesLinkType clone = null;
+    try
+    {
+      clone = m_factory.createTimeseriesLinkType();
+      clone.setActuate( link.getActuate() );
+      clone.setArcrole( link.getArcrole() );
+      clone.setHref( link.getHref() );
+      clone.setLinktype( link.getLinktype() );
+      clone.setRole( link.getRole() );
+      clone.setShow( link.getShow() );
+      clone.setTimeaxis( link.getTimeaxis() );
+      clone.setTitle( link.getTitle() );
+      clone.setType( link.getType() );
+      clone.setValueaxis( link.getValueaxis() );
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+    }
+    return clone;
+  }
 }

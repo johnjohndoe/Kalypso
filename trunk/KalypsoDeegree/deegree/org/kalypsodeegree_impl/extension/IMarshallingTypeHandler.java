@@ -30,8 +30,11 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * @param context
    *          use this context for relative url
    */
-  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver ) throws TypeRegistryException;
+  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver )
+      throws TypeRegistryException;
 
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname();
+
+  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException;
 }

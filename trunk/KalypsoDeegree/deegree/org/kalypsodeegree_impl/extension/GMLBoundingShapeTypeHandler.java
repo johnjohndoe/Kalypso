@@ -8,6 +8,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.ogcbasic.CommonNamespaces;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,7 +39,8 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
+   *      java.net.URL)
    */
   public void marshall( final Object object, final Node node, URL context )
   {
@@ -110,7 +112,8 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
   {
@@ -123,6 +126,21 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
   public String getShortname()
   {
     return "Bounding Shape";
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
+  public Object cloneObject( Object objectToClone )
+  {
+    final GM_Envelope env = (GM_Envelope)objectToClone;
+    GM_Position min = env.getMin();
+    GM_Position max = env.getMax();
+    double[] maxAsArray = max.getAsArray();
+    double[] minAsArray = min.getAsArray();
+    GM_Position newMin = GeometryFactory.createGM_Position( minAsArray );
+    GM_Position newMax = GeometryFactory.createGM_Position( maxAsArray );
+    return GeometryFactory.createGM_Envelope( newMin, newMax );
   }
 
 }

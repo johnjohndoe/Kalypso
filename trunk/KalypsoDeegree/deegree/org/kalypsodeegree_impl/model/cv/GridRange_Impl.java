@@ -88,4 +88,8 @@ public class GridRange_Impl implements GridRange
     return low;
   }
 
+  public Object clone()
+  {
+    return new GridRange_Impl( (double[])low.clone(), (double[])high.clone() );
+  }
 }
