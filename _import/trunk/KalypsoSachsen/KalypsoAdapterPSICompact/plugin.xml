@@ -4,7 +4,7 @@
    id="org.kalypso.psicompactadapter"
    name="KalypsoPSICompactAdapter"
    version="1.0.0"
-   provider-name="org.kalypso">
+   provider-name="kalypso.org">
 
    <runtime>
       <library name="KalypsoPSICompactAdapter.jar">

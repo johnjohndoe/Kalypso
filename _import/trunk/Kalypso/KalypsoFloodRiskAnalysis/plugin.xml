@@ -4,7 +4,7 @@
    id="org.kalypso.floodrisk"
    name="KalypsoFloodRiskAnalysis Plug-in"
    version="1.0.0"
-   provider-name=""
+   provider-name="kalypso.org"
    class="org.kalypso.floodrisk.KalypsoFloodRiskAnalysisPlugin">
 
    <runtime>
