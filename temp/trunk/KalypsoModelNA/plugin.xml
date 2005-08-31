@@ -3,7 +3,8 @@
 <plugin
    id="org.kalypso.NACalcJob"
    name="KalypsoNACalcJob"
-   version="1.0.1">
+   version="1.0.1"
+   provider-name="kalypso.org">
    <runtime>
       <library name="kalypsoNACalcJob.jar">
          <export name="*"/>

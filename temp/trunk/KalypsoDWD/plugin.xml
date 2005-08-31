@@ -3,7 +3,8 @@
 <plugin
    id="org.kalypso.dwd"
    name="KalypsoDWD"
-   version="1.0.0">
+   version="1.0.0"
+   provider-name="kalypso.org">
    <runtime>
       <library name="lib/dwdBinding.jar">
          <export name="*"/>
