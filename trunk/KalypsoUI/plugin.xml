@@ -201,7 +201,7 @@
             targetID="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
             id="org.kalypso.ui.editor.gistableeditor.GisTableActionDelegate">
          <menu
-               label="Tabelle"
+               label="%org.kalypso.ui.editors.tableeditor.menu.label"
                path="additions"
                id="org.kalypso.ui.editors.tableeditor.menu">
             <groupMarker
