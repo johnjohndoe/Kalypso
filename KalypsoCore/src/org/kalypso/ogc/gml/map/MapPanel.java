@@ -146,10 +146,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     removeMouseListener( m_widgetManager );
     removeMouseMotionListener( m_widgetManager );
     if( m_model != null )
-    {
       m_model.removeModellListener( this );
-    }
-
   }
 
   public void setOffset( int dx, int dy ) // used by pan method
@@ -484,6 +481,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_selectionProvider.addSelectionChangedListener( listener );
   }
 
+  // TODO: wird nie aufgerufen; PostSelection macht in Karte auch keinen Sinn
   public void firePostSelectionChanged()
   {
     m_selectionProvider.firePostSelectionChanged();
@@ -518,9 +516,12 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public ISelection getSelection()
   {
-    return m_model.getActiveTheme().getSelectionManager().getSelection();
     //TODO why would there be another selection porvider ?????
-//    return m_selectionProvider.getSelection();
+    // Gute frage: ABER! entweder geht alles über den SelectionProviderAdapter oder nix
+    // so wie es jetzt ist, kann es nicht funtionieren, denn die listener
+    // melden sich hier am provideradapter an, bekommen von dem aber via getSelection
+    // nix!
+    return m_model.getActiveTheme().getSelectionManager().getSelection();
   }
 
   /**
@@ -533,7 +534,5 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       setValidAll( false );
       repaint();
     }
-
   }
-
 }
