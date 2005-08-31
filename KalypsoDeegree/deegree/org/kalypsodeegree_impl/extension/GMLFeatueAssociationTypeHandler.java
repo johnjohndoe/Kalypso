@@ -55,4 +55,13 @@ public class GMLFeatueAssociationTypeHandler implements IMarshallingTypeHandler
     return "Feature link";
   }
 
+  /**
+   * @throws CloneNotSupportedException
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
+  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
+  {
+    throw new CloneNotSupportedException( "Clone is not supported" );
+  }
+
 }

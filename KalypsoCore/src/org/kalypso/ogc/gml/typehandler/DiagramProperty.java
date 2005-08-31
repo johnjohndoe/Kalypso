@@ -83,4 +83,15 @@ public class DiagramProperty
   {
     return (Double)zValues.get( index );
   }
+
+  public Object clone()
+  {
+    DiagramProperty clone = new DiagramProperty();
+    for( int i = 0; i < size(); i++ )
+    {
+      clone.addValue( new Double( getXValue( i ).doubleValue() ), new Double( getYValue( i ).doubleValue() ),
+          new Double( getZValue( i ).doubleValue() ) );
+    }
+    return clone;
+  }
 }

@@ -91,6 +91,7 @@ import org.kalypso.ogc.gml.schema.virtual.VirtualRasterFeatureTypePropertyHandle
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
+import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
@@ -105,6 +106,12 @@ import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
@@ -740,6 +747,17 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
       guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
+      //register gml-geometry types
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", "Polygon", GM_Surface.class ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", "MultiPolygon",
+          GM_MultiSurface.class ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", "LineString", GM_Curve.class ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", "MultiLineString",
+          GM_MultiCurve.class ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", "Point", GM_Point.class ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", "MultiPoint",
+          GM_MultiPoint.class ) );
+      // TODO LinearRingPropertyType, BoxPropertyype, GeometryCollectionPropertyType
       // register inlines
 
       final String[] wvqAxis = new String[]

@@ -85,4 +85,9 @@ public interface GridRange
    * coverage.
    */
   double[] getHigh();
+
+  /**
+   *  Returns a clone of this object
+   */
+  Object clone();
 }

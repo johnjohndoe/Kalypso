@@ -33,9 +33,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -154,5 +156,35 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
   public String[] getAxisTypes()
   {
     return m_axisTypes;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
+  public Object cloneObject( Object objectToClone )
+  {
+    final StringWriter sw = new StringWriter();
+    IObservation clone = null;
+    try
+    {
+      final ObservationType xml = ZmlFactory.createXML( (IObservation)objectToClone, null, null );
+      final Marshaller marshaller = ZmlFactory.getMarshaller();
+      marshaller.marshal( xml, sw );
+      final StringReader reader = new StringReader( sw.toString().trim() );
+      clone = ZmlFactory.parseXML( new InputSource( reader ), null, null );
+    }
+    catch( FactoryException e )
+    {
+      e.printStackTrace();
+    }
+    catch( JAXBException e )
+    {
+      e.printStackTrace();
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+    }
+    return clone;
   }
 }

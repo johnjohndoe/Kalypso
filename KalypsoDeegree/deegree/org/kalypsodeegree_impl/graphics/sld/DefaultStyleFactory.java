@@ -13,7 +13,6 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -155,17 +154,17 @@ public class DefaultStyleFactory
     for( int i = 0; i < properties.length; i++ )
     {
       FeatureTypeProperty property = properties[i];
-      if( property instanceof FeatureAssociationTypeProperty )
-      {
-        FeatureType associationFeatureType = ((FeatureAssociationTypeProperty)property).getAssociationFeatureType();
-        FeatureTypeProperty[] properties2 = associationFeatureType.getProperties();
-        for( int j = 0; j < properties2.length; j++ )
-        {
-          FeatureTypeProperty property2 = properties2[j];
-          if( property2.isGeometryProperty() )
-            symbolizer.add( createGeometrySymbolizer( property2));
-        }
-      }
+//      if( property instanceof FeatureAssociationTypeProperty )
+//      {
+//        FeatureType associationFeatureType = ((FeatureAssociationTypeProperty)property).getAssociationFeatureType();
+//        FeatureTypeProperty[] properties2 = associationFeatureType.getProperties();
+//        for( int j = 0; j < properties2.length; j++ )
+//        {
+//          FeatureTypeProperty property2 = properties2[j];
+//          if( property2.isGeometryProperty() )
+//            symbolizer.add( createGeometrySymbolizer( property2));
+//        }
+//      }
       if( property.isGeometryProperty() )
       {
 //        m_GeomProperty = property;

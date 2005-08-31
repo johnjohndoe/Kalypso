@@ -49,7 +49,8 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler
 
   /**
    * 
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
+   *      java.net.URL)
    */
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
 
@@ -81,7 +82,8 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   public Object unmarshall( Node node, URL gmlURL, IUrlResolver urlResolver ) throws TypeRegistryException
   {
@@ -212,6 +214,17 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler
   {
     BigDecimal bd = new BigDecimal( Double.toString( d ) );
     return ( bd.setScale( scale, mode ) ).doubleValue();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
+  public Object cloneObject( Object objectToClone )
+  {
+    RangeSet rangeSet = (RangeSet)objectToClone;
+    Vector rangeSetData = rangeSet.getRangeSetData();
+    String rangeSetDataFile = rangeSet.getRangeSetDataFile();
+    return new RangeSet( (Vector)rangeSetData.clone(), rangeSetDataFile );
   }
 
 }

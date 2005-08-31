@@ -431,10 +431,10 @@ public class FeatureFactory
     if( o instanceof String )
       return Mapper.mapXMLValueToJava( (String)o, type );
 
-    if( o instanceof GMLGeometry && type.startsWith( "org.kalypsodeegree.model.geometry." ) )
-      return GMLAdapter.wrap( (GMLGeometry)o );
-    if( o instanceof GMLGeometry )
-      System.out.println( o.getClass().toString() );
+    //    if( o instanceof GMLGeometry && type.startsWith( "org.kalypsodeegree.model.geometry." ) )
+    //      return GMLAdapter.wrap( (GMLGeometry)o );
+    //    if( o instanceof GMLGeometry )
+    //      System.out.println( o.getClass().toString() );
     throw new Exception( "could not convert property (" + o.toString() + ") to " + type );
   }
 
