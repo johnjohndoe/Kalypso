@@ -17,7 +17,7 @@ public interface IPlainProfil
 
   public static enum DEVIDER_TYP
   {
-    BORDVOLL, DURCHSTROEMTE, FLIESSZONE, WEHR;
+    BORDVOLL, DURCHSTROEMTE, FLIESSZONE, WEHR, PROFIL;
   }
 
   public static enum PROPERTY

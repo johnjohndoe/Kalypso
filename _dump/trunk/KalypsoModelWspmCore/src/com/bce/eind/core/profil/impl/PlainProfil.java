@@ -18,6 +18,7 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilConstants.RAUHEIT_TYP;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
 import com.bce.eind.core.profil.impl.devider.ProfilDevider;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
@@ -75,6 +76,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   public PointProperty[] addPointProperty( final PointProperty pointProperty )
 
   {
+    if (pointProperty == null)return null;
     final PointProperty[] depending = m_points.getDependenciesFor( pointProperty );
     final PointProperty[] newProperties = new PointProperty[depending.length + 1];
 
@@ -86,7 +88,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
     if( pointProperty == PointProperty.RAUHEIT )
     {
-      pointProperty.setParameter( "RauheitTyp", IProfilConstants.DEFAULT_RAUHEIT_TYP );
+      pointProperty.setParameter(RAUHEIT_TYP.class, IProfilConstants.DEFAULT_RAUHEIT_TYP );
     }
     return newProperties;
   }
