@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SaaleModell fid="root" xmlns:steuerung="org.kalypso.saale.steuerung" xmlns:wlm="org.kalypso.saale.wlm" xmlns="org.kalypso.saale.modell" xmlns:pegel="org.kalypso.saale.pegel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ombrometer="org.kalypso.saale.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:speicher="org.kalypso.saale.speicher" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.saale.modell file:///D:/Kalypso/KalypsoSaalePlugin/src/org/kalypso/lhwsachsenanhalt/saale/schemata/saalemodell.xsd">
+<SaaleModell fid="root" xmlns:steuerung="org.kalypso.saale.steuerung" xmlns:wlm="org.kalypso.saale.wlm" xmlns="org.kalypso.saale.modell" xmlns:pegel="org.kalypso.saale.pegel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:speicher="org.kalypso.saale.speicher" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xmlns:ombrometer="org.kalypso.saale.ombrometer" xsi:schemaLocation="org.kalypso.saale.modell file:///D:/Kalypso/KalypsoSaalePlugin/src/org/kalypso/lhwsachsenanhalt/saale/schemata/saalemodell.xsd">
   <steuerung:SteuerungCollectionAssociation>
     <steuerung:SteuerungCollection fid="Steuerung">
       <steuerung:SteuerungMember>
@@ -19905,6 +19905,607 @@
     </speicher:SpeicherCollection>
   </speicher:SpeicherCollectionAssociation>
   <ombrometer:OmbrometerCollectionAssociation>
-    <ombrometer:OmbrometerCollection fid="Ombrometer"/>
+    <ombrometer:OmbrometerCollection fid="Ombrometer">
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID90838">
+          <ombrometer:Name>Leinefelde</ombrometer:Name>
+          <ombrometer:NR>90838</ombrometer:NR>
+          <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID81309">
+          <ombrometer:Name>Harzgerode</ombrometer:Name>
+          <ombrometer:NR>81309</ombrometer:NR>
+          <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID80101">
+          <ombrometer:Name>Artern</ombrometer:Name>
+          <ombrometer:NR>80101</ombrometer:NR>
+          <ombrometer:NR-Ersatz>90838</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID130849">
+          <ombrometer:Name>Schkeuditz</ombrometer:Name>
+          <ombrometer:NR>130849</ombrometer:NR>
+          <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID81936">
+          <ombrometer:Name>Wittenberg</ombrometer:Name>
+          <ombrometer:NR>81936</ombrometer:NR>
+          <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID61520">
+          <ombrometer:Name>Holzdorf</ombrometer:Name>
+          <ombrometer:NR>61520</ombrometer:NR>
+          <ombrometer:NR-Ersatz>81936</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID130939">
+          <ombrometer:Name>Oschatz</ombrometer:Name>
+          <ombrometer:NR>130939</ombrometer:NR>
+          <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID110814">
+          <ombrometer:Name>Schmücke</ombrometer:Name>
+          <ombrometer:NR>110814</ombrometer:NR>
+          <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID93200">
+          <ombrometer:Name>Erfurt</ombrometer:Name>
+          <ombrometer:NR>93200</ombrometer:NR>
+          <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID110421">
+          <ombrometer:Name>Neuhaus</ombrometer:Name>
+          <ombrometer:NR>110421</ombrometer:NR>
+          <ombrometer:NR-Ersatz>110731</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID110731">
+          <ombrometer:Name>Sonneberg</ombrometer:Name>
+          <ombrometer:NR>110731</ombrometer:NR>
+          <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID100844">
+          <ombrometer:Name>Schleiz</ombrometer:Name>
+          <ombrometer:NR>100844</ombrometer:NR>
+          <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID82023">
+          <ombrometer:Name>Osterfeld</ombrometer:Name>
+          <ombrometer:NR>82023</ombrometer:NR>
+          <ombrometer:NR-Ersatz>103100</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID103100">
+          <ombrometer:Name>Gera</ombrometer:Name>
+          <ombrometer:NR>103100</ombrometer:NR>
+          <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID143300">
+          <ombrometer:Name>Plauen</ombrometer:Name>
+          <ombrometer:NR>143300</ombrometer:NR>
+          <ombrometer:NR-Ersatz>103100</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID143102">
+          <ombrometer:Name>Chemmnitz</ombrometer:Name>
+          <ombrometer:NR>143102</ombrometer:NR>
+          <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID210685">
+          <ombrometer:Name>Hof</ombrometer:Name>
+          <ombrometer:NR>210685</ombrometer:NR>
+          <ombrometer:NR-Ersatz>100844</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43014">
+          <ombrometer:Name>Bleiloch</ombrometer:Name>
+          <ombrometer:NR>43014</ombrometer:NR>
+          <ombrometer:NR-Ersatz>210685</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43032">
+          <ombrometer:Name>Hohenwarte</ombrometer:Name>
+          <ombrometer:NR>43032</ombrometer:NR>
+          <ombrometer:NR-Ersatz>210685</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43038">
+          <ombrometer:Name>Munschwitz</ombrometer:Name>
+          <ombrometer:NR>43038</ombrometer:NR>
+          <ombrometer:NR-Ersatz>43032</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43103">
+          <ombrometer:Name>Scheibe-Alsbach</ombrometer:Name>
+          <ombrometer:NR>43103</ombrometer:NR>
+          <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43760">
+          <ombrometer:Name>Luis.-Ohra</ombrometer:Name>
+          <ombrometer:NR>43760</ombrometer:NR>
+          <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43198">
+          <ombrometer:Name>Zeigerheim-Rudolst.</ombrometer:Name>
+          <ombrometer:NR>43198</ombrometer:NR>
+          <ombrometer:NR-Ersatz>43038</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43184">
+          <ombrometer:Name>Jena</ombrometer:Name>
+          <ombrometer:NR>43184</ombrometer:NR>
+          <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43811">
+          <ombrometer:Name>Straussfurt</ombrometer:Name>
+          <ombrometer:NR>43811</ombrometer:NR>
+          <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43935">
+          <ombrometer:Name>Sondershsn.</ombrometer:Name>
+          <ombrometer:NR>43935</ombrometer:NR>
+          <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44157">
+          <ombrometer:Name>TS Neustadt</ombrometer:Name>
+          <ombrometer:NR>44157</ombrometer:NR>
+          <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44186">
+          <ombrometer:Name>Stempeda</ombrometer:Name>
+          <ombrometer:NR>44186</ombrometer:NR>
+          <ombrometer:NR-Ersatz>44157</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43352">
+          <ombrometer:Name>Zeulenroda</ombrometer:Name>
+          <ombrometer:NR>43352</ombrometer:NR>
+          <ombrometer:NR-Ersatz>100844</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43353">
+          <ombrometer:Name>TS Weida</ombrometer:Name>
+          <ombrometer:NR>43353</ombrometer:NR>
+          <ombrometer:NR-Ersatz>43352</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43309">
+          <ombrometer:Name>Greiz</ombrometer:Name>
+          <ombrometer:NR>43309</ombrometer:NR>
+          <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44299">
+          <ombrometer:Name>Weissenfels</ombrometer:Name>
+          <ombrometer:NR>44299</ombrometer:NR>
+          <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43530">
+          <ombrometer:Name>Halle-Kroellwitz</ombrometer:Name>
+          <ombrometer:NR>43530</ombrometer:NR>
+          <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44188">
+          <ombrometer:Name>Kelbra</ombrometer:Name>
+          <ombrometer:NR>44188</ombrometer:NR>
+          <ombrometer:NR-Ersatz>43935</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44337">
+          <ombrometer:Name>Wippra</ombrometer:Name>
+          <ombrometer:NR>44337</ombrometer:NR>
+          <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44499">
+          <ombrometer:Name>Beneckenstein</ombrometer:Name>
+          <ombrometer:NR>44499</ombrometer:NR>
+          <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID73200">
+          <ombrometer:Name>Magdeburg</ombrometer:Name>
+          <ombrometer:NR>73200</ombrometer:NR>
+          <ombrometer:NR-Ersatz>44414</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID72023">
+          <ombrometer:Name>Brocken</ombrometer:Name>
+          <ombrometer:NR>72023</ombrometer:NR>
+          <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID72094">
+          <ombrometer:Name>Wernigerode</ombrometer:Name>
+          <ombrometer:NR>72094</ombrometer:NR>
+          <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44403">
+          <ombrometer:Name>Elend RHB k. Bode</ombrometer:Name>
+          <ombrometer:NR>44403</ombrometer:NR>
+          <ombrometer:NR-Ersatz>72023</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44404">
+          <ombrometer:Name>Ueberleitgsp.</ombrometer:Name>
+          <ombrometer:NR>44404</ombrometer:NR>
+          <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44407">
+          <ombrometer:Name>Rappbode TS</ombrometer:Name>
+          <ombrometer:NR>44407</ombrometer:NR>
+          <ombrometer:NR-Ersatz>44499</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44406">
+          <ombrometer:Name>Wendefurt</ombrometer:Name>
+          <ombrometer:NR>44406</ombrometer:NR>
+          <ombrometer:NR-Ersatz>44407</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44430">
+          <ombrometer:Name>Zilierbach TS</ombrometer:Name>
+          <ombrometer:NR>44430</ombrometer:NR>
+          <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44498">
+          <ombrometer:Name>Blankenbg. Harz</ombrometer:Name>
+          <ombrometer:NR>44498</ombrometer:NR>
+          <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID44414">
+          <ombrometer:Name>Halberstadt</ombrometer:Name>
+          <ombrometer:NR>44414</ombrometer:NR>
+          <ombrometer:NR-Ersatz>44498</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID45003">
+          <ombrometer:Name>Barby</ombrometer:Name>
+          <ombrometer:NR>45003</ombrometer:NR>
+          <ombrometer:NR-Ersatz>73200</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43478">
+          <ombrometer:Name>Roetha</ombrometer:Name>
+          <ombrometer:NR>43478</ombrometer:NR>
+          <ombrometer:NR-Ersatz>43451</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43451">
+          <ombrometer:Name>Schoembach</ombrometer:Name>
+          <ombrometer:NR>43451</ombrometer:NR>
+          <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+      <ombrometer:OmbrometerMember>
+        <ombrometer:Ombrometer fid="ID43436">
+          <ombrometer:Name>Windischleuba</ombrometer:Name>
+          <ombrometer:NR>43436</ombrometer:NR>
+          <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
+          <gml:location>
+            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            </gml:Point>
+          </gml:location>
+        </ombrometer:Ombrometer>
+      </ombrometer:OmbrometerMember>
+    </ombrometer:OmbrometerCollection>
   </ombrometer:OmbrometerCollectionAssociation>
 </SaaleModell>

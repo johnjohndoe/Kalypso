@@ -39,8 +39,9 @@
 		<complexContent>
 			<extension base="common:EmptyFeatureBaseType">
 				<sequence>
-					<element name="NR"  type="string"> <annotation><documentation xml:lang="de"><label>Pegelnummer</label><tooltip>Nummer</tooltip><description>Messstellennummer</description></documentation></annotation></element>
 					<element name="Name" type="string"/>
+					<element name="NR"  type="string"> <annotation><documentation xml:lang="de"><label>Nummer</label><tooltip>Nummer der Messstelle</tooltip><description>Messstellennummer</description></documentation></annotation></element>
+					<element name="NR-Ersatz"  type="string"> <annotation><documentation xml:lang="de"><label>Nummer (Ersatz)</label><tooltip>Nummer der Ersatz-Messstelle</tooltip><description>Messstellennummer der Ersatzstation</description></documentation></annotation></element>
 					<element ref="gml:location"/>
 					<element name="Niederschlag" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 				</sequence>

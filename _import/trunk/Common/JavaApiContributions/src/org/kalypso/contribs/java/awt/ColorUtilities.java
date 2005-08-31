@@ -144,7 +144,7 @@ public class ColorUtilities
    *          0 - 255
    * @return transparent color
    */
-  public static Color createTransarent( final Color color, final int alpha )
+  public static Color createTransparent( final Color color, final int alpha )
   {
     return new Color( color.getRed(), color.getGreen(), color.getBlue(), alpha );
   }

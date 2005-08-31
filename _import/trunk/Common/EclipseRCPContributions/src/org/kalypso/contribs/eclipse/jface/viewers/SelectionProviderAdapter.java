@@ -91,8 +91,8 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
    */
   public ISelection getSelection()
   {
-    if(m_selection==null)
-      m_selection =  StructuredSelection.EMPTY;
+    if( m_selection == null )
+      m_selection = StructuredSelection.EMPTY;
     return m_selection;
   }
 

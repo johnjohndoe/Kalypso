@@ -29,7 +29,6 @@
  */
 package org.kalypso.contribs.java.awt;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
@@ -66,23 +65,23 @@ import java.util.Map;
  */
 public class HighlightGraphics extends Graphics2D
 {
-  private final Color COLOR_FILL = ColorUtilities.createTransarent( Color.YELLOW, 170 );
+  private final Color COLOR_FILL = ColorUtilities.createTransparent( Color.YELLOW, 255 );
 
-  private final Color COLOR_TEXT = ColorUtilities.createTransarent( Color.RED, 250 );
+  private final Color COLOR_TEXT = ColorUtilities.createTransparent( Color.RED, 255 );
 
-  private final Color COLOR_LINE = ColorUtilities.createTransarent( Color.YELLOW, 200 );
+  private final Color COLOR_LINE = ColorUtilities.createTransparent( Color.YELLOW, 255 );
 
-  private final Color COLOR_BORDER = ColorUtilities.createTransarent( Color.RED, 150 );
+  private final Color COLOR_BORDER = ColorUtilities.createTransparent( Color.RED, 255 );
 
-  private static final Color COLOR_BACKGROUND = ColorUtilities.createTransarent( Color.lightGray, 5 );
+  private static final Color COLOR_BACKGROUND = ColorUtilities.createTransparent( Color.lightGray, 5 );
 
-  private static final Stroke STROKE_NORMAL = new BasicStroke( 4f );
+//  private static final Stroke STROKE_NORMAL = new BasicStroke( 4f );
 
-  private static final Stroke STROKE_DASHED = new BasicStroke( 4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 15,
-      new float[]
-      {
-          14,
-          14 }, 0 );
+//  private static final Stroke STROKE_DASHED = new BasicStroke( 4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 15,
+//      new float[]
+//      {
+//          14,
+//          14 }, 0 );
 
   private final Graphics2D m_graphics;
 
@@ -94,7 +93,7 @@ public class HighlightGraphics extends Graphics2D
     m_graphics = graphics;
     m_graphics.setColor( Color.YELLOW );
     m_graphics.setBackground( COLOR_BACKGROUND );
-    m_graphics.setStroke( STROKE_DASHED );
+//    m_graphics.setStroke( STROKE_DASHED );
   }
 
   public void setColor( Color c )
@@ -114,11 +113,11 @@ public class HighlightGraphics extends Graphics2D
 
   public void drawLine( int x1, int y1, int x2, int y2 )
   {
-    m_graphics.setStroke( STROKE_NORMAL );
+//    m_graphics.setStroke( STROKE_NORMAL );
     m_graphics.setColor( COLOR_BORDER );
     m_graphics.drawLine( x1, y1, x2, y2 );
 
-    m_graphics.setStroke( STROKE_DASHED );
+//    m_graphics.setStroke( STROKE_DASHED );
     m_graphics.setColor( COLOR_LINE );
     m_graphics.drawLine( x1, y1, x2, y2 );
 
@@ -226,6 +225,7 @@ public class HighlightGraphics extends Graphics2D
   public void drawGlyphVector( GlyphVector g, float x, float y )
   {
     m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawGlyphVector( g, x, y );
   }
 
@@ -269,12 +269,14 @@ public class HighlightGraphics extends Graphics2D
   public void drawOval( int x, int y, int width, int height )
   {
     m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawOval( x, y, width, height );
   }
 
   public void drawPolygon( int[] xPoints, int[] yPoints, int nPoints )
   {
     m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawPolygon( xPoints, yPoints, nPoints );
   }
 
@@ -284,12 +286,14 @@ public class HighlightGraphics extends Graphics2D
   public void drawPolygon( Polygon p )
   {
     m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawPolygon( p );
   }
 
   public void drawPolyline( int[] xPoints, int[] yPoints, int nPoints )
   {
     m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawPolyline( xPoints, yPoints, nPoints );
   }
 
@@ -299,6 +303,7 @@ public class HighlightGraphics extends Graphics2D
   public void drawRect( int x, int y, int width, int height )
   {
     m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawRect( x, y, width, height );
   }
 
@@ -317,6 +322,7 @@ public class HighlightGraphics extends Graphics2D
   public void drawRoundRect( int x, int y, int width, int height, int arcWidth, int arcHeight )
   {
     m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawRoundRect( x, y, width, height, arcWidth, arcHeight );
   }
 
