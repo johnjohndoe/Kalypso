@@ -2,6 +2,15 @@
 
 	<body>
 	&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;
-		
+		<br>
+&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;
+&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;3&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;
+
+<!--
+
+<request xmlns="request.zml.kalypso.org"><axes>date,Q</axes><statusAxes>Q</statusAxes></request>
+<filter><interpolationFilter xmlns="filters.zml.kalypso.org" calendarField="HOUR_OF_DAY" amount="3" forceFill="true" defaultValue="0.0" defaultStatus="2"/></filter>
+
+-->
 	</body>
 </html>
