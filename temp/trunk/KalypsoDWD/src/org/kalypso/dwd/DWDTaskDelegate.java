@@ -36,6 +36,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -73,10 +74,13 @@ import org.kalypso.zml.ObservationType;
 public class DWDTaskDelegate
 {
 
+  private Properties m_metadata = null;
+
   public void execute( final ILogger logger, final URL obsRasterURL, final URL dwd2zmlConfUrl,
-      final File targetContext, final Date startSim, final Date startForecast, final Date stopSim, String filter )
-      throws Exception
+      final File targetContext, final Date startSim, final Date startForecast, final Date stopSim, String filter,
+      final Properties metadata ) throws Exception
   {
+    m_metadata = metadata;
     logger.log( "DWD-task: generates ZML files from DWD-forecast" );
     logger.log( " inputRaster: " + obsRasterURL );
     logger.log( " raster to zml mapping: " + dwd2zmlConfUrl );
@@ -90,9 +94,16 @@ public class DWDTaskDelegate
     logger.log( " type of ZML to generate" + axisType );
 
     logger.log( " read inputraster..." );
-    final DWDObservationRaster obsRaster = DWDRasterHelper.loadObservationRaster( obsRasterURL, conf.getDwdKey(), conf
-        .getNumberOfCells() );
-
+    DWDObservationRaster obsRaster = null;
+    try
+    {
+      obsRaster = DWDRasterHelper.loadObservationRaster( obsRasterURL, conf.getDwdKey(), conf.getNumberOfCells() );
+    }
+    catch( Exception e )
+    {
+      logger.log( "konnte Raster nicht laden, DWD-Vorhersage kann nicht verwendet werden" );
+      logger.log( e.getLocalizedMessage() );
+    }
     final List targetList = conf.getTarget();
     if( filter == null )
       filter = "";
@@ -112,7 +123,11 @@ public class DWDTaskDelegate
 
       // iterate hours
 
-      final Date[] dates = obsRaster.getDates( startForecast, stopSim );
+      final Date[] dates;
+      if( obsRaster != null )
+        dates = obsRaster.getDates( startForecast, stopSim );
+      else
+        dates = new Date[0];
       final Object[][] tupleData = new Object[dates.length][3];
       for( int i = 0; i < dates.length; i++ )
       {
@@ -155,13 +170,7 @@ public class DWDTaskDelegate
         final IObservation forecastObservation;
         // generate href from filter and intervall
         final String href = ZmlURL.insertRequest( filter, new ObservationRequest( startForecast, stopSim ) );
-        //        if( filter != href )
         forecastObservation = ZmlFactory.decorateObservation( dwdObservation, href, targetContext.toURL() );
-        //        else
-        //          forecastObservation = dwdObservation;
-
-        // TODO merge with existing ZML in correct intervalls
-        // write result
 
         // ----------------
         // merge with target:
@@ -174,16 +183,11 @@ public class DWDTaskDelegate
         try
         {
           targetObservation = ZmlFactory.parseXML( sourceURL, title );
-          //          IAxis dAxis = ObservationUtilities.findAxisByClass(targetObservation.getAxisList(), Date.class);
-          //          ITuppleModel mValues = targetObservation.getValues(null);
-          //          System.out.println(mValues.getRangeFor(dAxis)+" (measured)");
         }
         catch( Exception e )
         {
-          // nothing
+          // nothing, if target is not existing it will be ignored
         }
-        //        ITuppleModel fValues = forecastObservation.getValues(null);
-        //        System.out.println(fValues.getRangeFor(dateAxis)+" (forecast)");
         final ForecastFilter fc = new ForecastFilter();
         final IObservation[] srcObs;
         if( targetObservation != null )
@@ -197,7 +201,9 @@ public class DWDTaskDelegate
 
         fc.initFilter( srcObs, forecastObservation, targetContext.toURL() );
         // ----------------
-
+        // add all the metadata from task-parameters
+        fc.getMetadataList().putAll( m_metadata );
+        //
         final ObservationType observationType = ZmlFactory.createXML( fc, null );
         final Marshaller marshaller = ZmlFactory.getMarshaller();
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -224,5 +230,4 @@ public class DWDTaskDelegate
       }
     }
   }
-
 }

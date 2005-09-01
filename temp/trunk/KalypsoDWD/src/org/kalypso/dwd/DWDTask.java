@@ -43,8 +43,10 @@ package org.kalypso.dwd;
 import java.io.File;
 import java.net.URL;
 import java.util.Date;
+import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.contribs.java.util.logging.ILogger;
 
@@ -79,6 +81,8 @@ public class DWDTask extends Task
   private long m_to;
 
   private String m_filter;
+
+  private Properties m_metadata = new Properties();
 
   public final void setDwd2zmlConfUrl( final URL dwd2zmlConfUrl )
   {
@@ -152,7 +156,7 @@ public class DWDTask extends Task
 
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
       delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date(
-          m_forecastFrom ), new Date( m_to ), m_filter );
+          m_forecastFrom ), new Date( m_to ), m_filter, m_metadata );
     }
     catch( final Exception e )
     {
@@ -161,4 +165,50 @@ public class DWDTask extends Task
       throw new BuildException( e.getLocalizedMessage(), e );
     }
   }
+
+  public void addConfiguredMetadata( final Metadata metadata )
+  {
+    if( metadata.getName() == null )
+    {
+      getProject().log( "Cannot add Metadata since property name is null", Project.MSG_WARN );
+      return;
+    }
+
+    if( metadata.getValue() == null )
+    {
+      getProject().log( "Cannot add Metadata since property value is null. Property name: " + metadata.getName(),
+          Project.MSG_WARN );
+      return;
+    }
+
+    m_metadata.setProperty( metadata.getName(), metadata.getValue() );
+  }
+
+  public final static class Metadata
+  {
+    private String m_name;
+
+    private String m_value;
+
+    public String getName()
+    {
+      return m_name;
+    }
+
+    public void setName( String name )
+    {
+      m_name = name;
+    }
+
+    public String getValue()
+    {
+      return m_value;
+    }
+
+    public void setValue( String value )
+    {
+      m_value = value;
+    }
+  }
+
 }

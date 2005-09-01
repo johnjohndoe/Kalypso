@@ -88,6 +88,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
@@ -255,7 +256,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       if( isSucceeded() )
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse" );
-        loadResults( tmpdir, modellWorkspace, logger, resultDir, resultEater, conf.getIdManager() );
+        loadResults( tmpdir, modellWorkspace, logger, resultDir, resultEater, conf );
         System.out.println( "fertig - Ergebnisse vorhanden" );
       }
       else
@@ -360,6 +361,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     // setting duration of simulation...
     // start
     conf.setSimulationStart( (Date)metaFE.getProperty( "startsimulation" ) );
+    conf.setSzenarioID( (String)metaFE.getProperty( "scenarioId" ) );
     // start forecast
     final Date startForecastDate = (Date)metaFE.getProperty( "startforecast" );
     conf.setSimulationForecasetStart( startForecastDate );
@@ -755,9 +757,9 @@ public class NaModelInnerCalcJob implements ICalcJob
   }
 
   private void loadResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger,
-      final File outputDir, ICalcResultEater resultEater, final IDManager idManager ) throws Exception
+      final File outputDir, ICalcResultEater resultEater, final NAConfiguration conf ) throws Exception
   {
-    loadTSResults( inputDir, modellWorkspace, logger, outputDir, idManager );
+    loadTSResults( inputDir, modellWorkspace, logger, outputDir, conf );
     loadTextFileResults( inputDir, logger, outputDir );
     loadLogs( inputDir, logger, resultEater );
     File[] files = outputDir.listFiles();
@@ -860,64 +862,64 @@ public class NaModelInnerCalcJob implements ICalcJob
   }
 
   private void loadTSResults( File inputDir, GMLWorkspace modellWorkspace, Logger logger, File outputDir,
-      final IDManager idManager ) throws Exception
+      final NAConfiguration conf ) throws Exception
   {
     //    j Gesamtabfluss Knoten .qgs
     FeatureType nodeFT = modellWorkspace.getFeatureType( "Node" );
     loadTSResults( "qgs", nodeFT, "name", TimeserieConstants.TYPE_RUNOFF, "pegelZR", "qberechnetZR", inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+        modellWorkspace, logger, outputDir, 1.0d, conf );
 
     FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
     //    j Niederschlag .pre
     loadTSResults( "pre", catchmentFT, "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    j Temperatur .tmp
     loadTSResults( "tmp", catchmentFT, "name", TimeserieConstants.TYPE_TEMPERATURE, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 1.0d, idManager );
+        modellWorkspace, logger, outputDir, 1.0d, conf );
     //    n Interflow .qif
     loadTSResults( "qif", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    n Grundwasser .qgw
     loadTSResults( "qgw", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    n Gesamtabfluss TG .qgg
     loadTSResults( "qgg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    n Grundwasserstand .gws - Umrechnung von m auf cm
     loadTSResults( "gws", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 100.0d, idManager );
+        modellWorkspace, logger, outputDir, 100.0d, conf );
     //    n Basisabfluss .qbs
     loadTSResults( "qbs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    n Oberflaechenabfluss .qna
     loadTSResults( "qna", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    n Abfluss vers. Flaechen .qvs
     loadTSResults( "qvs", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //TODO:check output for the next time series
     //    n Schnee .sch [mm]
     loadTSResults( "sch", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 0.1d, idManager );
+        modellWorkspace, logger, outputDir, 0.1d, conf );
     //    n Kluftgrundw1 .qt1
     loadTSResults( "qt1", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    n Kluftgrundw .qtg
     loadTSResults( "qtg", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    n Evapotranspiration .vet [mm]
     loadTSResults( "vet", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 0.1d, idManager );
+        modellWorkspace, logger, outputDir, 0.1d, conf );
     //    j Bodenfeuchte .bof [mm]
     loadTSResults( "bof", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 0.1d, idManager );
+        modellWorkspace, logger, outputDir, 0.1d, conf );
 
     //    n Wasserstand Speicher .sph [muNN]
     loadTSResults( "sph", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 100.0d, idManager );
+        modellWorkspace, logger, outputDir, 100.0d, conf );
     //    n Speicherueberlauf .sup [m³/s]
     loadTSResults( "sup", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
-        logger, outputDir, 1.0d, idManager );
+        logger, outputDir, 1.0d, conf );
     //    n Talsperrenverdunstung .spv [m³/d]
     //    loadTSResults( "spv", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
     //        modellWorkspace, logger, outputDir, 1.0d , idManager);
@@ -938,8 +940,9 @@ public class NaModelInnerCalcJob implements ICalcJob
 
   private void loadTSResults( String suffix, FeatureType resultFT, String titlePropName, String resultType,
       String metadataTSLink, String targetTSLink, File inputDir, GMLWorkspace modellWorkspace, Logger logger,
-      File outputDir, double resultFactor, IDManager idManager ) throws Exception
+      File outputDir, double resultFactor, final NAConfiguration conf ) throws Exception
   {
+    final IDManager idManager = conf.getIdManager();
     // ASCII-Files
     // generiere ZML Ergebnis Dateien
     final File ascciResultDir = new File( inputDir, "out_we.nat" );
@@ -1025,6 +1028,7 @@ public class NaModelInnerCalcJob implements ICalcJob
             logger
                 .info( "zu diesem Knoten existiert ein Pegel, einige Pegelmetadaten (z.B. Wechmann-Funktion) werden in Ergebniszeitreihe uebernommen\n" );
             final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );
+
             copyMetaData( pegelObservation.getMetadataList(), metadataList, new String[]
             {
                 TimeserieConstants.MD_ALARM_1,
@@ -1039,7 +1043,9 @@ public class NaModelInnerCalcJob implements ICalcJob
                 TimeserieConstants.MD_PEGELNULLPUNKT,
                 TimeserieConstants.MD_WQWECHMANN,
                 TimeserieConstants.MD_WQTABLE,
-                TimeserieConstants.MD_VORHERSAGE } );
+                TimeserieConstants.MD_TIMEZONE,
+                TimeserieConstants.MD_VORHERSAGE,
+                ObservationConstants.MD_SCENARIO } );
 
           }
         }
@@ -1072,16 +1078,30 @@ public class NaModelInnerCalcJob implements ICalcJob
         final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", title, false, null,
             metadataList, axis, qTuppelModel );
 
+        // update with Scenario metadata
+
+        final String scenarioID = conf.getScenarioID();
+        if( scenarioID != null && scenarioID.length() > 0 )
+          resultObservation.getMetadataList().put( ObservationConstants.MD_SCENARIO, scenarioID );
+
         // write result
         final ObservationType observationType = ZmlFactory.createXML( resultObservation, null );
         final Marshaller marshaller = ZmlFactory.getMarshaller();
         marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
-        FileOutputStream stream = new FileOutputStream( resultFile );
-        OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
-        marshaller.marshal( observationType, writer );
-        IOUtils.closeQuietly( writer );
-        IOUtils.closeQuietly( stream );
+        FileOutputStream stream = null;
+        OutputStreamWriter writer = null;
+        try
+        {
+          stream = new FileOutputStream( resultFile );
+          writer = new OutputStreamWriter( stream, "UTF-8" );
+          marshaller.marshal( observationType, writer );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( writer );
+          IOUtils.closeQuietly( stream );
+        }
       }
     }
   }

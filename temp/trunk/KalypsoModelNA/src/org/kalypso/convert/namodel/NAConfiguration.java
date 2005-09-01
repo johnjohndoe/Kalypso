@@ -129,9 +129,10 @@ public class NAConfiguration
   private final URL m_hydrotopFormatURL;
 
   private int m_minutesTimeStep = 60;
-  
-  private final IDManager m_idManager=new IDManager();
 
+  private final IDManager m_idManager = new IDManager();
+
+  private String m_szenarioID = "";
 
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
@@ -218,7 +219,7 @@ public class NAConfiguration
   {
     return m_catchmentFile;
   }
-  
+
   public File getZFTFile()
   {
     return m_zftFile;
@@ -396,10 +397,25 @@ public class NAConfiguration
   {
     return m_minutesTimeStep;
   }
-  
+
   public IDManager getIdManager()
   {
     return m_idManager;
+  }
+
+  /**
+   * All output timeseries must be marked with the szenario id
+   * 
+   * @param szenarioID
+   */
+  public void setSzenarioID( final String szenarioID )
+  {
+    m_szenarioID = szenarioID;
+  }
+
+  public String getScenarioID()
+  {
+    return m_szenarioID;
   }
 
 }
