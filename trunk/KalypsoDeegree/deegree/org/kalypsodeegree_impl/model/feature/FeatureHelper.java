@@ -260,18 +260,34 @@ public class FeatureHelper
     return false;
   }
 
+  public static boolean isFeatuerTypeInFeatureCollection( Feature feature, FeatureType ftToCheckFor )
+  {
+    if( isCollection( feature ) )
+    {
+      FeatureAssociationTypeProperty property = (FeatureAssociationTypeProperty)feature.getProperties()[0];
+      FeatureType[] associationFeatureTypes = property.getAssociationFeatureTypes();
+      for( int i = 0; i < associationFeatureTypes.length; i++ )
+      {
+        FeatureType type = associationFeatureTypes[i];
+        if( type.equals( ftToCheckFor ) )
+          return true;
+      }
+    }
+    return false;
+  }
+
   public static FeatureType[] getFeatureTypeFromCollection( Feature f )
   {
     FeatureType featureType = f.getFeatureType();
     FeatureTypeProperty[] properties = featureType.getProperties();
     FeatureTypeProperty property = featureType.getProperty( properties[0].getName() );
 
+    FeatureType[] afT = null;
     if( property instanceof FeatureAssociationTypeProperty )
     {
-      return ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureTypes();
+      afT = ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureTypes();
     }
-    return null;
+    return afT;
   }
 
-  
 }
