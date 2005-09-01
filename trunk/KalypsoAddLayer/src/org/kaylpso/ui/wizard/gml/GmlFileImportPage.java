@@ -45,6 +45,8 @@ import java.net.URL;
 import java.util.HashSet;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
@@ -68,16 +70,14 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Kuepferle
@@ -105,7 +105,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   private UrlResolver m_urlResolver = new UrlResolver();
 
-  private CommandableWorkspace m_workspace;
+  private GMLWorkspace m_workspace;
 
   private String m_source;
 
@@ -139,14 +139,12 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
   public void createControl( Composite parent )
   {
     m_topComposite = new Composite( parent, SWT.NULL );
-    // TODO add file group
     m_topComposite.setLayout( new GridLayout() );
     m_topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     createFileGroup( m_topComposite );
     createTreeView( m_topComposite );
     setControl( m_topComposite );
     setPageComplete( false );
-
   }
 
   private void createTreeView( Composite composite )
@@ -158,6 +156,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     layout.marginWidth = 0;
     layout.marginHeight = 2;
     m_viewerComposite.setLayout( layout );
+    //    m_viewer = new GmlTreeView( m_viewerComposite, false );
     m_treeViewer = new TreeViewer( m_viewerComposite );
     m_treeViewer.addSelectionChangedListener( this );
     m_treeViewer.setContentProvider( new GMLEditorContentProvider2() );
@@ -227,26 +226,25 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       dialog.open();
       //get first element, only one element possible
       IPath selection = (IPath)dialog.getResult()[0];
+      IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( selection );
       //create project path (Kalypso project-protocol)
       m_source = "project:/" + selection.removeFirstSegments( 1 ).toString();
       m_sourceFileText.setText( selection.toString() );
-      ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+
       try
       {
-        m_workspace = (CommandableWorkspace)pool
-            .getObject( new PoolableObjectType( "gml", m_source, m_activeMapContext ) );
-
+        final URL gmlURL = m_urlResolver.resolveURL( m_activeMapContext, m_source );
+        m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver ) );
       }
       catch( Exception e1 )
       {
         e1.printStackTrace();
       }
-      m_treeViewer.getTree().setVisible( false );
+      m_treeViewer.getTree().setVisible( true );
       m_treeViewer.setInput( m_workspace );
       // need to expand in order to load all elements into the treeviewers
       // cache
       m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
-      m_treeViewer.getTree().setVisible( true );
     }
   }
 
@@ -276,7 +274,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
       ISelection m_selection = event.getSelection();
       //clear old selection
       m_feature = new HashSet();
-      m_featureAssTypeProp = new HashSet();
       setPageComplete( false );
       if( !m_selection.isEmpty() )
       {
@@ -284,35 +281,30 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
         for( int i = 0; i < array.length; i++ )
         {
           Object o = array[i];
-          boolean hasGeometryProperty = false;
           if( o instanceof Feature && !m_workspace.getRootFeature().equals( o ) )
           {
             Feature feature = (Feature)o;
-            FeaturePath featurepathForFeature = m_workspace.getFeaturepathForFeature( feature );
-            FeatureType featureType = feature.getFeatureType();
-            FeatureTypeProperty[] properties = featureType.getProperties();
-            if( properties.length == 1 && properties[0] instanceof FeatureAssociationTypeProperty )
+            if( FeatureHelper.isCollection( feature ) )
             {
-              FeatureType aft = ( (FeatureAssociationTypeProperty)properties[0] ).getAssociationFeatureType();
-              hasGeometryProperty = aft.hasGeometryProperty();
-              m_ft = aft;
-              continue;
+              FeatureType[] featureType = FeatureHelper.getFeatureTypeFromCollection( feature );
+              for( int j = 0; j < featureType.length; j++ )
+              {
+                FeatureType type = featureType[j];
+                if( type.hasGeometryProperty() )
+                {
+                  m_feature.add( feature );
+                  setPageComplete( true );
+                }
+              }
             }
-
-            if( featureType.hasGeometryProperty() )
+            else if( feature.getFeatureType().hasGeometryProperty() )
             {
-              m_ft = featureType;
-            }
-            else
-            {
-//              FeatureTypeProperty[] properties = featureType.getProperties();
-            }
-            if( hasGeometryProperty )
               m_feature.add( (Feature)o );
+              setPageComplete( true );
+            }
           }
 
         }//for
-        setPageComplete( true );
       }//if
     }//if
   }//selectionChanged
@@ -348,5 +340,13 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     return (FeatureAssociationTypeProperty[])m_featureAssTypeProp
         .toArray( new FeatureAssociationTypeProperty[m_featureAssTypeProp.size()] );
 
+  }
+
+  /**
+   * @return
+   */
+  public GMLWorkspace getWorkspace()
+  {
+    return m_workspace;
   }
 }
