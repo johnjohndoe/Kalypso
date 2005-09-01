@@ -15,9 +15,11 @@ import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -232,11 +234,11 @@ public class DefaultStyleFactory
   private Symbolizer createGeometrySymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
   {
     String type = property.getType();
-    if( type.equals( GM_Polygon.class.getName() ) )
+    if( type.equals( GM_Polygon.class.getName() ) || type.equals( GM_Surface.class.getName() ) )
       return StyleFactory.createPolygonSymbolizer();
     else if( type.equals( GM_Point.class.getName() ) )
       return StyleFactory.createPointSymbolizer();
-    else if( type.equals( GM_LineString.class.getName() ) )
+    else if( type.equals( GM_LineString.class.getName() ) || type.equals( GM_Curve.class.getName() ))
       return StyleFactory.createLineSymbolizer();
     else
       throw new StyleNotDefinedException( "This geometry type: " + type + " has no default style available" );

@@ -26,6 +26,9 @@ public class FeaturePath
 {
   /** Separates two segments in the feature-path */
   public final static char SEGMENT_SEPARATOR = '/';
+  
+  public final static char TYPENAME_TAG_OPEN = '['; 
+  public final static char TYPENAME_TAG_CLOSE = ']'; 
 
   /** Something between two '/' */
   private final Segment[] m_segments;

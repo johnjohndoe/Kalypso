@@ -254,6 +254,7 @@ public class GmlTreeView extends SelectionProviderAdapter implements IPostSelect
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
+    m_treeViewer.refresh();
     fireModellEvent( modellEvent );
   }
 
