@@ -709,6 +709,11 @@
            class="org.kalypso.ant.MapZmlMeta2FeatureTask"
            library="lib/kalypsoAnt.jar"
            name="kalypso.mapZmlMeta2Feature"/>
+     <antTask
+           eclipseRuntime="true"
+           class="org.kalypso.ant.FetchFromURLsTask"
+           library="lib/kalypsoAnt.jar"
+           name="Kalypso.fetchFromURL"/>
    </extension>
       <extension
          point="org.kalypso.services.core.client.serviceproxy">

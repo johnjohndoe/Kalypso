@@ -119,17 +119,17 @@ public class Intervall
 
   public Calendar getEnd()
   {
-    return m_end;
+    return (Calendar)m_end.clone();
   }
 
   public Calendar getStart()
   {
-    return m_start;
+    return (Calendar)m_start.clone();
   }
 
   public int[] getStatus()
   {
-    return m_status;
+    return (int[])m_status.clone();
   }
 
   public void setStatus( final int[] status )
@@ -139,7 +139,7 @@ public class Intervall
 
   public double[] getValue()
   {
-    return m_value;
+    return (double[])m_value.clone();
   }
 
   public void setValue( final double[] value )

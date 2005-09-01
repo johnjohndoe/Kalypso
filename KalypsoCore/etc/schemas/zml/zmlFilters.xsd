@@ -66,6 +66,16 @@
                 <!-- startvalue of calendar field -->
                 <attribute type="int" name="startCalendarvalue" use="optional"/>
                 <attribute type="string" name="startCalendarfield" use="optional"/>
+                
+                <!-- default values are used, when rangeset request is greater than base timeseries -->
+
+				<!-- default value to use when filling absent values -->
+				<attribute type="double" name="defaultValue" default="0" use="optional"/>
+				<!-- default status to use when filling absent status -->
+				<attribute type="int" name="defaultStatus" default="2" use="optional"/>
+                
+
+                
 			</extension>		
 		</complexContent>
 	</complexType>
