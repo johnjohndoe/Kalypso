@@ -91,7 +91,9 @@ public class CalendarIterator implements Iterator
   public Object next()
   {
     final Object result = m_currentCal.clone();
+    // iterate the member
     m_currentCal.add( m_calendarField, m_amount );
+    // return the clone
     return result;
   }
 
