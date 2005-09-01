@@ -235,11 +235,14 @@ public final class ZmlURL
       RequestType requestType = RequestFactory.parseRequest( href );
       if( requestType == null )
         requestType = RequestFactory.OF.createRequest();
-
-      requestType.setName( request.getName() );
-      requestType.setAxes( StringUtils.join( request.getAxisTypes(), "," ) );
-      requestType.setStatusAxes( StringUtils.join( request.getAxisTypesWithStatus(), "," ) );
-
+      // the original request parameters have higher priority
+      if(requestType.getName()==null)
+        requestType.setName( request.getName() );
+      if(requestType.getAxes()==null)
+        requestType.setAxes( StringUtils.join( request.getAxisTypes(), "," ) );
+      if(requestType.getStatusAxes()==null)
+        requestType.setStatusAxes( StringUtils.join( request.getAxisTypesWithStatus(), "," ) );
+      
       if( request.getDateRange() != null )
       {
         final Calendar from = Calendar.getInstance();

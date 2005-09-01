@@ -254,9 +254,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       href = sourcelink.getHref();
     else
       href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter ); // use insertQueryPart, not insertFilter, because
-                                                                     // filter variable might also contain request spec
-                                                                     // etc.
+    // filter variable might also contain request spec
     final String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
+
     final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
 
     try

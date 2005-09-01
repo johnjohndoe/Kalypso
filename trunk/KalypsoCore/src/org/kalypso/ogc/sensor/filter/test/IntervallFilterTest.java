@@ -83,9 +83,11 @@ public class IntervallFilterTest extends TestCase
       zmlFilter.setZml( xlink );
 
       final IntervallFilter intervallFilter = fac.createIntervallFilter();
-      intervallFilter.setAmount( 3 );
+      intervallFilter.setAmount( 10 );
       intervallFilter.setCalendarField( "MINUTE" );
       intervallFilter.setMode( "sum" );
+      intervallFilter.setDefaultStatus( 4 );
+      intervallFilter.setDefaultValue( 12.9 );
       intervallFilter.setFilter( zmlFilter );
       writer = new StringWriter();
       final Marshaller marshaller = fac.createMarshaller();
@@ -95,8 +97,15 @@ public class IntervallFilterTest extends TestCase
       final String filterInline = XMLUtilities.prepareInLine( string );
       final URL zmlURL = new URL( href + "?" + filterInline );
       final IObservation observation = ZmlFactory.parseXML( zmlURL, "id" );
+      
+      // ZML geht von
+      //      "2005-02-16T16:50:00"
+      //      bis
+      //      "2005-02-23T17:00:00"
       final Date from = XML_DATETIME_FORMAT.parse( "2005-02-16T17:00:00" );
-      final Date to = XML_DATETIME_FORMAT.parse( "2005-02-16T17:36:00" );
+      final Date to = XML_DATETIME_FORMAT.parse( "2005-02-16T18:36:00" );
+//      final Date from = XML_DATETIME_FORMAT.parse( "2005-02-23T16:00:00" );
+//      final Date to = XML_DATETIME_FORMAT.parse( "2005-02-23T18:00:00" );
       String dump = ObservationUtilities.dump( observation
           .getValues( new ObservationRequest( new DateRange( from, to ) ) ), "," );
       System.out.println( dump );
