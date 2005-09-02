@@ -259,6 +259,9 @@ public class ExcelLikeTableCursor extends TableCursor
   {
     public void keyReleased( KeyEvent e )
     {
+      if( isDisposed() )
+        return;
+      
       if( e.keyCode == SWT.CONTROL && ( e.stateMask & SWT.SHIFT ) != 0 )
         return;
       if( e.keyCode == SWT.SHIFT && ( e.stateMask & SWT.CONTROL ) != 0 )

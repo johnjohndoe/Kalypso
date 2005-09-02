@@ -23,4 +23,10 @@
             catalogClass="org.kalypso.lhwsachsenanhalt.saale.SaaleUrlCatalog"
             jobClass="org.kalypso.lhwsachsenanhalt.saale.SaaleCalcJob"/>
    </extension>
+   <extension
+         point="org.kalypso.core.featureVisitor">
+      <visitor
+            class="org.kalypso.lhwsachsenanhalt.saale.utils.MetGebStdVisitor"
+            id="org.kalypso.model.saale.MetGebStdVisitor"/>
+   </extension>
 </plugin>

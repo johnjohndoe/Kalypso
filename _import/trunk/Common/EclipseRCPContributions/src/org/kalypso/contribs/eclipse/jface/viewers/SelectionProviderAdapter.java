@@ -133,13 +133,15 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
     for( int i = 0; i < listenersArray.length; i++ )
     {
       final ISelectionChangedListener l = listenersArray[i];
-      Platform.run( new SafeRunnable()
+      final SafeRunnable safeRunnable = new SafeRunnable()
       {
         public void run()
         {
           l.selectionChanged( e );
         }
-      } );
+      };
+
+      Platform.run( safeRunnable );
     }
   }
 

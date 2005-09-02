@@ -45,6 +45,8 @@ import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * Helper class
@@ -70,5 +72,28 @@ public final class ViewerUtilities
       if( elements != null && elements.length > 0 )
         viewer.setSelection( new StructuredSelection( elements[0] ), true );
     }
+  }
+
+  /** Calls a viewers refresh method async in its controls display thread. */
+  public static final void refreshViewerAsync( final Viewer viewer )
+  {
+    if( viewer == null )
+      return;
+
+    final Control control = viewer.getControl();
+    if( control == null || control.isDisposed() )
+      return;
+
+    control.getDisplay().asyncExec( new Runnable()
+    {
+      public void run()
+      {
+        // control may be disposed meanwhile
+        if( control.isDisposed() )
+          return;
+        
+        viewer.refresh();
+      }
+    } );
   }
 }

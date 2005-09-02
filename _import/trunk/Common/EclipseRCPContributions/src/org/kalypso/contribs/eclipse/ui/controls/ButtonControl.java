@@ -66,12 +66,8 @@ public class ButtonControl
     return m_tooltip;
   }
 
-  /**
-   * @return
-   */
   public int getStyle()
   {
-
     return m_style;
   }
 

@@ -85,9 +85,6 @@ public class HighlightGraphics extends Graphics2D
 
   private final Graphics2D m_graphics;
 
-  /**
-   *  
-   */
   public HighlightGraphics( Graphics2D graphics )
   {
     m_graphics = graphics;
@@ -435,14 +432,14 @@ public class HighlightGraphics extends Graphics2D
     return m_graphics.getClipBounds( r );
   }
 
-  /**
-   * 
-   * @see java.awt.Graphics#getClipRect()
-   */
-  public Rectangle getClipRect()
-  {
-    return m_graphics.getClipRect();
-  }
+//  /**
+//   * 
+//   * @see java.awt.Graphics#getClipRect()
+//   */
+//  public Rectangle getClipRect()
+//  {
+//    return m_graphics.getClipRect();
+//  }
 
   public Composite getComposite()
   {

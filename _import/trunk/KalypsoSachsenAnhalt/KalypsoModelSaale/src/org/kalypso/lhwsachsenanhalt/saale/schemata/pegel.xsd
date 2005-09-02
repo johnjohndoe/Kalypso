@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.saale.pegel" version="0.1" xmlns:obslink="obslink.zml.kalypso.org" xmlns:pegel="org.kalypso.saale.pegel" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.saale.pegel" version="0.1" xmlns:obslink="obslink.zml.kalypso.org" xmlns:pegel="org.kalypso.saale.pegel" xmlns:common="org.kalypso.saale.common" xmlns:ombrometer="org.kalypso.saale.ombrometer" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<import namespace="http://www.opengis.net/gml" schemaLocation="basis/feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="basis/obslink.xsd"/>
 	<import namespace="org.kalypso.saale.common" schemaLocation="common.xsd"/>
+	<import namespace="org.kalypso.saale.ombrometer" schemaLocation="ombrometer.xsd"/>
 	<element name="PegelCollectionAssociation" type="pegel:PegelCollectionAssociationType" substitutionGroup="gml:featureMember"/>
 	<complexType name="PegelCollectionAssociationType">
 		<complexContent>
@@ -114,6 +115,7 @@
 				<sequence>
 					<!-- Parameter aus Met_Geb.std -->
 					<element name="AE"  type="double"><annotation><documentation xml:lang="de"><label>AE</label><tooltip>AE</tooltip><description></description></documentation></annotation></element>
+<!--					
 					<element name="Stat1"  type="string"><annotation><documentation xml:lang="de"><label>Stat1</label><tooltip>Stat1</tooltip><description></description></documentation></annotation></element>
 					<element name="Fakt1"  type="double"><annotation><documentation xml:lang="de"><label>Fakt1</label><tooltip>Fakt1</tooltip><description></description></documentation></annotation></element>
 					<element name="Stat2"  type="string"><annotation><documentation xml:lang="de"><label>Stat2</label><tooltip>Stat2</tooltip><description></description></documentation></annotation></element>
@@ -124,6 +126,7 @@
 					<element name="Fakt4"  type="double"><annotation><documentation xml:lang="de"><label>Fakt4</label><tooltip>Fakt4</tooltip><description></description></documentation></annotation></element>
 					<element name="Stat5"  type="string"><annotation><documentation xml:lang="de"><label>Stat5</label><tooltip>Stat5</tooltip><description></description></documentation></annotation></element>
 					<element name="Fakt5"  type="double"><annotation><documentation xml:lang="de"><label>Fakt5</label><tooltip>Fakt5</tooltip><description></description></documentation></annotation></element>
+-->					
 					<element name="Snownr"  type="int"> <annotation><documentation xml:lang="de"><label>Snownr</label><tooltip>Snownr</tooltip><description></description></documentation></annotation></element>
 					<element name="QuantNr." type="string"> <annotation><documentation xml:lang="de"><label>QuantNr.</label><tooltip>QuantNr.</tooltip><description></description></documentation></annotation></element>
 					<element name="Region"  type="string"> <annotation><documentation xml:lang="de"><label>Region</label><tooltip>Region</tooltip><description></description></documentation></annotation></element>
@@ -211,10 +214,53 @@
 					<element name="H_35" type="double"> <annotation><documentation xml:lang="de"><label>H_35</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					<element name="H_36" type="double"> <annotation><documentation xml:lang="de"><label>H_36</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					
+					<!-- Gewichtung des Gebietsniederschlagmodells -->
+					<element name="gewichtung" type="pegel:GewichtungsAssociationType" maxOccurs="unbounded"/>
+					
    				    <element name="Niederschlag" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Schnee" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
+	
+	<!-- Relation TG nach RelationsFeature -->
+	<complexType name="GewichtungsAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="pegel:GewichtungsElement"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- RelationsFeature -->
+	<element name="GewichtungsElement" type="pegel:GewichtungsType" substitutionGroup="gml:_Feature"/>
+	<complexType name="GewichtungsType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element name="faktor" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewichtung</label>
+								<tooltip>Gewichtung</tooltip>
+								<description>Kommentar</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="ombrometerMember" type="ombrometer:OmbrometerAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Niederschlagsstation</label>
+								<tooltip>Niederschlagsstation</tooltip>
+								<description>Niederschlagsstation</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
 </schema>
