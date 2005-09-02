@@ -68,6 +68,10 @@
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter.e.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
             axisType="E"/>
+      <adapter
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.q.label"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter"
+            axisType="Q"/>
    </extension>
 
 </plugin>
