@@ -1,6 +1,5 @@
 package org.kaylpso.ui.wizard.wfs;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -907,6 +906,8 @@ public class ImportWfsWizardPage extends WizardPage implements
     GMLSchema schema = GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
     org.kalypsodeegree.model.feature.FeatureType[] featureTypes = schema
         .getFeatureTypes();
+    if( featureTypes.length == 1 )
+      return featureTypes[0].getName();
     for( int i = 0; i < featureTypes.length; i++ )
     {
       org.kalypsodeegree.model.feature.FeatureType ft = featureTypes[i];
