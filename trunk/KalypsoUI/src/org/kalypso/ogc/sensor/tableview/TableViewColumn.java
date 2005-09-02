@@ -64,8 +64,10 @@ public class TableViewColumn extends ObsViewItem
 
   private boolean m_shown = true;
 
+  private String m_format;
+
   public TableViewColumn( final TableView view, final IObsProvider provider, final String name,
-      final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis )
+      final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format )
   {
     super( view, provider, name );
 
@@ -73,6 +75,7 @@ public class TableViewColumn extends ObsViewItem
     m_width = width;
     m_keyAxis = keyAxis;
     m_valueAxis = valueAxis;
+    m_format = format;
   }
 
   public boolean isEditable()
@@ -134,5 +137,10 @@ public class TableViewColumn extends ObsViewItem
 
       getView().refresh( this );
     }
+  }
+  
+  public String getFormat()
+  {
+    return m_format;
   }
 }

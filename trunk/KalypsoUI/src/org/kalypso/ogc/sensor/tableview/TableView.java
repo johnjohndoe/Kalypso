@@ -49,6 +49,7 @@ import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * A table view template for observations. Each observation is wrapped up in a theme which in turn delivers columns for
@@ -59,7 +60,7 @@ import org.kalypso.ogc.sensor.template.ObsView;
 public class TableView extends ObsView
 {
   private final ITableViewRules m_rules = RulesFactory.getDefaultRules();
-  
+
   /**
    * @see org.kalypso.ogc.sensor.template.ObsView#toString()
    */
@@ -110,7 +111,8 @@ public class TableView extends ObsView
           if( !valueAxis.getType().equals( ignoreType ) )
           {
             final TableViewColumn col = new TableViewColumn( this, provider.copy(), NameUtils.replaceTokens(
-                tokenizedName, obs, valueAxis ), data.editable, 50, keyAxes[0], valueAxis );
+                tokenizedName, obs, valueAxis ), data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils
+                .getDefaultFormatString( valueAxis.getType() ) );
 
             addItem( col );
           }

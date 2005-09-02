@@ -50,6 +50,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.Vector;
@@ -281,31 +282,23 @@ public class KalypsoObservationService implements IObservationService
     final String obsId = ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
 
-    FileOutputStream fos = null;
-
+    IObservation obs = null;
     try
     {
-      IObservation obs = null;
-      try
-      {
-        final IRepositoryItem item = itemFromBean( obean );
+      final IRepositoryItem item = itemFromBean( obean );
 
-        obs = (IObservation)item.getAdapter( IObservation.class );
-      }
-      catch( final Exception e )
-      {
-        m_logger.info( "No observation for " + obean.getId() + ". Reason: " + e.getLocalizedMessage() );
-      }
-      finally
-      {
-        if( obs == null )
-        {
-          m_logger.info( "Trying to create default observation based on request..." );
+      obs = (IObservation)item.getAdapter( IObservation.class );
+    }
+    catch( final Exception e )
+    {
+      m_logger.info( "No observation for " + obean.getId() + ". Reason: " + e.getLocalizedMessage() );
 
-          obs = RequestFactory.createDefaultObservation( hereHref );
-        }
-      }
+      throw new RemoteException( "Daten können nicht ausgelesen werden", e );
+    }
 
+    FileOutputStream fos = null;
+    try
+    {
       // request part specified?
       IRequest request = null;
 
@@ -416,14 +409,14 @@ public class KalypsoObservationService implements IObservationService
     }
   }
 
-  private IRepositoryItem itemFromBean( final ItemBean obean ) throws RemoteException, RepositoryException
+  /**
+   * @throws NoSuchElementException
+   *           if item and/or repository not found
+   */
+  private IRepositoryItem itemFromBean( final ItemBean obean ) throws RepositoryException, NoSuchElementException
   {
     if( obean == null )
-    {
-      final NullPointerException e = new NullPointerException( "ItemBean must not be null" );
-      m_logger.throwing( getClass().getName(), "itemFromBean", e );
-      throw e;
-    }
+      throw new NullPointerException( "ItemBean must not be null" );
 
     // maybe bean already in map?
     if( m_mapBeanId2Item.containsKey( obean.getId() ) )
@@ -438,7 +431,7 @@ public class KalypsoObservationService implements IObservationService
       final IRepositoryItem item = rep.findItem( obean.getId() );
 
       if( item == null )
-        throw new RepositoryException( "Item does not exist or could not be found: " + obean.getId() );
+        throw new NoSuchElementException( "Item does not exist or could not be found: " + obean.getId() );
 
       return item;
     }
@@ -454,10 +447,7 @@ public class KalypsoObservationService implements IObservationService
         return item;
     }
 
-    final RemoteException e = new RemoteException( "Unknonwn Repository or item. Repository: " + repId + ", Item: "
-        + obean.getId() );
-    m_logger.throwing( getClass().getName(), "itemFromBean", e );
-    throw e;
+    throw new NoSuchElementException( "Unknonwn Repository or item. Repository: " + repId + ", Item: " + obean.getId() );
   }
 
   /**

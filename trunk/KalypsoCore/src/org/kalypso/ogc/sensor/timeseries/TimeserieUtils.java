@@ -49,8 +49,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -71,7 +72,7 @@ public class TimeserieUtils
 {
   private static Properties m_config;
 
-  private static HashMap m_formatMap = null;
+  private static HashMap m_formatMap = new HashMap();
 
   private static NumberFormat m_defaultFormat = null;
 
@@ -322,51 +323,82 @@ public class TimeserieUtils
    * Returns a NumberFormat instance according to the given timeserie type. If there is no specific instance for the
    * given type, then a default number format is returned.
    * 
-   * @param type
    * @return instance of NumberFormat that can be used to display the values to the user
    */
   public static NumberFormat getNumberFormatFor( final String type )
   {
-    final NumberFormat nf = (NumberFormat)getFormatMap().get( type );
+    return getNumberFormat( getDefaultFormatString( type ) );
+  }
+
+  /**
+   * Returns the adequate NumberFormat for the given format-string. It currently only supports formats of the form %X.Yf
+   * where actually only the Y is used to build a NumberFormat with Y minimum-fraction-digits.
+   * <p>
+   * The plan is, once we'll be using JDK 5.0, we'll try to replace this with the built-in functionality provided with
+   * formated printing.
+   * <p>
+   * TODO once on JDK 5.0 use formated printing if possible. Note that some refactoring might need to be done since we
+   * currently work with NumberFormats.
+   */
+  public static NumberFormat getNumberFormat( final String format )
+  {
+    final NumberFormat nf = (NumberFormat)m_formatMap.get( format );
     if( nf != null )
       return nf;
-
-    return getDefaultFormat();
-  }
-
-  private static Map getFormatMap()
-  {
-    if( m_formatMap == null )
+    else
     {
-      m_formatMap = new HashMap();
+      // parse the format spec and only take the min-fraction-digit part
+      final String regex = "%([0-9]*)\\.?([0-9]*)f";
+      final Pattern pattern = Pattern.compile( regex );
+      final Matcher matcher = pattern.matcher( format );
+      if( matcher.matches() )
+      {
+        final String minfd = matcher.group( 2 );
 
-      // for W
-      final NumberFormat wf = NumberFormat.getInstance();
-      wf.setMinimumFractionDigits( Integer.valueOf(
-          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_WATERLEVEL ) ).intValue() );
-      m_formatMap.put( TimeserieConstants.TYPE_WATERLEVEL, wf );
+        final NumberFormat wf = NumberFormat.getInstance();
+        wf.setMinimumFractionDigits( Integer.valueOf( minfd ).intValue() );
+        m_formatMap.put( format, wf );
 
-      // for N
-      final NumberFormat nf = NumberFormat.getInstance();
-      nf.setMinimumFractionDigits( Integer.valueOf(
-          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
-      m_formatMap.put( TimeserieConstants.TYPE_RAINFALL, nf );
-
-      // for n
-      final NumberFormat normf = NumberFormat.getInstance();
-      normf.setMinimumFractionDigits( Integer.valueOf(
-          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_NORM ) ).intValue() );
-      m_formatMap.put( TimeserieConstants.TYPE_NORM, normf );
-
-      // for V
-      final NumberFormat vf = NumberFormat.getInstance();
-      vf.setMinimumFractionDigits( Integer.valueOf(
-          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_VOLUME ) ).intValue() );
-      m_formatMap.put( TimeserieConstants.TYPE_VOLUME, vf );
+        return wf;
+      }
+      else
+        return getDefaultFormat();
     }
-
-    return m_formatMap;
   }
+
+  //  private static Map getFormatMap()
+  //  {
+  //    if( m_formatMap == null )
+  //    {
+  //      m_formatMap = new HashMap();
+  //
+  //      // for W
+  //      final NumberFormat wf = NumberFormat.getInstance();
+  //      wf.setMinimumFractionDigits( Integer.valueOf(
+  //          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_WATERLEVEL ) ).intValue() );
+  //      m_formatMap.put( TimeserieConstants.TYPE_WATERLEVEL, wf );
+  //
+  //      // for N
+  //      final NumberFormat nf = NumberFormat.getInstance();
+  //      nf.setMinimumFractionDigits( Integer.valueOf(
+  //          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
+  //      m_formatMap.put( TimeserieConstants.TYPE_RAINFALL, nf );
+  //
+  //      // for n
+  //      final NumberFormat normf = NumberFormat.getInstance();
+  //      normf.setMinimumFractionDigits( Integer.valueOf(
+  //          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_NORM ) ).intValue() );
+  //      m_formatMap.put( TimeserieConstants.TYPE_NORM, normf );
+  //
+  //      // for V
+  //      final NumberFormat vf = NumberFormat.getInstance();
+  //      vf.setMinimumFractionDigits( Integer.valueOf(
+  //          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_VOLUME ) ).intValue() );
+  //      m_formatMap.put( TimeserieConstants.TYPE_VOLUME, vf );
+  //    }
+  //
+  //    return m_formatMap;
+  //  }
 
   private static NumberFormat getDefaultFormat()
   {
@@ -391,21 +423,23 @@ public class TimeserieUtils
     }
   }
 
-  /**
-   * 
-   * @param axisTypes
-   * @param fistWithKey
-   * @return axis as IAxis[]
-   */
-  public static IAxis[] createDefaultAxis( final String[] axisTypes, boolean fistWithKey )
+  public static IAxis[] createDefaultAxes( final String[] axisTypes, boolean firstWithKey )
   {
     final List axisList = new ArrayList();
     if( axisTypes != null && axisTypes.length > 0 )
     {
-      axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[0], fistWithKey ) );
+      axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[0], firstWithKey ) );
       for( int i = 1; i < axisTypes.length; i++ )
         axisList.add( TimeserieUtils.createDefaulAxis( axisTypes[i], false ) );
     }
     return (IAxis[])axisList.toArray( new IAxis[axisList.size()] );
+  }
+
+  /**
+   * Returns the default format string for the given type
+   */
+  public static String getDefaultFormatString( final String type )
+  {
+    return getProperties().getProperty( "FORMAT_" + type );
   }
 }
