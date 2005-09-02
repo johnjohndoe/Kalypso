@@ -598,7 +598,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     final Object featureFromPath = getFeatureFromPath( featurePath );
     if( featureFromPath instanceof Feature )
       accept( fv, (Feature)featureFromPath, depth );
-    //      fv.visit( (Feature)featureFromPath );
     else if( featureFromPath instanceof FeatureList )
       accept( fv, (FeatureList)featureFromPath, depth );
     else
@@ -691,7 +690,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
               Object childFromList = list.get( j );
               if( childFromList != null && childFromList.equals( toFindParentFrom ) )
               {
-                String substitutionGroup = ((Feature)childFromList).getFeatureType().getSubstitutionGroup();
+//                String substitutionGroup = ((Feature)childFromList).getFeatureType().getSubstitutionGroup();
                 return f;
               }
             }

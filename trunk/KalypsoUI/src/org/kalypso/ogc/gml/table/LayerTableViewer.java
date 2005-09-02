@@ -76,7 +76,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Widget;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -107,7 +106,6 @@ import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureSelectionChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
@@ -681,13 +679,13 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     }
     if( event instanceof FeatureSelectionChangedModellEvent )
     {
-      GMLWorkspace workspace = ( (FeatureSelectionChangedModellEvent)event ).getGMLWorkspace();
-      Feature[] selection = ( (FeatureSelectionChangedModellEvent)event ).getGMLWorkspace().getSelectionManager()
-          .getFeatureSelection();
-      Widget widget = doFindInputItem( selection[0] );
+//      GMLWorkspace workspace = ( (FeatureSelectionChangedModellEvent)event ).getGMLWorkspace();
+//      Feature[] selection = ( (FeatureSelectionChangedModellEvent)event ).getGMLWorkspace().getSelectionManager()
+//          .getFeatureSelection();
+//      Widget widget = doFindInputItem( selection[0] );
       //TODO to make shure external selection changed is reflected in the table
-      Feature[] selection2 = getTheme().getSelectionManager().getFeatureSelection();
-      System.out.println( "" );
+//      Feature[] selection2 = getTheme().getSelectionManager().getFeatureSelection();
+//      System.out.println( "" );
     }
   }
 

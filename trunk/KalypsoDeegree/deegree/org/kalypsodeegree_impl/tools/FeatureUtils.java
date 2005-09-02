@@ -78,15 +78,15 @@ public class FeatureUtils
 
     if( GeometryUtilities.getPointClass().getName().equals( type ) )
     {
+      final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( format );
+
       final String rwString = input[0].trim();
       final String hwString = input[1].trim();
       if( rwString == null || rwString.length() == 0 || hwString == null || hwString.length() == 0 )
-        return null;
+        return GeometryFactory.createGM_Point( 0, 0, crs );
 
       final double rw = Double.parseDouble( rwString );
       final double hw = Double.parseDouble( hwString );
-
-      final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( format );
 
       return GeometryFactory.createGM_Point( rw, hw, crs );
     }

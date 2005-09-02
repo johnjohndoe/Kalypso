@@ -115,8 +115,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   private HashSet m_featureAssTypeProp = null;
 
-  private FeatureType m_ft = null;
-
   public GmlFileImportPage( String pageName )
   {
     super( pageName );
@@ -299,7 +297,7 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
             }
             else if( feature.getFeatureType().hasGeometryProperty() )
             {
-              m_feature.add( (Feature)o );
+              m_feature.add( o );
               setPageComplete( true );
             }
           }
@@ -331,10 +329,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
     m_treeViewer.removeSelectionChangedListener( this );
   }
 
-  /**
-   * @return
-   *  
-   */
   public FeatureAssociationTypeProperty[] getFeatureAssociations()
   {
     return (FeatureAssociationTypeProperty[])m_featureAssTypeProp
@@ -342,9 +336,6 @@ public class GmlFileImportPage extends WizardPage implements SelectionListener, 
 
   }
 
-  /**
-   * @return
-   */
   public GMLWorkspace getWorkspace()
   {
     return m_workspace;

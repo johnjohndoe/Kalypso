@@ -30,7 +30,9 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -41,29 +43,41 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class GMLEditorContentProvider2 implements ITreeContentProvider
 {
-
-  private Viewer m_viewer;
-
   private CommandableWorkspace m_workspace;
+
+  /**
+   * remebers the child-parent relationship. This is nedded, because if we provide no parent,
+   * setExpandedElements doesn't work, which
+   * will lead to an unusable gui.
+   */
+  private Map m_parentHash = new HashMap();
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object parentElement )
+  public Object[] getChildren( final Object parentElement )
+  {
+    final Object[] children = getChildrenInternal( parentElement );
+    if( children == null )
+      return null;
+
+    for( int i = 0; i < children.length; i++ )
+      m_parentHash.put( children[i], parentElement );
+
+    return children;
+  }
+
+  private Object[] getChildrenInternal( final Object parentElement )
   {
     final List result = new ArrayList();
     if( parentElement instanceof GMLWorkspace )
     {
       return new Object[]
       { ( (GMLWorkspace)parentElement ).getRootFeature() };
-
     }
     if( parentElement instanceof Feature )
     {
@@ -104,9 +118,9 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
-    return null;
+    return m_parentHash.get( element );
   }
 
   /**
@@ -135,34 +149,27 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public void dispose()
   {
-  // TODO Auto-generated method stub
-
+    m_parentHash.clear();
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-
-    m_viewer = viewer;
     if( oldInput != newInput )
     {
+      m_parentHash.clear();
+
       if( oldInput != null )
-      {
-        //        m_workspace.removeModellListener( this );
         m_workspace = null;
-      }
+
       if( newInput instanceof CommandableWorkspace )
         m_workspace = (CommandableWorkspace)newInput;
       else
         m_workspace = null;
-      if( m_workspace != null )
-        ;
-      //        m_workspace.addModellListener( this );
     }
-
   }
 
 }

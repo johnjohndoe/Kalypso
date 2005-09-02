@@ -118,9 +118,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
       {
         final CommandableWorkspace workspace = treeViewer.getWorkspace();
         if( workspace != null )
-        {
           bEnabled = workspace.isDirty();
-        }
       }
     }
     if( action != null )

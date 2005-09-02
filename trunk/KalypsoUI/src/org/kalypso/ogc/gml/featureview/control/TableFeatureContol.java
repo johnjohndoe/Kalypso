@@ -146,7 +146,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       // create columns
       // add all columns: TODO: use template?
       final FeatureType featureType = m_kft.getFeatureType();
-      final FeatureTypeProperty[] properties = featureType.getProperties();
+      final FeatureTypeProperty[] properties = featureType == null ? new FeatureTypeProperty[0] : featureType.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
         final FeatureTypeProperty ftp = properties[i];

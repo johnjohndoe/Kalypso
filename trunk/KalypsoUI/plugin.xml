@@ -256,7 +256,7 @@
          </action>
       </editorContribution>
       <editorContribution
-            targetID="org.kalypso.ui.editor.GMLEditor"
+            targetID="org.kalypso.ui.editor.GmlEditor"
             id="org.kalypso.ui.editor.gistreeeditor.GisTreeActionDelegate">
          <menu
                label="Baum"
@@ -267,8 +267,8 @@
          <action
                disabledIcon="icons/map/save_edit_disabled.gif"
                toolbarPath="Baum/edit"
-               label="%extension.EditorActions.saveData.label"
-               tooltip="%extension.EditorActions.saveData.tooltip"
+               label="%Extension.EditorActions.saveData.label"
+               tooltip="%Extension.EditorActions.saveData.tooltip"
                icon="icons/feature/save_GML.gif"
                class="org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate"
                style="push"

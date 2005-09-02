@@ -102,7 +102,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       m_featureType = ( (Feature)featureFromPath ).getFeatureType();
     }
     else
-      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
+    {
+      m_featureList = new SplitSort( null, null );
+      m_featureType = null;
+//      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
+    }
     
     m_workspace.addModellListener( this );
   }

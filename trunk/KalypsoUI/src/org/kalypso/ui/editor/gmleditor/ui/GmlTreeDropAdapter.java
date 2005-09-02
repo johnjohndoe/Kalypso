@@ -47,12 +47,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public class GmlTreeDropAdapter extends ViewerDropAdapter
 {
-
   private GmlTreeView m_viewer;
-
-  /**
-   *  
-   */
 
   public GmlTreeDropAdapter( GmlTreeView viewer )
   {

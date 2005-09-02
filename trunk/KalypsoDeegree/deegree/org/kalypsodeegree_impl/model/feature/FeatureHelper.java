@@ -254,8 +254,8 @@ public class FeatureHelper
       FeatureTypeProperty property = properties[i];
       if( featureType.isListProperty( property.getName() ) && properties.length == 1 )
         return true;
-      else
-        break;
+
+      break;
     }
     return false;
   }

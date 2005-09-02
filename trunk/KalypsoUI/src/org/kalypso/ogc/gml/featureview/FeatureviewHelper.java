@@ -74,7 +74,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 public class FeatureviewHelper
 {
   public final static int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
-  
+
   private FeatureviewHelper()
   {
   // wird nicht instantiiert
@@ -118,7 +118,7 @@ public class FeatureviewHelper
       griddata.setHorizontalAlignment( "GridData.BEGINNING" );
       griddata.setHorizontalSpan( 1 );
       griddata.setWidthHint( STANDARD_TEXT_FIELD_WIDTH_HINT );
-      
+
       editor.setLayoutData( griddata );
 
       type = editor;
@@ -139,14 +139,15 @@ public class FeatureviewHelper
     }
     else if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
     {
-      final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
+      final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
+          .getTypeHandlerForClassName( typename );
       type = handler.createFeatureviewControl( name, FACTORY );
-      
+
       griddata.setHorizontalAlignment( "GridData.FILL" );
       griddata.setGrabExcessHorizontalSpace( true );
-      
+
       griddata.setHorizontalSpan( type instanceof CompositeType ? 2 : 1 );
-      
+
       type.setLayoutData( griddata );
     }
     else if( "FeatureAssociationType".equals( typename ) )
@@ -167,53 +168,53 @@ public class FeatureviewHelper
         table.setLayoutData( griddata );
 
         type = table;
+        addLabel = false;
       }
       else
       {
-        final Subcomposite compo = FACTORY.createSubcomposite();
-        compo.setStyle( "SWT.NONE" );
-        compo.setProperty( name );
+          final Subcomposite compo = FACTORY.createSubcomposite();
+          compo.setStyle( "SWT.NONE" );
+          compo.setProperty( name );
 
-        griddata.setHorizontalAlignment( "GridData.FILL" );
-        griddata.setVerticalAlignment( "GridData.FILL" );
-        griddata.setGrabExcessHorizontalSpace( true );
-        griddata.setGrabExcessVerticalSpace( true );
-        griddata.setHorizontalSpan( 2 );
+          griddata.setHorizontalAlignment( "GridData.FILL" );
+          griddata.setVerticalAlignment( "GridData.FILL" );
+          griddata.setGrabExcessHorizontalSpace( true );
+          griddata.setGrabExcessVerticalSpace( true );
+          griddata.setHorizontalSpan( 2 );
 
-        compo.setLayoutData( griddata );
+          compo.setLayoutData( griddata );
 
-        final Group group = FACTORY.createGroup();
+          final Group group = FACTORY.createGroup();
 
-        final GridDataType groupdata = FACTORY.createGridData();
-        groupdata.setGrabExcessHorizontalSpace( true );
-        groupdata.setGrabExcessVerticalSpace( true );
-        groupdata.setHorizontalAlignment( "GridData.FILL" );
-        groupdata.setVerticalAlignment( "GridData.FILL" );
-        groupdata.setHorizontalSpan( 3 );
+          final GridDataType groupdata = FACTORY.createGridData();
+          groupdata.setGrabExcessHorizontalSpace( true );
+          groupdata.setGrabExcessVerticalSpace( true );
+          groupdata.setHorizontalAlignment( "GridData.FILL" );
+          groupdata.setVerticalAlignment( "GridData.FILL" );
+          groupdata.setHorizontalSpan( 3 );
 
-        //        final String lang = Locale.getDefault().getLanguage();
-        // TODO: ugly! use the eclipse locale settings
-        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
-            IKalypsoPreferences.LANGUAGE );
-        final Annotation annotation = ftp.getAnnotation( lang );
-        final String text = annotation == null ? name : annotation.getLabel();
-        final String tooltip = annotation == null ? null : annotation.getTooltip();
+          //        final String lang = Locale.getDefault().getLanguage();
+          // TODO: ugly! use the eclipse locale settings
+          final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+              IKalypsoPreferences.LANGUAGE );
+          final Annotation annotation = ftp.getAnnotation( lang );
+          final String text = annotation == null ? name : annotation.getLabel();
+          final String tooltip = annotation == null ? null : annotation.getTooltip();
 
-        group.setLayoutData( groupdata );
-        group.setText( text );
-        group.setTooltip( tooltip );
-        group.setStyle( "SWT.NONE" );
+          group.setLayoutData( groupdata );
+          group.setText( text );
+          group.setTooltip( tooltip );
+          group.setStyle( "SWT.NONE" );
 
-        final GridLayoutType gridLayout = FACTORY.createGridLayout();
-        gridLayout.setNumColumns( 2 );
-        group.setLayout( gridLayout );
+          final GridLayoutType gridLayout = FACTORY.createGridLayout();
+          gridLayout.setNumColumns( 2 );
+          group.setLayout( gridLayout );
 
-        group.getControl().add( compo );
+          group.getControl().add( compo );
 
-        type = group;
+          type = group;
+          addLabel = false;
       }
-      addLabel = false;
-
     }
 
     if( type == null )
@@ -242,7 +243,7 @@ public class FeatureviewHelper
     if( addLabel )
     {
       cellCount++;
-      
+
       final LabelType label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
 
@@ -262,17 +263,17 @@ public class FeatureviewHelper
     {
       final LayoutDataType layoutData = type.getLayoutData();
       if( layoutData instanceof GridDataType )
-        cellCount += ((GridDataType)layoutData).getHorizontalSpan();
-      
+        cellCount += ( (GridDataType)layoutData ).getHorizontalSpan();
+
       controlList.add( type );
     }
-    
+
     for( int i = cellCount; i < 3; i++ )
     {
       final LabelType label = FACTORY.createLabel();
       label.setStyle( "SWT.NONE" );
 
-//      label.setText( "" );
+      //      label.setText( "" );
       label.setVisible( false );
 
       final GridDataType labelGridData = FACTORY.createGridData();
@@ -282,7 +283,7 @@ public class FeatureviewHelper
 
       controlList.add( label );
     }
-    
+
   }
 
   /**
