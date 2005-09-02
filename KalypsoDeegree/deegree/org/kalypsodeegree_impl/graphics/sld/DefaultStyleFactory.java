@@ -15,11 +15,6 @@ import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------

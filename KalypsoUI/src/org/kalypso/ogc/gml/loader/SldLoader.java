@@ -40,10 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
-import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.io.Reader;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.java.net.UrlResolver;
@@ -64,7 +65,6 @@ public class SldLoader extends AbstractLoader
   public SldLoader()
   {
     m_urlResolver = new UrlResolver();
-
   }
 
   /**
@@ -82,14 +82,18 @@ public class SldLoader extends AbstractLoader
   protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor )
       throws LoaderException
   {
+    Reader reader = null;
     try
     {
       monitor.beginTask( "Lade SLD", 1000 );
 
       final URL url = m_urlResolver.resolveURL( context, source );
 
-      final Reader reader = new InputStreamReader( url.openStream() );
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+      // create reader via resolver in order to use the right encoding
+      reader = m_urlResolver.createReader( url );
+      final BufferedReader br = new BufferedReader( reader );
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( br );
+
       reader.close();
 
       final IResource resource = ResourceUtilities.findFileFromURL( url );
@@ -101,6 +105,10 @@ public class SldLoader extends AbstractLoader
     catch( final Exception e )
     {
       throw new LoaderException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
     }
   }
 

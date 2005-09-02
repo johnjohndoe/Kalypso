@@ -64,6 +64,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ogc.gml.selection.FeatureThemeSelection;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -72,7 +73,6 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -482,12 +482,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_selectionProvider.addSelectionChangedListener( listener );
   }
 
-  // TODO: wird nie aufgerufen; PostSelection macht in Karte auch keinen Sinn
-  public void firePostSelectionChanged()
-  {
-    m_selectionProvider.firePostSelectionChanged();
-  }
-
   public void removePostSelectionChangedListener( ISelectionChangedListener listener )
   {
     m_selectionProvider.removePostSelectionChangedListener( listener );
@@ -498,18 +492,20 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_selectionProvider.removeSelectionChangedListener( listener );
   }
 
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
-    if( m_model != null )
-    {
-      final IKalypsoTheme activeTheme = m_model.getActiveTheme();
-      if( selection instanceof IStructuredSelection && activeTheme instanceof IKalypsoFeatureTheme )
-      {
-        IFeatureSelectionManager selectionManager = ( (IKalypsoFeatureTheme)activeTheme ).getSelectionManager();
-        selectionManager.setSelection( this, ( (IStructuredSelection)selection ).toList() );
-      }
-    }
-    m_selectionProvider.setSelection( selection );
+  // should not be called!
+  // selection only changes, when themes fire such an event
+  //    if( m_model != null )
+  //    {
+  //      final IKalypsoTheme activeTheme = m_model.getActiveTheme();
+  //      if( selection instanceof IStructuredSelection && activeTheme instanceof IKalypsoFeatureTheme )
+  //      {
+  //        IFeatureSelectionManager selectionManager = ( (IKalypsoFeatureTheme)activeTheme ).getSelectionManager();
+  //        selectionManager.setSelection( this, ( (IStructuredSelection)selection ).toList() );
+  //      }
+  //    }
+  //    m_selectionProvider.setSelection( selection );
   }
 
   /**
@@ -517,25 +513,34 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public ISelection getSelection()
   {
-    //TODO why would there be another selection porvider ?????
-    // Gute frage: ABER! entweder geht alles über den SelectionProviderAdapter oder nix
-    // so wie es jetzt ist, kann es nicht funtionieren, denn die listener
-    // melden sich hier am provideradapter an, bekommen von dem aber via getSelection
-    // nix!
-    if( m_model == null || m_model.getActiveTheme() == null || m_model.getActiveTheme().getSelectionManager() == null )
-      return StructuredSelection.EMPTY;
-    return m_model.getActiveTheme().getSelectionManager().getSelection();
+    // wrap this selection into a KalypsoFeatureThemeSelection
+    return m_selectionProvider.getSelection();
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     if( event instanceof KalypsoSelectionChangedEvent )
     {
       setValidAll( false );
       repaint();
     }
+
+    final IStructuredSelection selectionToSet;
+    final IKalypsoTheme activeTheme = m_model.getActiveTheme();
+    if( activeTheme instanceof IKalypsoFeatureTheme )
+    {
+      if( m_model == null || activeTheme == null || activeTheme.getSelectionManager() == null )
+        selectionToSet = StructuredSelection.EMPTY;
+      else
+        selectionToSet = (IStructuredSelection)activeTheme.getSelectionManager().getSelection();
+
+      final FeatureThemeSelection selection = new FeatureThemeSelection( (IKalypsoFeatureTheme)activeTheme, event.getSource(), selectionToSet, null, null );
+      m_selectionProvider.setSelection( selection );
+    }
+    else
+      m_selectionProvider.setSelection( event.getSelection() );
   }
 }

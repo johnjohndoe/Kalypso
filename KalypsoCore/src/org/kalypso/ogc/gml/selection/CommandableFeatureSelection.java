@@ -69,13 +69,13 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   private final Object m_eventSource;
 
   public CommandableFeatureSelection( final CommandableWorkspace workspace, final Object eventSource,
-      final IStructuredSelection selection, final FeatureTypeProperty ftp, final Feature selectedRow )
+      final IStructuredSelection selection, final FeatureTypeProperty focusedFtp, final Feature focusedFeature )
   {
     m_workspace = workspace;
     m_eventSource = eventSource;
     m_selection = selection;
-    m_ftp = ftp;
-    m_selectedRow = selectedRow;
+    m_ftp = focusedFtp;
+    m_selectedRow = focusedFeature;
   }
 
   public Object getFirstElement()

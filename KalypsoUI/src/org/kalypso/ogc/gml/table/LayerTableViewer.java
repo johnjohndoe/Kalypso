@@ -90,6 +90,7 @@ import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.FeatureThemeSelection;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
@@ -98,7 +99,6 @@ import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.actions.FeatureThemeSelection;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
@@ -157,14 +157,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     public void selectionChanged( final SelectionChangedEvent event )
     {
-      getControl().getDisplay().asyncExec( new Runnable()
+      final Control control = getControl();
+      if( control.isDisposed() )
+        return;
+      control.getDisplay().asyncExec( new Runnable()
       {
-
         public void run()
         {
           if( event instanceof KalypsoSelectionChangedEvent )
           {
-
             if( !getTable().isDisposed()
                 && !( (KalypsoSelectionChangedEvent)event ).getSelectionInvoker().equals( this ) )
               setSelection( ( (KalypsoSelectionChangedEvent)event ).getSelection() );

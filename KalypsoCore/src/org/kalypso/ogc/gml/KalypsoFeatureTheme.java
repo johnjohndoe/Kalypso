@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -83,6 +85,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private IFeatureSelectionManager m_selectionManager = null;
 
+  private ISelectionChangedListener m_selectionChangeListener = new ISelectionChangedListener()
+  {
+    public void selectionChanged( final SelectionChangedEvent event )
+    {
+      // inform the map to redraw itself
+    }};
+
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name )
   {
     super( name );
@@ -105,9 +114,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       m_featureList = new SplitSort( null, null );
       m_featureType = null;
-//      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
+      //      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: " + featurePath );
     }
-    
+
     m_workspace.addModellListener( this );
   }
 
@@ -118,6 +127,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( int i = 0; i < styles.length; i++ )
       removeStyle( styles[i] );
     m_workspace.removeModellListener( this );
+
+    // unhook listener from selectinManager
+    setSelectionManager( null );
   }
 
   private void setDirty()
@@ -254,7 +266,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void restyleFeature( Feature feature )
   {
-    for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
       StyleDisplayMap sdm = (StyleDisplayMap)iter.next();
       sdm.restyle( feature );
@@ -488,7 +500,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   public void setSelectionManager( final IFeatureSelectionManager selectionManager )
   {
+    if( m_selectionManager != null )
+      m_selectionManager.removeSelectionChangedListener( m_selectionChangeListener );
+
     m_selectionManager = selectionManager;
+
+    if( m_selectionManager != null )
+      m_selectionManager.addSelectionChangedListener( m_selectionChangeListener );
   }
 
   /**
