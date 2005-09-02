@@ -69,7 +69,6 @@ import java.util.Map;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.gml.GMLFeature;
-import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.gml.GMLProperty;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -86,7 +85,6 @@ import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaUtils;
 import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
-import org.kalypsodeegree_impl.model.geometry.GMLAdapter;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -230,51 +228,6 @@ public class FeatureFactory
         result.setProperty( properties[i] );
     }
     return result;
-  }
-
-  /**
-   * creates an instance of a Feature from its FeatureType and a GMLFeature that contains the features data.
-   * 
-   * @param gmlFeature
-   *          instance of a <CODE>GMLFeature</CODE>
-   * @return instance of a <CODE>Feature</CODE>
-   * @deprecated do not create feature without GML-applicationschema
-   */
-  public static Feature createFeature( GMLFeature gmlFeature )
-  {
-    Debug.debugMethodBegin();
-
-    GMLProperty[] props = gmlFeature.getProperties();
-    FeatureTypeProperty[] ftp = new FeatureTypeProperty[props.length];
-    FeatureProperty[] fp = new FeatureProperty[props.length];
-    for( int j = 0; j < props.length; j++ )
-    {
-
-      ftp[j] = createFeatureTypeProperty( props[j].getName(), getType( props[j].getPropertyType() ), true );
-      Object o = props[j].getPropertyValue();
-      if( o instanceof GMLGeometry )
-      {
-        try
-        {
-          o = GMLAdapter.wrap( (GMLGeometry)o );
-        }
-        catch( Exception e )
-        {
-          System.out.println( " eee " + e );
-          continue;
-        }
-      }
-
-      fp[j] = createFeatureProperty( props[j].getName(), o );
-    }
-    FeatureType featureType = createFeatureType( gmlFeature.getName(), ftp );
-
-    String id = gmlFeature.getId();
-
-    Feature feature = createFeature( id, featureType, fp );
-
-    Debug.debugMethodEnd();
-    return feature;
   }
 
   public static Feature createFeature( final GMLFeature gmlFeature, final FeatureType featureTypes[],
@@ -431,64 +384,7 @@ public class FeatureFactory
     if( o instanceof String )
       return Mapper.mapXMLValueToJava( (String)o, type );
 
-    //    if( o instanceof GMLGeometry && type.startsWith( "org.kalypsodeegree.model.geometry." ) )
-    //      return GMLAdapter.wrap( (GMLGeometry)o );
-    //    if( o instanceof GMLGeometry )
-    //      System.out.println( o.getClass().toString() );
     throw new Exception( "could not convert property (" + o.toString() + ") to " + type );
-  }
-
-  /**
-   * returns the name of the (toplevel)class that is assigned to the submitted GML property type.
-   * 
-   * @param t
-   *          GML property type
-   */
-  private static String getType( int t )
-  {
-
-    String type = "java.lang.Object";
-    switch( t )
-    {
-    case GMLProperty.STRING:
-      type = "java.lang.String";
-      break;
-    case GMLProperty.GEOMETRY:
-      type = "org.kalypsodeegree.model.geometry.GM_Object";
-      break;
-    case GMLProperty.POINT:
-      type = "org.kalypsodeegree.model.geometry.GM_Point";
-      break;
-    case GMLProperty.LINESTRING:
-      type = "org.kalypsodeegree.model.geometry.GM_LineString";
-      break;
-    case GMLProperty.POLYGON:
-      type = "org.kalypsodeegree.model.geometry.GM_Polygon";
-      break;
-    case GMLProperty.MULTIGEOMETRY:
-      type = "org.kalypsodeegree.model.geometry.GM_Object";
-      break;
-    case GMLProperty.MULTILINESTRING:
-      type = "org.kalypsodeegree.model.geometry.GM_Object";
-      break;
-    case GMLProperty.MULTIPOINT:
-      type = "org.kalypsodeegree.model.geometry.GM_MultiPoint";
-      break;
-    case GMLProperty.MULTIPOLYGON:
-      // TODO
-      type = "org.kalypsodeegree.model.geometry.GM_Object";
-      break;
-    case GMLProperty.FEATURE:
-      type = "org.kalypsodeegree.model.feature.Feature";
-      break;
-    case GMLProperty.FEATURECOLLECTION:
-      type = "org.kalypsodeegree.model.feature.FeatureCollection";
-      break;
-    case GMLProperty.BOX:
-      type = "org.kalypsodeegree.model.geometry.GM_Envelope";
-      break;
-    }
-    return type;
   }
 
   public static FeatureList createFeatureList( final Feature parentFeature, final FeatureTypeProperty parentFTP,

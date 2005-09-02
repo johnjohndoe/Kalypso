@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -97,10 +96,8 @@ public class FeatureFilter extends AbstractFilter
    * @param feature
    *          that determines the Id
    * @return true, if the <tt>FeatureFilter</tt> evaluates to true, else false
-   * @throws FilterEvaluationException
-   *           if the evaluation fails
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( Feature feature )
   {
     String id = feature.getId();
     for( int i = 0; i < featureIds.size(); i++ )

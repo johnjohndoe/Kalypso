@@ -103,7 +103,7 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
    */
   public String getType()
   {
-    return GM_LineString.class.getName();
+    return GeometryUtilities.getLineStringClass().getName();
   }
 
   /**
@@ -112,14 +112,6 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
   public boolean isNullable()
   {
     return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
-   */
-  public boolean isGeometryProperty()
-  {
-    return true;
   }
 
 }

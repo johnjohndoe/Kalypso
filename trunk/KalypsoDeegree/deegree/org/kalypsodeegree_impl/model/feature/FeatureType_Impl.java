@@ -67,6 +67,7 @@ import java.util.Map;
 
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
@@ -109,7 +110,7 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
     for( int i = 0; i < properties.length; i++ )
     {
       // set default geoemtry
-      if( m_defaultGeometryPropPos < 0 && properties[i].isGeometryProperty() )
+      if( m_defaultGeometryPropPos < 0 && GeometryUtilities.isGeometry(properties[i]) )
         m_defaultGeometryPropPos = i;
 
       // this supports qualified and unqualified position questions
@@ -302,7 +303,7 @@ class FeatureType_Impl extends AbstractFeatureType implements FeatureType, Seria
     for( int i = 0; i < m_properties.length; i++ )
     {
       FeatureTypeProperty property = m_properties[i];
-      if( property.isGeometryProperty() )
+      if( GeometryUtilities.isGeometry(property) )
         return true;
     }
     return false;

@@ -76,6 +76,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author F.Lindemann
@@ -95,23 +96,26 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
   private LabelPlacement labelPlacement = null;
 
+  public final static int NO_GEOMETRY = -1;
+
   public final static int GM_POINT = 0;
 
-  public final static int GM_LINESTRING = 1;
+  public final static int GM_MULTIPOINT = 1;
 
-  public final static int GM_POLYGON = 2;
+  public final static int GM_LINESTRING = 2;
 
-  public final static int GM_MULTIPOINT = 3;
+  public static final int GM_MULTILINESTRING = 3;
 
-  public final static int GM_OBJECT = 4;
+  public final static int GM_POLYGON = 4;
 
-  //  private final FeatureTypeProperty m_ftp;
+  public static final int GM_MULTIPOLYGON = 5;
+
+  public final static int GM_OBJECT = 6;
 
   public TextSymbolizerLayout( Composite comp, Symbolizer symb, KalypsoUserStyle style, FeatureType featureType )
   {
     super( comp, symb, style );
     m_featureTyped = featureType;
-    //    m_ftp = ftp;
   }
 
   public void draw() throws FilterEvaluationException
@@ -336,20 +340,23 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
   public static int getFeatureTypeGeometryType( final FeatureTypeProperty ftp )
   {
     if( ftp == null )
-      return -1;
-    final String ft = ftp.getType();
-    if( ft.equals( "org.kalypsodeegree.model.geometry.GM_Point" ) )
+      return NO_GEOMETRY;
+
+    if( GeometryUtilities.isPointGeometry( ftp ) )
       return GM_POINT;
-    else if( ft.equals( "org.kalypsodeegree.model.geometry.GM_LineString" ) )
-      return GM_LINESTRING;
-    else if( ft.equals( "org.kalypsodeegree.model.geometry.GM_Polygon" ) )
-      return GM_POLYGON;
-    else if( ft.equals( "org.kalypsodeegree.model.geometry.GM_MultiPoint" ) )
+    else if( GeometryUtilities.isMultiPointGeometry( ftp ) )
       return GM_MULTIPOINT;
-    else if( ft.equals( "org.kalypsodeegree.model.geometry.GM_Object" ) ) //multilinestring,
-      // multipolygon
+    else if( GeometryUtilities.isLineStringGeometry( ftp ) )
+      return GM_LINESTRING;
+    else if( GeometryUtilities.isMultiLineStringGeometry( ftp ) )
+      return GM_MULTILINESTRING;
+    else if( GeometryUtilities.isPolygonGeometry( ftp ) )
+      return GM_POLYGON;
+    else if( GeometryUtilities.isMultiPolygonGeometry( ftp ) )
+      return GM_MULTIPOLYGON;
+    else if( GeometryUtilities.isUndefinedGeometry( ftp ) )
       return GM_OBJECT;
-    return -1;
+    return NO_GEOMETRY;
   }
 
   public TextInputPanel getLabelTextInput()

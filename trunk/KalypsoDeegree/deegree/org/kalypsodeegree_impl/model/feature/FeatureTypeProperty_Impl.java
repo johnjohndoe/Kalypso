@@ -65,6 +65,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
@@ -122,14 +123,6 @@ public class FeatureTypeProperty_Impl extends AbstractFeatureType implements Fea
     ret += "type = " + m_type + "\n";
     ret += "nullable = " + m_nullable + "\n";
     return ret;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
-   */
-  public boolean isGeometryProperty()
-  {
-    return m_type.startsWith( "org.kalypsodeegree.model.geometry." ) && !m_type.endsWith( "Envelope" );
   }
 
   /**

@@ -97,7 +97,5 @@ public interface FeatureTypeProperty
 
   public String getNamespace();
 
-  public boolean isGeometryProperty();
-
   public Map getAnnotationMap();
 }

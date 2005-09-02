@@ -69,10 +69,11 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType i
   {
     super( "link_" + ftp.getName(), "virtual", new HashMap() );
     m_linkName = ftp.getName();
-    m_type = GM_LineString.class.getName();
+    m_type = GeometryUtilities.getLineStringClass().getName();
   }
 
   /**
+   * 
    * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
    */
   public String getType()
@@ -84,14 +85,6 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractFeatureType i
    * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
    */
   public boolean isNullable()
-  {
-    return true;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
-   */
-  public boolean isGeometryProperty()
   {
     return true;
   }

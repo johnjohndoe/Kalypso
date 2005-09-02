@@ -17,6 +17,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author doemming
@@ -190,7 +191,7 @@ public class Feature_Impl implements Feature
     final FeatureTypeProperty[] ftp = m_featureType.getProperties();
     for( int p = 0; p < ftp.length; p++ )
     {
-      if( ftp[p].isGeometryProperty() )
+      if( GeometryUtilities.isGeometry(ftp[p])  )
       {
         Object o = getProperty( p );
         if( o == null )
@@ -207,7 +208,7 @@ public class Feature_Impl implements Feature
     final FeatureTypeProperty[] vftp = m_featureType.getVirtuelFeatureTypeProperty();
     for( int p = 0; p < vftp.length; p++ )
     {
-      if( vftp[p].isGeometryProperty() )
+      if( GeometryUtilities.isGeometry(vftp[p]))
       {
         Object o = getVirtuelProperty( vftp[p].getName(), null );
         if( o == null )
@@ -260,7 +261,7 @@ public class Feature_Impl implements Feature
     {
       return;
     }
-    if( ftp.isGeometryProperty() )
+    if( GeometryUtilities.isGeometry(ftp) )
       invalidEnvelope();
 
     int pos = m_featureType.getPropertyPosition( property.getName() );

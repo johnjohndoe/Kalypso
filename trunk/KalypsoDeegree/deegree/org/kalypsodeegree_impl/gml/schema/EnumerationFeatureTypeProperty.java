@@ -71,11 +71,4 @@ public class EnumerationFeatureTypeProperty extends AbstractFeatureType implemen
     return false;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
-   */
-  public boolean isGeometryProperty()
-  {
-    return false;
-  }
 }

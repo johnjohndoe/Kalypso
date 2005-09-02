@@ -69,6 +69,7 @@ import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
 import org.kalypsodeegree_impl.gml.GMLFactory;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author kuepfer
@@ -259,7 +260,7 @@ public class FilterCompositeFactory
       for( int i = 0; i < properties.length; i++ )
       {
         FeatureTypeProperty property = properties[i];
-        if( property.isGeometryProperty() )
+        if( GeometryUtilities.isGeometry( property))
           m_combo.add( property.getName().trim() );
       }
       //sets the availabel property active, if the property name does not match an emty entry is created

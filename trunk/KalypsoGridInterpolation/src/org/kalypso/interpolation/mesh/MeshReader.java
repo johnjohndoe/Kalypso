@@ -59,6 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -85,7 +86,7 @@ public class MeshReader
 
   private ElementTable m_elements = null;
 
-//  private boolean m_initialise = false;
+  //  private boolean m_initialise = false;
 
   protected Mesh importMesh( Mesh mesh, File[] files, CS_CoordinateSystem cs, GM_Surface wishbox, String shapeBase )
   {
@@ -112,8 +113,7 @@ public class MeshReader
         }
         else
           throw new Exception( "the border line is of type " + border.getClass().toString()
-              + " and not as required of type " + GM_Surface.class.getName() + " \nor " + GM_Polygon.class.getName()
-              + ".\nProgram aborted!" );
+              + " and not as required of type " + GeometryUtilities.getPolygonClass().getName() + ".\nProgram aborted!" );
         //kleinstes Polygon um die elemente zu suchen
         if( wishbox == null )
           finalWishbox = mesh.getBorderLine();
@@ -230,7 +230,7 @@ public class MeshReader
       while( st.nextToken() != StreamTokenizer.TT_EOF )
       {
         //reads the ID
-        String pointID = String.valueOf( (int)( st.nval                                                                                                     ) );
+        String pointID = String.valueOf( (int)( st.nval                                                                                                      ) );
         st.nextToken();
         //reads elevation value
         Double elevation = new Double( st.nval );
@@ -518,8 +518,8 @@ public class MeshReader
               double value = ( (Double)points.get( String.valueOf( xcor ) + String.valueOf( ycor ) ) ).doubleValue();
               values[nodeCounter] = value;
               verticies[nodeCounter++] = GeometryFactory.createGM_Position( xcor, ycor );
-//              if( value <= 0.0 )
-//                m_initialise = true;
+              //              if( value <= 0.0 )
+              //                m_initialise = true;
             }
 
             //*System.out.println("nodeocunter:" + nodeCounter);

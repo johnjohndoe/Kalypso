@@ -64,15 +64,18 @@ package org.kalypsodeegree.xml;
 // JDK 1.3
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -614,44 +617,32 @@ public class XMLTools
    */
   public static Document parse( String fileName ) throws IOException, SAXException
   {
-
-    //        Reader reader = new InputStreamReader(new FileInputStream(fileName));
-    //
-    //        StringWriter stw = new StringWriter();
-    //
-    //        // remove all not writeable characters
-    //        int c = -1;
-    //        int cc = -1;
-    //
-    //        while ((c = reader.read ()) > -1) {
-    //            if (c > 31) {
-    //                if ((cc == 32) && (c == 32)) {
-    //                } else {
-    //                    stw.write (c);
-    //                }
-    //
-    //                cc = c;
-    //            }
-    //        }
-    //        reader.close();
-    //
-    //        // remove not need spaces (spaces between tags)
-    //        StringBuffer sb = new StringBuffer(stw.toString ());
-    //        stw.close ();
-    //
-    //        String s = sb.toString ();
-    //
-    //        while (s.indexOf ("> <") > -1) {
-    //            int idx = s.indexOf ("> <");
-    //            sb.replace (idx, idx + 3, "><");
-    //            s = sb.toString ();
-    //        }
-    //
-    //        Document doc = parse (new StringReader(s));
     Reader reader = new InputStreamReader( new FileInputStream( fileName ) );
     Document doc = parse( reader );
 
     return doc;
+  }
+
+  /**
+   * 
+   * @param resource
+   * @return dom from url
+   * @throws IOException
+   * @throws SAXException
+   */
+  public static Document parse( final URL resource ) throws IOException, SAXException
+  {
+    final InputStream stream = resource.openStream();
+    Reader reader = null;
+    try
+    {
+      reader = new InputStreamReader( stream );
+      return parse( reader );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
   }
 
   /**
@@ -1117,4 +1108,5 @@ public class XMLTools
 
     return nodeName;
   }
+
 }

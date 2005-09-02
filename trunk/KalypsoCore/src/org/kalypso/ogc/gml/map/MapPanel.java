@@ -54,6 +54,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.KalypsoSelectionChangedEvent;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
@@ -521,6 +522,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     // so wie es jetzt ist, kann es nicht funtionieren, denn die listener
     // melden sich hier am provideradapter an, bekommen von dem aber via getSelection
     // nix!
+    if( m_model == null || m_model.getActiveTheme() == null || m_model.getActiveTheme().getSelectionManager() == null )
+      return StructuredSelection.EMPTY;
     return m_model.getActiveTheme().getSelectionManager().getSelection();
   }
 

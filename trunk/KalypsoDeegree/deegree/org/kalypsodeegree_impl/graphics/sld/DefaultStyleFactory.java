@@ -20,6 +20,7 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -76,7 +77,7 @@ public class DefaultStyleFactory
 
   private final String DEFAULT_STYLE_DRECTORY;
 
-//  private static FeatureTypeProperty m_GeomProperty;
+  //  private static FeatureTypeProperty m_GeomProperty;
 
   private HashMap m_defalultStyles = new HashMap();
 
@@ -156,20 +157,20 @@ public class DefaultStyleFactory
     for( int i = 0; i < properties.length; i++ )
     {
       FeatureTypeProperty property = properties[i];
-//      if( property instanceof FeatureAssociationTypeProperty )
-//      {
-//        FeatureType associationFeatureType = ((FeatureAssociationTypeProperty)property).getAssociationFeatureType();
-//        FeatureTypeProperty[] properties2 = associationFeatureType.getProperties();
-//        for( int j = 0; j < properties2.length; j++ )
-//        {
-//          FeatureTypeProperty property2 = properties2[j];
-//          if( property2.isGeometryProperty() )
-//            symbolizer.add( createGeometrySymbolizer( property2));
-//        }
-//      }
-      if( property.isGeometryProperty() )
+      //      if( property instanceof FeatureAssociationTypeProperty )
+      //      {
+      //        FeatureType associationFeatureType = ((FeatureAssociationTypeProperty)property).getAssociationFeatureType();
+      //        FeatureTypeProperty[] properties2 = associationFeatureType.getProperties();
+      //        for( int j = 0; j < properties2.length; j++ )
+      //        {
+      //          FeatureTypeProperty property2 = properties2[j];
+      //          if( property2.isGeometryProperty() )
+      //            symbolizer.add( createGeometrySymbolizer( property2));
+      //        }
+      //      }
+      if( GeometryUtilities.isGeometry(property) )
       {
-//        m_GeomProperty = property;
+        //        m_GeomProperty = property;
         symbolizer.add( createGeometrySymbolizer( property ) );
       }
       //      if( m_GeomProperty == null )
@@ -219,29 +220,28 @@ public class DefaultStyleFactory
     return sld;
   }
 
-//  private Symbolizer createTextSymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
-//  {
-//    String type = property.getType();
-//    if( type.equals( String.class.getName() ) )
-//    {
-//      return StyleFactory.createTextSymbolizer( m_GeomProperty.getType(), property.getName(), StyleFactory
-//          .createLabelPlacement( StyleFactory.createPointPlacement() ) );
-//    }
-//    throw new StyleNotDefinedException( "Error while creating TextSymbolizer from string type. Property name: "
-//        + property.getName() );
-//  }
+  //  private Symbolizer createTextSymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
+  //  {
+  //    String type = property.getType();
+  //    if( type.equals( String.class.getName() ) )
+  //    {
+  //      return StyleFactory.createTextSymbolizer( m_GeomProperty.getType(), property.getName(), StyleFactory
+  //          .createLabelPlacement( StyleFactory.createPointPlacement() ) );
+  //    }
+  //    throw new StyleNotDefinedException( "Error while creating TextSymbolizer from string type. Property name: "
+  //        + property.getName() );
+  //  }
 
-  private Symbolizer createGeometrySymbolizer( FeatureTypeProperty property ) throws StyleNotDefinedException
+  private Symbolizer createGeometrySymbolizer( FeatureTypeProperty ftp ) throws StyleNotDefinedException
   {
-    String type = property.getType();
-    if( type.equals( GM_Polygon.class.getName() ) || type.equals( GM_Surface.class.getName() ) )
-      return StyleFactory.createPolygonSymbolizer();
-    else if( type.equals( GM_Point.class.getName() ) )
+    if( GeometryUtilities.isPointGeometry( ftp ) )
       return StyleFactory.createPointSymbolizer();
-    else if( type.equals( GM_LineString.class.getName() ) || type.equals( GM_Curve.class.getName() ))
+    else if( GeometryUtilities.isLineStringGeometry( ftp ) )
       return StyleFactory.createLineSymbolizer();
+    else if( GeometryUtilities.isPolygonGeometry( ftp ) )
+      return StyleFactory.createPolygonSymbolizer();
     else
-      throw new StyleNotDefinedException( "This geometry type: " + type + " has no default style available" );
+      throw new StyleNotDefinedException( "This geometry type: " + ftp.getType() + " has no default style available" );
   }
 
   private Symbolizer createRasterSymbolizer()

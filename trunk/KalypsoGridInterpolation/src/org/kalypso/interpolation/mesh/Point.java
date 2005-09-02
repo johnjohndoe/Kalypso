@@ -16,6 +16,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -45,7 +46,7 @@ public class Point
   private FeatureType featureType = FeatureFactory.createFeatureType(
       "FEMNode", ns, new FeatureTypeProperty[]
       {
-          FeatureFactory.createFeatureTypeProperty( "GEOM", ns, GM_Point.class
+          FeatureFactory.createFeatureTypeProperty( "GEOM", ns, GeometryUtilities.getPointClass()
               .getName(), false, null ),
           FeatureFactory.createFeatureTypeProperty( "value", ns,
               Double.class.getName(), false, null ) }, min, max, null, null );

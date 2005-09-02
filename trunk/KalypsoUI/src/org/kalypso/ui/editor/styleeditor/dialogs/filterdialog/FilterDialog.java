@@ -108,6 +108,7 @@ import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 public class FilterDialog extends Dialog implements ISelectionChangedListener
 {
@@ -312,7 +313,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     inputLabel.setLayoutData( inputLabelData );
 
     //  **** FIFTH ROW - TREE
-     final TableTree tree = new TableTree( secondRowComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL
+    final TableTree tree = new TableTree( secondRowComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL
         | SWT.BORDER );
     GridData tableTreeData = new GridData();
     tableTreeData.widthHint = 224;
@@ -677,7 +678,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       FilterDialogTreeNode child = (FilterDialogTreeNode)children[0];
       if( child.getSubType() == FilterDialogTreeNode.SPATIAL_INTERSECTS )
       {
-
+        
       }
 
     }
@@ -1098,7 +1099,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     for( int i = 0; i < ftp.length; i++ )
     {
       FeatureTypeProperty geomProperty = ftp[i];
-      if( geomProperty.isGeometryProperty() )
+      if( GeometryUtilities.isGeometry(geomProperty) )
         labelStringItems.add( geomProperty.getName() );
     }
     final String[] items = new String[labelStringItems.size()];
@@ -1214,7 +1215,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         try
         {
           validInput = addata.verify();
-          if( validInput && ( ( m_drawGeomSelection && !m_loadGeomSelection )  || (!m_drawGeomSelection && m_loadGeomSelection ) ) )
+          if( validInput
+              && ( ( m_drawGeomSelection && !m_loadGeomSelection ) || ( !m_drawGeomSelection && m_loadGeomSelection ) ) )
           {
             getCurrentNode().setData( addata );
             setFilterInvalid();
@@ -1339,7 +1341,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      if( !ftp[i].getType().startsWith( "org.kalypsodeegree.model.geometry." ) )
+      if( !GeometryUtilities.isGeometry( ftp[i] ) )
         labelStringItems.add( ftp[i].getName() );
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
@@ -1456,7 +1458,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       // any type except for a geometry object
       else
       {
-        if( !ftp[i].getType().startsWith( "org.kalypsodeegree.model.geometry." ) )
+        if( !GeometryUtilities.isGeometry( ftp[i] ) )
           labelStringItems.add( ftp[i].getName() );
       }
     }
@@ -1566,7 +1568,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     ArrayList labelStringItems = new ArrayList();
     FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      if( !ftp[i].getType().startsWith( "org.kalypsodeegree.model.geometry." ) )
+      if( !GeometryUtilities.isGeometry( ftp[i] ) )
         labelStringItems.add( ftp[i].getName() );
     final String[] items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )

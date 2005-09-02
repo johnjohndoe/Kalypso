@@ -106,12 +106,6 @@ import org.kalypso.services.proxy.ICalculationService;
 import org.kalypso.services.proxy.IObservationService;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
@@ -122,6 +116,7 @@ import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.cv.RangeSetTypeHandler;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomainTypeHandler;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
@@ -748,16 +743,21 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
       guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
       //register gml-geometry types
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", "Polygon", GM_Surface.class ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", "MultiPolygon",
-          GM_MultiSurface.class ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", "LineString", GM_Curve.class ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", "MultiLineString",
-          GM_MultiCurve.class ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", "Point", GM_Point.class ) );
-      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", "MultiPoint",
-          GM_MultiPoint.class ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
+          .getMultiPointClass() ) );
+
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities
+          .getLineStringClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities
+          .getMultiLineStringClass() ) );
+
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities
+          .getPolygonClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
+          .getMultiPolygonClass() ) );
       // TODO LinearRingPropertyType, BoxPropertyype, GeometryCollectionPropertyType
+
       // register inlines
 
       final String[] wvqAxis = new String[]

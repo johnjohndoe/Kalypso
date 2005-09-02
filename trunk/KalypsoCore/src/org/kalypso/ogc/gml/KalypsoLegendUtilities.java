@@ -39,6 +39,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
@@ -108,13 +109,15 @@ public class KalypsoLegendUtilities
 
   private static Object getLegendValue( final FeatureTypeProperty ftp )
   {
-    final String type = ftp.getType();
-    if( "org.kalypsodeegree.model.geometry.GM_Point".equals( type ) )
+    if(GeometryUtilities.isPointGeometry(ftp)||GeometryUtilities.isMultiPointGeometry(ftp) )
       return DEFAULT_POINT;
-    if( "org.kalypsodeegree.model.geometry.GM_LineString".equals( type ) )
+    if( GeometryUtilities.isLineStringGeometry(ftp)||GeometryUtilities.isMultiLineStringGeometry(ftp)  )
       return DEFAULT_LINESTRING;
-    if( "org.kalypsodeegree.model.geometry.GM_Polygon".equals( type ) )
+    if(GeometryUtilities.isPolygonGeometry(ftp)||GeometryUtilities.isMultiPolygonGeometry(ftp)  )
       return DEFAULT_POLYGONE;
+    if(GeometryUtilities.isUndefinedGeometry(ftp))
+      return DEFAULT_POINT;
+    final String type = ftp.getType();
     if( type.startsWith( "java.lang." ) )
     {
       final String lang = "de";
