@@ -286,7 +286,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       String line;
       while( ( line = reader.readLine() ) != null )
       {
-        if( line.indexOf( "berechnung wurde ohne fehler beendet" ) >= 0 )
+        if( line.indexOf( "berechnung wurde ohne fehler beendet" ) >= 0 || line.indexOf( "Berechnung wurde ohne Fehler beendet!" )>=0)
           m_succeeded = true;
       }
     }

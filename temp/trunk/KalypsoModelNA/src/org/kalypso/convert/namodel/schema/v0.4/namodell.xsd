@@ -531,14 +531,14 @@
 					<element name="bianf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Faktor Inhalt Interzeption</label>
-								<tooltip>Korrekturfaktor Anfangsinhalt Interzeptionsspeicher</tooltip>
-								<description>Multiplikativer Faktor zur Korrektur des Anfangsinhaltes im Interzeptionsspeicher</description>
+								<label>Anfangsinhalt Interzeption</label>
+								<tooltip>Anfangsinhalt Interzeptionsspeicher</tooltip>
+								<description>Anfangsinhalte des Interzeptionsspeichers beim Berechnungsstart</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Coefficient content interception</label>
-								<tooltip>Correction coefficient for the initial content of interception storage</tooltip>
-								<description>Multiplicative coefficient for correction of the initial content in the interception storage. </description>
+								<label>Initial content interception</label>
+								<tooltip>initial content of interception storage</tooltip>
+								<description>initial content in the interception storage at the beginning of the simulation</description>
 							</documentation>
 						</annotation>
 					</element>

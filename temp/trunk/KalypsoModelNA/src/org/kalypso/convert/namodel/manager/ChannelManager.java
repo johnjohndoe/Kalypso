@@ -268,7 +268,7 @@ public class ChannelManager extends AbstractManager
   private void writeWVQ( IObservation observation, StringBuffer rhbBuffer ) throws SensorException
   {
     IAxis[] axisList = observation.getAxisList();
-    IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_WATERLEVEL );
+    IAxis waterTableAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_NORMNULL );
     IAxis volumeAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_VOLUME );
     IAxis dischargeAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RUNOFF );
     ITuppleModel values = observation.getValues( null );

@@ -80,8 +80,10 @@ public class SimulationVisitor extends NetElementVisitor
     if( m_cycleTest.contains( netElement ) )
     {
       StringBuffer b = new StringBuffer( "Netzplan ist fehlerhaft - Wasser flieﬂt im Kreis\n" );
+      System.out.println( "Netzplan ist fehlerhaft - Wasser flieﬂt im Kreis\n" + netElement );
 
       // check circle (shortest connection)
+      //TODO: Better output handling, in this way it is not easy to find the circle
       final NetElementCircleFinder circlefinder = new NetElementCircleFinder( netElement );
       List[] circleList = circlefinder.findCircle();
       b.append( "circle for : " + netElement + ":\n" );
@@ -93,6 +95,7 @@ public class SimulationVisitor extends NetElementVisitor
       log( b.toString() );
       throw new Exception( b.toString() );
     }
+    
     m_cycleTest.add( netElement );
 
     // first calculate upstream

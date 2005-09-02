@@ -60,6 +60,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -86,6 +87,8 @@ public class CatchmentManager extends AbstractManager
   public static final String STD_TEMP_FILENAME = "std.tmp";
 
   public static final String STD_VERD_FILENAME = "std.ver";
+
+  private static final HashMap m_fileMap = new HashMap();
 
   public CatchmentManager( GMLSchema schema, NAConfiguration conf ) throws IOException
   {
@@ -359,7 +362,7 @@ public class CatchmentManager extends AbstractManager
       line14.append( toAscci( fe, 14 ) + " " );
       sumGwwi += ( (Double)fe.getProperty( "gwwi" ) ).doubleValue();
     }
-    
+
     if( sumGwwi > 1.001 )
       throw new Exception(
           "Fehler!!! NA-Modell: Summe Grundwasserabgabe in Nachbargebiete > 1.0 (100%) in Teilgebiet (Name: "
@@ -446,19 +449,44 @@ public class CatchmentManager extends AbstractManager
     return ft.getName() + id;
   }
 
+  public static String getEingabeDateiString( Feature feature, NAConfiguration conf, String propName, String axisType )
+  {
+    final TimeseriesLink link = (TimeseriesLink)feature.getProperty( propName );
+    final String key = propName + link.getHref();
+    if( !m_fileMap.containsKey( key ) )
+    {
+      final int asciiID = conf.getIdManager().getAsciiID( feature );
+      final String name = "C_" + Integer.toString( asciiID ).trim() + "." + axisType;
+      m_fileMap.put( key, name );
+    }
+    return (String)m_fileMap.get( key );
+  }
+
   public static String getNiederschlagEingabeDateiString( Feature feature, NAConfiguration conf )
   {
-    int asciiID = conf.getIdManager().getAsciiID( feature );
-    return "C_" + Integer.toString( asciiID ).trim() + ".niederschlag";
+    return getEingabeDateiString( feature, conf, "niederschlagZR", TimeserieConstants.TYPE_RAINFALL );
+    //    final TimeseriesLink link = (TimeseriesLink)feature.getProperty( "niederschlagZR" );
+    //    final String href = link.getHref();
+    //    if( !m_fileMap.containsKey( href ) )
+    //    {
+    //      int asciiID = conf.getIdManager().getAsciiID( feature );
+    //      final String name = "C_" + Integer.toString( asciiID ).trim() + ".niederschlag";
+    //      m_fileMap.put( href, name );
+    //    }
+    //    return (String)m_fileMap.get( href );
+
     //    return "C_" + FeatureHelper.getAsString( feature, "inum" ) + ".niederschlag";
   }
 
   public static String getTemperaturEingabeDateiString( Feature feature, NAConfiguration conf )
   {
-    int asciiID = conf.getIdManager().getAsciiID( feature );
     if( feature.getProperty( "temperaturZR" ) != null )
-      return "C_" + Integer.toString( asciiID ).trim() + ".tmp";
+      return getEingabeDateiString( feature, conf, "temperaturZR", TimeserieConstants.TYPE_TEMPERATURE );
     return STD_TEMP_FILENAME;
+    //    int asciiID = conf.getIdManager().getAsciiID( feature );
+    //    if( feature.getProperty( "temperaturZR" ) != null )
+    //      return "C_" + Integer.toString( asciiID ).trim() + ".tmp";
+    //    return STD_TEMP_FILENAME;
   }
 
   /**
@@ -487,9 +515,12 @@ public class CatchmentManager extends AbstractManager
 
   private static String getVerdunstungEingabeDateiString( Feature feature, NAConfiguration conf )
   {
-    int asciiID = conf.getIdManager().getAsciiID( feature );
     if( feature.getProperty( "verdunstungZR" ) != null )
-      return "C_" + Integer.toString( asciiID ).trim() + ".ver";
+      return getEingabeDateiString( feature, conf, "verdunstungZR", TimeserieConstants.TYPE_EVAPORATION );
     return STD_VERD_FILENAME;
+
+    //    int asciiID = conf.getIdManager().getAsciiID( feature );
+    //    if( feature.getProperty( "verdunstungZR" ) != null )
+    //      return "C_" + Integer.toString( asciiID ).trim() + ".ver";
   }
 }
