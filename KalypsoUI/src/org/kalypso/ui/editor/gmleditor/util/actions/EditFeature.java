@@ -35,10 +35,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -64,20 +61,16 @@ public class EditFeature implements IActionDelegate
      
      final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
      final IWorkbenchPage page = window.getActivePage();
-     Shell shell = window.getShell();
      try
      {
-       page.showView( "org.kalypso.featureview.views.FeatureView" );
-       IViewReference[] viewReferences = page.getViewReferences();
-       IViewPart view = viewReferences[0].getView( true );
-       IWorkbenchPartSite site = view.getSite();
+       page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
      }
      catch( final PartInitException e )
      {
        e.printStackTrace();
+       final Shell shell = window.getShell();
        ErrorDialog.openError( shell, "Feature bearbeiten", "Fehler beim Öffnen der Feature-View", e.getStatus() );
      }
-     
    }
 
   }

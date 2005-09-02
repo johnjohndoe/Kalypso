@@ -29,12 +29,8 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * 

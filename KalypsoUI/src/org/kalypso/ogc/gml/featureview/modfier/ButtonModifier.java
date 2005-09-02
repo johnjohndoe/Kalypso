@@ -49,6 +49,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -105,7 +106,19 @@ public class ButtonModifier implements IFeatureModifier
 
       protected boolean openDialog( final Control parentControl )
       {
-        m_featureDialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty() );
+        // listener will be called, when a linked feature should be edited
+        final IFeatureChangeListener listener = new IFeatureChangeListener() {
+
+          public void featureChanged( final FeatureChange change )
+          {
+          }
+
+          public void openFeatureRequested( final Feature feature )
+          {
+            // what to do? normally feature should be selected, is this always ok?
+          }};
+        
+        m_featureDialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty(), listener );
         return m_featureDialog.open( parentControl.getShell() ) == Window.OK;
       }
 

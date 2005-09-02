@@ -43,8 +43,6 @@ package org.kalypso.ogc.gml.command;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.FeatureSelectionChangedModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
@@ -54,8 +52,6 @@ import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
  */
 public class SelectFeaturesCommand implements ICommand
 {
-  private final CommandableWorkspace m_workspace;
-
   private final Feature[] m_selection;
 
   private final IFeatureSelectionManager m_selectionManager;
@@ -74,13 +70,13 @@ public class SelectFeaturesCommand implements ICommand
   public SelectFeaturesCommand( final CommandableWorkspace workspace, final Feature[] selection,
       final IFeatureSelectionManager selectionManager, final Object eventSource )
   {
-    m_workspace = workspace;
     m_selection = selection;
     m_eventSource = eventSource;
     if( selectionManager != null )
       m_selectionManager = selectionManager;
     else
       m_selectionManager = workspace.getSelectionManager();
+    
     m_selectedFeaturesOriginal = m_selectionManager.getFeatureSelection();
   }
 
@@ -98,7 +94,6 @@ public class SelectFeaturesCommand implements ICommand
   public void process() throws Exception
   {
     m_selectionManager.setSelection( m_eventSource, m_selection );
-//    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace, ModellEvent.SELECTION_CHANGED ) );
   }
 
   /**
@@ -115,7 +110,6 @@ public class SelectFeaturesCommand implements ICommand
   public void undo() throws Exception
   {
     m_selectionManager.setSelection( m_eventSource, m_selectedFeaturesOriginal );
-//    m_workspace.fireModellEvent( new FeatureSelectionChangedModellEvent( m_workspace, ModellEvent.SELECTION_CHANGED ) );
   }
 
   /**

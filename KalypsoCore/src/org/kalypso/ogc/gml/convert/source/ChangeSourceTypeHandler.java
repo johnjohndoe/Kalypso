@@ -46,9 +46,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.gml.util.ChangeSourceType;
 import org.kalypso.gml.util.ChangeSourceType.VisitorType;
 import org.kalypso.gml.util.ChangeSourceType.VisitorType.ArgumentType;
@@ -97,30 +99,55 @@ public class ChangeSourceTypeHandler implements ISourceHandler
     }
   }
 
-  private void applyVisitors( final GMLWorkspace inputGML, final List propertyList ) throws ClassUtilityException
+  private void applyVisitors( final GMLWorkspace inputGML, final List propertyList ) throws ClassUtilityException,
+      GmlConvertException
   {
-    final ClassLoader classLoader = getClass().getClassLoader();
-    for( Iterator iter = propertyList.iterator(); iter.hasNext(); )
+    for( final Iterator iter = propertyList.iterator(); iter.hasNext(); )
     {
       final ChangeSourceType.VisitorType visitorType = (VisitorType)iter.next();
       final String featurePath = visitorType.getFeaturePath();
-      final String visitorClass = visitorType.getVisitorclass();
-
       final Properties arguments = createArguments( visitorType.getArgument() );
 
-      final FeatureVisitor visitor = (FeatureVisitor)ClassUtilities.newInstance( visitorClass, FeatureVisitor.class,
-          classLoader, new Object[]
-          { arguments } );
-
+      final String visitorClass = visitorType.getVisitorclass();
+      final String visitorID = visitorType.getVisitorid();
+      final FeatureVisitor visitor = createVisitor( visitorClass, visitorID, arguments );
       inputGML.accept( visitor, featurePath, FeatureVisitor.DEPTH_INFINITE );
     }
+  }
+
+  private FeatureVisitor createVisitor( final String visitorClass, final String visitorID, final Properties arguments ) throws ClassUtilityException, GmlConvertException
+  {
+    if( visitorClass != null )
+    {
+      final ClassLoader classLoader = getClass().getClassLoader();
+
+      return (FeatureVisitor)ClassUtilities.newInstance( visitorClass, FeatureVisitor.class, classLoader, new Object[]
+      { arguments } );
+    }
+    else if( visitorID != null )
+    {
+      try
+      {
+        final Properties properties = new Properties();
+        properties.put( "context", m_context.toExternalForm() );
+        properties.putAll( arguments );
+
+        return KalypsoCoreExtensions.createFeatureVisitor( visitorID, properties );
+      }
+      catch( final CoreException e )
+      {
+        throw new GmlConvertException( e );
+      }
+    }
+
+    throw new GmlConvertException( "Either visitorClass or visitorID must be set" );
   }
 
   private Properties createArguments( final List argumentList )
   {
     final Properties map = new Properties();
 
-    for( Iterator iter = argumentList.iterator(); iter.hasNext(); )
+    for( final Iterator iter = argumentList.iterator(); iter.hasNext(); )
     {
       final ChangeSourceType.VisitorType.ArgumentType aType = (ArgumentType)iter.next();
       map.setProperty( aType.getName(), aType.getValue() );

@@ -192,10 +192,17 @@ public class FeaturePath
 
     public Object getValue( final GMLWorkspace workspace, final Feature feature )
     {
+      final String name = getName();
+      
       if( isID() )
-        return workspace.getFeature( getName() );
+        return workspace.getFeature( name );
 
-      final Object value = feature.getProperty( getName() );
+      if( name.equals( "gewichtung" ) )
+        System.out.println();
+      
+      final Object value = feature.getProperty( name );
+      if( value == null )
+        System.out.println();
 
       // falls ein bestimmter typ gewünscht ist, jetzt filtern
       // geht natürlich nur bei FeatureListen

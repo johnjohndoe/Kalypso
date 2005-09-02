@@ -156,7 +156,6 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @throws CloneNotSupportedException
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
   public Object cloneObject( Object objectToClone )

@@ -31,7 +31,6 @@ package org.kalypso.ui.editor.gmleditor.ui;
 
 import java.awt.dnd.DragSourceAdapter;
 
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
@@ -43,12 +42,8 @@ import org.eclipse.swt.dnd.DragSourceListener;
  */
 public class GmlTreeDragListener extends DragSourceAdapter implements DragSourceListener
 {
-
+  // TODO: not used remove it!
   private GmlTreeView m_viewer;
-
-  /**
-   *  
-   */
 
   public GmlTreeDragListener( GmlTreeView viewer )
   {

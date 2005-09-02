@@ -97,7 +97,7 @@ public class FeatureSelectionManager implements IFeatureSelectionManager, ISelec
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager#setSelection(org.kalypsodeegree.model.feature.Feature[])
+   * @see org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager#setSelection(Object, Feature[])
    */
   public void setSelection( Object eventSource, Feature[] feature )
   {
@@ -107,7 +107,7 @@ public class FeatureSelectionManager implements IFeatureSelectionManager, ISelec
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager#setSelection(java.util.List)
+   * @see org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager#setSelection(Object, List)
    */
   public void setSelection( Object eventSource, List listOfFeatures )
   {

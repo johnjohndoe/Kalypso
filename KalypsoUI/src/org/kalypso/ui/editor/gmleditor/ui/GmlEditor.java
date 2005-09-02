@@ -94,7 +94,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen der Context-URL") );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen der Context-URL" ) );
     }
     catch( final UnsupportedEncodingException e )
     {
@@ -142,10 +142,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     TreeViewer treeViewer = m_viewer.getTreeViewer();
     Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
     getSite().registerContextMenu( menuManager, m_viewer );
-//    getSite().registerContextMenu( menuManager, m_viewer );
     treeViewer.getControl().setMenu( menu );
-//    m_viewer.getControl().setMenu( menu );
-
   }
 
   /**
@@ -168,7 +165,5 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   {
     m_viewer.getTreeViewer().getControl().setFocus();
   }
-
-
 
 }

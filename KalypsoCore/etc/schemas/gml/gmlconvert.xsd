@@ -340,9 +340,14 @@
 									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
-							<xs:attribute name="visitorclass" type="xs:string">
+							<xs:attribute name="visitorclass" type="xs:string" use="optional">
 								<xs:annotation>
 									<xs:documentation>Klassennamen des FeatureVisitors, der den Wert (Object) der Property erzeugt.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="visitorid" type="xs:string" use="optional">
+								<xs:annotation>
+									<xs:documentation>Extension-ID eines FeatureVisitor,der den Wert (Object) der Property erzeugt.</xs:documentation>
 								</xs:annotation>
 							</xs:attribute>
 							<xs:attribute name="featurePath" type="xs:string">

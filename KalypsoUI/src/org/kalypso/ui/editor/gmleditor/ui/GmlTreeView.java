@@ -127,6 +127,7 @@ public class GmlTreeView extends SelectionProviderAdapter implements IPostSelect
   {
     final TreeViewer treeViewer = m_treeViewer;
 
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     if( event instanceof KalypsoSelectionChangedEvent )
     {
       final KalypsoSelectionChangedEvent kalypsoEvent = (KalypsoSelectionChangedEvent)event;
@@ -137,14 +138,16 @@ public class GmlTreeView extends SelectionProviderAdapter implements IPostSelect
         {
           public void run()
           {
-            treeViewer.setSelection( event.getSelection(), true );
+            final Object[] objects = selection.toArray();
+            treeViewer.setExpandedElements( objects );
+            treeViewer.setSelection( selection, true );
           }
         } );
       }
     }
 
     // Inform selection-listeners of the GmlTreeView
-    setSelection( event.getSelection() );
+    setSelection( selection );
   }
 
   protected void handleTreeSelectionChanged( final SelectionChangedEvent event )
@@ -254,7 +257,30 @@ public class GmlTreeView extends SelectionProviderAdapter implements IPostSelect
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    m_treeViewer.refresh();
+    if( modellEvent.getEventSource() instanceof CommandableWorkspace )
+    {
+      // TODO: only refresh tree, if the structure has changed
+      // for this, we need better modell-events
+      if( !m_composite.isDisposed() )
+      {
+        final TreeViewer treeViewer = m_treeViewer;
+        m_composite.getDisplay().asyncExec( new Runnable()
+        {
+          public void run()
+          {
+            //  das selektierte Feature merken und dann wieder anzeigen
+            final Object[] expandedElements = treeViewer.getExpandedElements();
+
+            final IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+            
+            treeViewer.refresh();
+            treeViewer.setExpandedElements( expandedElements );
+            treeViewer.setSelection( selection );
+          }
+        } );
+      }
+    }
+
     fireModellEvent( modellEvent );
   }
 
@@ -321,7 +347,6 @@ public class GmlTreeView extends SelectionProviderAdapter implements IPostSelect
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
     {
       if( m_workspace != null )

@@ -55,9 +55,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.dialog.CalendarFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.FeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
+import org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog;
@@ -74,13 +76,16 @@ import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 
 /**
+ * This control behaves in two ways: if the type of the proeprty to edit is simple, it opens a fitting dialog to edit
+ * the property. If the property is a feature, it just informs its listeners, that it whichs to open that feature.
+ * 
  * @author belger
  */
 public class ButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
   private Button m_button;
 
-  private IFeatureDialog m_dialog;
+  private IFeatureDialog m_dialog = null;
 
   private Collection m_modifyListener = new ArrayList();
 
@@ -88,34 +93,33 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   {
     super( workspace, feature, ftp );
 
-    m_dialog = chooseDialog( workspace, feature, ftp );
+    // fake listener, which just informs my own listeners
+    final IFeatureChangeListener listener = new IFeatureChangeListener()
+    {
+      public void featureChanged( final FeatureChange change )
+      {
+        fireFeatureChange( change );
+      }
+
+      public void openFeatureRequested( final Feature featureToOpen )
+      {
+        fireOpenFeatureRequested( featureToOpen );
+      }
+    };
+
+    m_dialog = chooseDialog( workspace, feature, ftp, listener );
   }
 
-  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature,
-      final FeatureTypeProperty ftp )
+  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp, final IFeatureChangeListener listener )
   {
     final String typename = ftp.getType();
-    // TODO make extensionpoint for this
-    //    if( typename.equals( "java.lang.String" ) )
-    //      return text;
-    //    if( typeName.equals( "java.lang.Double" ) )
-    //      return new Double( text );
-    //    if( typeName.equals( "java.lang.Integer" ) )
-    //      return new Integer( text );
-    //    if( typeName.equals( "java.lang.Float" ) )
-    //      return new Float( text );
-    //    if( typeName.equals( "java.lang.Long" ) )
-    //      return new Long( text );
-    //    if( typeName.equals( "java.lang.Boolean" ) )
-    //      return new Boolean( text );
-    //    if( typeName.equals( "java.util.Date" ) )
-    //      return DATE_FORMATTER.parse( text );
     if( DateWithoutTime.class.getName().equals( typename ) )
       return new CalendarFeatureDialog( feature, ftp );
 
     if( GuiTypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
     {
-      final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename );
+      final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
+          .getTypeHandlerForClassName( typename );
       return handler.createFeatureDialog( workspace, feature, ftp );
     }
 
@@ -123,7 +127,8 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     {
       int maxOccurs = feature.getFeatureType().getMaxOccurs( ftp.getName() );
       if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
-      { // it is a list of features or links to features or mixed
+      {
+        // it is a list of features or links to features or mixed
         return new FeatureDialog( workspace, feature, ftp );
       }
       // it is not a list
@@ -136,12 +141,11 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
         linkedFeature = workspace.getFeature( (String)property );
       }
       else if( property instanceof Feature )
-      {
         linkedFeature = (Feature)property;
-      }
       else
         return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
-      return new FeatureDialog( workspace, linkedFeature );
+
+      return new JumpToFeatureDialog( listener, linkedFeature );
     }
 
     // TODO: use GUITypeHandler for those two!
@@ -206,7 +210,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     {
       final ModifyListener l = (ModifyListener)iter.next();
       final Event event = new Event();
-      // TODO: create a real event?
       event.widget = m_button;
       l.modifyText( new ModifyEvent( event ) );
     }

@@ -71,6 +71,8 @@ public abstract class AbstractCSV implements ITabledValues
    * 
    * @param ignoreEmptyLines
    *          when true, empty lines are not stored in this object
+   * @param startLine
+   *        line number to start reading. starts with 1
    */
   public AbstractCSV( final int startLine, final boolean ignoreEmptyLines )
   {

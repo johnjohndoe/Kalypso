@@ -7,7 +7,7 @@ package org.kalypsodeegree.model.feature.event;
  */
 public class ModellEvent
 {
-
+  /** TODO comment this stuff! What can have happened, if this event has been sent? */
   public final static long FEATURE_CHANGE = 1 << 1;
 
   public final static long STYLE_CHANGE = 1 << 2;
@@ -17,14 +17,12 @@ public class ModellEvent
   /** Das sendende Objekt hat sich völlig geändert */
   public static final long FULL_CHANGE = 1 << 4;
 
+  /** TODO: this is not a modell-event type (it has nothing todo with the workspace) */
   public static final long THEME_ADDED = 1 << 5;
 
+  /** TODO: this is not a modell-event type (it has nothing todo with the workspace) */
   public static final long LEGEND_UPDATED = 1 << 6;
 
-//  public static final long SELECTION_CHANGED = 1 << 7;
-
-  public static final long EDITING_CHANGED = 1 << 8;
-  
   private final ModellEventProvider m_eventSource;
 
   private final long m_bitmaskType;
