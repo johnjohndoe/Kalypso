@@ -24,6 +24,7 @@
    </requires>
 
    <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>
+   <extension-point id="featureVisitor" name="featureVisitor" schema="schema/featureVisitor.exsd"/>
 
    <extension
          point="org.kalypso.core.nativeObsAdapter">

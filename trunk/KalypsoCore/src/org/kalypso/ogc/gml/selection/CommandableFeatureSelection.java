@@ -126,7 +126,7 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.feature.selection.ICommandableFeatureSelection#getCommandableWorkspace()
+   * @see ICommandableFeatureSelection#getCommandableWorkspace()
    */
   public CommandableWorkspace getCommandableWorkspace()
   {
@@ -143,14 +143,12 @@ public class CommandableFeatureSelection implements ICommandableFeatureSelection
 
   public Feature[] getSelectedFeatures()
   {
-    ArrayList features = new ArrayList();
+    final ArrayList features = new ArrayList();
     for( Iterator iter = m_selection.iterator(); iter.hasNext(); )
     {
-      Object o = (Object)iter.next();
+      final Object o = iter.next();
       if( o instanceof Feature )
-      {
-        features.add( (Feature)o );
-      }
+        features.add( o );
     }
     return (Feature[])features.toArray( new Feature[features.size()] );
   }

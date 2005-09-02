@@ -50,5 +50,4 @@ public interface ICommandableFeatureSelection extends IStructuredSelection, IEve
   public FeatureTypeProperty getFocusedFeatureTypeProperty();
 
   public Feature getFocusedFeature();
-    
 }

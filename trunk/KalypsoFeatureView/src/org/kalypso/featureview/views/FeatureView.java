@@ -7,33 +7,23 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
-import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
-import org.kalypso.contribs.eclipse.ui.PartAdapter2;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
@@ -85,21 +75,9 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * @see org.eclipse.jface.viewers.IPostSelectionProvider
  *  
  */
-public class FeatureView extends ViewPart implements ISelectionChangedListener, ISelectionListener, ModellEventListener
+public class FeatureView extends ViewPart implements ModellEventListener
 {
   private static final String _KEIN_FEATURE_SELEKTIERT_ = "<kein Feature selektiert>";
-
-  /** An empty selection provider for the SelectionChangeEvent */
-  private static final ISelectionProvider m_selProvider = new SelectionProviderAdapter()
-  {
-    public ISelection getSelection()
-    {
-      return null;
-    }
-
-    public void setSelection( final ISelection selection )
-    {}
-  };
 
   protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null );
 
@@ -118,6 +96,15 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
 
   private ISchedulingRule m_mutextRule = new MutexSchedulingRule();
 
+  private ISelectionListener m_selectionListener = new ISelectionListener() {
+
+    public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
+    {
+      // controls of my feature composite may create events, don't react
+      if( selection != null )
+        FeatureView.this.selectionChanged( selection );
+    }};
+  
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
    */
@@ -126,95 +113,9 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
     super.init( site );
 
     final IWorkbenchPage page = site.getPage();
-    page.addPartListener( new PartAdapter2()
-    {
-      /**
-       * @see org.kalypso.contribs.eclipse.ui.PartAdapter2#partOpened(org.eclipse.ui.IWorkbenchPartReference)
-       */
-      public void partOpened( IWorkbenchPartReference partRef )
-      {
-        activateSelectionListener( partRef.getPart( false ) );
-      }
-
-      public void partClosed( IWorkbenchPartReference partRef )
-      {
-        final IWorkbenchPart part = partRef.getPart( false );
-        if( part == FeatureView.this )
-          page.removePartListener( this );
-        else
-          deactivateSelectionListener( part );
-      }
-    } );
-
-    page.getWorkbenchWindow().getSelectionService().addSelectionListener( FeatureView.this );
-    // TODO: not necessary; instead of adapting to ISelectionProvider; the editor should simply register at its site as
-    // selection-provider
-    final IEditorReference[] editorReferences = page.getEditorReferences();
-    for( int i = 0; i < editorReferences.length; i++ )
-    {
-      final IEditorReference reference = editorReferences[i];
-      activateSelectionListener( reference.getPart( false ) );
-    }
+    page.getWorkbenchWindow().getSelectionService().addSelectionListener( m_selectionListener );
   }
-
-  public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
-  {
-    // controls of my feature composite may create events, don't react
-    if( part != this && selection != null )
-      selectionChanged( new SelectionChangedEvent( m_selProvider, selection ) );
-  }
-
-  protected final void activateSelectionListener( final IWorkbenchPart part )
-  {
-    final ISelectionProvider provider = getSelectionProviderFromPart( part );
-    if( provider instanceof IPostSelectionProvider )
-      ( (IPostSelectionProvider)provider ).addPostSelectionChangedListener( FeatureView.this );
-    else if( provider != null )
-      provider.addSelectionChangedListener( FeatureView.this );
-  }
-
-  protected final void deactivateSelectionListener( final IWorkbenchPart part )
-  {
-    final ISelectionProvider provider = getSelectionProviderFromPart( part );
-    if( provider instanceof IPostSelectionProvider )
-      ( (IPostSelectionProvider)provider ).removePostSelectionChangedListener( FeatureView.this );
-    else if( provider != null )
-      provider.removeSelectionChangedListener( FeatureView.this );
-
-    if( provider != null )
-    {
-      // only if the current selection correspond to the shown feature
-      // clean myself
-      final ISelection selection = provider.getSelection();
-      if( selection instanceof ICommandableFeatureSelection )
-      {
-        final Feature feature = featureFromSelection( (ICommandableFeatureSelection)selection );
-        if( m_featureComposite.getFeature() == feature )
-          activateFeature( null, null );
-      }
-    }
-  }
-
-  /**
-   * Retrieves an {@link ISelectionProvider}from the given part by the {@link org.eclipse.core.runtime.IAdaptable}
-   * -Mechanism. In preference, a {@link IPostSelectionProvider}is taken.
-   * 
-   * @return null, if no provider is found
-   */
-  private static ISelectionProvider getSelectionProviderFromPart( final IWorkbenchPart part )
-  {
-    if( part instanceof IEditorPart )
-    {
-      final IPostSelectionProvider selProvider = (IPostSelectionProvider)part.getAdapter( IPostSelectionProvider.class );
-      if( selProvider != null )
-        return selProvider;
-
-      return (ISelectionProvider)part.getAdapter( ISelectionProvider.class );
-    }
-
-    return null;
-  }
-
+  
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
@@ -224,22 +125,11 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
     m_featureComposite.dispose();
 
     final IWorkbenchPage page = getSite().getPage();
-    final IEditorReference[] editorReferences = page.getEditorReferences();
-    for( int i = 0; i < editorReferences.length; i++ )
-    {
-      final IEditorReference reference = editorReferences[i];
-      deactivateSelectionListener( reference.getPart( false ) );
-    }
-
-    page.getWorkbenchWindow().getSelectionService().removeSelectionListener( this );
+    page.getWorkbenchWindow().getSelectionService().removeSelectionListener( m_selectionListener );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  public void selectionChanged( final SelectionChangedEvent event )
+  protected void selectionChanged( final ISelection selection )
   {
-    final ISelection selection = event.getSelection();
     if( selection instanceof ICommandableFeatureSelection && !selection.isEmpty() )
     {
       final ICommandableFeatureSelection featureSel = (ICommandableFeatureSelection)selection;
@@ -247,6 +137,9 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
       final Feature feature = featureFromSelection( featureSel );
       activateFeature( featureSel.getCommandableWorkspace(), feature );
     }
+    // empty view if we have no more selection -> e.g. when the selection-providing editor closes
+    else if ( selection == null || selection.isEmpty() )
+      activateFeature( null, null );
   }
 
   private Feature featureFromSelection( final ICommandableFeatureSelection featureSel )
@@ -285,113 +178,16 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
 
       public void openFeatureRequested( final Feature feature )
       {
-      // TODO implement it
+        final CommandableWorkspace workspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
+        // just show this feature in the view, don't change the selection this doesn't work
+        activateFeature( workspace, feature );
       }
     } );
 
-    makeActions();
-    hookContextMenu();
-    contributeToActionBars();
-
     activateFeature( null, null );
 
-    final IWorkbenchPart activePart = getSite().getPage().getActivePart();
-    if( activePart instanceof IViewPart )
-    {
-      final ISelectionProvider selectionProvider = ( (IViewPart)activePart ).getViewSite().getSelectionProvider();
-      if( selectionProvider != null )
-        selectionChanged( activePart, selectionProvider.getSelection() );
-    }
-    else if( activePart instanceof IEditorPart )
-    {
-      final ISelectionProvider selectionProvider = getSelectionProviderFromPart( activePart );
-      if( selectionProvider != null )
-        selectionChanged( activePart, selectionProvider.getSelection() );
-    }
-  }
-
-  private void hookContextMenu()
-  {
-  //    MenuManager menuMgr = new MenuManager( "#PopupMenu" );
-  //    menuMgr.setRemoveAllWhenShown( true );
-  //    menuMgr.addMenuListener( new IMenuListener()
-  //    {
-  //      public void menuAboutToShow( IMenuManager manager )
-  //      {
-  //        FeatureView.this.fillContextMenu( manager );
-  //      }
-  //    } );
-  //    Menu menu = menuMgr.createContextMenu( viewer.getControl() );
-  //    viewer.getControl().setMenu( menu );
-  //    getSite().registerContextMenu( menuMgr, viewer );
-  }
-
-  private void contributeToActionBars()
-  {
-  //    IActionBars bars = getViewSite().getActionBars();
-  //    fillLocalPullDown( bars.getMenuManager() );
-  //    fillLocalToolBar( bars.getToolBarManager() );
-  }
-
-  //  private void fillLocalPullDown( IMenuManager manager )
-  //  {
-  //    manager.add( action1 );
-  //    manager.add( new Separator() );
-  //    manager.add( action2 );
-  //  }
-
-  //  private void fillContextMenu( IMenuManager manager )
-  //  {
-  //    manager.add( action1 );
-  //    manager.add( action2 );
-  //    manager.add( new Separator() );
-  //    drillDownAdapter.addNavigationActions( manager );
-  //    // Other plug-ins can contribute there actions here
-  //    manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-  //  }
-
-  //  private void fillLocalToolBar( IToolBarManager manager )
-  //  {
-  //    manager.add( action1 );
-  //    manager.add( action2 );
-  //    manager.add( new Separator() );
-  //    drillDownAdapter.addNavigationActions( manager );
-  //  }
-
-  private void makeActions()
-  {
-  //    action1 = new Action()
-  //    {
-  //      public void run()
-  //      {
-  //        showMessage( "Action 1 executed" );
-  //      }
-  //    };
-  //    action1.setText( "Action 1" );
-  //    action1.setToolTipText( "Action 1 tooltip" );
-  //    action1.setImageDescriptor( PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-  //        ISharedImages.IMG_OBJS_INFO_TSK ) );
-  //
-  //    action2 = new Action()
-  //    {
-  //      public void run()
-  //      {
-  //        showMessage( "Action 2 executed" );
-  //      }
-  //    };
-  //    action2.setText( "Action 2" );
-  //    action2.setToolTipText( "Action 2 tooltip" );
-  //    action2.setImageDescriptor( PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-  //        ISharedImages.IMG_OBJS_INFO_TSK ) );
-  //    doubleClickAction = new Action()
-  //    {
-  //      public void run()
-  //      {
-  //        ISelection selection = viewer.getSelection();
-  //        Object obj = ( (IStructuredSelection)selection ).getFirstElement();
-  //        showMessage( "Double-click detected on " + obj.toString() );
-  //      }
-  //    };
+    final ISelection selection = getSite().getWorkbenchWindow().getSelectionService().getSelection();
+    selectionChanged( selection );
   }
 
   /**
@@ -402,7 +198,7 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
     m_mainGroup.setFocus();
   }
 
-  private void activateFeature( final CommandableWorkspace workspace, final Feature feature )
+  protected void activateFeature( final CommandableWorkspace workspace, final Feature feature )
   {
     final Group mainGroup = m_mainGroup;
     final ScrolledCompositeCreator creator = m_creator;
@@ -419,7 +215,10 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
           return Status.OK_STATUS;
 
         if( oldWorkspace != null )
+        {
           oldWorkspace.removeModellListener( FeatureView.this );
+          getSite().setSelectionProvider( null );
+        }
 
         if( m_featureComposite != null )
           m_featureComposite.disposeControl();
@@ -436,6 +235,7 @@ public class FeatureView extends ViewPart implements ISelectionChangedListener, 
         if( workspace != null && feature != null && mainGroup != null && ( !mainGroup.isDisposed() ) )
         {
           workspace.addModellListener( FeatureView.this );
+          getSite().setSelectionProvider( workspace.getSelectionManager() );
 
           creator.createControl( mainGroup, SWT.V_SCROLL, SWT.NONE );
           creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
