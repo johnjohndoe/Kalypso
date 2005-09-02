@@ -112,7 +112,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       .createFeatureType( "Gewässer", "wizard.kalypso.na", //$NON-NLS-1$ //$NON-NLS-2$
           new FeatureTypeProperty[]
           {
-              FeatureFactory.createFeatureTypeProperty( "Ort", "wizard.kalypso.na", GM_LineString.class.getName(), //$NON-NLS-2$
+              FeatureFactory.createFeatureTypeProperty( "Ort", "wizard.kalypso.na", GeometryUtilities.getLineStringClass().getName(), //$NON-NLS-2$
                   false, null ),
               FeatureFactory.createFeatureTypeProperty( "name", "wizard.kalypso.na", String.class.getName(), false, //$NON-NLS-1$ //$NON-NLS-2$
                   null ),
