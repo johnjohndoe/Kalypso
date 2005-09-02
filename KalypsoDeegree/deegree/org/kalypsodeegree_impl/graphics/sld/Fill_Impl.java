@@ -119,11 +119,11 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
 
     if( cssParam != null )
     {
-      String s = cssParam.getValue( feature );
+      String s = cssParam.getValue( feature ).replaceAll("##", "#");
 
       try
       {
-        awtColor = Color.decode( s );
+        awtColor =  Color.decode( s );
       }
       catch( NumberFormatException e )
       {
