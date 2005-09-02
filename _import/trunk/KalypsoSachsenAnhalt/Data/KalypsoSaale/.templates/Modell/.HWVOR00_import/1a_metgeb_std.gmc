@@ -1,0 +1,15 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
+	<featuremapping>
+		<csvsource xlink:href="Stammdat/Met_Geb.std"  comment="*" delemiter="&#9;" lineskip="1">
+			<featureproperty name="PNR" type="java.lang.String" format="">   <column>0</column>  </featureproperty>
+			<featureproperty name="Region" type="java.lang.String" format="">   <column>16</column>  </featureproperty>
+		</csvsource>
+		<gmlsource xlink:href="../modell.gml"/>
+		<changeFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" toID="PNR">
+			<map from="PNR" to="PNR"/>
+			<map from="Region" to="Region"/>
+		</changeFeaturesMapping>
+	</featuremapping>
+</gmlconvert>

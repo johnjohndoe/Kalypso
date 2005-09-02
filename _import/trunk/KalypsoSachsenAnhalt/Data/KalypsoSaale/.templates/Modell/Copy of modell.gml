@@ -616,7 +616,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -791,7 +791,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -960,7 +960,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -1135,7 +1135,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -1310,7 +1310,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Saale-Ilm</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -1485,7 +1485,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Saale-Ilm</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -1660,7 +1660,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -1835,7 +1835,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Saale-Ilm</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -2010,7 +2010,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -2197,7 +2197,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -2366,7 +2366,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -2535,7 +2535,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -2704,7 +2704,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -2879,7 +2879,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -3054,7 +3054,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -3223,7 +3223,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -3398,7 +3398,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Unstrut-Eichsfeld</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -3567,7 +3567,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -3736,7 +3736,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -3911,7 +3911,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -4086,7 +4086,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -4261,7 +4261,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Weisse Elster</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -4430,7 +4430,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Weisse Elster</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -4599,7 +4599,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Weisse Elster</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -4774,7 +4774,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -4955,7 +4955,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -5124,7 +5124,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -5293,7 +5293,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -5462,7 +5462,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -5631,7 +5631,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -5800,7 +5800,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -5969,7 +5969,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -6138,7 +6138,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -6307,7 +6307,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -6482,7 +6482,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -6657,7 +6657,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -6832,7 +6832,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -7001,7 +7001,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -7170,7 +7170,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -7339,7 +7339,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Harz</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -7514,7 +7514,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -7689,7 +7689,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -7858,7 +7858,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -8027,7 +8027,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -8202,7 +8202,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Nord</pegel:Region>
+          <pegel:Region/>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>

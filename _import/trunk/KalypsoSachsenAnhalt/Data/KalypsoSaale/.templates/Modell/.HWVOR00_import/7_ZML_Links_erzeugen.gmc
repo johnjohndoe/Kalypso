@@ -37,10 +37,10 @@
 			<argument name="href" value="Ergebnisse/Durchfluß/${fid}.zml"/>
 		</visitor>
 
-<!-- Temperatur -->
-		<visitor featurePath="TempCollectionAssociation/TempMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
-			<argument name="link" value="Temperatur"/>
-			<argument name="href" value="./Temperatur/${fid}.zml"/>
+<!-- Ombormeter -->
+		<visitor featurePath="OmbrometerCollectionAssociation/OmbrometerMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Niederschlag"/>
+			<argument name="href" value="Ombrometer/${fid}.zml"/>
 		</visitor>
 	</changesource>
 </gmlconvert>

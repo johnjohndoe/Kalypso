@@ -242,7 +242,7 @@
 			<featureproperty name="H3_72" type="java.lang.Double" format="">   <column>234</column>  </featureproperty>
 		</csvsource>
 		<gmlsource xlink:href="../modell.gml"/>
-		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="WLMCollectionAssociation/WLMMember" toID="PNR" handleExisting="change">
+		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="WLMCollectionAssociation/WLMMember" toID="PNR" handleExisting="change" fid="WLM-${fromID}">
 			<map from="PNR"    to="PNR"/>
 			<map from="IP_1"   to="IP_1"/>
 			<map from="IP_2"   to="IP_2"/>
