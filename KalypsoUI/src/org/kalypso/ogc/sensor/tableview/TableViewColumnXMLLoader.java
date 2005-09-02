@@ -50,6 +50,7 @@ import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -101,11 +102,12 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
 
       final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
       final String name = NameUtils.replaceTokens( colName, obs, valueAxis );
+      final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils.getDefaultFormatString( valueAxis.getType() );
 
       final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
           : new PooledObsProvider( key, null );
       final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol.getWidth(),
-          keyAxis, valueAxis );
+          keyAxis, valueAxis, format );
 
       m_view.addItem( column );
     }

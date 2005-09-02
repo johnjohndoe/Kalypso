@@ -165,7 +165,7 @@ public class ObservationViewerDialog extends ResizableDialog
   private ButtonControl[] createButtonControls()
   {
     final List result = new ArrayList();
-    final IAxis[] axis = TimeserieUtils.createDefaultAxis( m_axisTypes, true );
+    final IAxis[] axis = TimeserieUtils.createDefaultAxes( m_axisTypes, true );
 
     if( ( m_buttonControls & BUTTON_REMOVE ) == BUTTON_REMOVE )
     {

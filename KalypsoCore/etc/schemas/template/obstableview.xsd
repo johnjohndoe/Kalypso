@@ -100,6 +100,13 @@
 					</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="format" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>the format specification of the column. Values
+					of this column will be displayed according to this format.
+					</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	<!-- / typeColumn -->
 	<!-- typeObservation -->

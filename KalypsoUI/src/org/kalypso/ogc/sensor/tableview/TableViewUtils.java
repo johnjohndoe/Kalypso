@@ -252,6 +252,7 @@ public class TableViewUtils
         xmlCol.setId( "c" + String.valueOf( colCount ) );
         xmlCol.setName( col.getName() );
         xmlCol.setWidth( col.getWidth() );
+        xmlCol.setFormat( col.getFormat() );
 
         xmlColumns.add( xmlCol );
       }

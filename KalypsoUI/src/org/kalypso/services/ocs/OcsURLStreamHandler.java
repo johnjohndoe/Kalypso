@@ -110,11 +110,13 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
       try
       {
-        log.info( "Es wird versucht, eine Default-Zeitreihe zu erzeugen" );
+        log.info( "Es wird versucht, eine Default-Zeitreihe zu erzeugen..." );
         
         // we might be here because the server is down. If the href contains
         // a request, let create a default observation according to it.
         final IObservation obs = RequestFactory.createDefaultObservation( href );
+        
+        log.info( "Default-Zeitreihe " + obs.getName() + " wurde erzeugt." );
 
         ZmlFactory.writeToFile( obs, file );
 
