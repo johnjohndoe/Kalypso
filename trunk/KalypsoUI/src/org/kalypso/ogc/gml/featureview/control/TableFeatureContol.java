@@ -152,7 +152,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
         final FeatureTypeProperty ftp = properties[i];
         m_viewer.addColumn( ftp.getName(), true, 100, "SWT.CENTER", null, i == properties.length - 1 );
       }
-
     }
   }
 

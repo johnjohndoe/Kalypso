@@ -238,7 +238,8 @@ public class FeatureSelectionManager implements IFeatureSelectionManager, ISelec
 
   private final void fireSelectionChanged( final SelectionChangedEvent event )
   {
-    Object[] listeners = m_listeners.getListeners();
+    final ListenerList listenerList = m_listeners;
+    Object[] listeners = listenerList.getListeners();
     for( int i = 0; i < listeners.length; i++ )
     {
       final Object listener = listeners[i];
@@ -247,17 +248,19 @@ public class FeatureSelectionManager implements IFeatureSelectionManager, ISelec
         final ISelectionChangedListener l = (ISelectionChangedListener)listener;
         Platform.run( new SafeRunnable()
         {
-          public void run()
+          public void run() throws Exception
           {
             try
             {
               l.selectionChanged( event );
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               // it is assumed that listener is not a valid reference anymore and was not removed
               // from the listener list
-              m_listeners.remove( l );
+              listenerList.remove( l );
+              
+              throw e;
             }
           }
         } );

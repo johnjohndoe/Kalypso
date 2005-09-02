@@ -27,12 +27,10 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.editor.actions;
+package org.kalypso.ogc.gml.selection;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureThemeSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 

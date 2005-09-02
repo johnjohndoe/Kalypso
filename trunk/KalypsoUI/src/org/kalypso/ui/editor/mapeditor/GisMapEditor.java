@@ -288,7 +288,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
         .getCoordinatesSystem(), inputFile.getProject() );
     setMapModell( mapModell );
     //register with all selection managers of the map model
-    IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+    // BUG PRONE! This code cannot know, if someone else changes the selection manager
+    // of one of the themes; if this happens this code is broken!
+    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( int i = 0; i < allThemes.length; i++ )
     {
       IKalypsoTheme theme = allThemes[i];
