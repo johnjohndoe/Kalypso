@@ -52,6 +52,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
@@ -206,7 +207,7 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
       // collect available geometry properties
       for( int i = 0; i < ftps.length; i++ )
       {
-        if( ftps[i].getType().startsWith( "org.kalypsodeegree.model.geometry" ) )
+        if(GeometryUtilities.isGeometry(ftps[i]))
           geoFtps.add( ftps[i] );
       }
 
@@ -221,26 +222,8 @@ public class CreateGeometryFeatureWidget extends AbstractWidget
 
   private void setGeometryWidget( final IKalypsoFeatureTheme theme, final FeatureTypeProperty ftp )
   {
-    if( ftp.getType().equals( "org.kalypsodeegree.model.geometry.GM_Point" ) )
+    if( GeometryUtilities.isPointGeometry(ftp) )
       myWidget = new CreatePointFeatureWidget( "Gemoetrie-editor", "editieren von " + ftp.getName(), this, theme, ftp );
-    //    else if( ftp.getType().equals(
-    // "org.kalypsodeegree.model.geometry.GM_MultiPoint"
-    // ) )
-    //      myWidget = new CreateMultipointFeatureWidget();
-    //    else if( ftp.getType().equals(
-    // "org.kalypsodeegree.model.geometry.GM_Polygon" )
-    // )
-    //      myWidget = new CreatePolygonFeatureWidget();
-    //    else if( ftp.getType().equals(
-    // "org.kalypsodeegree.model.geometry.GM_MultiSurface" ) )
-    //      myWidget = new CreateMultipolygonFeatureWidget();
-    //    else if( ftp.getType().equals(
-    // "org.kalypsodeegree.model.geometry.GM_LineString"
-    // ) )
-    //      myWidget = new CreateLinestringFeatureWidget();
-    //    else if( ftp.getType().equals(
-    // "org.kalypsodeegree.model.geometry.GM_MultiCurve"
-    // ) )
     //      myWidget = new CreateMultilinestringFeatureWidget();
   }
 

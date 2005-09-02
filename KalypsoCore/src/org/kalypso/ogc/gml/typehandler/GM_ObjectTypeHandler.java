@@ -37,6 +37,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.extension.TypeRegistryException;
@@ -67,12 +68,9 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
 
   private final String m_shortName;
 
-  private final String m_schemaElementName;
-
-  public GM_ObjectTypeHandler( final String schemaTypeName, final String schemaElementName, final Class clazz )
+  public GM_ObjectTypeHandler( final String schemaTypeName, final Class clazz )
   {
     m_typeName = schemaTypeName;
-    m_schemaElementName = schemaElementName;
     m_clazz = clazz;
     m_shortName = m_clazz.getName().replaceAll( ".+\\.", "" );
   }
@@ -102,7 +100,6 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
       final Document ownerDocument = node.getOwnerDocument();
       final Node importedNode = ownerDocument.importNode( newNode, true );
       node.appendChild( importedNode );
-
     }
     catch( Exception e )
     {
@@ -116,19 +113,24 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
    */
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
-    Element element = XMLTools.getNamedChild( node, XMLHelper.GMLSCHEMA_NS, m_schemaElementName );
+    if( node == null )
+      return null;
+    final ElementList childElements = XMLTools.getChildElements( node );
+    if( childElements.getLength() < 1 )
+      return null;
+    final Element element = childElements.item( 0 );
+
     if( element != null )
       try
       {
         GMLGeometry gml = GMLFactory.createGMLGeometry( element );
         GM_Object object = GMLAdapter.wrap( gml );
-        if( !m_clazz.isInstance( object ) )
-        {
-          // 	debug
-          System.out.println( "hier ist der falsche type angegeben biem typehandler" );
-          System.out.println( "registriert: " + m_clazz.getName() );
-          System.out.println( "wert ist " + object.getClass().getName() );
-        }
+        //        if( !m_clazz.isInstance( object ) )
+        //        {
+        //          System.out.println( "hier ist der falsche type angegeben biem typehandler" );
+        //          System.out.println( "registriert: " + m_clazz.getName() );
+        //          System.out.println( "wert ist " + object.getClass().getName() );
+        //        }
         return object;
       }
       catch( GM_Exception e )

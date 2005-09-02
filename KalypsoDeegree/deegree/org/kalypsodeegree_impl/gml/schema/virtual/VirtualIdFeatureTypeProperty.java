@@ -84,12 +84,4 @@ public class VirtualIdFeatureTypeProperty extends AbstractFeatureType implements
     return false;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
-   */
-  public boolean isGeometryProperty()
-  {
-    return false;
-  }
-
 }

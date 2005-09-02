@@ -40,6 +40,7 @@ import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.xml.sax.SAXException;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -781,7 +782,7 @@ public class ImportWfsWizardPage extends WizardPage implements
         for( int j = 0; j < vProperty.length; j++ )
         {
           FeatureTypeProperty vp = vProperty[i];
-          if( vp.isGeometryProperty() )
+          if(GeometryUtilities.isGeometry( vp)) 
             return vp.getType();
 
         }
@@ -867,7 +868,7 @@ public class ImportWfsWizardPage extends WizardPage implements
         for( int j = 0; j < properties.length; j++ )
         {
           FeatureTypeProperty property = properties[j];
-          if( property.isGeometryProperty() )
+          if( GeometryUtilities.isGeometry(property) )
           {
             return property.getType();
           }
@@ -879,7 +880,7 @@ public class ImportWfsWizardPage extends WizardPage implements
           for( int j = 0; j < vProperty.length; j++ )
           {
             FeatureTypeProperty vp = vProperty[i];
-            if( vp.isGeometryProperty() )
+            if( GeometryUtilities.isGeometry(vp) )
               return vp.getType();
           }
         }

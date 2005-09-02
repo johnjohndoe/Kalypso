@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author F.Lindemann
@@ -64,11 +65,11 @@ public class TextLabelComboPanel extends ComboPanel
     ArrayList labelStringItems = new ArrayList();
     final FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      if( !ftp[i].isGeometryProperty() )
+      if( ! GeometryUtilities.isGeometry(ftp[i]) )
         labelStringItems.add( ftp[i].getName() );
     final FeatureTypeProperty[] vftp = featureType.getVirtuelFeatureTypeProperty();
     for( int i = 0; i < vftp.length; i++ )
-      if( !vftp[i].isGeometryProperty() )
+      if(! GeometryUtilities.isGeometry(vftp[i]) )
         labelStringItems.add( vftp[i].getName() );
     items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )

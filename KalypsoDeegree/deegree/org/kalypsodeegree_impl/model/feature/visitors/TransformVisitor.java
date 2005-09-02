@@ -10,6 +10,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -59,7 +60,7 @@ public class TransformVisitor implements FeatureVisitor
         // TODO: also handle list of geoobjects
 
         final FeatureTypeProperty ftp = ftps[i];
-        if( ftp.isGeometryProperty() )
+        if( GeometryUtilities.isGeometry(ftp) )
         {
           final GM_Object object = (GM_Object)f.getProperty( ftp.getName() );
           if( object != null )

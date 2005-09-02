@@ -41,7 +41,6 @@
 
 package org.kalypsodeegree_impl.tools;
 
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -77,7 +76,7 @@ public class FeatureUtils
     if( Double.class.getName().equals( type ) )
       return new Double( input[0].replace( ',', '.' ) );
 
-    if( GM_Point.class.getName().equals( type ) )
+    if( GeometryUtilities.getPointClass().getName().equals( type ) )
     {
       final String rwString = input[0].trim();
       final String hwString = input[1].trim();

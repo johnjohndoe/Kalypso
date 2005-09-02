@@ -51,6 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.feature.AbstractFeatureType;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
@@ -108,7 +109,7 @@ public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implem
    */
   public String getType()
   {
-    return GM_Polygon.class.getName();
+    return GeometryUtilities.getPolygonClass().getName();
   }
 
   /**
@@ -117,14 +118,6 @@ public class VirtualRasterFeatureTypeProperty extends AbstractFeatureType implem
   public boolean isNullable()
   {
     return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
-   */
-  public boolean isGeometryProperty()
-  {
-    return true;
   }
 
   public void setVirtualValue( Object value )

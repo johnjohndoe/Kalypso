@@ -73,6 +73,7 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author F.Lindemann
@@ -180,7 +181,7 @@ public class AddSymbolizerPanel
     }
 
     // Symbolizer Add-Button
-    Label symbolizerAddButton = new Label( m_composite, SWT.PUSH | SWT.CENTER );
+    final Label symbolizerAddButton = new Label( m_composite, SWT.PUSH | SWT.CENTER );
     symbolizerAddButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
     FormData symbolizerAddButtonData = new FormData();
     symbolizerAddButtonData.height = 20;
@@ -300,8 +301,7 @@ public class AddSymbolizerPanel
 
     for( int i = 0; i < ftp.length; i++ )
     {
-      String type = ftp[i].getType();
-      if( type.startsWith( "org.kalypsodeegree.model.geometry." ) && !type.endsWith( "GM_Envelope" ) )
+      if(  GeometryUtilities.isGeometry(ftp[i])  )
         list.add( ftp[i].getName() );
     }
     return list;
@@ -316,7 +316,9 @@ public class AddSymbolizerPanel
     // in case of Pattern-Rule it does not make sense to have a pattern for
     // textsymbolizer
 
-    if( TextSymbolizerLayout.getFeatureTypeGeometryType( ftp ) == TextSymbolizerLayout.GM_POINT )
+    final int featureTypeGeometryType = TextSymbolizerLayout.getFeatureTypeGeometryType( ftp );
+    if( featureTypeGeometryType == TextSymbolizerLayout.GM_POINT
+        || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOINT )
     {
       if( m_isSimpleRule )
       {
@@ -330,7 +332,8 @@ public class AddSymbolizerPanel
         items[0] = "Point";
       }
     }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( ftp ) == TextSymbolizerLayout.GM_LINESTRING )
+    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_LINESTRING
+        || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTILINESTRING )
     {
       if( m_isSimpleRule )
       {
@@ -346,7 +349,8 @@ public class AddSymbolizerPanel
         items[1] = "Point";
       }
     }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( ftp ) == TextSymbolizerLayout.GM_POLYGON )
+    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_POLYGON
+        || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOLYGON )
     {
       if( m_isSimpleRule )
       {
@@ -362,35 +366,22 @@ public class AddSymbolizerPanel
         items[1] = "Point";
       }
     }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( ftp ) == TextSymbolizerLayout.GM_MULTIPOINT )
+    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_OBJECT )
     {
       if( m_isSimpleRule )
       {
-        items = new String[2];
-        items[0] = "Point";
-        items[1] = "Text";
+        items = new String[4];
+        items[0] = "Text";
+        items[1] = "Point";
+        items[2] = "Line";
+        items[3] = "Polygon";
       }
       else
-      {
-        items = new String[1];
-        items[0] = "Point";
-      }
-    }
-    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( ftp ) == TextSymbolizerLayout.GM_OBJECT ) //multilinestring,
-    // multipolygon
-    {
-      if( m_isSimpleRule )
       {
         items = new String[3];
-        items[0] = "Polygon";
-        items[1] = "Text";
-        items[2] = "Point";
-      }
-      else
-      {
-        items = new String[2];
-        items[0] = "Polygon";
-        items[1] = "Point";
+        items[0] = "Point";
+        items[1] = "Line";
+        items[2] = "Polygon";
       }
     }
     return items;

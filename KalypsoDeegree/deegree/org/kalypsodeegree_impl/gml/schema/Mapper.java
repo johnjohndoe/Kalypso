@@ -14,39 +14,14 @@ public class Mapper
 
   private static final SimpleDateFormat XML_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd" );
 
-  
-
   public static String mapGMLSchemaType2JavaType( String name )
   {
-    if( "GeometryPropertyType".equals( name ) )
-      return "org.kalypsodeegree.model.geometry.GM_Object";
-
-    if( "PointPropertyType".equals( name ) )
-      return "org.kalypsodeegree.model.geometry.GM_Point";
-
-    if( "MultiPointPropertyType".equals( name ) )
-      return "org.kalypsodeegree.model.geometry.GM_MultiPoint";
-
-    if( "PolygonPropertyType".equals( name ) )
-      return "org.kalypsodeegree.model.geometry.GM_Polygon";
-
-    if( "MultiPolygonPropertyType".equals( name ) )
-      return "org.kalypsodeegree.model.geometry.GM_MultiSurface";
-
-    if( "LineStringPropertyType".equals( name ) )
-      return "org.kalypsodeegree.model.geometry.GM_LineString";
-
-    if( "MultiLineStringPropertyType".equals( name ) )
-      return "org.kalypsodeegree.model.geometry.GM_MultiCurve";
-
     if( "AbstractFeatureType".equals( name ) )
       return "org.kalypsodeegree.model.feature.Feature";
 
     if( "FeatureAssociationType".equals( name ) )
       return "FeatureAssociationType";
 
-    //    System.out.println( "add mapping for " + name + " in " +
-    // Mapper.class.toString() );
     return null;
   }
 
@@ -168,8 +143,8 @@ public class Mapper
     if( !createGeometry )
       return null;
 
-    // TODO create default geo properties 
-    
+    // TODO create default geo properties
+
     return null;
   }
 }

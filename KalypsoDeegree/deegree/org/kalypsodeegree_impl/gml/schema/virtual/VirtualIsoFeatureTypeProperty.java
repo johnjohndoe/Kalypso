@@ -222,7 +222,7 @@ public class VirtualIsoFeatureTypeProperty extends AbstractFeatureType implement
    */
   public String getType()
   {
-    return GM_LineString.class.getName();
+    return GeometryUtilities.getLineStringClass().getName();
   }
 
   /**
@@ -233,11 +233,4 @@ public class VirtualIsoFeatureTypeProperty extends AbstractFeatureType implement
     return false;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
-   */
-  public boolean isGeometryProperty()
-  {
-    return true;
-  }
 }

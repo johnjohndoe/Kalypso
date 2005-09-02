@@ -71,7 +71,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.kalypsodeegree_impl.tools.TimeTools;
 
 /**
@@ -184,7 +190,7 @@ public class DBaseFile
    * constructor <BR>
    * only for writing a dBase file <BR>
    */
-  public DBaseFile( String url, FieldDescriptor[] fieldDesc ) 
+  public DBaseFile( String url, FieldDescriptor[] fieldDesc )
   {
     m_defaultFileShapeType = -1;
     fname = url;
@@ -271,7 +277,7 @@ public class DBaseFile
       // get the column name into a byte array
       b = new byte[11];
       rafDbf.readFully( b );
-      
+
       // bugfix: 'b' may contain 0-bytes, so convert only up to first 0 byte
       int length = 11;
       for( int bIndex = 0; bIndex < 11; bIndex++ )
@@ -401,16 +407,18 @@ public class DBaseFile
   {
     switch( m_defaultFileShapeType )
     {
+    // remeber: the geometry classes must be the same
+    //    as the one used by the marshalling type handlers
     case ShapeConst.SHAPE_TYPE_POINT:
-      return "org.kalypsodeegree.model.geometry.GM_Point";
+      return GeometryUtilities.getPointClass().getName();
     case ShapeConst.SHAPE_TYPE_MULTIPOINT:
-      return "org.kalypsodeegree.model.geometry.GM_MultiPoint";
+      return GeometryUtilities.getMultiPointClass().getName();
     case ShapeConst.SHAPE_TYPE_POLYLINE:
-      return "org.kalypsodeegree.model.geometry.GM_LineString";
+      return GeometryUtilities.getLineStringClass().getName();
     case ShapeConst.SHAPE_TYPE_POLYGON:
-      return "org.kalypsodeegree.model.geometry.GM_Polygon";
+      return GeometryUtilities.getPolygonClass().getName();
     default:
-      return "org.kalypsodeegree.model.geometry.GM_Object";
+      return GM_Object.class.getName();
     }
   }
 
