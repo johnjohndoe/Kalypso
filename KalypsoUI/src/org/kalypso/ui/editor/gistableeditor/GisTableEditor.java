@@ -201,6 +201,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     } );
 
     getSite().registerContextMenu( menuManager, m_layerTable );
+    getSite().setSelectionProvider( getLayerTable() );
     m_layerTable.setMenu( menuManager );
 
     load();
