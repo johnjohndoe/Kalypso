@@ -4,4 +4,12 @@
 		factory="org.kalypso.wiskiadapter.WiskiRepositoryFactory"
 		conf="rmi://193.23.163.115:10991/KiWWDataProvider#-#kmustermann#geheim#de"
 		name="wiski" />
+	
+	<!-- INFO: sollte die Verbindung nicht klappen, checken ob smdhvzlapp in etc/hosts eingetragen ist -->
+		<!--repository
+		factory="org.kalypso.wiskiadapter.WiskiRepositoryFactory"
+		conf="rmi://smdhvzlapp:10991/KiWWDataProvider#-#kmustermann#geheim#de"
+		name="wiski" /-->
+
 </repconf>
+
