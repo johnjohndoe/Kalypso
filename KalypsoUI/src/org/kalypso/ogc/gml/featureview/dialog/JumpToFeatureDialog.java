@@ -88,7 +88,7 @@ public class JumpToFeatureDialog implements IFeatureDialog
    */
   public String getLabel()
   {
-    return "Link zu Feature: " + m_feature.getId();
+    return m_feature == null ? "<Link nicht gesetzt oder nicht gültig>" : "Link zu Feature: " + m_feature.getId();
   }
 
 }
