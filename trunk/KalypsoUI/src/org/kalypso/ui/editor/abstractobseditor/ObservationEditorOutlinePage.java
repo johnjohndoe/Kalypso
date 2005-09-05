@@ -184,8 +184,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
     if( element instanceof ObsViewItem )
     {
-      final ObsViewItem curve = (ObsViewItem)element;
-      curve.setShown( event.getChecked() );
+      final ObsViewItem item = (ObsViewItem)element;
+      item.setShown( event.getChecked() );
     }
   }
 

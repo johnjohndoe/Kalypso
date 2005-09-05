@@ -66,4 +66,14 @@ public class FileUtilitiesTest extends TestCase
 
     assertTrue( FileUtilities.isChildOf( f, c3 ) );
   }
+  
+  public void testValidateName()
+  {
+    assertEquals( "foobar", FileUtilities.validateName( "\\foo*bar?", "" ) );
+    assertEquals( "robertocarlos", FileUtilities.validateName( "/roberto/carlos", "" ) );
+    assertEquals( "plusminus", FileUtilities.validateName( "plus:minus", "" ) );
+    assertEquals( "xml", FileUtilities.validateName( "<xml>", "" ) );
+    assertEquals( "strongweak", FileUtilities.validateName( "strong|weak", "" ) );
+    assertEquals( "whatthehell", FileUtilities.validateName( "what\"the\"hell", "" ) );
+  }
 }

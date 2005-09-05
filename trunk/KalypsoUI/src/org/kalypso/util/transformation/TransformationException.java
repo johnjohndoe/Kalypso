@@ -41,6 +41,8 @@
 package org.kalypso.util.transformation;
 
 /**
+ * @deprecated use ant task instead in your model-configuration
+ * 
  * @author belger
  */
 public class TransformationException extends Exception

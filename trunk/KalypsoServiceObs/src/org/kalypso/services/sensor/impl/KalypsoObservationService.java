@@ -319,7 +319,12 @@ public class KalypsoObservationService implements IObservationService
 
       final ObservationType obsType = ZmlFactory.createXML( obs, request, m_timezone );
 
-      final File f = File.createTempFile( "___" + obs.getName(), ".zml", m_tmpDir );
+      // name of the temp file must be valid against OS-rules for naming files
+      // so remove any special characters
+      final String tempFileName = FileUtilities.validateName( "___" + obs.getName(), "-" );
+      
+      // create temp file
+      final File f = File.createTempFile( tempFileName, ".zml", m_tmpDir );
 
       // we say delete on exit even if we allow the client to delete the file
       // explicitely in the clearTempData() service call. This allows us to

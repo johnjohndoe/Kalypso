@@ -136,7 +136,6 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     // type dependent format
     final NumberFormat nf = m_model.getNumberFormat( column );
     final String text = nf.format( n.doubleValue() );
-
     label.setText( text );
 
     return label;

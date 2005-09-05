@@ -450,7 +450,7 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
-      return TimeserieUtils.getNumberFormatFor( col.getAxis().getType() );
+      return TimeserieUtils.getNumberFormat( col.getFormat() );
     }
   }
 

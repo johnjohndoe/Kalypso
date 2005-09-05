@@ -65,6 +65,8 @@ import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.io.StreamUtilities;
 
 /**
+ * @deprecated use ant task instead in your model-configuration
+ * 
  * @author belger
  */
 public class ReplaceTransformation extends AbstractTransformation

@@ -55,6 +55,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
  * Kopiert oder verschiebt ein Verzeichnis
  * 
  * thül, belger
+ * 
+ * @deprecated use ant task instead in your model-configuration
  */
 public class CopyOrMoveDirTransformation extends AbstractTransformation
 {

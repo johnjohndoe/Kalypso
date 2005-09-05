@@ -66,6 +66,9 @@ import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
  */
 public class FileUtilities
 {
+  /** regex defining which are the invalid characters for a file name */
+  public final static String INVALID_CHARACTERS = "[\\\\/:\\*\\?\"<>|]";
+
   /**
    * THE system tmp dir "java.io.tmpdir"
    */
@@ -461,5 +464,15 @@ public class FileUtilities
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
+   * 
+   * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and replaced by the given replacement-string
+   */
+  public static String validateName( final String fileName, final String replacement )
+  {
+    return fileName.replaceAll( INVALID_CHARACTERS, replacement );
   }
 }

@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -185,9 +184,6 @@ public class WQTuppleModel extends AbstractTuppleModel
           final double w = number.doubleValue();
           double q = m_converter.computeQ( d, w );
 
-          // TODO ist das nicht duch TimeserieUtils.getNumberFormatFor( String type ). Marc.
-          // just leave 3 decimals
-          q = ( (double)( (int)( q * 1000 ) ) ) / 1000;
           value = new Double( q );
         }
 
@@ -195,7 +191,7 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
       catch( final WQException e )
       {
-        Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
+        //Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
 
         value = ZERO;
         status = KalypsoStati.STATUS_DERIVATION_ERROR;
@@ -236,7 +232,7 @@ public class WQTuppleModel extends AbstractTuppleModel
       }
       catch( final WQException e )
       {
-        Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
+        //Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
 
         value = ZERO;
         status = KalypsoStati.STATUS_CHECK;

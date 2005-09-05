@@ -185,7 +185,7 @@ public abstract class ObsView implements IObsViewEventProvider
 
   public final void refresh( final ObsViewItem item )
   {
-    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_REFRESH_ITEMS ) );
+    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_REFRESH_ITEMSTATE ) );
   }
 
   public final void refresh()
