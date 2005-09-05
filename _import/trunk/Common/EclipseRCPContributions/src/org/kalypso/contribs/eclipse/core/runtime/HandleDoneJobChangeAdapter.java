@@ -2,7 +2,6 @@ package org.kalypso.contribs.eclipse.core.runtime;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 
@@ -13,7 +12,7 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author belger
  */
-public final class HandleDoneJobChangeAdapter extends JobChangeAdapter
+public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
 {
   protected final Shell m_shell;
 
@@ -29,8 +28,10 @@ public final class HandleDoneJobChangeAdapter extends JobChangeAdapter
    * @param messageFirstline
    *          Displayed as first line of the message box. The second line wil be the mesage of the status objekt.
    */
-  public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline )
+  public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline, final boolean autoRemoveListener )
   {
+    super( autoRemoveListener );
+    
     m_shell = shell;
     m_messageTitle = messageTitle;
     m_messageFirstline = messageFirstline;
@@ -41,7 +42,6 @@ public final class HandleDoneJobChangeAdapter extends JobChangeAdapter
    */
   public void done( final IJobChangeEvent event )
   {
-
     final Runnable runnable = new Runnable()
     {
       public void run()
@@ -53,5 +53,7 @@ public final class HandleDoneJobChangeAdapter extends JobChangeAdapter
       }
     };
     m_shell.getDisplay().asyncExec( runnable );
+    
+    super.done( event );
   }
 }

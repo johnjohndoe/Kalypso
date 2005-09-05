@@ -76,6 +76,14 @@ public class ResourceUtilities
     return root.getFile( path );
   }
 
+  public static File makeFileFromPath( final IPath resource )
+  {
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IPath rootLocation = root.getLocation();
+    final File rootFile = rootLocation.toFile();
+    return new File( rootFile, resource.toString() );
+  }
+  
   public static IProject findProjectFromURL( final URL baseURL )
   {
     final IPath path = findPathFromURL( baseURL );
@@ -130,14 +138,6 @@ public class ResourceUtilities
     }
 
     return null;
-  }
-
-  public static File makeFileFromPath( final IPath resource )
-  {
-    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    final IPath rootLocation = root.getLocation();
-    final File rootFile = rootLocation.toFile();
-    return new File( rootFile, resource.toString() );
   }
 
   /** Gets all local files for given resources */
