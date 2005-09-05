@@ -116,6 +116,8 @@ public class GMLWeightingTask extends Task
       final UrlResolver urlResolver = new UrlResolver();
       // create needed factories
       final ObjectFactory filterFac = new ObjectFactory();
+      final Marshaller marshaller = filterFac.createMarshaller();
+
       final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
 
       // workspace for results
@@ -142,11 +144,20 @@ public class GMLWeightingTask extends Task
 
         // 5. resolve weights
         final Feature[] weightFEs = workspace.resolveLinks( targetFE, m_propRelationWeightMember );
+        
         // 6. loop weights
         for( int j = 0; j < weightFEs.length; j++ )
         {
           // 7. resolve feature that has source zml reference
           final Feature sourceFE = workspace.resolveLink( weightFEs[j], m_propRelationSourceFeature );
+          if( sourceFE == null )
+          {
+            logger.log( "Linked source feature missing in Feature: " + weightFEs[j].getId() );
+            
+            // IMPORTANT: just skips this weight; leads probably to wrong results
+            continue;
+          }
+          
           // 8. resolve property that is source zml reference
           final TimeseriesLink zmlLink = (TimeseriesLink)sourceFE.getProperty( m_propZMLSource );
           // 9. build operation filter with parameters from gml
@@ -163,10 +174,11 @@ public class GMLWeightingTask extends Task
         }
         // 10. serialize filter to string
         final Writer writer = new StringWriter();
-        final Marshaller marshaller = filterFac.createMarshaller();
         marshaller.marshal( nOperationFilter, writer );
+        writer.close();
         final String string = XMLUtilities.removeXMLHeader( writer.toString() );
         final String filterInline = XMLUtilities.prepareInLine( string ) + "#useascontext";
+        
         // 11. add mapping to result workspace
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, targetURL.toExternalForm() );
         logger.log( " Ziel-ZML " + targetURL );
@@ -178,14 +190,11 @@ public class GMLWeightingTask extends Task
       // 14. serialize result workspace to file
       if( m_targetMapping != null )
       {
-        final FileWriter writer = new FileWriter( m_targetMapping );
+        FileWriter writer = null;
         try
         {
+          writer = new FileWriter( m_targetMapping );
           GmlSerializer.serializeWorkspace( writer, resultWorkspace );
-        }
-        catch( Exception e )
-        {
-          throw e;
         }
         finally
         {
@@ -193,9 +202,10 @@ public class GMLWeightingTask extends Task
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
+      throw new BuildException( e );
     }
   }
 
