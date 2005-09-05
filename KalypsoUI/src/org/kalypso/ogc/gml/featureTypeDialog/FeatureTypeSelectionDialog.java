@@ -37,7 +37,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -76,7 +75,6 @@ public class FeatureTypeSelectionDialog extends Dialog
   protected Control createDialogArea( Composite parent )
   {
     Composite main = (Composite)super.createDialogArea( parent );
-    GridLayout layout = new GridLayout();
     Label lable = new Label( main, SWT.NULL );
     lable.setText( "Wählen sie die zu impotierenden Datentypen aus:" );
     m_list = new List( main, SWT.BORDER | SWT.MULTI );
@@ -108,7 +106,6 @@ public class FeatureTypeSelectionDialog extends Dialog
       public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );
-
       }
     } );
 

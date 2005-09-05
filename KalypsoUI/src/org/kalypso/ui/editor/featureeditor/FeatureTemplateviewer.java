@@ -185,7 +185,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       final Featuretemplate m_template = (Featuretemplate)m_unmarshaller.unmarshal( is );
 
       final List views = m_template.getView();
-      for( Iterator iter = views.iterator(); iter.hasNext(); )
+      for( final Iterator iter = views.iterator(); iter.hasNext(); )
         m_featureComposite.addView( (FeatureviewType)iter.next() );
 
       final LayerType layer = m_template.getLayer();
