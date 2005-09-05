@@ -225,7 +225,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.FeatureType, java.lang.String)
    */
-  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType, String linkPropertyName )
+  public Feature[] resolveWhoLinksTo( final Feature linkTargetfeature, final FeatureType linkSrcFeatureType, final String linkPropertyName )
   {
     if( linkTargetfeature == null )
       return new Feature[0];
@@ -234,19 +234,19 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     final Feature[] features = getFeatures( linkSrcFeatureType );
     for( int i = 0; i < features.length; i++ )
     {
-      Object prop = features[i].getProperty( linkPropertyName );
+      final Object prop = features[i].getProperty( linkPropertyName );
       if( prop == linkTargetfeature )
         result.add( features[i] );
       if( linkTargetfeature.getId().equals( prop ) )
         result.add( features[i] );
     }
 
-    FeatureType[] substiFTs = GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
+    final FeatureType[] substiFTs = GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
     for( int _ft = 0; _ft < substiFTs.length; _ft++ )
     {
       final Feature[] substiFeatures = getFeatures( substiFTs[_ft] );
 
-      for( int i = 0; i < features.length; i++ )
+      for( int i = 0; i < substiFeatures.length; i++ )
       {
         Object prop = substiFeatures[i].getProperty( linkPropertyName );
         if( prop == linkTargetfeature )
@@ -255,7 +255,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
           result.add( substiFeatures[i] );
       }
     }
-
     return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
