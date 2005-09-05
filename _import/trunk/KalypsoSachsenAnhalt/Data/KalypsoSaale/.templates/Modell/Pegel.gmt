@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5611669.287894826" left="5168775.403922504" right="5483773.969178552" srs="EPSG:31469" top="5959682.499324441"/>
+    <extent bottom="5658231.049053166" left="5179798.169680366" right="5340386.916852236" srs="EPSG:31469" top="5772066.110339556"/>
     <layers active="ID_1">
-        <layer name="Niederschlagsgebiete" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-            <ns2:style linktype="sld" style="Niederschlagsgebiete" ns1:actuate="onRequest" ns1:href="project:/.styles/niederschlagsgebiete-Flachland-Nord.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="PNR" ns1:actuate="onRequest" ns1:href="project:/.styles/eingabepegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
         <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/.shape/Gewässerflächen#EPSG:31468" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
             <ns4:style linktype="sld" style="seen" ns3:actuate="onRequest" ns3:href="project:/.styles/seen.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>

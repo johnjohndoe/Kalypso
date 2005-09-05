@@ -6,12 +6,12 @@
 		
 <!-- Pegel -->		
 		<visitor featurePath="PegelCollectionAssociation/PegelMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
-			<argument name="link" value="Durchfluß"/>
-			<argument name="href" value="Durchfluß/${fid}.zml"/>
+			<argument name="link" value="Durchfluss"/>
+			<argument name="href" value="Durchfluss/${fid}.zml"/>
 		</visitor>
 		<visitor featurePath="PegelCollectionAssociation/PegelMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
-			<argument name="link" value="Durchfluß_gerechnet"/>
-			<argument name="href" value="Ergebnisse/Durchfluß/${fid}.zml"/>
+			<argument name="link" value="Durchfluss_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${fid}.zml"/>
 		</visitor>
 		<visitor featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
 			<argument name="link" value="Niederschlag"/>
@@ -33,8 +33,8 @@
 		</visitor>
 
 		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
-			<argument name="link" value="Zufluß_gerechnet"/>
-			<argument name="href" value="Ergebnisse/Durchfluß/${fid}.zml"/>
+			<argument name="link" value="Zufluss_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${fid}.zml"/>
 		</visitor>
 
 <!-- Temperatur -->

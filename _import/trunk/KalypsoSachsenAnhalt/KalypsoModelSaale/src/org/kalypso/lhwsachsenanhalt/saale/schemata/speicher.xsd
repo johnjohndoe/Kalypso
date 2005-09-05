@@ -84,7 +84,7 @@
 					<element ref="gml:location"/>
 					<element name="Inhalt" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Inhalt_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="Zufluß" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Zufluss" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>

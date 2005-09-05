@@ -94,8 +94,8 @@
 					<element name="Reserve9"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve9</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					<element name="Reserve10"  type="string"> <annotation><documentation xml:lang="de"><label>Reserve10</label><tooltip></tooltip><description></description></documentation></annotation></element>
 					<element ref="gml:location"><annotation><documentation xml:lang="de"><label>Ort</label><tooltip>Ort</tooltip><description>Geographische Lage des Pegels</description></documentation></annotation></element>
-					<element name="Durchfluß" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="Durchfluß_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Durchfluss" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Durchfluss_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>

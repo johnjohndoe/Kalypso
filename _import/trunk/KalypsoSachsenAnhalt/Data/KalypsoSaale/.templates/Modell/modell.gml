@@ -607,12 +607,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570210.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570210.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570210.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570210.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -782,12 +782,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4460810.0,5607510.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID572010.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572010.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID572010.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID572010.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -951,12 +951,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570000.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570000.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570000.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570000.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -1126,12 +1126,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4442860.0,5612760.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID572115.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572115.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID572115.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID572115.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -1301,12 +1301,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4453055.0,5620340.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570270.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570270.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570270.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570270.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -1476,12 +1476,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570330.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570330.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570330.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570330.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -1651,12 +1651,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID572890.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572890.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID572890.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID572890.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -1826,12 +1826,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4470620.0,5659720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID572920.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID572920.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID572920.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID572920.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -2001,12 +2001,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID574210.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID574210.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID574210.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID574210.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -2188,12 +2188,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4409860.0,5664280.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573010.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573010.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573010.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573010.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -2357,12 +2357,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573090.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573090.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573090.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573090.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -2526,12 +2526,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575110.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575110.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575110.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575110.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -2695,12 +2695,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4428510.0,5690810.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575240.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575240.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575240.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575240.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -2870,12 +2870,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4442840.0,5685400.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573110.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573110.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573110.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573110.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -3045,12 +3045,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575660.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575660.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575660.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575660.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -3214,12 +3214,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4415680.0,5708740.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575500.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575500.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575500.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575500.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -3389,12 +3389,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4417390.0,5704330.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575400.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575400.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575400.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575400.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -3558,12 +3558,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4427829.0,5714940.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575700.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575700.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575700.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575700.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -3727,12 +3727,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4430911.0,5702078.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575710.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575710.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575710.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575710.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -3902,12 +3902,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4478080.0,5676890.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573360.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573360.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573360.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573360.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -4077,12 +4077,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4488330.0,5669090.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570500.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570500.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570500.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570500.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -4252,12 +4252,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576470.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576470.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576470.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576470.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -4421,12 +4421,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4503255.0,5641790.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576520.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576520.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576520.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576520.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -4590,12 +4590,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4510230.0,5658010.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576610.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576610.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576610.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576610.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -4765,12 +4765,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4527130.0,5675330.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID577570.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID577570.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID577570.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID577570.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -4946,12 +4946,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4510300.0,5694580.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576900.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576900.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576900.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576900.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -5115,12 +5115,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4496950.0,5709575.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570810.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570810.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570810.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570810.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -5284,12 +5284,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4450100.0,5715940.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID578410.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578410.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID578410.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID578410.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -5453,12 +5453,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4463690.0,5719145.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID578420.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578420.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID578420.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID578420.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -5622,12 +5622,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4467540.0,5735500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID578430.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID578430.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID578430.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID578430.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -5791,12 +5791,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4481900.0,5741000.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570910.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570910.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570910.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570910.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -5960,12 +5960,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4409180.0,5735160.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579305.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579305.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579305.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579305.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6129,12 +6129,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4412230.0,5730240.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579205.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579205.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579205.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579205.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6298,12 +6298,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4416480.0,5729450.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579405.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579405.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579405.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579405.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6473,12 +6473,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579011.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579011.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579011.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579011.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6648,12 +6648,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579015.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579015.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579015.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579015.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6823,12 +6823,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4450580.0,5728800.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579610.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579610.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579610.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579610.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6992,12 +6992,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4449660.0,5745250.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579620.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579620.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579620.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579620.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -7161,12 +7161,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4444290.0,5750710.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579045.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579045.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579045.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579045.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -7330,12 +7330,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4428700.0,5750600.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579712.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579712.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579712.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579712.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -7505,12 +7505,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4453380.0,5763720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579070.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579070.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579070.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579070.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -7680,12 +7680,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4471764.0,5746742.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579085.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579085.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579085.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579085.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -7849,12 +7849,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570930.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570930.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570930.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570930.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -8018,12 +8018,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4596940.0,5710280.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID553050.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID553050.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID553050.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID553050.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -8193,12 +8193,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4574810.0,5737740.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID553061.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID553061.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID553061.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID553061.zml"/>
+          </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -8368,12 +8368,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4460560.0,5608840.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570250.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570250.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570250.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570250.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8437,12 +8437,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4478940.0,5664025.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID570340.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID570340.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570340.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570340.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8506,12 +8506,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573100.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573100.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573100.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573100.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8575,12 +8575,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575245.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575245.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575245.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575245.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8644,12 +8644,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID573200.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID573200.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573200.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573200.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8713,12 +8713,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4426820.0,5702050.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575402.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575402.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575402.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575402.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8782,12 +8782,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4433480.0,5701500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575406.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575406.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575406.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575406.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8851,12 +8851,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4438870.0,5702720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575410.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575410.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575410.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575410.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8920,12 +8920,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID575450.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID575450.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575450.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575450.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8989,12 +8989,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576631.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576631.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576631.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576631.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9058,12 +9058,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID576950.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID576950.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576950.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576950.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9127,12 +9127,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579621.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579621.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579621.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579621.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9196,12 +9196,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579306.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579306.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579306.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579306.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9265,12 +9265,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4414550.0,5735350.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579330.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579330.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579330.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579330.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9334,12 +9334,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4417540.0,5734200.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579000.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579000.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579000.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579000.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9403,12 +9403,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579999.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579999.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579999.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579999.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9472,12 +9472,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579012.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579012.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579012.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579012.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9541,12 +9541,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579013.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579013.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579013.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579013.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9610,12 +9610,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4417750.0,5734220.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579001.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579001.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579001.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579001.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9679,12 +9679,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579014.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579014.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579014.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579014.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9748,12 +9748,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">4425440.0,5734720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579006.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579006.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579006.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579006.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9817,12 +9817,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579713.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579713.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579713.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579713.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9886,12 +9886,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579069.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579069.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579069.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579069.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9955,12 +9955,12 @@
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
-          <pegel:Durchfluß>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluß/ID579084.zml"/>
-          </pegel:Durchfluß>
-          <pegel:Durchfluß_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluß/ID579084.zml"/>
-          </pegel:Durchfluß_gerechnet>
+          <pegel:Durchfluss>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579084.zml"/>
+          </pegel:Durchfluss>
+          <pegel:Durchfluss_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579084.zml"/>
+          </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
     </pegel:PegelCollection>
@@ -19821,7 +19821,7 @@
           <speicher:Inhalt_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID570250.zml"/>
           </speicher:Inhalt_gerechnet>
-          <speicher:Zufluß/>
+          <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -19875,7 +19875,7 @@
           <speicher:Inhalt_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID573100.zml"/>
           </speicher:Inhalt_gerechnet>
-          <speicher:Zufluß/>
+          <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -19929,7 +19929,7 @@
           <speicher:Inhalt_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID575406.zml"/>
           </speicher:Inhalt_gerechnet>
-          <speicher:Zufluß/>
+          <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -19983,7 +19983,7 @@
           <speicher:Inhalt_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579330.zml"/>
           </speicher:Inhalt_gerechnet>
-          <speicher:Zufluß/>
+          <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -20037,7 +20037,7 @@
           <speicher:Inhalt_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579001.zml"/>
           </speicher:Inhalt_gerechnet>
-          <speicher:Zufluß/>
+          <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -20091,7 +20091,7 @@
           <speicher:Inhalt_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579012.zml"/>
           </speicher:Inhalt_gerechnet>
-          <speicher:Zufluß/>
+          <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
@@ -20145,7 +20145,7 @@
           <speicher:Inhalt_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579006.zml"/>
           </speicher:Inhalt_gerechnet>
-          <speicher:Zufluß/>
+          <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
     </speicher:SpeicherCollection>

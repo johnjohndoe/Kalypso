@@ -67,11 +67,11 @@
 		<echo message="Zeitreihen von WISKI laden: ${calc.dir}" />
 
 		<echo message="Verzeichnisse werden erstellt" />
-		<mkdir dir="${calc.dir}/Durchfluß" />
+		<mkdir dir="${calc.dir}/Durchfluss" />
 		<mkdir dir="${calc.dir}/Ombrometer" />
 		<mkdir dir="${calc.dir}/Niederschlag" />
 
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluß.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluss.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,W,Q&lt;/axes&gt;&lt;statusAxes&gt;W,Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
 		</kalypso.copyObservation>
 
@@ -102,7 +102,7 @@
 			<input id="MODELL" path="modell.gml" relativeToCalcCase="true" />
 
 			<!--  implizit benötigte Daten (=Zeitreihen); id ist unwichtig -->
-			<input id="Durchfluß" path="Durchfluß" relativeToCalcCase="true" />
+			<input id="Durchfluss" path="Durchfluss" relativeToCalcCase="true" />
 			<input id="Niederschlag" path="Niederschlag" relativeToCalcCase="true" />
 			<input id="Schnee" path="Schnee" relativeToCalcCase="true" optional="true" />
 			<input id="Speicherinhalt" path="Speicherinhalt" relativeToCalcCase="true" />
@@ -120,7 +120,7 @@
 	<!--   TODO: do this every time, we do a update -> work with calc.url, because of the encoding problems -->
 	<target name="updateLocations" description="Aktualisiert die geografische Verortung innerhalb der modell.gml anhand der Daten in der lokalen Zeitreihen">
 		<echo message="Aktualisiere ${modell.gml}" />
-		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Durchfluß" context="file:///${modell.gml}">
+		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Durchfluss" context="file:///${modell.gml}">
 			<mapping targetProperty="location" format="EPSG:31468">
 				<metadata name="Rechtswert" />
 				<metadata name="Hochwert" />

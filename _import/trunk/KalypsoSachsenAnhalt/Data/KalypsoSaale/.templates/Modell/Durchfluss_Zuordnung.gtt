@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
-    <layer featurePath="WiskiMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="wiskiimport_durchfluß.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <layer featurePath="WiskiMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="wiskiimport_durchfluss.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column alignment="16384" editable="false" format="" name="lokal" width="122"/>
         <column alignment="16384" editable="true" format="" name="wiski_vergangenheit" width="246"/>
         <column alignment="16384" editable="true" format="" name="wiski_simulation_vergangenheit" width="266"/>
