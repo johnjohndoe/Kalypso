@@ -46,6 +46,7 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
+ * @deprecated use ant task instead in your model-configuration
  * @author belger
  */
 public abstract class AbstractTransformation implements ITransformation

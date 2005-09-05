@@ -59,7 +59,6 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
 /**
- * 
  * This Task generates from a numer of input zml files new zml output files. <br>
  * It uses a combination of operation and n-operation filters like this: <br>
  * <center><b>ZMLout = sum( f(i)*ZMLin(i) ) </b> </center> <br>

@@ -110,7 +110,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
       try
       {
-        log.info( "Es wird versucht, eine Default-Zeitreihe zu erzeugen..." );
+        log.warning( "Es wird versucht, eine Default-Zeitreihe zu erzeugen..." );
         
         // we might be here because the server is down. If the href contains
         // a request, let create a default observation according to it.
@@ -124,10 +124,12 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       }
       catch( final Exception se )
       {
+        log.warning( "Default-Zeitreihe konnte nicht erzeugt werden." );
+        
         exceptionMessage += "\n" + se.getLocalizedMessage();
       }
 
-      throw new IOException( "URL konnte nicht gelöst werden, Grund: " + exceptionMessage );
+      throw new IOException( "URL konnte nicht aufgelöst werden, Grund: " + exceptionMessage );
     }
     finally
     {

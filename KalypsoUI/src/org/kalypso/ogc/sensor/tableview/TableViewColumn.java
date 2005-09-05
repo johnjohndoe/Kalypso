@@ -71,6 +71,9 @@ public class TableViewColumn extends ObsViewItem
   {
     super( view, provider, name );
 
+    if( format == null )
+      throw new IllegalArgumentException( "Format-Spezifikation der Spalte " + name + " darf nicht null sein" );
+    
     m_isEditable = isEditable;
     m_width = width;
     m_keyAxis = keyAxis;
@@ -138,7 +141,10 @@ public class TableViewColumn extends ObsViewItem
       getView().refresh( this );
     }
   }
-  
+
+  /**
+   * @return the format-specification (non-null). 
+   */
   public String getFormat()
   {
     return m_format;

@@ -40,6 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.runtime;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -48,12 +51,7 @@ import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 
@@ -65,68 +63,71 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
  */
 public class LogStatusWrapper
 {
-  public final static LogStatusWrapper OK_RESULT = new LogStatusWrapper( "", null );
+  /** lines which begin with this token are used as "summary-lines" (see constructor) */
+  public static final String SUMMARY_BEGIN_TOKEN = "***";
 
+  /** some summary destinated to the end-user so that he gets the grasp of what happened before looking at the details */
   private final String m_summary;
 
-  private final IFile m_logFile;
+  /** the log-file from which the stati will be created (one status per line) */
+  private final File m_logFile;
 
-  public LogStatusWrapper( final String logFile ) throws CoreException
+  private final String m_charsetName;
+
+  /**
+   * Constructor: summary is taken from the logfile. The file is parsed and each line which begins with '***' is
+   * appended to the summary.
+   */
+  public LogStatusWrapper( final File logFile, final String charsetName )
   {
-    final IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation( new Path( logFile ) );
-    if( files.length != 0 && files[0].exists() )
+    if( logFile == null )
+      throw new IllegalStateException( "Log-Datei darf nicht null sein" );
+    if( !logFile.exists() )
+      throw new IllegalStateException( "Log-Datei " + logFile.toString() + " existiert nicht" );
+
+    m_logFile = logFile;
+    m_charsetName = charsetName;
+
+    final StringWriter sw = new StringWriter();
+    final PrintWriter pw = new PrintWriter( sw );
+
+    LineNumberReader reader = null;
+    try
     {
-      m_logFile = files[0];
-      if( ! m_logFile.isSynchronized( 0 ) )
-        m_logFile.refreshLocal(0, new NullProgressMonitor() );
-
-      final StringWriter sw = new StringWriter();
-      final PrintWriter pw = new PrintWriter( sw );
-
-      LineNumberReader reader = null;
-      try
+      reader = new LineNumberReader( new InputStreamReader( new BufferedInputStream( new FileInputStream( logFile ) ),
+          charsetName ) );
+      while( reader.ready() )
       {
-        reader = new LineNumberReader( new InputStreamReader( m_logFile.getContents(), m_logFile.getCharset() ) );
-        while( reader.ready() )
-        {
-          final String line = reader.readLine();
-          if( line == null )
-            break;
+        final String line = reader.readLine();
+        if( line == null )
+          break;
 
-          if( line.startsWith( "***" ) && line.length() > 3 )
-            pw.println( line.substring( 3 ) );
-        }
-
-        pw.close();
-      }
-      catch( IOException e )
-      {
-        e.printStackTrace();
-      }
-      catch( CoreException e )
-      {
-        e.printStackTrace();
-      }
-      finally
-      {
-        IOUtils.closeQuietly( reader );
+        if( line.startsWith( SUMMARY_BEGIN_TOKEN ) && line.length() > 3 )
+          pw.println( line.substring( 3 ) );
       }
 
       pw.close();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+      pw.close();
       m_summary = sw.toString();
     }
-    else
-    {
-      m_summary = "";
-      m_logFile = null;
-    }
-
   }
 
-  public LogStatusWrapper( final String summary, final IFile logFile )
+  /**
+   * Constructor: the logFile as well as the summary are provided.
+   */
+  public LogStatusWrapper( final String summary, final File logFile, final String charsetName )
   {
     m_summary = summary;
     m_logFile = logFile;
+    m_charsetName = charsetName;
   }
 
   /**
@@ -140,7 +141,7 @@ public class LogStatusWrapper
   /**
    * @return Returns the logFile.
    */
-  public IFile getLogFile()
+  public File getLogFile()
   {
     return m_logFile;
   }
@@ -160,8 +161,8 @@ public class LogStatusWrapper
     final String truncatedSummary = StringUtils.left( m_summary, 512 );
     // '\r' verschwinden lassen, da sonst der Status-Dialog zuviele Umbrüche generiert
     final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + "Siehe Details oder Logdatei: "
-        + m_logFile.getFullPath().toOSString();
+        + m_logFile.toString();
 
-    return new LogStatus( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, msg, null, m_logFile );
+    return new LogStatus( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, msg, null, m_logFile, m_charsetName );
   }
 }

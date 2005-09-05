@@ -54,9 +54,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.FileUtilities;
 import org.kalypso.commons.runtime.LogStatusWrapper;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.model.xml.TransformationList;
@@ -65,6 +68,7 @@ import org.kalypso.model.xml.TransformationType;
 /**
  * Static Helper class for transformations
  * 
+ * @deprecated use ant task instead in your model-configuration
  * @author belger
  */
 public class TransformationHelper
@@ -104,13 +108,9 @@ public class TransformationHelper
   /**
    * Führt alle Transformationen einer Transformationen Liste aus
    * 
-   * @param folder
-   * @param trans
-   * @param monitor
    * @return result of transformation
-   * @throws TransformationException
    */
-  public static LogStatusWrapper doTranformations( final IFolder folder, final TransformationList trans,
+  public static IStatus doTranformations( final IFolder folder, final TransformationList trans,
       final IProgressMonitor monitor ) throws TransformationException
   {
     final List transList = trans.getTransformation();
@@ -191,8 +191,18 @@ public class TransformationHelper
     // were thrown for user.
     final String msg = msgWriter.toString();
     if( msg.length() > 0 )
-      return new LogStatusWrapper( msg, logFile );
+    {
+      try
+      {
+        return new LogStatusWrapper( msg, ResourceUtilities.makeFileFromPath( logFile.getFullPath() ), logFile
+            .getCharset() ).toStatus();
+      }
+      catch( final CoreException e )
+      {
+        throw new TransformationException( e );
+      }
+    }
 
-    return LogStatusWrapper.OK_RESULT;
+    return Status.OK_STATUS;
   }
 }

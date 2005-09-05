@@ -62,6 +62,8 @@ import org.kalypso.contribs.java.lang.CatchThread;
 import org.w3c.dom.Document;
 
 /**
+ * @deprecated use ant task instead in your model-configuration
+ * 
  * @author belger
  */
 public class XslTransformation extends AbstractTransformation

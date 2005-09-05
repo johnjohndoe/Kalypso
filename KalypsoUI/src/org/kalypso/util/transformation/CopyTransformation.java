@@ -41,14 +41,14 @@
 package org.kalypso.util.transformation;
 
 /**
+ * @deprecated use ant task instead in your model-configuration
+ * 
  * @author doemming
  */
 public class CopyTransformation extends CopyOrMoveTransformation
 {
-
   public CopyTransformation()
   {
     super( CopyOrMoveTransformation.MODE_COPY );
   }
-
 }

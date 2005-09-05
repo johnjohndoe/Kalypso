@@ -41,11 +41,13 @@
 package org.kalypso.commons.runtime;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -57,15 +59,18 @@ import org.eclipse.core.runtime.Status;
  */
 public class LogStatus extends Status
 {
-  private final IFile m_logFile;
+  private final File m_logFile;
+  private final String m_charsetName;
 
   private IStatus[] m_children = null;
 
   public LogStatus( final int severity, final String pluginId, final int code, final String message,
-      final Throwable exception, final IFile logFile )
+      final Throwable exception, final File logFile, final String charsetName )
   {
     super( severity, pluginId, code, message, exception );
+    
     m_logFile = logFile;
+    m_charsetName = charsetName;
   }
 
   /**
@@ -88,7 +93,7 @@ public class LogStatus extends Status
       BufferedReader reader = null;
       try
       {
-        reader = new BufferedReader( new InputStreamReader( m_logFile.getContents(), m_logFile.getCharset() ) );
+        reader = new BufferedReader( new InputStreamReader( new FileInputStream( m_logFile ), m_charsetName ) );
         String line = reader.readLine();
         while( line != null )
         {
@@ -96,7 +101,7 @@ public class LogStatus extends Status
           line = reader.readLine();
         }
       }
-      catch( Exception e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }

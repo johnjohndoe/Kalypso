@@ -82,6 +82,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.Mapper;
 
 /**
+ * @deprecated use ant task instead in your model-configuration
+ * 
  * Diese Transformation führt das 'Resolven' der Zeitreihen durch. Dies passiert, indem alle Features einer Feature-List
  * der Reihe nach durchlaufen werden, und für jedes Feature zwei Zeitreihen vom Server geholt und als eine gemergte
  * Zeitreihe lokal abgelegt wird.

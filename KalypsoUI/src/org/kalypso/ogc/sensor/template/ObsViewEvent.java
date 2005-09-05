@@ -53,10 +53,13 @@ public class ObsViewEvent extends EventObject
 
   public final static int TYPE_REMOVE_ALL = 4;
 
+  /** used for refreshing the whole template */
   public final static int TYPE_REFRESH = 8;
 
-  public final static int TYPE_REFRESH_ITEMS = 16;
+  /** used for item-state related events */
+  public final static int TYPE_REFRESH_ITEMSTATE = 16;
 
+  /** used for obs-view feature related events */
   public final static int TYPE_REFRESH_FEATURES = 32;
   
   private final Object m_obj;

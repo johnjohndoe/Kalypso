@@ -58,6 +58,7 @@ import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.java.lang.CatchThread;
 
 /**
+ * @deprecated use ant task instead in your model-configuration
  * @author belger
  */
 public class CalculationTransformation extends AbstractTransformation

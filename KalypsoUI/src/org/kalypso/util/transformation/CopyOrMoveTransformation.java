@@ -53,6 +53,8 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.FolderUtilities;
 
 /**
+ * @deprecated use ant task instead in your model-configuration
+ * 
  * belger
  */
 public class CopyOrMoveTransformation extends AbstractTransformation

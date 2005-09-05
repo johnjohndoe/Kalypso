@@ -263,11 +263,12 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
 
       logPW.close();
       final Project antProject = getProject();
+      final String logString = logwriter.toString();
       if( antProject == null )
-        System.out.print( logwriter.toString() );
+        System.out.print( logString );
       else
-        antProject.log( logwriter.toString() );
-
+        antProject.log( logString );
+      
       return new MultiStatus( KalypsoGisPlugin.getId(), 0, (IStatus[])stati.toArray( new IStatus[stati.size()] ), "",
           null );
     }

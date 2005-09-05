@@ -332,7 +332,7 @@ public class TimeserieUtils
 
   /**
    * Returns the adequate NumberFormat for the given format-string. It currently only supports formats of the form %X.Yf
-   * where actually only the Y is used to build a NumberFormat with Y minimum-fraction-digits.
+   * where actually only the Y is used to build a NumberFormat with Y minimum/maximum-fraction-digits.
    * <p>
    * The plan is, once we'll be using JDK 5.0, we'll try to replace this with the built-in functionality provided with
    * formated printing.
@@ -356,7 +356,9 @@ public class TimeserieUtils
         final String minfd = matcher.group( 2 );
 
         final NumberFormat wf = NumberFormat.getInstance();
-        wf.setMinimumFractionDigits( Integer.valueOf( minfd ).intValue() );
+        final int intValue = Integer.valueOf( minfd ).intValue();
+        wf.setMinimumFractionDigits( intValue );
+        wf.setMaximumFractionDigits( intValue );
         m_formatMap.put( format, wf );
 
         return wf;
@@ -365,40 +367,6 @@ public class TimeserieUtils
         return getDefaultFormat();
     }
   }
-
-  //  private static Map getFormatMap()
-  //  {
-  //    if( m_formatMap == null )
-  //    {
-  //      m_formatMap = new HashMap();
-  //
-  //      // for W
-  //      final NumberFormat wf = NumberFormat.getInstance();
-  //      wf.setMinimumFractionDigits( Integer.valueOf(
-  //          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_WATERLEVEL ) ).intValue() );
-  //      m_formatMap.put( TimeserieConstants.TYPE_WATERLEVEL, wf );
-  //
-  //      // for N
-  //      final NumberFormat nf = NumberFormat.getInstance();
-  //      nf.setMinimumFractionDigits( Integer.valueOf(
-  //          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_RAINFALL ) ).intValue() );
-  //      m_formatMap.put( TimeserieConstants.TYPE_RAINFALL, nf );
-  //
-  //      // for n
-  //      final NumberFormat normf = NumberFormat.getInstance();
-  //      normf.setMinimumFractionDigits( Integer.valueOf(
-  //          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_NORM ) ).intValue() );
-  //      m_formatMap.put( TimeserieConstants.TYPE_NORM, normf );
-  //
-  //      // for V
-  //      final NumberFormat vf = NumberFormat.getInstance();
-  //      vf.setMinimumFractionDigits( Integer.valueOf(
-  //          getProperties().getProperty( "MFD_" + TimeserieConstants.TYPE_VOLUME ) ).intValue() );
-  //      m_formatMap.put( TimeserieConstants.TYPE_VOLUME, vf );
-  //    }
-  //
-  //    return m_formatMap;
-  //  }
 
   private static NumberFormat getDefaultFormat()
   {
@@ -411,15 +379,15 @@ public class TimeserieUtils
     return m_defaultFormat;
   }
 
-  public static Class getDataClass( String type )
+  public static Class getDataClass( final String type )
   {
     try
     {
       return Class.forName( getProperties().getProperty( "AXISCLASS_" + type, "" ) );
     }
-    catch( ClassNotFoundException e )
+    catch( final ClassNotFoundException e )
     {
-      return null;
+      throw new IllegalArgumentException( "Axis-type is not supported: " + type );
     }
   }
 
