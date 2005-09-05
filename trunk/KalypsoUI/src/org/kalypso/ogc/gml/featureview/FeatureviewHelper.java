@@ -53,6 +53,7 @@ import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Featureview;
+import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayoutType;
 import org.kalypso.template.featureview.Group;
@@ -292,11 +293,11 @@ public class FeatureviewHelper
    * @param type
    * @return featureview
    */
-  public static Featureview createFeatureviewFromFeatureType( final FeatureType type )
+  public static FeatureviewType createFeatureviewFromFeatureType( final FeatureType type )
   {
     try
     {
-      final Featureview featureview = FACTORY.createFeatureview();
+      final FeatureviewType featureview = FACTORY.createFeatureviewType();
       featureview.setTypename( type.getName() );
       featureview.setStyle( "SWT.NONE" );
 

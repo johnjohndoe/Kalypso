@@ -30,10 +30,12 @@ import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.ICommandableFeatureSelection;
+import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -292,5 +294,24 @@ public class FeatureView extends ViewPart implements ModellEventListener
           }
         } );
     }
+  }
+
+  public GMLWorkspace getCurrentworkspace()
+  {
+    return m_featureComposite.getWorkspace();
+  }
+
+  public Feature getCurrentFeature()
+  {
+    return m_featureComposite.getFeature();
+  }
+
+  public FeatureviewType getCurrentViewTemplates()
+  {
+    final Feature feature = getCurrentFeature();
+    if( feature == null )
+      return null;
+    
+    return m_featureComposite.getFeatureview( feature.getFeatureType() );
   }
 }
