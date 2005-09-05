@@ -508,7 +508,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         for( int j = 0; j < channelFEs.length; j++ )
         {
           final Feature newEndNodeFE = workspace.createFeature( nodeFT );
-          workspace.setFeatureAsComposition( channelFEs[i], "downStreamNodeMember", newEndNodeFE, true );
+          workspace.setFeatureAsComposition( channelFEs[j], "downStreamNodeMember", newEndNodeFE, true );
         }
         // add as zufluss
         final Feature newNodeFE = buildVChannelNet( workspace, nodeFE );
