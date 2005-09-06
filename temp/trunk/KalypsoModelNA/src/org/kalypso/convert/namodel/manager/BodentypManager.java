@@ -1,25 +1,3 @@
-package org.kalypso.convert.namodel.manager;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import org.kalypso.convert.namodel.NAConfiguration;
-import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -61,12 +39,33 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  *   
  *  ---------------------------------------------------------------------------*/
 
+package org.kalypso.convert.namodel.manager;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import org.kalypso.convert.namodel.NAConfiguration;
+import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+
 /**
  * @author huebsch
  */
 public class BodentypManager extends AbstractManager
 {
-
   private final NAConfiguration m_conf;
 
   private final FeatureType m_bodentypFT;
@@ -75,7 +74,6 @@ public class BodentypManager extends AbstractManager
 
   private static final String BodArtParameterPropName = "BodArtParameterMember";
 
-  
   public BodentypManager( GMLSchema parameterSchema, NAConfiguration conf ) throws IOException
   {
     super( conf.getParameterFormatURL() );
@@ -110,6 +108,7 @@ public class BodentypManager extends AbstractManager
       line = reader.readLine();
       if( line == null )
         return null;
+      
       System.out.println( reader.getLineNumber() + ": " + line );
     }
     while( ( fe = readNextFeature( reader ) ) != null )
