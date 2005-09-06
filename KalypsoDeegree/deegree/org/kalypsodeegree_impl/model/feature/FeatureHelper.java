@@ -246,7 +246,9 @@ public class FeatureHelper
 
   public static boolean isCollection( Feature f )
   {
+    // TODO was ist das?
     System.out.println();
+    
     FeatureType featureType = f.getFeatureType();
     FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )

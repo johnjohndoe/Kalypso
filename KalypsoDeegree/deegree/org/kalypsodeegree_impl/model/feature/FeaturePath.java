@@ -198,11 +198,11 @@ public class FeaturePath
         return workspace.getFeature( name );
 
       if( name.equals( "gewichtung" ) )
-        System.out.println();
+        System.out.println(); // TODO debug?
       
       final Object value = feature.getProperty( name );
       if( value == null )
-        System.out.println();
+        System.out.println(); // TODO debug?
 
       // falls ein bestimmter typ gewünscht ist, jetzt filtern
       // geht natürlich nur bei FeatureListen

@@ -522,7 +522,7 @@ public class ObservationViewer extends Composite
         try
         {
           obs = ZmlFactory.parseXML( url, href );
-          System.out.println();
+          System.out.println(); // TODO debug?
         }
         catch( SensorException e1 )
         {

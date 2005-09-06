@@ -46,8 +46,6 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  * FeatureRemoveActionDelegate
  * <p>
  * 
- * created by
- * 
  * @author doemming (24.05.2005)
  */
 public class FeatureSetPropertyActionDelegate implements IActionDelegate
@@ -62,7 +60,7 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
    */
   public void run( IAction action )
   {
-    System.out.println( "action remove Feature" );
+    System.out.println( "action remove Feature" ); // TODO debug?
     if( action.isEnabled() && m_selection != null && m_ftp != null )
     {
 
@@ -84,7 +82,6 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
         e.printStackTrace();
       }
     }
-
   }
 
   /**

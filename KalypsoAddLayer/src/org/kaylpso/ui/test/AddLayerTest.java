@@ -73,6 +73,8 @@ public class AddLayerTest extends TestCase
     {
       worldFileURL = worldFile.toURL();
       URLConnection con = worldFileURL.openConnection();
+      
+      // TODO remove println?
       System.out.println( con.getContentEncoding() );
       InputStream is = worldFileURL.openStream();
       BufferedReader br = new BufferedReader( new InputStreamReader( is ) );

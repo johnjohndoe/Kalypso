@@ -94,13 +94,13 @@ public final class PlainObsProvider implements IObsProvider
   // obs kann sich nicht ändern
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#isLoading()
-   */
-  public boolean isLoading()
-  {
-    return false;
-  }
+//  /**
+//   * @see org.kalypso.ogc.sensor.template.IObsProvider#isLoading()
+//   */
+//  public boolean isLoading()
+//  {
+//    return false;
+//  }
 
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
