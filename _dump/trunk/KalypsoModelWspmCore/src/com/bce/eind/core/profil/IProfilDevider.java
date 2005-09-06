@@ -6,7 +6,7 @@ public interface IProfilDevider
 {
   public static enum PROPERTY
   {
-    RAUHEIT, BEIWERT, 
+    RAUHEIT, BEIWERT,TRENNERPOSITION 
   };
 
   public Object getValueFor( final Object key);

@@ -394,9 +394,9 @@ public class Profil implements IProfil
 
   }
 
-  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property )
+  public void setValueFor( IProfilDevider devider, Object property ,Object value)
   {
-    devider.setValueFor( DEVIDER_PROPERTY.class, property );
+    devider.setValueFor(property,value );
     fireDeviderChanged( null, devider );
 
   }

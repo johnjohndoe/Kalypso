@@ -18,7 +18,6 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilConstants.RAUHEIT_TYP;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
 import com.bce.eind.core.profil.impl.devider.ProfilDevider;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
@@ -451,9 +450,9 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
     { new PointChange( point, pointProperty, value ) } );
   }
 
-  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property )
+  public void setValueFor( IProfilDevider devider, Object property,Object value )
   {
-    devider.setValueFor( DEVIDER_PROPERTY.class, property );
+    devider.setValueFor( property,value );
 
   }
 

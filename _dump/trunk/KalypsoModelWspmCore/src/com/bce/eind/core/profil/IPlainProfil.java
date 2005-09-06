@@ -17,7 +17,7 @@ public interface IPlainProfil
 
   public static enum DEVIDER_TYP
   {
-    BORDVOLL, DURCHSTROEMTE, FLIESSZONE, WEHR, PROFIL;
+    BORDVOLL, DURCHSTROEMTE, FLIESSZONE, WEHR;
   }
 
   public static enum PROPERTY
@@ -183,7 +183,7 @@ public interface IPlainProfil
 
   public void setValueFor(IProfilPoint point,PointProperty property, double value) throws ProfilDataException;
  
-  public void setValueFor(IProfilDevider devider,DEVIDER_PROPERTY property);
+  public void setValueFor(IProfilDevider devider,Object property,Object value);
   
   public void setValues( final PointChange[] changes ) throws ProfilDataException;
   
