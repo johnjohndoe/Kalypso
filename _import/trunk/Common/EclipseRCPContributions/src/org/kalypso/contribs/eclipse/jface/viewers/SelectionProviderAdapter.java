@@ -144,5 +144,4 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
       Platform.run( safeRunnable );
     }
   }
-
 }
