@@ -170,7 +170,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public void paint( Graphics g )
   {
-
     paintMap( g );
     paintWidget( g );
   }

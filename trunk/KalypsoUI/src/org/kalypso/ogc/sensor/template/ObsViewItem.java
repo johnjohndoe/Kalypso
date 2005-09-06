@@ -158,8 +158,8 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     return m_obsProvider.getArguments();
   }
 
-  public boolean isLoading()
-  {
-    return m_obsProvider.isLoading();
-  }
+//  public boolean isLoading()
+//  {
+//    return m_obsProvider.isLoading();
+//  }
 }

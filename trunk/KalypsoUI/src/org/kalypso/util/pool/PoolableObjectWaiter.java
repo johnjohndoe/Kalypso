@@ -108,5 +108,4 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   {
     return m_result;
   }
-
 }

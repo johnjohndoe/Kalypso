@@ -47,8 +47,10 @@ import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * Setzt die selektierten Features innerhalb eines Workspace
+ * <p>
+ * TODO rename to highlight...something
  * 
- * @author belger TODO rename to highlight...something
+ * @author belger
  */
 public class SelectFeaturesCommand implements ICommand
 {
@@ -119,5 +121,4 @@ public class SelectFeaturesCommand implements ICommand
   {
     return "Objekte selektieren";
   }
-
 }

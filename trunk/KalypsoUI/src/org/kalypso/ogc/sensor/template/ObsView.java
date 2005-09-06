@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.template;
 import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -62,6 +63,11 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
  * <p>
  * The view supports enabled features, which might dictate some of the aspects of the appearance. By default, features
  * are enabled.
+ * <p>
+ * <b>bugfix #1</b>: if diagram is refreshed, updated, and refreshed in short cycles, <br>
+ * it is possible to have duplicate items because some observation is being loaded <br>
+ * in the background while removeAllItems() is called. <br>
+ * All code fragments related to this bugfix are marked with a comment 'bugfix #1'
  * 
  * @author schlienger
  */
@@ -89,6 +95,9 @@ public abstract class ObsView implements IObsViewEventProvider
 
   private final Set m_enabledFeatures = new HashSet();
 
+  // bugfix #1
+  private final List m_loading = Collections.synchronizedList( new ArrayList() );
+
   /**
    * Default constructor: enables all the features
    */
@@ -105,42 +114,55 @@ public abstract class ObsView implements IObsViewEventProvider
 
   public abstract String toString();
 
-  public boolean waitUntilLoaded( final int sleepTime, final int maxLoops )
-  {
-    for( int i = 0; i < maxLoops; i++ )
-    {
-      if( !isLoading() )
-        return true;
-
-      try
-      {
-        Thread.sleep( sleepTime );
-      }
-      catch( InterruptedException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return false;
-  }
-
-  private boolean isLoading()
-  {
-    synchronized( m_items )
-    {
-      for( final Iterator iter = m_items.iterator(); iter.hasNext(); )
-      {
-        if( ( (ObsViewItem)iter.next() ).isLoading() )
-          return true;
-      }
-
-      return false;
-    }
-  }
+  //  public boolean waitUntilLoaded( final int sleepTime, final int maxLoops )
+  //  {
+  //    for( int i = 0; i < maxLoops; i++ )
+  //    {
+  //      if( !isLoading() )
+  //        return true;
+  //
+  //      try
+  //      {
+  //        Thread.sleep( sleepTime );
+  //      }
+  //      catch( InterruptedException e )
+  //      {
+  //        e.printStackTrace();
+  //      }
+  //    }
+  //
+  //    return false;
+  //  }
+  //
+  //  private boolean isLoading()
+  //  {
+  //    synchronized( m_items )
+  //    {
+  //      for( final Iterator iter = m_items.iterator(); iter.hasNext(); )
+  //      {
+  //        if( ( (ObsViewItem)iter.next() ).isLoading() )
+  //          return true;
+  //      }
+  //
+  //      return false;
+  //    }
+  //  }
 
   public void removeAllItems()
   {
+    // bugfix #1
+    while( m_loading.size() > 0 )
+    {
+      try
+      {
+        Thread.sleep( 100 );
+      }
+      catch( final InterruptedException ignored )
+      {
+        // empty
+      }
+    }
+
     synchronized( m_items )
     {
       for( final Iterator iter = m_items.iterator(); iter.hasNext(); )
@@ -236,6 +258,10 @@ public abstract class ObsView implements IObsViewEventProvider
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
+    // bugfix #1
+    if( !synchron )
+      m_loading.add( k );
+
     final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
     { this, data, ignoreType, tokenizedName }, synchron )
     {
@@ -251,6 +277,9 @@ public abstract class ObsView implements IObsViewEventProvider
         {
           provider.dispose();
         }
+
+        // bugfix #1
+        ( (ObsView)m_data[0] ).m_loading.remove( key );
       }
     };
 

@@ -425,7 +425,7 @@ public class FilterCompositeFactory
               .trim() ) );
           ( (PropertyIsCOMPOperation)m_operation )
               .setSecondExperssion( new Literal( m_secondRowText.getText().trim() ) );
-          System.out.println( "test" );
+          System.out.println( "test" ); // TODO debug?
         }
 
         public void widgetDefaultSelected( SelectionEvent e )
