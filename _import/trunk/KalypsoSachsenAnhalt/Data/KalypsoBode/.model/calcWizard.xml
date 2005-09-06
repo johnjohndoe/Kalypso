@@ -20,7 +20,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsstationen.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="1"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
@@ -49,7 +48,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
@@ -84,7 +82,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_uh_Wendefurth.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="4"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
@@ -118,7 +115,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="8"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
@@ -148,7 +144,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel_uh_Wendefurth.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="16"/>
 		<!--
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
@@ -191,7 +186,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="32"/>
 		
 		Diagramm 
 	    <arg name="diagShowLegend" value="false"/>
@@ -223,7 +217,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_oh_Speicher.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="64"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
@@ -257,7 +250,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel_oh_Speicher.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="128"/>
 		<!--
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
@@ -301,7 +293,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="256"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
@@ -334,7 +325,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="512"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
@@ -365,7 +355,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="2048"/>
 		<!--
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
@@ -409,7 +398,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="4096"/>
 		<!--
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
@@ -453,7 +441,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="8192"/>
 		<!--
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
@@ -495,7 +482,6 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
-		<arg name="selectionID" value="16384"/>
 		<!--
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
@@ -508,7 +494,7 @@
 		<!-- 
         Tabelle -->
 		<!-- 
-       Exporte  -->
+        Exporte  -->
 		<!-- Name of the feature-property, used for display/selection purposes -->
 		<arg name="pegelNameProperty" value="Name"/>
 		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->

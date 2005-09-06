@@ -11,7 +11,6 @@
           target: create              
          ================================= -->
 	<target name="create" description="Erzeugt eine Rechenvariante">
-		<!-- TODO -->
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
 
 		<echo message="Grunddaten und Vorlagen werden kopiert" />
@@ -166,6 +165,7 @@
     <!-- ================================= 
           target: exportVorhersagen              
          ================================= -->
+
     <target name="exportVorhersagen" depends="calculationProperties" description="Export der Prognosen">
         <echo message="Vorhersagezeitreihen werden exportiert"/>
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
