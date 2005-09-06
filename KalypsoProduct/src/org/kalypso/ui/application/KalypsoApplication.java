@@ -41,6 +41,7 @@
 package org.kalypso.ui.application;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -72,7 +73,7 @@ public class KalypsoApplication implements IPlatformRunnable
     {
       // TODO: HACK TO BE REMOVED when separation client/server is ok
       KalypsoGisPlugin.getDefault();
-      
+
       final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
       authPlugin.startLoginProcedure( display );
       final IKalypsoUser user = authPlugin.getCurrentUser();
@@ -89,6 +90,10 @@ public class KalypsoApplication implements IPlatformRunnable
     finally
     {
       display.dispose();
+
+      // be sure to close splash screen
+      // important for instance in the case no workbench started (user cancelled login-procedure)
+      Platform.endSplash();
     }
   }
 
