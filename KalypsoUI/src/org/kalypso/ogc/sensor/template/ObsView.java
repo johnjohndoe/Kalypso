@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.template;
 import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -96,7 +95,7 @@ public abstract class ObsView implements IObsViewEventProvider
   private final Set m_enabledFeatures = new HashSet();
 
   // bugfix #1
-  private final List m_loading = Collections.synchronizedList( new ArrayList() );
+  //private final List m_loading = Collections.synchronizedList( new ArrayList() );
 
   /**
    * Default constructor: enables all the features
@@ -151,17 +150,17 @@ public abstract class ObsView implements IObsViewEventProvider
   public void removeAllItems()
   {
     // bugfix #1
-    while( m_loading.size() > 0 )
-    {
-      try
-      {
-        Thread.sleep( 100 );
-      }
-      catch( final InterruptedException ignored )
-      {
-        // empty
-      }
-    }
+//    while( m_loading.size() > 0 )
+//    {
+//      try
+//      {
+//        Thread.sleep( 100 );
+//      }
+//      catch( final InterruptedException ignored )
+//      {
+//        // empty
+//      }
+//    }
 
     synchronized( m_items )
     {
@@ -259,8 +258,8 @@ public abstract class ObsView implements IObsViewEventProvider
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
     // bugfix #1
-    if( !synchron )
-      m_loading.add( k );
+//    if( !synchron )
+//      m_loading.add( k );
 
     final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
     { this, data, ignoreType, tokenizedName }, synchron )
@@ -279,7 +278,7 @@ public abstract class ObsView implements IObsViewEventProvider
         }
 
         // bugfix #1
-        ( (ObsView)m_data[0] ).m_loading.remove( key );
+//        ( (ObsView)m_data[0] ).m_loading.remove( key );
       }
     };
 
