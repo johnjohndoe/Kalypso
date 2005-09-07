@@ -419,4 +419,35 @@ public class KalypsoStatusUtils
     // customisation possible in the near future...
     return null;
   }
+
+  /**
+   * Combines the stati according to the policy defined when interpolating
+   * the corresponding value-axes.
+   */
+  public static int performInterpolation( final int status1, final int status2 )
+  {
+    return (status1 | status2 ) & KalypsoStati.MASK_INTERPOLATION;
+  }
+  
+  /**
+   * Combines the stati according to the policy defined when performing arithmetic
+   * operations on the corresponding value-axes.
+   */
+  public static int performArithmetic( final int[] stati )
+  {
+    int status = 0;
+    for( int i = 0; i < stati.length; i++ )
+      status |= stati[i];
+    
+    return status & KalypsoStati.MASK_ARITHMETIC;
+  }
+ 
+  /**
+   * Combines the stati according to the policy defined when performing arithmetic
+   * operations on the corresponding value-axes.
+   */
+  public static int performArithmetic( final int status1, final int status2 )
+  {
+    return (status1 | status2 ) & KalypsoStati.MASK_ARITHMETIC;
+  }
 }
