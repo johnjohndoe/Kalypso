@@ -170,10 +170,7 @@
         <echo message="Vorhersagezeitreihen werden exportiert"/>
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
 
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${calc.url}/wiskiimport_gesamt.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${calc.url}/wiskiimport_messung_120_h_vorhersage.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${calc.url}/wiskiimport_messung_48_h_vorhersage.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${calc.url}/wiskiimport_vorhersage.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${calc.url}/wiskiexport_prognose.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
     </target>
 
 </project>
