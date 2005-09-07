@@ -59,6 +59,8 @@ import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
  * <li>die models[] sortiert sind
  * <li>die models[] eine "andere" Reihenfolge haben
  * </ul>
+ * <p>
+ * TODO Rename class to something like MultiTimeseriesTuppleModel
  * 
  * @author schlienger
  */
@@ -68,8 +70,6 @@ public class ForecastTuppleModel extends AbstractTuppleModel
 
   /**
    * Constructor
-   * 
-   * TODO change class name to MultiTuppleModel, as this is not only for forecast
    */
   public ForecastTuppleModel( final ITuppleModel[] models ) throws SensorException
   {

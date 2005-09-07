@@ -59,8 +59,8 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
  * InterpolationFilter. This is a simple yet tricky interpolation filter. It steps through the time and eventually
  * interpolates the values at t, using the values at t-1 and t+1.
  * <p>
- * This filter can also deal with Kalypso Status Axes. In that case it does not perform a strict interpolation, but uses
- * the bitwise OR-Operator to combine the stati. When no status is available, it uses the default value for the status
+ * This filter can also deal with Kalypso Status Axes. In that case it does not perform an interpolation, but uses
+ * the policy defined in KalypsoStatusUtils. When no status is available, it uses the default value for the status
  * provided in the constructor.
  * 
  * @author schlienger
@@ -216,9 +216,8 @@ public class InterpolationFilter extends AbstractObservationFilter
 
             if( KalypsoStatusUtils.isStatusAxis( valueAxes[ia] ) )
             {
-              // this is the status axis
-              // no interpolation but a bitwise OR
-              tupple[pos] = new Integer( (int)v1[pos] | (int)v2[pos] );
+              // this is the status axis: no interpolation
+              tupple[pos] = new Integer( KalypsoStatusUtils.performInterpolation( (int)v1[pos], (int)v2[pos] ) );
             }
             else
             {
