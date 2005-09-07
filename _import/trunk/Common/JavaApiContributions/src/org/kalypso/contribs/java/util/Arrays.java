@@ -451,11 +451,12 @@ public final class Arrays
   }
 
   /**
-   * 
    * @param array
    *          the data
    * @param fromPos
    * @param toPos
+   * 
+   * @deprecated you should use System.arrayCopy instead
    */
   public static byte[] copyPart( byte[] array, int fromPos, int toPos )
   {
@@ -466,7 +467,6 @@ public final class Arrays
   }
 
   /**
-   * 
    * @param strings
    * @param separator
    * @return content as string
