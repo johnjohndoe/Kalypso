@@ -14,7 +14,7 @@
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="60"/>
+		<arg name="rightSash" value="50"/>
 		<!-- 
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsstationen.gmt"/>
@@ -27,6 +27,11 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<!-- 
+        Ant-Knopf -->
+		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
+		<arg name="buttonTooltip" value="Gebietsniederschlag mittels Gebietsniederschlagsmodell berechnen"/>
+		<arg name="buttonLaunch" value="niederschlagsmodell"/>
 	</page>
 	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -42,7 +47,7 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="60"/>
 		<!--  
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
@@ -55,11 +60,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<!-- 
-        Ant-Knopf -->
-		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
-		<arg name="buttonTooltip" value="Gebietsniederschlag mittels Gebietsniederschlagsmodell berechnen"/>
-		<arg name="buttonLaunch" value="niederschlagsmodell"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
 	<!-- Wasserstand / Abfluss (Messung) -->
@@ -92,8 +92,7 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="template"/>
-		<arg name="zmlTableTemplate" value=".templates/.wizard/Eingabepegel_uh_Wendefurth.ott"/>
+		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- Abgabe Speicher (Messung und Prognose) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -155,8 +154,7 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
          Tabelle -->
-		<arg name="zmlTableShow" value="template"/>
-		<arg name="zmlTableTemplate" value=".templates/.wizard/Vorhersagepegel_uh_Wendefurth.ott"/>
+		<arg name="zmlTableShow" value="all"/>
 		<!-- 
         Ant-Knopf für Berechnung -->
 		<arg name="buttonText" value="Q-Prognose uh. Wendefurth"/>
@@ -227,8 +225,7 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="template"/>
-		<arg name="zmlTableTemplate" value=".templates/.wizard/Eingabepegel_oh_Speicher.ott"/>
+		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE OBERHALB SPEICHER -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose oberhalb Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -261,8 +258,7 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!--
         Tabelle -->
-		<arg name="zmlTableShow" value="template"/>
-		<arg name="zmlTableTemplate" value=".templates/.wizard/Vorhersagepegel_oh_Speicher.ott"/>
+		<arg name="zmlTableShow" value="all"/>
 		<!-- 
         Ant-Knopf für Berechnung -->
 		<arg name="buttonText" value="Q-Prognose oh. Speicher"/>

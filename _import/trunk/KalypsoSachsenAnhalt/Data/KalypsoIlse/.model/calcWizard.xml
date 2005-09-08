@@ -14,7 +14,7 @@
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="60"/>
+		<arg name="rightSash" value="50"/>
 		<!-- 
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsstationen.gmt"/>
@@ -27,6 +27,11 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<!-- 
+        Ant-Knopf -->
+   	    <arg name="buttonText" value="Gebietsniederschlag berechnen"/>
+		<arg name="buttonTooltip" value="Gebietsniederschlag mittels Gebietsniederschlagsmodell berechnen"/>
+		<arg name="buttonLaunch" value="niederschlagsmodell"/>
 	</page>
 	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -42,7 +47,7 @@
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="60"/>
 		<!-- 
         Karte -->
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
@@ -55,11 +60,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<!-- 
-        Ant-Knopf -->
-   	    <arg name="buttonText" value="Gebietsniederschlag berechnen"/>
-		<arg name="buttonTooltip" value="Gebietsniederschlag mittels Gebietsniederschlagsmodell berechnen"/>
-		<arg name="buttonLaunch" value="niederschlagsmodell"/>
 	</page>
 	<!-- Wasserstand / Abfluss (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse /  Wasserstände  - Eingabepegel" imageLocation="icons/calcwizard/kalypso32.gif">
