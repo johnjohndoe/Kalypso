@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.CheckboxFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.RadioFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
 import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
@@ -81,6 +82,7 @@ import org.kalypso.template.featureview.GroupType;
 import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
+import org.kalypso.template.featureview.RadiobuttonType;
 import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.TableType;
 import org.kalypso.template.featureview.TextType;
@@ -297,6 +299,24 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
 
       addFeatureControl( bfc );
+
+      return control;
+    }
+    else if( controlType instanceof RadiobuttonType )
+    {
+      final RadiobuttonType radioType = (RadiobuttonType)controlType;
+
+      final String propertyName = radioType.getProperty();
+      final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
+      
+      final Object valueToSet = radioType.getValueToSet();
+      final String text = radioType.getText();
+      final RadioFeatureControl rfc = new RadioFeatureControl( workspace, feature, ftp, valueToSet, text );
+
+      final int radioStyle = SWTUtilities.createStyleFromString( radioType.getStyle() );
+      final Control control = rfc.createControl( parent, radioStyle );
+
+      addFeatureControl( rfc );
 
       return control;
     }

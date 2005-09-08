@@ -165,8 +165,8 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
         final Map metadata = (Map)configuration.getProperty( CONF_METADATA );
 
-        final Object newValue = Mapper.mapJavaValueToXml( fc.newValue );
-        metadata.put( fc.property, newValue );
+        final Object newValue = Mapper.mapJavaValueToXml( fc.getNewValue() );
+        metadata.put( fc.getProperty(), newValue );
       }
     };
 

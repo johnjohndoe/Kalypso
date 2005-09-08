@@ -95,7 +95,7 @@ public class CalendarFeatureDialog implements IFeatureDialog
   private Date getDate()
   {
     if( m_change != null )
-      return (Date)m_change.newValue;
+      return (Date)m_change.getNewValue();
 
     return (Date)m_feature.getProperty( m_ftp.getName() );
   }
