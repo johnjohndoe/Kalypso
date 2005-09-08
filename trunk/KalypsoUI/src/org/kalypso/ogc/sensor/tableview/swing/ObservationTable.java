@@ -363,7 +363,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       super.processMouseEvent( e );
   }
 
-  public Object getObservationTableModel()
+  public ObservationTableModel getObservationTableModel()
   {
     return m_model;
   }
