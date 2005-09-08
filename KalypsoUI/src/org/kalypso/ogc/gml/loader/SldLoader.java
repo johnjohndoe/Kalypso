@@ -97,7 +97,8 @@ public class SldLoader extends AbstractLoader
       reader.close();
 
       final IResource resource = ResourceUtilities.findFileFromURL( url );
-      addResource( resource, styledLayerDescriptor );
+      if( resource != null )
+        addResource( resource, styledLayerDescriptor );
 
       monitor.done();
       return styledLayerDescriptor;
