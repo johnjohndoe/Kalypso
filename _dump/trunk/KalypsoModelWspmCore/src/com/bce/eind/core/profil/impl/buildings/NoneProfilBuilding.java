@@ -2,8 +2,8 @@ package com.bce.eind.core.profil.impl.buildings;
 
 import java.util.ArrayList;
 
-import com.bce.eind.core.profil.IProfil;
-import com.bce.eind.core.profil.ProfilBuildingProperty;
+import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
 
 /**
  * @author kimwerner
@@ -12,6 +12,6 @@ public class NoneProfilBuilding extends AbstractProfilBuilding
 {
   public NoneProfilBuilding( )
   {
-    super( IProfil.BUILDING_TYP.NONE, new ArrayList<ProfilBuildingProperty>( 0 ), null );
+    super( BUILDING_TYP.NONE, new ArrayList<BUILDING_PROPERTY>( 0 ), null );
   }
 }

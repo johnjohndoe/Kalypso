@@ -3,28 +3,16 @@ package com.bce.eind.core.profil;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_PROPERTY;
+import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilConstants.PROFIL_PROPERTY;
 
 /**
  * @author kimwerner
  */
 public interface IPlainProfil
 {
-  public static enum BUILDING_TYP
-  {
-    BRUECKE, EI, KREIS, MAUL, NONE, TRAPEZ, WEHR;
-  }
-
-  public static enum DEVIDER_TYP
-  {
-    BORDVOLL, DURCHSTROEMTE, FLIESSZONE, WEHR;
-  }
-
-  public static enum PROPERTY
-  {
-    KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, RAUHEIT_TYP, STATION, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
-  }
-
+  
   /**
    * @param point
    * @param devider
@@ -172,12 +160,12 @@ public interface IPlainProfil
    * @param buildingTyp
    * @throws ProfilDataException
    */
-  public void setBuilding( final IPlainProfil.BUILDING_TYP buildingTyp ) throws ProfilDataException;
+  public void setBuilding( final BUILDING_TYP buildingTyp ) throws ProfilDataException;
 
   /**
    * @param key
    * @param value
-   * @see PROPERTY
+   * @see PROFIL_PROPERTY
    */
   public void setProperty( final Object key, final Object value );
 

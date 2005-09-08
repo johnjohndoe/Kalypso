@@ -3,8 +3,8 @@
  */
 package com.bce.eind;
 
-import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
+import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
 import com.bce.eind.core.profil.impl.buildings.BrueckeProfilBuilding;
 import com.bce.eind.core.profil.impl.buildings.EiProfilBuilding;
 import com.bce.eind.core.profil.impl.buildings.KreisProfilBuilding;
@@ -18,7 +18,7 @@ import com.bce.eind.core.profil.impl.buildings.TrapezProfilBuilding;
 public class ProfilBuildingFactory
 {
 
-  public static IProfilBuilding createProfilBuilding( final IProfil.BUILDING_TYP buildingTyp )
+  public static IProfilBuilding createProfilBuilding( final BUILDING_TYP buildingTyp )
   {
     switch( buildingTyp )
     {

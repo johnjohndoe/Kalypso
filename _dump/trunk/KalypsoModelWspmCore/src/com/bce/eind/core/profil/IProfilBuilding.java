@@ -2,7 +2,8 @@ package com.bce.eind.core.profil;
 
 import java.util.Collection;
 
-import com.bce.eind.core.profil.IPlainProfil.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
 
 /**
  * @author kimwerner
@@ -13,14 +14,14 @@ public interface IProfilBuilding
 
   public PointProperty[] getProfilPointProperties( );
 
-  public Collection<ProfilBuildingProperty> getProfilBuildingProperties( );
+  public Collection<BUILDING_PROPERTY> getProfilBuildingProperties( );
 
-  public double getValue( final ProfilBuildingProperty buildingValue )
+  public double getValue( final BUILDING_PROPERTY buildingValue )
       throws ProfilBuildingException;
 
   /** @return true, if the value was changed, false if bothing happended */
-  public boolean setValue( final ProfilBuildingProperty buildingValue, final double value )
+  public boolean setValue( final BUILDING_PROPERTY buildingValue, final double value )
       throws ProfilBuildingException;
 
-  public boolean hasProperty( final ProfilBuildingProperty profilBuildingProperty );
+  public boolean hasProperty( final BUILDING_PROPERTY profilBuildingProperty );
 }

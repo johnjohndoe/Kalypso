@@ -10,7 +10,6 @@ import java.util.List;
 
 import com.bce.eind.ProfilBuildingFactory;
 import com.bce.eind.core.profil.IPlainProfil;
-import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
@@ -45,7 +44,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
     m_points = new ProfilPoints();
     m_points.addProperty( PointProperty.BREITE );
     m_points.addProperty( PointProperty.HOEHE );
-    m_building = ProfilBuildingFactory.createProfilBuilding( IProfil.BUILDING_TYP.NONE );
+    m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
 
   }
 
@@ -87,7 +86,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
     if( pointProperty == PointProperty.RAUHEIT )
     {
-      pointProperty.setParameter(RAUHEIT_TYP.class, IProfilConstants.DEFAULT_RAUHEIT_TYP );
+      pointProperty.setParameter(RAUHEIT_PROPERTY.class, IProfilConstants.DEFAULT_RAUHEIT_TYP );
     }
     return newProperties;
   }
@@ -372,7 +371,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   /**
    * @see com.bce.eind.core.profil.IPlainProfil#setBuilding(com.bce.eind.core.profil.IPlainProfil.BUILDING_TYP)
    */
-  public void setBuilding( final IProfil.BUILDING_TYP buildingTyp ) throws ProfilDataException
+  public void setBuilding( final BUILDING_TYP buildingTyp ) throws ProfilDataException
   {
     removeBuilding();
     m_building = ProfilBuildingFactory.createProfilBuilding( buildingTyp );
@@ -380,7 +379,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
     for( final PointProperty property : m_building.getProfilPointProperties() )
       addPointProperty( property );
 
-    if( buildingTyp == IProfil.BUILDING_TYP.BRUECKE )
+    if( buildingTyp == BUILDING_TYP.BRUECKE )
     {
       for( final Iterator<IProfilPoint> pktIt = m_points.iterator(); pktIt.hasNext(); )
       {

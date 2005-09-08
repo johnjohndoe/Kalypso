@@ -2,14 +2,13 @@ package com.bce.eind.core.profil.impl.devider;
 
 import java.util.HashMap;
 
-import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.IPlainProfil.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
 
 public class ProfilDevider implements IProfilDevider
 {
-  private IProfil.DEVIDER_TYP m_Typ;
+  private DEVIDER_TYP m_Typ;
 
   private IProfilPoint m_point;
 
@@ -49,7 +48,7 @@ public class ProfilDevider implements IProfilDevider
     return m_point;
   }
 
-  public IProfil.DEVIDER_TYP getTyp( )
+  public DEVIDER_TYP getTyp( )
   {
     return m_Typ;
   }

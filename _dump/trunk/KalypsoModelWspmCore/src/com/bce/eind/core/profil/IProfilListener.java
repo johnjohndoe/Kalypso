@@ -1,5 +1,7 @@
 package com.bce.eind.core.profil;
 
+import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
+
 
 
 /**
@@ -20,7 +22,7 @@ public interface IProfilListener
   
   public void onBuildingChanged();
 
-  public void onBuildingDataChanged( final IProfilBuilding building, final ProfilBuildingProperty buildingProperty, final double value );
+  public void onBuildingDataChanged( final IProfilBuilding building, final BUILDING_PROPERTY buildingProperty, final double value );
   
   public void onMetaDataChanged( final Object key, final Object value );
   

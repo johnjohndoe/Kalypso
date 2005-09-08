@@ -6,19 +6,19 @@ import java.util.List;
 
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
+import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.PointProperty;
-import com.bce.eind.core.profil.ProfilBuildingProperty;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_PROPERTY;
+
 
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
  */
-public class Profil implements IProfil
+public class Profil implements IProfil, IProfilConstants
 {
   private final List<IProfilListener> m_listeners = new ArrayList<IProfilListener>( 10 );
 
@@ -96,7 +96,7 @@ public class Profil implements IProfil
    */
 
   public void fireBuildingDataChanged( final IProfilBuilding building,
-      final ProfilBuildingProperty buildingProperty, final double value )
+      final BUILDING_PROPERTY buildingProperty, final double value )
   {
     final IProfilListener[] listeners = m_listeners
         .toArray( new IProfilListener[m_listeners.size()] );
@@ -344,7 +344,7 @@ public class Profil implements IProfil
    * @throws ProfilDataException
    * @see com.bce.eind.core.profilinterface.IProfil#setBuilding(com.bce.eind.core.profilinterface.IProfilBuilding)
    */
-  public void setBuilding( final IProfil.BUILDING_TYP buildingTyp ) throws ProfilDataException
+  public void setBuilding( final BUILDING_TYP buildingTyp ) throws ProfilDataException
   {
     m_profil.setBuilding( buildingTyp );
 

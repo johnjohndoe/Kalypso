@@ -1,6 +1,6 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IPlainProfil.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
 
 public interface IProfilDevider
 {
