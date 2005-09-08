@@ -70,8 +70,8 @@ public class ChangeFeaturesCommand implements ICommand
     {
       final FeatureChange change = changes[i];
 
-      final Object oldValue = change.feature.getProperty( change.property );
-      m_oldChanges[i] = new FeatureChange( change.feature, change.property, oldValue );
+      final Object oldValue = change.getFeature().getProperty( change.getProperty() );
+      m_oldChanges[i] = new FeatureChange( change.getFeature(), change.getProperty(), oldValue );
     }
   }
 
@@ -121,9 +121,9 @@ public class ChangeFeaturesCommand implements ICommand
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
-      final FeatureProperty fp = FeatureFactory.createFeatureProperty( change.property, change.newValue );
-      change.feature.setProperty( fp );
-      changedFeaturesList.add( change.feature );
+      final FeatureProperty fp = FeatureFactory.createFeatureProperty( change.getProperty(), change.getNewValue() );
+      change.getFeature().setProperty( fp );
+      changedFeaturesList.add( change.getFeature() );
     }
 
     if( m_workspace != null )

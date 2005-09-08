@@ -47,16 +47,29 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeatureChange
 {
-  public final Feature feature;
+  private final Feature m_feature;
 
-  public final String property;
+  private final String m_property;
 
-  public final Object newValue;
+  private final Object m_newValue;
 
-  public FeatureChange( final Feature featur, final String propert, final Object newValu )
+  public FeatureChange( final Feature feature, final String property, final Object newValue )
   {
-    this.feature = featur;
-    this.property = propert;
-    this.newValue = newValu;
+    m_feature = feature;
+    m_property = property;
+    m_newValue = newValue;
+  }
+  
+  public Feature getFeature()
+  {
+    return m_feature;
+  }
+  public Object getNewValue()
+  {
+    return m_newValue;
+  }
+  public String getProperty()
+  {
+    return m_property;
   }
 }
