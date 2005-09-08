@@ -10,14 +10,14 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="nextPage" value="NS_Gebiete"/>
+		<arg name="nextPage" value="NS_Gebiete_Thür_Wald"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="50"/>
 		<!-- 
         Karte -->
-		<arg name="mapTemplate" value=".templates/.wizard/Wizard_Ombrometer.gmt"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Ombrometer.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<!--
@@ -34,23 +34,24 @@
 		<arg name="buttonLaunch" value="niederschlagsmodell"/>
 	</page>
 	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete" imageLocation="icons/calcwizard/kalypso32.gif">
+	<!-- Niederschlagsgebiete Thüringer Wald -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Thüringer Wald" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
-		<arg name="pageID" value="NS_Gebiete"/>
+		<arg name="pageID" value="NS_Gebiete_Thür_Wald"/>
 		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Thür_Wald.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<arg name="prevPage" value="Ombrometer"/>
-		<arg name="nextPage" value="Q_uh_Wendefurth"/>
+		<arg name="nextPage" value="NS_Gebiete_Saale_Ilm"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
 		<arg name="rightSash" value="60"/>
 		<!--  
         Karte -->
-		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Thür_Wald.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<!--
@@ -61,6 +62,182 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
+	<!-- Niederschlagsgebiete Saale / Ilm-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Saale / Ilm" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Saale_Ilm"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Saale_Ilm.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="NS_Gebiete_Thür_Wald"/>
+		<arg name="nextPage" value="NS_Gebiete_W_Elster"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Saale_Ilm.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+	</page>
+	<!-- Niederschlagsgebiete Weiße Elster -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_W_Elster"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_W_Elster.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="NS_Gebiete_Saale_Ilm"/>
+		<arg name="nextPage" value="NS_Gebiete_Unstrut_Eich"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Weiße_Elster.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+	</page>
+	<!-- Niederschlagsgebiete Unstrut / Eichsfeld-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Unstrut / Eichsfeld" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Unstrut_Eich"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Unstrut_Eich.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="NS_Gebiete_W_Elster"/>
+		<arg name="nextPage" value="NS_Gebiete_Flach_Süd"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Unstrut_Eichsfeld.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+	</page>
+	<!-- Niederschlagsgebiete Flachland Süd-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete -  Flachland Süd" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Flach_Süd"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Süd.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="NS_Gebiete_Unstrut_Eich"/>
+		<arg name="nextPage" value="NS_Gebiete_Harz"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Flachland_Süd.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+	</page>
+	<!-- Niederschlagsgebiete Harz -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Harz" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Harz"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Harz.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="NS_Gebiete_Flach_Süd"/>
+		<arg name="nextPage" value="NS_Gebiete_Flach_Nord"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Harz.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+	</page>
+	<!-- Niederschlagsgebiete Flachland Nord-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Flachland Nord" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Flach_Nord"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Nord.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="prevPage" value="NS_Gebiete_Harz"/>
+		<arg name="nextPage" value="NS_Gebiete_"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Flachland_Nord.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+	</page>
+	
+	
+	
+	
+	
+	
+<!--
+-->	
 	<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
 	<!-- Wasserstand / Abfluss (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse /  Wasserstände - Eingabepegel uh. Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">

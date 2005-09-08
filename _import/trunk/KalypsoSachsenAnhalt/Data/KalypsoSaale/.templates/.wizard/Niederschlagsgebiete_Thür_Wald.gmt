@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5517396.788227284" left="5094662.90711794" right="5544364.244380324" srs="EPSG:31469" top="5876417.608922357"/>
-    <layers active="ID_7">
-        <layer name="Niederschlagsgebiete - Weisse Elster" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <extent bottom="5598575.33740928" left="5222482.7798324" right="5263706.865991773" srs="EPSG:31469" top="5636062.916502202"/>
+    <layers active="ID_3">
+        <layer name="Niederschlagsgebiete - Weisse Elster" visible="false" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Niederschlagsgebiete" ns1:actuate="onRequest" ns1:href="project:/.styles/niederschlagsgebiete-Weisse Elster.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
-        <layer name="Niederschlagsgebiete - Unstrut-Eichsfeld" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <layer name="Niederschlagsgebiete - Unstrut-Eichsfeld" visible="false" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
             <ns4:style linktype="sld" style="Niederschlagsgebiete" ns3:actuate="onRequest" ns3:href="project:/.styles/niederschlagsgebiete-Unstrut-Eichsfeld.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
         </layer>
         <layer name="Niederschlagsgebiete - Thüringer Wald" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
             <ns6:style linktype="sld" style="Niederschlagsgebiete" ns5:actuate="onRequest" ns5:href="project:/.styles/niederschlagsgebiete-Thüringer Wald.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
         </layer>
-        <layer name="Niederschlagsgebiete - Saale-Ilm" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_4" linktype="gml" ns7:actuate="onRequest" ns7:href="modell.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+        <layer name="Niederschlagsgebiete - Saale-Ilm" visible="false" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_4" linktype="gml" ns7:actuate="onRequest" ns7:href="modell.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
             <ns8:style linktype="sld" style="Niederschlagsgebiete" ns7:actuate="onRequest" ns7:href="project:/.styles/niederschlagsgebiete-Saale-Ilm.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
         </layer>
-        <layer name="Niederschlagsgebiete - Harz" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="modell.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
+        <layer name="Niederschlagsgebiete - Harz" visible="false" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="modell.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
             <ns10:style linktype="sld" style="Niederschlagsgebiete" ns9:actuate="onRequest" ns9:href="project:/.styles/niederschlagsgebiete-Harz.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
         </layer>
-        <layer name="Niederschlagsgebiete - Flachland Süd" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_6" linktype="gml" ns11:actuate="onRequest" ns11:href="modell.gml" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
+        <layer name="Niederschlagsgebiete - Flachland Süd" visible="false" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_6" linktype="gml" ns11:actuate="onRequest" ns11:href="modell.gml" ns11:type="simple" xmlns:ns11="http://www.w3.org/1999/xlink">
             <ns12:style linktype="sld" style="Niederschlagsgebiete" ns11:actuate="onRequest" ns11:href="project:/.styles/niederschlagsgebiete-Flachland-Süd.sld" ns11:type="simple" xmlns:ns12="types.template.kalypso.org"/>
         </layer>
-        <layer name="Niederschlagsgebiete - Flachland Nord" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_7" linktype="gml" ns13:actuate="onRequest" ns13:href="modell.gml" ns13:type="simple" xmlns:ns13="http://www.w3.org/1999/xlink">
+        <layer name="Niederschlagsgebiete - Flachland Nord" visible="false" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_7" linktype="gml" ns13:actuate="onRequest" ns13:href="modell.gml" ns13:type="simple" xmlns:ns13="http://www.w3.org/1999/xlink">
             <ns14:style linktype="sld" style="Niederschlagsgebiete" ns13:actuate="onRequest" ns13:href="project:/.styles/niederschlagsgebiete-Flachland-Nord.sld" ns13:type="simple" xmlns:ns14="types.template.kalypso.org"/>
         </layer>
         <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_8" linktype="shape" ns15:actuate="onRequest" ns15:href="project:/.shape/Gewässerflächen#EPSG:31468" ns15:type="simple" xmlns:ns15="http://www.w3.org/1999/xlink">
