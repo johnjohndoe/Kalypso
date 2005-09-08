@@ -22,6 +22,7 @@
 				<include name="wiskiimport_messung_48_h_vorhersage.gml" />
 				<include name="wiskiimport_gesamt.gml" />
 				<include name="wiskiimport_vorhersage.gml" />
+				<include name="wiskiexport_prognose.gml" />
 				<include name="**/*.gmt" />		<!-- Kartenansichten -->
 				<include name="**/*.ott" />		<!-- Zeitreihen-Tabellen -->
 				<include name="**/*.gtt" />		<!-- GIS-Tabellen (Parameteransichten) -->
