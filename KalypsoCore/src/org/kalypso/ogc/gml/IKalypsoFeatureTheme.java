@@ -68,7 +68,7 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 
   public FeatureList getFeatureList();
 
-  public FeatureList getFeatureListVisible( GM_Envelope env );
+  public FeatureList getFeatureListVisible( final GM_Envelope env );
 
   public IFeatureSelectionManager getSelectionManager();
 

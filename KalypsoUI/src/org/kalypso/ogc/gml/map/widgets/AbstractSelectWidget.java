@@ -57,16 +57,15 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
+/**
+ * 
+ * @author doemming
+ */
 public abstract class AbstractSelectWidget extends AbstractWidget
 {
-  /*
-   * 
-   * @author doemming
-   */
   public AbstractSelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
-
   }
 
   /**
@@ -210,7 +209,8 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     if( allowOnlyOneSelectedFeature() )
     {
       final Feature fe = (Feature)features.get( 0 );
-      command = new SelectFeaturesCommand( activeTheme.getWorkspace(), fe, activeTheme.getSelectionManager(),getMapPanel());
+      command = new SelectFeaturesCommand( activeTheme.getWorkspace(), fe, activeTheme.getSelectionManager(),
+          getMapPanel() );
     }
     else
       command = new SelectFeaturesCommand( activeTheme.getWorkspace(), (Feature[])features

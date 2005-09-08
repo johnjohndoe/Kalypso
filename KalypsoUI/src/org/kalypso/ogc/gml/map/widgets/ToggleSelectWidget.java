@@ -42,12 +42,12 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import org.kalypso.ogc.gml.command.JMSelector;
 
+/**
+ * 
+ * @author doemming
+ */
 public class ToggleSelectWidget extends AbstractSelectWidget
 {
-  /*
-   * 
-   * @author doemming
-   */
   public ToggleSelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
