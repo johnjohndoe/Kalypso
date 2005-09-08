@@ -87,7 +87,18 @@
           target: gebietsniederschlag              
          ================================= -->
 	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
-		<kalypso.gmlWeight modelurl="${calc.url}/modell.gml" featurepathtarget="PegelCollectionAssociation/PegelMember[Gebiet]" propzmltarget="Niederschlag" proprelationweightmember="gewichtung" propweight="faktor" proprelationsourcefeature="ombrometerMember" propzmlsource="Niederschlag" targetcontext="${calc.url}" from="${startsim}" forecastfrom="${startforecast}" to="${stopsim}" />
+		<kalypso.gmlWeight 
+			modelurl="${calc.url}/modell.gml" 
+			featurepathtarget="PegelCollectionAssociation/PegelMember[Gebiet]" 
+			propzmltarget="Niederschlag" 
+			proprelationweightmember="gewichtung" 
+			propweight="faktor" 
+			proprelationsourcefeature="ombrometerMember" 
+			propzmlsource="Niederschlag" 
+			targetcontext="${calc.url}" 
+			from="${startsim}" 
+			forecastfrom="${startforecast}" 
+			to="${stopsim}" />
 	</target>
 
 	<target name="runCalculation">
