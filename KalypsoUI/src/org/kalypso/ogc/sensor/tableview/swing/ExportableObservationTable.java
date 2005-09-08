@@ -48,7 +48,6 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.java.swing.table.TableUtils;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -98,7 +97,8 @@ public class ExportableObservationTable implements IExportableObject
       monitor.worked(1);
       
       // normal table dump
-      TableUtils.dump( m_table, "\t", writer );
+      final ObservationTableModel model = m_table.getObservationTableModel();
+      model.dump( "\t", writer );
       
       monitor.worked(1);
       

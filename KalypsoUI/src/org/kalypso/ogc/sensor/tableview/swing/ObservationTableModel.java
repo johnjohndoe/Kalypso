@@ -40,10 +40,15 @@
  -----------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.Format;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -542,6 +547,65 @@ public class ObservationTableModel extends AbstractTableModel
       final TableViewColumn col2 = (TableViewColumn)o2;
 
       return col1.getName().compareTo( col2.getName() );
+    }
+  }
+
+  /**
+   * Exports the contents of the model
+   */
+  public void dump( final String separator, final BufferedWriter writer ) throws IOException
+  {
+    if( m_sharedModel.isEmpty() )
+      return;
+
+    final Object checkObject = m_sharedModel.first();
+
+    // will be used for formating the various columns
+    final Format[] nf = new Format[m_columns.size() + 1];
+
+    // find appropriate format for shared column (Attention: can still be null)
+    if( checkObject instanceof Date )
+      nf[0] = DateFormat.getDateTimeInstance();
+    else if( checkObject instanceof Integer )
+      nf[0] = NumberFormat.getIntegerInstance();
+    else if( checkObject instanceof Number )
+      nf[0] = NumberFormat.getNumberInstance();
+
+    // dump header and fetch numberformats
+    writer.write( m_sharedAxis.getName() );
+    
+    int col = 1;
+    for( final Iterator it = m_columns.iterator(); it.hasNext(); )
+    {
+      final TableViewColumn tvc = (TableViewColumn)it.next();
+
+      nf[col] = TimeserieUtils.getNumberFormat( tvc.getFormat() );
+
+      writer.write( separator );
+      writer.write( tvc.getName() );
+    }
+    
+    writer.newLine();
+
+    // dump values
+    int row = 0;
+    for( final Iterator iter = m_sharedModel.iterator(); iter.hasNext(); )
+    {
+      final Object key = iter.next();
+
+      writer.write( nf[0] == null ? key.toString() : nf[0].format( key ) );
+
+      col = 1;
+      for( ; col < getColumnCount(); col++ )
+      {
+        final Object value = getValueAt( row, col );
+
+        writer.write( separator );
+        writer.write( nf[col].format( value ) );
+      }
+
+      writer.newLine();
+      row++;
     }
   }
 }

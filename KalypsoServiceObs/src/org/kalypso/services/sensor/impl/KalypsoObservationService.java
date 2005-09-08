@@ -423,20 +423,22 @@ public class KalypsoObservationService implements IObservationService
     if( obean == null )
       throw new NullPointerException( "ItemBean must not be null" );
 
+    final String id = ZmlURL.removeServerSideId( obean.getId() );
+    
     // maybe bean already in map?
-    if( m_mapBeanId2Item.containsKey( obean.getId() ) )
-      return (IRepositoryItem)m_mapBeanId2Item.get( obean.getId() );
+    if( m_mapBeanId2Item.containsKey( id ) )
+      return (IRepositoryItem)m_mapBeanId2Item.get( id );
 
     // try with repository id
-    final String repId = RepositoryUtils.getRepositoryId( obean.getId() );
+    final String repId = RepositoryUtils.getRepositoryId( id );
     if( m_mapRepId2Rep.containsKey( repId ) )
     {
       final IRepository rep = (IRepository)m_mapRepId2Rep.get( repId );
 
-      final IRepositoryItem item = rep.findItem( obean.getId() );
+      final IRepositoryItem item = rep.findItem( id );
 
       if( item == null )
-        throw new NoSuchElementException( "Item does not exist or could not be found: " + obean.getId() );
+        throw new NoSuchElementException( "Item does not exist or could not be found: " + id );
 
       return item;
     }
@@ -446,13 +448,13 @@ public class KalypsoObservationService implements IObservationService
     {
       final IRepository rep = (IRepository)it.next();
 
-      final IRepositoryItem item = rep.findItem( obean.getId() );
+      final IRepositoryItem item = rep.findItem( id );
 
       if( item != null )
         return item;
     }
 
-    throw new NoSuchElementException( "Unknonwn Repository or item. Repository: " + repId + ", Item: " + obean.getId() );
+    throw new NoSuchElementException( "Unknonwn Repository or item. Repository: " + repId + ", Item: " + id );
   }
 
   /**

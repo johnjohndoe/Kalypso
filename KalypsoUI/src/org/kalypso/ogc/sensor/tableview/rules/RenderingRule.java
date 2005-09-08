@@ -116,6 +116,17 @@ public class RenderingRule
    */
   public boolean contains( final int mask )
   {
+    if( m_mask == 0 || mask == 0 )
+      return mask == m_mask;
+    
     return ( m_mask & mask ) == mask;
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString()
+  {
+    return m_mask + " - " + m_tt == null ? "" : m_tt;
   }
 }

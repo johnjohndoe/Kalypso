@@ -304,6 +304,9 @@ public class KalypsoStatusUtils
    */
   public static boolean checkMask( final int mask, final int bit )
   {
+    if( bit == 0 || mask == 0 )
+      return mask == bit;
+    
     return ( mask & bit ) == bit;
   }
 
