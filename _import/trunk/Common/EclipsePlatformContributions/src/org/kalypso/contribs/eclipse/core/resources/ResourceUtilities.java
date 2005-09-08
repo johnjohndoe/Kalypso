@@ -113,6 +113,8 @@ public class ResourceUtilities
     }
     //Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
     // to an eclipse path
+    // WARNING: this is quite ugly and probalbly doesn't work as it is intended to do
+    // especially, if we are working with pathes into the .metadata section we get bugs
     else if( urlpath != null && urlpath.startsWith( "http:/" ) || urlpath.startsWith( "file:/" ) )
     {
       IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -131,7 +133,10 @@ public class ResourceUtilities
       {
         //split the string at the common part (path to workspace) and always take the second
         //part as the relative eclipse workspace path
-        String[] array = urlpath.split( url.toString() );
+        final String[] array = urlpath.split( url.toString() );
+        if( array[1].startsWith( ".metadata" ) )
+          return null;
+        
         return new Path( array[1] );
 
       }
