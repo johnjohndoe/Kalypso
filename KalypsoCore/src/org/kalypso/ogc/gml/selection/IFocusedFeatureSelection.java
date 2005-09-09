@@ -29,43 +29,15 @@
  */
 package org.kalypso.ogc.gml.selection;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
- * CommandableFeatureAction
- * <p>
- * decorates a structuredselection and provides additional an
- * 
- * @see org.kalypso.ogc.gml.mapmodel.CommandableWorkspace editors that provide featureselections should overwrite
- *      getSelection()
- * @see org.eclipse.jface.viewers.ISelectionProvider and deliver this type of selection. Actions on the other hand
- *      should cast for this type of selection and use the CommanableWorkspace as Commandtarget.
- * 
- * created by
- * 
- * @author doemming (24.05.2005)
+ * A feature selection which provides an additional focused feature including a focused property. Used for example in
+ * the table-view.
  */
-public class FeatureThemeSelection extends CommandableFeatureSelection implements IFeatureThemeSelection
+public interface IFocusedFeatureSelection extends IFeatureSelection
 {
-  private final IKalypsoFeatureTheme m_theme;
+  public Feature getFocusedFeature();
 
-  public FeatureThemeSelection( final IKalypsoFeatureTheme theme, Object eventSource,
-      final IStructuredSelection selection, final FeatureTypeProperty ftp, final Feature selectedRow )
-  {
-    super( theme.getWorkspace(), eventSource, selection, ftp, selectedRow );
-
-    m_theme = theme;
-  }
-
-  /**
-   * 
-   * @see org.kalypso.ogc.gml.selection.IFeatureThemeSelection#getKalypsoFeatureTheme()
-   */
-  public IKalypsoFeatureTheme getKalypsoFeatureTheme()
-  {
-    return m_theme;
-  }
+  public String getFocusedProperty();
 }

@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/*--------------- Kalypso-Header ------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,36 +36,50 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
 
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.kalypso.commons.command.ICommandTarget;
+ --------------------------------------------------------------------------*/
+
+package org.kalypso.ogc.gml.selection;
+
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author vdoemming
+ * @author belger
  */
-public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
+public final class EasyFeatureWrapper
 {
-  public CommandableWorkspace getWorkspace();
+  private final CommandableWorkspace m_workspace;
+  private final Feature m_feature;
+  private final Feature m_parentFeature;
+  private final String m_parentFeatureProperty;
 
-  public ISchedulingRule getSchedulingRule();
+  public EasyFeatureWrapper( final CommandableWorkspace workspace, final Feature feature, final Feature parentFeature,
+      final String parentFeatureProperty )
+  {
+    m_workspace = workspace;
+    m_feature = feature;
+    m_parentFeature = parentFeature;
+    m_parentFeatureProperty = parentFeatureProperty;
+  }
 
-  public FeatureType getFeatureType();
+  public Feature getFeature()
+  {
+    return m_feature;
+  }
 
-  public void addStyle( final KalypsoUserStyle style );
+  public Feature getParentFeature()
+  {
+    return m_parentFeature;
+  }
 
-  public void removeStyle( final KalypsoUserStyle style );
+  public String getParentFeatureProperty()
+  {
+    return m_parentFeatureProperty;
+  }
 
-  public UserStyle[] getStyles();
-
-  public FeatureList getFeatureList();
-
-  public FeatureList getFeatureListVisible( final GM_Envelope env );
+  public CommandableWorkspace getWorkspace()
+  {
+    return m_workspace;
+  }
 }

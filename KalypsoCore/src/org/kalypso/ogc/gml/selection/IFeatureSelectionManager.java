@@ -29,24 +29,18 @@
  */
 package org.kalypso.ogc.gml.selection;
 
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
- * IFeatureThemeSelection
- * <p>
- * 
- * created by
- * 
- * @author doemming (24.05.2005)
+ * @author doemming
  */
-public interface IFeatureThemeSelection extends ICommandableFeatureSelection
+public interface IFeatureSelectionManager extends IFeatureSelection
 {
-  public IKalypsoFeatureTheme getKalypsoFeatureTheme();
+  public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd );
+  
+  public void clear();
+  
+  public void addSelectionListener( final IFeatureSelectionListener l );
 
-  public FeatureTypeProperty getFocusedFeatureTypeProperty();
-
-  public Feature getFocusedFeature();
-
+  public void removeSelectionListener( final IFeatureSelectionListener l );
 }

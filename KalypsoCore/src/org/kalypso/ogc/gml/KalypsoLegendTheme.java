@@ -61,7 +61,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -121,13 +120,15 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   }
 
   /**
-   * 
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paintUnSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
+  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, final boolean selected )
   {
+    if( selected )
+      return;
+
     int w = g.getClipBounds().width;
     int h = g.getClipBounds().height;
     if( m_Image == null )
@@ -137,21 +138,6 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
       g.setPaintMode();
       g.drawImage( m_Image, w - m_imageWidth, h - m_imageHeight, m_imageWidth, m_imageHeight, null );
     }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics, java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox )
-  {
-  // nothing to paint
-  }
-
-  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
-  {
-  // nothing to paint
   }
 
   public void addModellListener( final ModellEventListener listener )
@@ -287,13 +273,4 @@ public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
   {
     return "";
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getSelectionManager()
-   */
-  public IFeatureSelectionManager getSelectionManager()
-  {
-    return null;
-  }
-
 }

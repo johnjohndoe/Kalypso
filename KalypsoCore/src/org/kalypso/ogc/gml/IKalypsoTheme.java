@@ -46,7 +46,6 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
@@ -56,9 +55,7 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
 {
   public void dispose();
 
-  public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox );
-
-  public void paintUnSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox );
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected );
 
   /**
    * returns the name of the layer
@@ -70,8 +67,4 @@ public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
   public void setName( final String name );
 
   public GM_Envelope getBoundingBox();
-
-  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox );
-
-  public IFeatureSelectionManager getSelectionManager();
 }

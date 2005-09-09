@@ -133,10 +133,11 @@ public class MapModellHelper
       p.setDestRect( x - 2, y - 2, w + x, h + y );
 
       final double scale = calcScale( model, bbox, bounds.width, bounds.height );
-      model.paintUnselected( gr, p, bbox, scale );
+      
+      model.paint( gr, p, bbox, scale, false );
+
       final HighlightGraphics highlightGraphics = new HighlightGraphics((Graphics2D)gr); 
-//      gr.setXORMode( Color.yellow );
-      model.paintSelected( highlightGraphics, p, bbox, scale );
+      model.paint( highlightGraphics, p, bbox, scale, true );
     }
     finally
     {
