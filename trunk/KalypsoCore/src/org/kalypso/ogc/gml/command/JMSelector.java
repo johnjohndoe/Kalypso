@@ -52,71 +52,16 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * Finds features in the map
+ * 
  * @author von Dömming
  */
 public class JMSelector
 {
-  public final static int MODE_TOGGLE = 1;
-
-  public final static int MODE_SELECT = 2;
-
-  public final static int MODE_UNSELECT = 3;
-
-  public final static int MODE_COLLECT = 4;
-
-  private int mySelectionMode = MODE_TOGGLE;
-
-  public JMSelector()
-  {
-  //
-  }
-
-  public JMSelector( int selectionMode )
-  {
-    mySelectionMode = selectionMode;
-  }
-
-  public void setSelectionMode( int selectionMode )
-  {
-    this.mySelectionMode = selectionMode;
-  }
-
-  public List perform( final List listFe, final IFeatureSelectionManager selectionManager )
-  {
-    final List result = new ArrayList(); // alle veraenderten fe
-    final Iterator iterator = listFe.iterator();
-    while( iterator.hasNext() )
-    {
-      final Feature fe = (Feature)iterator.next();
-
-      switch( mySelectionMode )
-      {
-      case MODE_TOGGLE:
-        result.add( fe );
-        break;
-      case MODE_SELECT:
-        if( !selectionManager.isSelected( fe) )
-          result.add( fe );
-        break;
-      case MODE_UNSELECT:
-        if( selectionManager.isSelected( fe)  )
-          result.add( fe );
-        break;
-      case MODE_COLLECT:
-        return listFe;
-
-      default:
-        break;
-      }
-    }
-    return result;
-  }
-
   /**
    * // selects all features (display elements) that are located within the submitted bounding box. // GMLGeometry
    * gmlGeometry=GMLFactory.createGMLGeometry(bbox);
@@ -124,8 +69,7 @@ public class JMSelector
    * //Operation operation=new SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry); //Filter filter=new
    * ComplexFilter(operation);
    */
-  public List select( final GM_Envelope env, final FeatureList list, final boolean selectWithinBoxStatus,
-      final IFeatureSelectionManager selectionManager )
+  public List select( final GM_Envelope env, final FeatureList list, final boolean selectWithinBoxStatus )
   {
     try
     {
@@ -148,7 +92,7 @@ public class JMSelector
           testFE.add( fe );
       }
 
-      return perform( testFE, selectionManager );
+      return testFE;
     }
     catch( final Exception e )
     {
@@ -161,7 +105,7 @@ public class JMSelector
   /**
    * selects all features that intersects the submitted point
    */
-  public List select( final GM_Position position, final FeatureList list, final IFeatureSelectionManager selectionManager )
+  public List select( final GM_Position position, final FeatureList list )
   {
     final List resultList = new ArrayList();
     final List testFe = new ArrayList();
@@ -181,11 +125,11 @@ public class JMSelector
         System.out.println( err.getMessage() );
         System.out.println( "...using workaround \"box selection\"" );
         System.out.println( "set view dependent radius" );
-        resultList.addAll( select( position, 0.0001d, list, false, selectionManager ) );
+        resultList.addAll( select( position, 0.0001d, list, false ) );
       }
     }
 
-    resultList.addAll( perform( testFe, selectionManager ) );
+    resultList.addAll( testFe );
 
     return resultList;
   }
@@ -194,22 +138,21 @@ public class JMSelector
    * selects all features (display elements) that are located within the circle described by the position and the
    * radius.
    */
-  public List select( GM_Position pos, double r, final FeatureList list, boolean withinStatus, final IFeatureSelectionManager selectionManager)
+  public List select( final GM_Position pos, double r, final FeatureList list, boolean withinStatus )
   {
     final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos
         .getY()
         + r );
-    final List resultDE = select( env, list, withinStatus, selectionManager );
+    final List resultDE = select( env, list, withinStatus );
 
     return resultDE;
   }
 
-  public Feature selectNearest( GM_Point pos, final double r, final FeatureList list, final boolean withinStatus,
-      final IFeatureSelectionManager selectionManager )
+  public Feature selectNearest( GM_Point pos, final double r, final FeatureList list, final boolean withinStatus )
   {
     Feature result = null;
     double dist = 0;
-    final List listFE = select( pos.getPosition(), r, list, withinStatus, selectionManager );
+    final List listFE = select( pos.getPosition(), r, list, withinStatus );
     for( int i = 0; i < listFE.size(); i++ )
     {
       final Feature fe = (Feature)listFE.get( i );

@@ -47,7 +47,6 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -207,33 +206,26 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
   //nothing
   }
 
-  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
-  {
-  // nothing
-  }
-
   /**
-   * 
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintUnSelected(java.awt.Graphics,
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paintUnSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox,
+      final boolean selected )
   {
+    if( selected )
+      return;
+
     try
     {
       WMSHelper.transformImage( m_image, m_origBBox, m_localCS, m_imageCS, p, g );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
 
-  }
-
-  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox )
-  {
-  //    paintSelected( hg, p, scale, bbox, selectionManager );
   }
 
   /**
@@ -267,19 +259,4 @@ public class KalypsoPictureTheme extends AbstractKalypsoTheme
     layer.setActuate( "onRequest" );
     layer.setType( "simple" );
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getSelectionManager()
-   */
-  public IFeatureSelectionManager getSelectionManager()
-  {
-    return null;
-  }
-
-  //  public void saveTheme( IProgressMonitor monitor )
-  //  {
-  //    // TODO Auto-generated method stub
-  //    
-  //  }
-
 }

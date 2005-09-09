@@ -4,7 +4,8 @@
    id="org.kalypso.core"
    name="KalypsoCore Plug-in"
    version="1.0.0"
-   provider-name="kalypso.org">
+   provider-name="kalypso.org"
+   class="org.kalypso.core.KalypsoCorePlugin">
 
    <runtime>
       <library name="lib/coreBinding.jar">

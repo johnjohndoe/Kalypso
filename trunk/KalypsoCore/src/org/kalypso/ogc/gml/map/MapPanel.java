@@ -44,50 +44,67 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.jface.viewers.IPostSelectionProvider;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.jface.viewers.KalypsoSelectionChangedEvent;
-import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
+import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.selection.FeatureThemeSelection;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * 
  * @author vdoemming
- *  
  */
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider,
-    ISelectionProvider, IPostSelectionProvider, ISelectionChangedListener
+    ISelectionProvider
 {
-  private final ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
+  private final IFeatureSelectionManager m_selectionManager;
 
-  private final SelectionProviderAdapter m_selectionProvider = new SelectionProviderAdapter();
+  private final List m_selectionListeners = new ArrayList( 5 );
+
+  private IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
+  {
+    public void selectionChanged( final IFeatureSelection selection )
+    {
+      globalSelectionChanged( selection );
+    }
+  };
+
+  private final ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
 
   private static final long serialVersionUID = 1L;
 
@@ -121,7 +138,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private boolean validMap = false;
 
-  IMapModell m_model = null;
+  private IMapModell m_model = null;
 
   private final WidgetManager m_widgetManager;
 
@@ -131,8 +148,12 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private GM_Envelope m_wishBBox;
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs )
+  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs,
+      final IFeatureSelectionManager manager )
   {
+    m_selectionManager = manager;
+    m_selectionManager.addSelectionListener( m_globalSelectionListener );
+
     // set empty Modell:
     setMapModell( new MapModell( crs, null ) );
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
@@ -146,6 +167,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   {
     removeMouseListener( m_widgetManager );
     removeMouseMotionListener( m_widgetManager );
+
+    m_selectionManager.removeSelectionListener( m_globalSelectionListener );
+
     if( m_model != null )
       m_model.removeModellListener( this );
   }
@@ -471,40 +495,20 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     m_modellEventProvider.removeModellListener( listener );
   }
 
-  public void addPostSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    m_selectionProvider.addPostSelectionChangedListener( listener );
+    m_selectionListeners.add( listener );
   }
 
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    m_selectionProvider.addSelectionChangedListener( listener );
-  }
-
-  public void removePostSelectionChangedListener( ISelectionChangedListener listener )
-  {
-    m_selectionProvider.removePostSelectionChangedListener( listener );
-  }
-
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
-  {
-    m_selectionProvider.removeSelectionChangedListener( listener );
+    m_selectionListeners.remove( listener );
   }
 
   public void setSelection( final ISelection selection )
   {
-  // should not be called!
-  // selection only changes, when themes fire such an event
-  //    if( m_model != null )
-  //    {
-  //      final IKalypsoTheme activeTheme = m_model.getActiveTheme();
-  //      if( selection instanceof IStructuredSelection && activeTheme instanceof IKalypsoFeatureTheme )
-  //      {
-  //        IFeatureSelectionManager selectionManager = ( (IKalypsoFeatureTheme)activeTheme ).getSelectionManager();
-  //        selectionManager.setSelection( this, ( (IStructuredSelection)selection ).toList() );
-  //      }
-  //    }
-  //    m_selectionProvider.setSelection( selection );
+    // should not be called!
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -512,34 +516,153 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
    */
   public ISelection getSelection()
   {
-    // wrap this selection into a KalypsoFeatureThemeSelection
-    return m_selectionProvider.getSelection();
+    final IMapModell mapModell = getMapModell();
+    if( mapModell == null )
+      return StructuredSelection.EMPTY;
+    
+    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+    if( !( activeTheme instanceof IKalypsoFeatureTheme ) )
+      return StructuredSelection.EMPTY;
+
+    return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme)activeTheme, m_selectionManager );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  public void selectionChanged( final SelectionChangedEvent event )
+  protected void globalSelectionChanged( final IFeatureSelection selection )
   {
-    if( event instanceof KalypsoSelectionChangedEvent )
+    if( selection != null )
     {
-      setValidAll( false );
-      repaint();
+      // TODO: only repaint, if selection contains features contained in my themes changes
     }
+    //    final List selectedElements = selection.toList();
+    //    
+    //    final IKalypsoTheme[] allThemes = getMapModell().getAllThemes();
+    //    for( int i = 0; i < allThemes.length; i++ )
+    //    {
+    //      final IKalypsoTheme theme = allThemes[i];
+    //      if( theme instanceof IKalypsoFeatureTheme )
+    //      {
+    //        final IKalypsoFeatureTheme featureTheme = theme;
+    //        final FeatureList featureList = featureTheme.getFeatureList();
+    //      }
+    //    }
 
-    final IStructuredSelection selectionToSet;
-    final IKalypsoTheme activeTheme = m_model.getActiveTheme();
-    if( activeTheme instanceof IKalypsoFeatureTheme )
-    {
-      if( m_model == null || activeTheme == null || activeTheme.getSelectionManager() == null )
-        selectionToSet = StructuredSelection.EMPTY;
-      else
-        selectionToSet = (IStructuredSelection)activeTheme.getSelectionManager().getSelection();
-
-      final FeatureThemeSelection selection = new FeatureThemeSelection( (IKalypsoFeatureTheme)activeTheme, event.getSource(), selectionToSet, null, null );
-      m_selectionProvider.setSelection( selection );
-    }
-    else
-      m_selectionProvider.setSelection( event.getSelection() );
+    setValidAll( false );
+    repaint();
   }
+
+  public void select( final Point startPoint, final Point endPoint, final int radius )
+  {
+    final GeoTransform transform = getProjection();
+
+    final IKalypsoTheme activeTheme = m_model.getActiveTheme();
+    if( activeTheme == null || !( activeTheme instanceof IKalypsoFeatureTheme ) )
+      return;
+
+    if( startPoint != null )
+    {
+      double g1x = transform.getSourceX( startPoint.getX() );
+      double g1y = transform.getSourceY( startPoint.getY() );
+
+      if( endPoint == null ) // not dragged
+      {
+        // TODO depend on featuretype
+        // line and point with radius
+        // polygon without radius
+        double gisRadius = Math.abs( transform.getSourceX( startPoint.getX() + radius ) - g1x );
+
+        final JMSelector selector = new JMSelector();
+
+        final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, getMapModell()
+            .getCoordinatesSystem() );
+
+        final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme )
+            .getFeatureListVisible( null ), false );
+
+        final List listFe = new ArrayList();
+        if( fe != null )
+          listFe.add( fe );
+
+        changeSelection( listFe, (IKalypsoFeatureTheme)activeTheme, m_selectionManager );
+      }
+      else
+      // dragged
+      {
+        final double g2x = transform.getSourceX( endPoint.getX() );
+        final double g2y = transform.getSourceY( endPoint.getY() );
+        boolean withinStatus = false;
+
+        if( endPoint.getX() > startPoint.getX() && endPoint.getY() > startPoint.getY() )
+          withinStatus = true;
+
+        double minX = g1x < g2x ? g1x : g2x;
+        double maxX = g1x > g2x ? g1x : g2x;
+        double minY = g1y < g2y ? g1y : g2y;
+        double maxY = g1y > g2y ? g1y : g2y;
+
+        if( minX != maxX && minY != maxY )
+        {
+          final JMSelector selector = new JMSelector();
+          final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
+          final List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
+              .getFeatureListVisible( null ), withinStatus );
+
+          changeSelection( features, (IKalypsoFeatureTheme)activeTheme, m_selectionManager );
+        }
+      }
+    }
+  }
+
+  private void changeSelection( final List features, final IKalypsoFeatureTheme theme,
+      final IFeatureSelectionManager selectionManager2 )
+  {
+    // nothing was choosen by the user, dont do anything
+    // TODO: maybe clear selection?
+    if( features.isEmpty() )
+      return;
+
+    // remove all selectied features from this theme
+    // TODO: maybe only visible??
+    final FeatureList featureList = theme.getFeatureList();
+    final Feature parentFeature = featureList.getParentFeature();
+    final String parentProperty = featureList.getParentFeatureTypeProperty().getName();
+
+    final Feature[] toRemove = featureList.toFeatures();
+
+    // add all selectied features
+    final EasyFeatureWrapper[] toAdd = new EasyFeatureWrapper[features.size()];
+    for( int i = 0; i < features.size(); i++ )
+    {
+      final Feature f = (Feature)features.get( i );
+      toAdd[i] = new EasyFeatureWrapper( theme.getWorkspace(), f, parentFeature, parentProperty );
+    }
+
+    // TODO: change dependend on selection mode
+    // this is toggle select
+    selectionManager2.changeSelection( toRemove, toAdd );
+    
+    fireSelectionChanged();
+  }
+  
+  private final void fireSelectionChanged()
+  {
+    final ISelectionChangedListener[] listenersArray = (ISelectionChangedListener[])m_selectionListeners
+        .toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
+
+    final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
+    for( int i = 0; i < listenersArray.length; i++ )
+    {
+      final ISelectionChangedListener l = listenersArray[i];
+      final SafeRunnable safeRunnable = new SafeRunnable()
+      {
+        public void run()
+        {
+          l.selectionChanged( e );
+        }
+      };
+
+      Platform.run( safeRunnable );
+    }
+  }
+
+
 }

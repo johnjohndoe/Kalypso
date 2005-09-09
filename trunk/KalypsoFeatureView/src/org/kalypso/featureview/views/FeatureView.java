@@ -24,12 +24,13 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.ICommandableFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Annotation;
@@ -54,7 +55,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * adapts {@link org.eclipse.jface.viewers.ISelectionProvider}or
  * {@linked org.eclipse.jface.viewers.IPostSelectionProvider}.</li>
  * <li>In preference, the view listens to post-selections, in order to change the shown feature not too often.</li>
- * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.ICommandableFeatureSelection}, changes
+ * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes
  * (i.e. made by the user) in the feature-control will be immediately postet into the given
  * {@link org.kalypso.ogc.gml.mapmodel.CommandableWorkspace}.</li>
  * <li>If the current selection changes to something not viewable, the last shown feature continues to be shown. If the
@@ -81,7 +82,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 {
   private static final String _KEIN_FEATURE_SELEKTIERT_ = "<kein Feature selektiert>";
 
-  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null );
+  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null, KalypsoCorePlugin.getDefault().getSelectionManager() );
 
   protected final JobExclusiveCommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -98,15 +99,17 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private ISchedulingRule m_mutextRule = new MutexSchedulingRule();
 
-  private ISelectionListener m_selectionListener = new ISelectionListener() {
+  private ISelectionListener m_selectionListener = new ISelectionListener()
+  {
 
     public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
     {
       // controls of my feature composite may create events, don't react
       if( selection != null )
         FeatureView.this.selectionChanged( selection );
-    }};
-  
+    }
+  };
+
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
    */
@@ -117,7 +120,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final IWorkbenchPage page = site.getPage();
     page.getWorkbenchWindow().getSelectionService().addSelectionListener( m_selectionListener );
   }
-  
+
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
@@ -132,23 +135,23 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   protected void selectionChanged( final ISelection selection )
   {
-    if( selection instanceof ICommandableFeatureSelection && !selection.isEmpty() )
+    if( selection instanceof IFeatureSelection )
     {
-      final ICommandableFeatureSelection featureSel = (ICommandableFeatureSelection)selection;
+      final IFeatureSelection featureSel = (IFeatureSelection)selection;
 
       final Feature feature = featureFromSelection( featureSel );
-      activateFeature( featureSel.getCommandableWorkspace(), feature );
+      activateFeature( featureSel.getWorkspace( feature ), feature );
+      return;
     }
-    // empty view if we have no more selection -> e.g. when the selection-providing editor closes
-    else if ( selection == null || selection.isEmpty() )
-      activateFeature( null, null );
+
+    activateFeature( null, null );
   }
 
-  private Feature featureFromSelection( final ICommandableFeatureSelection featureSel )
+  private Feature featureFromSelection( final IFeatureSelection featureSel )
   {
-    final Feature focusedFeature = featureSel.getFocusedFeature();
-    if( focusedFeature != null )
-      return focusedFeature;
+    //    final Feature focusedFeature = featureSel.getFocusedFeature();
+    //    if( focusedFeature != null )
+    //      return focusedFeature;
 
     for( final Iterator sIt = featureSel.iterator(); sIt.hasNext(); )
     {
@@ -237,7 +240,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
         if( workspace != null && feature != null && mainGroup != null && ( !mainGroup.isDisposed() ) )
         {
           workspace.addModellListener( FeatureView.this );
-          getSite().setSelectionProvider( workspace.getSelectionManager() );
+          //          getSite().setSelectionProvider( workspace.getSelectionManager() );
 
           creator.createControl( mainGroup, SWT.V_SCROLL, SWT.NONE );
           creator.getScrolledComposite().setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -311,7 +314,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final Feature feature = getCurrentFeature();
     if( feature == null )
       return null;
-    
+
     return m_featureComposite.getFeatureview( feature.getFeatureType() );
   }
 }

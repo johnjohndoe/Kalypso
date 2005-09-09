@@ -74,7 +74,6 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.tools.NetWorker;
 import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -101,11 +100,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private CS_CoordinateSystem m_remoteCSR = null;
 
-//  private boolean m_authentification;
-//
-//  private String m_pass;
-//
-//  private String m_user;
+  //  private boolean m_authentification;
+  //
+  //  private String m_pass;
+  //
+  //  private String m_user;
 
   private GM_Envelope m_maxEnv = null;
 
@@ -189,23 +188,15 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
   }
 
   /**
-   * @param g
-   *          the graphics context from the map panel
-   * @param p
-   *          world to screen transformation
-   * @param scale
-   *          scale
-   * @param bbox
-   *          bounding box from map model (screen)
-   * 
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(Graphics, Graphics, GeoTransform, double, GM_Envelope)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
+  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, final boolean selected )
   {
-  // nothing  
-  }
-  public void paintUnSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox )
-  {
+    if( selected )
+      return;
+
     //the image is only updated when the wish bbox is ok
     if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
     {
@@ -231,11 +222,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       int height = (int)g.getClip().getBounds().getHeight();
       updateImage( width, height, bbox );
     }
-  }
-
-  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, double scale, GM_Envelope bbox )
-  {
-    //   paintSelected( hg, p, scale, bbox, selectionManager );
   }
 
   public void updateImage( int width, int height, GM_Envelope bbox )
@@ -394,38 +380,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       e.printStackTrace();
     }
     return bbox;
-
   }
 
   public String getSource()
   {
     return m_source;
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getSelectionManager()
-   */
-  public IFeatureSelectionManager getSelectionManager()
-  {
-    return null;
-  }
-
-  //  public void saveTheme( IProgressMonitor monitor )
-  //  {
-  //   
-
-  //    
-  //    try
-  //    {
-  //      ImageOutputStream ios = ImageIO.createImageOutputStream( new File(
-  // "c:/temp" ) );
-  //      ImageIO.write( (RenderedImage)m_remoteImage, m_layers, ios );
-  //    }
-  //    catch( IOException e )
-  //    {
-  //      // TODO: handle exception
-  //    }
-  //    
-  //  }
-
-}// class KalypsoWMSTheme
+}

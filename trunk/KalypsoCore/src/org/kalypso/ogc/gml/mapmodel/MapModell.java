@@ -61,7 +61,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class MapModell implements IMapModell
 {
   private final ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
-   
+
   private final static Boolean THEME_ENABLED = Boolean.valueOf( true );
 
   private final static Boolean THEME_DISABLED = Boolean.valueOf( false );
@@ -76,7 +76,7 @@ public class MapModell implements IMapModell
 
   private IProject m_project;
 
-  public MapModell( final CS_CoordinateSystem crs, IProject project )
+  public MapModell( final CS_CoordinateSystem crs, final IProject project )
   {
     m_coordinatesSystem = crs;
     m_project = project;
@@ -145,94 +145,23 @@ public class MapModell implements IMapModell
     return m_coordinatesSystem;
   }
 
-  //  /**
-  //   * renders the map to the passed graphic context
-  //   *
-  //   * @param g
-  //   * @throws RenderException
-  //   * thrown if the passed <tt>Graphic<tt> haven't
-  //   * clipbounds. use g.setClip( .. );
-  //   */
-  //  public void paint( final Graphics g ) throws RenderException
-  //  {
-  //    if( getThemeSize() == 0 )
-  //      return;
-  //    if( g.getClipBounds() == null )
-  //    {
-  //      throw new RenderException( "no clip bounds defined for graphic context" );
-  //    }
-  //
-  //    int x = g.getClipBounds().x;
-  //    int y = g.getClipBounds().y;
-  //    int w = g.getClipBounds().width;
-  //    int h = g.getClipBounds().height;
-  //    myProjection.setDestRect( x - 2, y - 2, w + x, h + y );
-  //    
-  //    //myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
-  //    
-  //    final double scale = calcScale( g.getClipBounds().width,
-  // g.getClipBounds().height );
-  //    final GeoTransform p = getProjection();
-  //    final GM_Envelope bbox = getBoundingBox();
-  //    
-  //    for( int i = 0; i < getThemeSize(); i++ )
-  //    {
-  //      if( isThemeEnabled( getTheme( i ) ) )
-  //        getTheme( i ).paint( g, p, scale, bbox );
-  //    }
-  //  }
-
-  public void paintSelected( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale )
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
   {
-    if( getThemeSize() == 0 )
-      return;
-
-    for( int i = 0; i < getThemeSize(); i++ )
+    final int themeSize = getThemeSize();
+    for( int i = 0; i < themeSize; i++ )
     {
-      IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
+      final IKalypsoTheme theme = getTheme( themeSize - i - 1 );
       if( isThemeEnabled( theme ) )
-        theme.paintSelected( g, p, scale, bbox );
+        theme.paint( g, p, scale, bbox, selected );
     }
   }
 
-  /**
-   * 
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintSelected(java.awt.Graphics, java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double)
-   */
-  public void paintSelected( Graphics gr, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale )
-  {
-    if( getThemeSize() == 0 )
-      return;
-
-    for( int i = 0; i < getThemeSize(); i++ )
-    {
-      IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
-      if( isThemeEnabled( theme ) )
-      {
-        theme.paintSelected( gr, hg, p, scale, bbox );
-      }
-    }
-  }
-
-  //  public double getScale()
-  //  {
-  //    return myScale;
-  //  }
-  //
-  //  public double getScale( Graphics g )
-  //  {
-  //    myScale = calcScale( g.getClipBounds().width, g.getClipBounds().height );
-  //    return myScale;
-  //  }
-
-  public IKalypsoTheme getTheme( int pos )
+  public IKalypsoTheme getTheme( final int pos )
   {
     return (IKalypsoTheme)m_themes.elementAt( pos );
   }
 
-  public IKalypsoTheme getTheme( String themeName )
+  public IKalypsoTheme getTheme( final String themeName )
   {
     for( int i = 0; i < m_themes.size(); i++ )
       if( themeName.equals( ( (IKalypsoTheme)m_themes.elementAt( i ) ).getName() ) )
@@ -359,23 +288,5 @@ public class MapModell implements IMapModell
   public IProject getProject()
   {
     return m_project;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintUnselected(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double)
-   */
-  public void paintUnselected( Graphics gr, GeoTransform p, GM_Envelope bbox, double scale )
-  {
-    if( getThemeSize() == 0 )
-      return;
-
-    for( int i = 0; i < getThemeSize(); i++ )
-    {
-      IKalypsoTheme theme = getTheme( getThemeSize() - i - 1 );
-      if( isThemeEnabled( theme ) )
-        theme.paintUnSelected( gr, p, scale, bbox );
-    }
   }
 }

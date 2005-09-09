@@ -56,7 +56,6 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
@@ -310,14 +309,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSelectionManager()
-   */
-  public IFeatureSelectionManager getSelectionManager()
-  {
-    return m_workspace.getSelectionManager();
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature, java.lang.String, int)
    */
   public boolean isAggrigatedLink( Feature parent, String linkPropName, int pos )
@@ -351,5 +342,13 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public Feature getParentFeature( Feature toFindParentFrom )
   {
     return m_workspace.getParentFeature( toFindParentFrom );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getAllFeatures()
+   */
+  public Feature[] getAllFeatures()
+  {
+    return m_workspace.getAllFeatures();
   }
 }

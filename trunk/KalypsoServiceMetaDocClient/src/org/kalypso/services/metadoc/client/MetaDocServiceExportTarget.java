@@ -80,6 +80,7 @@ import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExportTarget;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.services.proxy.IMetaDocService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.feature.FeaturePage;
@@ -157,7 +158,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
     final Feature feature = prepareFeature( configuration );
     final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc,
-        false, null, feature )
+        false, null, feature, new FeatureSelectionManager2() )
     {
       protected void applyFeatureChange( FeatureChange fc )
       {
