@@ -225,7 +225,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.FeatureType, java.lang.String)
    */
-  public Feature[] resolveWhoLinksTo( final Feature linkTargetfeature, final FeatureType linkSrcFeatureType, final String linkPropertyName )
+  public Feature[] resolveWhoLinksTo( final Feature linkTargetfeature, final FeatureType linkSrcFeatureType,
+      final String linkPropertyName )
   {
     if( linkTargetfeature == null )
       return new Feature[0];
@@ -627,6 +628,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * This method checks if this link property is an aggreagted list.
+   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int)
    */
@@ -644,6 +647,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     // else must be a list
     final List list = (List)value;
+    if( list.size() == 0 )
+      return false;
     final Object object = list.get( pos );
     if( object instanceof Feature )
       return false;
@@ -689,7 +694,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
               Object childFromList = list.get( j );
               if( childFromList != null && childFromList.equals( toFindParentFrom ) )
               {
-//                String substitutionGroup = ((Feature)childFromList).getFeatureType().getSubstitutionGroup();
+                //                String substitutionGroup = ((Feature)childFromList).getFeatureType().getSubstitutionGroup();
                 return f;
               }
             }
@@ -701,7 +706,16 @@ public class GMLWorkspace_Impl implements GMLWorkspace
           return f;
       }
     }
+    Feature rootFeature = getRootFeature();
+    Object[] properties = rootFeature.getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      Object property = properties[i];
+      if( property != null && property.equals( toFindParentFrom ) )
+        return rootFeature;
+    }
     //TODO throw exception instead of returning null
     return null;
   }
+
 }

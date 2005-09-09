@@ -56,6 +56,8 @@ import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.filterencoding.ArithmeticExpression;
@@ -74,7 +76,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author kuepfer
  */
-public class FilterCompositeFactory
+public class FilterCompositeFactory extends ModellEventProviderAdapter
 {
   private static FilterCompositeFactory m_factory = new FilterCompositeFactory();
 
@@ -232,6 +234,7 @@ public class FilterCompositeFactory
           String item = c.getItem( c.getSelectionIndex() );
           int newOperationId = OperationDefines.getIdByName( item );
           ( (SpatialOperation)m_operation ).setOperatorId( newOperationId );
+          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
         }
 
         public void widgetDefaultSelected( SelectionEvent e )
@@ -253,6 +256,7 @@ public class FilterCompositeFactory
           Combo c = (Combo)e.widget;
           PropertyName pn = new PropertyName( c.getItem( c.getSelectionIndex() ) );
           ( (SpatialOperation)m_operation ).setProperty( pn );
+          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
         }
       } );
 
@@ -260,7 +264,7 @@ public class FilterCompositeFactory
       for( int i = 0; i < properties.length; i++ )
       {
         FeatureTypeProperty property = properties[i];
-        if( GeometryUtilities.isGeometry( property))
+        if( GeometryUtilities.isGeometry( property ) )
           m_combo.add( property.getName().trim() );
       }
       //sets the availabel property active, if the property name does not match an emty entry is created
@@ -320,7 +324,7 @@ public class FilterCompositeFactory
               //TODO What shall we do? good question....
               e2.printStackTrace();
             }
-
+            fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
           }
           else
             m_scrabLayerCombo.setVisible( false );
@@ -329,13 +333,16 @@ public class FilterCompositeFactory
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-        // do nothing
+          widgetSelected( e );
 
         }
       } );
       m_scrabLayerCombo = new Combo( this, SWT.NULL );
       m_scrabLayerCombo.setItems( new String[]
-      { "ScrabPolygon_1", "ScrabLine_2", "ScrabPoint_3" } );
+      {
+          "ScrabPolygon_1",
+          "ScrabLine_2",
+          "ScrabPoint_3" } );
       m_scrabLayerCombo.select( 0 );
       m_scrabLayerCombo.setVisible( false );
       this.setFocus();
@@ -425,12 +432,12 @@ public class FilterCompositeFactory
               .trim() ) );
           ( (PropertyIsCOMPOperation)m_operation )
               .setSecondExperssion( new Literal( m_secondRowText.getText().trim() ) );
-          System.out.println( "test" ); // TODO debug?
+          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
         }
 
         public void widgetDefaultSelected( SelectionEvent e )
         {
-        //widgetSelected( e );
+          widgetSelected( e );
         }
       } );
       m_firstRowLabel = new Label( this, SWT.FILL );
@@ -469,6 +476,7 @@ public class FilterCompositeFactory
             ( (PropertyIsCOMPOperation)m_operation ).setSecondExperssion( l );
             System.out.print( "" );
           }
+          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
         }
       } );
       m_secondRowLabel = new Label( this, SWT.FILL );
@@ -616,6 +624,7 @@ public class FilterCompositeFactory
             Literal l = new Literal( m_secondRowText.getText().trim() );
             ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( l );
           }
+          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
         }
       } );
       m_secondRowLabel = new Label( this, SWT.FILL );
@@ -723,7 +732,7 @@ public class FilterCompositeFactory
       {
         public void widgetSelected( SelectionEvent e )
         {
-          // empty
+        // empty
         }
 
         public void widgetDefaultSelected( SelectionEvent e )

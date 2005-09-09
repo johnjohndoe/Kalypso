@@ -152,37 +152,16 @@ public class DefaultStyleFactory
     for( int i = 0; i < properties.length; i++ )
     {
       FeatureTypeProperty property = properties[i];
-      //      if( property instanceof FeatureAssociationTypeProperty )
-      //      {
-      //        FeatureType associationFeatureType = ((FeatureAssociationTypeProperty)property).getAssociationFeatureType();
-      //        FeatureTypeProperty[] properties2 = associationFeatureType.getProperties();
-      //        for( int j = 0; j < properties2.length; j++ )
-      //        {
-      //          FeatureTypeProperty property2 = properties2[j];
-      //          if( property2.isGeometryProperty() )
-      //            symbolizer.add( createGeometrySymbolizer( property2));
-      //        }
-      //      }
-      if( GeometryUtilities.isGeometry(property) )
+      if( GeometryUtilities.isUndefinedGeometry( property ) )
       {
-        //        m_GeomProperty = property;
+        symbolizer.add( StyleFactory.createPointSymbolizer() );
+        symbolizer.add( StyleFactory.createLineSymbolizer() );
+        symbolizer.add( StyleFactory.createPolygonSymbolizer() );
+      }
+      else if( GeometryUtilities.isGeometry( property ) )
+      {
         symbolizer.add( createGeometrySymbolizer( property ) );
       }
-      //      if( m_GeomProperty == null )
-      //      {
-      //        FeatureTypeProperty[] vProperty = featureType
-      //            .getVirtuelFeatureTypeProperty();
-      //        //check virtual properties
-      //        if( vProperty != null )
-      //        {
-      //          for( int j = 0; j < vProperty.length; j++ )
-      //          {
-      //            FeatureTypeProperty vp = vProperty[i];
-      //            if( vp.isGeometryProperty() )
-      //              symbolizer.add( createGeometrySymbolizer( vp ) );
-      //          }
-      //        }
-      //      }
     }
 
     FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, (Symbolizer[])symbolizer

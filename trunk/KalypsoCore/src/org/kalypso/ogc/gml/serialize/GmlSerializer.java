@@ -283,10 +283,15 @@ public final class GmlSerializer
 
   public static GMLWorkspace createGMLWorkspace( final InputStream inputStream, final URL schemaURL ) throws Exception
   {
-    final GMLSchema schema = new GMLSchema( schemaURL );
-
     final Document gmlAsDOM = XMLHelper.getAsDOM( new InputSource( inputStream ), true );
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
+
+    GMLSchema schema = null;
+    if( schemaURL != null )
+      schema = new GMLSchema( schemaURL );
+    else
+    //TODO load multiple Schema from schemaLocation -> Feature is composed of featureTypes from different schemas!!!
+      schema = loadSchemaForGmlDoc( gml );
 
     return createGMLWorkspace( gml, schema, schemaURL, null );
   }

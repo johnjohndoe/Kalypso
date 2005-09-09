@@ -2,6 +2,7 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -244,20 +246,34 @@ public class FeatureHelper
 
   }
 
-  public static boolean isCollection( Feature f )
+  public static int[] getPositionOfAllAssociations( Feature feature )
   {
-    // TODO was ist das?
-    System.out.println();
-    
-    FeatureType featureType = f.getFeatureType();
+    ArrayList res = new ArrayList();
+    FeatureType featureType = feature.getFeatureType();
     FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
       FeatureTypeProperty property = properties[i];
-      if( featureType.isListProperty( property.getName() ) && properties.length == 1 )
-        return true;
+      if( property instanceof FeatureAssociationTypeProperty )
+      {
+        res.add( new Integer( i ) );
+      }
+    }
+    Integer[] positions = (Integer[])res.toArray( new Integer[res.size()] );
+    return ArrayUtils.toPrimitive( positions );
+  }
 
-      break;
+  public static boolean isCollection( Feature f )
+  {
+    FeatureType featureType = f.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
+    if( properties.length > 1 )
+      return false;
+    for( int i = 0; i < properties.length; i++ )
+    {
+      FeatureTypeProperty property = properties[i];
+      if( featureType.isListProperty( property.getName() ) )
+        return true;
     }
     return false;
   }
