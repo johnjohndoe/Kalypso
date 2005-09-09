@@ -42,6 +42,7 @@
 					<element name="PNR"  type="string"> <annotation><documentation xml:lang="de"><label>Pegelnummer</label><tooltip>Pegelnummer</tooltip><description>Pegelnummer</description></documentation></annotation></element>
 					<element name="Name"  type="string"> <annotation><documentation xml:lang="de"><label>Pegelname</label><tooltip>Pegelname</tooltip><description>Pegelname</description></documentation></annotation></element>
 					<element name="Gewaesser"  type="string"> <annotation><documentation xml:lang="de"><label>Gewässername</label><tooltip>Gewässername</tooltip><description>Gewässername</description></documentation></annotation></element>
+					<element name="TS_Steuerung_Gruppe"  type="string"> <annotation><documentation xml:lang="de"><label>TS-Steuerungs-Gruppe</label><tooltip></tooltip><description>Talsperren-Steuerungs-Gruppe zu der der Pegel gehört</description></documentation></annotation></element>
 					<element name="ZG"  type="int"> <annotation><documentation xml:lang="de"><label>Zwischengebiet</label><tooltip>Zwischengebiet im Modell</tooltip><description>Zwischengebiet im Modell</description></documentation></annotation></element>
 					<element name="Land"  type="string"> <annotation><documentation xml:lang="de"><label>Land</label><tooltip>Bundesland</tooltip><description>Bundesland</description></documentation></annotation></element>
 					<element name="WN1"  type="string"> <annotation><documentation xml:lang="de"><label>BezWG1</label><tooltip>Bezeichnung der Alarmstufe</tooltip><description>Bezeichnung der Alarmstufe</description></documentation></annotation></element>
@@ -96,7 +97,6 @@
 					<element ref="gml:location"><annotation><documentation xml:lang="de"><label>Ort</label><tooltip>Ort</tooltip><description>Geographische Lage des Pegels</description></documentation></annotation></element>
 					<element name="Durchfluss" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Durchfluss_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="TS_Steuerung_Gruppe"  type="string"> <annotation><documentation xml:lang="de"><label>TS-Steuerungs-Gruppe</label><tooltip></tooltip><description>Talsperren-Steuerungs-Gruppe zu der der Pegel gehört</description></documentation></annotation></element>
 				</sequence>
 			</extension>
 		</complexContent>
