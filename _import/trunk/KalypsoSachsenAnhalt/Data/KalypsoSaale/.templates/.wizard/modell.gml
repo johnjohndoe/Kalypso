@@ -551,6 +551,7 @@
           <pegel:PNR>570210</pegel:PNR>
           <pegel:Name>Blankenstein</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -603,8 +604,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Blankenstein</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -726,6 +727,7 @@
           <pegel:PNR>572010</pegel:PNR>
           <pegel:Name>Kaulsdorf-Eichicht</pegel:Name>
           <pegel:Gewaesser>Loquitz</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -778,8 +780,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kaulsdorf-Eichicht</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4460810.0,5607510.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5248482.683350287,5613394.703020362</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -895,6 +897,7 @@
           <pegel:PNR>570000</pegel:PNR>
           <pegel:Name>Saale-TS-Zulauf</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -947,8 +950,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Saale-TS-Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1070,6 +1073,7 @@
           <pegel:PNR>572115</pegel:PNR>
           <pegel:Name>Schwarzburg</pegel:Name>
           <pegel:Gewaesser>Schwarza</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -1122,8 +1126,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Schwarzburg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4442860.0,5612760.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5230745.737236389,5619372.028039761</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1245,6 +1249,7 @@
           <pegel:PNR>570270</pegel:PNR>
           <pegel:Name>Rudolstadt</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -1297,8 +1302,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rudolstadt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4453055.0,5620340.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5241248.182222819,5626538.526212809</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1420,6 +1425,7 @@
           <pegel:PNR>570330</pegel:PNR>
           <pegel:Name>Camburg-Stöben</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -1472,8 +1478,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Camburg-Stöben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1595,6 +1601,7 @@
           <pegel:PNR>572890</pegel:PNR>
           <pegel:Name>Gräfinau-Angstedt</pegel:Name>
           <pegel:Gewaesser>Ilm</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -1647,8 +1654,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Gräfinau-Angstedt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1770,6 +1777,7 @@
           <pegel:PNR>572920</pegel:PNR>
           <pegel:Name>Niedertrebra</pegel:Name>
           <pegel:Gewaesser>Ilm</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -1822,8 +1830,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Niedertrebra</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4470620.0,5659720.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5260413.498932757,5665200.829968938</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1945,6 +1953,7 @@
           <pegel:PNR>574210</pegel:PNR>
           <pegel:Name>Erfurt - Möbisburg</pegel:Name>
           <pegel:Gewaesser>Gera</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -1997,8 +2006,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Erfurt - Möbisburg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2132,6 +2141,7 @@
           <pegel:PNR>573010</pegel:PNR>
           <pegel:Name>Nägelstedt</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -2184,8 +2194,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Nägelstedt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4409860.0,5664280.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5199838.418538342,5672239.814863433</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2301,6 +2311,7 @@
           <pegel:PNR>573090</pegel:PNR>
           <pegel:Name>Straußfurt Zulauf</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -2353,8 +2364,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Straußfurt Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2470,6 +2481,7 @@
           <pegel:PNR>575110</pegel:PNR>
           <pegel:Name>Wasserthaleben</pegel:Name>
           <pegel:Gewaesser>Helbe</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -2522,8 +2534,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Wasserthaleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2639,6 +2651,7 @@
           <pegel:PNR>575240</pegel:PNR>
           <pegel:Name>Hachelbich</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -2691,8 +2704,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hachelbich</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4428510.0,5690810.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5219575.403565181,5698010.40507236</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2814,6 +2827,7 @@
           <pegel:PNR>573110</pegel:PNR>
           <pegel:Name>Oldisleben</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -2866,8 +2880,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Oldisleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4442840.0,5685400.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5233684.368357805,5692013.65933405</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -2989,6 +3003,7 @@
           <pegel:PNR>575660</pegel:PNR>
           <pegel:Name>Ilfeld</pegel:Name>
           <pegel:Gewaesser>Bere</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -3041,8 +3056,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Ilfeld</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -3158,6 +3173,7 @@
           <pegel:PNR>575500</pegel:PNR>
           <pegel:Name>Nordhausen</pegel:Name>
           <pegel:Gewaesser>Zorge</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -3210,8 +3226,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Nordhausen</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4415680.0,5708740.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5207479.351964117,5716468.107622847</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -3333,6 +3349,7 @@
           <pegel:PNR>575400</pegel:PNR>
           <pegel:Name>Sundhausen</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -3385,8 +3402,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Sundhausen</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4417390.0,5704330.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5209008.576604276,5711987.41311397</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -3502,6 +3519,7 @@
           <pegel:PNR>575700</pegel:PNR>
           <pegel:Name>Stolberg</pegel:Name>
           <pegel:Gewaesser>Thyra</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -3554,8 +3572,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Stolberg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4427829.0,5714940.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5219884.014518001,5722169.791608091</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -3671,6 +3689,7 @@
           <pegel:PNR>575710</pegel:PNR>
           <pegel:Name>Berga</pegel:Name>
           <pegel:Gewaesser>Thyra</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -3723,8 +3742,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Berga</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4430911.0,5702078.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5222438.297318893,5709180.639856182</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -3846,6 +3865,7 @@
           <pegel:PNR>573360</pegel:PNR>
           <pegel:Name>Laucha</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>40</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -3898,8 +3918,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Laucha</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4478080.0,5676890.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -4021,6 +4041,7 @@
           <pegel:PNR>570500</pegel:PNR>
           <pegel:Name>Naumburg</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>40</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -4073,8 +4094,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Naumburg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4488330.0,5669090.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5278502.456832645,5673846.669853642</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -4196,6 +4217,7 @@
           <pegel:PNR>576470</pegel:PNR>
           <pegel:Name>Greiz</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>40</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -4248,8 +4270,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Greiz</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -4365,6 +4387,7 @@
           <pegel:PNR>576520</pegel:PNR>
           <pegel:Name>Gera-Langenberg</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -4417,8 +4440,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Gera-Langenberg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4503255.0,5641790.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5292311.3317286065,5645945.862163521</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -4534,6 +4557,7 @@
           <pegel:PNR>576610</pegel:PNR>
           <pegel:Name>Zeitz</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -4586,8 +4610,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Zeitz</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4510230.0,5658010.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5299944.359072916,5661876.769992451</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -4709,6 +4733,7 @@
           <pegel:PNR>577570</pegel:PNR>
           <pegel:Name>Böhlen</pegel:Name>
           <pegel:Gewaesser>Pleiße</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SN</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -4761,8 +4786,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Böhlen</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4527130.0,5675330.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5317544.257262139,5678500.760759538</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -4890,6 +4915,7 @@
           <pegel:PNR>576900</pegel:PNR>
           <pegel:Name>Oberthau</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -4942,8 +4968,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Oberthau</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4510300.0,5694580.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5301507.860978434,5698431.19678324</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -5059,6 +5085,7 @@
           <pegel:PNR>570810</pegel:PNR>
           <pegel:Name>Halle-Trotha</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -5111,8 +5138,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Halle-Trotha</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4496950.0,5709575.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5288776.610886077,5713968.348566319</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -5228,6 +5255,7 @@
           <pegel:PNR>578410</pegel:PNR>
           <pegel:Name>Wippra</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -5280,8 +5308,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Wippra</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4450100.0,5715940.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5242196.069346789,5722255.072919038</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -5397,6 +5425,7 @@
           <pegel:PNR>578420</pegel:PNR>
           <pegel:Name>Mansfeld-Leimbach</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -5449,8 +5478,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Mansfeld-Leimbach</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4463690.0,5719145.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5255916.448648093,5724901.574328145</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -5566,6 +5595,7 @@
           <pegel:PNR>578430</pegel:PNR>
           <pegel:Name>Großschierstedt</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -5618,8 +5648,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Großschierstedt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4467540.0,5735500.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5260438.4209322315,5741095.942669736</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -5735,6 +5765,7 @@
           <pegel:PNR>570910</pegel:PNR>
           <pegel:Name>Bernburg</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -5787,8 +5818,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Bernburg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4481900.0,5741000.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5275022.093257368,5746003.660376846</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -5904,6 +5935,7 @@
           <pegel:PNR>579305</pegel:PNR>
           <pegel:Name>Elend</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -5956,8 +5988,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Elend</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4409180.0,5735160.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5202064.848171497,5743158.836068862</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6073,6 +6105,7 @@
           <pegel:PNR>579205</pegel:PNR>
           <pegel:Name>Tanne</pegel:Name>
           <pegel:Gewaesser>Warme Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -6125,8 +6158,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Tanne</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4412230.0,5730240.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5204912.682197833,5738112.595510322</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6242,6 +6275,7 @@
           <pegel:PNR>579405</pegel:PNR>
           <pegel:Name>Trautenstein</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -6294,8 +6328,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Trautenstein</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4416480.0,5729450.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5209130.6656647865,5737147.58355137</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6417,6 +6451,7 @@
           <pegel:PNR>579011</pegel:PNR>
           <pegel:Name>Rappbode-TS-Zulauf</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -6469,8 +6504,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rappbode-TS-Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6592,6 +6627,7 @@
           <pegel:PNR>579015</pegel:PNR>
           <pegel:Name>TS-Wendefurth-Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -6644,8 +6680,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth-Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6767,6 +6803,7 @@
           <pegel:PNR>579610</pegel:PNR>
           <pegel:Name>Meisdorf</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -6819,8 +6856,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Meisdorf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4450580.0,5728800.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5243204.610715386,5735094.547495468</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6936,6 +6973,7 @@
           <pegel:PNR>579620</pegel:PNR>
           <pegel:Name>Hausneindorf</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -6988,8 +7026,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hausneindorf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4449660.0,5745250.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5242962.025211956,5751581.315923652</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7105,6 +7143,7 @@
           <pegel:PNR>579045</pegel:PNR>
           <pegel:Name>Wegeleben</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -7157,8 +7196,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Wegeleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4444290.0,5750710.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5237817.465321006,5757262.428122178</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7274,6 +7313,7 @@
           <pegel:PNR>579712</pegel:PNR>
           <pegel:Name>Mahndorf</pegel:Name>
           <pegel:Gewaesser>Holtemme</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -7326,8 +7366,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Mahndorf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4428700.0,5750600.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5222223.009723585,5757795.546140475</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7449,6 +7489,7 @@
           <pegel:PNR>579070</pegel:PNR>
           <pegel:Name>Hadmersleben</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -7501,8 +7542,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hadmersleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4453380.0,5763720.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5247443.864253307,5769896.280832737</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7624,6 +7665,7 @@
           <pegel:PNR>579085</pegel:PNR>
           <pegel:Name>Stassfurt</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -7676,8 +7718,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Stassfurt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4471764.0,5746742.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5265124.746705247,5752162.069050949</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7793,6 +7835,7 @@
           <pegel:PNR>570930</pegel:PNR>
           <pegel:Name>Calbe</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -7845,8 +7888,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Calbe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7962,6 +8005,7 @@
           <pegel:PNR>553050</pegel:PNR>
           <pegel:Name>Bad Liebenwerda</pegel:Name>
           <pegel:Gewaesser>Schwarze Elster</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8014,8 +8058,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Bad Liebenwerda</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4596940.0,5710280.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5388740.674050987,5710573.53672294</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8137,6 +8181,7 @@
           <pegel:PNR>553061</pegel:PNR>
           <pegel:Name>Löben</pegel:Name>
           <pegel:Gewaesser>Schwarze Elster</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8189,8 +8234,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Löben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4574810.0,5737740.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5367754.704416813,5738921.4626806555</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8312,6 +8357,7 @@
           <pegel:PNR>570250</pegel:PNR>
           <pegel:Name>Kaulsdorf</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8364,8 +8410,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kaulsdorf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4460560.0,5608840.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5248286.577196389,5614734.748297545</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8381,6 +8427,7 @@
           <pegel:PNR>570340</pegel:PNR>
           <pegel:Name>Saaleck</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8433,8 +8480,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Saaleck</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4478940.0,5664025.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5268907.738549339,5669165.843725166</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8450,6 +8497,7 @@
           <pegel:PNR>573100</pegel:PNR>
           <pegel:Name>Straußfurt Abgabe</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8502,8 +8550,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Straußfurt Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8519,6 +8567,7 @@
           <pegel:PNR>575245</pegel:PNR>
           <pegel:Name>Wippermündung</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8571,8 +8620,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Wippermündung</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8588,6 +8637,7 @@
           <pegel:PNR>573200</pegel:PNR>
           <pegel:Name>oh. Bretleben</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>40</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8640,8 +8690,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>oh. Bretleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8657,6 +8707,7 @@
           <pegel:PNR>575402</pegel:PNR>
           <pegel:Name>Kelbra Zulauf</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8709,8 +8760,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kelbra Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4426820.0,5702050.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5218345.9150316175,5709320.405627218</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8726,6 +8777,7 @@
           <pegel:PNR>575406</pegel:PNR>
           <pegel:Name>Kelbra-Abgabe</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8778,8 +8830,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kelbra-Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4433480.0,5701500.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5224983.699596131,5708497.272501556</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8795,6 +8847,7 @@
           <pegel:PNR>575410</pegel:PNR>
           <pegel:Name>Bennungen</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8847,8 +8900,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Bennungen</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4438870.0,5702720.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5230423.833556903,5709496.276845569</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8864,6 +8917,7 @@
           <pegel:PNR>575450</pegel:PNR>
           <pegel:Name>Nikolausrieth</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>40</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8916,8 +8970,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Nikolausrieth</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8933,6 +8987,7 @@
           <pegel:PNR>576631</pegel:PNR>
           <pegel:Name>Kleindalzig</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SN</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8985,8 +9040,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kleindalzig</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9002,6 +9057,7 @@
           <pegel:PNR>576950</pegel:PNR>
           <pegel:Name>Elstermündung</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9054,8 +9110,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Elstermündung</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9071,6 +9127,7 @@
           <pegel:PNR>579621</pegel:PNR>
           <pegel:Name>Mündung</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9123,8 +9180,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Mündung</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9140,6 +9197,7 @@
           <pegel:PNR>579306</pegel:PNR>
           <pegel:Name>HWR Kalte Bode -Zulauf</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9192,8 +9250,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>HWR Kalte Bode -Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9209,6 +9267,7 @@
           <pegel:PNR>579330</pegel:PNR>
           <pegel:Name>Königsh./HWR - Abgabe</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9261,8 +9320,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Königsh./HWR - Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4414550.0,5735350.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5207443.355702623,5743127.6902597435</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9278,6 +9337,7 @@
           <pegel:PNR>579000</pegel:PNR>
           <pegel:Name>Ül-Spere, Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9330,8 +9390,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Ül-Spere, Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4417540.0,5734200.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5210386.313997258,5741854.435113958</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9347,6 +9407,7 @@
           <pegel:PNR>579999</pegel:PNR>
           <pegel:Name>ÜL zur Rappbode</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9399,8 +9460,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>ÜL zur Rappbode</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9416,6 +9477,7 @@
           <pegel:PNR>579012</pegel:PNR>
           <pegel:Name>Rappbode-TS-Abgabe</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9468,8 +9530,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rappbode-TS-Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9485,6 +9547,7 @@
           <pegel:PNR>579013</pegel:PNR>
           <pegel:Name>Rappbode-TS, TWA</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9537,8 +9600,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rappbode-TS, TWA</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9554,6 +9617,7 @@
           <pegel:PNR>579001</pegel:PNR>
           <pegel:Name>Hirtenstieg/ÜL-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9606,8 +9670,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hirtenstieg/ÜL-Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4417750.0,5734220.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5210597.158191622,5741865.789702753</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9623,6 +9687,7 @@
           <pegel:PNR>579014</pegel:PNR>
           <pegel:Name>TS-Wendefurth, Bode-Anteil</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9675,8 +9740,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth, Bode-Anteil</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9692,6 +9757,7 @@
           <pegel:PNR>579006</pegel:PNR>
           <pegel:Name>TS-Wendefurth-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9744,8 +9810,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth-Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4425440.0,5734720.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5218308.347485623,5742049.175148535</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9761,6 +9827,7 @@
           <pegel:PNR>579713</pegel:PNR>
           <pegel:Name>Mdg</pegel:Name>
           <pegel:Gewaesser>Holtemme</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9813,8 +9880,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Mdg Holtemme</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9830,6 +9897,7 @@
           <pegel:PNR>579069</pegel:PNR>
           <pegel:Name>an Holtemme</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9882,8 +9950,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>an Holtemme</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9899,6 +9967,7 @@
           <pegel:PNR>579084</pegel:PNR>
           <pegel:Name>Hilfspunkt</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9951,8 +10020,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hilfspunkt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -20158,8 +20227,8 @@
           <ombrometer:NR>90838</ombrometer:NR>
           <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20173,8 +20242,8 @@
           <ombrometer:NR>81309</ombrometer:NR>
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20188,8 +20257,8 @@
           <ombrometer:NR>80101</ombrometer:NR>
           <ombrometer:NR-Ersatz>90838</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20203,8 +20272,8 @@
           <ombrometer:NR>130849</ombrometer:NR>
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20218,8 +20287,8 @@
           <ombrometer:NR>81936</ombrometer:NR>
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20233,8 +20302,8 @@
           <ombrometer:NR>61520</ombrometer:NR>
           <ombrometer:NR-Ersatz>81936</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20248,8 +20317,8 @@
           <ombrometer:NR>130939</ombrometer:NR>
           <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20263,8 +20332,8 @@
           <ombrometer:NR>110814</ombrometer:NR>
           <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20278,8 +20347,8 @@
           <ombrometer:NR>93200</ombrometer:NR>
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20293,8 +20362,8 @@
           <ombrometer:NR>110421</ombrometer:NR>
           <ombrometer:NR-Ersatz>110731</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20308,8 +20377,8 @@
           <ombrometer:NR>110731</ombrometer:NR>
           <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20323,8 +20392,8 @@
           <ombrometer:NR>100844</ombrometer:NR>
           <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20338,8 +20407,8 @@
           <ombrometer:NR>82023</ombrometer:NR>
           <ombrometer:NR-Ersatz>103100</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20353,8 +20422,8 @@
           <ombrometer:NR>103100</ombrometer:NR>
           <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20368,8 +20437,8 @@
           <ombrometer:NR>143300</ombrometer:NR>
           <ombrometer:NR-Ersatz>103100</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20383,8 +20452,8 @@
           <ombrometer:NR>143102</ombrometer:NR>
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20398,8 +20467,8 @@
           <ombrometer:NR>210685</ombrometer:NR>
           <ombrometer:NR-Ersatz>100844</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20413,8 +20482,8 @@
           <ombrometer:NR>43014</ombrometer:NR>
           <ombrometer:NR-Ersatz>210685</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20428,8 +20497,8 @@
           <ombrometer:NR>43032</ombrometer:NR>
           <ombrometer:NR-Ersatz>210685</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20443,8 +20512,8 @@
           <ombrometer:NR>43038</ombrometer:NR>
           <ombrometer:NR-Ersatz>43032</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20458,8 +20527,8 @@
           <ombrometer:NR>43103</ombrometer:NR>
           <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20473,8 +20542,8 @@
           <ombrometer:NR>43760</ombrometer:NR>
           <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20488,8 +20557,8 @@
           <ombrometer:NR>43198</ombrometer:NR>
           <ombrometer:NR-Ersatz>43038</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20503,8 +20572,8 @@
           <ombrometer:NR>43184</ombrometer:NR>
           <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20518,8 +20587,8 @@
           <ombrometer:NR>43811</ombrometer:NR>
           <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20533,8 +20602,8 @@
           <ombrometer:NR>43935</ombrometer:NR>
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20548,8 +20617,8 @@
           <ombrometer:NR>44157</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20563,8 +20632,8 @@
           <ombrometer:NR>44186</ombrometer:NR>
           <ombrometer:NR-Ersatz>44157</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20578,8 +20647,8 @@
           <ombrometer:NR>43352</ombrometer:NR>
           <ombrometer:NR-Ersatz>100844</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20593,8 +20662,8 @@
           <ombrometer:NR>43353</ombrometer:NR>
           <ombrometer:NR-Ersatz>43352</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20608,8 +20677,8 @@
           <ombrometer:NR>43309</ombrometer:NR>
           <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20623,8 +20692,8 @@
           <ombrometer:NR>44299</ombrometer:NR>
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20638,8 +20707,8 @@
           <ombrometer:NR>43530</ombrometer:NR>
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20653,8 +20722,8 @@
           <ombrometer:NR>44188</ombrometer:NR>
           <ombrometer:NR-Ersatz>43935</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20668,8 +20737,8 @@
           <ombrometer:NR>44337</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20683,8 +20752,8 @@
           <ombrometer:NR>44499</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20698,8 +20767,8 @@
           <ombrometer:NR>73200</ombrometer:NR>
           <ombrometer:NR-Ersatz>44414</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20713,8 +20782,8 @@
           <ombrometer:NR>72023</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20728,8 +20797,8 @@
           <ombrometer:NR>72094</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20743,8 +20812,8 @@
           <ombrometer:NR>44403</ombrometer:NR>
           <ombrometer:NR-Ersatz>72023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20758,8 +20827,8 @@
           <ombrometer:NR>44404</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20773,8 +20842,8 @@
           <ombrometer:NR>44407</ombrometer:NR>
           <ombrometer:NR-Ersatz>44499</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20788,8 +20857,8 @@
           <ombrometer:NR>44406</ombrometer:NR>
           <ombrometer:NR-Ersatz>44407</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20803,8 +20872,8 @@
           <ombrometer:NR>44430</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20818,8 +20887,8 @@
           <ombrometer:NR>44498</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20833,8 +20902,8 @@
           <ombrometer:NR>44414</ombrometer:NR>
           <ombrometer:NR-Ersatz>44498</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20848,8 +20917,8 @@
           <ombrometer:NR>45003</ombrometer:NR>
           <ombrometer:NR-Ersatz>73200</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20863,8 +20932,8 @@
           <ombrometer:NR>43478</ombrometer:NR>
           <ombrometer:NR-Ersatz>43451</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20878,8 +20947,8 @@
           <ombrometer:NR>43451</ombrometer:NR>
           <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20893,8 +20962,8 @@
           <ombrometer:NR>43436</ombrometer:NR>
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
