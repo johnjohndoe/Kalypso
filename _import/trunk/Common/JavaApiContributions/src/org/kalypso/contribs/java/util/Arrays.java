@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.util;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -60,6 +61,11 @@ public final class Arrays
       v.add( array[i] );
 
     return v;
+  }
+
+  public static void addAll( final Collection c, final Object[] elementsToAdd )
+  {
+    c.addAll( Arrays.asList( elementsToAdd ) );
   }
 
   /**
