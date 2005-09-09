@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wqFilter xmlns="filters.zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="filters.zml.kalypso.org
+<!--wqFilter xmlns="filters.zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="filters.zml.kalypso.org
 zmlFilters.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:vc="valuecomp.filters.zml.kalypso.org" type="W">
 
 	<valueFilter>
@@ -11,4 +11,15 @@ zmlFilters.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:vc="valuecomp.f
 		</zmlFilter>
 	</valueFilter>
 	
-</wqFilter>
+</wqFilter-->
+
+<tranProLinFilter xmlns="filters.zml.kalypso.org"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="filters.zml.kalypso.org
+zmlFilters.xsd"
+	xmlns:xlink="http://www.w3.org/1999/xlink" dateFrom="2005-12-31T23:00:00"
+	dateTo="2005-12-31T23:00:00" factorBegin="1.0" factorEnd="1.15">
+	<zmlFilter>
+		<zml xlink:href="foo"/>
+	</zmlFilter>
+</tranProLinFilter>

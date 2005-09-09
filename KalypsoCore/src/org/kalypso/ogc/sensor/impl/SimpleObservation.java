@@ -82,12 +82,14 @@ public class SimpleObservation implements IObservation
 
   private String m_href;
 
-  /**
-   * Default constructor
-   */
   public SimpleObservation()
   {
     this( "", "", "", false, null, new MetadataList(), new IAxis[0] );
+  }
+  
+  public SimpleObservation( final IAxis[] axes )
+  {
+    this( "", "", "", false, null, new MetadataList(), axes );
   }
 
   public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,

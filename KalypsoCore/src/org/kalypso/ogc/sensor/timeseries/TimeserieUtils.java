@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -61,7 +62,10 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 
 /**
  * Utilities when dealing with Observations which are Kalypso Timeseries.
@@ -409,5 +413,50 @@ public class TimeserieUtils
   public static String getDefaultFormatString( final String type )
   {
     return getProperties().getProperty( "FORMAT_" + type );
+  }
+
+  /**
+   * Create a test timeserie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
+   * randomly generated.
+   * 
+   * @param axisTypes
+   *          as seen in TimeserieConstants.TYPE_*
+   * @param amountRows
+   *          amount of rows of the TuppleModel that is randomly created
+   * @throws SensorException
+   */
+  public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues )
+      throws SensorException
+  {
+    final IAxis[] axes = new IAxis[axisTypes.length + 1];
+    axes[0] = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_DATE, true );
+    for( int i = 0; i < axisTypes.length; i++ )
+      axes[i + 1] = TimeserieUtils.createDefaulAxis( axisTypes[i] );
+
+    final SimpleObservation obs = new SimpleObservation( axes );
+    final SimpleTuppleModel model = new SimpleTuppleModel( axes );
+
+    final Calendar cal = Calendar.getInstance();
+    for( int i = 0; i < amountRows; i++ )
+    {
+      final Object[] tupple = new Object[axes.length];
+      tupple[0] = cal.getTime();
+
+      for( int j = 1; j < tupple.length; j++ )
+      {
+        if( allowNegativeValues )
+          tupple[j] = new Double( Math.random() * 100 * ( Math.random() > .5 ? 1 : -1 ) );
+        else
+          tupple[j] = new Double( Math.random() * 100 );
+      }
+
+      model.addTupple( tupple );
+
+      cal.add( Calendar.DAY_OF_YEAR, 1 );
+    }
+
+    obs.setValues( model );
+
+    return obs;
   }
 }

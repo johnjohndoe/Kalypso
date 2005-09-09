@@ -9,3 +9,4 @@ DataholeFilterImpl=org.kalypso.ogc.sensor.filter.creators.DataHoleFilterCreator
 
 ForecastFilterImpl=org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilterCreator
 InterpolationFilterImpl=org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator
+TranProLinFilterImpl=org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterCreator

@@ -73,17 +73,11 @@
 				<attribute type="double" name="defaultValue" default="0" use="optional"/>
 				<!-- default status to use when filling absent status -->
 				<attribute type="int" name="defaultStatus" default="2" use="optional"/>
-                
-
-                
 			</extension>		
 		</complexContent>
 	</complexType>
 	<element name="intervallFilter" type="filters:intervallFilterType" substitutionGroup="filters:filter"/>
     
-    
-    
-	
 	<!-- Filter: Math Operation between Filters -->
 	<complexType name="nOperationFilterType">
 		<complexContent>
@@ -140,7 +134,7 @@
 	</complexType>
 	<element name="dataholeFilter" type="filters:dataholeFilterType" substitutionGroup="filters:filter"/>
 
-	<!-- Filter: forecast (merges the tupples on the date axis in ascending order) -->	
+	<!-- Filter: forecast (merges the tupples on the date axis) -->
 	<complexType name="forecastFilterType">
 		<complexContent>
 			<extension base="filters:abstractFilterType">
@@ -163,5 +157,21 @@
 		</complexContent>
 	</complexType>
 	<element name="zmlFilter" type="filters:zmlFilterType" substitutionGroup="filters:filter"/>
+	
+	<!-- Filter: Linear-Progressive-Transformation -->
+	<complexType name="tranProLinFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="filters:filter" minOccurs="0"/>
+				</sequence>
+				<attribute type="dateTime" name="dateFrom"/>
+				<attribute type="dateTime" name="dateTo"/>
+				<attribute type="double" name="factorBegin"/>
+				<attribute type="double" name="factorEnd"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="tranProLinFilter" type="filters:tranProLinFilterType" substitutionGroup="filters:filter" />
 	
 </schema>
