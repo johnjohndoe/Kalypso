@@ -39,7 +39,6 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.tools.ant.util.ReaderInputStream;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
@@ -105,17 +104,14 @@ public class CloneUtilities
   public static Object cloneFeatureProperty( Object featureProperty, FeatureTypeProperty property )
       throws CloneNotSupportedException
   {
-    Class clazz = featureProperty.getClass();
-    ITypeHandler typeHandler = m_typeHandlerRegistry.getTypeHandlerForClassName( clazz.getName() );
+    final Class clazz = featureProperty.getClass();
+    final ITypeHandler typeHandler = m_typeHandlerRegistry.getTypeHandlerForClassName( clazz.getName() );
+    
     if( typeHandler == null )
       return FeatureFactory.createFeatureProperty( property.getName(), featureProperty );
-    else
-    {
-      if( typeHandler instanceof IMarshallingTypeHandler )
-      {
-        return ( (IMarshallingTypeHandler)typeHandler ).cloneObject( featureProperty );
-      }
-    }
+
+    if( typeHandler instanceof IMarshallingTypeHandler )
+      return ( (IMarshallingTypeHandler)typeHandler ).cloneObject( featureProperty );
     throw new CloneNotSupportedException( "Object: " + featureProperty.getClass().getName() + "\tis not clonable" );
   }
 }

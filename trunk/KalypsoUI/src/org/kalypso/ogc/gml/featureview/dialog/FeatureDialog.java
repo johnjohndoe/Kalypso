@@ -11,6 +11,7 @@ import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.FeatureviewDialog;
 import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
@@ -32,25 +33,26 @@ public class FeatureDialog implements IFeatureDialog
 
   private final GMLWorkspace m_workspace;
 
+  private final IFeatureSelectionManager m_selectionManager;
+
   /**
    * FeatureDialog that shows a property of a feature to edit, usually the property is type of FeatureAssociationType
    * and maxOccurs is greater than 1, so ist a table inside
    */
-  public FeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
+  public FeatureDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
   {
     m_workspace = workspace;
     m_feature = feature;
     m_ftp = ftp;
+    m_selectionManager = selectionManager;
   }
 
   /**
    * FeatureDialog that allows complete editing of the given feature
    */
-  public FeatureDialog( final GMLWorkspace workspace, final Feature feature )
+  public FeatureDialog( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager )
   {
-    m_workspace = workspace;
-    m_feature = feature;
-    m_ftp = null;
+    this( workspace, feature, null, selectionManager );
   }
 
   /**
@@ -70,7 +72,7 @@ public class FeatureDialog implements IFeatureDialog
     else
       commwork = new CommandableWorkspace( m_workspace );
 
-    final FeatureComposite composite = new FeatureComposite( commwork, m_feature, new FeatureviewType[]
+    final FeatureComposite composite = new FeatureComposite( commwork, m_feature, m_selectionManager, new FeatureviewType[]
     { fvType } );
 
     final FeatureviewDialog dialog = new FeatureviewDialog( commwork, m_target, shell, composite );

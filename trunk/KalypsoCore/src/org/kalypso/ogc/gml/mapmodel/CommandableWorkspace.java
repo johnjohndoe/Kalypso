@@ -343,12 +343,4 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     return m_workspace.getParentFeature( toFindParentFrom );
   }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getAllFeatures()
-   */
-  public Feature[] getAllFeatures()
-  {
-    return m_workspace.getAllFeatures();
-  }
 }

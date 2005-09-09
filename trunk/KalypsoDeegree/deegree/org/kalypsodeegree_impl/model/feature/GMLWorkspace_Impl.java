@@ -19,8 +19,6 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.selection.FeatureSelectionManager;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
@@ -44,8 +42,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /** xmlns -> namespaceURI */
   private final Map m_nsMap;
-
-  private final IFeatureSelectionManager m_selectionManager = new FeatureSelectionManager();
 
   /**
    * 
@@ -620,16 +616,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSelectionManager()
-   */
-  public IFeatureSelectionManager getSelectionManager()
-  {
-    return m_selectionManager;
-  }
-
-  /**
-   * This method checks if this link property is an aggreagted list.
-   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int)
    */

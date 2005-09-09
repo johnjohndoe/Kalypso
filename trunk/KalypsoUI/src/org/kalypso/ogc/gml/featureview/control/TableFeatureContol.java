@@ -24,6 +24,7 @@ import org.eclipse.ui.internal.Workbench;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -51,12 +52,15 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   Collection m_listeners = new ArrayList();
 
+  private final IFeatureSelectionManager m_selectionManager;
+
   public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
-      final IFeatureModifierFactory factory )
+      final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager )
   {
     super( workspace, ftp );
 
     m_factory = factory;
+    m_selectionManager = selectionManager;
     m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
   }
 
@@ -65,7 +69,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public Control createControl( final Composite parent, final int style )
   {
-    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory );
+    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionManager );
 
     setFeature( getWorkspace(), getFeature() );
 
@@ -139,7 +143,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       else
         c_workspace = new CommandableWorkspace( workspace );
 
-      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName );
+      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName, m_selectionManager );
       m_kft.addModellListener( this );
       m_viewer.setInput( m_kft );
 

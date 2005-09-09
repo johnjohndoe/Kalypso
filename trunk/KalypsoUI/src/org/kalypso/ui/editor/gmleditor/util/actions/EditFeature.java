@@ -42,8 +42,6 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class EditFeature implements IActionDelegate
@@ -87,7 +85,6 @@ public class EditFeature implements IActionDelegate
       m_selection = (IStructuredSelection)selection;
       action.setEnabled( true );
     }
-
   }
 
 }

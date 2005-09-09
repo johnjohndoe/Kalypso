@@ -36,7 +36,8 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -66,14 +67,14 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
    */
   public boolean performDrop( Object data )
   {
-//    if( getCurrentTarget() == null || data == null )
-//    {
-//      return false;
-//    }
+    //    if( getCurrentTarget() == null || data == null )
+    //    {
+    //      return false;
+    //    }
     System.out.print( "performDrop - " );
-    CommandableWorkspace workspace = m_viewer.getWorkspace();
+    final CommandableWorkspace workspace = m_viewer.getWorkspace();
 
-    Object currentTargetObject = getCurrentTarget();
+    final Object currentTargetObject = getCurrentTarget();
     if( currentTargetObject instanceof FeatureAssociationTypeElement )
     {
       FeatureAssociationTypeProperty fatp = ( (FeatureAssociationTypeElement)currentTargetObject )
@@ -88,7 +89,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       }
       else
         pos = 0;
-      boolean b = workspace.isAggrigatedLink( parentFeature, fatp.getName(), pos );
+      //      boolean b = workspace.isAggrigatedLink( parentFeature, fatp.getName(), pos );
 
     }
     Object selectedSourceObject = getSelectedObject();
@@ -98,7 +99,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     {
       if( selectedSourceObject instanceof Feature && currentTargetObject instanceof Feature )
       {
-        Feature sourceFeature = (Feature)selectedSourceObject;
+        //        Feature sourceFeature = (Feature)selectedSourceObject;
 
       }
     }
@@ -109,17 +110,19 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
    * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int,
    *      org.eclipse.swt.dnd.TransferData)
    */
-  public boolean validateDrop( Object target, int operation, TransferData transferType )
+  public boolean validateDrop( final Object target, final int operation, final TransferData transferType )
   {
-    CommandableFeatureSelection structuredSelection = (CommandableFeatureSelection)m_viewer.getSelection();
-    CommandableWorkspace workspace = m_viewer.getWorkspace();
-    Feature[] selectedFeatures = structuredSelection.getSelectedFeatures();
+    final IFeatureSelection featureSelection = (IFeatureSelection)m_viewer.getSelection();
+    final Feature[] selectedFeatures = FeatureSelectionHelper.getFeatures( featureSelection );
+
+    final IFeatureSelection structuredSelection = (IFeatureSelection)m_viewer.getSelection();
+    FeatureSelectionHelper.getFeatures( structuredSelection );
     System.out.println();
     System.out.println( "validateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
-    Feature selectedFeature = null;
+    //    
+
     Feature targetFeature = null;
     FeatureType targetFt = null;
-    FeatureType[] linkedTargetFt = null;
     FeatureType matchingFt = null;
     FeatureAssociationTypeProperty targetAssocFtp = null;
     if( !isValidSelection( selectedFeatures ) )
@@ -152,8 +155,8 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
         System.out.println( "Diff = " + new Integer( maxOccurs - ( featureList.size() + selectedFeatures.length ) ) );
         if( maxOccurs >= featureList.size() + selectedFeatures.length )
           return true;
-        else
-          return false;
+
+        return false;
       }
       if( !isList && targetFeature.getProperty( propertyName ) == null )//&& operation == DND.DROP_LINK )
         return true;

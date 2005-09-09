@@ -1,8 +1,3 @@
-package org.kalypsodeegree.model.feature.event;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -43,10 +38,17 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree.model.feature.event;
 
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+/**
+ * 
+ * @author doemming
+ */
 public class FeatureStructureChangeModellEvent extends ModellEvent implements IGMLWorkspaceModellEvent
 {
-
   private final GMLWorkspace m_workspace;
 
   private final Feature m_parentFeature;
@@ -59,10 +61,6 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
 
   private final int m_changeType;
 
-  /*
-   * 
-   * @author doemming
-   */
   public FeatureStructureChangeModellEvent( GMLWorkspace workspace, Feature parentFeature, int changeType )
   {
     super( workspace, FEATURE_CHANGE );

@@ -51,6 +51,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CompositeType;
@@ -150,12 +151,11 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
   {
-    return new ButtonModifier( workspace, ftp );
+    return new ButtonModifier( workspace, ftp, selectionManager );
   }
 
   /**

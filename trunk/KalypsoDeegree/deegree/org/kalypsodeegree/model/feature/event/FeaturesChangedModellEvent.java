@@ -1,9 +1,3 @@
-package org.kalypsodeegree.model.feature.event;
-
-import java.util.List;
-
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -44,18 +38,22 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree.model.feature.event;
 
+import java.util.List;
+
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+/**
+ * 
+ * @author doemming
+ */
 public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorkspaceModellEvent
 {
-
   private final List m_features;
 
   private final GMLWorkspace m_workspace;
 
-  /*
-   * 
-   * @author doemming
-   */
   public FeaturesChangedModellEvent( GMLWorkspace workspace, List features )
   {
     super( workspace, FEATURE_CHANGE );

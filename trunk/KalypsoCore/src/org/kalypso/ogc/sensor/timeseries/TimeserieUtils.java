@@ -349,27 +349,25 @@ public class TimeserieUtils
     final NumberFormat nf = (NumberFormat)m_formatMap.get( format );
     if( nf != null )
       return nf;
-    else
+
+    // parse the format spec and only take the min-fraction-digit part
+    final String regex = "%([0-9]*)\\.?([0-9]*)f";
+    final Pattern pattern = Pattern.compile( regex );
+    final Matcher matcher = pattern.matcher( format );
+    if( matcher.matches() )
     {
-      // parse the format spec and only take the min-fraction-digit part
-      final String regex = "%([0-9]*)\\.?([0-9]*)f";
-      final Pattern pattern = Pattern.compile( regex );
-      final Matcher matcher = pattern.matcher( format );
-      if( matcher.matches() )
-      {
-        final String minfd = matcher.group( 2 );
+      final String minfd = matcher.group( 2 );
 
-        final NumberFormat wf = NumberFormat.getInstance();
-        final int intValue = Integer.valueOf( minfd ).intValue();
-        wf.setMinimumFractionDigits( intValue );
-        wf.setMaximumFractionDigits( intValue );
-        m_formatMap.put( format, wf );
+      final NumberFormat wf = NumberFormat.getInstance();
+      final int intValue = Integer.valueOf( minfd ).intValue();
+      wf.setMinimumFractionDigits( intValue );
+      wf.setMaximumFractionDigits( intValue );
+      m_formatMap.put( format, wf );
 
-        return wf;
-      }
-      else
-        return getDefaultFormat();
+      return wf;
     }
+
+    return getDefaultFormat();
   }
 
   private static NumberFormat getDefaultFormat()

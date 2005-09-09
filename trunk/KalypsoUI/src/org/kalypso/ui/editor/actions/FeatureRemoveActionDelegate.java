@@ -29,22 +29,19 @@
  */
 package org.kalypso.ui.editor.actions;
 
-import java.util.List;
-
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureThemeSelection;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.util.command.DeleteFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * FeatureRemoveActionDelegate
@@ -56,74 +53,41 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public class FeatureRemoveActionDelegate implements IActionDelegate
 {
-
-  private IStructuredSelection m_selection = null;
+  private IFeatureSelection m_selection = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  public void run( final IAction action )
   {
-    if( action.isEnabled() && m_selection != null )
+    if( m_selection != null )
     {
-      if( m_selection instanceof IFeatureThemeSelection )
+      final EasyFeatureWrapper[] allFeatures = m_selection.getAllFeatures();
+      if( allFeatures.length > 0 )
       {
-        final IKalypsoFeatureTheme theme = ( (IFeatureThemeSelection)m_selection ).getKalypsoFeatureTheme();
-        final CommandableWorkspace workspace = theme.getWorkspace();
-        final FeatureList featureList = theme.getFeatureList();
-        final Feature parentFeature = featureList.getParentFeature();
-        final FeatureTypeProperty ftp = featureList.getParentFeatureTypeProperty();
-        final List list = m_selection.toList();
-        for( int i = 0; i < list.size(); i++ )
+        DeleteFeatureCommand command = new DeleteFeatureCommand( allFeatures );
+        try
         {
-          Feature f = (Feature)list.get( i );
-          DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, ftp.getName(), f );
-          try
-          {
-            workspace.postCommand( command );
-          }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-          }
+          // post it to the first workspace, normally all features in this context should
+          // live in the same workspace
+          // furthermore, it is not relevant, in which workspace the command is processed
+          allFeatures[0].getWorkspace().postCommand( command );
         }
-      }
-      else if( m_selection instanceof CommandableFeatureSelection )
-      {
-        CommandableFeatureSelection selection = (CommandableFeatureSelection)m_selection;
-        CommandableWorkspace cWorkspace = selection.getCommandableWorkspace();
-        final List list = m_selection.toList();
-        for( int j = 0; j < list.size(); j++ )
+        catch( final Exception e )
         {
-          //is always a Feature since object contribution points to feature
-          Feature selectedFeature = (Feature)list.get( j );
-          FeatureType featureType = selectedFeature.getFeatureType();
-          Feature parentFeature = cWorkspace.getParentFeature( selectedFeature );
-          FeatureType parentFtp = parentFeature.getFeatureType();
-          FeatureTypeProperty[] properties = parentFtp.getProperties();
-          String propName = null;
-          FeatureType ftp = null;
-          for( int i = 0; i < properties.length; i++ )
-          {
-            FeatureTypeProperty property = properties[i];
-            if( property instanceof FeatureAssociationTypeProperty )
-            {
-              propName = property.getName();
-              ftp = ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureType();
-            }
-            if( ftp != null && ftp.equals( featureType ) )
-              break;
-          }
-          DeleteFeatureCommand command = new DeleteFeatureCommand( cWorkspace, parentFeature, propName, selectedFeature );
+          e.printStackTrace();
+          
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e );
 
-          try
-          {
-            cWorkspace.postCommand( command );
-          }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-          }
+          // we are in the ui-thread so we get a shell here
+          final Shell shell = Display.getCurrent().getActiveShell();
+          if( shell != null )
+            ErrorDialog.openError( shell, action.getText(), "Fehler beim Löschen der Features", status );
+        }
+        finally
+        {
+          final Feature[] features = FeatureSelectionHelper.getFeatures(m_selection);
+          m_selection.getSelectionManager().changeSelection( features, new EasyFeatureWrapper[0] );
         }
       }
     }
@@ -135,16 +99,21 @@ public class FeatureRemoveActionDelegate implements IActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    if( selection instanceof IStructuredSelection )
+    action.setEnabled( false );
+    m_selection = null;
+
+    if( selection instanceof IFeatureSelection )
     {
-      m_selection = (IStructuredSelection)selection;
-      if( !selection.isEmpty() )
-      {
-        final String text = action.getText();
-        final String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + m_selection.size() + ")";
-        action.setText( newText );
+      m_selection = (IFeatureSelection)selection;
+
+      final int featureCount = FeatureSelectionHelper.getFeatureCount( m_selection );
+
+      final String text = action.getText();
+      final String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + featureCount + ")";
+      action.setText( newText );
+
+      if( featureCount > 0 )
         action.setEnabled( true );
-      }
     }
   }
 }

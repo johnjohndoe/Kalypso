@@ -70,6 +70,7 @@ import org.kalypso.ogc.gml.featureview.control.RadioFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.SubFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TableFeatureContol;
 import org.kalypso.ogc.gml.featureview.control.TextFeatureControl;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.CheckboxType;
 import org.kalypso.template.featureview.CompositeType;
@@ -111,23 +112,28 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private Control m_control = null;
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature )
+  private final IFeatureSelectionManager m_selectionManager;
+
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager )
   {
-    this( workspace, feature, new URL[] {} );
+    this( workspace, feature, selectionManager, new URL[] {} );
   }
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final URL[] templateURL )
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager, final URL[] templateURL )
   {
     super( workspace, feature, null );
+    m_selectionManager = selectionManager;
 
     for( int i = 0; i < templateURL.length; i++ )
       addView( templateURL[i] );
   }
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final FeatureviewType[] views )
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
   {
     super( workspace, feature, null );
 
+    m_selectionManager = selectionManager;
+    
     for( int i = 0; i < views.length; i++ )
       addView( views[i] );
   }
@@ -294,7 +300,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final String propertyName = buttonType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp );
+      final ButtonFeatureControl bfc = new ButtonFeatureControl( workspace, feature, ftp, m_selectionManager );
 
       final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
 
@@ -327,7 +333,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final String propertyName = compoType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
-      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, (FeatureviewType[])m_viewMap.values().toArray(
+      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, m_selectionManager, (FeatureviewType[])m_viewMap.values().toArray(
           new FeatureviewType[0] ) );
       fc.setFeature( workspace, feature );
 
@@ -345,7 +351,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory() );
+      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager );
       fc.setFeature( workspace, feature );
 
       addFeatureControl( fc );

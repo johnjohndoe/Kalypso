@@ -40,14 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
-import org.kalypso.ogc.gml.command.JMSelector;
-
+/**
+ * 
+ * @author doemming
+ */
 public class SingleElementSelectWidget extends AbstractSelectWidget
 {
-  /*
-   * 
-   * @author doemming
-   */
   public SingleElementSelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
@@ -56,7 +54,7 @@ public class SingleElementSelectWidget extends AbstractSelectWidget
 
   protected int getSelectionMode()
   {
-    return JMSelector.MODE_TOGGLE;
+    return super.MODE_TOGGLE;
   }
 
   protected boolean allowOnlyOneSelectedFeature()

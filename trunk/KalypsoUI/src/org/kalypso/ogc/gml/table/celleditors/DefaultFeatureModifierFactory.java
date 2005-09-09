@@ -46,6 +46,7 @@ import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -56,11 +57,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String)
+   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String, org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
    */
   public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
-      final String format )
+      final String format, final IFeatureSelectionManager selectionManager )
   {
     final String type = ftp.getType();
 
@@ -81,14 +81,14 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( "java.lang.Boolean".equals( type ) )
       return new BooleanModifier( ftp );
     if( FeatureHelper.isGeometryType( type ) )
-      return new ButtonModifier( workspace, ftp );
+      return new ButtonModifier( workspace, ftp, selectionManager );
     if( "FeatureAssociationType".equals( type ) )
-      return new ButtonModifier( workspace, ftp );
+      return new ButtonModifier( workspace, ftp, selectionManager );
 
     final IGuiTypeHandler typeHandler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
         .getTypeHandlerForClassName( type );
     if( typeHandler != null )
-      return typeHandler.createFeatureModifier( workspace, ftp );
+      return typeHandler.createFeatureModifier( workspace, ftp, selectionManager );
 
     return new StringModifier( ftp );
   }

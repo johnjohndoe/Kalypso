@@ -31,18 +31,20 @@ package org.kalypso.ui.editor.actions;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.CommandableFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureThemeSelection;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -58,98 +60,48 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class FeatureAddActionDelegate implements IActionDelegate
 {
 
-  private IStructuredSelection m_selection = null;
+  private IFeatureSelection m_selection = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   public void run( final IAction action )
   {
-    if( action.isEnabled() && m_selection != null )
+    if( m_selection != null )
     {
-      if( m_selection instanceof IFeatureThemeSelection )
-      {
-        final IKalypsoFeatureTheme theme = ( (IFeatureThemeSelection)m_selection ).getKalypsoFeatureTheme();
-        final CommandableWorkspace workspace = theme.getWorkspace();
-        final FeatureList featureList = theme.getFeatureList();
+      final Feature firstFeature = FeatureSelectionHelper.getFirstFeature( m_selection );
+      if( firstFeature == null )
+        return;
 
-        final Feature parentFeature = featureList.getParentFeature();
-        // TODO change featurelist and remove cast
-        // TODO ask for FeatureType (substitutiongroup)
-        final FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)featureList
-            .getParentFeatureTypeProperty();
-        int pos = 0; // TODO get pos from somewhere
-        final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getAssociationFeatureType(),
-            parentFeature, ftp.getName(), pos );
-        try
-        {
-          workspace.postCommand( command );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-      else if( m_selection instanceof CommandableFeatureSelection )
+      final CommandableWorkspace workspace = m_selection.getWorkspace( firstFeature );
+      final Feature parentFeature = m_selection.getParentFeature( firstFeature );
+
+      // TODO change featurelist and remove cast
+      // TODO ask for FeatureType (substitutiongroup)
+
+      final String parentFeatureProperty = m_selection.getParentFeatureProperty( firstFeature );
+      final FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)parentFeature.getFeatureType()
+          .getProperty( parentFeatureProperty );
+
+      int pos = 0; // TODO get pos from somewhere
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, ftp.getAssociationFeatureType(),
+          parentFeature, ftp.getName(), pos, m_selection.getSelectionManager() );
+      try
       {
-        CommandableFeatureSelection selection = (CommandableFeatureSelection)m_selection;
-        CommandableWorkspace cWorkspace = selection.getCommandableWorkspace();
-        //is always a Feature since object contribution points to feature
-        Feature selectedFeature = (Feature)m_selection.getFirstElement();
-        FeatureType featureType = selectedFeature.getFeatureType();
-        Feature parentFeature = null;
-        //        if( FeatureHelper.isCollection( selectedFeature) )
-        //          parentFeature = selectedFeature;
-        //        else
-        parentFeature = cWorkspace.getParentFeature( selectedFeature );
-        FeatureType parentFtp = parentFeature.getFeatureType();
-        FeatureTypeProperty[] properties = parentFtp.getProperties();
-        String propName = null;
-        FeatureType ftp = null;
-        for( int i = 0; i < properties.length; i++ )
-        {
-          FeatureTypeProperty property = properties[i];
-          if( property.getName().equals( featureType.getName() ) )
-          {
-            ftp = featureType;
-          }
-          if( property instanceof FeatureAssociationTypeProperty )
-          {
-            propName = property.getName();
-            FeatureType[] ftps = ( (FeatureAssociationTypeProperty)property ).getAssociationFeatureTypes();
-            for( int j = 0; j < ftps.length; j++ )
-            {
-              FeatureType ft = ftps[j];
-              String name = ftps[j].getName();
-              if( name.equals( featureType.getName() ) )
-              {
-                ftp = ft;
-                break;
-              }
-            }
-          }
-          if( ftp != null )
-            break;
-        }
-        //guess insert position in list
-        int pos = 0;
-        if( parentFtp.isListProperty( propName ) )
-        {
-          List list = (List)parentFeature.getProperty( propName );
-          pos = list.indexOf( selectedFeature );
-        }
-        try
-        {
-          AddFeatureCommand command = new AddFeatureCommand( cWorkspace, ftp, parentFeature, propName, pos );
-          cWorkspace.postCommand( command );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
+        workspace.postCommand( command );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e );
+
+        // we are in the ui-thread so we get a shell here
+        final Shell shell = Display.getCurrent().getActiveShell();
+        if( shell != null )
+          ErrorDialog.openError( shell, action.getText(), "Fehler beim Hinzufügen des Features", status );
       }
     }
-
   }
 
   /**
@@ -159,38 +111,20 @@ public class FeatureAddActionDelegate implements IActionDelegate
   public void selectionChanged( IAction action, ISelection selection )
   {
     action.setEnabled( false );
-    if( selection instanceof IStructuredSelection )
+    m_selection = null;
+
+    if( !selection.isEmpty() && selection instanceof IFeatureSelection )
     {
-      m_selection = (IStructuredSelection)selection;
-      if( selection instanceof IFeatureThemeSelection )
-      {
-        IFeatureThemeSelection fts = (IFeatureThemeSelection)selection;
-        IKalypsoFeatureTheme theme = fts.getKalypsoFeatureTheme();
-        FeatureList featureList = theme.getFeatureList();
-        Feature parentFeature = featureList.getParentFeature();
-        int currentSize = featureList.size();
-        int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( 0 );
-        if( maxOccurs > currentSize )
-          action.setEnabled( true );
-      }
-      else if( m_selection instanceof CommandableFeatureSelection )
-      {
-        CommandableWorkspace workspace = ( (CommandableFeatureSelection)m_selection ).getCommandableWorkspace();
-        Object element = m_selection.getFirstElement();
-        //it is always a Feature (objectcontribution)
-        Feature selectedFeature = (Feature)element;
-        Feature parentFeature = workspace.getParentFeature( (Feature)element );
+      m_selection = (IFeatureSelection)selection;
+
+      final Feature selectedFeature = FeatureSelectionHelper.getFirstFeature( m_selection );
+      //it is always a Feature (objectcontribution)
+      final Feature parentFeature = m_selection.getParentFeature( selectedFeature );
+      if( selectedFeature != null && parentFeature != null )
         action.setEnabled( checkMaxOccurs( parentFeature, selectedFeature ) );
-      }
     }
   }
 
-  /**
-   * @param parentFeature
-   * @param feature
-   * @param workspace
-   * @return
-   */
   private boolean checkMaxOccurs( Feature feature, Feature featureToCheckOccurence )
   {
     int maxOccurs = -1;
@@ -226,4 +160,5 @@ public class FeatureAddActionDelegate implements IActionDelegate
 
     return true;
   }
+
 }

@@ -239,13 +239,10 @@ public class WfsLoader extends AbstractLoader
     return sb.toString();
   }
 
-  /**
-   * @return
-   */
-  private String buildGetFeatureRequestGET()
-  {
-    return m_url + "?REQUEST=GetFeature&SERVICE=wfs&VERSION=1.0.0&typename=" + m_featureType;
-  }
+//  private String buildGetFeatureRequestGET()
+//  {
+//    return m_url + "?REQUEST=GetFeature&SERVICE=wfs&VERSION=1.0.0&typename=" + m_featureType;
+//  }
 
   /**
    * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,

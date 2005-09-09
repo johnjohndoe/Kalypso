@@ -65,6 +65,7 @@ import org.kalypso.ogc.gml.featureview.dialog.RangeSetFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.RectifiedGridDomainFeatureDialog;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -89,7 +90,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   private Collection m_modifyListener = new ArrayList();
 
-  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp )
+  public ButtonFeatureControl( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
   {
     super( workspace, feature, ftp );
 
@@ -107,10 +108,10 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       }
     };
 
-    m_dialog = chooseDialog( workspace, feature, ftp, listener );
+    m_dialog = chooseDialog( workspace, feature, ftp, listener, selectionManager );
   }
 
-  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp, final IFeatureChangeListener listener )
+  public static IFeatureDialog chooseDialog( final GMLWorkspace workspace, final Feature feature, final FeatureTypeProperty ftp, final IFeatureChangeListener listener, final IFeatureSelectionManager selectionManager )
   {
     final String typename = ftp.getType();
     if( DateWithoutTime.class.getName().equals( typename ) )
@@ -129,7 +130,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
       {
         // it is a list of features or links to features or mixed
-        return new FeatureDialog( workspace, feature, ftp );
+        return new FeatureDialog( workspace, feature, ftp, selectionManager );
       }
       // it is not a list
       final Object property = feature.getProperty( ftp.getName() );

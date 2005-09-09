@@ -444,11 +444,6 @@ public class GeometryUtilities
     return false; // not supported TODO support it
   }
 
-  /**
-   * 
-   * @param ftp
-   * @return
-   */
   public static boolean isEnvelopeGeometry( final FeatureTypeProperty ftp )
   {
     return ftp.getType().endsWith( "Envelope" ); // TODO use class.netName()

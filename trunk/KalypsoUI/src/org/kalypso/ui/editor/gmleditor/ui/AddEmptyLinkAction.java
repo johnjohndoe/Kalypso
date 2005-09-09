@@ -37,6 +37,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -50,37 +51,22 @@ import org.kalypsodeegree.model.feature.FeatureType;
  */
 public class AddEmptyLinkAction extends Action
 {
-
   private final FeatureAssociationTypeProperty m_fatp;
 
   private final CommandableWorkspace m_workspace;
 
   private final Feature m_parentFeature;
 
-  /**
-   *  
-   */
-
-  public AddEmptyLinkAction( String text, FeatureAssociationTypeProperty fatp, Feature parentFeature,
-      CommandableWorkspace workspace )
-  {
-    super( text );
-    m_fatp = fatp;
-    m_workspace = workspace;
-    m_parentFeature = parentFeature;
-  }
-
-  /**
-   *  
-   */
+  private final IFeatureSelectionManager m_selectionManager;
 
   public AddEmptyLinkAction( String text, ImageDescriptor image, FeatureAssociationTypeProperty fatp,
-      Feature parentFeature, CommandableWorkspace workspace )
+      Feature parentFeature, CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
   {
     super( text, image );
     m_fatp = fatp;
     m_workspace = workspace;
     m_parentFeature = parentFeature;
+    m_selectionManager = selectionManager;
   }
 
   public void run()
@@ -104,7 +90,7 @@ public class AddEmptyLinkAction extends Action
     }
     else
       ft = featureTypes[0];
-    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp.getName(), 0 );
+    command = new AddFeatureCommand( m_workspace, ft, m_parentFeature, m_fatp.getName(), 0, m_selectionManager );
     try
     {
       m_workspace.postCommand( command );

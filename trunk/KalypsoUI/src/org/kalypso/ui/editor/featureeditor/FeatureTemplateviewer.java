@@ -68,6 +68,7 @@ import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.ObjectFactory;
@@ -105,7 +106,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private String m_featurePath;
 
-  private FeatureComposite m_featureComposite = new FeatureComposite( null, null, new URL[] {} );
+  private FeatureComposite m_featureComposite = new FeatureComposite( null, null, new FeatureSelectionManager2(), new URL[] {} );
 
   private Label m_label;
 

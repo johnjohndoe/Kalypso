@@ -39,6 +39,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.ControlType;
@@ -72,9 +73,9 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
     return button;
   }
 
-  public IFeatureModifier createFeatureModifier( GMLWorkspace workspace, FeatureTypeProperty ftp )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
   {
-    return new ButtonModifier( workspace, ftp );
+    return new ButtonModifier( workspace, ftp,  selectionManager );
   }
 
   public String getText( Object element )

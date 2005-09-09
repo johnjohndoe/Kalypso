@@ -37,6 +37,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.template.featureview.ButtonType;
@@ -88,12 +89,11 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
    */
-  public IFeatureModifier createFeatureModifier( GMLWorkspace workspace, FeatureTypeProperty ftp )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
   {
-    return new ButtonModifier( workspace, ftp );
+    return new ButtonModifier( workspace, ftp, selectionManager );
   }
 
   /**
