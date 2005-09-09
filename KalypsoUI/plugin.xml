@@ -344,16 +344,6 @@
                tooltip="%Extension.EditorActions.GisMapEditor.featureSelection.tooltip">
          </action>
          <action
-               label="%Extension.EditorActions.GisMapEditor.featureRequest.label"
-               icon="icons/full/elcl16/kde_contexthelp.gif"
-               style="radio"
-               tooltip="%Extension.EditorActions.GisMapEditor.featureRequest.tooltip"
-               class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureWidgetDelegate"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-               toolbarPath="karte/tools"
-               id="org.kalypso.ui.editor.mapeditor.action.EditFeatureAction">
-         </action>
-         <action
                label="%Extension.EditorActions.GisMapEditor.maximize.label"
                icon="icons/map/zoomin.gif"
                style="radio"

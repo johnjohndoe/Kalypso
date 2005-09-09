@@ -8,6 +8,7 @@ import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureControl;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -22,9 +23,12 @@ public class SubFeatureControl extends AbstractFeatureControl
 
   private final FeatureviewType[] m_views;
 
-  public SubFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final FeatureviewType[] views )
+  private final IFeatureSelectionManager m_selectionManager;
+
+  public SubFeatureControl( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
   {
     super( workspace, ftp );
+    m_selectionManager = selectionManager;
     m_views = views;
   }
 
@@ -37,9 +41,9 @@ public class SubFeatureControl extends AbstractFeatureControl
     final GMLWorkspace workspace = getWorkspace();
     final Object property = feature.getProperty( getFeatureTypeProperty().getName() );
     if( property instanceof Feature )
-      m_fc = new FeatureComposite( workspace, (Feature)property, m_views );
+      m_fc = new FeatureComposite( workspace, (Feature)property, m_selectionManager, m_views );
     else
-      m_fc = new ButtonFeatureControl( workspace, feature, getFeatureTypeProperty() );
+      m_fc = new ButtonFeatureControl( workspace, feature, getFeatureTypeProperty(), m_selectionManager );
 
     m_fc.addChangeListener( new IFeatureChangeListener()
     {

@@ -1060,7 +1060,6 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   {
     String propertyName = null;
     Object literal = null;
-    int type = subType;
 
     if( data instanceof BinarySpatialData )
     {

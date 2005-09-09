@@ -65,7 +65,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 

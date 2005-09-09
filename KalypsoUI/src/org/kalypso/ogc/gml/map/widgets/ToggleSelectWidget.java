@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
-import org.kalypso.ogc.gml.command.JMSelector;
 
 /**
  * 
@@ -56,7 +55,7 @@ public class ToggleSelectWidget extends AbstractSelectWidget
 
   protected int getSelectionMode()
   {
-    return JMSelector.MODE_TOGGLE;
+    return super.MODE_TOGGLE;
   }
 
   /**

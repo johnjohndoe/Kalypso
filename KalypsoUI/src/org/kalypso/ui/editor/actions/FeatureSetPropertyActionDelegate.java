@@ -30,14 +30,20 @@
 package org.kalypso.ui.editor.actions;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.IFeatureThemeSelection;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFocusedFeatureSelection;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -50,36 +56,44 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public class FeatureSetPropertyActionDelegate implements IActionDelegate
 {
-
-  private IFeatureThemeSelection m_selection = null;
-
-  private FeatureTypeProperty m_ftp = null;
+  private IFocusedFeatureSelection m_selection = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  public void run( final IAction action )
   {
-    System.out.println( "action remove Feature" ); // TODO debug?
-    if( action.isEnabled() && m_selection != null && m_ftp != null )
-    {
+    if( m_selection == null )
+      return;
 
-      final IKalypsoFeatureTheme theme = m_selection.getKalypsoFeatureTheme();
-      final CommandableWorkspace workspace = theme.getWorkspace();
-      final FeatureTypeProperty ftp = m_selection.getFocusedFeatureTypeProperty();
-      final HashMap map = new HashMap();
-      final Object value = m_selection.getFocusedFeature().getProperty( ftp.getName() );
-      map.put( m_ftp.getName(), value );
-      final Feature[] fes = (Feature[])m_selection.toList().toArray( new Feature[m_selection.size()] );
+    final Feature focusedFeature = m_selection.getFocusedFeature();
+    final String focusedProperty = m_selection.getFocusedProperty();
+    final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
+
+    if( ftp != null )
+    {
+      final CommandableWorkspace workspace = m_selection.getWorkspace( focusedFeature );
+      final Map map = new HashMap();
+
+      final Object value = focusedFeature.getProperty( focusedProperty );
+      map.put( focusedProperty, value );
+
+      final Feature[] fes = FeatureSelectionHelper.getFeatures( m_selection );
       final ModifyFeatureCommand command = new ModifyFeatureCommand( workspace, fes, map );
       try
       {
         workspace.postCommand( command );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
+
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e );
+
+        // we are in the ui-thread so we get a shell here
+        final Shell shell = Display.getCurrent().getActiveShell();
+        if( shell != null )
+          ErrorDialog.openError( shell, action.getText(), "Fehler beim Übertragen der Eigenschaften", status );
       }
     }
   }
@@ -88,22 +102,26 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
-    if( selection instanceof IFeatureThemeSelection && !selection.isEmpty() )
+    action.setEnabled( false );
+    m_selection = null;
+
+    if( selection instanceof IFocusedFeatureSelection
+        && FeatureSelectionHelper.getFeatureCount( (IFocusedFeatureSelection)selection ) > 0 )
     {
-      m_selection = (IFeatureThemeSelection)selection;
-      m_ftp = m_selection.getFocusedFeatureTypeProperty();
-      if( m_ftp != null && m_selection.size() >= 2 )
+      m_selection = (IFocusedFeatureSelection)selection;
+      final Feature focusedFeature = m_selection.getFocusedFeature();
+      final String focusedProperty = m_selection.getFocusedProperty();
+      final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
+      if( ftp != null && m_selection.size() >= 2 )
       {
         action.setEnabled( true );
-        String text = action.getText();
-        String lang = KalypsoGisPlugin.getDefault().getLang();
-        String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + m_ftp.getAnnotation( lang ).getLabel() + ")";
+        final String text = action.getText();
+        final String lang = KalypsoGisPlugin.getDefault().getLang();
+        final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + ftp.getAnnotation( lang ).getLabel() + ")";
         action.setText( newText );
-        return;
       }
     }
-    action.setEnabled( false );
   }
 }

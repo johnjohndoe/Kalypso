@@ -13,7 +13,6 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -30,16 +29,13 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypso.ui.editor.actions.FeatureAddActionDelegate;
-import org.kalypso.ui.editor.gmleditor.util.actions.AddFeatureAction;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Küpferle
@@ -47,8 +43,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class GmlEditor extends AbstractEditorPart implements ICommandTarget
 {
   protected GmlTreeView m_viewer = null;
-
-  private IAction addLinkAction = null;
 
   public void dispose()
   {
@@ -131,7 +125,8 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
   public synchronized void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
-    m_viewer = new GmlTreeView( parent );
+
+    m_viewer = new GmlTreeView( parent, KalypsoCorePlugin.getDefault().getSelectionManager() );
     //register as site selection provider
     getSite().setSelectionProvider( m_viewer );
     createContextMenu();
@@ -166,7 +161,7 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
             List list = (List)parentFeature.getProperty( fatp.getName() );
             if( list.size() < featureType.getMaxOccurs( fatp.getName() ) )
               menuManager.add( new AddEmptyLinkAction( "Feature neu", ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE, fatp,
-                  parentFeature, workspace ) );
+                  parentFeature, workspace, KalypsoCorePlugin.getDefault().getSelectionManager() ) );
           }
         }
       }

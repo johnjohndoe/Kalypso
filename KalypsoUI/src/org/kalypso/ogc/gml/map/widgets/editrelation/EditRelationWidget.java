@@ -115,7 +115,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   private static final double RADIUS = 30;
 
-  TreeViewer m_viewer;
+  private TreeViewer m_viewer;
 
   final EditRelationOptionsContentProvider m_contentProvider = new EditRelationOptionsContentProvider();
 
@@ -151,16 +151,15 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       return;
     }
     m_targetFE = null;
-    final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
+    final JMSelector selector = new JMSelector();
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory
         .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
 
-    double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
-    IKalypsoFeatureTheme input = (IKalypsoFeatureTheme)m_viewer.getInput();
+    final double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
 
-    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, input.getSelectionManager() );
+    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false );
     m_srcFE = feature;
     m_fitProblems.setLength( 0 );
     updateProblemsText();
@@ -230,14 +229,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     super.moved( p );
     if( m_srcFE == null )
       return;
-    final JMSelector selector = new JMSelector( JMSelector.MODE_COLLECT );
+    final JMSelector selector = new JMSelector(  );
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory
         .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
-    IKalypsoFeatureTheme input = (IKalypsoFeatureTheme)m_viewer.getInput();
-    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false, input.getSelectionManager() );
+    final Feature feature = selector.selectNearest( point, r, m_allowedFeatureList, false );
     m_fitProblems.setLength( 0 );
     m_targetFE = null;
     if( m_srcFE == feature )
@@ -318,18 +316,18 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
   private void refreshSettings()
   {
-    // 
     m_allowedFeatureList = getallowedFeatureList();
-    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
+    final TreeViewer viewer = m_viewer;
+    if( viewer != null && !viewer.getControl().isDisposed() )
     {
       final IKalypsoTheme activeTheme = getActiveTheme();
-      if( m_viewer.getInput() != activeTheme )
+      if( viewer.getInput() != activeTheme )
         m_viewer.getControl().getDisplay().asyncExec( new Runnable()
         {
           public void run()
           {
-            if( m_viewer != null && !m_viewer.getControl().isDisposed() )
-              m_viewer.setInput( activeTheme );
+            if( viewer != null && !viewer.getControl().isDisposed() )
+              viewer.setInput( activeTheme );
           }
         } );
     }
@@ -612,23 +610,24 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     data2.grabExcessVerticalSpace = true;
 
     //  m_viewer = new CheckboxTreeViewer( parent, SWT.FILL );
-    m_viewer = new TreeViewer( m_topLevel, SWT.FILL );
-    m_viewer.getControl().setLayoutData( data2 );
-    m_viewer.setContentProvider( m_contentProvider );
+    final TreeViewer viewer = new TreeViewer( m_topLevel, SWT.FILL );
+    m_viewer = viewer;
+    viewer.getControl().setLayoutData( data2 );
+    viewer.setContentProvider( m_contentProvider );
     m_labelProvider = new EditRelationOptionsLabelProvider( m_contentProvider );
-    m_viewer.setLabelProvider( m_labelProvider );
+    viewer.setLabelProvider( m_labelProvider );
 
     m_textInfo = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
     m_textInfo.setText( "Info" );
 
     m_textProblem = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
     m_textProblem.setText( "Problem" );
-    m_viewer.setAutoExpandLevel( 2 );
-    m_viewer.getTree().addMouseListener( new MouseAdapter()
+    viewer.setAutoExpandLevel( 2 );
+    viewer.getTree().addMouseListener( new MouseAdapter()
     {
-      public void mouseUp( MouseEvent e )
+      public void mouseUp( final MouseEvent e )
       {
-        final TreeItem item = m_viewer.getTree().getItem( new org.eclipse.swt.graphics.Point( e.x, e.y ) );
+        final TreeItem item = viewer.getTree().getItem( new org.eclipse.swt.graphics.Point( e.x, e.y ) );
         if( item != null )
         {
           final Object element = item.getData();
@@ -636,7 +635,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           {
             boolean status = m_contentProvider.isChecked( element );
             m_contentProvider.accept( element, new SetCheckedTreeVisitor( !status ) );
-            m_viewer.refresh( element, true );
+            viewer.refresh( element, true );
           }
         }
       }

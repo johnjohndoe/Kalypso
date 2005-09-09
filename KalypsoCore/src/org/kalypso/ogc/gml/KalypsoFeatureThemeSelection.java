@@ -41,6 +41,7 @@
 
 package org.kalypso.ogc.gml;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -103,9 +104,9 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
     if( featureList == null )
       return StructuredSelection.EMPTY;
 
-    selection.retainAll( featureList );
-
-    return new StructuredSelection( selection );
+    final ArrayList list = new ArrayList( selection );
+    list.retainAll( featureList );
+    return new StructuredSelection( list );
   }
 
   /**

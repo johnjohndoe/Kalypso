@@ -62,8 +62,6 @@ public class FeatureTypeSelectionDialog extends Dialog
 
   private String[] m_selectedFeatureTypeName;
 
-  private List m_list;
-
   public FeatureTypeSelectionDialog( Shell parentShell, FeatureType[] featureTypes )
   {
     super( parentShell );
@@ -72,44 +70,50 @@ public class FeatureTypeSelectionDialog extends Dialog
 
   }
 
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
-    Composite main = (Composite)super.createDialogArea( parent );
-    Label lable = new Label( main, SWT.NULL );
+    final Composite main = (Composite)super.createDialogArea( parent );
+    final Label lable = new Label( main, SWT.NULL );
+
     lable.setText( "Wählen sie die zu impotierenden Datentypen aus:" );
-    m_list = new List( main, SWT.BORDER | SWT.MULTI );
+    final List list = new List( main, SWT.BORDER | SWT.MULTI );
     for( int i = 0; i < m_ft.length; i++ )
     {
       FeatureType ft = m_ft[i];
       if( !ft.getName().startsWith( "_" ) )
       {
         Annotation annotation = ft.getAnnotation( m_lang );
-        m_list.add( annotation.getLabel() );
+        list.add( annotation.getLabel() );
       }
     }
-    GridData data = new GridData();
+    final GridData data = new GridData();
     data.widthHint = 250;
-    m_list.setLayoutData( data );
-    m_list.addSelectionListener( new SelectionListener()
+
+    list.setLayoutData( data );
+
+    list.addSelectionListener( new SelectionListener()
     {
-
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        Widget w = e.widget;
-        if( w == m_list )
-        {
-          m_selectedFeatureTypeName = m_list.getSelection();
-        }
-
+        handleWidgetSelected( list, e );
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
       {
-        widgetSelected( e );
+        handleWidgetSelected( list, e );
       }
     } );
 
     return main;
+  }
+
+  protected void handleWidgetSelected( final List list, final SelectionEvent e )
+  {
+    final Widget w = e.widget;
+    if( w == list )
+    {
+      m_selectedFeatureTypeName = list.getSelection();
+    }
   }
 
   public FeatureType[] getSelectedFeatureTypes()

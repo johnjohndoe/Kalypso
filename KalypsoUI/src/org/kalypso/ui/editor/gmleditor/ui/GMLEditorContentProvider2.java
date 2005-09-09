@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -55,6 +56,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    * will lead to an unusable gui.
    */
   private Map m_parentHash = new HashMap();
+
+  private TreeViewer m_viewer;
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
@@ -120,7 +123,11 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public Object getParent( final Object element )
   {
-    return m_parentHash.get( element );
+    final Object object = m_parentHash.get( element );
+    if( object == null )
+      System.out.println( "No parent for object: " + element );
+    
+    return object;
   }
 
   /**
@@ -150,6 +157,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   public void dispose()
   {
     m_parentHash.clear();
+    m_viewer = null;
   }
 
   /**
@@ -158,6 +166,8 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
+    m_viewer = (TreeViewer)viewer;
+    
     if( oldInput != newInput )
     {
       m_parentHash.clear();
@@ -170,6 +180,34 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       else
         m_workspace = null;
     }
+  }
+
+  public Feature getParentFeature( final Feature feature )
+  {
+    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement)getParent( feature );
+    if( parent == null )
+      return null;
+    
+    return parent.getParentFeature();
+  }
+
+  public String getParentFeatureProperty( final Feature feature )
+  {
+    final FeatureAssociationTypeElement parent = (FeatureAssociationTypeElement)getParent( feature );
+    if( parent == null )
+      return null;
+    
+    return parent.getAssociationTypeProperty().getName();
+  }
+
+  public void expandElement( final Object element )
+  {
+    if( element == null )
+      return;
+    
+    expandElement( getParent( element ) );
+
+    m_viewer.setExpandedState( element, true );
   }
 
 }

@@ -72,6 +72,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
@@ -79,9 +80,9 @@ import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 import org.kalypso.template.gismapview.Gismapview;
@@ -91,7 +92,6 @@ import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
 
 /**
  * <p>
@@ -109,8 +109,7 @@ import org.kalypsodeegree_impl.model.feature.selection.IFeatureSelectionManager;
  * 
  * @author belger
  */
-public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, 
-    IExportableObjectFactory
+public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvider, IExportableObjectFactory
 {
   private GisMapOutlinePage m_outlinePage = null;
 
@@ -118,10 +117,12 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private GisTemplateMapModell m_mapModell;
 
+  private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+
   public GisMapEditor()
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem() );
+    m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
     m_mapPanel.getWidgetManager().addWidgetChangeListener( new IWidgetChangeListener()
     {
       public void widgetChanged( final IWidget newWidget )
@@ -285,19 +286,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     final URL context = ResourceUtilities.createURL( inputFile );
 
     final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault()
-        .getCoordinatesSystem(), inputFile.getProject() );
+        .getCoordinatesSystem(), inputFile.getProject(), m_selectionManager );
     setMapModell( mapModell );
-    //register with all selection managers of the map model
-    // BUG PRONE! This code cannot know, if someone else changes the selection manager
-    // of one of the themes; if this happens this code is broken!
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    for( int i = 0; i < allThemes.length; i++ )
-    {
-      IKalypsoTheme theme = allThemes[i];
-      IFeatureSelectionManager selectionManager = theme.getSelectionManager();
-      if( selectionManager != null )
-        selectionManager.addSelectionChangedListener( m_mapPanel );
-    }
 
     GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
 
@@ -335,25 +325,10 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
     m_mapModell.saveTheme( theme, monitor );
   }
 
-  /*
-   *  
-   */
   public void dispose()
   {
     if( m_mapModell != null )
-    {
-      // @CHRISTOPH sollte dies nicht besser in setMapModell() stehen ?
-      //unregister from all selection managers
-      final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
-      for( int i = 0; i < allThemes.length; i++ )
-      {
-        final IKalypsoTheme theme = allThemes[i];
-        final IFeatureSelectionManager selectionManager = theme.getSelectionManager();
-        if( selectionManager != null )
-          selectionManager.removeSelectionChangedListener( m_mapPanel );
-      }
       m_mapModell.dispose();
-    }
 
     m_mapPanel.dispose();
 
@@ -364,31 +339,6 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
     super.dispose();
   }
-
-//  /**
-//   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-//   */
-//  public ISelection getSelection()
-//  {
-//    // return emtpy selection if we have no model
-//    if( m_mapModell == null )
-//      return new StructuredSelection();
-//    
-//    final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
-//    final IStructuredSelection selection = (IStructuredSelection)m_mapPanel.getSelection();
-//    if( !selection.isEmpty() && activeTheme instanceof IKalypsoFeatureTheme )
-//      return new FeatureThemeSelection( (IKalypsoFeatureTheme)activeTheme, this, selection, null, (Feature)selection
-//          .getFirstElement() );
-//    return selection;
-//  }
-
-//  /**
-//   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-//   */
-//  public void setSelection( ISelection selection )
-//  {
-//    m_mapPanel.setSelection( selection );
-//  }
 
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)

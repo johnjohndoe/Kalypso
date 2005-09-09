@@ -41,11 +41,18 @@
 package org.kalypso.ogc.gml.table;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -55,12 +62,21 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class LayerTableContentProvider implements IStructuredContentProvider
 {
-
-  private final LayerTableViewer m_viewer;
-
-  public LayerTableContentProvider( LayerTableViewer viewer )
+  private final ISelectionChangedListener m_tableSelectionListener = new ISelectionChangedListener()
   {
-    m_viewer = viewer;
+    public void selectionChanged( final SelectionChangedEvent event )
+    {
+      viewerSelectionChanged( event.getSelection() );
+    }
+  };
+
+  private final IFeatureSelectionManager m_selectionManager;
+
+  private Viewer m_viewer;
+
+  public LayerTableContentProvider( final IFeatureSelectionManager selectionManager )
+  {
+    m_selectionManager = selectionManager;
   }
 
   /**
@@ -102,7 +118,8 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public void dispose()
   {
-  //  
+    if( m_viewer != null )
+      m_viewer.removeSelectionChangedListener( m_tableSelectionListener );
   }
 
   /**
@@ -111,7 +128,45 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    */
   public void inputChanged( final Viewer viewer, Object oldInput, Object newInput )
   {
-  //
+    if( m_viewer != null )
+      m_viewer.removeSelectionChangedListener( m_tableSelectionListener );
+
+    m_viewer = viewer;
+
+    if( m_viewer != null )
+      m_viewer.addSelectionChangedListener( m_tableSelectionListener );
+  }
+
+  /**
+   * @param selection
+   */
+  protected void viewerSelectionChanged( final ISelection selection )
+  {
+    // remove all features in input from manager
+    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)m_viewer.getInput();
+    final FeatureList featureList = theme == null ? null : theme.getFeatureList();
+    if( featureList == null )
+      return;
+    
+    final Feature[] featuresToRemove = featureList.toFeatures();
+
+    // add current selection
+    final IStructuredSelection structSel = (IStructuredSelection)selection;
+    final List wrappers = new ArrayList( structSel.size() );
+    for( final Iterator sIt = structSel.iterator(); sIt.hasNext(); )
+    {
+      final Object object = sIt.next();
+      if( object instanceof Feature )
+      {
+        final EasyFeatureWrapper wrapper = new EasyFeatureWrapper( theme.getWorkspace(), (Feature)object, featureList
+            .getParentFeature(), featureList.getParentFeatureTypeProperty().getName() );
+        wrappers.add( wrapper );
+      }
+    }
+
+    final EasyFeatureWrapper[] izis = (EasyFeatureWrapper[])wrappers.toArray( new EasyFeatureWrapper[wrappers.size()] );
+
+    m_selectionManager.changeSelection( featuresToRemove, izis );
   }
 
 }

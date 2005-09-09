@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.GismapviewType;
 import org.kalypso.template.gismapview.ObjectFactory;
@@ -76,10 +77,13 @@ public class GisTemplateMapModell implements IMapModell
 
   private final URL m_context;
 
+  private final IFeatureSelectionManager m_selectionManager;
+
   public GisTemplateMapModell( final Gismapview gisview, final URL context, final CS_CoordinateSystem crs,
-      IProject project )
+      IProject project, final IFeatureSelectionManager selectionManager )
   {
     m_context = context;
+    m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
     // layer 1 is legend
     final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
@@ -142,7 +146,7 @@ public class GisTemplateMapModell implements IMapModell
       return new KalypsoPictureTheme( layerName, layerType.getLinktype(), source, KalypsoGisPlugin.getDefault()
           .getCoordinatesSystem() );
     }
-    return new GisTemplateFeatureTheme( layerType, context);
+    return new GisTemplateFeatureTheme( layerType, context, m_selectionManager );
   }
 
   // Helper
@@ -290,14 +294,15 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.moveUp( theme );
   }
 
-  public void paintSelected( Graphics g, GeoTransform p, GM_Envelope bbox, double scale )
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      double, boolean)
+   */
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
+      final boolean selected )
   {
-    m_modell.paintSelected( g, p, bbox, scale );
-  }
-
-  public void paintSelected( Graphics g, Graphics hg, GeoTransform p, GM_Envelope bbox, double scale )
-  {
-    m_modell.paintSelected( g, hg, p, bbox, scale );
+    m_modell.paint( g, p, bbox, scale, selected );
   }
 
   public void removeModellListener( ModellEventListener listener )
@@ -350,6 +355,7 @@ public class GisTemplateMapModell implements IMapModell
   {
     return m_modell;
   }
+
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
    */
@@ -357,15 +363,4 @@ public class GisTemplateMapModell implements IMapModell
   {
     return m_modell.getProject();
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paintUnselected(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double)
-   */
-  public void paintUnselected( Graphics gr, GeoTransform p, GM_Envelope bbox, double scale )
-  {
-    m_modell.paintUnselected( gr, p, bbox, scale );
-  }
-
 }

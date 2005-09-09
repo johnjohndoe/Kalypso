@@ -40,14 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
-import org.kalypso.ogc.gml.command.JMSelector;
-
+/**
+ * 
+ * @author doemming
+ */
 public class UnSelectWidget extends AbstractSelectWidget
 {
-  /*
-   * 
-   * @author doemming
-   */
   public UnSelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
@@ -56,7 +54,7 @@ public class UnSelectWidget extends AbstractSelectWidget
 
   protected int getSelectionMode()
   {
-    return JMSelector.MODE_UNSELECT;
+    return super.MODE_UNSELECT;
   }
 
   /**

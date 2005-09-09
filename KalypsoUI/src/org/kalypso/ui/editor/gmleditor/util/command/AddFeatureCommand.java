@@ -43,9 +43,11 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -63,16 +65,19 @@ public class AddFeatureCommand implements ICommand
 
   private Feature newFeature = null;
 
-  private final GMLWorkspace m_workspace;
+  private final CommandableWorkspace m_workspace;
 
-  public AddFeatureCommand( final GMLWorkspace workspace, FeatureType type, Feature parentFeature, String propertyName,
-      int pos )
+  private final IFeatureSelectionManager m_selectionManager;
+
+  public AddFeatureCommand( final CommandableWorkspace workspace, final FeatureType type, final Feature parentFeature, final String propertyName,
+      final int pos, final IFeatureSelectionManager selectionManager )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
     m_type = type;
+    m_selectionManager = selectionManager;
   }
 
   /**
@@ -145,5 +150,9 @@ public class AddFeatureCommand implements ICommand
     m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
         FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    
+    if( m_selectionManager != null )
+      m_selectionManager.changeSelection( new Feature[0], new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, newFeature, m_parentFeature, m_propName ) } );
+    
   }
 }

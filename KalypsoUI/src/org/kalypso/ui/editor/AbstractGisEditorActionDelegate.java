@@ -89,13 +89,9 @@ public abstract class AbstractGisEditorActionDelegate implements IEditorActionDe
       if( m_editor instanceof GisTableEditor )
         ( (GisTableEditor)m_editor ).getLayerTable().addModellListener( this );
       if( m_editor instanceof GisMapEditor )
-      {
         ( (GisMapEditor)m_editor ).getMapPanel().addModellListener( this );
-      }
       if( m_editor instanceof GmlEditor )
-      {
         ( (GmlEditor)m_editor ).getTreeView().addModellListener( this );
-      }
     }
     // update action state
     refreshAction( null );

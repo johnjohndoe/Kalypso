@@ -118,7 +118,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     super.init( site );
 
     final IWorkbenchPage page = site.getPage();
-    page.getWorkbenchWindow().getSelectionService().addSelectionListener( m_selectionListener );
+    page.getWorkbenchWindow().getSelectionService().addPostSelectionListener( m_selectionListener );
   }
 
   /**
@@ -208,6 +208,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final Group mainGroup = m_mainGroup;
     final ScrolledCompositeCreator creator = m_creator;
 
+    // TODO: check first, if there is anything to do, else
+    // we get a hour-glass everytime we select anything
     final Job job = new UIJob( getSite().getShell().getDisplay(), "Feature anzeigen" )
     {
       public IStatus runInUIThread( IProgressMonitor monitor )

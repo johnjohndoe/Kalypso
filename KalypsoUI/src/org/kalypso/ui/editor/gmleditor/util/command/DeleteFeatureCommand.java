@@ -40,35 +40,39 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author belger
  */
 public class DeleteFeatureCommand implements ICommand
 {
-  private final Feature m_parentFeature;
+  private final EasyFeatureWrapper[] m_wrappers;
 
-  private final Object m_deleteItem;
+  private final Map m_listIndexMap = new HashMap();
 
-  private int index = -1;
-
-  private final String m_propName;
-
-  private final GMLWorkspace m_workspace;
-
-  public DeleteFeatureCommand( final GMLWorkspace workspace, Feature parentFeature, String propName, Object deleteItem )
+  public DeleteFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature,
+      final String propName, final Feature featureToDelete )
   {
-    m_workspace = workspace;
-    m_parentFeature = parentFeature;
-    m_propName = propName;
-    m_deleteItem = deleteItem;
+    m_wrappers = new EasyFeatureWrapper[]
+    { new EasyFeatureWrapper( workspace, featureToDelete, parentFeature, propName ) };
+  }
+
+  public DeleteFeatureCommand( final EasyFeatureWrapper[] wrappers )
+  {
+    m_wrappers = wrappers;
   }
 
   /**
@@ -100,28 +104,55 @@ public class DeleteFeatureCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    Object prop = m_parentFeature.getProperty( m_propName );
-    Object properties[] = m_parentFeature.getProperties();
-    int propIndex = 0;
-    for( ; propIndex < properties.length; propIndex++ )
-      if( properties[propIndex] == prop )
-        break;
+    final Map parentMap = new HashMap( m_wrappers.length );
 
-    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
+    for( int i = 0; i < m_wrappers.length; i++ )
+    {
+      final EasyFeatureWrapper wrapper = m_wrappers[i];
 
-    if( maxOccurs == 1 )
-    {
-      properties[index] = m_deleteItem;
-      index = -1;
+      final CommandableWorkspace workspace = wrapper.getWorkspace();
+      final Feature parentFeature = wrapper.getParentFeature();
+      final String propName = wrapper.getParentFeatureProperty();
+      final Feature feature = wrapper.getFeature();
+
+      final Object prop = parentFeature.getProperty( propName );
+      final Object properties[] = parentFeature.getProperties();
+      int propIndex = 0;
+      for( ; propIndex < properties.length; propIndex++ )
+        if( properties[propIndex] == prop )
+          break;
+
+      int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propIndex );
+
+      if( maxOccurs == 1 )
+      {
+        parentFeature.setProperty( FeatureFactory.createFeatureProperty(
+            propName, feature ) );
+      }
+      else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+      {
+        final List list = (List)prop;
+        
+        final Integer index = (Integer)m_listIndexMap.get(wrapper);
+        list.add( index.intValue(), feature );
+      }
+      
+      final Object oldParentFeature = parentMap.get( workspace );
+      if( oldParentFeature == null )
+        parentMap.put( workspace, parentFeature );
+      else if( oldParentFeature != parentFeature )
+        parentMap.put( workspace, workspace.getRootFeature() );
     }
-    else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+
+    for( final Iterator mapIt = parentMap.entrySet().iterator(); mapIt.hasNext(); )
     {
-      List list = (List)prop;
-      list.add( index, m_deleteItem );
-      index = -1;
+      final Map.Entry entry = (Entry)mapIt.next();
+      final CommandableWorkspace workspace = (CommandableWorkspace)entry.getKey();
+      final Feature parentFeature = (Feature)entry.getValue();
+
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature,
+          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -134,28 +165,54 @@ public class DeleteFeatureCommand implements ICommand
 
   private void delete()
   {
-    Object prop = m_parentFeature.getProperty( m_propName );
-    Object properties[] = m_parentFeature.getProperties();
-    int propIndex = 0;
-    for( ; propIndex < properties.length; propIndex++ )
-      if( properties[propIndex] == prop )
-        break;
+    final Map parentMap = new HashMap( m_wrappers.length );
 
-    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
-
-    if( maxOccurs == 1 )
+    for( int i = 0; i < m_wrappers.length; i++ )
     {
-      properties[propIndex] = null;
-      index = propIndex;
-    }
-    else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
-    {
-      List list = (List)prop;
-      index = list.indexOf( m_deleteItem );
-      list.remove( m_deleteItem );
+      final EasyFeatureWrapper wrapper = m_wrappers[i];
+
+      final CommandableWorkspace workspace = wrapper.getWorkspace();
+      final Feature parentFeature = wrapper.getParentFeature();
+      final String propName = wrapper.getParentFeatureProperty();
+      final Feature feature = wrapper.getFeature();
+
+      final Object prop = parentFeature.getProperty( propName );
+      final Object properties[] = parentFeature.getProperties();
+
+      int propIndex = 0;
+      for( ; propIndex < properties.length; propIndex++ )
+        if( properties[propIndex] == prop )
+          break;
+
+      final int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propIndex );
+
+      if( maxOccurs == 1 )
+      {
+        parentFeature.setProperty( FeatureFactory.createFeatureProperty(
+            propName, null ) );
+      }
+      else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+      {
+        final List list = (List)prop;
+        m_listIndexMap.put( wrapper, new Integer( list.indexOf( feature ) ) );
+        list.remove( feature );
+      }
+
+      final Object oldParentFeature = parentMap.get( workspace );
+      if( oldParentFeature == null )
+        parentMap.put( workspace, parentFeature );
+      else if( oldParentFeature != parentFeature )
+        parentMap.put( workspace, workspace.getRootFeature() );
     }
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature,
-        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    for( final Iterator mapIt = parentMap.entrySet().iterator(); mapIt.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)mapIt.next();
+      final CommandableWorkspace workspace = (CommandableWorkspace)entry.getKey();
+      final Feature parentFeature = (Feature)entry.getValue();
+
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature,
+          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    }
   }
 }

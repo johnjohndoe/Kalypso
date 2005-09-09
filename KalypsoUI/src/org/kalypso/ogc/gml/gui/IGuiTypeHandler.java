@@ -47,6 +47,7 @@ import javax.xml.bind.JAXBException;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -66,7 +67,7 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 
   public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException;
 
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp );
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager );
 
   /** Creeates an instance of my type from a string */
   public Object parseType( final String text ) throws ParseException;
