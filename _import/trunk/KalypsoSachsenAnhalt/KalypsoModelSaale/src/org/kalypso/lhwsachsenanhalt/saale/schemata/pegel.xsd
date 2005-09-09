@@ -96,6 +96,7 @@
 					<element ref="gml:location"><annotation><documentation xml:lang="de"><label>Ort</label><tooltip>Ort</tooltip><description>Geographische Lage des Pegels</description></documentation></annotation></element>
 					<element name="Durchfluss" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Durchfluss_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="TS_Steuerung_Gruppe"  type="string"> <annotation><documentation xml:lang="de"><label>TS-Steuerungs-Gruppe</label><tooltip></tooltip><description>Talsperren-Steuerungs-Gruppe zu der der Pegel gehört</description></documentation></annotation></element>
 				</sequence>
 			</extension>
 		</complexContent>
