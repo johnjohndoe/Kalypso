@@ -38,6 +38,15 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.tools.ant.util.ReaderInputStream;
 import org.kalypso.zml.obslink.ObjectFactory;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * 
@@ -47,6 +56,8 @@ import org.kalypso.zml.obslink.ObjectFactory;
  */
 public class CloneUtilities
 {
+
+  private static ITypeRegistry m_typeHandlerRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
   /**
    * 
@@ -73,4 +84,38 @@ public class CloneUtilities
     return unmarshaller.unmarshal( inputStream );
   }
 
+  public static Feature clone( Feature featureToClone ) throws CloneNotSupportedException
+  {
+    Object[] properties = featureToClone.getProperties();
+    Object[] clonedProperties = new Object[properties.length];
+    FeatureType featureType = featureToClone.getFeatureType();
+    FeatureTypeProperty[] featureTypeProperties = featureType.getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      Object property = properties[i];
+
+      if( property != null )
+        clonedProperties[i] = cloneFeatureProperty( property, featureTypeProperties[i] );
+
+    }
+    return FeatureFactory.createFeature( featureToClone.getId(), featureType, clonedProperties );
+
+  }
+
+  public static Object cloneFeatureProperty( Object featureProperty, FeatureTypeProperty property )
+      throws CloneNotSupportedException
+  {
+    Class clazz = featureProperty.getClass();
+    ITypeHandler typeHandler = m_typeHandlerRegistry.getTypeHandlerForClassName( clazz.getName() );
+    if( typeHandler == null )
+      return FeatureFactory.createFeatureProperty( property.getName(), featureProperty );
+    else
+    {
+      if( typeHandler instanceof IMarshallingTypeHandler )
+      {
+        return ( (IMarshallingTypeHandler)typeHandler ).cloneObject( featureProperty );
+      }
+    }
+    throw new CloneNotSupportedException( "Object: " + featureProperty.getClass().getName() + "\tis not clonable" );
+  }
 }

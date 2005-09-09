@@ -120,7 +120,8 @@ public class GmlTreeView extends SelectionProviderAdapter implements IPostSelect
 
     // als post selection listener anmelden,
     // dann passiert das ganze gedöns nicht immer sofort
-    m_treeViewer.addPostSelectionChangedListener( m_treeSelectionChangedListener );
+//    m_treeViewer.addPostSelectionChangedListener( m_treeSelectionChangedListener );
+    m_treeViewer.addSelectionChangedListener( m_treeSelectionChangedListener );
   }
 
   protected void handleWorkspaceSelectionChanged( final SelectionChangedEvent event )
@@ -327,7 +328,7 @@ public class GmlTreeView extends SelectionProviderAdapter implements IPostSelect
     m_eventProvider.fireModellEvent( event );
   }
 
-  public TreeViewer getTreeViewer()
+  protected TreeViewer getTreeViewer()
   {
     return m_treeViewer;
   }

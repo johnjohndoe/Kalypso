@@ -55,8 +55,7 @@ public class GmlTreeDragListener extends DragSourceAdapter implements DragSource
    */
   public void dragStart( DragSourceEvent event )
   {
-    System.out.println( "Drag-Start" );
-
+   //do nothing
   }
 
   /**
@@ -64,9 +63,7 @@ public class GmlTreeDragListener extends DragSourceAdapter implements DragSource
    */
   public void dragSetData( DragSourceEvent event )
   {
-    Object source = event.getSource();
-    System.out.println( "\nDrag-SetData: " + source );
-
+   //do nothing
   }
 
   /**
@@ -74,8 +71,7 @@ public class GmlTreeDragListener extends DragSourceAdapter implements DragSource
    */
   public void dragFinished( DragSourceEvent event )
   {
-    System.out.println( "Drag-Finished" );
-
+   //do nothing
   }
 
 }

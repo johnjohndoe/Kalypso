@@ -3,12 +3,24 @@ package org.kalypso.ogc.gml.loader;
 import java.io.BufferedInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.deegree.services.capabilities.DCPType;
+import org.deegree.services.capabilities.HTTP;
+import org.deegree.services.capabilities.Protocol;
+import org.deegree.services.wfs.capabilities.Capability;
+import org.deegree.services.wfs.capabilities.GetFeature;
+import org.deegree.services.wfs.capabilities.Request;
+import org.deegree.services.wfs.capabilities.WFSCapabilities;
+import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -43,6 +55,12 @@ public class WfsLoader extends AbstractLoader
 
   private URL m_schemaURL;
 
+  private boolean m_postProtocol = false;
+
+  private boolean m_getProtocol = false;
+
+  private URL m_url = null;
+
   /**
    * Loads a WFS DataSource from the given URL
    * 
@@ -55,20 +73,21 @@ public class WfsLoader extends AbstractLoader
   protected Object loadIntern( String source, URL context, IProgressMonitor monitor ) throws LoaderException
   {
     BufferedInputStream inputStream = null;
+    PrintStream ps = null;
     try
     {
       monitor.beginTask( "WFS laden", 1000 );
-      URL url = null;
       final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
-      String path = sourceProps.getProperty( "URL" );
+      final String path = sourceProps.getProperty( "URL" );
 
       m_featureType = sourceProps.getProperty( "FEATURE" );
 
       if( path != null )
       {
-        url = new URL( path );
+        m_url = new URL( path );
       }
-      m_schemaURL = new URL( url + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + m_featureType );
+      m_schemaURL = new URL( m_url + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + m_featureType );
+//      GMLSchema schema = GMLSchemaCatalog.getSchema( m_schemaURL );
 
       //
       //          if (array[0].length() > 0 && array[0].startsWith("http://"))
@@ -77,9 +96,27 @@ public class WfsLoader extends AbstractLoader
       //          }
       //          if (array[1].length() > 0)
       //              featureType = array[1];
-
-      // get wfs capabiliets
-      //          WFSCapabilities wfsCaps = getCapabilites(url);
+      //TODO put capabilites into a file cache (similar to GMLSchemaCache ) -> performance
+      //       get wfs capabiliets to check which protocol types are supported by the service
+      final WFSCapabilities wfsCaps = getCapabilites( m_url );
+      final Capability capability = wfsCaps.getCapability();
+      final Request request = capability.getRequest();
+      final GetFeature getFeature = request.getGetFeature();
+      final DCPType[] type = getFeature.getDCPType();
+      for( int i = 0; i < type.length; i++ )
+      {
+        final DCPType dcpt = type[i];
+        final Protocol protocol = dcpt.getProtocol();
+        if( protocol instanceof HTTP )
+        {
+          final URL[] getOnlineResources = ( (HTTP)protocol ).getGetOnlineResources();
+          final URL[] postOnlineResources = ( (HTTP)protocol ).getPostOnlineResources();
+          if( getOnlineResources.length > 0 )
+            m_getProtocol = true;
+          if( postOnlineResources.length > 0 )
+            m_postProtocol = true;
+        }
+      }
 
       // check if the requested featureType is available on the server
       // (consistancy check of gmt-file)
@@ -101,24 +138,25 @@ public class WfsLoader extends AbstractLoader
       //          RemoteWFService service = new RemoteWFService(wfsCaps);
       //          service.doService(getfeatureRequest);
       //          InputStream is = con.getInputStream();
-      URLConnection con = url.openConnection();
+      final URLConnection con = m_url.openConnection();
       con.setDoOutput( true );
       con.setDoInput( true );
 
       // write request to the WFS server
-
-      PrintStream ps = new PrintStream( con.getOutputStream() );
-      ps.print( buildGetFeatureRequest() );
-      // TODO: immer in try/finaslly block schliessen!
-      ps.close();
+      ps = new PrintStream( con.getOutputStream() );
+      ps.print( buildGetFeatureRequestPOST() );
+      //      if( m_getProtocol )
+      //      {
+      //        ps.print( buildGetFeatureRequestGET() );
+      //      }
+      //      else
+      //      {
+      //        ps.print( buildGetFeatureRequestPOST() );
+      //      }
 
       //read response from the WFS server and create a GMLWorkspace
-      // TODO: Bitte in zukunft immer die Streams schliessen!
-      // TODO: und immer die Streams buffern
-      // TODO: und immer alles committen, damits keine compiler-Fehler gibt!
-
       inputStream = new BufferedInputStream( con.getInputStream() );
-
+//      writeInputStreamToFile( "d://temp//getfeature_deegree_wfs.xml", inputStream );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, m_schemaURL );
       inputStream.close();
 
@@ -128,63 +166,70 @@ public class WfsLoader extends AbstractLoader
 
       return new CommandableWorkspace( workspace );
     }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+      throw new LoaderException( "Der InputStream is korumpiert. GML kann nicht geladen werden" );
+    }
     catch( final Exception e )
     {
       e.printStackTrace();
+      //      tryToLoadAsFeatureCollection();
       throw new LoaderException( "Konnte GML von WFS nicht laden", e );
     }
     finally
     {
       monitor.done();
+      IOUtils.closeQuietly( ps );
       IOUtils.closeQuietly( inputStream );
     }
   }
 
-//  private WFSCapabilities getCapabilites( String url )
-//  {
-//    WFSCapabilities caps = null;
-//    try
-//    {
-//      final URL urlGetCap = new URL( url + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
-//      final URLConnection conGetCap = urlGetCap.openConnection();
-//      conGetCap.addRequestProperty( "SERVICE", "WFS" );
-//      conGetCap.addRequestProperty( "VERSION", "1.0.0" );
-//      conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
-//      InputStream isGetCap = conGetCap.getInputStream();
-//      Reader reader = new InputStreamReader( isGetCap );
-//      caps = WFSCapabilitiesFactory.createCapabilities( reader );
-//    }
-//    catch( MalformedURLException urle )
-//    {
-//      urle.printStackTrace();
-//      // TODO
-//      // MessageDialog urlMessage = new MessageDialog(null, "Loading WFS
-//      // Capabilites",null , "Fehler beim Laden des WFS Themas",
-//      // MessageDialog.ERROR, 0, null);
-//    }
-//    catch( IOException ioe )
-//    {
-//      ioe.printStackTrace();
-//      // TODO MessageDialog
-//    }
-//    catch( Exception e )
-//    {
-//      e.printStackTrace();
-//      // TODO MessageDialog
-//    }
-//
-//    return caps;
-//  }
+  private WFSCapabilities getCapabilites( URL url )
+  {
+    WFSCapabilities caps = null;
+    try
+    {
+      final URL urlGetCap = new URL( url + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
+      final URLConnection conGetCap = urlGetCap.openConnection();
+      conGetCap.addRequestProperty( "SERVICE", "WFS" );
+      conGetCap.addRequestProperty( "VERSION", "1.0.0" );
+      conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
+      InputStream isGetCap = conGetCap.getInputStream();
+      Reader reader = new InputStreamReader( isGetCap );
+      caps = WFSCapabilitiesFactory.createCapabilities( reader );
+    }
+    catch( MalformedURLException urle )
+    {
+      urle.printStackTrace();
+      // TODO
+      // MessageDialog urlMessage = new MessageDialog(null, "Loading WFS
+      // Capabilites",null , "Fehler beim Laden des WFS Themas",
+      // MessageDialog.ERROR, 0, null);
+    }
+    catch( IOException ioe )
+    {
+      ioe.printStackTrace();
+      // TODO MessageDialog
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      // TODO MessageDialog
+    }
+
+    return caps;
+  }
 
   public String getDescription()
   {
     return "WFS Layer";
   }
 
-  private String buildGetFeatureRequest()
+  private String buildGetFeatureRequestPOST()
   {
     StringBuffer sb = new StringBuffer();
-    sb.append( "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" );
+    sb.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" );// iso-8859-1 
     sb.append( "<GetFeature outputFormat=\"GML2\" xmlns:gml=\"http://www.opengis.net/gml\">\n" );
     sb.append( "<Query typeName=\"" + m_featureType + "\">\n" );
     sb.append( "<Filter>\n" );
@@ -192,6 +237,14 @@ public class WfsLoader extends AbstractLoader
     sb.append( "</Query>" );
     sb.append( "</GetFeature>" );
     return sb.toString();
+  }
+
+  /**
+   * @return
+   */
+  private String buildGetFeatureRequestGET()
+  {
+    return m_url + "?REQUEST=GetFeature&SERVICE=wfs&VERSION=1.0.0&typename=" + m_featureType;
   }
 
   /**
@@ -205,7 +258,7 @@ public class WfsLoader extends AbstractLoader
     {
       Display display = new Display();
       MessageDialog md = new MessageDialog( new Shell( display ), "Speichern der Daten vom WFS",
-          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                  ).createImage(), "Sollen die Daten Lokal gespeichrt werden?",
+          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                           ).createImage(), "Sollen die Daten Lokal gespeichrt werden?",
           MessageDialog.QUESTION, new String[]
           {
               "Ja",
@@ -254,25 +307,25 @@ public class WfsLoader extends AbstractLoader
   // not used
   // better use: ioutils.copy( );
   // and close stream in finally block
-  //  /**
-  //   * This method is just for debuging, to write an imput stream to a file
-  //   */
-  //  private void writeInputStreamToFile( String filename, InputStream is )
-  //  {
-  //    try
-  //    {
-  //      FileWriter fileWriterGetCap = new FileWriter( filename, true );
-  //      int i = 0;
-  //      while( ( i = is.read() ) >= 0 )
-  //      {
-  //        fileWriterGetCap.write( (char)i );
-  //      }
-  //      fileWriterGetCap.close();
-  //    }
-  //    catch( Exception e )
-  //    {
-  //      e.printStackTrace();
-  //      // TODO: handle exception
-  //    }
-  //  }
+  /**
+   * This method is just for debuging, to write an imput stream to a file
+   */
+  private void writeInputStreamToFile( String filename, InputStream is )
+  {
+    try
+    {
+      FileWriter fileWriterGetCap = new FileWriter( filename, true );
+      int i = 0;
+      while( ( i = is.read() ) >= 0 )
+      {
+        fileWriterGetCap.write( (char)i );
+      }
+      fileWriterGetCap.close();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      // TODO: handle exception
+    }
+  }
 }

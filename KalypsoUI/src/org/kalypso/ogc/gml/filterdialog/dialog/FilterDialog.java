@@ -77,12 +77,14 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 
 /**
  * @author kuepfer
  */
-public class FilterDialog extends Dialog
+public class FilterDialog extends Dialog implements ModellEventListener
 {
   protected final FeatureType m_featureType;
 
@@ -102,6 +104,8 @@ public class FilterDialog extends Dialog
 
   private ToolBar m_toolBar;
 
+  private FilterCompositeFactory m_filterCompositeFactory = null;
+
   public FilterDialog( Shell parent, FeatureType featureType, Filter root )
   {
     super( parent );
@@ -109,7 +113,8 @@ public class FilterDialog extends Dialog
     m_root = new FilterRootElement();
     if( root != null )
       m_root.addChild( root );
-
+    m_filterCompositeFactory = FilterCompositeFactory.getInstance( null );
+    m_filterCompositeFactory.addModellListener( this );
     setShellStyle( getShellStyle() | SWT.MAX );
   }
 
@@ -180,10 +185,9 @@ public class FilterDialog extends Dialog
           if( firstElement instanceof Operation )
           {
             Object oldValue = firstElement;
-            FilterCompositeFactory.getInstance( null ).createFilterElementComposite(
-                (Operation)firstElement, m_propGroup, m_featureType );
-            m_root.firePropertyChange( FilterRootElement.OPERATION_ADDED, oldValue,
-                firstElement );
+            FilterCompositeFactory.getInstance( null ).createFilterElementComposite( (Operation)firstElement,
+                m_propGroup, m_featureType );
+            m_root.firePropertyChange( FilterRootElement.OPERATION_ADDED, oldValue, firstElement );
           }
           else if( firstElement instanceof FeatureFilter )
           {
@@ -285,24 +289,24 @@ public class FilterDialog extends Dialog
     return m_main;
   }
 
-//  /**
-//   *  
-//   */
-//  private void createLocalMenu()
-//  {
-//    final MenuManager menuManager = new MenuManager( "#PopUp" );
-//    menuManager.setRemoveAllWhenShown( true );
-//    menuManager.addMenuListener( new IMenuListener()
-//    {
-//      public void menuAboutToShow( IMenuManager manager )
-//      {
-//        manager.add( new Separator() );
-//        manager.add( action );
-//      }
-//    } );
-//    Menu menu = menuManager.createContextMenu( m_viewer2.getControl() );
-//    m_viewer2.getControl().setMenu( menu );
-//  }
+  //  /**
+  //   *
+  //   */
+  //  private void createLocalMenu()
+  //  {
+  //    final MenuManager menuManager = new MenuManager( "#PopUp" );
+  //    menuManager.setRemoveAllWhenShown( true );
+  //    menuManager.addMenuListener( new IMenuListener()
+  //    {
+  //      public void menuAboutToShow( IMenuManager manager )
+  //      {
+  //        manager.add( new Separator() );
+  //        manager.add( action );
+  //      }
+  //    } );
+  //    Menu menu = menuManager.createContextMenu( m_viewer2.getControl() );
+  //    m_viewer2.getControl().setMenu( menu );
+  //  }
 
   private void createContextMenu()
   {
@@ -372,5 +376,19 @@ public class FilterDialog extends Dialog
   public Filter getFilter()
   {
     return m_root.getFilter();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   */
+  public void onModellChange( ModellEvent modellEvent )
+  {
+    if( modellEvent.getEventSource().equals( m_filterCompositeFactory ) )
+    {
+      m_viewer2.refresh();
+      m_viewer2.expandAll();
+
+    }
+
   }
 }

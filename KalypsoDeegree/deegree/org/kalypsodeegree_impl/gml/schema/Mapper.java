@@ -54,6 +54,8 @@ public class Mapper
 
     if( "long".equals( name ) )
       return "java.lang.Long";
+    if( "decimal".equals( name ) )
+      return "java.lang.Float";
 
     // TODO: map them all over registry
 

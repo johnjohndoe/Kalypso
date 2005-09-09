@@ -45,6 +45,7 @@ import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * FeatureRemoveActionDelegate
@@ -96,7 +97,11 @@ public class FeatureAddActionDelegate implements IActionDelegate
         //is always a Feature since object contribution points to feature
         Feature selectedFeature = (Feature)m_selection.getFirstElement();
         FeatureType featureType = selectedFeature.getFeatureType();
-        Feature parentFeature = cWorkspace.getParentFeature( selectedFeature );
+        Feature parentFeature = null;
+        //        if( FeatureHelper.isCollection( selectedFeature) )
+        //          parentFeature = selectedFeature;
+        //        else
+        parentFeature = cWorkspace.getParentFeature( selectedFeature );
         FeatureType parentFtp = parentFeature.getFeatureType();
         FeatureTypeProperty[] properties = parentFtp.getProperties();
         String propName = null;
@@ -159,14 +164,66 @@ public class FeatureAddActionDelegate implements IActionDelegate
       m_selection = (IStructuredSelection)selection;
       if( selection instanceof IFeatureThemeSelection )
       {
-        // TODO check maxOccurs
-        action.setEnabled( true );
+        IFeatureThemeSelection fts = (IFeatureThemeSelection)selection;
+        IKalypsoFeatureTheme theme = fts.getKalypsoFeatureTheme();
+        FeatureList featureList = theme.getFeatureList();
+        Feature parentFeature = featureList.getParentFeature();
+        int currentSize = featureList.size();
+        int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( 0 );
+        if( maxOccurs > currentSize )
+          action.setEnabled( true );
       }
       else if( m_selection instanceof CommandableFeatureSelection )
       {
-        if( m_selection.getFirstElement() instanceof Feature )
-          action.setEnabled( true );
+        CommandableWorkspace workspace = ( (CommandableFeatureSelection)m_selection ).getCommandableWorkspace();
+        Object element = m_selection.getFirstElement();
+        //it is always a Feature (objectcontribution)
+        Feature selectedFeature = (Feature)element;
+        Feature parentFeature = workspace.getParentFeature( (Feature)element );
+        action.setEnabled( checkMaxOccurs( parentFeature, selectedFeature ) );
       }
     }
+  }
+
+  /**
+   * @param parentFeature
+   * @param feature
+   * @param workspace
+   * @return
+   */
+  private boolean checkMaxOccurs( Feature feature, Feature featureToCheckOccurence )
+  {
+    int maxOccurs = -1;
+    int size = -1;
+    FeatureType featureType = feature.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
+    int[] pos = FeatureHelper.getPositionOfAllAssociations( feature );
+    if( pos.length > 0 )
+    {
+      for( int i = 0; i < pos.length; i++ )
+      {
+        Object property = feature.getProperty( pos[i] );
+        FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)properties[pos[i]];
+        maxOccurs = featureType.getMaxOccurs( ftp.getName() );
+        if( property instanceof Feature )
+        {
+          Feature f = (Feature)property;
+          if( f.equals( featureToCheckOccurence ) )
+            return false;
+
+        }
+        if( property instanceof List )
+        {
+          size = ( (List)property ).size();
+          if( maxOccurs == -1 )
+            return true;
+          else if( maxOccurs < size )
+            return false;
+        }
+      }
+
+    }
+
+    return true;
   }
 }

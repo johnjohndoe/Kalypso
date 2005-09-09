@@ -610,16 +610,6 @@
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
                 id="org.kalypso.objcetclass.filterencoding.create.comparisonoperation"/>
        </objectContribution>
-       <objectContribution
-             adaptable="false"
-             objectClass="org.kalypso.ui.editor.gmleditor.util.model.FeatureElement"
-             id="org.kalypso.objectclass.FeatureElement">
-          <action
-                label="Testaction"
-                icon="icons/kalypso16.gif"
-                class="org.kalypso.ui.editor.gmleditor.util.actions.TestElementAction"
-                id="testaction"/>
-       </objectContribution>
    </extension>
    <extension
          id="resourceFilters"

@@ -65,7 +65,7 @@ public final class AddFeatureAction extends Action
   private Shell m_shell;
 
   public AddFeatureAction( FeatureType type, CommandableWorkspace workspace, Feature parentFeature,
-      String propertyName, int i, Shell shell )
+      String propertyName, int i)
   {
     super( type.getName() );
     m_propertyName = propertyName;
@@ -73,7 +73,6 @@ public final class AddFeatureAction extends Action
     m_workspace = workspace;
     m_type = type;
     m_parentFeature = parentFeature;
-    m_shell = shell;
   }
 
   /**

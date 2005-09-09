@@ -756,6 +756,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           .getPolygonClass() ) );
       registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
           .getMultiPolygonClass() ) );
+
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities
+          .getUndefinedGeometryClass() ) );
       // TODO LinearRingPropertyType, BoxPropertyype, GeometryCollectionPropertyType
 
       // register inlines
