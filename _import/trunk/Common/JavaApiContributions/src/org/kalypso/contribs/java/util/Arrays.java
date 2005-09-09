@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -126,7 +127,7 @@ public final class Arrays
   }
 
   /**
-   * convenient method to cast array into type. The code here is based on the code of Vector.toArray(Object[] type)
+   * Convenient method to cast array into type. The code here is based on the code of Vector.toArray(Object[] type)
    * 
    * <pre>
    * Call example:  Double[] ds = Arrays.castArray(someArray, new Double[0]);
@@ -487,5 +488,45 @@ public final class Arrays
         result.append( separator );
     }
     return result.toString();
+  }
+
+  /**
+   * Concatenate the two given arrays in a new one containing all of the elements.
+   * 
+   * @param array1
+   *          first array to append
+   * @param array2
+   *          second array to append
+   * @param type
+   *          type of the array to create
+   * 
+   * @see List#toArray(java.lang.Object[]) for an example of the use of the type argument
+   */
+  public static Object[] concat( final Object[] array1, final Object[] array2, final Object[] type )
+  {
+    final ArrayList list = new ArrayList( array1.length + array2.length );
+    list.addAll( java.util.Arrays.asList( array1 ) );
+    list.addAll( java.util.Arrays.asList( array2 ) );
+
+    return list.toArray( type );
+  }
+
+  /**
+   * Return new array containing the given one with the given object appended at the end of it.
+   * 
+   * @param object
+   *          object to append to array
+   * @param type
+   *          type of the array to create
+   * 
+   * @see List#toArray(java.lang.Object[]) for an example of the use of the type argument
+   */
+  public static Object[] concat( final Object[] array, final Object object, final Object[] type )
+  {
+    final ArrayList list = new ArrayList( array.length + 1 );
+    list.addAll( java.util.Arrays.asList( array ) );
+    list.add( object );
+
+    return list.toArray( type );
   }
 }
