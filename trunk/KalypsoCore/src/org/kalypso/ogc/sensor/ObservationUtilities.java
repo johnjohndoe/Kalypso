@@ -230,7 +230,8 @@ public class ObservationUtilities
    */
   public static void dump( final ITuppleModel model, final String sep, final Writer writer ) throws SensorException
   {
-    final IAxis[] axes = model.getAxisList();
+    // do not use the same array because of the sort
+    final IAxis[] axes = (IAxis[])new ArrayList( Arrays.asList( model.getAxisList() ) ).toArray( new IAxis[0] );
 
     // sort axes in order to have a better output
     sortAxes( axes );
