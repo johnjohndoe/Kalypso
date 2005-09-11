@@ -81,7 +81,6 @@ import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
