@@ -92,6 +92,12 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class MapPanel extends Canvas implements IMapModellView, ComponentListener, ModellEventProvider,
     ISelectionProvider
 {
+  public static final int MODE_SELECT = 0;
+
+  public static final int MODE_TOGGLE = 1;
+
+  public static final int MODE_UNSELECT = 2;
+
   private final IFeatureSelectionManager m_selectionManager;
 
   private final List m_selectionListeners = new ArrayList( 5 );
@@ -519,12 +525,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
       return StructuredSelection.EMPTY;
-    
+
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( !( activeTheme instanceof IKalypsoFeatureTheme ) )
       return StructuredSelection.EMPTY;
 
-    return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme)activeTheme, m_selectionManager );
+    return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme)activeTheme,
+        m_selectionManager );
   }
 
   protected void globalSelectionChanged( final IFeatureSelection selection )
@@ -550,7 +557,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     repaint();
   }
 
-  public void select( final Point startPoint, final Point endPoint, final int radius )
+  public void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode,
+      final boolean useOnlyFirstChoosen )
   {
     final GeoTransform transform = getProjection();
 
@@ -572,8 +580,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
         final JMSelector selector = new JMSelector();
 
-        final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, getMapModell()
-            .getCoordinatesSystem() );
+        final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, getMapModell().getCoordinatesSystem() );
 
         final Feature fe = selector.selectNearest( pointSelect, gisRadius, ( (IKalypsoFeatureTheme)activeTheme )
             .getFeatureListVisible( null ), false );
@@ -582,7 +589,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
         if( fe != null )
           listFe.add( fe );
 
-        changeSelection( listFe, (IKalypsoFeatureTheme)activeTheme, m_selectionManager );
+        changeSelection( listFe, (IKalypsoFeatureTheme)activeTheme, m_selectionManager, selectionMode );
       }
       else
       // dragged
@@ -606,43 +613,71 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
           final List features = selector.select( envSelect, ( (IKalypsoFeatureTheme)activeTheme )
               .getFeatureListVisible( null ), withinStatus );
 
-          changeSelection( features, (IKalypsoFeatureTheme)activeTheme, m_selectionManager );
+          if( useOnlyFirstChoosen && !features.isEmpty() )
+          {
+            // delete all but first if we shall only the first selected
+            final Object object = features.get( 0 );
+            features.clear();
+            features.add( object );
+          }
+
+          changeSelection( features, (IKalypsoFeatureTheme)activeTheme, m_selectionManager, selectionMode );
         }
       }
     }
   }
 
   private void changeSelection( final List features, final IKalypsoFeatureTheme theme,
-      final IFeatureSelectionManager selectionManager2 )
+      final IFeatureSelectionManager selectionManager2, final int selectionMode )
   {
     // nothing was choosen by the user, dont do anything
     // TODO: maybe clear selection?
     if( features.isEmpty() )
       return;
 
-    // remove all selectied features from this theme
+    // remove all selected features from this theme
     // TODO: maybe only visible??
     final FeatureList featureList = theme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
     final String parentProperty = featureList.getParentFeatureTypeProperty().getName();
 
-    final Feature[] toRemove = featureList.toFeatures();
-
     // add all selectied features
-    final EasyFeatureWrapper[] toAdd = new EasyFeatureWrapper[features.size()];
+    final EasyFeatureWrapper[] selectedWrapped = new EasyFeatureWrapper[features.size()];
     for( int i = 0; i < features.size(); i++ )
     {
       final Feature f = (Feature)features.get( i );
-      toAdd[i] = new EasyFeatureWrapper( theme.getWorkspace(), f, parentFeature, parentProperty );
+      selectedWrapped[i] = new EasyFeatureWrapper( theme.getWorkspace(), f, parentFeature, parentProperty );
     }
 
-    // TODO: change dependend on selection mode
-    // this is toggle select
+    final Feature[] toRemove;
+    final EasyFeatureWrapper[] toAdd;
+
+    switch( selectionMode )
+    {
+    case MODE_TOGGLE: // dreht die selection der auswahl um
+      // BUG: past nicht mehr zur beschreibung!
+      toRemove = new Feature[0];
+      toAdd = selectedWrapped;
+      break;
+
+    case MODE_SELECT: // selectert genau das, was ausgewählt wurde
+      toRemove = featureList.toFeatures();
+      toAdd = selectedWrapped;
+      break;
+
+    case MODE_UNSELECT: // löscht alles augewählte aus der selection
+      toRemove = featureList.toFeatures();
+      toAdd = new EasyFeatureWrapper[0];
+
+    default:
+      throw new UnsupportedOperationException( "Unknown selection mode: " + selectionMode );
+    }
+
     selectionManager2.changeSelection( toRemove, toAdd );
-    
+
     fireSelectionChanged();
   }
-  
+
   private final void fireSelectionChanged()
   {
     final ISelectionChangedListener[] listenersArray = (ISelectionChangedListener[])m_selectionListeners
@@ -663,6 +698,5 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       Platform.run( safeRunnable );
     }
   }
-
 
 }
