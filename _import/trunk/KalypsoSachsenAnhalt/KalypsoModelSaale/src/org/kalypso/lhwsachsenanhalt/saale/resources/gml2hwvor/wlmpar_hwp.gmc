@@ -1,6 +1,6 @@
 <gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<csvtarget linktype="gml" xlink:href="WLMPAR.HWP" featurePath="WLMCollectionAssociation/WLMMember" delemiter="&#9;" writeHeader="false">
+	<csvtarget linktype="gml" xlink:href="WLMPAR.HWP" featurePath="WLMCollectionAssociation/WLMMember" delemiter="&#9;" writeHeader="true">
 		<column>PNR</column>
 		<column>IP_1</column>
 		<column>IP_2</column>

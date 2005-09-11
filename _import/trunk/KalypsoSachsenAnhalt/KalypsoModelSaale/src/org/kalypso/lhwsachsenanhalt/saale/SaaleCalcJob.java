@@ -234,7 +234,11 @@ public class SaaleCalcJob implements ICalcJob
     convertGml( externData, stammdatURL, "Stammdat/tssteu.hwp", "tssteu_hwp.gmc" );
     convertGml( externData, stammdatURL, "Stammdat/ts.std", "ts_std.gmc" );
     convertGml( externData, stammdatURL, "Stammdat/wlmpar.hwp", "wlmpar_hwp.gmc" );
-    convertGml( externData, stammdatURL, "Stammdat/hwsteu.stv", "hwsteu_stv.gmc" );
+    //convertGml( externData, stammdatURL, "Stammdat/hwsteu.stv", "hwsteu_stv.gmc" );
+
+    // hwsteu.stv is no more in the model, just copy it out of the resources
+    final URL resource = getClass().getResource( "resources/HW_STEU.STV" );
+    FileUtils.copyURLToFile( resource, new File( stammdatdir, "HW_STEU.STV" ) );
   }
 
   private void convertGml( final Map externData, final URL stammdatURL, final String filenameForLog,

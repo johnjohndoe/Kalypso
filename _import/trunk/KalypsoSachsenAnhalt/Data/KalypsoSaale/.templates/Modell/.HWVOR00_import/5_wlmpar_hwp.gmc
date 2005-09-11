@@ -2,7 +2,7 @@
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
 	<featuremapping>
-		<csvsource xlink:href="Stammdat/WLMPAR.HWP"  comment="*" delemiter="&#9;">
+		<csvsource xlink:href="Stammdat/WLMPAR.HWP" comment="*" delemiter="&#9;" lineskip="1">
 			<featureproperty name="PNR" type="java.lang.String" format="">   <column>0</column>  </featureproperty>
 			<featureproperty name="IP_1" type="java.lang.Integer" format="">   <column>1</column>  </featureproperty>
 			<featureproperty name="IP_2" type="java.lang.Integer" format="">   <column>2</column>  </featureproperty>

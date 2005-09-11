@@ -1,0 +1,61 @@
+PNR_Modell	Modellart	PNR_Z	PNR_NO	PNR_NU	PNR_NA	Bemerkung
+570210	1	0	0	0	0	Blankenstein
+572010	1	0	0	0	0	Kaulsdorf/Loquitz
+570000	2	570210	0	572010	0	Zufluss Saale-TS, Looquitz als Indikator ZG
+572115	1	0	0	0	0	Schwarzburg
+570270	3	570000	572010	572115	0	Rudolstadt 
+570330	2	570270	0	0	0	Camburg
+572890	1	0	0	0	0	Gräfinau
+572920	2	572890	0	0	0	Niedertrebra
+570340	2	572920	570330	570330	0	SAALECK, Camburg 
+574210	2	572890	0	0	0	Erfurt-Möbisburg, Gräfinau als Indikator
+573010	1	0	0	0	0	Nägelstedt
+573090	2	574210	573010	0	0	TS Straußfurt, Zulauf
+575110	1	0	0	0	0	Wasserthaleben
+575240	1	0	0	0	0	Hachelbich
+575245	2	575240	0	0	0	Wipper Mdg
+573110	3	573090	575110	575245	0	Oldisleben
+575660	1	0	0	0	0	Ilfeld
+575500	2	575660	0	0	0	Nordhausen
+575400	1	0	0	0	0	Sundhausen
+575402	2	575500	575400	0	0	TS Kelbra, Zulauf
+575700	1	0	0	0	0	Stolberg
+575710	2	575700	0	0	0	Berga/Thyra
+575410	3	575402	575700	575700	0	Bennungen, THYRA anteilig Indikator ZG
+575450	2	575410	0	0	0	Nikolausrieth
+573200	2	573110	0	0	0	Bretleben.
+573360	2	573200	575450	0	0	Laucha
+570500	2	572920	573360	572920	0	Naumburg
+576470	4	0	0	0	0	Greiz
+576520	2	576470	0	0	0	Gera-Langenberg
+576610	2	576520	0	0	0	Zeitz
+576631	2	576610	0	0	0	Kleindalzig
+577570	1	0	0	0	0	Böhlen
+576900	2	576631	577570	0	0	Oberthau
+576950	2	576900	0	0	0	W.Elster Anteil in Saale
+570810	2	570500	0	576900	0	Trotha
+578410	1	0	0	0	0	Wippra
+578420	2	578410	0	0	0	Leimbach
+578430	2	578420	0	0	0	Großschierstedt 
+570910	2	570810	0	578430	0	Bernburg
+579305	1	0	0	0	0	Elend
+579205	1	0	0	0	0	Tanne
+579405	1	0	0	0	0	Trautenstein
+579306	2	579305	0	579405	0	RHB KALTE Bode Zulauf, Trautenstein als Indikator
+579000	3	579306	579205	579405	0	KBODE, Steuerung, Trautenstein Indikator ZG
+579014	3	579000	0	0	579999	Überleitungssperre bis Wendefurth, nur Bode
+579011	2	579405	579999	0	0	RAPPBODE Zulauf
+579015	3	579011	0	579014	579013	WENDEFURT Zulauf, Rappbode hier Hauptfluss
+579610	1	0	0	0	0	Meisdorf
+579620	2	579610	0	0	0	Hausneindorf
+579621	2	579620	0	0	0	Selke Mündung neu
+579045	3	579015	0	579620	0	WEGELEBEN
+579712	1	0	0	0	0	MAHNDORF
+579713	2	579712	0	0	0	Holtemme Mdg
+579069	2	579045	0	0	0	Bode bis Holtemme
+579070	2	579069	579713	0	0	Hadmersleben
+579084	2	579070	0	0	0	Pseudo, nur Hilfspunkt
+579085	2	579084	0	0	0	STASSFURT
+570930	2	570910	579085	0	0	CALBE
+553050	4	0	0	0	0	Bad LIEBENWERDA
+553061	2	553050	0	0	0	LOEBEN
