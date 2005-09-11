@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
+import org.kalypso.ogc.gml.map.MapPanel;
+
 /**
  * 
  * @author doemming
@@ -54,7 +56,7 @@ public class SelectWidget extends AbstractSelectWidget
 
   protected int getSelectionMode()
   {
-    return super.MODE_SELECT;
+    return MapPanel.MODE_SELECT;
   }
 
   /**

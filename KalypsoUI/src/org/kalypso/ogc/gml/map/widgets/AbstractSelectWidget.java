@@ -49,12 +49,6 @@ import java.awt.Point;
  */
 public abstract class AbstractSelectWidget extends AbstractWidget
 {
-  public static final int MODE_UNSELECT = 2;
-
-  public static final int MODE_TOGGLE = 1;
-
-  public static final int MODE_SELECT = 0;
-
   public AbstractSelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
@@ -105,7 +99,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
     try
     {
-      getMapPanel().select( m_startPoint, m_endPoint, m_radius );
+      getMapPanel().select( m_startPoint, m_endPoint, m_radius, getSelectionMode(), allowOnlyOneSelectedFeature() );
     }
     finally
     {

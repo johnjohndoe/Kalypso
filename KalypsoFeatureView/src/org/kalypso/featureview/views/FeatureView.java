@@ -130,7 +130,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_featureComposite.dispose();
 
     final IWorkbenchPage page = getSite().getPage();
-    page.getWorkbenchWindow().getSelectionService().removeSelectionListener( m_selectionListener );
+    page.getWorkbenchWindow().getSelectionService().removePostSelectionListener( m_selectionListener );
   }
 
   protected void selectionChanged( final ISelection selection )

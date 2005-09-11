@@ -160,6 +160,14 @@ public class GMLWeightingTask extends Task
           
           // 8. resolve property that is source zml reference
           final TimeseriesLink zmlLink = (TimeseriesLink)sourceFE.getProperty( m_propZMLSource );
+          if( zmlLink == null )
+          {
+            logger.log( "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
+            
+            // IMPORTANT: just skips this weight; leads probably to wrong results
+            continue;
+          }
+          
           // 9. build operation filter with parameters from gml
           final OperationFilter filter = filterFac.createOperationFilter();
           filterList.add( filter );

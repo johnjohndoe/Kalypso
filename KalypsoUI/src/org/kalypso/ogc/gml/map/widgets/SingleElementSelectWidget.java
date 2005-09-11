@@ -40,21 +40,22 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
+import org.kalypso.ogc.gml.map.MapPanel;
+
 /**
  * 
  * @author doemming
  */
 public class SingleElementSelectWidget extends AbstractSelectWidget
 {
-  public SingleElementSelectWidget( String name, String toolTip )
+  public SingleElementSelectWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
-
   }
 
   protected int getSelectionMode()
   {
-    return super.MODE_TOGGLE;
+    return MapPanel.MODE_SELECT;
   }
 
   protected boolean allowOnlyOneSelectedFeature()
