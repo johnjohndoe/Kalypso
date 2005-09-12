@@ -70,13 +70,22 @@
 		<mkdir dir="${calc.dir}/Durchfluss" />
 		<mkdir dir="${calc.dir}/Ombrometer" />
 		<mkdir dir="${calc.dir}/Niederschlag" />
+		<mkdir dir="${calc.dir}/Speicherinhalt" />
 
 		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluss.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,W,Q&lt;/axes&gt;&lt;statusAxes&gt;W,Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
 		</kalypso.copyObservation>
 
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluss_mit_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="wiski_vergangenheit" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,W,Q&lt;/axes&gt;&lt;statusAxes&gt;W,Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+		</kalypso.copyObservation>
+
 		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_ombrometer.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+		</kalypso.copyObservation>
+
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_speicher.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+			<source property="wiski_vergangenheit" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,V&lt;/axes&gt;&lt;statusAxes&gt;V&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
 		</kalypso.copyObservation>
 
 		<!-- nach update immer Gebietsniederschlag aufrufen -->

@@ -65,14 +65,14 @@
 	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 	        </label>
 	
-	        <radiobutton text="Abgabe ist Vorgegeben" style="SWT.NONE" tooltip="" property="ST_Art" valueToSet="2">
+	        <radiobutton text="Abgabe ist vorgegeben" style="SWT.NONE" tooltip="" property="ST_Art" valueToSet="2">
 	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 	        </radiobutton>
 	        <label style="SWT.NONE" visible="false">
 	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 	        </label>
 
-	        <radiobutton text="Steuerpegel ist Vorgegeben" style="SWT.NONE" tooltip="" property="ST_Art" valueToSet="3">
+	        <radiobutton text="Steuerpegel ist vorgegeben" style="SWT.NONE" tooltip="" property="ST_Art" valueToSet="3">
 	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 	        </radiobutton>
 	        <label style="SWT.NONE" visible="false">

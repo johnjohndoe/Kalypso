@@ -266,7 +266,7 @@
 	<!-- KONTROLLE DER ZEITREIHEN - WASSERSTAND / ABFLUSS (Messung und manchmal auch Prognose) -->
 	<!-- abwechselnd mit STEUERUNG DER TALSPERREN -->
 	<!-- TS-Steuerungs-Gruppe 10 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Saale-Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_10"/>
@@ -297,7 +297,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_10"/>
@@ -310,10 +310,15 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_10.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
         <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_10.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_10.gft"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 20 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -347,7 +352,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_20"/>
@@ -360,10 +365,15 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_20.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
         <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_20.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_20.gft"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 30 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -397,7 +407,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_30"/>
@@ -410,10 +420,15 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
-        <!--
+		<arg name="rightSash" value="100"/>
+ 		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_30.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+       <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_30.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_30.gft"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 40 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -447,7 +462,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_40"/>
@@ -460,10 +475,15 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
-        <!--
+		<arg name="rightSash" value="100"/>
+ 		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_40.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+       <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_40.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_40.gft"/>
 	</page>	
     <!-- TS-Steuerungs-Gruppe 50 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -529,7 +549,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der HWS Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_55"/>
@@ -542,10 +562,15 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
-        <!--
+		<arg name="rightSash" value="100"/>
+ 		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_55.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+       <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_55.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_55.gft"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 60 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Überleitungsperre Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -579,7 +604,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Überleitungssperre Königshütte" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_60"/>
@@ -592,13 +617,18 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_60.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
         <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_60.gft"/>	
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_60.gft"/>	
 	</page>
     <!-- TS-Steuerungs-Gruppe 65 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_65"/>
@@ -611,10 +641,15 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
-       <!--
+		<arg name="rightSash" value="100"/>
+ 		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_65.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+      <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_65.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_65.gft"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 70 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -648,7 +683,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_70"/>
@@ -661,10 +696,15 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_70.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
         <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_70.gmt"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_70.gmt"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 80 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -698,7 +738,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_80"/>
@@ -711,10 +751,15 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="50"/>
-        <!--
+		<arg name="rightSash" value="100"/>
+ 		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_80.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+       <!--
         FeatureView -->
-		<arg name="featViewTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_80.gmt"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_80.gmt"/>
 		<!-- 
         Ant-Knopf -->
 		<arg name="buttonText" value="Vorhersage durchführen"/>

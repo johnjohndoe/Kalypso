@@ -10,6 +10,12 @@
 				<Name>Speicher</Name>
 				<Rule>
 					<Name>Speicher</Name>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+					  <ogc:PropertyIsEqualTo>
+					    <ogc:PropertyName>PNR</ogc:PropertyName>
+					    <ogc:Literal>579330</ogc:Literal>
+					  </ogc:PropertyIsEqualTo>
+					</ogc:Filter>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
 					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
 					<PointSymbolizer>
