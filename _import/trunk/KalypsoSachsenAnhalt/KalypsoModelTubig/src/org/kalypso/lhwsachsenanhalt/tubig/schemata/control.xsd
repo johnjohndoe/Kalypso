@@ -96,7 +96,9 @@
 		<complexContent>
 			<extension base="tubigcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element ref="tubig:BatchIDAssociation" minOccurs="1" maxOccurs="unbounded"/>
+					<!-- nur eine Rechnung auf einmal -->
+					<!-- <element ref="tubig:BatchIDAssociation" minOccurs="1" maxOccurs="unbounded"/> -->
+					<element ref="tubig:BatchIDAssociation" minOccurs="1" maxOccurs="1"/>
 				</sequence>
 			</extension>
 		</complexContent>
