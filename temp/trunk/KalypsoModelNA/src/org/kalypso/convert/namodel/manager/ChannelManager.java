@@ -249,7 +249,6 @@ public class ChannelManager extends AbstractManager
         System.out.println( "Es existiert keine (gültige) WQV-Beziehung für das Rückhaltebecken, ID: "
             + idManager.getAsciiID( feature ) );
       }
-      asciiBuffer.getRhbBuffer().append( "\n" );
 
       // Kommentar Ende Speicher
       // RHB 12

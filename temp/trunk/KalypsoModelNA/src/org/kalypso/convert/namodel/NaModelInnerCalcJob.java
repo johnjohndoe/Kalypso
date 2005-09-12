@@ -782,13 +782,13 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     //    j Temperatur .tmp
     if( suffix.equalsIgnoreCase( "tmp" ) )
-      return "Temperatur TG";
+      return "Temperatur Teilgebiet";
     //    j Niederschlag .pre
     if( suffix.equalsIgnoreCase( "pre" ) )
-      return "Niederschlag TG";
+      return "Niederschlag Teilgebiet";
     //    n Schnee .sch
     if( suffix.equalsIgnoreCase( "sch" ) )
-      return "Schneehöhe TG";
+      return "Schneehöhe Teilgebiet";
     //    j Bodenfeuchte .bof
     if( suffix.equalsIgnoreCase( "bof" ) )
       return "Bodenfeuchte";
@@ -797,25 +797,25 @@ public class NaModelInnerCalcJob implements ICalcJob
       return "Bodenspeicherbilanz";
     //    n Grundwasserstand .gws
     if( suffix.equalsIgnoreCase( "gws" ) )
-      return "Grundwasserstand TG";
+      return "Grundwasserstand Teilgebiet";
     //    j Gesamtabfluss Knoten .qgs
     if( suffix.equalsIgnoreCase( "qgs" ) )
       return "Gesamtabfluss Knoten";
     //    n Gesamtabfluss TG .qgg
     if( suffix.equalsIgnoreCase( "qgg" ) )
-      return "Gesamtabfluss TG";
+      return "Gesamtabfluss Teilgebiet";
     //    n Oberflaechenabfluss .qna
     if( suffix.equalsIgnoreCase( "qna" ) )
-      return "Oberflaechenabfluss nat. Flaechen TG";
+      return "Oberflaechenabfluss nat. Flaechen Teilgebiet";
     //    n Interflow .qif
     if( suffix.equalsIgnoreCase( "qif" ) )
-      return "Interflow TG";
+      return "Interflow Teilgebiet";
     //    n Abfluss vers. Flaechen .qvs
     if( suffix.equalsIgnoreCase( "qvs" ) )
-      return "Abfluss vers. Flaechen TG";
+      return "Abfluss vers. Flaechen Teilgebiet";
     //    n Basisabfluss .qbs
     if( suffix.equalsIgnoreCase( "qbs" ) )
-      return "Basisabfluss TG";
+      return "Basisabfluss Teilgebiet";
     //    n Kluftgrundw1 .qt1
     if( suffix.equalsIgnoreCase( "qt1" ) )
       return "Abfluss Kluftgrundw1";
@@ -824,7 +824,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       return "Abfluss KluftGW";
     //    n Grundwasser .qgw
     if( suffix.equalsIgnoreCase( "qgw" ) )
-      return "Grundwasserabfluss TG";
+      return "Grundwasserabfluss Teilgebiet";
     //    n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) )
       return "Evapotranspiration";
@@ -839,10 +839,10 @@ public class NaModelInnerCalcJob implements ICalcJob
       return "Statistische Abflusswerte";
     //    n Speicherinhalt .spi
     if( suffix.equalsIgnoreCase( "spi" ) )
-      return "Speicherinhalt";
+      return "Füllvolumen Speicher";
     //    n Wasserspiegelhöhe .sph
     if( suffix.equalsIgnoreCase( "sph" ) )
-      return "Wasserspiegelhöhe";
+      return "Wasserspiegelhöhe Speicher";
     //    n Verdunstung aus Talsperre .spv
     if( suffix.equalsIgnoreCase( "spv" ) )
       return "Talsperrenverdunstung";
@@ -870,6 +870,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         modellWorkspace, logger, outputDir, 1.0d, conf );
 
     FeatureType catchmentFT = modellWorkspace.getFeatureType( "Catchment" );
+    FeatureType rhbChannelFT = modellWorkspace.getFeatureType( "StorageChannel" );
     //    j Niederschlag .pre
     loadTSResults( "pre", catchmentFT, "name", TimeserieConstants.TYPE_RAINFALL, null, null, inputDir, modellWorkspace,
         logger, outputDir, 1.0d, conf );
@@ -914,20 +915,22 @@ public class NaModelInnerCalcJob implements ICalcJob
     loadTSResults( "bof", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
         modellWorkspace, logger, outputDir, 0.1d, conf );
 
+    
+    //Straenge
     //    n Wasserstand Speicher .sph [muNN]
-    loadTSResults( "sph", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
-        modellWorkspace, logger, outputDir, 100.0d, conf );
+    loadTSResults( "sph", rhbChannelFT, "name", TimeserieConstants.TYPE_NORMNULL, null, null, inputDir,
+        modellWorkspace, logger, outputDir, 1.0d, conf );
     //    n Speicherueberlauf .sup [m³/s]
-    loadTSResults( "sup", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
+    loadTSResults( "sup", rhbChannelFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
         logger, outputDir, 1.0d, conf );
+//        n Speicherinhalt .spi [hm³]
+        loadTSResults( "spi", rhbChannelFT, "name", TimeserieConstants.TYPE_VOLUME, null, null, inputDir,
+            modellWorkspace, logger, outputDir, 1.0d , conf);
     //    n Talsperrenverdunstung .spv [m³/d]
     //    loadTSResults( "spv", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
     //        modellWorkspace, logger, outputDir, 1.0d , idManager);
     //    n Zehrung .spn [m³/d]
     //    loadTSResults( "spn", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
-    //        modellWorkspace, logger, outputDir, 1.0d , idManager);
-    //    n Speicherinhalt .spi [hm³]
-    //    loadTSResults( "spi", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
     //        modellWorkspace, logger, outputDir, 1.0d , idManager);
 
     //    n Kapil.Aufstieg/Perkolation .kap [mm]
@@ -956,14 +959,17 @@ public class NaModelInnerCalcJob implements ICalcJob
       final BlockTimeSeries ts = new BlockTimeSeries();
       ts.importBlockFile( qgsFiles[0] );
 
-      // iterate model nodes and generate zml
+      // iterate model nodes/Catchments/rhbChannels and generate zml
 
       final Feature[] nodeFEs = modellWorkspace.getFeatures( resultFT );
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
+        if( resultFT == (modellWorkspace.getFeatureType("Node"))||resultFT == (modellWorkspace.getFeatureType("Catchment")))
+        {
         if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
           continue; // should not generate results
+        }
         //        final String key = FeatureHelper.getAsString( feature, keyPropName );
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
         final String feID = feature.getId();
