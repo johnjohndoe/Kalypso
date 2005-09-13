@@ -4,14 +4,10 @@ import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
 
 public interface IProfilDevider
 {
-  public static enum PROPERTY
-  {
-    RAUHEIT, BEIWERT,TRENNERPOSITION 
-  };
-
+  
   public Object getValueFor( final Object key);
 
-  public void setValueFor( final Object key,final Object value );
+  //public void setValueFor( final Object key,final Object value );
 
   public IProfilPoint getPoint( );
 

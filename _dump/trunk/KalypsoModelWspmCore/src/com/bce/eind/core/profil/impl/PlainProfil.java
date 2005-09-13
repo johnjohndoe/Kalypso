@@ -451,7 +451,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
   public void setValueFor( IProfilDevider devider, Object property,Object value )
   {
-    devider.setValueFor( property,value );
+    ((ProfilDevider)devider).setValueFor( property,value );
 
   }
 

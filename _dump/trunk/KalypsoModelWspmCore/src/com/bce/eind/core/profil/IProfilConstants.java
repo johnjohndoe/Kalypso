@@ -22,7 +22,7 @@ public interface IProfilConstants
 
   public enum DEVIDER_PROPERTY
   {
-    BOESCHUNG, SOHLE
+    BOESCHUNG, RAUHEIT, BEIWERT
   };
 
   /** alle möglichen Rauheiten eines Profils */
