@@ -29,6 +29,8 @@
  */
 package org.kalypso.ogc.gml.selection;
 
+import java.util.List;
+
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -43,4 +45,11 @@ public interface IFeatureSelectionManager extends IFeatureSelection
   public void addSelectionListener( final IFeatureSelectionListener l );
 
   public void removeSelectionListener( final IFeatureSelectionListener l );
+  
+  /**
+   * Return the list of features
+   * 
+   * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
+   */
+  public List toList();
 }
