@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <SaaleModell fid="root" xmlns:wlm="org.kalypso.saale.wlm" xmlns="org.kalypso.saale.modell" xmlns:pegel="org.kalypso.saale.pegel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:speicher="org.kalypso.saale.speicher" xmlns:common="org.kalypso.saale.common" xmlns:gml="http://www.opengis.net/gml" xmlns:ombrometer="org.kalypso.saale.ombrometer" xsi:schemaLocation="org.kalypso.saale.modell file:///D:/Kalypso/KalypsoSaalePlugin/src/org/kalypso/lhwsachsenanhalt/saale/schemata/saalemodell.xsd">
   <pegel:PegelCollectionAssociation>
     <pegel:PegelCollection fid="Pegel">
@@ -73,7 +73,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region>ThÃ¼ringer Wald</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -249,7 +249,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region>ThÃ¼ringer Wald</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -419,7 +419,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region>ThÃ¼ringer Wald</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -595,7 +595,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region>ThÃ¼ringer Wald</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -879,7 +879,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="ID570330">
           <pegel:PNR>570330</pegel:PNR>
-          <pegel:Name>Camburg-Stöben</pegel:Name>
+          <pegel:Name>Camburg-StÃ¶ben</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -932,7 +932,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Camburg-Stöben</pegel:Reserve10>
+          <pegel:Reserve10>Camburg-StÃ¶ben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1055,7 +1055,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="ID572890">
           <pegel:PNR>572890</pegel:PNR>
-          <pegel:Name>Gräfinau-Angstedt</pegel:Name>
+          <pegel:Name>GrÃ¤finau-Angstedt</pegel:Name>
           <pegel:Gewaesser>Ilm</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -1108,7 +1108,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Gräfinau-Angstedt</pegel:Reserve10>
+          <pegel:Reserve10>GrÃ¤finau-Angstedt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1123,7 +1123,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region>ThÃ¼ringer Wald</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -1407,7 +1407,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="ID574210">
           <pegel:PNR>574210</pegel:PNR>
-          <pegel:Name>Erfurt - Möbisburg</pegel:Name>
+          <pegel:Name>Erfurt - MÃ¶bisburg</pegel:Name>
           <pegel:Gewaesser>Gera</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -1460,7 +1460,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Erfurt - Möbisburg</pegel:Reserve10>
+          <pegel:Reserve10>Erfurt - MÃ¶bisburg</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1475,7 +1475,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Thüringer Wald</pegel:Region>
+          <pegel:Region>ThÃ¼ringer Wald</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -1595,7 +1595,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="ID573010">
           <pegel:PNR>573010</pegel:PNR>
-          <pegel:Name>Nägelstedt</pegel:Name>
+          <pegel:Name>NÃ¤gelstedt</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -1648,7 +1648,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Nägelstedt</pegel:Reserve10>
+          <pegel:Reserve10>NÃ¤gelstedt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -1765,7 +1765,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="ID573090">
           <pegel:PNR>573090</pegel:PNR>
-          <pegel:Name>Straußfurt Zulauf</pegel:Name>
+          <pegel:Name>StrauÃŸfurt Zulauf</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -1818,7 +1818,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Straußfurt Zulauf</pegel:Reserve10>
+          <pegel:Reserve10>StrauÃŸfurt Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -3387,7 +3387,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region>Flachland-SÃ¼d</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -3563,7 +3563,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region>Flachland-SÃ¼d</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -3672,7 +3672,7 @@
         <pegel:Gebiet fid="ID576470">
           <pegel:PNR>576470</pegel:PNR>
           <pegel:Name>Greiz</pegel:Name>
-          <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:Gewaesser>WeiÃŸe Elster</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>40</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
@@ -3842,7 +3842,7 @@
         <pegel:Gebiet fid="ID576520">
           <pegel:PNR>576520</pegel:PNR>
           <pegel:Name>Gera-Langenberg</pegel:Name>
-          <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:Gewaesser>WeiÃŸe Elster</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
@@ -4012,7 +4012,7 @@
         <pegel:Gebiet fid="ID576610">
           <pegel:PNR>576610</pegel:PNR>
           <pegel:Name>Zeitz</pegel:Name>
-          <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:Gewaesser>WeiÃŸe Elster</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
@@ -4187,8 +4187,8 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="ID577570">
           <pegel:PNR>577570</pegel:PNR>
-          <pegel:Name>Böhlen</pegel:Name>
-          <pegel:Gewaesser>Pleiße</pegel:Gewaesser>
+          <pegel:Name>BÃ¶hlen</pegel:Name>
+          <pegel:Gewaesser>PleiÃŸe</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SN</pegel:Land>
@@ -4240,7 +4240,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Böhlen</pegel:Reserve10>
+          <pegel:Reserve10>BÃ¶hlen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -4255,7 +4255,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region>Flachland-SÃ¼d</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -4370,7 +4370,7 @@
         <pegel:Gebiet fid="ID576900">
           <pegel:PNR>576900</pegel:PNR>
           <pegel:Name>Oberthau</pegel:Name>
-          <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:Gewaesser>WeiÃŸe Elster</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
@@ -4437,7 +4437,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region>Flachland-SÃ¼d</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -4607,7 +4607,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region>Flachland-SÃ¼d</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -5049,7 +5049,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="ID578430">
           <pegel:PNR>578430</pegel:PNR>
-          <pegel:Name>Großschierstedt</pegel:Name>
+          <pegel:Name>GroÃŸschierstedt</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -5102,7 +5102,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Großschierstedt</pegel:Reserve10>
+          <pegel:Reserve10>GroÃŸschierstedt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">4467540.0,5735500.0</gml:coordinates>
@@ -5117,7 +5117,7 @@
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
-          <pegel:Region>Flachland-Süd</pegel:Region>
+          <pegel:Region>Flachland-SÃ¼d</pegel:Region>
           <pegel:LM1>0</pegel:LM1>
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
@@ -7635,7 +7635,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="ID553061">
           <pegel:PNR>553061</pegel:PNR>
-          <pegel:Name>Löben</pegel:Name>
+          <pegel:Name>LÃ¶ben</pegel:Name>
           <pegel:Gewaesser>Schwarze Elster</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -7688,7 +7688,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Löben</pegel:Reserve10>
+          <pegel:Reserve10>LÃ¶ben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -7951,7 +7951,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="ID573100">
           <pegel:PNR>573100</pegel:PNR>
-          <pegel:Name>Straußfurt Abgabe</pegel:Name>
+          <pegel:Name>StrauÃŸfurt Abgabe</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
@@ -8004,7 +8004,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Straußfurt Abgabe</pegel:Reserve10>
+          <pegel:Reserve10>StrauÃŸfurt Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8021,7 +8021,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="ID575245">
           <pegel:PNR>575245</pegel:PNR>
-          <pegel:Name>Wippermündung</pegel:Name>
+          <pegel:Name>WippermÃ¼ndung</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8074,7 +8074,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Wippermündung</pegel:Reserve10>
+          <pegel:Reserve10>WippermÃ¼ndung</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8442,7 +8442,7 @@
         <pegel:Pegel fid="ID576631">
           <pegel:PNR>576631</pegel:PNR>
           <pegel:Name>Kleindalzig</pegel:Name>
-          <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:Gewaesser>WeiÃŸe Elster</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SN</pegel:Land>
@@ -8511,8 +8511,8 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="ID576950">
           <pegel:PNR>576950</pegel:PNR>
-          <pegel:Name>Elstermündung</pegel:Name>
-          <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
+          <pegel:Name>ElstermÃ¼ndung</pegel:Name>
+          <pegel:Gewaesser>WeiÃŸe Elster</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
@@ -8564,7 +8564,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Elstermündung</pegel:Reserve10>
+          <pegel:Reserve10>ElstermÃ¼ndung</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8581,7 +8581,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="ID579621">
           <pegel:PNR>579621</pegel:PNR>
-          <pegel:Name>Mündung</pegel:Name>
+          <pegel:Name>MÃ¼ndung</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
@@ -8634,7 +8634,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Mündung</pegel:Reserve10>
+          <pegel:Reserve10>MÃ¼ndung</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -8721,7 +8721,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="ID579330">
           <pegel:PNR>579330</pegel:PNR>
-          <pegel:Name>Königsh./HWR - Abgabe</pegel:Name>
+          <pegel:Name>KÃ¶nigsh./HWR - Abgabe</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
@@ -8774,7 +8774,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Königsh./HWR - Abgabe</pegel:Reserve10>
+          <pegel:Reserve10>KÃ¶nigsh./HWR - Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">4413680.0,5735760.0</gml:coordinates>
@@ -8791,7 +8791,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="ID579000">
           <pegel:PNR>579000</pegel:PNR>
-          <pegel:Name>Ül-Spere, Zulauf</pegel:Name>
+          <pegel:Name>Ãœl-Spere, Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8844,7 +8844,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Ül-Spere, Zulauf</pegel:Reserve10>
+          <pegel:Reserve10>Ãœl-Spere, Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">4417540.0,5734200.0</gml:coordinates>
@@ -8861,7 +8861,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="ID579999">
           <pegel:PNR>579999</pegel:PNR>
-          <pegel:Name>ÜL zur Rappbode</pegel:Name>
+          <pegel:Name>ÃœL zur Rappbode</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
@@ -8914,7 +8914,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>ÜL zur Rappbode</pegel:Reserve10>
+          <pegel:Reserve10>ÃœL zur Rappbode</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
@@ -9071,7 +9071,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="ID579001">
           <pegel:PNR>579001</pegel:PNR>
-          <pegel:Name>Hirtenstieg/ÜL-Abgabe</pegel:Name>
+          <pegel:Name>Hirtenstieg/ÃœL-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe/>
           <pegel:ZG>-1</pegel:ZG>
@@ -9124,7 +9124,7 @@
           <pegel:Reserve7>0</pegel:Reserve7>
           <pegel:Reserve8>0</pegel:Reserve8>
           <pegel:Reserve9>0</pegel:Reserve9>
-          <pegel:Reserve10>Hirtenstieg/ÜL-Abgabe</pegel:Reserve10>
+          <pegel:Reserve10>Hirtenstieg/ÃœL-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31468">
               <gml:coordinates cs="," decimal="." ts=" ">4417500.0,5734180.0</gml:coordinates>
@@ -19356,13 +19356,13 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="ID573100">
           <speicher:PNR>573100</speicher:PNR>
-          <speicher:Name>TS Straußfurt</speicher:Name>
+          <speicher:Name>TS StrauÃŸfurt</speicher:Name>
           <speicher:Gewaesser>Unstrut</speicher:Gewaesser>
           <speicher:MaxInhalt>18.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>573090</speicher:PNR-Zufluss>
           <speicher:PNR_ST>573110</speicher:PNR_ST>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
-          <speicher:TS_NAME>TS Straußfurt</speicher:TS_NAME>
+          <speicher:TS_NAME>TS StrauÃŸfurt</speicher:TS_NAME>
           <speicher:STEUNAME>Oldisleben</speicher:STEUNAME>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
@@ -19479,7 +19479,7 @@
           <speicher:PNR_ST>579000</speicher:PNR_ST>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
           <speicher:TS_NAME>HWS Kalte Bode</speicher:TS_NAME>
-          <speicher:STEUNAME>Überleitungssperre, Zulauf</speicher:STEUNAME>
+          <speicher:STEUNAME>Ãœberleitungssperre, Zulauf</speicher:STEUNAME>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -19530,15 +19530,15 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="ID579001">
           <speicher:PNR>579001</speicher:PNR>
-          <speicher:Name>Überleitungssperre</speicher:Name>
+          <speicher:Name>Ãœberleitungssperre</speicher:Name>
           <speicher:Gewaesser>Bode</speicher:Gewaesser>
           <speicher:MaxInhalt>1.2</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579000</speicher:PNR-Zufluss>
           <speicher:PNR_ST>579014</speicher:PNR_ST>
           <speicher:PNR_NA>579999</speicher:PNR_NA>
-          <speicher:TS_NAME>Überleitungssperre Königshütte</speicher:TS_NAME>
+          <speicher:TS_NAME>Ãœberleitungssperre KÃ¶nigshÃ¼tte</speicher:TS_NAME>
           <speicher:STEUNAME>TS-Wendefurth, Bode-Anteil</speicher:STEUNAME>
-          <speicher:UELNAME>Überleitung Rappbode</speicher:UELNAME>
+          <speicher:UELNAME>Ãœberleitung Rappbode</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>-1</speicher:ST_Art>
           <speicher:QG1>25</speicher:QG1>
@@ -19812,7 +19812,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="ID110814">
-          <ombrometer:Name>Schmücke</ombrometer:Name>
+          <ombrometer:Name>SchmÃ¼cke</ombrometer:Name>
           <ombrometer:NR>110814</ombrometer:NR>
           <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
           <gml:location>

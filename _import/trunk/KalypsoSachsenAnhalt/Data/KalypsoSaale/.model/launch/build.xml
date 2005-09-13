@@ -50,7 +50,10 @@
 	<!-- ================================= 
           target: create              
          ================================= -->
+<!--
 	<target name="create" depends="calculationProperties" description="Erzeugt eine Rechenvariante">
+-->
+	<target name="create" description="Erzeugt eine Rechenvariante">
 		<!-- TODO -->
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
 

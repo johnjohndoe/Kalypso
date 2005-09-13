@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5721478.061822312" left="5195099.084341427" right="5277755.3589609135" top="5797605.599400317"/>
+    <extent bottom="5723070.060091743" left="5185871.167671617" right="5257040.731981197" srs="EPSG:31469" top="5796893.40476541"/>
     <layers active="ID_1">
         <layer name="Niederschlagsgebiete" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Niederschlagsgebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Niederschlagsgebiete" ns1:actuate="onRequest" ns1:href="project:/.styles/niederschlagsgebiete.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>

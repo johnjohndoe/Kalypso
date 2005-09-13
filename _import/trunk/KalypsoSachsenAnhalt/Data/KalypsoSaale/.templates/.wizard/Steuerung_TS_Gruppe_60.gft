@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org">
-    <layer featurePath="#fid#ID579001" id="layer_1" linktype="gml" ns1:href="modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+    <layer featurePath="#fid#ID579001" id="ID_1" linktype="gml" ns1:href="modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink"/>
     <view typename="Speicher" style="SWT.NONE">
         <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
         <gridLayout numColumns="3"/>
@@ -66,27 +66,6 @@
 	        </label>
 	
 	        <radiobutton text="Abgabe ist vorgegeben" style="SWT.NONE" tooltip="" property="ST_Art" valueToSet="2">
-	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-	        </radiobutton>
-	        <label style="SWT.NONE" visible="false">
-	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-	        </label>
-
-	        <radiobutton text="Steuerpegel ist vorgegeben" style="SWT.NONE" tooltip="" property="ST_Art" valueToSet="3">
-	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-	        </radiobutton>
-	        <label style="SWT.NONE" visible="false">
-	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-	        </label>
-
-	        <radiobutton text="Abgabe ist vorgegeben und Unterfahren Steuerpegel" style="SWT.NONE" tooltip="" property="ST_Art" valueToSet="4">
-	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-	        </radiobutton>
-	        <label style="SWT.NONE" visible="false">
-	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-	        </label>
-
-	        <radiobutton text="Abgabe = Zufluss und Unterfahren Steuerpegel" style="SWT.NONE" tooltip="" property="ST_Art" valueToSet="5">
 	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 	        </radiobutton>
 	        <label style="SWT.NONE" visible="false">

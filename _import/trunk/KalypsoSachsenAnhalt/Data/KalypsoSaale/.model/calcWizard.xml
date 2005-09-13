@@ -319,6 +319,8 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_10.gft"/>
+		<arg name="selectFeatureID" value="ID570250"/>
+		<arg name="pantoFeatureId" value="ID570250"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 20 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -374,6 +376,8 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_20.gft"/>
+		<arg name="selectFeatureID" value="ID573100"/>
+		<arg name="pantoFeatureId" value="ID573100"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 30 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -429,9 +433,11 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_30.gft"/>
+		<arg name="selectFeatureID" value="ID575406"/>
+		<arg name="pantoFeatureId" value="ID575406"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 40 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_40"/>
@@ -462,7 +468,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_40"/>
@@ -484,6 +490,8 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_40.gft"/>
+		<arg name="selectFeatureID" value="ID576470"/>
+		<arg name="pantoFeatureId" value="ID576470"/>
 	</page>	
     <!-- TS-Steuerungs-Gruppe 50 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -571,6 +579,8 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_55.gft"/>
+		<arg name="selectFeatureID" value="ID579330"/>
+		<arg name="pantoFeatureId" value="ID579330"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 60 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Überleitungsperre Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -626,6 +636,8 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_60.gft"/>	
+		<arg name="selectFeatureID" value="ID579001"/>
+		<arg name="pantoFeatureId" value="ID579001"/>
 	</page>
     <!-- TS-Steuerungs-Gruppe 65 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -650,6 +662,8 @@
       <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_65.gft"/>
+		<arg name="selectFeatureID" value="ID579012"/>
+		<arg name="pantoFeatureId" value="ID579012"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 70 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -704,10 +718,12 @@
 		<arg name="maximizeMap" value="false"/>
         <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_70.gmt"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_70.gft"/>
+		<arg name="selectFeatureID" value="ID579006"/>
+		<arg name="pantoFeatureId" value="ID579006"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 80 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_80"/>
@@ -738,7 +754,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_80"/>
@@ -759,7 +775,9 @@
 		<arg name="maximizeMap" value="false"/>
        <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_80.gmt"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_80.gft"/>
+		<arg name="selectFeatureID" value="ID553050"/>
+		<arg name="pantoFeatureId" value="ID553050"/>
 		<!-- 
         Ant-Knopf -->
 		<arg name="buttonText" value="Vorhersage durchführen"/>

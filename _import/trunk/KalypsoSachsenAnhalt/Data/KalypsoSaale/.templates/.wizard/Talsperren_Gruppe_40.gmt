@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5642478.510449822" left="5173500.990344406" right="5288813.993522837" srs="EPSG:31469" top="5752574.544685704"/>
+    <extent bottom="5701381.740047902" left="5194493.849470469" right="5245784.641258107" srs="EPSG:31469" top="5745406.935803909"/>
     <layers active="ID_1">
-        <layer name="Talsperren Gruppe 20" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-            <ns2:style linktype="sld" style="Speicher" ns1:actuate="onRequest" ns1:href="project:/.styles/talsperren_gruppe_20.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        <layer name="Talsperren Gruppe 40" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/talsperren_gruppe_40.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
         <layer name="Talsperren" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
             <ns4:style linktype="sld" style="Speicher" ns3:actuate="onRequest" ns3:href="project:/.styles/speicher.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
         </layer>
         <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
-            <ns6:style linktype="sld" style="Eingabepegel" ns5:actuate="onRequest" ns5:href="project:/.styles/eingabepegel_ts_gruppe_20.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
+            <ns6:style linktype="sld" style="Eingabepegel" ns5:actuate="onRequest" ns5:href="project:/.styles/eingabepegel_ts_gruppe_30.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
         </layer>
         <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:actuate="onRequest" ns7:href="project:/.shape/Gewässerflächen#EPSG:31468" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
             <ns8:style linktype="sld" style="seen" ns7:actuate="onRequest" ns7:href="project:/.styles/seen.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
