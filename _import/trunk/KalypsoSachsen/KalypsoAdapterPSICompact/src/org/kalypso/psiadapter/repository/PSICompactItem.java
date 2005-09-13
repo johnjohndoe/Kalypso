@@ -101,11 +101,11 @@ public class PSICompactItem implements IRepositoryItem
       if( adaptable && anotherClass == IObservation.class )
         return new PSICompactObservationItem( getName(), getIdentifier(), m_objectInfo, m_valueType );
     }
-    catch( ECommException e )
+    catch( final ECommException e )
     {
       e.printStackTrace();
 
-      return null;
+      throw new IllegalStateException( e.getLocalizedMessage() );
     }
 
     return null;
