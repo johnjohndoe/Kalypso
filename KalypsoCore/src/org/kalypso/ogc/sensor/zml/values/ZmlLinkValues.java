@@ -129,7 +129,7 @@ public class ZmlLinkValues implements IZmlValues
     try
     {
       // get item from csv file
-      final String item = m_csv.getItem( index, m_column );
+      final String item = m_csv.getItem( index, m_column ).trim();
 
       // parse item using axis parser
       final Object obj = m_parser.parse( item );
