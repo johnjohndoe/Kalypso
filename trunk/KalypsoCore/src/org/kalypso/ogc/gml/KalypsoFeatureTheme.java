@@ -335,6 +335,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         result = new HashSet();
       m_vaildEnvelope = null;
       restyle( env );
+      
+      // TODO: causes concurrent modification exception, use arrays instead
       for( Iterator iter = m_dispayElements.iterator(); iter.hasNext(); )
         result.add( ( (DisplayElement[])iter.next() )[0].getFeature() );
       return result;

@@ -378,7 +378,7 @@ public class GMLSchemaFactory
 
   private static Annotation createAnnotation( Element element )
   {
-    String lang = element.getAttributeNS( "http://www.w3.org/XML/1998/namespace", "lang" );
+    final String lang = element.getAttributeNS( "http://www.w3.org/XML/1998/namespace", "lang" );
     final String tooltip = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "tooltip" );
     final String label = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema", "label" );
     final String description = XMLHelper.getStringFromChildElement( element, "http://www.w3.org/2001/XMLSchema",
