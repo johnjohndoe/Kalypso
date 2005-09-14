@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -68,7 +67,7 @@ public class SimpleObservation implements IObservation
 
   private boolean m_editable;
 
-  private IXlink m_target;
+  private Object m_target;
 
   private MetadataList m_metadata;
 
@@ -93,13 +92,13 @@ public class SimpleObservation implements IObservation
   }
 
   public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
-      final IXlink target, final MetadataList metadata, final IAxis[] axes )
+      final Object target, final MetadataList metadata, final IAxis[] axes )
   {
     this( href, identifier, name, editable, target, metadata, axes, new SimpleTuppleModel( axes ) );
   }
 
   public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
-      final IXlink target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
+      final Object target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
   {
     m_href = href;
     m_identifier = identifier;
@@ -130,7 +129,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public IXlink getTarget()
+  public Object getTarget()
   {
     return m_target;
   }

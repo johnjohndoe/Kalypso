@@ -171,7 +171,7 @@ public class ObservationPlot extends XYPlot
   {
     clearCurves();
   }
-  
+
   /**
    * Adds a diagram axis and configures it for the use in this plot.
    */
@@ -184,7 +184,7 @@ public class ObservationPlot extends XYPlot
       vAxis = (ValueAxis)OF.getObjectInstance( diagAxis.getDataType(), ValueAxis.class, new Object[]
       { diagAxis.toFullString() } );
     }
-    catch( FactoryException e )
+    catch( final FactoryException e )
     {
       throw new SensorException( e );
     }
@@ -201,7 +201,7 @@ public class ObservationPlot extends XYPlot
 
     if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
     {
-      int pos = getDomainPos();
+      int pos = getAdequateDomainPos();
       setDomainAxis( pos, vAxis );
       setDomainAxisLocation( pos, loc );
 
@@ -209,7 +209,7 @@ public class ObservationPlot extends XYPlot
     }
     else
     {
-      int pos = getRangePos();
+      int pos = getAdequateRangePos();
       setRangeAxis( pos, vAxis );
       setRangeAxisLocation( pos, loc );
 
@@ -219,7 +219,10 @@ public class ObservationPlot extends XYPlot
     m_diag2chartAxis.put( diagAxis, vAxis );
   }
 
-  private int getDomainPos()
+  /**
+   * @return adequate position for a new domain axis
+   */
+  private int getAdequateDomainPos()
   {
     final int count = getDomainAxisCount();
     if( count == 0 )
@@ -232,7 +235,10 @@ public class ObservationPlot extends XYPlot
     return count;
   }
 
-  private int getRangePos()
+  /**
+   * @return adequate position for a new range axis
+   */
+  private int getAdequateRangePos()
   {
     final int count = getRangeAxisCount();
     if( count == 0 )
@@ -243,6 +249,22 @@ public class ObservationPlot extends XYPlot
         return i;
 
     return count;
+  }
+
+  /**
+   * @return adequate position for a new dataset
+   */
+  private int getAdequateDatasetPos()
+  {
+    final int count = getDatasetCount();
+    if( count == 0 )
+      return 0;
+    
+    for( int i = 0; i < count; i++ )
+      if( getDataset( i ) == null )
+        return i;
+      
+      return count;
   }
 
   /**
@@ -315,9 +337,9 @@ public class ObservationPlot extends XYPlot
       throw new IllegalArgumentException( "Kann Kurve " + curve
           + " im Diagramm nicht hinzufügen. Die Achsen sind nicht gültig." );
 
-    final XYCurveSerie xyc = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
+    final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
 
-    m_curve2serie.put( curve, xyc );
+    m_curve2serie.put( curve, serie );
 
     final DiagramAxis key = yDiagAxis;
 
@@ -329,8 +351,7 @@ public class ObservationPlot extends XYPlot
 
       m_diagAxis2ds.put( key, cds );
 
-      final int pos = m_diagAxis2ds.values().size();
-
+      final int pos = getAdequateDatasetPos();
       setDataset( pos, cds );
 
       final XYItemRenderer renderer = getRenderer( yAxis.getType() );
@@ -343,13 +364,13 @@ public class ObservationPlot extends XYPlot
     // if a curve gets removed meanwhile, the mapping seriespos -> curvecolor
     // gets invalid! always reset all colors of all curves
     final Color curveColor = curve.getColor();
-    cds.addCurveSerie( xyc, curveColor, getRenderer( indexOf( cds ) ) );
+    cds.addCurveSerie( serie, curveColor, getRenderer( indexOf( cds ) ) );
 
-    m_serie2dataset.put( xyc, cds );
-    
+    m_serie2dataset.put( serie, cds );
+
     analyseCurve( curve );
   }
-  
+
   private void analyseCurve( final DiagViewCurve curve ) throws SensorException
   {
     final IObservation obs = curve.getObservation();
@@ -428,24 +449,24 @@ public class ObservationPlot extends XYPlot
       }
     }
   }
-  
+
   /**
    * Refreshes the plot in order to take the enabled features of the view into account
    */
-  public void refreshMetaInformation(  )
+  public void refreshMetaInformation()
   {
     // clear all markers and extra informations
     clearDomainMarkers();
     clearAnnotations();
     m_yConsts.clear();
     m_markers.clear();
-    
+
     // step through curves and analyse them
-    
+
     for( Iterator it = m_curve2serie.keySet().iterator(); it.hasNext(); )
     {
       final DiagViewCurve curve = (DiagViewCurve)it.next();
-      
+
       try
       {
         analyseCurve( curve );
@@ -465,6 +486,7 @@ public class ObservationPlot extends XYPlot
   public synchronized void removeCurve( final DiagViewCurve curve )
   {
     final XYCurveSerie serie = (XYCurveSerie)m_curve2serie.get( curve );
+
     if( serie != null )
     {
       final CurveDataset ds = (CurveDataset)m_serie2dataset.get( serie );
@@ -501,10 +523,10 @@ public class ObservationPlot extends XYPlot
 
               // trick: if it is the only axis, then do not remove it
               // else NullPointerException in drawQuadrants (JFreeChart)
-              if( getRangeAxis() != getRangeAxis( pos.intValue() ) )
+              if( getRangeAxis() != getRangeAxis( pos.intValue() ) || getRangeAxisCount() > 1 )
               {
                 setRangeAxis( pos.intValue(), null );
-                m_chartAxes2Pos.remove( cAxis );
+                //m_chartAxes2Pos.remove( cAxis );
                 m_diag2chartAxis.remove( dAxis );
               }
 
@@ -520,7 +542,7 @@ public class ObservationPlot extends XYPlot
       m_curve2serie.remove( curve );
 
       if( m_curve2serie.size() == 0 )
-        clearBackground();
+        clearCurves();
     }
   }
 
@@ -544,7 +566,7 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
-   * overriden to return a default axis when no real axes defined yet
+   * Overriden to return a default axis when no real axes defined yet
    * 
    * @see org.jfree.chart.plot.XYPlot#getRangeAxis()
    */
@@ -553,7 +575,14 @@ public class ObservationPlot extends XYPlot
     if( m_diag2chartAxis.size() == 0 )
       return new NumberAxis();
 
-    return super.getRangeAxis();
+    for( int i = 0; i < getRangeAxisCount(); i++ )
+    {
+      final ValueAxis rangeAxis = getRangeAxis( i );
+      if( rangeAxis != null )
+        return rangeAxis;
+    }
+
+    return new NumberAxis();
   }
 
   /**
@@ -685,8 +714,7 @@ public class ObservationPlot extends XYPlot
 
     public String toString()
     {
-      return getClass().getName() + ": " + this.label + " " + this.alarm + " "
-          + this.axis.getLabel();
+      return getClass().getName() + ": " + this.label + " " + this.alarm + " " + this.axis.getLabel();
     }
   }
 }

@@ -18,7 +18,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.commons.xml.xlink.IXlink;
 
 import com.bce.datacenter.db.timeseries.Timeserie;
 import com.bce.datacenter.db.timeseries.TimeserieTupple;
@@ -120,7 +119,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public IXlink getTarget( )
+  public Object getTarget( )
   {
     return null;
   }

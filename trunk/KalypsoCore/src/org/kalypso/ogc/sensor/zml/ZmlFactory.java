@@ -71,7 +71,6 @@ import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.ParserFactory;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -355,13 +354,9 @@ public class ZmlFactory
 
     final ZmlTuppleModel model = new ZmlTuppleModel( valuesMap );
 
-    IXlink target = null;
-    if( obs.getTarget() != null )
-      target = new JAXBXLink( obs.getTarget() );
-
     final String href = context != null ? context.toExternalForm() : "";
 
-    final SimpleObservation zmlObs = new SimpleObservation( href, identifier, obs.getName(), obs.isEditable(), target,
+    final SimpleObservation zmlObs = new SimpleObservation( href, identifier, obs.getName(), obs.isEditable(), null,
         metadata, model.getAxisList(), model );
 
     return decorateObservation( zmlObs, href, context );

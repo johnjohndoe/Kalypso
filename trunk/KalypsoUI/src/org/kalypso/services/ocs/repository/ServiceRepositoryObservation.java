@@ -53,7 +53,6 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -167,7 +166,7 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
-  public IXlink getTarget()
+  public Object getTarget()
   {
     try
     {
