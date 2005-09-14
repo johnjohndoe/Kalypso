@@ -131,7 +131,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_kft = null;
     }
 
-    if( m_viewer != null )
+    if( m_viewer != null && workspace != null && feature != null )
     {
       final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( feature );
       final String ftpName = getFeatureTypeProperty().getName();
