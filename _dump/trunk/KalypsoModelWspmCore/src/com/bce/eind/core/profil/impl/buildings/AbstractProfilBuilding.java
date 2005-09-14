@@ -13,6 +13,7 @@ import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
+import com.bce.eind.core.result.IResultSet.TYPE;
 
 /**
  * @author kimwerner
@@ -51,7 +52,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   }
 
   /**
-   * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY)
+   * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY, TYPE)
    */
   public double getValue( BUILDING_PROPERTY buildingValue ) throws ProfilBuildingException
   {

@@ -1,11 +1,9 @@
 package com.bce.eind.core.strang;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
-import com.bce.eind.core.result.IResult;
+import com.bce.eind.core.result.IResultSet;
 
 
 /**
@@ -17,9 +15,9 @@ public class StrangInfo
   private final ProfilInfo[] m_profiles;
   private int m_index;
   private Collection<IStranginfoListener> m_listeners = new LinkedList<IStranginfoListener>();
-  private final IResult[] m_results;
+  private final IResultSet[] m_results;
 
-  public StrangInfo( final ProfilInfo[] profile, final int index, final IResult[] results )
+  public StrangInfo( final ProfilInfo[] profile, final int index, final IResultSet[] results )
   {
     m_profiles = profile;
     m_index = index;
@@ -66,24 +64,9 @@ public class StrangInfo
     return m_profiles[m_index];
   }
   
-  public ResultInfo[] getCurrentResults()
+  public IResultSet[] getCurrentResults()
   {
-    final List<ResultInfo> results = new ArrayList<ResultInfo>(m_results.length);
-    
-    final ProfilInfo info = getInfo();
-    if( info != null )
-    {
-      final double station = info.getStation();
-      for( int i = 0; i < m_results.length; i++ )
-      {
-        final IResult r = m_results[i];
-        final Double value = r.getResult( station );
-        if( value != null )
-          results.add( new ResultInfo( r.getType(), r.getName(), value ) );
-      }
-    }
-    
-    return results.toArray( new ResultInfo[results.size()] );
+    return m_results;
   }
   
   public int size()

@@ -5,22 +5,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.bce.eind.core.result.IResult;
+import com.bce.eind.core.result.IResultSet;
+import com.bce.eind.core.result.IStationResult;
 
-public class Result implements IResult
+public class Result implements IResultSet
 {
-  private final Map<Double, Double> m_map = new HashMap<Double, Double>();
+  private final Map<Double, Map<TYPE, Double>> m_map = new HashMap<Double, Map<TYPE, Double>>();
 
-  private final Map<Double, Double> m_unmodMap = Collections.unmodifiableMap( m_map );
-
-  private final TYPE m_type;
+  private final Map<Double, Map<TYPE, Double>> m_unmodMap = Collections.unmodifiableMap( m_map );
 
   private final String m_name;
 
-  public Result( final String name, final IResult.TYPE type )
+  public Result( final String name )
   {
     m_name = name;
-    m_type = type;
   }
 
   public String getName( )
@@ -28,28 +26,52 @@ public class Result implements IResult
     return m_name;
   }
 
-  public Double getResult( final double station )
+  public Double getValue( final double station, final TYPE type )
   {
-    return m_map.get( station );
+    final Map<TYPE, Double> map = m_map.get( station );
+    return map == null ? null : map.get( type );
   }
 
-  public void addResult( final double station, final double value )
+  public void addResult( final double station, final double value, final TYPE type )
   {
-    m_map.put( station, value );
+    final Map<TYPE, Double> map = getResults( station );
+
+    map.put( type, value );
   }
 
-  public Double removeResult( final double station )
+  /** Return the results for the given station. If no such map exists, creates one. */
+  private Map<TYPE, Double> getResults( final double station )
   {
-    return m_map.remove( station );
+    final Map<TYPE, Double> map = m_map.get( station );
+    if( map != null )
+      return map;
+
+    final Map<TYPE, Double> newMap = new HashMap<TYPE, Double>( TYPE.values().length );
+    m_map.put( station, newMap );
+
+    return newMap;
   }
 
-  public TYPE getType( )
-  {
-    return m_type;
-  }
+  // public Double removeResult( final double station )
+  // {
+  // return m_map.remove( station );
+  // }
 
+  /** Returns an iterator over the stations. */
   public Iterator<Double> iterator( )
   {
     return m_unmodMap.keySet().iterator();
+  }
+
+  public IStationResult getValues( final double station )
+  {
+    final Map<TYPE, Double> results = getResults( station );
+    return new StationResult( m_name, Collections.unmodifiableMap( results ) );
+  }
+
+  public Double putValue( final double station, final TYPE type, final double value )
+  {
+    final Map<TYPE, Double> results = getResults( station );
+    return results.put( type, value );
   }
 }

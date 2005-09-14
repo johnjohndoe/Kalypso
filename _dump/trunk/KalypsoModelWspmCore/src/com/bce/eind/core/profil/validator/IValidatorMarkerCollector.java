@@ -5,7 +5,7 @@ import org.eclipse.core.runtime.CoreException;
 public interface IValidatorMarkerCollector
 {
   public static final String MARKER_ATTRIBUTE_POINTPOS = "profile.marker.attribute.pointpos";
-  public static final String MARKER_ATTRIBUTE_POINTPROPERTY = "profile.marker.attribute.pointpos";
+  public static final String MARKER_ATTRIBUTE_POINTPROPERTY = "profile.marker.attribute.pointProperty";
 
   /**
    * Creates a (profile-)marker on the given resource. All validation rules should use this method,
