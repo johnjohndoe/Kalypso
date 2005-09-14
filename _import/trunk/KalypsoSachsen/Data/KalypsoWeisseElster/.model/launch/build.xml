@@ -344,10 +344,4 @@
     <target name="update" depends="updateAll" description="Aktualisiert eine Rechenvariante">
         <echo message="aktualisiere Zeitreihen: ${calc.dir}" />
     </target>
-
-    <target name="afterCalc" description="Kopiert die Modelldaten nach der Rechnnung">
-        <!--	<copy file="${calc.dir}/Ergebnisse/calcCase.gml" tofile="${calc.dir}/calcCase.gml" overwrite="true" />
-   			TODO dies evt. einfügen
-   		 -->
-    </target>
 </project>
