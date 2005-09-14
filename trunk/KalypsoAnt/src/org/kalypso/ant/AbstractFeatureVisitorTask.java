@@ -127,13 +127,14 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   private boolean m_doSaveGml = false;
 
   /**
-   * @param doSaveGml If true, the read gml will be safed at the end of the process.
+   * @param doSaveGml
+   *          If true, the read gml will be safed at the end of the process.
    */
   public AbstractFeatureVisitorTask( final boolean doSaveGml )
   {
     m_doSaveGml = doSaveGml;
   }
-  
+
   public void setRunAsync( final boolean runAsync )
   {
     m_runAsync = runAsync;
@@ -253,12 +254,20 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
           subProgressMonitor.done();
         }
       }
-      
+
       if( m_doSaveGml )
       {
-        final OutputStreamWriter writer = resolver.createWriter( gmlURL );
-        GmlSerializer.serializeWorkspace( writer, workspace );
-        writer.close();
+        OutputStreamWriter writer = null;
+        try
+        {
+          writer = resolver.createWriter( gmlURL );
+          GmlSerializer.serializeWorkspace( writer, workspace );
+          writer.close();
+        }
+        finally
+        {
+          IOUtils.closeQuietly( writer );
+        }
       }
 
       logPW.close();
@@ -268,7 +277,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
         System.out.print( logString );
       else
         antProject.log( logString );
-      
+
       return new MultiStatus( KalypsoGisPlugin.getId(), 0, (IStatus[])stati.toArray( new IStatus[stati.size()] ), "",
           null );
     }

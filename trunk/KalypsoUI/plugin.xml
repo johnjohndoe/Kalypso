@@ -694,6 +694,11 @@
            class="org.kalypso.ant.FetchFromURLsTask"
            library="lib/kalypsoAnt.jar"
            name="Kalypso.fetchFromURL"/>
+     <antTask
+           class="org.kalypso.ant.PropertyReplaceTask"
+           headless="true"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.propertyReplace"/>
    </extension>
       <extension
          point="org.kalypso.services.core.client.serviceproxy">

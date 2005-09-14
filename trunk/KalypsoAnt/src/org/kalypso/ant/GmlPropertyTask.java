@@ -43,16 +43,13 @@ package org.kalypso.ant;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.XmlProperty;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -73,8 +70,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class GmlPropertyTask extends Task
 {
-  private final Map m_addedAttributes = new HashMap();
-
+  private final PropertyAdder m_propertyAdder = new PropertyAdder( this );
+  
   private final List m_properties = new LinkedList();
 
   /** URL from where to read the gml */
@@ -112,7 +109,7 @@ public class GmlPropertyTask extends Task
     try
     {
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL );
-      for( Iterator iter = m_properties.iterator(); iter.hasNext(); )
+      for( final Iterator iter = m_properties.iterator(); iter.hasNext(); )
         addProperty( workspace, (Property)iter.next() );
     }
     catch( final BuildException be )
@@ -179,10 +176,10 @@ public class GmlPropertyTask extends Task
       else
         date = dateValue;
 
-      addProperty( name, "" + date.getTime(), null );
+      m_propertyAdder.addProperty( name, "" + date.getTime(), null );
     }
     else if( value != null )
-      addProperty( name, value.toString(), null );
+      m_propertyAdder.addProperty( name, value.toString(), null );
     else
     {
       getProject().log( "No value for feature with id " + f.getId() + " in property: " + featureProperty,
@@ -191,44 +188,9 @@ public class GmlPropertyTask extends Task
       if( defaultValue != null )
       {
         getProject().log( "Using defualt value: " + defaultValue, Project.MSG_DEBUG );
-        addProperty( name, defaultValue, null );
+        m_propertyAdder.addProperty( name, defaultValue, null );
       }
     }
-  }
-
-  /**
-   * Actually add the given property/value to the project after writing a log message.
-   * 
-   * @note: Taken from {@link XmlProperty}in Ant.
-   */
-  private void addProperty( String name, String value, String id )
-  {
-    String msg = name + ":" + value;
-    if( id != null )
-      msg += ( "(id=" + id + ")" );
-
-    log( msg, Project.MSG_DEBUG );
-
-    if( m_addedAttributes.containsKey( name ) )
-    {
-      // If this attribute was added by this task, then
-      // we append this value to the existing value.
-      // We use the setProperty method which will
-      // forcibly override the property if it already exists.
-      // We need to put these properties into the project
-      // when we read them, though (instead of keeping them
-      // outside of the project and batch adding them at the end)
-      // to allow other properties to reference them.
-      value = (String)m_addedAttributes.get( name ) + "," + value;
-      getProject().setProperty( name, value );
-    }
-    else
-      getProject().setNewProperty( name, value );
-
-    m_addedAttributes.put( name, value );
-
-    if( id != null )
-      getProject().addReference( id, value );
   }
 
   public final static class Property
