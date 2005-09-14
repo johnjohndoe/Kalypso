@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <observation linktype="zml" ns1:href="W_BOXBRG.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 583200" editable="true" id="c1" name="W - 583200" width="50"/>
+        <column axis="Abfluss" editable="true" id="c2" name="Q - 583200" width="50"/>
+    </observation>
+    <observation linktype="zml" ns2:href="W_BAUTZWB.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 582030" editable="true" id="c3" name="W - 582030" width="50"/>
+        <column axis="Abfluss" editable="true" id="c4" name="Q - 582030" width="50"/>
+    </observation>
+    <observation linktype="zml" ns3:href="W_SAERI.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 583290" editable="true" id="c5" name="W - 583290" width="50"/>
+        <column axis="Abfluss" editable="true" id="c6" name="Q - 583290" width="50"/>
+    </observation>
+    <observation linktype="zml" ns4:href="W_SPWITZ.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 582820" editable="true" id="c7" name="W - 582820" width="50"/>
+        <column axis="Abfluss" editable="true" id="c8" name="Q - 582820" width="50"/>
+    </observation>
+    <observation linktype="zml" ns5:href="W_SPREMB.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 582090" editable="true" id="c9" name="W - 582090" width="50"/>
+    </observation>
+    <observation linktype="zml" ns6:href="W_GROEDI.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 583121" editable="true" id="c10" name="W - 583121" width="50"/>
+        <column axis="Abfluss" editable="true" id="c11" name="Q - 583121" width="50"/>
+    </observation>
+    <observation linktype="zml" ns7:href="W_SPREY.zml" xmlns:ns7="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 582080" editable="true" id="c12" name="W - 582080" width="50"/>
+        <column axis="Abfluss" editable="true" id="c13" name="Q - 582080" width="50"/>
+    </observation>
+    <observation linktype="zml" ns8:href="W_LIESKE.zml" xmlns:ns8="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 582060" editable="true" id="c14" name="W - 582060" width="50"/>
+        <column axis="Abfluss" editable="true" id="c15" name="Q - 582060" width="50"/>
+    </observation>
+    <observation linktype="zml" ns9:href="W_SCHIRG.zml" xmlns:ns9="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 582010" editable="true" id="c16" name="W - 582010" width="50"/>
+        <column axis="Abfluss" editable="true" id="c17" name="Q - 582010" width="50"/>
+    </observation>
+    <observation linktype="zml" ns10:href="W_JAENKD.zml" xmlns:ns10="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand 583250" editable="true" id="c18" name="W - 583250" width="50"/>
+        <column axis="Abfluss" editable="true" id="c19" name="Q - 583250" width="50"/>
+    </observation>
+</obstableview>
+

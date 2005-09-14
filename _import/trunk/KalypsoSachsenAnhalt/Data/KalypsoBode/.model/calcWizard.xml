@@ -483,7 +483,8 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
-		<arg name="ignoreTye1" value="W"/>
+		
+		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>

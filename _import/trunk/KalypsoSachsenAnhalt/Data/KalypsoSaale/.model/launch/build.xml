@@ -50,9 +50,6 @@
 	<!-- ================================= 
           target: create              
          ================================= -->
-<!--
-	<target name="create" depends="calculationProperties" description="Erzeugt eine Rechenvariante">
--->
 	<target name="create" description="Erzeugt eine Rechenvariante">
 		<!-- TODO -->
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
@@ -138,15 +135,27 @@
 
 	<!-- ================================= 
           target: updateLocations     
-          Arbeitet auf der slektierten modell.gml   
+          Arbeitet auf der selektierten modell.gml   
          ================================= -->
 	<!--   TODO: do this every time, we do a update -> work with calc.url, because of the encoding problems -->
 	<target name="updateLocations" description="Aktualisiert die geografische Verortung innerhalb der modell.gml anhand der Daten in der lokalen Zeitreihen">
 		<echo message="Aktualisiere ${modell.gml}" />
 		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Durchfluss" context="file:///${modell.gml}">
 			<mapping targetProperty="location" format="EPSG:31468">
-				<metadata name="Rechtswert" />
-				<metadata name="Hochwert" />
+				<metadata name="Rechtswert"/>
+				<metadata name="Hochwert"/>
+			</mapping>
+		</kalypso.mapZmlMeta2Feature>
+		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="SpeicherCollectionAssociation/SpeicherMember" depth="zero" zmllink="Inhalt" context="file:///${modell.gml}">
+			<mapping targetProperty="location" format="EPSG:31468">
+				<metadata name="Rechtswert"/>
+				<metadata name="Hochwert"/>
+			</mapping>
+		</kalypso.mapZmlMeta2Feature>
+		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="OmbrometerCollectionAssociation/OmbrometerMember" depth="zero" zmllink="Niederschlag" context="file:///${modell.gml}">
+			<mapping targetProperty="location" format="EPSG:31468">
+				<metadata name="Rechtswert"/>
+				<metadata name="Hochwert"/>
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
 	</target>

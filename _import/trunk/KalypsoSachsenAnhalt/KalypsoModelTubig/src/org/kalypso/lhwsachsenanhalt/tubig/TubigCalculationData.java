@@ -1,4 +1,4 @@
-/**
+/*
  * ---------------- FILE HEADER KALYPSO ------------------------------------------
  * 
  * This file is part of kalypso. Copyright (C) 2004 by:
@@ -40,6 +40,7 @@ import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 public final class TubigCalculationData
 {
@@ -85,7 +86,16 @@ public final class TubigCalculationData
       dtStartForecast = (Date)featCtrl.getProperty( "startforecast" );
       Feature featCtrlBatchColl;
       featCtrlBatchColl = (Feature)featCtrl.getProperty( "BatchIDCollectionAssociation" );
-      featLstCtrlBatch = (FeatureList)featCtrlBatchColl.getProperty( "BatchIDAssociation" );
+      final Object batchIDObject = featCtrlBatchColl.getProperty( "BatchIDAssociation" );
+      // kleiner Hack, weil maxOccurs auf 1 gesetzt werden kann und dann gibt es eine classCastException
+      if( batchIDObject instanceof Feature )
+      {
+        final FeatureList list = FeatureFactory.createFeatureList( featCtrlBatchColl, featCtrlBatchColl.getFeatureType().getProperty( "BatchIDAssociation" ) );
+        list.add( batchIDObject );
+        featLstCtrlBatch = list;
+      }
+      else
+        featLstCtrlBatch = (FeatureList)batchIDObject;
 
       // Informationen in TubigCalculationData schreiben
       m_startsim = dtStartSim;

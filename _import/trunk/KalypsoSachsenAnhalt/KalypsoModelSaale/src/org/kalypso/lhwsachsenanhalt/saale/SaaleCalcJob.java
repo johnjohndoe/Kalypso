@@ -265,8 +265,6 @@ public class SaaleCalcJob implements ICalcJob
         datendir, "P_dat.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context );
     featurezml2vor( modellWorkspace, "Schnee", "PegelCollectionAssociation/PegelMember[Gebiet]", new File( datendir,
         "SNDAT.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context );
-    featurezml2vor( modellWorkspace, "Temperatur", "TempCollectionAssociation/TempMember", new File( datendir,
-        "TLDAT.vor" ), TimeserieConstants.TYPE_TEMPERATURE, resolver, context );
     featurezml2vor( modellWorkspace, "Inhalt", "SpeicherCollectionAssociation/SpeicherMember", new File( datendir,
         "Tsdat.vor" ), TimeserieConstants.TYPE_VOLUME, resolver, context );
   }

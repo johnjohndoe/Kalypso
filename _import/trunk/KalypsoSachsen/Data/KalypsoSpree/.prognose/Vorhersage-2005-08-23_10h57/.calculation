@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpreeControl fid="foo" xmlns="org.kalypso.spree.control" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.spree.control ">
+  <startsimulation>2005-08-21T10:00:00</startsimulation>
+  <startforecast>2005-08-23T10:00:00</startforecast>
+  <editor>thuel2</editor>
+  <description>- bitte ausfüllen -</description>
+  <comment>- bitte ausfüllen -</comment>
+  <calctime>2005-08-23T10:57:14</calctime>
+</SpreeControl>

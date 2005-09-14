@@ -105,6 +105,12 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
   public boolean visit( final Feature f )
   {
     final TimeseriesLink link = (TimeseriesLink)f.getProperty( m_linkProperty );
+    if( link == null )
+    {
+      m_logger.warning( "Link '" + m_linkProperty + "' nicht gesetzt in Feature: " + f.getId() );
+      return true;  
+    }
+
     try
     {
       final IObservation observation = ZmlFactory.parseXML( m_resolver.resolveURL( m_context, link.getHref() ), "id" );
@@ -126,7 +132,6 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
       e.printStackTrace();
 
       m_logger.warning( "Zeitreihe konnte aus Modell nicht gelesen werden: " + link.getHref() );
-
     }
 
     return true;

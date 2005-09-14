@@ -68,7 +68,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="tubig:BatchIDCollectionAssociation"/>
+					<element ref="tubig:BatchIDCollectionAssociation" />
 				</sequence>
 			</extension>
 		</complexContent>
@@ -98,7 +98,15 @@
 				<sequence>
 					<!-- nur eine Rechnung auf einmal -->
 					<!-- <element ref="tubig:BatchIDAssociation" minOccurs="1" maxOccurs="unbounded"/> -->
-					<element ref="tubig:BatchIDAssociation" minOccurs="1" maxOccurs="1"/>
+					<element ref="tubig:BatchIDAssociation" minOccurs="1" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Rechnung</label>
+								<tooltip>Rechnung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>

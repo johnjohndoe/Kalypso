@@ -1,7 +1,8 @@
-#Wed Aug 10 09:44:53 CEST 2005
+#Tue Aug 23 14:15:20 CEST 2005
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/W_SAERI.zml=UTF-8
+encoding//.prognose/Vorhersage-2005-08-23_14h14/.calculation=UTF-8
 encoding//Rechenvarianten/20040104_test2/Zeitreihen/PA_JAENKD.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h12/Zeitreihen/PA_JAENKD.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h49/Zeitreihen/QV_TSBAUTZ.zml=UTF-8
@@ -95,6 +96,7 @@ encoding//.prognose/Vorhersage-2005-01-04_09h11/Zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h25/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_10h33/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h49/Flusslaufparameter.gtt=UTF-8
+encoding//.prognose/Vorhersage-2005-08-23_10h57/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h49/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-2005-07-06_21h25/Zeitreihen/QV_BWALDE.zml=UTF-8
 encoding//.prognose/history/Zeitreihen/PA_GROEDI.zml=UTF-8
@@ -394,6 +396,7 @@ encoding//.prognose/2004_KTest/grafik/W_JAENKD-1.dat=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Gesamtansicht.gmt=UTF-8
 encoding//.prognose/Vorhersage-2005-11-23_14h57/grafik/PA_GROEDI-1.dat=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h05/Zeitreihen/PA_JAENKD.zml=UTF-8
+encoding//.prognose/Vorhersage-2005-08-23_10h57/.calculation=UTF-8
 encoding//.prognose/prognose10/calcCase.gml=UTF-8
 encoding//.prognose/history/grafik/W_BAUTZWB-1.dat=UTF-8
 encoding//.prognose/prognose11/calcCase.gml=UTF-8

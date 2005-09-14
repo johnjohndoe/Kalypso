@@ -10,7 +10,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="nextPage" value="NS_Gebiete_Thür_Wald"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -43,8 +42,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Thür_Wald.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Ombrometer"/>
-		<arg name="nextPage" value="NS_Gebiete_Saale_Ilm"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -71,8 +68,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Saale_Ilm.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="NS_Gebiete_Thür_Wald"/>
-		<arg name="nextPage" value="NS_Gebiete_W_Elster"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -99,8 +94,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_W_Elster.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="NS_Gebiete_Saale_Ilm"/>
-		<arg name="nextPage" value="NS_Gebiete_Unstrut_Eich"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -127,8 +120,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Unstrut_Eich.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="NS_Gebiete_W_Elster"/>
-		<arg name="nextPage" value="NS_Gebiete_Flach_Süd"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -155,8 +146,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Süd.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="NS_Gebiete_Unstrut_Eich"/>
-		<arg name="nextPage" value="NS_Gebiete_Harz"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -183,8 +172,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Harz.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="NS_Gebiete_Flach_Süd"/>
-		<arg name="nextPage" value="NS_Gebiete_Flach_Nord"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -211,8 +198,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Nord.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="NS_Gebiete_Harz"/>
-		<arg name="nextPage" value="Inhalt_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -240,8 +225,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="NS_Gebiete_Flach_Nord"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_10"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -274,8 +257,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_10.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Inhalt_TS"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_10"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -305,8 +286,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_10.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Inhalt_TS"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_20"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -331,8 +310,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_20.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Steu_TS_Gruppe_10"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_20"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -362,8 +339,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_20.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Q_TS_Gruppe_20"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_30"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -388,8 +363,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_30.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Steu_TS_Gruppe_20"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_30"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -419,8 +392,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_30.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Q_TS_Gruppe_30"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_40"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -445,8 +416,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_40.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Steu_TS_Gruppe_30"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_40"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -476,8 +445,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_40.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Q_TS_Gruppe_40"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_50"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -494,7 +461,7 @@
 		<arg name="pantoFeatureId" value="ID576470"/>
 	</page>	
     <!-- TS-Steuerungs-Gruppe 50 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_50"/>
@@ -502,8 +469,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_50.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Steu_TS_Gruppe_40"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_55"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -526,7 +491,7 @@
 		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 55 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_55"/>
@@ -534,8 +499,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_55.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Q_TS_Gruppe_50"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_55"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -565,8 +528,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_55.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Q_TS_Gruppe_55"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_60"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -591,8 +552,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_60.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Steu_TS_Gruppe_55"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_60"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -622,8 +581,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_60.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Q_TS_Gruppe_60"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_65"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -648,8 +605,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_65.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Steu_TS_Gruppe_60"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_70"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -674,8 +629,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_70.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Steu_TS_Gruppe_65"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_70"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -705,8 +658,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_70.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Q_TS_Gruppe_70"/>
-		<arg name="nextPage" value="Q_TS_Gruppe_80"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -731,8 +682,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_80.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Steu_TS_Gruppe_70"/>
-		<arg name="nextPage" value="Steu_TS_Gruppe_80"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -762,8 +711,6 @@
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_80.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Q_TS_Gruppe_80"/>
-		<arg name="nextPage" value=""/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -778,6 +725,39 @@
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_80.gft"/>
 		<arg name="selectFeatureID" value="ID553050"/>
 		<arg name="pantoFeatureId" value="ID553050"/>
+	</page>
+	
+		
+	
+	<!-- BERECHNUNG - und Ergebnisdarstellung -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Ergebnisse Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg10"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg10.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_10.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
 		<!-- 
         Ant-Knopf -->
 		<arg name="buttonText" value="Vorhersage durchführen"/>
@@ -785,53 +765,237 @@
 		<arg name="buttonLaunch" value="runCalculation"/>
 	</page>
 	
-		
-	
-	
-
-	<!-- SPEICHERRECHNUNG BAT 3  -->
-	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
-	<!-- dies Seite gilt auch für Bat4/5, abgesehen von der Überschrift -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Speicherrechnung bei Vorgabe der Abgaben" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
-		<arg name="pageID" value="Berechnung_bat3"/>
+		<arg name="pageID" value="Berechnung_Erg20"/>
 		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat3.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg20.html"/>
 -->
 		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
-		<arg name="prevPage" value="Abgabe_Speicher_2"/>
-		<arg name="nextPage" value="Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="0"/>
 		<!-- 
         Karte -->
-		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_20.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-		<!-- orange (255,128,64) -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
 		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="V"/>
-		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg30"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg30.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<!-- 
-        Ant-Knopf für Berechnung -->
-		<arg name="buttonText" value="Speicherrechnung"/>
-		<arg name="buttonTooltip" value="Speicherrechnung bei Vorgabe der Abgaben"/>
-		<arg name="buttonLaunch" value="runBatch"/>
-		<arg name="buttonProperties">
-			<arg name="tubig.batch.name" value="run3.bat"/>
-		</arg>
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_30.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg40"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg40.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_40.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg50"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg50.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_50.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg55"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg55.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_55.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Überlauf Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg60"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg60.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_60.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg70"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg70.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_70.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg80"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg80.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_80.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
 	</page>
 
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->

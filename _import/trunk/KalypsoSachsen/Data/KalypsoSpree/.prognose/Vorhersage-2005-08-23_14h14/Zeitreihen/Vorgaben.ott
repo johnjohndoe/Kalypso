@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <observation linktype="zml" ns1:href="QV_BWALDE.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c1" name="Q - QV_BWALDE" width="50"/>
+    </observation>
+    <observation linktype="zml" ns2:href="QV_SPWIESE.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c2" name="Q - QV_SPWIESE" width="50"/>
+    </observation>
+    <observation linktype="zml" ns3:href="QV_LOHSA.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c3" name="Q - QV_LOHSA" width="50"/>
+    </observation>
+    <observation linktype="zml" ns4:href="QP_BURGNEU.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c4" name="Q - QP_BURGNEU" width="50"/>
+    </observation>
+    <observation linktype="zml" ns5:href="QV_RLKETTE.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c5" name="Q - QV_RLKETTE" width="50"/>
+    </observation>
+</obstableview>
+
