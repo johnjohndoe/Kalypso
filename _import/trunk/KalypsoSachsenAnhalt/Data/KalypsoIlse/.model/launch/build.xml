@@ -183,22 +183,28 @@
 	<!-- für Ilse ist EPSG:31468 richtig -->
 	<target name="updateLocations" description="Aktualisiert die geografische Verortung innerhalb der modell.gml anhand der Daten in der lokalen Zeitreihen">
 		<echo message="Aktualisiere ${modell.gml}" />
-		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Ganglinie_gemessen" context="file:///${modell.gml}">
-			<mapping targetProperty="Ort" format="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+		
+		<kalypso.propertyReplace name="gmlPath" value="platform:/resource${modell.gml}" regex="\\" replacement="/" />
+		
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Ganglinie_gemessen" context="${gmlPath}">
+			<mapping targetProperty="Ort">
 				<metadata name="Rechtswert"/>
 				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
-		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="SpeicherCollectionAssociation/SpeicherMember" depth="zero" zmllink="Abgabe" context="file:///${modell.gml}">
-			<mapping targetProperty="Ort" format="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="SpeicherCollectionAssociation/SpeicherMember" depth="zero" zmllink="Abgabe" context="${gmlPath}">
+			<mapping targetProperty="Ort">
 				<metadata name="Rechtswert"/>
 				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
-		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="OmbrometerCollectionAssociation/OmbrometerMember" depth="zero" zmllink="Niederschlag_gemessen" context="file:///${modell.gml}">
-			<mapping targetProperty="Ort" format="http://www.opengis.net/gml/srs/EPSG.xml#31468">
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="OmbrometerCollectionAssociation/OmbrometerMember" depth="zero" zmllink="Niederschlag_gemessen" context="${gmlPath}">
+			<mapping targetProperty="Ort">
 				<metadata name="Rechtswert"/>
 				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
 	</target>

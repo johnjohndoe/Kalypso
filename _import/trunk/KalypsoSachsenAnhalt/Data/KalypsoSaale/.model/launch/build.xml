@@ -96,18 +96,7 @@
           target: gebietsniederschlag              
          ================================= -->
 	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
-		<kalypso.gmlWeight 
-			modelurl="${calc.url}/modell.gml" 
-			featurepathtarget="PegelCollectionAssociation/PegelMember[Gebiet]" 
-			propzmltarget="Niederschlag" 
-			proprelationweightmember="gewichtung" 
-			propweight="faktor" 
-			proprelationsourcefeature="ombrometerMember" 
-			propzmlsource="Niederschlag" 
-			targetcontext="${calc.url}" 
-			from="${startsim}" 
-			forecastfrom="${startforecast}" 
-			to="${stopsim}" />
+		<kalypso.gmlWeight modelurl="${calc.url}/modell.gml" featurepathtarget="PegelCollectionAssociation/PegelMember[Gebiet]" propzmltarget="Niederschlag" proprelationweightmember="gewichtung" propweight="faktor" proprelationsourcefeature="ombrometerMember" propzmlsource="Niederschlag" targetcontext="${calc.url}" from="${startsim}" forecastfrom="${startforecast}" to="${stopsim}" />
 	</target>
 
 	<target name="runCalculation">
@@ -140,22 +129,28 @@
 	<!--   TODO: do this every time, we do a update -> work with calc.url, because of the encoding problems -->
 	<target name="updateLocations" description="Aktualisiert die geografische Verortung innerhalb der modell.gml anhand der Daten in der lokalen Zeitreihen">
 		<echo message="Aktualisiere ${modell.gml}" />
-		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Durchfluss" context="file:///${modell.gml}">
-			<mapping targetProperty="location" format="EPSG:31468">
-				<metadata name="Rechtswert"/>
-				<metadata name="Hochwert"/>
+
+		<kalypso.propertyReplace name="gmlPath" value="platform:/resource${modell.gml}" regex="\\" replacement="/" />
+
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Durchfluss" context="${gmlPath}">
+			<mapping targetProperty="location">
+				<metadata name="Rechtswert" />
+				<metadata name="Hochwert" />
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
-		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="SpeicherCollectionAssociation/SpeicherMember" depth="zero" zmllink="Inhalt" context="file:///${modell.gml}">
-			<mapping targetProperty="location" format="EPSG:31468">
-				<metadata name="Rechtswert"/>
-				<metadata name="Hochwert"/>
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="SpeicherCollectionAssociation/SpeicherMember" depth="zero" zmllink="Inhalt" context="${gmlPath}">
+			<mapping targetProperty="location">
+				<metadata name="Rechtswert" />
+				<metadata name="Hochwert" />
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
-		<kalypso.mapZmlMeta2Feature gml="file:///${modell.gml}" featurepath="OmbrometerCollectionAssociation/OmbrometerMember" depth="zero" zmllink="Niederschlag" context="file:///${modell.gml}">
-			<mapping targetProperty="location" format="EPSG:31468">
-				<metadata name="Rechtswert"/>
-				<metadata name="Hochwert"/>
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="OmbrometerCollectionAssociation/OmbrometerMember" depth="zero" zmllink="Niederschlag" context="${gmlPath}">
+			<mapping targetProperty="location">
+				<metadata name="Rechtswert" />
+				<metadata name="Hochwert" />
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
 	</target>

@@ -10,7 +10,7 @@
 <stringAttribute key="org.eclipse.ant.ui.ATTR_BUILD_SCOPE" value="${none}"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="updateLocations,"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-e -l &quot;${container_loc}/updateLocations.log&quot; -Dmodell.gml=${resource_loc}"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-e -l &quot;${container_loc}/updateLocations.log&quot; -Dmodell.gml=${resource_path}"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="KalypsoIlse"/>
 <stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${container}"/>
 <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_CAPTURE_OUTPUT" value="false"/>

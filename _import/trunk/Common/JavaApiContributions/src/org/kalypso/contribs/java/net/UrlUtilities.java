@@ -111,7 +111,7 @@ public class UrlUtilities implements IUrlResolver
     }
     catch( final UnknownServiceException e )
     {
-      // in diesem Fall unterstütz die URL kein Output
+      // in diesem Fall unterstützt die URL kein Output
 
       // jetzt versuchen, selbst einen Stream zu öffnen
       final String protocol = url.getProtocol();
