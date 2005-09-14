@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.TimeZone;
 
 import org.kalypso.commons.conversion.units.SIConverter;
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -151,7 +150,7 @@ public class WiskiTimeserie implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public IXlink getTarget()
+  public Object getTarget()
   {
     return null;
   }
@@ -314,15 +313,15 @@ public class WiskiTimeserie implements IObservation
     }
 
     // compose setTsData HashMap
-    
+
     // HACK: retrieve the server-side-timezone, if specified, from our metadatalist
     final String strtz = getMetadataList().getProperty( "_SERVER_SIDE_TIMEZONE_" );
     final TimeZone tz = strtz != null ? TimeZone.getTimeZone( strtz ) : TimeZone.getDefault();
-    final int utcOffset  = tz.getOffset( new Date().getTime() ) / 1000 / 60 / 60;
+    final int utcOffset = tz.getOffset( new Date().getTime() ) / 1000 / 60 / 60;
     // END-HACK
 
     value_tsinfo_map.put( "utcoffset", new Integer( utcOffset ) );
-    
+
     ts_values_map.put( KiWWDataProviderInterface.KEY_TSINFO, value_tsinfo_map );
 
     value_tscoldesc_ll.add( value_tscoldesc_map );
@@ -527,10 +526,15 @@ public class WiskiTimeserie implements IObservation
     final HashMap details = call.getDetails();
     final String carteasting = (String)details.get( "station_carteasting" );
     if( carteasting != null )
-      md.setProperty( TimeserieConstants.MD_GKR, carteasting );
+    {
+      md.setProperty( TimeserieConstants.MD_GKR, carteasting.trim() );
+
+      final String crds = TimeserieUtils.getCoordinateSystemNameForGkr( carteasting.trim() );
+      md.setProperty( TimeserieConstants.MD_COORDSYS, crds );
+    }
     final String cartnorthing = (String)details.get( "station_cartnorthing" );
     if( cartnorthing != null )
-      md.setProperty( TimeserieConstants.MD_GKH, cartnorthing );
+      md.setProperty( TimeserieConstants.MD_GKH, cartnorthing.trim() );
     final String river = (String)details.get( "river_longname" );
     if( river != null )
       md.setProperty( TimeserieConstants.MD_GEWAESSER, river );

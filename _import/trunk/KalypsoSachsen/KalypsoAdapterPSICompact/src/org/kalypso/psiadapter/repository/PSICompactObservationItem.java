@@ -2,6 +2,7 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Date;
 
+import org.kalypso.commons.conversion.units.IValueConverter;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -19,8 +20,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.psiadapter.PSICompactFactory;
-import org.kalypso.commons.conversion.units.IValueConverter;
-import org.kalypso.commons.xml.xlink.IXlink;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
@@ -120,8 +119,11 @@ public class PSICompactObservationItem implements IObservation
 
     if( psiMD != null )
     {
+      final String gkr = String.valueOf( psiMD.getRight() );
+      metadata.put( TimeserieConstants.MD_GKR, gkr );
+      metadata.put( TimeserieConstants.MD_COORDSYS, TimeserieUtils.getCoordinateSystemNameForGkr( gkr ) );
       metadata.put( TimeserieConstants.MD_GKH, String.valueOf( psiMD.getHeight() ) );
-      metadata.put( TimeserieConstants.MD_GKR, String.valueOf( psiMD.getRight() ) );
+      
       metadata.put( TimeserieConstants.MD_HOEHENANGABEART, psiMD.getLevelUnit() );
       metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String.valueOf( psiMD.getLevel() ) );
       metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String.valueOf( psiMD.getMapNo() ) );
@@ -232,7 +234,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public IXlink getTarget()
+  public Object getTarget()
   {
     return null;
   }
@@ -295,7 +297,7 @@ public class PSICompactObservationItem implements IObservation
   {
     // always make a copy of the tupple model, takes care of the correct timezone for PSICompact
     final PSICompactTuppleModel model = PSICompactTuppleModel.copyModel( values, m_vc );
-    
+
     if( model.getCount() > 0 )
     {
       try
