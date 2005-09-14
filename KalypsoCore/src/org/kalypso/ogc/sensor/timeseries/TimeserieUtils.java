@@ -457,4 +457,13 @@ public class TimeserieUtils
 
     return obs;
   }
+  
+  /**
+   * @param gkr the Gausskrüger Rechtswert as string
+   * @return the corresponding Gausskrüger Coordinate System Name
+   */
+  public static String getCoordinateSystemNameForGkr( final String gkr )
+  {
+    return getProperties().getProperty( "GK_" + gkr.substring(0,1), "<konnte nicht ermittelt werden>" );
+  }
 }

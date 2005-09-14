@@ -24,7 +24,6 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.ObservationType;
 
@@ -216,12 +215,11 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final String href = "";
       final String id = "";
       final String name = "";
-      final IXlink xlink = null;
       final MetadataList metadata = new MetadataList();
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
-      IObservation newObservation = new SimpleObservation( href, id, name, false, xlink, metadata, axesNew,
+      IObservation newObservation = new SimpleObservation( href, id, name, false, null, metadata, axesNew,
           newTuppelModel );
       ObservationType type = ZmlFactory.createXML( newObservation, null );
       // create new Observation...

@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
@@ -77,7 +76,7 @@ public interface IObservation extends IObservationEventProvider
    * 
    * @return target or null
    */
-  public IXlink getTarget();
+  public Object getTarget();
 
   /**
    * Returns the list of Metadata.

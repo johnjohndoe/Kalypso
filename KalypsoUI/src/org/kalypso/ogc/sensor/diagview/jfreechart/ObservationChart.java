@@ -157,6 +157,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
           view = (DiagView)( (DiagViewCurve)evt.getObject() ).getView();
 
         final int et = evt.getType();
+
         switch( et )
         {
           case ObsViewEvent.TYPE_ADD:
@@ -172,16 +173,10 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
             break;
 
           case ObsViewEvent.TYPE_REFRESH_ITEMSTATE:
-            obsPlot.removeCurve( (DiagViewCurve)evt.getObject() );
-            obsPlot.addCurve( (DiagViewCurve)evt.getObject() );
-            //            clearChart();
-            //
-            //            final ObsViewItem[] items = view.getItems();
-            //            for( int i = 0; i < items.length; i++ )
-            //            {
-            //              final DiagViewCurve curve = (DiagViewCurve)items[i];
-            //              obsPlot.addCurve( curve );
-            //            }
+            final DiagViewCurve curve = (DiagViewCurve)evt.getObject();
+            obsPlot.removeCurve( curve );
+            if( curve.isShown() )
+              obsPlot.addCurve( curve );
             break;
 
           case ObsViewEvent.TYPE_REFRESH:

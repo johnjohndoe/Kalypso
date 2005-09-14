@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -101,7 +100,7 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.getName();
   }
 
-  public IXlink getTarget()
+  public Object getTarget()
   {
     return m_obs.getTarget();
   }

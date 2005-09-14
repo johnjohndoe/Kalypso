@@ -44,13 +44,13 @@
 							system</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="target" type="xlink:SimpleLinkType" 
+				<xs:element name="target" type="xs:string" 
 					minOccurs="0" maxOccurs="1">
 					<xs:annotation>
 						<xs:documentation>The target of the observation, that 
-							is the thing or object being observed. This is a 
-							XLink which can point to pretty much 
-							anything</xs:documentation>
+							is the thing or object being observed. It can be 
+							pretty much everything.
+						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="metadataList" type="MetadataListType" 

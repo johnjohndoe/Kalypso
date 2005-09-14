@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
 
-import org.kalypso.commons.xml.xlink.IXlink;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -116,7 +115,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     return m_obs.getName();
   }
 
-  public IXlink getTarget()
+  public Object getTarget()
   {
     if( m_obs == null )
       throw new IllegalStateException( "Internal observation is null" );
