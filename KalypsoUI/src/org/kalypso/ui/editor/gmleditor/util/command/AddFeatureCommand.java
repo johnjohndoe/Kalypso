@@ -142,7 +142,7 @@ public class AddFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Feature addieren";
+    return "Feature hinzufügen";
   }
 
   private void addFeature() throws Exception

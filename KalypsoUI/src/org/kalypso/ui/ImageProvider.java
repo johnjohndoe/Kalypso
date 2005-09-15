@@ -107,9 +107,17 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_FORWARD = id( "icons/util/forward_nav.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
+  public static final ImageDescriptor IMAGE_FILTERDIALOG_ADD_FILTER = id("icons/filterdialog/filter_ps.gif");
   
   public static final ImageDescriptor IMAGE_FEATURE = id( "icons/feature/gis_feature.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_LINKED = id( "icons/feature/gis_feature_light.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_RELATION_AGGREGATION = id( "icons/feature/feature_link_aggregation.gif" );
   public static final ImageDescriptor IMAGE_FEATURE_RELATION_COMPOSITION = id( "icons/feature/feature_link_composition.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_POINT = id( "icons/feature/geom_point.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOINT = id( "icons/feature/geom_multipoint.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_LINE = id( "icons/feature/geom_line.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTILINE = id( "icons/feature/geom_multiline.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_POLYGON = id( "icons/feature/geom_polygon.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOLYGON = id( "icons/feature/geom_multipolygon.gif" );
+  
 }

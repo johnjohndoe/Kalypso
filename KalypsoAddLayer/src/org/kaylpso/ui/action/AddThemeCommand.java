@@ -72,8 +72,7 @@ public class AddThemeCommand implements ICommand
    * @param featurePath
    *          the feature path in the gml workspace
    * @param source
-   *          a String having keywords and (paired values) depending on the
-   *          Loader context
+   *          a String having keywords and (paired values) depending on the Loader context
    * @param stylelinktype
    *          keyword for the used style type (normally sld)
    * @param style
@@ -84,12 +83,11 @@ public class AddThemeCommand implements ICommand
    *          sets the type simple or complex
    *  
    */
-  public AddThemeCommand( GisTemplateMapModell model, String name, String type, String featurePath,
-      String source, String stylelinktype, String style, String styleLocation, String styleType )
-      throws JAXBException
+  public AddThemeCommand( GisTemplateMapModell model, String name, String type, String featurePath, String source,
+      String stylelinktype, String style, String styleLocation, String styleType ) throws JAXBException
   {
     m_mapModell = model;
-    int id = m_mapModell.getThemeSize()+1;
+    int id = m_mapModell.getThemeSize() + 1;
     ObjectFactory o = new ObjectFactory();
     m_layer = o.createGismapviewTypeLayersTypeLayer();
     m_layer.setHref( source );
@@ -128,7 +126,7 @@ public class AddThemeCommand implements ICommand
   public void process() throws Exception
   {
     m_theme = m_mapModell.addTheme( m_layer );
-    m_mapModell.activateTheme(m_theme);
+    m_mapModell.activateTheme( m_theme );
   }
 
   /**

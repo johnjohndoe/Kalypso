@@ -151,7 +151,7 @@ public class DeleteFeatureCommand implements ICommand
       final Feature parentFeature = (Feature)entry.getValue();
 
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature,
-          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
     }
   }
 

@@ -101,6 +101,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       handleTreeSelectionChanged( event );
     }
   };
+  public static final int DEFAULT_EXPATIONA_LEVEL = 3;
 
   private GmlTreeDropAdapter m_dropAdapter;
 
@@ -366,6 +367,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         public void run()
         {
           treeViewer.setInput( m_workspace );
+          treeViewer.getTree().setVisible( false );
+          treeViewer.expandAll();
+          treeViewer.collapseAll();
+          treeViewer.expandToLevel( DEFAULT_EXPATIONA_LEVEL );
+          treeViewer.getTree().setVisible( true );
         }
       } );
     }

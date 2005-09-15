@@ -125,7 +125,7 @@ public class FilterDialog extends Dialog implements ModellEventListener
     //    applyDialogFont( m_main );
     //tree-group
     m_treeGroup = new Group( m_main, SWT.FILL );
-    m_treeGroup.setText( "Filter-Layout" );
+    m_treeGroup.setText( "Filter für " + m_featureType.getName() );
     m_treeGroup.setLayoutData( new GridData( 280, 200 ) );
     m_treeGroup.setLayout( new GridLayout() );
     //tree-viewer
@@ -175,7 +175,7 @@ public class FilterDialog extends Dialog implements ModellEventListener
           m_propGroup = new Group( m_main, SWT.FILL );
           m_propGroup.setText( "Filter-Eigenschaften" );
           m_propGroup.setLayout( new GridLayout() );
-          GridData data = new GridData( GridData.FILL_HORIZONTAL );
+          GridData data = new GridData( GridData.FILL_BOTH );
           data.heightHint = 150;
           data.widthHint = 250;
           data.grabExcessHorizontalSpace = true;
@@ -187,7 +187,7 @@ public class FilterDialog extends Dialog implements ModellEventListener
             Object oldValue = firstElement;
             FilterCompositeFactory.getInstance( null ).createFilterElementComposite( (Operation)firstElement,
                 m_propGroup, m_featureType );
-            m_root.firePropertyChange( FilterRootElement.OPERATION_ADDED, oldValue, firstElement );
+            //            m_root.firePropertyChange( FilterRootElement.OPERATION_ADDED, oldValue, firstElement );
           }
           else if( firstElement instanceof FeatureFilter )
           {
@@ -212,7 +212,7 @@ public class FilterDialog extends Dialog implements ModellEventListener
     m_viewer2.setInput( new Object[]
     { m_root } );
     m_viewer2.expandAll();
-    //place holder to be drawn later for property group
+    //toolbar
     m_toolBar = new ToolBar( m_main, SWT.NULL | SWT.FLAT );
     ToolItem m_loadFilterItem = new ToolItem( m_toolBar, SWT.NONE );
     m_loadFilterItem.setToolTipText( "Filter aus dem Workspace laden" );
@@ -288,25 +288,6 @@ public class FilterDialog extends Dialog implements ModellEventListener
     createContextMenu();
     return m_main;
   }
-
-  //  /**
-  //   *
-  //   */
-  //  private void createLocalMenu()
-  //  {
-  //    final MenuManager menuManager = new MenuManager( "#PopUp" );
-  //    menuManager.setRemoveAllWhenShown( true );
-  //    menuManager.addMenuListener( new IMenuListener()
-  //    {
-  //      public void menuAboutToShow( IMenuManager manager )
-  //      {
-  //        manager.add( new Separator() );
-  //        manager.add( action );
-  //      }
-  //    } );
-  //    Menu menu = menuManager.createContextMenu( m_viewer2.getControl() );
-  //    m_viewer2.getControl().setMenu( menu );
-  //  }
 
   private void createContextMenu()
   {

@@ -469,6 +469,25 @@ public class GeometryUtilities
     //      return true;
     return false;
   }
+  
+  public static Class getClass( FeatureTypeProperty ftp )
+  {
+    if( isPointGeometry( ftp ) )
+      return getPointClass();
+    if( isMultiPointGeometry( ftp ) )
+      return getMultiPointClass();
+    if( isLineStringGeometry( ftp ) )
+      return getLineStringClass();
+    if( isMultiLineStringGeometry( ftp ) )
+      return getMultiLineStringClass();
+    if( isPolygonGeometry( ftp ) )
+      return getPolygonClass();
+    if( isMultiPolygonGeometry( ftp ) )
+      return getMultiPolygonClass();
+    if( isAnyMultiGeometry( ftp ) )
+      return null;
+    return null;
+  }
 
   public static Class getPointClass()
   {

@@ -58,7 +58,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
   {
     super( viewer.getTreeViewer() );
     m_viewer = viewer;
-    setFeedbackEnabled( false );
+    setFeedbackEnabled( true );
     setScrollExpandEnabled( true );
   }
 
@@ -67,10 +67,6 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
    */
   public boolean performDrop( Object data )
   {
-    //    if( getCurrentTarget() == null || data == null )
-    //    {
-    //      return false;
-    //    }
     System.out.print( "performDrop - " );
     final CommandableWorkspace workspace = m_viewer.getWorkspace();
 
@@ -115,27 +111,21 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     final IFeatureSelection featureSelection = (IFeatureSelection)m_viewer.getSelection();
     final Feature[] selectedFeatures = FeatureSelectionHelper.getFeatures( featureSelection );
 
-    final IFeatureSelection structuredSelection = (IFeatureSelection)m_viewer.getSelection();
-    FeatureSelectionHelper.getFeatures( structuredSelection );
-    System.out.println();
-    System.out.println( "validateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
-    //    
+    System.out.println( "\nvalidateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
 
     Feature targetFeature = null;
-    FeatureType targetFt = null;
+    FeatureType targetFt;
     FeatureType matchingFt = null;
     FeatureAssociationTypeProperty targetAssocFtp = null;
     if( !isValidSelection( selectedFeatures ) )
       return false;
     if( target instanceof LinkedFeatureElement2 )
       return false;
-    //    if( operation == DND.DROP_NONE )
-    //      return false;
     if( target instanceof FeatureAssociationTypeElement )
     {
       FeatureAssociationTypeElement targetFatElement = (FeatureAssociationTypeElement)target;
       targetAssocFtp = targetFatElement.getAssociationTypeProperty();
-      System.out.println( "Target is a FeatuerAssociationTypeElement " + targetAssocFtp.getName() );
+      System.out.println( "FeatuerAssociationTypeElement:\n  target: " + targetAssocFtp.getName() );
       String propertyName = targetAssocFtp.getName();
       targetFeature = targetFatElement.getParentFeature();
       //try to find matching FeatureType
@@ -153,9 +143,8 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       {
         List featureList = (List)targetFeature.getProperty( propertyName );
         System.out.println( "Diff = " + new Integer( maxOccurs - ( featureList.size() + selectedFeatures.length ) ) );
-        if( maxOccurs >= featureList.size() + selectedFeatures.length )
+        if( maxOccurs >= featureList.size() + selectedFeatures.length || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
           return true;
-
         return false;
       }
       if( !isList && targetFeature.getProperty( propertyName ) == null )//&& operation == DND.DROP_LINK )
@@ -165,10 +154,8 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     if( target instanceof Feature )
     {
       targetFeature = (Feature)target;
-      System.out.println( "Target is Featuer id = " + targetFeature.getId() );
       if( FeatureHelper.isCollection( targetFeature ) )
       {
-        System.out.println( "isCollection = " + true );
         FeatureType[] featureTypeFromCollection = FeatureHelper.getFeatureTypeFromCollection( targetFeature );
         for( int i = 0; i < featureTypeFromCollection.length; i++ )
         {
@@ -179,7 +166,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
         }
       }
       targetFt = targetFeature.getFeatureType();
-      System.out.println( "targetFT = " + targetFt.getName() + "\tsourceFT = "
+      System.out.println( "Feature:\ntargetFT = " + targetFt.getName() + "\tsourceFT = "
           + selectedFeatures[0].getFeatureType().getName() );
 
       //      matchingFt = hasMatchingFeatureType( selectedFeatures[0].getFeatureType(), new FeatureType[]

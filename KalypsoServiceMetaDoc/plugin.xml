@@ -9,8 +9,8 @@
       <import plugin="org.kalypso.contribs.java"/>
       <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.kalypso.commons"/>
-      <import plugin="org.kalypso.metadoc"/>
       <import plugin="org.kalypso.services.core"/>
+      <import plugin="org.kalypso.metadoc"/>
    </requires>
 
 </plugin>

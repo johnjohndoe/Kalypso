@@ -108,11 +108,10 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
       {
         gmlURL = urlResolver.resolveURL( m_mapContextURL, getRelativeProjectPath( filePath ) );
         GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, urlResolver );
-        FeatureType ft = workspace.getFeatureTypeFromPath("RectifiedGridCoverageMember");
+        FeatureType ft = workspace.getFeatureTypeFromPath( "RectifiedGridCoverageMember" );
         //FeatureType ft = workspace.getFeatureType( "RectifiedGridCoverage" );
         styleName = ft.getName();
-        stylePath = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ft,
-            styleName ).toString();
+        stylePath = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ft, styleName ).toString();
       }
       catch( MalformedURLException e1 )
       {
@@ -134,9 +133,8 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     if( m_outlineviewer.getMapModell() != null )
       try
       {
-        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, filePath
-            .lastSegment(), "gml", "RectifiedGridCoverageMember",
-            getRelativeProjectPath( filePath ), "sld", styleName, stylePath, "simple" );
+        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, filePath.lastSegment(), "gml",
+            "RectifiedGridCoverageMember", getRelativeProjectPath( filePath ), "sld", styleName, stylePath, "simple" );
         m_outlineviewer.postCommand( command, null );
       }
       catch( Exception e )
