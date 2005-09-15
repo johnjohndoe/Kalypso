@@ -2,7 +2,6 @@ package org.kalypso.lhwsachsenanhalt.saale;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,9 +18,12 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.lhwsachsenanhalt.saale.batch.HWVORBatch;
@@ -84,6 +86,7 @@ public class SaaleCalcJob implements ICalcJob
       final ICalcMonitor monitor ) throws CalcJobServiceException
   {
     final File loggerFile = new File( tmpdir, "saale.log" );
+    resultEater.addResult( "LOG", loggerFile );
     StreamHandler streamHandler = null;
     try
     {
@@ -106,7 +109,15 @@ public class SaaleCalcJob implements ICalcJob
         return;
       runCalculation( inputData.getExeFile(), monitor );
 
-      m_logger.info( "Berechnung wird durchgeführt" );
+      if( monitor.isCanceled() )
+        return;
+
+      final File hwqvorFile = new File( inputData.getHwvorDir(), HWDIR_AUSGABE + "/HWQVOR.TXT" );
+      resultEater.addResult( "HWVOR00_LOG", hwqvorFile );
+
+      checkHWVORLog( hwqvorFile );
+
+      m_logger.info( "Berechnung abgeschlossen" );
 
       // parse output
       if( monitor.isCanceled() )
@@ -116,26 +127,34 @@ public class SaaleCalcJob implements ICalcJob
       monitor.setMessage( "Ergebnisdaten werden zurückgelesen." );
       final File resultdir = readResults( tmpdir, inputData.getDataDir() );
       resultEater.addResult( "ZML_RESULT", resultdir );
-      resultEater.addResult( "HWVOR00_LOG", new File( inputData.getHwvorDir(), HWDIR_AUSGABE + "/HWQVOR.TXT" ) );
-    }
-    catch( final FileNotFoundException e )
-    {
-      // should never happen
-      e.printStackTrace();
+
+      // if you want an info message at the end of each calc job uncomment the next line
+      // monitor.setFinishInfo( IStatus.INFO, "Berechnung erfolgreich abgeschlossen" );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler bei der Berechnung", e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler bei der Berechnung", e );
+      monitor.setFinishInfo( status.getSeverity(), StatusUtilities.messageFromStatus( status ) );
     }
     finally
     {
       if( streamHandler != null )
         streamHandler.close();
     }
+  }
 
-    resultEater.addResult( "LOG", loggerFile );
+  private void checkHWVORLog( final File hwqvorFile ) throws IOException
+  {
+    final String defaultCharset = CharsetUtilities.getDefaultCharset();
+    final String string = FileUtils.readFileToString( hwqvorFile, defaultCharset );
+    if( string.trim().endsWith( "ENDE QVOR" ) )
+      return;
+
+    throw new CalcJobServiceException(
+        "Berechnung wurde nicht erfolgreich abgeschlossen.\nBitte sehen Sie die Log-Datei unter Ergebnisse/HWQVOR.TXT ein.",
+        null );
   }
 
   private void runCalculation( final File exeFile, final ICalcMonitor monitor ) throws IOException,
@@ -259,7 +278,7 @@ public class SaaleCalcJob implements ICalcJob
     externData.put( SaaleConst.REGISTERED_ID, modellWorkspace );
     convertGml( externData, datenURL, "Daten/hwablauf.vor", "hwablauf_vor.gmc" );
 
-    featurezml2vor( modellWorkspace, "Durchfluß", "PegelCollectionAssociation/PegelMember", new File( datendir,
+    featurezml2vor( modellWorkspace, "Durchfluss", "PegelCollectionAssociation/PegelMember", new File( datendir,
         "Q_dat.vor" ), TimeserieConstants.TYPE_RUNOFF, resolver, context );
     featurezml2vor( modellWorkspace, "Niederschlag", "PegelCollectionAssociation/PegelMember[Gebiet]", new File(
         datendir, "P_dat.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context );
@@ -288,11 +307,11 @@ public class SaaleCalcJob implements ICalcJob
     final File resultdir = new File( tmpdir, "out" );
     try
     {
-      convertVor2Zml( new File( datendir, "Q_dat.vor" ), new File( resultdir, "Durchfluß" ),
+      convertVor2Zml( new File( datendir, "Q_dat.vor" ), new File( resultdir, "Durchfluss" ),
           TimeserieConstants.TYPE_RUNOFF );
-      convertVor2Zml( new File( datendir, "Tsdat.vor" ), new File( resultdir, "Speicher" ),
+      convertVor2Zml( new File( datendir, "Tsdat.vor" ), new File( resultdir, "Speicherinhalt" ),
           TimeserieConstants.TYPE_RUNOFF );
-      
+
       m_logger.info( "Ergebnisdaten wurden konvertiert." );
       m_logger.info( "" );
     }
@@ -305,10 +324,11 @@ public class SaaleCalcJob implements ICalcJob
     return resultdir;
   }
 
-  private void convertVor2Zml( final File vorFile, final File outDir, final String type ) throws ParseException, WQException, SensorException, JAXBException, FactoryException, IOException
+  private void convertVor2Zml( final File vorFile, final File outDir, final String type ) throws ParseException,
+      WQException, SensorException, JAXBException, FactoryException, IOException
   {
     final HWVORBatch converter = new HWVORBatch();
-    
+
     final IObservation[] obs = converter.readObservations( vorFile, type, null );
 
     // change metadata: add FILE_NAME and copy all metadata from corresponding input zml
@@ -316,16 +336,16 @@ public class SaaleCalcJob implements ICalcJob
     {
       final IObservation observation = obs[i];
       final MetadataList obsMeta = observation.getMetadataList();
-      
+
       final String identifier = observation.getName();
       final MetadataList oldMeta = (MetadataList)m_metadataMap.get( type + "#" + identifier );
       if( oldMeta != null )
         obsMeta.putAll( oldMeta );
-      
+
       obsMeta.put( "Datei", vorFile.getAbsolutePath() );
     }
-    
-    converter.obs2zml( null, outDir, type, obs );    
+
+    converter.obs2zml( null, outDir, type, obs );
   }
-  
+
 }

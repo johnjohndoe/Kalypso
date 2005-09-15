@@ -34,10 +34,25 @@
 
 		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
 			<argument name="link" value="Zufluss_gerechnet"/>
-			<argument name="href" value="Ergebnisse/Durchfluss/${fidOnlyDigits}.zml"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${property:PNR-Zufluss}.zml"/>
 		</visitor>
 
-<!-- Ombormeter -->
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Abgabe_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${property:PNR}.zml"/>
+		</visitor>
+
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Steuerung_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${property:PNR_ST}.zml"/>
+		</visitor>
+
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Überleitung_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${property:PNR_NA}.zml"/>
+		</visitor>
+
+<!-- Ombrometer -->
 		<visitor featurePath="OmbrometerCollectionAssociation/OmbrometerMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
 			<argument name="link" value="Niederschlag"/>
 			<argument name="href" value="Ombrometer/${fidOnlyDigits}.zml"/>

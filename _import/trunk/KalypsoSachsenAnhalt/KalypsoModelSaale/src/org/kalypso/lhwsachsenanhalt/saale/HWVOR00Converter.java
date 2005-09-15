@@ -87,7 +87,7 @@ public class HWVOR00Converter
     return m_obsNames.isEmpty();
   }
 
-  public void addObservation( final IObservation inObs, final String timeAxis, final String dataAxis )
+  public void addObservation( final IObservation inObs, final String obsName, final String timeAxis, final String dataAxis )
   {
     IAxis axTime;
     IAxis axData;
@@ -95,7 +95,7 @@ public class HWVOR00Converter
     Number value;
     Date date;
 
-    m_obsNames.add( m_obsNum, inObs.getName() );
+    m_obsNames.add( m_obsNum, obsName );
 
     try
     {

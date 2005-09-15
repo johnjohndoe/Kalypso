@@ -84,8 +84,10 @@
 					<element ref="gml:location"/>
 					<element name="Inhalt" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Inhalt_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="Zufluss" type="obslink:TimeseriesLinkFeatureProperty"/>
-					<element name="Abgabe" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Zufluss_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Abgabe_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Steuerung_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Überleitung_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>

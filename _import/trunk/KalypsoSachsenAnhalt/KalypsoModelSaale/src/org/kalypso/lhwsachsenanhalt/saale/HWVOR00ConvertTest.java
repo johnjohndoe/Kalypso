@@ -72,8 +72,8 @@ public class HWVOR00ConvertTest extends TestCase
 
     final Writer out = new BufferedWriter( new FileWriter( "C:\\test.txt" ) );
     final HWVOR00Converter conv = new HWVOR00Converter();
-    conv.addObservation( observations[0], "date", "N" );
-    conv.addObservation( observations[1], "date", "N" );
+    conv.addObservation( observations[0], "555000", "date", "N" );
+    conv.addObservation( observations[1], "505050", "date", "N" );
     conv.toHWVOR00( out );
     out.close();
     file.delete();

@@ -200,7 +200,7 @@ public class HWVORBatch
 
       setForecastHours( observation );
 
-      final File outFile = new File( outDir, "ID" + name + ".zml" );
+      final File outFile = new File( outDir, name + ".zml" );
 
       final FileOutputStream stream = new FileOutputStream( outFile );
       final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );

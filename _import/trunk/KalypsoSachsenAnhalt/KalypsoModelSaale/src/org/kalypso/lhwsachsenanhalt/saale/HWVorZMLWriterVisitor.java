@@ -111,16 +111,18 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
       return true;  
     }
 
+    final String href = link.getHref();
     try
     {
-      final IObservation observation = ZmlFactory.parseXML( m_resolver.resolveURL( m_context, link.getHref() ), "id" );
-
-      final String identifier = observation.getName();
+      // HACK: we know, that the names of the zml files are exactly the Pegel-Numbers. So just
+      // delete all non-digits and we have the original number.
+      final String id = href.replaceAll( "\\D", "" );
+      final IObservation observation = ZmlFactory.parseXML( m_resolver.resolveURL( m_context, href ), id );
       final MetadataList obsMeta = observation.getMetadataList();
       final MetadataList clonedMeta = new MetadataList();
       clonedMeta.putAll( obsMeta );
-      m_metadataMap.put( m_dataAxis + "#" + identifier, clonedMeta );
-      m_converter.addObservation( observation, TimeserieConstants.TYPE_DATE, m_dataAxis );
+      m_metadataMap.put( m_dataAxis + "#" + id, clonedMeta );
+      m_converter.addObservation( observation, id, TimeserieConstants.TYPE_DATE, m_dataAxis );
     }
     catch( final MalformedURLException e )
     {
@@ -131,7 +133,7 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logger.warning( "Zeitreihe konnte aus Modell nicht gelesen werden: " + link.getHref() );
+      m_logger.warning( "Zeitreihe konnte aus Modell nicht gelesen werden: " + href );
     }
 
     return true;
