@@ -61,6 +61,14 @@ public class WfsLoader extends AbstractLoader
 
   private URL m_url = null;
 
+  private String m_filter = null;
+
+  public final static String URL_KEY = "URL";
+
+  public final static String FILTER_KEY = "FILTER";
+
+  public final static String FEATURE_KEY = "FEATURE";
+
   /**
    * Loads a WFS DataSource from the given URL
    * 
@@ -78,16 +86,18 @@ public class WfsLoader extends AbstractLoader
     {
       monitor.beginTask( "WFS laden", 1000 );
       final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
-      final String path = sourceProps.getProperty( "URL" );
+      final String path = sourceProps.getProperty( URL_KEY );
 
-      m_featureType = sourceProps.getProperty( "FEATURE" );
+      m_featureType = sourceProps.getProperty( FEATURE_KEY );
+      m_filter = sourceProps.getProperty( FILTER_KEY );
 
       if( path != null )
       {
         m_url = new URL( path );
       }
+
       m_schemaURL = new URL( m_url + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + m_featureType );
-//      GMLSchema schema = GMLSchemaCatalog.getSchema( m_schemaURL );
+      //      GMLSchema schema = GMLSchemaCatalog.getSchema( m_schemaURL );
 
       //
       //          if (array[0].length() > 0 && array[0].startsWith("http://"))
@@ -156,7 +166,7 @@ public class WfsLoader extends AbstractLoader
 
       //read response from the WFS server and create a GMLWorkspace
       inputStream = new BufferedInputStream( con.getInputStream() );
-//      writeInputStreamToFile( "d://temp//getfeature_deegree_wfs.xml", inputStream );
+      //      writeInputStreamToFile( "d://temp//getfeature_deegree_wfs.xml", inputStream );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, m_schemaURL );
       inputStream.close();
 
@@ -229,20 +239,25 @@ public class WfsLoader extends AbstractLoader
   private String buildGetFeatureRequestPOST()
   {
     StringBuffer sb = new StringBuffer();
-    sb.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" );// iso-8859-1 
+    sb.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" );// iso-8859-1
     sb.append( "<GetFeature outputFormat=\"GML2\" xmlns:gml=\"http://www.opengis.net/gml\">\n" );
     sb.append( "<Query typeName=\"" + m_featureType + "\">\n" );
-    sb.append( "<Filter>\n" );
-    sb.append( "</Filter>\n" );
+    if( m_filter == null )
+    {
+      sb.append( "<Filter>\n" );
+      sb.append( "</Filter>\n" );
+    }
+    else
+      sb.append( m_filter );
     sb.append( "</Query>" );
     sb.append( "</GetFeature>" );
     return sb.toString();
   }
 
-//  private String buildGetFeatureRequestGET()
-//  {
-//    return m_url + "?REQUEST=GetFeature&SERVICE=wfs&VERSION=1.0.0&typename=" + m_featureType;
-//  }
+  //  private String buildGetFeatureRequestGET()
+  //  {
+  //    return m_url + "?REQUEST=GetFeature&SERVICE=wfs&VERSION=1.0.0&typename=" + m_featureType;
+  //  }
 
   /**
    * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
@@ -255,7 +270,7 @@ public class WfsLoader extends AbstractLoader
     {
       Display display = new Display();
       MessageDialog md = new MessageDialog( new Shell( display ), "Speichern der Daten vom WFS",
-          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                           ).createImage(), "Sollen die Daten Lokal gespeichrt werden?",
+          ( ImageProvider.IMAGE_STYLEEDITOR_SAVE                                ).createImage(), "Sollen die Daten Lokal gespeichrt werden?",
           MessageDialog.QUESTION, new String[]
           {
               "Ja",

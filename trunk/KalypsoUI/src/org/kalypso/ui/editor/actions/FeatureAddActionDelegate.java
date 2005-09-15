@@ -149,7 +149,7 @@ public class FeatureAddActionDelegate implements IActionDelegate
         if( property instanceof List )
         {
           size = ( (List)property ).size();
-          if( maxOccurs == -1 )
+          if( maxOccurs == FeatureType.UNBOUND_OCCURENCY )
             return true;
           else if( maxOccurs < size )
             return false;

@@ -25,10 +25,11 @@
       <import plugin="org.kalypso.auth"/>
       <import plugin="org.kalypso.commons"/>
       <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="org.kalypso.metadoc"/>
       <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.services.core.client"/>
       <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.services.metadoc"/>
+      <import plugin="org.kalypso.metadoc"/>
    </requires>
 
       <extension

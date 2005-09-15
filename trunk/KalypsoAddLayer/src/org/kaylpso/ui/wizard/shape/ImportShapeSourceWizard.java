@@ -89,22 +89,23 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     try
     {
       File shapeBaseFile = m_page.getShapeBaseFile();
-      
+
       String stylePath = null;
       String styleName = null;
-      
+
       if( m_page.checkDefaultStyle() )
       {
-      //read Shapefile
-      GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBaseFile.toString(),
-          m_page.getCRS() );
+        //read Shapefile
+        GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBaseFile.toString(), m_page.getCRS() );
 
-      //get DefaultStyle
-      styleName = shapeBaseFile.getName();
-      URL styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
-          shapeWS.getFeatureType( shapeBaseFile.toString() ), styleName );
-      stylePath = styleHref.toString();
-      }else{
+        //get DefaultStyle
+        styleName = shapeBaseFile.getName();
+        URL styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
+            shapeWS.getFeatureType( shapeBaseFile.toString() ), styleName );
+        stylePath = styleHref.toString();
+      }
+      else
+      {
         stylePath = getRelativeProjectPath( m_page.getStylePath() );
         styleName = m_page.getStyleName();
       }
@@ -113,9 +114,8 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
       IMapModell mapModell = m_outlineviewer.getMapModell();
       String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
       String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
-      AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, themeName,
-          "shape", "featureMember", fileName, "sld", styleName,
-          stylePath, "simple" );
+      AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, themeName, "shape",
+          "featureMember", fileName, "sld", styleName, stylePath, "simple" );
       m_outlineviewer.postCommand( command, null );
     }
 
@@ -139,7 +139,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     m_page.removeListeners();
     return true;
   }
-  
+
   private String getRelativeProjectPath( IPath path )
   {
     return "project:/" + path.removeFirstSegments( 1 ).toString();

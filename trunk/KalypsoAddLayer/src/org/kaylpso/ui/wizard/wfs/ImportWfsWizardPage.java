@@ -1,51 +1,3 @@
-package org.kaylpso.ui.wizard.wfs;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.TreeSet;
-
-import javax.naming.OperationNotSupportedException;
-
-import org.deegree.services.wfs.capabilities.FeatureType;
-import org.deegree.services.wfs.capabilities.WFSCapabilities;
-import org.deegree.services.wms.StyleNotDefinedException;
-import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.GMLSchema;
-import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.xml.sax.SAXException;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -86,12 +38,57 @@ import org.xml.sax.SAXException;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kaylpso.ui.wizard.wfs;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeSet;
+
+import javax.naming.OperationNotSupportedException;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.deegree.services.wfs.capabilities.WFSCapabilities;
+import org.deegree.services.wms.StyleNotDefinedException;
+import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+
 /**
- * 
  * @author Kuepferle
- *  
  */
-public class ImportWfsWizardPage extends WizardPage implements SelectionListener, KeyListener
+public class ImportWfsWizardPage extends WizardPage
 {
   private Combo m_url = null;
 
@@ -111,9 +108,7 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
 
   protected static final String bufferDefault = "10";
 
-  private Composite m_layerSelection;
-
-  private FeatureType[] m_featureTypes = null;
+  private HashMap m_featureTypes = new HashMap();
 
   private List m_listLeftSide;
 
@@ -141,77 +136,175 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
 
   private static final int MIN_LIST_HIGHT = 150;
 
-  private WFSCapabilities m_wfsCapabilites;
+  private WFSCapabilities m_wfsCapabilites = null;
 
   private Button m_addFilterButton;
 
-  private Filter m_filter;
+  private HashMap m_filter = new HashMap();
 
-  /**
-   * 
-   * @author kuepfer
-   */
+  private final SelectionListener m_urlSelectionListener = new SelectionListener()
+  {
+
+    public void widgetSelected( final SelectionEvent e )
+    {
+      reloadServer();
+    }
+
+    public void widgetDefaultSelected( SelectionEvent e )
+    {
+      reloadServer();
+    }
+  };
+
+  private final SelectionListener m_authSelectionListener = new SelectionAdapter()
+  {
+    public void widgetSelected( SelectionEvent e )
+    {
+      if( m_authentification.getSelection() )
+      {
+        m_labelUser.setVisible( true );
+        m_labelPass.setVisible( true );
+        m_pass.setVisible( true );
+        m_user.setVisible( true );
+      }
+      else
+      {
+        m_labelUser.setVisible( false );
+        m_labelPass.setVisible( false );
+        m_pass.setVisible( false );
+        m_user.setVisible( false );
+      }
+      reloadServer();
+    }
+  };
+
+  private final SelectionListener m_userSelectionListener = new SelectionAdapter()
+  {
+    public void widgetSelected( SelectionEvent e )
+    {
+      reloadServer();
+    }
+
+    public void widgetDefaultSelected( SelectionEvent e )
+    {
+      reloadServer();
+    }
+  };
+
+  private final SelectionListener m_passSelectionListener = new SelectionAdapter()
+  {
+    public void widgetSelected( SelectionEvent e )
+    {
+      reloadServer();
+    }
+
+    public void widgetDefaultSelected( SelectionEvent e )
+    {
+      reloadServer();
+    }
+  };
+
+  private final SelectionListener m_leftSelectionListener = new SelectionAdapter()
+  {
+    public void widgetSelected( final SelectionEvent e )
+    {
+      updateButtons();
+    }
+  };
+
+  private final SelectionListener m_addButtonSelectionListener = new SelectionAdapter()
+  {
+    public void widgetSelected( SelectionEvent e )
+    {
+      addButtonPressed();
+    }
+  };
+
+  private final SelectionListener m_removeButtonSelectionListener = new SelectionAdapter()
+  {
+    public void widgetSelected( SelectionEvent e )
+    {
+      removeButtonPressed();
+    }
+  };
+
+  private final SelectionListener m_filterButtonSelectionListener = new SelectionAdapter()
+  {
+    public void widgetSelected( SelectionEvent e )
+    {
+      filterPressed();
+    }
+  };
+
+  private final SelectionListener m_rightSelectionListener = new SelectionAdapter()
+  {
+    public void widgetSelected( SelectionEvent e )
+    {
+      updateButtons();
+    }
+
+    public void widgetDefaultSelected( SelectionEvent e )
+    {
+      updateButtons();
+    }
+  };
+
+  private final ModifyListener m_urlModifyListener = new ModifyListener()
+  {
+    public void modifyText( final ModifyEvent e )
+    {
+      revalidatePage();
+    }
+  };
+
+  private Composite m_leftsideButtonC;
+
+  private Label m_authLabel;
+
   public ImportWfsWizardPage( String pageName )
   {
     super( pageName );
     setTitle( "Web Feature Service einbinden" );
     setMessage( "Web Feature Service Daten einbinden." );
     setPageComplete( false );
-
   }
 
-  /*
-   * 
-   * @author kuepfer
-   */
   public ImportWfsWizardPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
     setPageComplete( false );
-
   }
 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite arg0 )
+  public void createControl( final Composite parent )
   {
-    Composite composite = new Group( arg0, SWT.NULL );
-    GridLayout layout = new GridLayout( 1, false );
+    final Composite composite = new Group( parent, SWT.NULL );
+    final GridLayout layout = new GridLayout( 1, false );
     composite.setLayout( layout );
 
     createSourceFields( composite );
-    m_authentification = new Button( composite, SWT.CHECK );
-    m_authentification.setText( "Authentifizierung" );
-    m_authentification.setToolTipText( "Eingabe von Benutzername und Passwort für den Zugriff auf den Service" );
-    m_authentification.setSelection( true );
-    m_authentification.addSelectionListener( this );
 
     createLayerSelectionControl( composite );
-    m_addFilterButton = new Button( composite, SWT.NULL );
-    m_addFilterButton.setText( "Filter hinzufügen.." );
-    m_addFilterButton.setToolTipText( "Erstellen/hinzufügen eines Filters für ein WFS Querable Request" );
-    m_addFilterButton.addSelectionListener( this );
-    m_addFilterButton.setEnabled( false );
-    composite.layout();
-    composite.pack();
-    setControl( arg0 );
-    setPageComplete( false );
 
+    setControl( parent );
+    setPageComplete( false );
   }
 
-  private void createSourceFields( Composite composite )
+  private void createSourceFields( final Composite parent )
   {
-    Group fieldGroup = new Group( composite, SWT.NULL );
+    final Group fieldGroup = new Group( parent, SWT.NULL );
     fieldGroup.setLayout( new GridLayout( 2, false ) );
     fieldGroup.setText( "Verbindungsdaten" );
+    fieldGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+
     //  add url
     m_labelUrl = new Label( fieldGroup, SWT.NONE );
     m_labelUrl.setText( "URL:" );
     m_labelUrl.setToolTipText( "URL des Web Feature Servers (WFS)" );
     m_labelUrl.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
-    GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-    gridData.widthHint = 400;
+
     //initialize availabel Servers
     ArrayList catalog = ( (ImportWfsSourceWizard)getWizard() ).getCatalog();
     if( catalog == null )
@@ -219,34 +312,50 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
     m_url = new Combo( fieldGroup, SWT.BORDER );
     m_url.setItems( (String[])catalog.toArray( new String[catalog.size()] ) );
     m_url.setVisibleItemCount( 15 );
+
+    final GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+    gridData.widthHint = 400;
     m_url.setLayoutData( gridData );
-    m_url.select( 0 );
-    m_url.addKeyListener( this );
+    m_url.addSelectionListener( m_urlSelectionListener );
+    m_url.addModifyListener( m_urlModifyListener );
 
     // add spacer
-    Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
+    final Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
     label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 3 ) );
+
+    //dummy to keep the layoutaut
+    //    new Label( fieldGroup, SWT.NONE ).setLayoutData( new GridData() );
 
     // usr
     m_labelUser = new Label( fieldGroup, SWT.NONE );
     m_labelUser.setText( "Benutzername:" );
     m_labelUser.setToolTipText( "Benutzername für den gewählten Server" );
     m_labelUser.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
+    m_labelUser.setVisible( false );
 
     m_user = new Text( fieldGroup, SWT.BORDER );
     m_user.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_user.addKeyListener( this );
+    m_user.addSelectionListener( m_userSelectionListener );
+    m_user.setVisible( false );
 
     // pass
     m_labelPass = new Label( fieldGroup, SWT.NONE );
     m_labelPass.setText( "Passwort:" );
     m_labelPass.setToolTipText( "Passwort für den gewählten Server" );
     m_labelPass.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
+    m_labelPass.setVisible( false );
 
     m_pass = new Text( fieldGroup, SWT.BORDER | SWT.PASSWORD );
     m_pass.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_pass.addKeyListener( this );
+    m_pass.addSelectionListener( m_passSelectionListener );
+    m_pass.setVisible( false );
 
+    m_authentification = new Button( fieldGroup, SWT.CHECK );
+    m_authentification.setText( "Authentifizierung" );
+    m_authentification
+        .setToolTipText( "Einblenden der Eingabefelder für Benutzername und Passwort für den Zugriff auf geschützte Services" );
+    m_authentification.setSelection( false );
+    m_authentification.addSelectionListener( m_authSelectionListener );
     /*
      * add advanced stuff
      * 
@@ -266,42 +375,40 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
   {
     m_layerGroup = new Group( composite, SWT.CENTER );
     m_layerGroup.setText( "Verfügbare Themen des Web Feature Servers" );
-    GridLayout gridLayout = new GridLayout();
+    GridLayout gridLayout = new GridLayout( 4, false );
     gridLayout.marginHeight = 10;
     gridLayout.horizontalSpacing = 10;
     gridLayout.verticalSpacing = 10;
     m_layerGroup.setLayout( gridLayout );
     m_layerGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    m_layerSelection = new Composite( m_layerGroup, SWT.NULL );
-    m_layerSelection.setLayout( new GridLayout( 3, false ) );
-    m_layerSelection.setLayoutData( new GridData( MIN_DIALOG_WIDTH, SWT.DEFAULT ) );
+    m_listLeftSide = new List( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
+    m_listLeftSide.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_listLeftSide.addSelectionListener( m_leftSelectionListener );
 
-    m_listLeftSide = new List( m_layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
-    m_listLeftSide.setLayoutData( new GridData( MIN_LIST_WITH, MIN_LIST_HIGHT ) );
-    m_listLeftSide.setItems( getNamesFeatureType() );
-    m_listLeftSide.addSelectionListener( this );
-
-    m_buttonComposite = new Composite( m_layerSelection, SWT.NULL );
-    m_buttonComposite.setLayout( new GridLayout() );
-    m_buttonComposite.setLayoutData( new GridData( 50, SWT.DEFAULT ) );
-
-    m_addLayer = new Button( m_buttonComposite, SWT.PUSH );
+    m_addLayer = new Button( m_layerGroup, SWT.PUSH );
     m_addLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     m_addLayer.setToolTipText( "Hinzufügen eines Themas zur Kartenansicht" );
-    m_addLayer.addSelectionListener( this );
-    m_removeLayer = new Button( m_buttonComposite, SWT.PUSH );
-    m_removeLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
+    m_addLayer.addSelectionListener( m_addButtonSelectionListener );
+    m_addLayer.setEnabled( false );
+    m_listRightSide = new List( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
+    m_listRightSide.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_listRightSide.addSelectionListener( m_rightSelectionListener );
+    m_leftsideButtonC = new Composite( m_layerGroup, SWT.NULL );
+    m_leftsideButtonC.setLayout( new GridLayout() );
+    m_leftsideButtonC.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_leftsideButtonC.setLayoutData( new GridData( 40, SWT.DEFAULT ) );
+    m_removeLayer = new Button( m_leftsideButtonC, SWT.PUSH );
+    m_removeLayer.setEnabled( false );
+    m_removeLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     m_removeLayer.setToolTipText( "Entfernen des gewählten Themas aus der Kartenansicht" );
-    m_removeLayer.addSelectionListener( this );
-
-    m_listRightSide = new List( m_layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
-    m_listRightSide.setLayoutData( new GridData( MIN_LIST_WITH, MIN_LIST_HIGHT ) );
-    m_listRightSide.addSelectionListener( this );
-
-    m_layerGroup.setVisible( false );
-    m_layerGroup.pack();
-
+    m_removeLayer.addSelectionListener( m_removeButtonSelectionListener );
+    m_addFilterButton = new Button( m_leftsideButtonC, SWT.NULL );
+    m_addFilterButton.setImage( ImageProvider.IMAGE_FILTERDIALOG_ADD_FILTER.createImage() );
+    m_addFilterButton.setToolTipText( "Erstellen/hinzufügen eines Filters für ein WFS Querable Request" );
+    m_addFilterButton.addSelectionListener( m_filterButtonSelectionListener );
+    m_addFilterButton.setEnabled( false );
+    m_layerGroup.setVisible( true );
   }
 
   // private Composite createAdvancedControl( Composite arg0 )
@@ -380,98 +487,7 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
   //  }
 
   /**
-   * TODO summary sentence for modifyText ...
    * 
-   * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-   * @param e
-   */
-  public void modifyText( ModifyEvent e )
-  {
-    if( e.widget != null && e.widget instanceof Text )
-      ( (Text)e.widget ).setForeground( null );
-    if( e.widget == m_url )
-    {
-      if( validateURLField() )
-      {
-        try
-        {
-          m_featureTypes = getFeatureTypesFromURL( getUrl() );
-        }
-        catch( MalformedURLException e1 )
-        {
-          setMessage( e1.getMessage() );
-          setPageComplete( false );
-        }
-        if( m_featureTypes == null || m_url.getText().length() < 1 )
-          m_layerSelection.setVisible( false );
-        updateLayerSelection();
-        setErrorMessage( null );
-      }
-      else
-      {
-        setPageComplete( false );
-        setErrorMessage( "Ungültige URL" );
-      }
-    }
-    getContainer().updateButtons();
-  }
-
-  private void updateLayerSelection()
-  {
-    if( m_featureTypes.length < 1 || m_featureTypes == null )
-    {
-      m_layerSelection.setVisible( false );
-      m_addFilterButton.setEnabled( false );
-    }
-    if( m_listRightSide.getItemCount() < 1 )
-    {
-      m_removeLayer.setEnabled( false );
-      m_addFilterButton.setEnabled( false );
-    }
-    else
-    {
-      m_removeLayer.setEnabled( true );
-      m_addFilterButton.setEnabled( true );
-    }
-    if( m_listRightSide.getSelectionCount() > 1 || m_featureTypes != null )
-    {
-      m_layerGroup.setVisible( true );
-      m_listLeftSide.setItems( getNamesFeatureType() );
-      m_layerGroup.redraw();
-      m_layerGroup.pack();
-      m_addFilterButton.setEnabled( true );
-      setPageComplete( true );
-    }
-    getControl().redraw();
-  }
-
-  private boolean isvalidURL( String urlToCheck )
-  {
-    try
-    {
-      URL validUrl = new URL( urlToCheck );
-      URLConnection con = validUrl.openConnection();
-      System.out.println( urlToCheck );
-      con.connect();
-
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-      setErrorMessage( "Die gewählte URL ist ungültig" );
-      return false;
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-      setErrorMessage( "Konnte keine Verbindung zum Server aufbauen" );
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * TODO summary sentence for widgetSelected ...
    * 
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    * @param e
@@ -506,146 +522,14 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
       //          advanced.setVisible( advancedTag.getSelection() );
       //        }
       //      }
-      if( b.equals( m_addLayer ) )
-      {
-        String[] selection = m_listLeftSide.getSelection();
-        if( selection != null )
-        {
-          addNewSelection( selection );
-          updateLayerSelection();
-        }
-      }
-      if( b.equals( m_removeLayer ) )
-      {
 
-        String[] selection = m_listRightSide.getSelection();
-        if( selection != null )
-        {
-          removeSelection( selection );
-          updateLayerSelection();
-        }
-      }
-      if( b.equals( m_authentification ) )
-      {
-        if( m_authentification.getSelection() )
-        {
-          m_labelUser.setVisible( true );
-          m_labelPass.setVisible( true );
-          m_pass.setVisible( true );
-          m_user.setVisible( true );
-        }
-        else
-        {
-          m_labelUser.setVisible( false );
-          m_labelPass.setVisible( false );
-          m_pass.setVisible( false );
-          m_user.setVisible( false );
-        }
-      }
-      if( b.equals( m_addFilterButton ) )
-      {
-        Shell parent = getShell();
-
-        final FilterDialog dialog;
-        try
-        {
-          dialog = new FilterDialog( parent, getFeatureTypes( m_listRightSide.getItems() )[0], null );
-          int open = dialog.open();
-          if( open == Window.OK )
-          {
-            m_filter = dialog.getFilter();
-          }
-
-        }
-        catch( Exception e1 )
-        {
-          // TODO Auto-generated catch block
-          e1.printStackTrace();
-        }
-
-      }
     }
     getContainer().updateButtons();
-  }
-
-  public URL[] getDescribeFeatureTypeURLs( String[] layers ) throws MalformedURLException
-  {
-    URL[] urls = new URL[layers.length];
-    for( int i = 0; i < layers.length; i++ )
-    {
-      String layer = layers[i];
-      urls[i] = getSchemaURL( layer );
-
-    }
-    return urls;
   }
 
   private URL getSchemaURL( String layer ) throws MalformedURLException
   {
     return new URL( getUrl() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );
-  }
-
-  //  private org.kalypsodeegree.model.feature.FeatureType getFeatureType(
-  // FeatureType ft )
-  //  {
-  //    try
-  //    {
-  //      URL schemaURL = getDescribeFeatureTypeURL( ft.getName() );
-  //      URLConnection cox = schemaURL.openConnection();
-  //      InputStream is = cox.getInputStream();
-  //      Reader reader = new InputStreamReader( is );
-  //      Document doc = XMLTools.parse( reader );
-  //      GMLDocument_Impl gml = new GMLDocument_Impl( doc );
-  //      GMLProperty[] properties = gml.getRoot().getProperties();
-  //      for( int i = 0; i < properties.length; i++ )
-  //      {
-  //        GMLProperty property = properties[i];
-  //        System.out.println( property.getPropertyValue() );
-  //        if( property.getPropertyValue().equals( ft.getName() ) )
-  //          System.out.println( "" );
-  //      }
-  //
-  //    }
-  //    catch( MalformedURLException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //    catch( IOException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //    catch( SAXException e )
-  //    {
-  //      e.printStackTrace();
-  //    }
-  //    return null;
-  //  }
-
-  private void removeSelection( String[] selection )
-  {
-    String[] list = m_listRightSide.getItems();
-    for( int i = 0; i < selection.length; i++ )
-    {
-      String item = selection[i];
-      if( contains( item, list ) )
-        m_listRightSide.remove( item );
-
-    }
-  }
-
-  private void addNewSelection( String[] selection )
-  {
-    String[] original = m_listRightSide.getItems();
-    if( original.length > 0 )
-      for( int i = 0; i < selection.length; i++ )
-      {
-        String item = selection[i];
-        if( !contains( item, original ) )
-          m_listRightSide.add( item );
-
-      }
-    else
-      m_listRightSide.setItems( selection );
   }
 
   /**
@@ -662,43 +546,17 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
     }
   }
 
-  private FeatureType[] getFeatureTypesFromURL( URL service )
+  private WFSCapabilities getCapabilites() throws MalformedURLException, IOException, Exception
   {
-    m_wfsCapabilites = null;
-    try
-    {
 
-      final URL urlGetCap = new URL( service + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
-      final URLConnection conGetCap = urlGetCap.openConnection();
-      conGetCap.addRequestProperty( "SERVICE", "WFS" );
-      conGetCap.addRequestProperty( "VERSION", "1.0.0" );
-      conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
-      InputStream isGetCap = conGetCap.getInputStream();
-      m_wfsCapabilites = WFSCapabilitiesFactory.createCapabilities( new InputStreamReader( isGetCap ) );
-      //search all availabele layers on this service
-      //      FileWriter fw = new FileWriter("d://temp//caps.xml");
-      //      fw.write( wfsCapabilites.exportAsXML());
-      return m_wfsCapabilites.getFeatureTypeList().getFeatureTypes();
-
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-      setErrorMessage( "Die URL des Servers ist ungültig, der Server ist off-line oder verweigert die Verbindung." );
-      return null;
-    }
-    catch( SAXException e )
-    {
-      e.printStackTrace();
-      //TODO handel exeption
-      setErrorMessage( "Fehler beim lesen der Capabilies: " + e );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      setErrorMessage( "Fehler beim absetzen des GetCapabilites Request" + e );
-    }
-    return null;
+    final URL urlGetCap = new URL( getUrl().toString().trim() + "?"
+        + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
+    final URLConnection conGetCap = urlGetCap.openConnection();
+    conGetCap.addRequestProperty( "SERVICE", "WFS" );
+    conGetCap.addRequestProperty( "VERSION", "1.0.0" );
+    conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
+    InputStream isGetCap = conGetCap.getInputStream();
+    return WFSCapabilitiesFactory.createCapabilities( new InputStreamReader( isGetCap ) );
   }
 
   /**
@@ -707,52 +565,20 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
    * 
    * @return an array of strings sorted alphabetically
    */
-  private String[] getNamesFeatureType()
+  private String[] getLayerNamesFromCapabilities()
   {
-    if( m_featureTypes != null )
+    if( m_wfsCapabilites != null )
     {
       TreeSet list = new TreeSet();
-      for( int i = 0; i < m_featureTypes.length; i++ )
+      org.deegree.services.wfs.capabilities.FeatureType[] featureTypes = m_wfsCapabilites.getFeatureTypeList()
+          .getFeatureTypes();
+      for( int i = 0; i < featureTypes.length; i++ )
       {
-        list.add( m_featureTypes[i].getName() );
+        list.add( featureTypes[i].getName() );
       }
       return (String[])list.toArray( new String[list.size()] );
     }
-    return new String[]
-    { "" };
-  }
-
-  private boolean contains( String item, String[] list )
-  {
-
-    for( int i = 0; i < list.length; i++ )
-    {
-      String listItem = list[i];
-      if( item.equals( listItem ) )
-        return true;
-    }
-
-    return false;
-  }
-
-  private boolean validateURLField()
-  {
-    //   checks catchment field entry and file suffix
-    if( m_url.getText().length() == 0 )
-    {
-      setErrorMessage( "Das URL Feld darf nicht leer sein" );
-      setPageComplete( false );
-      return false;
-    }
-    else if( isvalidURL( m_url.getText() ) == false )
-    {
-      setPageComplete( false );
-      return false;
-    }
-    //setPageComplete(true);
-    setErrorMessage( null );
-    setMessage( null );
-    return true;
+    return new String[0];
   }
 
   public String[] getSelectedFeatureNames()
@@ -760,72 +586,15 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
     return m_listRightSide.getItems();
   }
 
-  public org.kalypsodeegree.model.feature.FeatureType[] getSelectedFeatureTypes() throws Exception
+  public FeatureType[] getSelectedFeatureTypes() throws Exception
   {
-    String[] selectedLayers = m_listRightSide.getSelection();
-    org.kalypsodeegree.model.feature.FeatureType[] res = new org.kalypsodeegree.model.feature.FeatureType[selectedLayers.length];
-    for( int i = 0; i < selectedLayers.length; i++ )
-    {
-      String name = selectedLayers[i];
-      GMLSchema schema = getFeatureTypeSchema( name );
-      org.kalypsodeegree.model.feature.FeatureType[] ft = schema.getFeatureTypes();
-      if( ft.length == 1 )
-        
-      for( int j = 0; j < ft.length; j++ )
-      {
-        org.kalypsodeegree.model.feature.FeatureType featureType = ft[j];
-        if( featureType.getName().equals( name ) )
-        {
-          res[i] = featureType;
-        }
-      }
-    }
-    return res;
+    String[] selectedFeatureNames = getSelectedFeatureNames();
+    return getFeatureTypes( selectedFeatureNames );
   }
 
   public URL getUrl() throws MalformedURLException
   {
     return new URL( m_url.getText().trim() );
-  }
-
-  public String guessGeometryType() throws Exception
-  {
-    final org.kalypsodeegree.model.feature.FeatureType[] featureTypes = getSelectedFeatureTypes();
-    for( int i = 0; i < featureTypes.length; i++ )
-    {
-      final org.kalypsodeegree.model.feature.FeatureType type = featureTypes[i];
-      // TODO create style that fits to schema
-      final FeatureTypeProperty property = type.getProperty( "GEOM" );
-      if( property != null )
-        return property.getType();
-      // check for virtual properties
-      FeatureTypeProperty[] vProperty = type.getVirtuelFeatureTypeProperty();
-      if( vProperty != null )
-      {
-        for( int j = 0; j < vProperty.length; j++ )
-        {
-          FeatureTypeProperty vp = vProperty[i];
-          if( GeometryUtilities.isGeometry( vp ) )
-            return vp.getType();
-
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * This method returns the schema of a selected feature.
-   * 
-   * @param layer
-   *          name of feature (layer from WFS)
-   * @return schema of the feature
-   * 
-   *  
-   */
-  public GMLSchema getFeatureTypeSchema( String layer ) throws Exception
-  {
-    return GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
   }
 
   /**
@@ -836,7 +605,7 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
    * @return returns a hash set of feature type properties that is passed trough <em>clazz</em> parameter.
    *  
    */
-  private org.kalypsodeegree.model.feature.FeatureType[] getFeatureTypes( String[] layer )
+  private FeatureType[] getFeatureTypes( String[] layer )
 
   {
     HashSet res = new HashSet();
@@ -844,74 +613,28 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
     for( int i = 0; i < layer.length; i++ )
     {
       String l = layer[i];
-
-      try
+      FeatureType featureType = (FeatureType)m_featureTypes.get( l );
+      if( featureType == null )
       {
-        featureTypeSchema = getFeatureTypeSchema( l );
-      }
-      catch( Exception e )
-      {
-        setMessage( e.getMessage() );
-        setPageComplete( false );
-      }
-      org.kalypsodeegree.model.feature.FeatureType[] featureTypes = featureTypeSchema.getFeatureTypes();
-      for( int j = 0; j < featureTypes.length; j++ )
-      {
-        org.kalypsodeegree.model.feature.FeatureType property = featureTypes[j];
-
-        if( property.equals( featureTypeSchema.getFeatureType( property.getName() ) ) )
+        try
         {
-          res.add( property );
+          URL url = new URL( getUrl().toString().trim()
+              + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + l );
+          featureTypeSchema = GMLSchemaCatalog.getSchema( url );
+          featureType = featureTypeSchema.getFeatureType( l );
+          m_featureTypes.put( l, featureType );
+        }
+        catch( Exception e )
+        {
+          setMessage( e.getMessage() );
+          setPageComplete( false );
         }
       }
-    }
-    return (org.kalypsodeegree.model.feature.FeatureType[])res
-        .toArray( new org.kalypsodeegree.model.feature.FeatureType[res.size()] );
-  }
 
-  /**
-   * This Method guesses a geometry type for a feature layer from a wfs response. Does not support multi geometry
-   * features.
-   * 
-   * @param layer
-   *          layer name of the requestet feature
-   * @return type name of geometry property (first one found)
-   */
-  public String guessGeometryType( String layer )
-  {
-    try
-    {
-      GMLSchema schema = getFeatureTypeSchema( layer );
-      org.kalypsodeegree.model.feature.FeatureType[] featureTypes = schema.getFeatureTypes();
-      for( int i = 0; i < featureTypes.length; i++ )
-      {
-        org.kalypsodeegree.model.feature.FeatureType featureType = featureTypes[i];
-        FeatureTypeProperty[] properties = featureType.getProperties();
-        for( int j = 0; j < properties.length; j++ )
-        {
-          FeatureTypeProperty property = properties[j];
-          if( GeometryUtilities.isGeometry( property ) )
-          {
-            return property.getType();
-          }
-        }
-        FeatureTypeProperty[] vProperty = featureType.getVirtuelFeatureTypeProperty();
-        if( vProperty != null )
-        {
-          for( int j = 0; j < vProperty.length; j++ )
-          {
-            FeatureTypeProperty vp = vProperty[i];
-            if( GeometryUtilities.isGeometry( vp ) )
-              return vp.getType();
-          }
-        }
-      }
+      res.add( featureType );
+
     }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
+    return (FeatureType[])res.toArray( new FeatureType[res.size()] );
   }
 
   /**
@@ -926,13 +649,15 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
       OperationNotSupportedException
 
   {
+    //FIXME this method is not working properly, it has to be adjusted
+    //when the Schema parser is adjusted!!!!!!
     GMLSchema schema = GMLSchemaCatalog.getSchema( getSchemaURL( layer ) );
-    org.kalypsodeegree.model.feature.FeatureType[] featureTypes = schema.getFeatureTypes();
+    FeatureType[] featureTypes = schema.getFeatureTypes();
     if( featureTypes.length == 1 )
       return featureTypes[0].getName();
     for( int i = 0; i < featureTypes.length; i++ )
     {
-      org.kalypsodeegree.model.feature.FeatureType ft = featureTypes[i];
+      FeatureType ft = featureTypes[i];
       FeatureTypeProperty[] properties = ft.getProperties();
       for( int j = 0; j < properties.length; j++ )
       {
@@ -950,74 +675,120 @@ public class ImportWfsWizardPage extends WizardPage implements SelectionListener
   public URL setDefautltStyle( String layer ) throws StyleNotDefinedException
   {
 
-    return KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ( getFeatureTypes( new String[]
-    { layer } )[0] ), null );
+    return KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( getFeatureType( layer ), null );
   }
 
   public void removeListeners()
   {
-    m_addLayer.removeSelectionListener( this );
-    m_removeLayer.removeSelectionListener( this );
-    m_listLeftSide.removeSelectionListener( this );
-    m_listRightSide.removeSelectionListener( this );
-    m_url.removeKeyListener( this );
-    m_user.removeKeyListener( this );
-    m_pass.removeKeyListener( this );
-
+    m_addLayer.removeSelectionListener( m_addButtonSelectionListener );
+    m_removeLayer.removeSelectionListener( m_removeButtonSelectionListener );
+    m_listLeftSide.removeSelectionListener( m_leftSelectionListener );
+    m_listRightSide.removeSelectionListener( m_rightSelectionListener );
+    //    m_url.removeKeyListener( this );
+    //    m_user.removeKeyListener( this );
+    //    m_pass.removeKeyListener( this );
   }
 
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
-   */
-  public void keyPressed( KeyEvent e )
+  public Filter getFilter( String layerName )
   {
-  // do nothing
-
+    FeatureType featureType = getFeatureType( layerName );
+    return (Filter)m_filter.get( featureType );
   }
 
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
-   */
-  public void keyReleased( KeyEvent e )
+  protected void reloadServer()
   {
-    if( e.widget == m_url )
+
+    try
     {
-      if( validateURLField() && e.character == SWT.CR )
+      m_wfsCapabilites = getCapabilites();
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+      setErrorMessage( "Ungültige URL" );
+      setPageComplete( false );
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+      setErrorMessage( "Die Verbindung zum WFS-Dienst konnte nicht hergestellt werden" );
+      setPageComplete( false );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      setErrorMessage( "Fehler beim Lesen der Capabilites des WFS-Dienstes" );
+      setPageComplete( false );
+    }
+    String[] layerNames = getLayerNamesFromCapabilities();
+    m_listLeftSide.setItems( layerNames );
+    updateButtons();
+  }
+
+  protected void addButtonPressed()
+  {
+    String[] selection = m_listLeftSide.getSelection();
+    if( selection != null )
+    {
+      final String[] original = m_listRightSide.getItems();
+      for( int i = 0; i < selection.length; i++ )
       {
-        try
-        {
-          m_featureTypes = getFeatureTypesFromURL( getUrl() );
-        }
-        catch( MalformedURLException e1 )
-        {
-          setErrorMessage( e1.getMessage() );
-          setPageComplete( false );
-        }
-        if( m_featureTypes == null || m_url.getText().length() < 1 )
-          m_layerSelection.setVisible( false );
-        updateLayerSelection();
-        setErrorMessage( null );
+        final String item = selection[i];
+        if( !ArrayUtils.contains( original, item ) )
+          m_listRightSide.add( item );
       }
-      else
-      {
-        setPageComplete( false );
-        setErrorMessage( "Die eingegebene URL ist ungültig" );
-      }
-
+      updateButtons();
     }
-    if( e.widget == m_pass )
-    {
-      //TODO validation
-    }
-    if( e.widget == m_user )
-    {
-      //TODO check user name
-    }
-
   }
 
-  public Filter getFilter()
+  protected void removeButtonPressed()
   {
-    return m_filter;
+    String[] selection = m_listRightSide.getSelection();
+    if( selection != null )
+    {
+      String[] list = m_listRightSide.getItems();
+      for( int i = 0; i < selection.length; i++ )
+      {
+        String item = selection[i];
+        if( ArrayUtils.contains( list, item ) )
+          m_listRightSide.remove( item );
+
+      }
+      updateButtons();
+    }
+  }
+
+  protected void filterPressed()
+  {
+    // the add filter button is only enabled if the selection size == 1
+    FeatureType ft = getFeatureType( m_listRightSide.getSelection()[0] );
+    Filter filter = (Filter)m_filter.get( ft );
+    final FilterDialog dialog = new FilterDialog( getShell(), ft, filter );
+    int open = dialog.open();
+    if( open == Window.OK )
+    {
+      m_filter.put( ft, dialog.getFilter() );
+    }
+    revalidatePage();
+  }
+
+  protected void revalidatePage()
+  {
+    setPageComplete( m_listRightSide.getItemCount() > 0 );
+  }
+
+  private void updateButtons()
+  {
+    m_addFilterButton.setEnabled( m_listRightSide.getSelectionCount() == 1 );
+    m_removeLayer.setEnabled( m_listRightSide.getSelectionCount() > 0 );
+    m_addLayer.setEnabled( m_listLeftSide.getSelectionCount() > 0 );
+    revalidatePage();
+  }
+
+  private FeatureType getFeatureType( String layerName )
+  {
+    FeatureType[] featureTypes = getFeatureTypes( new String[]
+    { layerName } );
+    return featureTypes[0];
   }
 }

@@ -14,10 +14,15 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.loader.WfsLoader;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
+import org.kalypsodeegree.filterencoding.ElseFilter;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
+import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 import org.kaylpso.ui.KalypsoServiceConstants;
 import org.kaylpso.ui.action.AddThemeCommand;
 
@@ -76,10 +81,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   private ArrayList m_catalog;
 
   public ImportWfsSourceWizard()
-  {
-    super();
-
-  }
+  {}
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
@@ -96,7 +98,16 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
           String layer = layers[i];
           //Write the defaultStyle to the system-default temporary directory
           URL style = m_page.setDefautltStyle( layer );
-
+          Filter filter = m_page.getFilter( layer );
+          String xml = null;
+          if( filter == null )
+            xml = "";
+          else if( filter instanceof ComplexFilter )
+            xml = ( (ComplexFilter)filter ).toXML().toString();
+          else if( filter instanceof FeatureFilter )
+            xml = ( (FeatureFilter)filter ).toXML().toString();
+          else if( filter instanceof ElseFilter )
+            xml = ( (ElseFilter)filter ).toXML().toString();
           // TODO here the featurePath is set to featureMember because this is
           // the top feature of the GMLWorkspace
           // it must be implemented to only set the name of the feature
@@ -106,9 +117,9 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
             throw new OperationNotSupportedException(
                 "The guessing of feature path has failed. The user has to choose the feature path, not implemented yet" );
 
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layer,
-              "wfs", featurePath, "URL=" + m_page.getUrl() + "#" + "FEATURE=" + layer, "sld",
-              layer, style.toString(), "simple" );
+          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layer, "wfs", featurePath,
+              "#" + WfsLoader.URL_KEY + "=" + m_page.getUrl() + "#" + WfsLoader.FEATURE_KEY + "=" + layer + "#"
+                  + WfsLoader.FILTER_KEY + "=" + xml, "sld", layer, style.toString(), "simple" );
           m_outlineviewer.postCommand( command, null );
 
         }
@@ -143,7 +154,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     }
     finally
     {
-      IOUtils.closeQuietly(is);
+      IOUtils.closeQuietly( is );
     }
   }
 

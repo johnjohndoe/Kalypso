@@ -36,7 +36,10 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.CustoumFeatureTypeProperty;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * 
@@ -54,13 +57,28 @@ public class GMLEditorLabelProvider2 extends LabelProvider
    */
   public Image getImage( Object element )
   {
-    final ImageDescriptor descriptor;
+    ImageDescriptor descriptor = null;
     if( element instanceof Feature )
       descriptor = ImageProvider.IMAGE_FEATURE;
     else if( element instanceof FeatureAssociationTypeElement )
       descriptor = ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
     else if( element instanceof LinkedFeatureElement2 )
       descriptor = ImageProvider.IMAGE_FEATURE_LINKED;
+    else if( element instanceof FeatureTypeProperty )
+    {
+      if( GeometryUtilities.isPointGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_POINT;
+      if( GeometryUtilities.isMultiPointGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOINT;
+      if( GeometryUtilities.isLineStringGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_LINE;
+      if( GeometryUtilities.isMultiLineStringGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTILINE;
+      if( GeometryUtilities.isPolygonGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_POLYGON;
+      if( GeometryUtilities.isMultiPolygonGeometry( (FeatureTypeProperty)element ) )
+        descriptor = ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
+    }
     else
       return null;
     return descriptor.createImage();
@@ -92,6 +110,12 @@ public class GMLEditorLabelProvider2 extends LabelProvider
     {
       final Feature decoratedFeature = ( (LinkedFeatureElement2)element ).getDecoratedFeature();
       return "-> " + getText( decoratedFeature );
+    }
+    if( element instanceof FeatureTypeProperty )
+    {
+      FeatureTypeProperty ftp = (FeatureTypeProperty)element;
+      return GeometryUtilities.getClass( ftp ).getName().replaceAll( ".+\\.", "" );
+
     }
     return "unknown";
   }

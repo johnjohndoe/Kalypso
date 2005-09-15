@@ -263,6 +263,22 @@ public class FeatureHelper
     return ArrayUtils.toPrimitive( positions );
   }
 
+  public static FeatureAssociationTypeProperty[] getAllAssociations( Feature feature )
+  {
+    ArrayList res = new ArrayList();
+    FeatureType featureType = feature.getFeatureType();
+    FeatureTypeProperty[] properties = featureType.getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      FeatureTypeProperty property = properties[i];
+      if( property instanceof FeatureAssociationTypeProperty )
+      {
+        res.add( (FeatureAssociationTypeProperty)property );
+      }
+    }
+    return (FeatureAssociationTypeProperty[])res.toArray( new FeatureAssociationTypeProperty[res.size()] );
+  }
+
   public static boolean isCollection( Feature f )
   {
     FeatureType featureType = f.getFeatureType();

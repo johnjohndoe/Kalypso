@@ -42,6 +42,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author kuepfer
@@ -92,7 +93,11 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
         if( property instanceof FeatureAssociationTypeProperty )
           result.add( new FeatureAssociationTypeElement( (Feature)parentElement,
               (FeatureAssociationTypeProperty)property ) );
+
+        if( GeometryUtilities.isGeometry( property ) )
+          result.add( property );
       }
+      
       return result.toArray();
     }
     if( parentElement instanceof FeatureAssociationTypeElement )
