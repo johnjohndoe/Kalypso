@@ -57,8 +57,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * Unterstützte Variablen für das Pattern:
  * </p>
  * <ul>
- * <li>${fid} Die Feature-ID</li>
+ * <li>${fid} Feature-ID</li>
  * <li>${fidOnlyDigits} Same as ${fid}, but all non-digits are pruned. </li>
+ * <li>${property:<name>} Will be replaced with the String-Version of the property with name in the current feature. </li>
  * <li><${wiski_sim:link_property} Erstellt die Href anhand der Href der angegebenen Property. Diese wird nach dem Wiski-Simulations Pattern abgeändert. </li>
  * </ul>
  * 
@@ -120,11 +121,36 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     
     href = href.replaceAll( "\\Q${fid}\\E", fid );
     href = href.replaceAll( "\\Q${fidOnlyDigits}\\E", fidOnlyDigits );
-
+    href = replaceProperties( f, href );
+    
     // wiski pattern
     href = applyWiskiSim( href, f );
 
     return href;
+  }
+
+  private String replaceProperties( final Feature f, final String href )
+  {
+    final String PROPERTY = "${property";
+
+    String newHref = href;
+    while( true )
+    {
+      final int start = newHref.indexOf( PROPERTY );
+      if( start == -1 )
+        break;
+      
+      final int stop = newHref.indexOf( '}', start + PROPERTY.length() + 1 );
+      if( stop == -1 )
+        break;
+      
+      final String name = newHref.substring( start + PROPERTY.length() + 1, stop );
+      final Object value = f.getProperty( name );
+      final String replacement = value == null ? "<null>" : value.toString();
+      newHref = newHref.substring( 0, start ) + replacement + newHref.substring( stop + 1 );
+    }
+    
+    return newHref;
   }
 
   private String applyWiskiSim( final String href, final Feature f )
@@ -167,12 +193,8 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     if( lastPoint == -1 )
       return "";
     
-    final int lastLastPoint = href.lastIndexOf( '.', lastPoint -1 );
-    if( lastLastPoint == -1 )
-      return "";
-    
-    final String name = href.substring( 0, lastLastPoint );
-    final String tail = href.substring( lastLastPoint );
+    final String name = href.substring( 0, lastPoint );
+    final String tail = href.substring( lastPoint );
     
     return name + ".Sim" + tail;
   }

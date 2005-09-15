@@ -265,16 +265,14 @@ public class FeatureHelper
 
   public static FeatureAssociationTypeProperty[] getAllAssociations( Feature feature )
   {
-    ArrayList res = new ArrayList();
-    FeatureType featureType = feature.getFeatureType();
-    FeatureTypeProperty[] properties = featureType.getProperties();
+    final ArrayList res = new ArrayList();
+    final FeatureType featureType = feature.getFeatureType();
+    final FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      FeatureTypeProperty property = properties[i];
+      final FeatureTypeProperty property = properties[i];
       if( property instanceof FeatureAssociationTypeProperty )
-      {
-        res.add( (FeatureAssociationTypeProperty)property );
-      }
+        res.add( property );
     }
     return (FeatureAssociationTypeProperty[])res.toArray( new FeatureAssociationTypeProperty[res.size()] );
   }
