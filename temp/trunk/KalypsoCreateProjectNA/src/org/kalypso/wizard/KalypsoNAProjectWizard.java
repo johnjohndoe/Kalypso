@@ -49,6 +49,7 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -86,6 +87,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.schema.GMLSchema;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
+import org.kalypsodeegree_impl.model.feature.FeatureAssociationTypeProperty_Impl;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -105,22 +107,28 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   static final String PROJECT_PAGE = "page_type:createNewProject"; //$NON-NLS-1$
 
-  private final String m_resourceBase = WizardMessages.getString("KalypsoNAProjectWizard.ResourcePath"); //$NON-NLS-1$
+  private final String m_resourceBase = WizardMessages.getString( "KalypsoNAProjectWizard.ResourcePath" ); //$NON-NLS-1$
 
   static final FeatureType dummyFeatureType = FeatureFactory
-      .createFeatureType( "Gewässer", "wizard.kalypso.na", //$NON-NLS-1$ //$NON-NLS-2$
+      .createFeatureType(
+          "Gewässer", "wizard.kalypso.na", //$NON-NLS-1$ //$NON-NLS-2$
           new FeatureTypeProperty[]
           {
-              FeatureFactory.createFeatureTypeProperty( "Ort", "wizard.kalypso.na", GeometryUtilities.getLineStringClass().getName(), //$NON-NLS-2$
+              FeatureFactory.createFeatureTypeProperty(
+                  "Ort", "wizard.kalypso.na", GeometryUtilities.getLineStringClass().getName(), //$NON-NLS-2$
                   false, null ),
               FeatureFactory.createFeatureTypeProperty( "name", "wizard.kalypso.na", String.class.getName(), false, //$NON-NLS-1$ //$NON-NLS-2$
                   null ),
               FeatureFactory.createFeatureTypeProperty( "description", "wizard.kalypso.na", String.class.getName(), //$NON-NLS-1$ //$NON-NLS-2$
                   false, null ),
-//              FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class.getName(), false, //$NON-NLS-1$ //$NON-NLS-2$
-//                  null ),
-              FeatureFactory.createFeatureTypeProperty( WizardMessages.getString("KalypsoNAProjectWizard.ChannelFeatureTypeProperty"), "wizard.kalypso.na", Integer.class.getName(),  //$NON-NLS-1$//$NON-NLS-2$
-                  false, null ) }, new int[]
+              //              FeatureFactory.createFeatureTypeProperty( "inum", "wizard.kalypso.na", Integer.class.getName(), false,
+              // //$NON-NLS-1$
+              // //$NON-NLS-2$
+              //                  null ),
+              FeatureFactory
+                  .createFeatureTypeProperty(
+                      WizardMessages.getString( "KalypsoNAProjectWizard.ChannelFeatureTypeProperty" ), "wizard.kalypso.na", Integer.class.getName(), //$NON-NLS-1$//$NON-NLS-2$
+                      false, null ) }, new int[]
           {
               1,
               1 }, new int[]
@@ -181,8 +189,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     try
     {
       createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      createProjectPage.setDescription( WizardMessages.getString("KalypsoNAProjectWizard.DescriptionNewProjectPage") ); //$NON-NLS-1$
-      createProjectPage.setTitle( WizardMessages.getString("KalypsoNAProjectWizard.TitleNewProjectPage") ); //$NON-NLS-1$
+      createProjectPage.setDescription( WizardMessages.getString( "KalypsoNAProjectWizard.DescriptionNewProjectPage" ) ); //$NON-NLS-1$
+      createProjectPage.setTitle( WizardMessages.getString( "KalypsoNAProjectWizard.TitleNewProjectPage" ) ); //$NON-NLS-1$
       createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
       addPage( createProjectPage );
     }
@@ -191,19 +199,23 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       e.printStackTrace();
     }
 
-    createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, WizardMessages.getString("KalypsoNAProjectWizard.CatchmentPageTitle"), //$NON-NLS-1$
+    createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, WizardMessages
+        .getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
 
     addPage( createMappingCatchmentPage );
 
-    createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, WizardMessages.getString("KalypsoNAProjectWizard.ChannelPageTitle"), //$NON-NLS-1$
+    createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, WizardMessages
+        .getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, dummyFeatureType );
     addPage( createMappingRiverPage );
 
-    createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, WizardMessages.getString("KalypsoNAProjectWizard.NodePageTitle"), //$NON-NLS-1$
+    createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, WizardMessages
+        .getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
     addPage( createMappingNodePage );
-    createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, WizardMessages.getString("KalypsoNAProjectWizard.HydrotopePageTitle"), //$NON-NLS-1$
+    createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, WizardMessages
+        .getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
     addPage( createMappingHydrotopPage );
   }
@@ -424,7 +436,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       Feature sourceFeature = (Feature)sourceFeatureList.get( i );
       final String fid;
       if( idColKey != null )
-        fid = "Catchment" + (String)sourceFeature.getProperty( idColKey ); //$NON-NLS-1$
+        fid = "Catchment" + ( sourceFeature.getProperty( idColKey ) ).toString(); //$NON-NLS-1$
       else
         fid = sourceFeature.getId();
       Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
@@ -443,7 +455,25 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
         FeatureProperty fp = FeatureFactory.createFeatureProperty( targetkey, so );
         targetFeature.setProperty( fp );
-
+      }
+      // Bodenkorrekturparameter erstellen
+      //TODO: Anzahl durch Dialog
+      List list = new ArrayList();
+      FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty( "bodenkorrekturmember", list );
+      targetFeature.setProperty( bodenkorrekturProperty );
+      for( int j = 0; j < 3; j++ )
+      {
+        FeatureTypeProperty bodFtProp = modelFT.getProperty( "bodenkorrekturmember" );
+        FeatureType bodenKorrekturFT = ( (FeatureAssociationTypeProperty_Impl)bodFtProp ).getAssociationFeatureTypes()[0];
+        Feature newFeature = modelWS.createFeature( bodenKorrekturFT );
+        try
+        {
+          modelWS.addFeatureAsComposition( targetFeature, "bodenkorrekturmember", j, newFeature );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
       catchmentList.add( targetFeature );
     }
@@ -508,7 +538,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       idColKey = null;
 
     //StrangArt is defined in dummyFeatureType (member variable)
-    String typeKey = (String)mapping.get( WizardMessages.getString("KalypsoNAProjectWizard.ChannelFeatureTypeProperty") ); //$NON-NLS-1$
+    String typeKey = (String)mapping.get( WizardMessages
+        .getString( "KalypsoNAProjectWizard.ChannelFeatureTypeProperty" ) ); //$NON-NLS-1$
     //remove the channel type mapping (just needed once)
     mapping.remove( typeKey );
 
@@ -525,8 +556,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       catch( Exception e )
       {
         e.printStackTrace();
-        throw new NumberFormatException(
-            WizardMessages.getString("KalypsoNAProjectWizard.ExceptionStrangArt") ); //$NON-NLS-1$
+        throw new NumberFormatException( WizardMessages.getString( "KalypsoNAProjectWizard.ExceptionStrangArt" ) ); //$NON-NLS-1$
       }
 
       Feature targetFeature = null;
@@ -555,6 +585,27 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
         FeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
         targetFeature = FeatureFactory.createFeature( fid, kmFT, true );
+
+        // KMparameter erstellen
+        //TODO: Anzahl durch Dialog
+        List list = new ArrayList();
+        FeatureProperty kmParameterProperty = FeatureFactory.createFeatureProperty( "KMParameterMember", list );
+        targetFeature.setProperty( kmParameterProperty );
+        for( int j = 0; j < 5; j++ )
+        {
+          FeatureTypeProperty kmFtProp = kmFT.getProperty( "KMParameterMember" );
+          FeatureType kmParameterFT = ( (FeatureAssociationTypeProperty_Impl)kmFtProp ).getAssociationFeatureTypes()[0];
+          Feature newFeature = modelWS.createFeature( kmParameterFT );
+          try
+          {
+            modelWS.addFeatureAsComposition( targetFeature, "KMParameterMember", j, newFeature );
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+          }
+        }
+
         break;
       }
       case 2:
@@ -571,7 +622,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       }
       case 3:
       {
-        throw new NotImplementedException( WizardMessages.getString("KalypsoNAProjectWizard.ExceptionNotImplementedRHT") ); //$NON-NLS-1$
+        throw new NotImplementedException( WizardMessages
+            .getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
       }
       default:
       {
