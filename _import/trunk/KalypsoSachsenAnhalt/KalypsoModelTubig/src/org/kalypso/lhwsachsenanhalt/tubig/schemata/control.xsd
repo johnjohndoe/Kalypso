@@ -12,6 +12,15 @@
 		<complexContent>
 			<extension base="tubig:_TubigControlBaseType">
 				<sequence>
+					<element ref="tubig:ScenarioAssociation">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario</label>
+								<tooltip>Szenario der Modellrechnung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
 					<element ref="tubig:ControlAssociation">
 						<annotation>
 							<documentation xml:lang="de">
@@ -26,6 +35,52 @@
 							<documentation xml:lang="de">
 								<label>Metadaten</label>
 								<tooltip>Metadaten der Modellrechung</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="ScenarioAssociation" type="tubig:ScenarioAssociationType"/>
+	<complexType name="ScenarioAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubig:Scenario"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Scenario" type="tubig:ScenarioType" substitutionGroup="gml:_Feature"/>
+	<complexType name="ScenarioType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="scenarioId" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario Id</label>
+								<tooltip>Id des Szenario in welchem die Modellrechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="scenarioName" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario</label>
+								<tooltip>Name des Szenario in welchem dieModellrechnung durchgeführt wird</tooltip>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="scenarioDescription" type="string" minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Szenario Beschreibung</label>
+								<tooltip>Beschreibung des Szenario in welchem die Modellrechnung durchgeführt wird</tooltip>
 								<description/>
 							</documentation>
 						</annotation>
@@ -68,7 +123,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="tubig:BatchIDCollectionAssociation" />
+					<element ref="tubig:BatchIDCollectionAssociation"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -154,33 +209,6 @@
 		<complexContent>
 			<extension base="tubigcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="scenarioId" type="string" minOccurs="0" maxOccurs="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Szenario Id</label>
-								<tooltip>Id des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
-								<description/>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="scenarioName" type="string" minOccurs="0" maxOccurs="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Szenario</label>
-								<tooltip>Name des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
-								<description/>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="scenarioDescription" type="string" minOccurs="0" maxOccurs="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Szenario Beschreibung</label>
-								<tooltip>Beschreibung des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
-								<description/>
-							</documentation>
-						</annotation>
-					</element>
 					<element name="editor" type="string">
 						<annotation>
 							<documentation xml:lang="de">

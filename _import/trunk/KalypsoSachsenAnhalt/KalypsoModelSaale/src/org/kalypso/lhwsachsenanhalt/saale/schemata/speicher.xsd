@@ -85,6 +85,7 @@
 					<element name="Inhalt" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Inhalt_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Zufluss" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Abgabe" type="obslink:TimeseriesLinkFeatureProperty"/>
 				</sequence>
 			</extension>
 		</complexContent>
