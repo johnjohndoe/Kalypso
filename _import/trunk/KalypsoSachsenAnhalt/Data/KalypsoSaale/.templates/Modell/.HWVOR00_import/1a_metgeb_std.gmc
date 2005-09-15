@@ -7,7 +7,7 @@
 			<featureproperty name="Region" type="java.lang.String" format="">   <column>16</column>  </featureproperty>
 		</csvsource>
 		<gmlsource xlink:href="../modell.gml"/>
-		<changeFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" toID="PNR">
+		<changeFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" fid="Pegel-${fromID}" toID="PNR">
 			<map from="PNR" to="PNR"/>
 			<map from="Region" to="Region"/>
 		</changeFeaturesMapping>

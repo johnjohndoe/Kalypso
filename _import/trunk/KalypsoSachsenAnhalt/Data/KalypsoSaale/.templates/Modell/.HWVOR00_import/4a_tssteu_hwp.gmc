@@ -43,7 +43,7 @@
 			<featureproperty name="RE_KOR" type="java.lang.String" format=""><column>37</column></featureproperty>
 		</csvsource>
 		<gmlsource xlink:href="../modell.gml"/>
-		<addFeaturesMapping fromPath="featureMember" fromID="PNR_TS" toPath="SpeicherCollectionAssociation/SpeicherMember" toID="PNR" fid="${fromID}" handleExisting="change">
+		<addFeaturesMapping fromPath="featureMember" fromID="PNR_TS" toPath="SpeicherCollectionAssociation/SpeicherMember" toID="PNR" fid="Speicher-${fromID}" handleExisting="change">
 			<map from="PNR_ST" to="PNR_ST"/>
 			<map from="PNR_NA" to="PNR_NA"/>
 			<map from="TS_NAME" to="TS_NAME"/>

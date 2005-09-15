@@ -3,46 +3,40 @@
   <WiskiMember>
     <Wiski fid="ID570250">
       <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID570250.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/570250.zml"/>
       </lokal>
       <wiski_vergangenheit>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://"/>
       </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href=""/>
-      </wiski_simulation_vergangenheit>
+      <wiski_simulation_vergangenheit/>
     </Wiski>
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="ID573100">
       <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID573100.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/573100.zml"/>
       </lokal>
       <wiski_vergangenheit>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://"/>
       </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href=""/>
-      </wiski_simulation_vergangenheit>
+      <wiski_simulation_vergangenheit/>
     </Wiski>
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="ID575406">
       <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID575406.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/575406.zml"/>
       </lokal>
       <wiski_vergangenheit>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://"/>
       </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href=""/>
-      </wiski_simulation_vergangenheit>
+      <wiski_simulation_vergangenheit/>
     </Wiski>
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="ID579330">
       <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579330.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579330.zml"/>
       </lokal>
       <wiski_vergangenheit>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://"/>
@@ -55,7 +49,7 @@
   <WiskiMember>
     <Wiski fid="ID579001">
       <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579001.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579001.zml"/>
       </lokal>
       <wiski_vergangenheit>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Überleitungssperre.V.07:00Uhr"/>
@@ -68,7 +62,7 @@
   <WiskiMember>
     <Wiski fid="ID579012">
       <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579012.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579012.zml"/>
       </lokal>
       <wiski_vergangenheit>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://"/>
@@ -81,7 +75,7 @@
   <WiskiMember>
     <Wiski fid="ID579006">
       <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579006.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579006.zml"/>
       </lokal>
       <wiski_vergangenheit>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://"/>

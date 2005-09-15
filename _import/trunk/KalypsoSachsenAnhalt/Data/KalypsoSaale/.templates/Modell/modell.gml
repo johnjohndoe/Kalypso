@@ -3,7 +3,7 @@
   <pegel:PegelCollectionAssociation>
     <pegel:PegelCollection fid="Pegel">
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID570210">
+        <pegel:Gebiet fid="Pegel-570210">
           <pegel:PNR>570210</pegel:PNR>
           <pegel:Name>Blankenstein</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -60,15 +60,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Blankenstein</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570210.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570210.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -153,33 +153,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570210-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-570210-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID210685"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-210685"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570210-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-570210-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43014"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43014"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570210-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-570210-gewicht-2">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID110731"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-110731"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570210.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570210.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID572010">
+        <pegel:Gebiet fid="Pegel-572010">
           <pegel:PNR>572010</pegel:PNR>
           <pegel:Name>Kaulsdorf-Eichicht</pegel:Name>
           <pegel:Gewaesser>Loquitz</pegel:Gewaesser>
@@ -236,15 +236,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kaulsdorf-Eichicht</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID572010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/572010.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID572010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/572010.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -329,27 +329,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572010-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-572010-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID110421"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-110421"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572010-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-572010-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43038"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43038"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID572010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/572010.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID572010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/572010.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID570000">
+        <pegel:Gebiet fid="Pegel-570000">
           <pegel:PNR>570000</pegel:PNR>
           <pegel:Name>Saale-TS-Zulauf</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -406,15 +406,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Saale-TS-Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570000.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570000.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570000.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570000.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -499,33 +499,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570000-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-570000-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID100816"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-100816"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570000-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-570000-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43032"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43032"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570000-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-570000-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID100844"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-100844"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570000.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570000.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570000.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570000.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID572115">
+        <pegel:Gebiet fid="Pegel-572115">
           <pegel:PNR>572115</pegel:PNR>
           <pegel:Name>Schwarzburg</pegel:Name>
           <pegel:Gewaesser>Schwarza</pegel:Gewaesser>
@@ -582,15 +582,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Schwarzburg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID572115.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/572115.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID572115.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/572115.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -675,33 +675,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572115-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-572115-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID110421"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-110421"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572115-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-572115-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID110731"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-110731"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572115-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-572115-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43198"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43198"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID572115.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/572115.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID572115.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/572115.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID570270">
+        <pegel:Gebiet fid="Pegel-570270">
           <pegel:PNR>570270</pegel:PNR>
           <pegel:Name>Rudolstadt</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -758,15 +758,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rudolstadt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570270.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570270.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570270.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570270.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -851,33 +851,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570270-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-570270-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43184"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43184"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570270-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-570270-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43032"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43032"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570270-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-570270-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43198"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43198"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570270.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570270.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570270.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570270.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID570330">
+        <pegel:Gebiet fid="Pegel-570330">
           <pegel:PNR>570330</pegel:PNR>
           <pegel:Name>Camburg-Stöben</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -934,15 +934,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Camburg-Stöben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570330.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570330.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1027,33 +1027,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570330-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-570330-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43184"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43184"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570330-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-570330-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID103100"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-103100"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570330-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-570330-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43198"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43198"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570330.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570330.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID572890">
+        <pegel:Gebiet fid="Pegel-572890">
           <pegel:PNR>572890</pegel:PNR>
           <pegel:Name>Gräfinau-Angstedt</pegel:Name>
           <pegel:Gewaesser>Ilm</pegel:Gewaesser>
@@ -1110,15 +1110,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Gräfinau-Angstedt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID572890.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/572890.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID572890.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/572890.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1203,33 +1203,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572890-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-572890-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID110814"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-110814"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572890-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-572890-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID110421"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-110421"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572890-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-572890-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43760"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43760"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID572890.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/572890.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID572890.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/572890.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID572920">
+        <pegel:Gebiet fid="Pegel-572920">
           <pegel:PNR>572920</pegel:PNR>
           <pegel:Name>Niedertrebra</pegel:Name>
           <pegel:Gewaesser>Ilm</pegel:Gewaesser>
@@ -1286,15 +1286,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Niedertrebra</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID572920.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/572920.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID572920.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/572920.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1379,33 +1379,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572920-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-572920-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID93200"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-93200"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572920-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-572920-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID100655"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-100655"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID572920-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-572920-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43184"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43184"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID572920.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/572920.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID572920.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/572920.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID574210">
+        <pegel:Gebiet fid="Pegel-574210">
           <pegel:PNR>574210</pegel:PNR>
           <pegel:Name>Erfurt - Möbisburg</pegel:Name>
           <pegel:Gewaesser>Gera</pegel:Gewaesser>
@@ -1462,15 +1462,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Erfurt - Möbisburg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID574210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/574210.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID574210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/574210.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1555,45 +1555,45 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID574210-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID93200"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-93200"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID574210-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43760"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43760"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID574210-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-2">
               <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID110814"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-110814"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID574210-gewicht-3">
+            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-3">
               <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43739"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43739"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID574210-gewicht-4">
+            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-4">
               <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43753"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43753"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID574210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/574210.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID574210.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/574210.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID573010">
+        <pegel:Gebiet fid="Pegel-573010">
           <pegel:PNR>573010</pegel:PNR>
           <pegel:Name>Nägelstedt</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
@@ -1650,15 +1650,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Nägelstedt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/573010.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573010.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1743,27 +1743,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573010-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-573010-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID90838"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-90838"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573010-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-573010-gewicht-1">
               <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43935"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43935"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID573010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/573010.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID573010.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/573010.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID573090">
+        <pegel:Gebiet fid="Pegel-573090">
           <pegel:PNR>573090</pegel:PNR>
           <pegel:Name>Straußfurt Zulauf</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
@@ -1820,15 +1820,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Straußfurt Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573090.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/573090.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573090.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573090.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1913,27 +1913,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573090-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-573090-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43811"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43811"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573090-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-573090-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID93200"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-93200"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID573090.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/573090.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID573090.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/573090.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID575110">
+        <pegel:Gebiet fid="Pegel-575110">
           <pegel:PNR>575110</pegel:PNR>
           <pegel:Name>Wasserthaleben</pegel:Name>
           <pegel:Gewaesser>Helbe</pegel:Gewaesser>
@@ -1990,15 +1990,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Wasserthaleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575110.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575110.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2083,27 +2083,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575110-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-575110-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID90838"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-90838"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575110-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-575110-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43935"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43935"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/575110.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/575110.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID575240">
+        <pegel:Gebiet fid="Pegel-575240">
           <pegel:PNR>575240</pegel:PNR>
           <pegel:Name>Hachelbich</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
@@ -2160,15 +2160,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hachelbich</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575240.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575240.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575240.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575240.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2253,33 +2253,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575240-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-575240-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43935"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43935"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575240-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-575240-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44188"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44188"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575240-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-575240-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID90838"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-90838"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575240.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/575240.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575240.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/575240.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID573110">
+        <pegel:Gebiet fid="Pegel-573110">
           <pegel:PNR>573110</pegel:PNR>
           <pegel:Name>Oldisleben</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
@@ -2336,15 +2336,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Oldisleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/573110.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573110.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2429,33 +2429,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573110-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-573110-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43811"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43811"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573110-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-573110-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43872"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43872"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573110-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-573110-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43935"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43935"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID573110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/573110.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID573110.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/573110.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID575660">
+        <pegel:Gebiet fid="Pegel-575660">
           <pegel:PNR>575660</pegel:PNR>
           <pegel:Name>Ilfeld</pegel:Name>
           <pegel:Gewaesser>Bere</pegel:Gewaesser>
@@ -2512,15 +2512,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Ilfeld</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575660.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575660.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575660.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575660.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2605,27 +2605,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575660-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-575660-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44499"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44499"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575660-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-575660-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44186"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44186"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575660.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/575660.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575660.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/575660.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID575500">
+        <pegel:Gebiet fid="Pegel-575500">
           <pegel:PNR>575500</pegel:PNR>
           <pegel:Name>Nordhausen</pegel:Name>
           <pegel:Gewaesser>Zorge</pegel:Gewaesser>
@@ -2682,15 +2682,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Nordhausen</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575500.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575500.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2775,33 +2775,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575500-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-575500-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44186"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44186"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575500-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-575500-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44157"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44157"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575500-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-575500-gewicht-2">
               <pegel:faktor>0.2</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID90838"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-90838"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/575500.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/575500.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID575400">
+        <pegel:Gebiet fid="Pegel-575400">
           <pegel:PNR>575400</pegel:PNR>
           <pegel:Name>Sundhausen</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
@@ -2858,15 +2858,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Sundhausen</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575400.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575400.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575400.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575400.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2951,27 +2951,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575400-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-575400-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID90838"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-90838"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575400-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-575400-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43935"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43935"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575400.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/575400.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575400.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/575400.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID575700">
+        <pegel:Gebiet fid="Pegel-575700">
           <pegel:PNR>575700</pegel:PNR>
           <pegel:Name>Stolberg</pegel:Name>
           <pegel:Gewaesser>Thyra</pegel:Gewaesser>
@@ -3028,15 +3028,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Stolberg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5219884.014518001,5722169.791608091</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4427829.0,5714940.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575700.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575700.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575700.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575700.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3121,27 +3121,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575700-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-575700-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44157"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44157"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575700-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-575700-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44186"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44186"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575700.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/575700.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575700.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/575700.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID575710">
+        <pegel:Gebiet fid="Pegel-575710">
           <pegel:PNR>575710</pegel:PNR>
           <pegel:Name>Berga</pegel:Name>
           <pegel:Gewaesser>Thyra</pegel:Gewaesser>
@@ -3198,15 +3198,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Berga</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5222438.297318893,5709180.639856182</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4430911.0,5702078.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575710.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575710.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575710.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575710.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3291,33 +3291,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575710-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-575710-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44157"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44157"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575710-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-575710-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44186"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44186"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID575710-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-575710-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44188"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44188"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID575710.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/575710.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID575710.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/575710.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID573360">
+        <pegel:Gebiet fid="Pegel-573360">
           <pegel:PNR>573360</pegel:PNR>
           <pegel:Name>Laucha</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
@@ -3374,15 +3374,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Laucha</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4478080.0,5676890.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573360.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/573360.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573360.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573360.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3467,33 +3467,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573360-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-573360-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43872"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43872"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573360-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-573360-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44299"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44299"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID573360-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-573360-gewicht-2">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID80101"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-80101"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID573360.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/573360.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID573360.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/573360.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID570500">
+        <pegel:Gebiet fid="Pegel-570500">
           <pegel:PNR>570500</pegel:PNR>
           <pegel:Name>Naumburg</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -3550,15 +3550,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Naumburg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5278502.456832645,5673846.669853642</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4488330.0,5669090.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570500.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570500.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3643,33 +3643,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570500-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-570500-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID82023"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-82023"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570500-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-570500-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44299"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44299"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570500-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-570500-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43184"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43184"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570500.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570500.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570500.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID576470">
+        <pegel:Gebiet fid="Pegel-576470">
           <pegel:PNR>576470</pegel:PNR>
           <pegel:Name>Greiz</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
@@ -3726,15 +3726,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Greiz</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576470.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/576470.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576470.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576470.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3819,27 +3819,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576470-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-576470-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID143300"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-143300"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576470-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-576470-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID100844"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-100844"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID576470.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/576470.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID576470.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/576470.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID576520">
+        <pegel:Gebiet fid="Pegel-576520">
           <pegel:PNR>576520</pegel:PNR>
           <pegel:Name>Gera-Langenberg</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
@@ -3896,15 +3896,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Gera-Langenberg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576520.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/576520.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576520.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576520.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3989,27 +3989,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576520-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-576520-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID103100"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-103100"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576520-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-576520-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43353"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43353"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID576520.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/576520.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID576520.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/576520.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID576610">
+        <pegel:Gebiet fid="Pegel-576610">
           <pegel:PNR>576610</pegel:PNR>
           <pegel:Name>Zeitz</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
@@ -4066,15 +4066,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Zeitz</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5299944.359072916,5661876.769992451</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4510230.0,5658010.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/576610.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576610.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4159,33 +4159,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576610-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-576610-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID82023"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-82023"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576610-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-576610-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID103100"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-103100"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576610-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-576610-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44299"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44299"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID576610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/576610.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID576610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/576610.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID577570">
+        <pegel:Gebiet fid="Pegel-577570">
           <pegel:PNR>577570</pegel:PNR>
           <pegel:Name>Böhlen</pegel:Name>
           <pegel:Gewaesser>Pleiße</pegel:Gewaesser>
@@ -4242,15 +4242,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Böhlen</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID577570.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/577570.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID577570.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/577570.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4335,39 +4335,39 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID577570-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-577570-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43436"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43436"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID577570-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-577570-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43478"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43478"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID577570-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-577570-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43451"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43451"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID577570-gewicht-3">
+            <pegel:GewichtungsElement fid="Pegel-577570-gewicht-3">
               <pegel:faktor>0.5</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID130849"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-130849"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID577570.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/577570.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID577570.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/577570.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID576900">
+        <pegel:Gebiet fid="Pegel-576900">
           <pegel:PNR>576900</pegel:PNR>
           <pegel:Name>Oberthau</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
@@ -4424,15 +4424,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Oberthau</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5301507.860978434,5698431.19678324</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4510300.0,5694580.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576900.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/576900.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576900.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576900.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4517,27 +4517,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576900-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-576900-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID130849"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-130849"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID576900-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-576900-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43478"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43478"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID576900.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/576900.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID576900.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/576900.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID570810">
+        <pegel:Gebiet fid="Pegel-570810">
           <pegel:PNR>570810</pegel:PNR>
           <pegel:Name>Halle-Trotha</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -4594,15 +4594,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Halle-Trotha</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5288776.610886077,5713968.348566319</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4496950.0,5709575.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570810.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570810.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570810.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570810.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4687,27 +4687,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570810-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-570810-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID130849"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-130849"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570810-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-570810-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44299"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44299"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570810.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570810.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570810.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570810.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID578410">
+        <pegel:Gebiet fid="Pegel-578410">
           <pegel:PNR>578410</pegel:PNR>
           <pegel:Name>Wippra</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
@@ -4764,15 +4764,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Wippra</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5242196.069346789,5722255.072919038</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4450100.0,5715940.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID578410.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/578410.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID578410.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/578410.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4857,27 +4857,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID578410-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-578410-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44337"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44337"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID578410-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-578410-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81309"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81309"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID578410.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/578410.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID578410.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/578410.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID578420">
+        <pegel:Gebiet fid="Pegel-578420">
           <pegel:PNR>578420</pegel:PNR>
           <pegel:Name>Mansfeld-Leimbach</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
@@ -4934,15 +4934,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Mansfeld-Leimbach</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5255916.448648093,5724901.574328145</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4463690.0,5719145.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID578420.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/578420.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID578420.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/578420.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5027,27 +5027,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID578420-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-578420-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44337"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44337"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID578420-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-578420-gewicht-1">
               <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81309"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81309"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID578420.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/578420.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID578420.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/578420.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID578430">
+        <pegel:Gebiet fid="Pegel-578430">
           <pegel:PNR>578430</pegel:PNR>
           <pegel:Name>Großschierstedt</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
@@ -5104,15 +5104,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Großschierstedt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5260438.4209322315,5741095.942669736</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4467540.0,5735500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID578430.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/578430.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID578430.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/578430.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5197,27 +5197,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID578430-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-578430-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44337"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44337"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID578430-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-578430-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44414"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44414"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID578430.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/578430.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID578430.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/578430.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID570910">
+        <pegel:Gebiet fid="Pegel-570910">
           <pegel:PNR>570910</pegel:PNR>
           <pegel:Name>Bernburg</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -5274,15 +5274,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Bernburg</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5275022.093257368,5746003.660376846</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4481900.0,5741000.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570910.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570910.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570910.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570910.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5367,27 +5367,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570910-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-570910-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44414"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44414"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570910-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-570910-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID43530"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-43530"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570910.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570910.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570910.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570910.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579305">
+        <pegel:Gebiet fid="Pegel-579305">
           <pegel:PNR>579305</pegel:PNR>
           <pegel:Name>Elend</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
@@ -5444,15 +5444,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Elend</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5202064.848171497,5743158.836068862</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4409180.0,5735160.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579305.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579305.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579305.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579305.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5537,27 +5537,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579305-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579305-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID72023"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-72023"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579305-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579305-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44403"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44403"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579305.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579305.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579305.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579305.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579205">
+        <pegel:Gebiet fid="Pegel-579205">
           <pegel:PNR>579205</pegel:PNR>
           <pegel:Name>Tanne</pegel:Name>
           <pegel:Gewaesser>Warme Bode</pegel:Gewaesser>
@@ -5614,15 +5614,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Tanne</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5204912.682197833,5738112.595510322</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4412230.0,5730240.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579205.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579205.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579205.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579205.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5707,27 +5707,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579205-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579205-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44403"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44403"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579205-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579205-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44499"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44499"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579205.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579205.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579205.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579205.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579405">
+        <pegel:Gebiet fid="Pegel-579405">
           <pegel:PNR>579405</pegel:PNR>
           <pegel:Name>Trautenstein</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
@@ -5784,15 +5784,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Trautenstein</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5209130.6656647865,5737147.58355137</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4416480.0,5729450.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579405.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579405.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579405.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579405.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5877,33 +5877,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579405-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579405-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44499"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44499"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579405-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579405-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44404"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44404"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579405-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-579405-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81309"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81309"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579405.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579405.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579405.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579405.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579011">
+        <pegel:Gebiet fid="Pegel-579011">
           <pegel:PNR>579011</pegel:PNR>
           <pegel:Name>Rappbode-TS-Zulauf</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
@@ -5960,15 +5960,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rappbode-TS-Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579011.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579011.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579011.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579011.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6053,33 +6053,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579011-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579011-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44499"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44499"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579011-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579011-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44404"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44404"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579011-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-579011-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81309"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81309"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579011.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579011.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579011.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579011.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579015">
+        <pegel:Gebiet fid="Pegel-579015">
           <pegel:PNR>579015</pegel:PNR>
           <pegel:Name>TS-Wendefurth-Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -6136,15 +6136,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth-Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579015.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579015.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579015.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6229,33 +6229,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579015-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579015-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44407"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44407"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579015-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579015-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44498"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44498"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579015-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-579015-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44404"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44404"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579015.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579015.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579015.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579015.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579610">
+        <pegel:Gebiet fid="Pegel-579610">
           <pegel:PNR>579610</pegel:PNR>
           <pegel:Name>Meisdorf</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
@@ -6312,15 +6312,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Meisdorf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5243204.610715386,5735094.547495468</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4450580.0,5728800.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579610.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579610.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6405,27 +6405,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579610-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579610-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81309"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81309"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579610-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579610-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44337"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44337"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579610.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579610.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579610.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579620">
+        <pegel:Gebiet fid="Pegel-579620">
           <pegel:PNR>579620</pegel:PNR>
           <pegel:Name>Hausneindorf</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
@@ -6482,15 +6482,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hausneindorf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5242962.025211956,5751581.315923652</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4449660.0,5745250.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579620.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579620.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579620.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579620.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6575,27 +6575,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579620-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579620-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44414"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44414"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579620-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579620-gewicht-1">
               <pegel:faktor>0.2</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81309"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81309"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579620.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579620.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579620.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579620.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579045">
+        <pegel:Gebiet fid="Pegel-579045">
           <pegel:PNR>579045</pegel:PNR>
           <pegel:Name>Wegeleben</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -6652,15 +6652,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Wegeleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579045.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579045.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579045.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579045.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6745,27 +6745,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579045-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579045-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44414"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44414"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579045-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579045-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44406"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44406"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579045.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579045.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579045.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579045.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579712">
+        <pegel:Gebiet fid="Pegel-579712">
           <pegel:PNR>579712</pegel:PNR>
           <pegel:Name>Mahndorf</pegel:Name>
           <pegel:Gewaesser>Holtemme</pegel:Gewaesser>
@@ -6822,15 +6822,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Mahndorf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5222223.009723585,5757795.546140475</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4428700.0,5750600.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579712.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579712.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579712.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579712.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6915,33 +6915,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579712-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579712-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID72094"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-72094"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579712-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579712-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44430"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44430"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579712-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-579712-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44498"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44498"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579712.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579712.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579712.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579712.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579070">
+        <pegel:Gebiet fid="Pegel-579070">
           <pegel:PNR>579070</pegel:PNR>
           <pegel:Name>Hadmersleben</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -6998,15 +6998,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hadmersleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5247443.864253307,5769896.280832737</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4453380.0,5763720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579070.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579070.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579070.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579070.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7091,33 +7091,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579070-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579070-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44414"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44414"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579070-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579070-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID73200"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-73200"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579070-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-579070-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID72094"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-72094"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579070.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579070.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579070.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579070.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID579085">
+        <pegel:Gebiet fid="Pegel-579085">
           <pegel:PNR>579085</pegel:PNR>
           <pegel:Name>Stassfurt</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -7174,15 +7174,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Stassfurt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5265120.665000831,5752160.234277211</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4471760.0,5746740.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579085.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579085.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579085.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579085.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7267,27 +7267,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579085-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-579085-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44414"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44414"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID579085-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-579085-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID73200"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-73200"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID579085.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579085.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID579085.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579085.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID570930">
+        <pegel:Gebiet fid="Pegel-570930">
           <pegel:PNR>570930</pegel:PNR>
           <pegel:Name>Calbe</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -7344,15 +7344,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Calbe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570930.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570930.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570930.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570930.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7437,27 +7437,27 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570930-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-570930-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID44414"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-44414"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID570930-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-570930-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID73200"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-73200"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID570930.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570930.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID570930.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570930.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID553050">
+        <pegel:Gebiet fid="Pegel-553050">
           <pegel:PNR>553050</pegel:PNR>
           <pegel:Name>Bad Liebenwerda</pegel:Name>
           <pegel:Gewaesser>Schwarze Elster</pegel:Gewaesser>
@@ -7514,15 +7514,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Bad Liebenwerda</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID553050.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/553050.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID553050.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/553050.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7607,33 +7607,33 @@
           <pegel:H_35>0.0010</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID553050-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-553050-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81936"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81936"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID553050-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-553050-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID130939"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-130939"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID553050-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-553050-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81936"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81936"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID553050.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/553050.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID553050.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/553050.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID553061">
+        <pegel:Gebiet fid="Pegel-553061">
           <pegel:PNR>553061</pegel:PNR>
           <pegel:Name>Löben</pegel:Name>
           <pegel:Gewaesser>Schwarze Elster</pegel:Gewaesser>
@@ -7690,15 +7690,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Löben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID553061.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/553061.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID553061.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/553061.zml"/>
           </pegel:Durchfluss_gerechnet>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7783,33 +7783,33 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID553061-gewicht-0">
+            <pegel:GewichtungsElement fid="Pegel-553061-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81936"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81936"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID553061-gewicht-1">
+            <pegel:GewichtungsElement fid="Pegel-553061-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID130939"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-130939"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="ID553061-gewicht-2">
+            <pegel:GewichtungsElement fid="Pegel-553061-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#ID81936"/>
+              <pegel:ombrometerMember xlink:href="#Ombrometer-81936"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/ID553061.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/553061.zml"/>
           </pegel:Niederschlag>
           <pegel:Schnee>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/ID553061.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/553061.zml"/>
           </pegel:Schnee>
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID570250">
+        <pegel:Pegel fid="Pegel-570250">
           <pegel:PNR>570250</pegel:PNR>
           <pegel:Name>Kaulsdorf</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -7866,20 +7866,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kaulsdorf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570250.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570250.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570250.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570250.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID570340">
+        <pegel:Pegel fid="Pegel-570340">
           <pegel:PNR>570340</pegel:PNR>
           <pegel:Name>Saaleck</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
@@ -7936,20 +7936,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Saaleck</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5268907.738549339,5669165.843725166</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4478940.0,5664025.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID570340.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570340.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID570340.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570340.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID573100">
+        <pegel:Pegel fid="Pegel-573100">
           <pegel:PNR>573100</pegel:PNR>
           <pegel:Name>Straußfurt Abgabe</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
@@ -8006,20 +8006,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Straußfurt Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573100.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/573100.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573100.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573100.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID575245">
+        <pegel:Pegel fid="Pegel-575245">
           <pegel:PNR>575245</pegel:PNR>
           <pegel:Name>Wippermündung</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
@@ -8076,20 +8076,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Wippermündung</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575245.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575245.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575245.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575245.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID573200">
+        <pegel:Pegel fid="Pegel-573200">
           <pegel:PNR>573200</pegel:PNR>
           <pegel:Name>oh. Bretleben</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
@@ -8146,20 +8146,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>oh. Bretleben</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID573200.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/573200.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID573200.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573200.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID575402">
+        <pegel:Pegel fid="Pegel-575402">
           <pegel:PNR>575402</pegel:PNR>
           <pegel:Name>Kelbra Zulauf</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
@@ -8216,20 +8216,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kelbra Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5218345.9150316175,5709320.405627218</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4426820.0,5702050.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575402.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575402.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575402.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575402.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID575406">
+        <pegel:Pegel fid="Pegel-575406">
           <pegel:PNR>575406</pegel:PNR>
           <pegel:Name>Kelbra-Abgabe</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
@@ -8286,20 +8286,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kelbra-Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575406.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575406.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575406.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575406.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID575410">
+        <pegel:Pegel fid="Pegel-575410">
           <pegel:PNR>575410</pegel:PNR>
           <pegel:Name>Bennungen</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
@@ -8356,20 +8356,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Bennungen</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5230423.833556903,5709496.276845569</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4438870.0,5702720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575410.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575410.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575410.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575410.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID575450">
+        <pegel:Pegel fid="Pegel-575450">
           <pegel:PNR>575450</pegel:PNR>
           <pegel:Name>Nikolausrieth</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
@@ -8426,20 +8426,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Nikolausrieth</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID575450.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575450.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID575450.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575450.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID576631">
+        <pegel:Pegel fid="Pegel-576631">
           <pegel:PNR>576631</pegel:PNR>
           <pegel:Name>Kleindalzig</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
@@ -8496,20 +8496,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Kleindalzig</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576631.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/576631.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576631.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576631.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID576950">
+        <pegel:Pegel fid="Pegel-576950">
           <pegel:PNR>576950</pegel:PNR>
           <pegel:Name>Elstermündung</pegel:Name>
           <pegel:Gewaesser>Weiße Elster</pegel:Gewaesser>
@@ -8566,20 +8566,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Elstermündung</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID576950.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/576950.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID576950.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576950.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579621">
+        <pegel:Pegel fid="Pegel-579621">
           <pegel:PNR>579621</pegel:PNR>
           <pegel:Name>Mündung</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
@@ -8636,20 +8636,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Mündung</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579621.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579621.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579621.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579621.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579306">
+        <pegel:Pegel fid="Pegel-579306">
           <pegel:PNR>579306</pegel:PNR>
           <pegel:Name>HWR Kalte Bode -Zulauf</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
@@ -8706,20 +8706,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>HWR Kalte Bode -Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579306.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579306.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579306.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579306.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579330">
+        <pegel:Pegel fid="Pegel-579330">
           <pegel:PNR>579330</pegel:PNR>
           <pegel:Name>Königsh./HWR - Abgabe</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
@@ -8776,20 +8776,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Königsh./HWR - Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5206590.141740188,5743573.569932701</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4413680.0,5735760.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579330.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579330.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579000">
+        <pegel:Pegel fid="Pegel-579000">
           <pegel:PNR>579000</pegel:PNR>
           <pegel:Name>Ül-Spere, Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -8846,20 +8846,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Ül-Spere, Zulauf</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5210386.313997258,5741854.435113958</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4417540.0,5734200.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579000.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579000.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579000.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579999">
+        <pegel:Pegel fid="Pegel-579999">
           <pegel:PNR>579999</pegel:PNR>
           <pegel:Name>ÜL zur Rappbode</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
@@ -8916,20 +8916,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>ÜL zur Rappbode</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579999.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579999.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579999.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579999.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579012">
+        <pegel:Pegel fid="Pegel-579012">
           <pegel:PNR>579012</pegel:PNR>
           <pegel:Name>Rappbode-TS-Abgabe</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
@@ -8986,20 +8986,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rappbode-TS-Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579012.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579012.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579012.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579012.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579013">
+        <pegel:Pegel fid="Pegel-579013">
           <pegel:PNR>579013</pegel:PNR>
           <pegel:Name>Rappbode-TS, TWA</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -9056,20 +9056,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Rappbode-TS, TWA</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579013.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579013.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579013.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579013.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579001">
+        <pegel:Pegel fid="Pegel-579001">
           <pegel:PNR>579001</pegel:PNR>
           <pegel:Name>Hirtenstieg/ÜL-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -9126,20 +9126,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hirtenstieg/ÜL-Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5210345.486482198,5741836.080253657</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4417500.0,5734180.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579001.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579001.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579001.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579001.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579014">
+        <pegel:Pegel fid="Pegel-579014">
           <pegel:PNR>579014</pegel:PNR>
           <pegel:Name>TS-Wendefurth, Bode-Anteil</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -9196,20 +9196,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth, Bode-Anteil</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579014.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579014.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579014.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579014.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579006">
+        <pegel:Pegel fid="Pegel-579006">
           <pegel:PNR>579006</pegel:PNR>
           <pegel:Name>TS-Wendefurth-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -9266,20 +9266,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth-Abgabe</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5218308.347485623,5742049.175148535</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4425440.0,5734720.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579006.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579006.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579006.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579006.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579713">
+        <pegel:Pegel fid="Pegel-579713">
           <pegel:PNR>579713</pegel:PNR>
           <pegel:Name>Mdg</pegel:Name>
           <pegel:Gewaesser>Holtemme</pegel:Gewaesser>
@@ -9336,20 +9336,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Mdg Holtemme</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579713.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579713.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579713.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579713.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579069">
+        <pegel:Pegel fid="Pegel-579069">
           <pegel:PNR>579069</pegel:PNR>
           <pegel:Name>an Holtemme</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -9406,20 +9406,20 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>an Holtemme</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579069.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579069.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579069.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579069.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Pegel fid="ID579084">
+        <pegel:Pegel fid="Pegel-579084">
           <pegel:PNR>579084</pegel:PNR>
           <pegel:Name>Hilfspunkt</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
@@ -9476,15 +9476,15 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>Hilfspunkt</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/ID579084.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579084.zml"/>
           </pegel:Durchfluss>
           <pegel:Durchfluss_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/ID579084.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579084.zml"/>
           </pegel:Durchfluss_gerechnet>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -19296,7 +19296,7 @@
   <speicher:SpeicherCollectionAssociation>
     <speicher:SpeicherCollection fid="Speicher">
       <speicher:SpeicherMember>
-        <speicher:Speicher fid="ID570250">
+        <speicher:Speicher fid="Speicher-570250">
           <speicher:PNR>570250</speicher:PNR>
           <speicher:Name>Saale-TS</speicher:Name>
           <speicher:Gewaesser>Saale</speicher:Gewaesser>
@@ -19340,21 +19340,21 @@
           <speicher:NAmax>0</speicher:NAmax>
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID570250.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/570250.zml"/>
           </speicher:Inhalt>
           <speicher:Inhalt_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID570250.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/570250.zml"/>
           </speicher:Inhalt_gerechnet>
           <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
-        <speicher:Speicher fid="ID573100">
+        <speicher:Speicher fid="Speicher-573100">
           <speicher:PNR>573100</speicher:PNR>
           <speicher:Name>TS Straußfurt</speicher:Name>
           <speicher:Gewaesser>Unstrut</speicher:Gewaesser>
@@ -19398,21 +19398,21 @@
           <speicher:NAmax>0</speicher:NAmax>
           <speicher:RE_KOR>11</speicher:RE_KOR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID573100.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/573100.zml"/>
           </speicher:Inhalt>
           <speicher:Inhalt_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID573100.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/573100.zml"/>
           </speicher:Inhalt_gerechnet>
           <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
-        <speicher:Speicher fid="ID575406">
+        <speicher:Speicher fid="Speicher-575406">
           <speicher:PNR>575406</speicher:PNR>
           <speicher:Name>TS Kelbra</speicher:Name>
           <speicher:Gewaesser>Helme</speicher:Gewaesser>
@@ -19456,21 +19456,21 @@
           <speicher:NAmax>0</speicher:NAmax>
           <speicher:RE_KOR>21</speicher:RE_KOR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5218345.9150316175,5709320.405627218</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4426820.0,5702050.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID575406.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/575406.zml"/>
           </speicher:Inhalt>
           <speicher:Inhalt_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID575406.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/575406.zml"/>
           </speicher:Inhalt_gerechnet>
           <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
-        <speicher:Speicher fid="ID579330">
+        <speicher:Speicher fid="Speicher-579330">
           <speicher:PNR>579330</speicher:PNR>
           <speicher:Name>RHB Kalte Bode</speicher:Name>
           <speicher:Gewaesser>Kalte Bode</speicher:Gewaesser>
@@ -19514,21 +19514,21 @@
           <speicher:NAmax>0</speicher:NAmax>
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579330.zml"/>
           </speicher:Inhalt>
           <speicher:Inhalt_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579330.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/579330.zml"/>
           </speicher:Inhalt_gerechnet>
           <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
-        <speicher:Speicher fid="ID579001">
+        <speicher:Speicher fid="Speicher-579001">
           <speicher:PNR>579001</speicher:PNR>
           <speicher:Name>Überleitungssperre</speicher:Name>
           <speicher:Gewaesser>Bode</speicher:Gewaesser>
@@ -19572,21 +19572,21 @@
           <speicher:NAmax>13.5</speicher:NAmax>
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5210386.313997258,5741854.435113958</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4417540.0,5734200.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579001.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579001.zml"/>
           </speicher:Inhalt>
           <speicher:Inhalt_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579001.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/579001.zml"/>
           </speicher:Inhalt_gerechnet>
           <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
-        <speicher:Speicher fid="ID579012">
+        <speicher:Speicher fid="Speicher-579012">
           <speicher:PNR>579012</speicher:PNR>
           <speicher:Name>TS Rappbode</speicher:Name>
           <speicher:Gewaesser>Rappbode</speicher:Gewaesser>
@@ -19630,21 +19630,21 @@
           <speicher:NAmax>3</speicher:NAmax>
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579012.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579012.zml"/>
           </speicher:Inhalt>
           <speicher:Inhalt_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579012.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/579012.zml"/>
           </speicher:Inhalt_gerechnet>
           <speicher:Zufluss/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
       <speicher:SpeicherMember>
-        <speicher:Speicher fid="ID579006">
+        <speicher:Speicher fid="Speicher-579006">
           <speicher:PNR>579006</speicher:PNR>
           <speicher:Name>TS Wendefurth</speicher:Name>
           <speicher:Gewaesser>Bode</speicher:Gewaesser>
@@ -19688,15 +19688,15 @@
           <speicher:NAmax>0</speicher:NAmax>
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/ID579006.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579006.zml"/>
           </speicher:Inhalt>
           <speicher:Inhalt_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/ID579006.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Speicherinhalt/579006.zml"/>
           </speicher:Inhalt_gerechnet>
           <speicher:Zufluss/>
         </speicher:Speicher>
@@ -19706,752 +19706,752 @@
   <ombrometer:OmbrometerCollectionAssociation>
     <ombrometer:OmbrometerCollection fid="Ombrometer">
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID90838">
+        <ombrometer:Ombrometer fid="Ombrometer-90838">
           <ombrometer:Name>Leinefelde</ombrometer:Name>
           <ombrometer:NR>90838</ombrometer:NR>
           <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID90838.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/90838.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID81309">
+        <ombrometer:Ombrometer fid="Ombrometer-81309">
           <ombrometer:Name>Harzgerode</ombrometer:Name>
           <ombrometer:NR>81309</ombrometer:NR>
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID81309.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/81309.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID80101">
+        <ombrometer:Ombrometer fid="Ombrometer-80101">
           <ombrometer:Name>Artern</ombrometer:Name>
           <ombrometer:NR>80101</ombrometer:NR>
           <ombrometer:NR-Ersatz>90838</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID80101.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/80101.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID130849">
+        <ombrometer:Ombrometer fid="Ombrometer-130849">
           <ombrometer:Name>Schkeuditz</ombrometer:Name>
           <ombrometer:NR>130849</ombrometer:NR>
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID130849.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/130849.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID81936">
+        <ombrometer:Ombrometer fid="Ombrometer-81936">
           <ombrometer:Name>Wittenberg</ombrometer:Name>
           <ombrometer:NR>81936</ombrometer:NR>
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID81936.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/81936.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID61520">
+        <ombrometer:Ombrometer fid="Ombrometer-61520">
           <ombrometer:Name>Holzdorf</ombrometer:Name>
           <ombrometer:NR>61520</ombrometer:NR>
           <ombrometer:NR-Ersatz>81936</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID61520.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/61520.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID130939">
+        <ombrometer:Ombrometer fid="Ombrometer-130939">
           <ombrometer:Name>Oschatz</ombrometer:Name>
           <ombrometer:NR>130939</ombrometer:NR>
           <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID130939.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/130939.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID110814">
+        <ombrometer:Ombrometer fid="Ombrometer-110814">
           <ombrometer:Name>Schmücke</ombrometer:Name>
           <ombrometer:NR>110814</ombrometer:NR>
           <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID110814.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/110814.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID93200">
+        <ombrometer:Ombrometer fid="Ombrometer-93200">
           <ombrometer:Name>Erfurt</ombrometer:Name>
           <ombrometer:NR>93200</ombrometer:NR>
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID93200.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/93200.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID110421">
+        <ombrometer:Ombrometer fid="Ombrometer-110421">
           <ombrometer:Name>Neuhaus</ombrometer:Name>
           <ombrometer:NR>110421</ombrometer:NR>
           <ombrometer:NR-Ersatz>110731</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID110421.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/110421.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID110731">
+        <ombrometer:Ombrometer fid="Ombrometer-110731">
           <ombrometer:Name>Sonneberg</ombrometer:Name>
           <ombrometer:NR>110731</ombrometer:NR>
           <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID110731.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/110731.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID100844">
+        <ombrometer:Ombrometer fid="Ombrometer-100844">
           <ombrometer:Name>Schleiz</ombrometer:Name>
           <ombrometer:NR>100844</ombrometer:NR>
           <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID100844.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/100844.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID82023">
+        <ombrometer:Ombrometer fid="Ombrometer-82023">
           <ombrometer:Name>Osterfeld</ombrometer:Name>
           <ombrometer:NR>82023</ombrometer:NR>
           <ombrometer:NR-Ersatz>103100</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID82023.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/82023.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID103100">
+        <ombrometer:Ombrometer fid="Ombrometer-103100">
           <ombrometer:Name>Gera</ombrometer:Name>
           <ombrometer:NR>103100</ombrometer:NR>
           <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID103100.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/103100.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID143300">
+        <ombrometer:Ombrometer fid="Ombrometer-143300">
           <ombrometer:Name>Plauen</ombrometer:Name>
           <ombrometer:NR>143300</ombrometer:NR>
           <ombrometer:NR-Ersatz>103100</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID143300.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/143300.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID143102">
+        <ombrometer:Ombrometer fid="Ombrometer-143102">
           <ombrometer:Name>Chemmnitz</ombrometer:Name>
           <ombrometer:NR>143102</ombrometer:NR>
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID143102.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/143102.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID210685">
+        <ombrometer:Ombrometer fid="Ombrometer-210685">
           <ombrometer:Name>Hof</ombrometer:Name>
           <ombrometer:NR>210685</ombrometer:NR>
           <ombrometer:NR-Ersatz>100844</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID210685.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/210685.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43014">
+        <ombrometer:Ombrometer fid="Ombrometer-43014">
           <ombrometer:Name>Bleiloch</ombrometer:Name>
           <ombrometer:NR>43014</ombrometer:NR>
           <ombrometer:NR-Ersatz>210685</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43014.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43014.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43032">
+        <ombrometer:Ombrometer fid="Ombrometer-43032">
           <ombrometer:Name>Hohenwarte</ombrometer:Name>
           <ombrometer:NR>43032</ombrometer:NR>
           <ombrometer:NR-Ersatz>210685</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43032.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43032.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43038">
+        <ombrometer:Ombrometer fid="Ombrometer-43038">
           <ombrometer:Name>Munschwitz</ombrometer:Name>
           <ombrometer:NR>43038</ombrometer:NR>
           <ombrometer:NR-Ersatz>43032</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43038.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43038.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43103">
+        <ombrometer:Ombrometer fid="Ombrometer-43103">
           <ombrometer:Name>Scheibe-Alsbach</ombrometer:Name>
           <ombrometer:NR>43103</ombrometer:NR>
           <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43103.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43103.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43760">
+        <ombrometer:Ombrometer fid="Ombrometer-43760">
           <ombrometer:Name>Luis.-Ohra</ombrometer:Name>
           <ombrometer:NR>43760</ombrometer:NR>
           <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43760.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43760.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43198">
+        <ombrometer:Ombrometer fid="Ombrometer-43198">
           <ombrometer:Name>Zeigerheim-Rudolst.</ombrometer:Name>
           <ombrometer:NR>43198</ombrometer:NR>
           <ombrometer:NR-Ersatz>43038</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43198.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43198.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43184">
+        <ombrometer:Ombrometer fid="Ombrometer-43184">
           <ombrometer:Name>Jena</ombrometer:Name>
           <ombrometer:NR>43184</ombrometer:NR>
           <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43184.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43184.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43811">
+        <ombrometer:Ombrometer fid="Ombrometer-43811">
           <ombrometer:Name>Straussfurt</ombrometer:Name>
           <ombrometer:NR>43811</ombrometer:NR>
           <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43811.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43811.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43935">
+        <ombrometer:Ombrometer fid="Ombrometer-43935">
           <ombrometer:Name>Sondershsn.</ombrometer:Name>
           <ombrometer:NR>43935</ombrometer:NR>
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43935.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43935.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44157">
+        <ombrometer:Ombrometer fid="Ombrometer-44157">
           <ombrometer:Name>TS Neustadt</ombrometer:Name>
           <ombrometer:NR>44157</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44157.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44157.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44186">
+        <ombrometer:Ombrometer fid="Ombrometer-44186">
           <ombrometer:Name>Stempeda</ombrometer:Name>
           <ombrometer:NR>44186</ombrometer:NR>
           <ombrometer:NR-Ersatz>44157</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44186.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44186.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43352">
+        <ombrometer:Ombrometer fid="Ombrometer-43352">
           <ombrometer:Name>Zeulenroda</ombrometer:Name>
           <ombrometer:NR>43352</ombrometer:NR>
           <ombrometer:NR-Ersatz>100844</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43352.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43352.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43353">
+        <ombrometer:Ombrometer fid="Ombrometer-43353">
           <ombrometer:Name>TS Weida</ombrometer:Name>
           <ombrometer:NR>43353</ombrometer:NR>
           <ombrometer:NR-Ersatz>43352</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43353.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43353.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43309">
+        <ombrometer:Ombrometer fid="Ombrometer-43309">
           <ombrometer:Name>Greiz</ombrometer:Name>
           <ombrometer:NR>43309</ombrometer:NR>
           <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43309.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43309.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44299">
+        <ombrometer:Ombrometer fid="Ombrometer-44299">
           <ombrometer:Name>Weissenfels</ombrometer:Name>
           <ombrometer:NR>44299</ombrometer:NR>
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44299.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44299.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43530">
+        <ombrometer:Ombrometer fid="Ombrometer-43530">
           <ombrometer:Name>Halle-Kroellwitz</ombrometer:Name>
           <ombrometer:NR>43530</ombrometer:NR>
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43530.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43530.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44188">
+        <ombrometer:Ombrometer fid="Ombrometer-44188">
           <ombrometer:Name>Kelbra</ombrometer:Name>
           <ombrometer:NR>44188</ombrometer:NR>
           <ombrometer:NR-Ersatz>43935</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44188.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44188.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44337">
+        <ombrometer:Ombrometer fid="Ombrometer-44337">
           <ombrometer:Name>Wippra</ombrometer:Name>
           <ombrometer:NR>44337</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44337.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44337.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44499">
+        <ombrometer:Ombrometer fid="Ombrometer-44499">
           <ombrometer:Name>Beneckenstein</ombrometer:Name>
           <ombrometer:NR>44499</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44499.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44499.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID73200">
+        <ombrometer:Ombrometer fid="Ombrometer-73200">
           <ombrometer:Name>Magdeburg</ombrometer:Name>
           <ombrometer:NR>73200</ombrometer:NR>
           <ombrometer:NR-Ersatz>44414</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID73200.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/73200.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID72023">
+        <ombrometer:Ombrometer fid="Ombrometer-72023">
           <ombrometer:Name>Brocken</ombrometer:Name>
           <ombrometer:NR>72023</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID72023.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/72023.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID72094">
+        <ombrometer:Ombrometer fid="Ombrometer-72094">
           <ombrometer:Name>Wernigerode</ombrometer:Name>
           <ombrometer:NR>72094</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID72094.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/72094.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44403">
+        <ombrometer:Ombrometer fid="Ombrometer-44403">
           <ombrometer:Name>Elend RHB k. Bode</ombrometer:Name>
           <ombrometer:NR>44403</ombrometer:NR>
           <ombrometer:NR-Ersatz>72023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44403.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44403.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44404">
+        <ombrometer:Ombrometer fid="Ombrometer-44404">
           <ombrometer:Name>Ueberleitgsp.</ombrometer:Name>
           <ombrometer:NR>44404</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44404.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44404.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44407">
+        <ombrometer:Ombrometer fid="Ombrometer-44407">
           <ombrometer:Name>Rappbode TS</ombrometer:Name>
           <ombrometer:NR>44407</ombrometer:NR>
           <ombrometer:NR-Ersatz>44499</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44407.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44407.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44406">
+        <ombrometer:Ombrometer fid="Ombrometer-44406">
           <ombrometer:Name>Wendefurt</ombrometer:Name>
           <ombrometer:NR>44406</ombrometer:NR>
           <ombrometer:NR-Ersatz>44407</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44406.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44406.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44430">
+        <ombrometer:Ombrometer fid="Ombrometer-44430">
           <ombrometer:Name>Zilierbach TS</ombrometer:Name>
           <ombrometer:NR>44430</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44430.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44430.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44498">
+        <ombrometer:Ombrometer fid="Ombrometer-44498">
           <ombrometer:Name>Blankenbg. Harz</ombrometer:Name>
           <ombrometer:NR>44498</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44498.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44498.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID44414">
+        <ombrometer:Ombrometer fid="Ombrometer-44414">
           <ombrometer:Name>Halberstadt</ombrometer:Name>
           <ombrometer:NR>44414</ombrometer:NR>
           <ombrometer:NR-Ersatz>44498</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID44414.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44414.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID45003">
+        <ombrometer:Ombrometer fid="Ombrometer-45003">
           <ombrometer:Name>Barby</ombrometer:Name>
           <ombrometer:NR>45003</ombrometer:NR>
           <ombrometer:NR-Ersatz>73200</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID45003.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/45003.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43478">
+        <ombrometer:Ombrometer fid="Ombrometer-43478">
           <ombrometer:Name>Roetha</ombrometer:Name>
           <ombrometer:NR>43478</ombrometer:NR>
           <ombrometer:NR-Ersatz>43451</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43478.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43478.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43451">
+        <ombrometer:Ombrometer fid="Ombrometer-43451">
           <ombrometer:Name>Schoembach</ombrometer:Name>
           <ombrometer:NR>43451</ombrometer:NR>
           <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43451.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43451.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
-        <ombrometer:Ombrometer fid="ID43436">
+        <ombrometer:Ombrometer fid="Ombrometer-43436">
           <ombrometer:Name>Windischleuba</ombrometer:Name>
           <ombrometer:NR>43436</ombrometer:NR>
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">0.0,0.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/ID43436.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43436.zml"/>
           </ombrometer:Niederschlag>
         </ombrometer:Ombrometer>
       </ombrometer:OmbrometerMember>

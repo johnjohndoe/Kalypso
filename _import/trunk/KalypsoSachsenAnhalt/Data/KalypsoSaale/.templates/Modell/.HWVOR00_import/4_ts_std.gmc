@@ -10,7 +10,7 @@
 			<featureproperty name="ZUFLUSS" type="java.lang.String" format=""><column>4</column></featureproperty>
 		</csvsource>
 		<gmlsource xlink:href="../modell.gml"/>
-		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="SpeicherCollectionAssociation/SpeicherMember" toID="PNR" fid="${fromID}" handleExisting="overwrite">
+		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="SpeicherCollectionAssociation/SpeicherMember" toID="PNR" fid="Speicher-${fromID}" handleExisting="overwrite">
  			<map from="PNR" to="PNR"/>
 			<map from="Name" to="Name"/>
 			<map from="Gewaesser" to="Gewaesser"/>

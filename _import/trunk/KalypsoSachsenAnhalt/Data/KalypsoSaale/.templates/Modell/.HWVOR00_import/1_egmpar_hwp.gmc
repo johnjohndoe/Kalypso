@@ -83,7 +83,7 @@
 			<featureproperty name="H_36" type="java.lang.Double" format=""> <column>74</column> </featureproperty>
 		</csvsource>
 		<gmlsource xlink:href=".saalemodell_leer.gml"/>
-		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" toID="PNR" handleExisting="change">
+		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember[Gebiet]" toID="PNR" fid="Pegel-${fromID}" handleExisting="change">
 		<map from="PNR" to="PNR"/>
 			<map from="L" to="L"/>
 			<map from="N" to="N"/>

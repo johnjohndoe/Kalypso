@@ -21,7 +21,7 @@
 			<featureproperty name="Reserve10" type="java.lang.String" format=""><column>15</column></featureproperty>
 		</csvsource>
 		<gmlsource xlink:href="../modell.gml"/>
-		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember" toID="PNR" fid="${fromID}" handleExisting="change">
+		<addFeaturesMapping fromPath="featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember" toID="PNR" fid="Pegel-${fromID}" handleExisting="change">
 			<map from="Bodenfrost" to="Bodenfrost"/>
 			<map from="Feuchte" to="Feuchte"/>
 			<map from="Schnee" to="SchneeTyp"/>

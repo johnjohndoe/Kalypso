@@ -301,6 +301,7 @@
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_10.gft"/>
 		<arg name="selectFeatureID" value="570250"/>
 		<arg name="pantoFeatureId" value="570250"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 20 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
