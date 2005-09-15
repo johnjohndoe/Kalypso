@@ -31,6 +31,7 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.io.StringReader;
 import java.net.URL;
+import java.text.ParseException;
 
 import org.apache.tools.ant.util.ReaderInputStream;
 import org.kalypso.contribs.java.net.IUrlResolver;
@@ -184,5 +185,12 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
   {
     return XMLHelper.GMLSCHEMA_NS + ":" + m_typeName;
   }
-
+  
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text )
+  {
+    throw new UnsupportedOperationException();
+  }
 }

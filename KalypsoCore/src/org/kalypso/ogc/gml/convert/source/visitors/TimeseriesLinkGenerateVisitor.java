@@ -58,6 +58,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * </p>
  * <ul>
  * <li>${fid} Die Feature-ID</li>
+ * <li>${fidOnlyDigits} Same as ${fid}, but all non-digits are pruned. </li>
  * <li><${wiski_sim:link_property} Erstellt die Href anhand der Href der angegebenen Property. Diese wird nach dem Wiski-Simulations Pattern abgeändert. </li>
  * </ul>
  * 
@@ -114,7 +115,11 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     String href = m_hrefPattern;
     
     // Feature ID
-    href = href.replaceAll( "\\Q${fid}\\E", f.getId() );
+    final String fid = f.getId();
+    final String fidOnlyDigits = fid.replaceAll( "\\D", "" );
+    
+    href = href.replaceAll( "\\Q${fid}\\E", fid );
+    href = href.replaceAll( "\\Q${fidOnlyDigits}\\E", fidOnlyDigits );
 
     // wiski pattern
     href = applyWiskiSim( href, f );

@@ -1,6 +1,7 @@
 package org.kalypsodeegree_impl.model.cv;
 
 import java.net.URL;
+import java.text.ParseException;
 import java.util.Vector;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
@@ -52,7 +53,8 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
 
   /**
    * 
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
+   *      java.net.URL)
    */
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
@@ -123,7 +125,8 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
   {
@@ -203,7 +206,15 @@ public class RectifiedGridDomainTypeHandler implements IMarshallingTypeHandler
    */
   public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
   {
-    throw new CloneNotSupportedException("Clone is not supported!");
+    throw new CloneNotSupportedException( "Clone is not supported!" );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text ) throws ParseException
+  {
+    throw new UnsupportedOperationException();
   }
 
 }

@@ -32,6 +32,7 @@ package org.kalypso.ogc.gml.typehandler;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.text.ParseException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -187,4 +188,13 @@ public class ZmlInlineTypeHandler implements IMarshallingTypeHandler
     }
     return clone;
   }
+
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text )
+  {
+    throw new UnsupportedOperationException();
+  }
+
 }
