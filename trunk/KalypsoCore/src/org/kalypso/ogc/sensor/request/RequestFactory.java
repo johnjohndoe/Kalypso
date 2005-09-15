@@ -35,11 +35,14 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -109,7 +112,11 @@ public class RequestFactory
   }
 
   /**
-   * Create a default observation (best effort) according to the request
+   * Create a default observation (best effort) according to the request.
+   * <p>
+   * If there is an extension for org.kalypso.core.requestObsToMerge, then the observation delivered by the instance of
+   * this extension is merged with the observation created here. You can use this for instance to have some default
+   * W/Q-Table in the metadata.
    * 
    * @return a new instance of SimpleObservation that will statisfy the request specification
    */
@@ -138,6 +145,25 @@ public class RequestFactory
     mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" );
     mdl.setProperty( ObservationConstants.MD_ORIGIN, "Request-Mechanismus" );
 
+    try
+    {
+      final IMergeObservationProvider provider = KalypsoCoreExtensions.getDefaultMergeObservationProvider();
+
+      if( provider != null )
+      {
+        final IObservation toMerge = provider.getObservationToMerge();
+
+        // currently only metadata is merged...
+        // maybe merge more stuff later?
+        mdl.putAll( toMerge.getMetadataList() );
+      }
+    }
+    catch( final CoreException e )
+    {
+      Logger.getLogger( RequestFactory.class.getName() ).warning(
+          "Default-Observation used for merging with request could not be created: " + e.getLocalizedMessage() );
+    }
+
     return obs;
   }
 
@@ -153,15 +179,16 @@ public class RequestFactory
 
     return createDefaultObservation( xmlReq );
   }
-  
-  public static String buildXmlString( final RequestType requestType, final boolean includeXmlHeader ) throws JAXBException, IOException
+
+  public static String buildXmlString( final RequestType requestType, final boolean includeXmlHeader )
+      throws JAXBException, IOException
   {
     StringWriter writer = null;
     try
     {
       writer = new StringWriter();
       final Marshaller marshaller = new ObjectFactory().createMarshaller();
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT , Boolean.FALSE );
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
       marshaller.marshal( requestType, writer );
       writer.close();
     }
@@ -172,8 +199,8 @@ public class RequestFactory
 
     final String xmlStr = writer.toString();
     if( !includeXmlHeader )
-      return xmlStr.replaceAll( "<\\?xml.*>" , "" ).replaceAll("\n", "");
-    
+      return xmlStr.replaceAll( "<\\?xml.*>", "" ).replaceAll( "\n", "" );
+
     return xmlStr;
   }
 }

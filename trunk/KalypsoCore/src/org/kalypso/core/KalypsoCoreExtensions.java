@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.ogc.sensor.request.IMergeObservationProvider;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
@@ -61,6 +62,8 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 public class KalypsoCoreExtensions
 {
   private final static String VISITOR_EXTENSION_POINT = "org.kalypso.core.featureVisitor";
+
+  private final static String OBSTOMERGE_EXTENSION_POINT = "org.kalypso.core.requestObsToMerge";
 
   /** id -> config-element */
   private static Map THE_VISITOR_MAP = null;
@@ -94,4 +97,21 @@ public class KalypsoCoreExtensions
     return visitor;
   }
 
+  /**
+   * @return the first provider found or null if none
+   */
+  public static IMergeObservationProvider getDefaultMergeObservationProvider() throws CoreException
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( OBSTOMERGE_EXTENSION_POINT );
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+
+    if( configurationElements.length == 0 )
+      return null;
+
+    final IMergeObservationProvider obsProvider = (IMergeObservationProvider)configurationElements[0]
+        .createExecutableExtension( "class" );
+
+    return obsProvider;
+  }
 }
