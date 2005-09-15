@@ -647,7 +647,7 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     if( kalypsoNAVersion == null || kalypsoNAVersion.equals( "lfug" ) || kalypsoNAVersion.equals( "" ) )
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
-    else if( kalypsoNAVersion.equals( "test" ) )
+    else if( kalypsoNAVersion.equals( "v2.0.2" ) )
       m_kalypsoKernelPath = EXE_FILE_2_02;
     else if( kalypsoNAVersion.equals( "kalypso2.01_3000" ) )
       m_kalypsoKernelPath = EXE_FILE_2_01_3000;
