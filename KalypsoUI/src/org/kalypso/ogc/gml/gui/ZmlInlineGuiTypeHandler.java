@@ -114,10 +114,11 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
   public String getText( Object o )
   {
-    final String prefix = Arrays.toString( m_typeHandler.getAxisTypes(), "" ) + ": ";
-    if( o == null )
-      return prefix + "-";
-    return prefix + ( (IObservation)o ).getName();
+    //    final String prefix = Arrays.toString( m_typeHandler.getAxisTypes(), "" ) + ": ";
+    //    if( o == null )
+    //      return prefix + "-";
+    //    return prefix + ( (IObservation)o ).getName();
+    return "<Editieren...>";
   }
 
   /**

@@ -96,6 +96,6 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
    */
   public String getLabel()
   {
-    return "X-Y Diagramm...";
+    return "Diagramm...";
   }
 }
