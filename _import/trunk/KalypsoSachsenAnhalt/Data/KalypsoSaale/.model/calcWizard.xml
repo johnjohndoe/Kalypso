@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="17">
 	<!-- KONTROLLE UND UMRECHNUNG DER ZEITREIHEN - NIEDERSCHLAG -->
 	<!-- Niederschlag an Stationen (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Ombrometer" imageLocation="icons/calcwizard/kalypso32.gif">

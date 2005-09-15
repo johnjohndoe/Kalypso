@@ -2,11 +2,12 @@
 html, body {
       
     text-align:center;
+    vertical-align:middle;
     margin:15px 0 0 0;
     padding:0;
     height:100%;
     overflow:hidden;
-    scroll:auto;
+    overflow:auto;
     vertical-align:middle;
 }
 
@@ -41,8 +42,7 @@ html, body {
 
 /* Einfacher Button (1 Zeile=1 Button)*/
 #button {
-height:35px;
-width:200px;
+height:40px;
 margin:0;
 padding:0;
 display:block;
@@ -50,52 +50,76 @@ display:block;
 
 /* Verzweigte Button (1 Zeile=mehrere Button) */
 #button_bypass {
-height:35px;
-padding:0 0 0 3px;
-margin:0;
+height:40px;
+padding:0;
+margin:0 2px 0 2px;
 display:inline;
-vertical-align:bottom;
 }
 
 
-/* Grundlayout BUTTON bei Verlinkungen: einfache und verzweigte Button */
-#button a,  #button_bypass a {
-
-margin:0px;
-padding:3px 2px 2px 2px;
-font-family:arial, sans-serif;
-font-size:8px;
-line-height:85%;
+/* Grundlayout BUTTON bei Verlinkungen: einfacher  Button */
+#button a {
+margin:0;
+padding:0;
+font-family:tahoma, sans-serif;
+font-size:9px;
+line-height:100%;
 font-weight:normal;
-background:url(a_hi.gif) no-repeat 100%;
-color:#fff;
+color:#000;
 text-decoration:none;
-width:81px;
-height:20px;
+border-top:2px solid #1EA3CF;
+border-bottom:2px solid #1EA3CF;
+background:#90D4ED;
+width:90px;
+height:25px;
 }
 
 
-/* Grundlayout, AKTIVER Zustand */
-#button a:active, #button_bypass a:active {
-background:url(a_hi_active.gif) no-repeat 100%;
-color:#fff;
-text-decoration:underline;
+#button a.activ {
+border-top:2px solid #096;
+border-bottom:2px solid #096;
+background:#CFC;
 }
 
 
-/* Layout des sich verzweigenden Button: linke Hauptlinie */
+
+/* Grundlayout BUTTON bei Verlinkungen: verzweigter Button */
+#button_bypass a  {
+margin:0;
+padding:0;
+font-family:tahoma, sans-serif;
+font-size:9px;
+line-height:100%;
+font-weight:normal;
+color:#000;
+text-decoration:none;
+border-top:1px solid #1EA3CF;
+border-bottom:1px solid #1EA3CF;
+background:#90D4ED;
+width:60px;
+height:25px;
+}
+
+#button_bypass a.activ {
+border-top:2px solid #096;
+border-bottom:2px solid #096;
+background:#CFC;
+}
+
+
+/* Layout des verzweigenden Buttons: linke Hauptlinie */
 .bypass_top_l {
 background:url(bypass_top_l.gif) no-repeat center bottom #fff; 
 }
 
 
-/* Layout des sich verzweigenden Button: mittlere Hauptlinie */
+/* Layout des verzweigenden Buttons: mittlere Hauptlinie */
 .bypass_top_m {
 background:url(bypass_top_m.gif) no-repeat center bottom #fff; 
 }
 
 
-/* Layout des sich verzweigenden Button: rechte Hauptlinie */
+/* Layout des verzweigenden Buttons: rechte Hauptlinie */
 .bypass_top_r {
 background:url(bypass_top_r.gif) no-repeat center bottom #fff; 
 }
@@ -111,6 +135,7 @@ background:#fff;
 background:url(bypass_l.gif) no-repeat center bottom #fff; 
 }
 
+
 /* Layout des linken verzweigenden Button, linke Hauptlinie*/
 .bypass_l_b {
 background:url(bypass_l_b.gif) no-repeat center bottom #fff; 
@@ -118,12 +143,13 @@ background:url(bypass_l_b.gif) no-repeat center bottom #fff;
 
 
 /* Layout des mittleren verzweigenden Button */
-.direct {
+.mitte  {
 background:url(direct.gif) no-repeat center bottom #fff; 
 }
 
+
 /* Layout des mittleren verzweigenden Button, mittlere Hauptlinie*/
-.direct_b {
+.mitte_b {
 background:url(direct_b.gif) no-repeat center bottom #fff; 
 }
 
@@ -140,7 +166,16 @@ background:url(bypass_r_b.gif) no-repeat center bottom #fff;
 }
 
 
-/* Footer-Button, selberklärend */
+
+/* Direkte Verbindungslinien*/
+.direct {
+background:url(direct_b.gif) no-repeat center bottom #fff; 
+}
+
+
+
+
+/* Footer-Button, selberklï¿½rend */
 
 #footer a {
 padding:2px 10px 0 2px;

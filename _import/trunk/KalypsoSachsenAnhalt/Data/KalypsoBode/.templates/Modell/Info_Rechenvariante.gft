@@ -4,16 +4,24 @@
 	<view typename="TubigControl" style="SWT.NONE">
 		<gridData grabExcessHorizontalSpace="false"/>
 		<gridLayout numColumns="1" horizontalSpacing="10"/>
-		<label text="Steuerparameter eingeben" style="0"/>
-		<group style="SWT.NONE" text="Steuerparameter">
+		
+		<group style="SWT.NONE" text="Szenario">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
+			<gridLayout numColumns="2" horizontalSpacing="10" verticalSpacing="0"/>
+			<subcomposite property="ScenarioAssociation" style="SWT.NONE">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
+			</subcomposite>
+		</group>
+		
+		<group style="SWT.NONE" text="Steuerparameter eingeben">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 			<gridLayout numColumns="2" horizontalSpacing="10"/>
 			<subcomposite property="ControlAssociation" style="SWT.NONE">
 				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 			</subcomposite>
 		</group>
-		<label text="Metadaten eingeben" style="0"/>
-		<group style="0" text="Metadaten">
+		
+		<group style="0" text="Metadaten eingeben">
 			<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 			<gridLayout numColumns="2" horizontalSpacing="10"/>
 			<subcomposite property="MetadataAssociation" style="SWT.NONE">
@@ -21,6 +29,13 @@
 			</subcomposite>
 		</group>
 	</view>
+	<view typename="Scenario" style="SWT.NONE">
+			<gridLayout numColumns="2" horizontalSpacing="10"/>
+			<label property="scenarioName" style="0"/>
+			<text property="scenarioName" style="2048" editable="false">
+				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+			</text>
+	</view>	
 	<view typename="Control" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
 		<label property="startsimulation" style="0"/>
@@ -31,18 +46,12 @@
 		<text property="startforecast" style="2048" editable="false">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
-		<label text="Batches" style="SWT.NONE">
-			<!-- heightHint kann keine Verkleinerung bewirken... -->
-			<gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"/>
-		</label>
-		<subcomposite property="BatchIDCollectionAssociation" style="SWT.BORDER"/>
+		<subcomposite property="BatchIDCollectionAssociation" style="SWT.NONE">
+			<gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" horizontalSpan="2" />
+		</subcomposite>
 	</view>
 	<view typename="Metadata" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
-		<label property="scenarioName" style="0"/>
-		<text property="scenarioName" style="SWT.BORDER" editable="false">
-			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
-		</text>
 		<label property="editor" style="0"/>
 		<text property="editor" style="2048">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
@@ -55,12 +64,35 @@
 			<gridData verticalAlignment="1" horizontalAlignment="1"/>
 		</label>
 		<text property="comment" style="2050">
-			<!-- hier kann ein heightHint eine Vergrößerung bewirken, nur auf was wird der Hint gesetzt? -->
 			<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 		</text>
 		<label property="calctime" style="0"/>
 		<text property="calctime" style="2048">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
+	</view>
+	<view typename="BatchIDCollection" style="SWT.NONE">
+		<gridLayout numColumns="1" horizontalSpacing="10"/>
+		<subcomposite property="BatchIDAssociation" style="SWT.NONE">
+			<gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" horizontalSpan="2" />
+		</subcomposite>
+	</view>
+	<view typename="BatchID" style="SWT.NONE">
+ 		<gridLayout numColumns="1" horizontalSpacing="10"/>
+        <radiobutton text="Q-Prognose uh. Wendefurth" style="SWT.NONE" tooltip="Abfluss-Prognose unterhalb Wendefurth" property="id" valueToSet="RUN1.BAT">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </radiobutton>
+        <radiobutton text="Q-Prognose oh. Speicher" style="SWT.NONE" tooltip="Abfluss-Prognose oberhalb Speicher" property="id" valueToSet="run2.bat">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </radiobutton>
+        <radiobutton text="Speicherrechnung" style="SWT.NONE" tooltip="Speicherrechnung bei Vorgabe der Abgaben" property="id" valueToSet="run3.bat">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </radiobutton>
+        <radiobutton text="TS-Steuerung ohne Optim." style="SWT.NONE" tooltip="TS-Steuerung ohne Optimierung" property="id" valueToSet="run4.bat">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </radiobutton>
+        <radiobutton text="TS-Steuerung mit Optim." style="SWT.NONE" tooltip="TS-Steuerung mit Optimierung" property="id" valueToSet="run5.bat">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </radiobutton>
 	</view>
 </featuretemplate>
