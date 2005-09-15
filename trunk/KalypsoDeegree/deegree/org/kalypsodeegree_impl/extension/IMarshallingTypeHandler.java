@@ -1,6 +1,7 @@
 package org.kalypsodeegree_impl.extension;
 
 import java.net.URL;
+import java.text.ParseException;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.w3c.dom.Node;
@@ -36,5 +37,8 @@ public interface IMarshallingTypeHandler extends ITypeHandler
   /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
   public String getShortname();
 
-  public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException;
+  public Object cloneObject( final Object objectToClone ) throws CloneNotSupportedException;
+  
+  /** Creeates an instance of my type from a string */
+  public Object parseType( final String text ) throws ParseException;
 }

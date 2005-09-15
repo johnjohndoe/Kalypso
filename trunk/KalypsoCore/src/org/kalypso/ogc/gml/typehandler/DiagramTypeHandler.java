@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
+import java.text.ParseException;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.xml.XMLUtilities;
@@ -54,7 +55,6 @@ import org.w3c.dom.Node;
  */
 public class DiagramTypeHandler implements IMarshallingTypeHandler
 {
-
   private final String m_typeName = "DiagramType";
 
   private final String m_typeNamespace = "http://www.tuhh.de/kalypsoNA";
@@ -152,5 +152,13 @@ public class DiagramTypeHandler implements IMarshallingTypeHandler
   {
     DiagramProperty property = (DiagramProperty)objectToClone;
     return property.clone();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text )
+  {
+    throw new UnsupportedOperationException();
   }
 }

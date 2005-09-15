@@ -55,7 +55,9 @@ import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 
 /**
  * @author belger
@@ -68,14 +70,20 @@ public class StringModifier implements IFeatureModifier
 
   private final FeatureTypeProperty m_ftp;
 
-  private final IGuiTypeHandler m_typeHandler;
+  private final IGuiTypeHandler m_guiTypeHandler;
+
+  private final IMarshallingTypeHandler m_marshallingTypeHandler;
 
   public StringModifier( final FeatureTypeProperty ftp )
   {
     m_ftp = ftp;
 
-    final ITypeRegistry typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    m_typeHandler = (IGuiTypeHandler)typeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
+    // wen need both registered type handler types
+    final ITypeRegistry guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    m_guiTypeHandler = (IGuiTypeHandler)guiTypeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
+    
+    final ITypeRegistry marshallingTypeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    m_marshallingTypeHandler = (IMarshallingTypeHandler)marshallingTypeRegistry.getTypeHandlerForClassName( m_ftp.getType() );
   }
 
   /**
@@ -101,8 +109,8 @@ public class StringModifier implements IFeatureModifier
   
   private String toText( final Object data )
   {
-    if( m_typeHandler != null )
-      return m_typeHandler.getText( data );
+    if( m_guiTypeHandler != null )
+      return m_guiTypeHandler.getText( data );
 
     if( data instanceof Date )
       return DATE_FORMATTER.format( data );
@@ -141,8 +149,8 @@ public class StringModifier implements IFeatureModifier
   private Object parseData( final String text ) throws ParseException
   {
     final String typeName = m_ftp.getType();
-    if( m_typeHandler != null )
-      return m_typeHandler.parseType( text );
+    if( m_guiTypeHandler != null )
+      return m_marshallingTypeHandler.parseType( text );
     else if( typeName.equals( "java.lang.String" ) )
       return text;
     else if( typeName.equals( "java.lang.Boolean" ) )
@@ -212,8 +220,8 @@ public class StringModifier implements IFeatureModifier
    */
   public Image getImage( final Feature f )
   {
-    if( m_typeHandler != null )
-      return m_typeHandler.getImage( getValue( f ) );
+    if( m_guiTypeHandler != null )
+      return m_guiTypeHandler.getImage( getValue( f ) );
 
     return null;
   }

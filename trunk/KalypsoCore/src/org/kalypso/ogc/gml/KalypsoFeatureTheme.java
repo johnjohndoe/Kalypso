@@ -329,16 +329,21 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       { style };
     }
 
-    public Set queryVisibleFeatures( GM_Envelope env, Set result )
+    public Set queryVisibleFeatures( final GM_Envelope env, Set result )
     {
       if( result == null )
         result = new HashSet();
       m_vaildEnvelope = null;
       restyle( env );
       
-      // TODO: causes concurrent modification exception, use arrays instead
-      for( Iterator iter = m_dispayElements.iterator(); iter.hasNext(); )
-        result.add( ( (DisplayElement[])iter.next() )[0].getFeature() );
+      // iterate through array to avoid concurrent modification exception
+      final DisplayElement[][] elts = (DisplayElement[][])m_dispayElements.toArray( new DisplayElement[m_dispayElements.size()][] );
+      for( int i = 0; i < elts.length; i++ )
+      {
+        final DisplayElement[] element = elts[i];
+        result.add( element[0].getFeature() );
+      }
+
       return result;
     }
 

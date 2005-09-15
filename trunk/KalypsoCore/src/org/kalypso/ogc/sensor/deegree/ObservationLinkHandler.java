@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.deegree;
 
 import java.net.URL;
+import java.text.ParseException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -182,4 +183,25 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
     }
     return clone;
   }
+  
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text ) throws ParseException
+  {
+    final org.kalypso.zml.obslink.ObjectFactory factory = new org.kalypso.zml.obslink.ObjectFactory();
+    try
+    {
+      final TimeseriesLink link = factory.createTimeseriesLink();
+      link.setHref( text );
+      return link;
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+      
+      throw new ParseException( e.getLocalizedMessage(), 1 );
+    }
+  }
+
 }

@@ -101,6 +101,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       handleTreeSelectionChanged( event );
     }
   };
+  
   public static final int DEFAULT_EXPATIONA_LEVEL = 3;
 
   private GmlTreeDropAdapter m_dropAdapter;
@@ -120,8 +121,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     // als post selection listener anmelden,
     // dann passiert das ganze gedöns nicht immer sofort
-//    m_treeViewer.addPostSelectionChangedListener( m_treeSelectionChangedListener );
-    m_treeViewer.addSelectionChangedListener( m_treeSelectionChangedListener );
+    m_treeViewer.addPostSelectionChangedListener( m_treeSelectionChangedListener );
   }
 
   protected void handleGlobalSelectionChanged( final IFeatureSelection selection )
@@ -266,6 +266,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_pool.removePoolListener( this );
 
     m_selectionManager.removeSelectionListener( m_globalSelectionChangedListener );
+    m_treeViewer.removePostSelectionChangedListener( m_treeSelectionChangedListener );
   }
 
   /**
@@ -275,6 +276,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
+      final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent)modellEvent;
+      final Feature parentFeature = structureEvent.getParentFeature();
+      
       if( !m_composite.isDisposed() )
       {
         final TreeViewer treeViewer = m_treeViewer;
@@ -282,7 +286,10 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         {
           public void run()
           {
-            treeViewer.refresh();
+            if( parentFeature == null )
+                treeViewer.refresh();
+            else
+              treeViewer.refresh( parentFeature );
           }
         } );
       }
@@ -367,11 +374,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         public void run()
         {
           treeViewer.setInput( m_workspace );
-          treeViewer.getTree().setVisible( false );
-          treeViewer.expandAll();
-          treeViewer.collapseAll();
-          treeViewer.expandToLevel( DEFAULT_EXPATIONA_LEVEL );
-          treeViewer.getTree().setVisible( true );
         }
       } );
     }

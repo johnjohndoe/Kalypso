@@ -40,7 +40,6 @@
  ------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
-import java.text.ParseException;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -156,25 +155,5 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
   {
     return new ButtonModifier( workspace, ftp, selectionManager );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#parseType(java.lang.String)
-   */
-  public Object parseType( final String text ) throws ParseException
-  {
-    final org.kalypso.zml.obslink.ObjectFactory factory = new org.kalypso.zml.obslink.ObjectFactory();
-    try
-    {
-      final TimeseriesLink link = factory.createTimeseriesLink();
-      link.setHref( text );
-      return link;
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      
-      throw new ParseException( e.getLocalizedMessage(), 1 );
-    }
   }
 }

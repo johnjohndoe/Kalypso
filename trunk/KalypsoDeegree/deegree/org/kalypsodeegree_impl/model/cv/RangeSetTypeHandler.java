@@ -227,4 +227,12 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler
     return new RangeSet( (Vector)rangeSetData.clone(), rangeSetDataFile );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text )
+  {
+    throw new UnsupportedOperationException();
+  }
+
 }

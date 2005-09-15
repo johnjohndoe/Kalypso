@@ -143,4 +143,12 @@ public class GMLBoundingShapeTypeHandler implements IMarshallingTypeHandler
     return GeometryFactory.createGM_Envelope( newMin, newMax );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text )
+  {
+    throw new UnsupportedOperationException();
+  }
+
 }

@@ -29,8 +29,6 @@
  */
 package org.kalypso.ogc.gml.gui;
 
-import java.text.ParseException;
-
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
@@ -96,14 +94,4 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
   {
     return ResourceFileTypeHandler.TYPENAME;
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#parseType(java.lang.String)
-   */
-  public Object parseType( String text ) throws ParseException
-  {
-    // TODO implement it
-    return null;
-  }
-
 }

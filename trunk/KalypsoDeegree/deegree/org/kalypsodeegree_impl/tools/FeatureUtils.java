@@ -41,6 +41,10 @@
 
 package org.kalypsodeegree_impl.tools;
 
+import java.text.ParseException;
+
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -95,6 +99,19 @@ public class FeatureUtils
       final double hw = Double.parseDouble( hwString );
 
       return GeometryFactory.createGM_Point( rw, hw, crs );
+    }
+    
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( type );
+    if( typeHandler != null )
+    {
+      try
+      {
+        return typeHandler.parseType( input[0] );
+      }
+      catch( final ParseException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     return null;

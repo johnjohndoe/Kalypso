@@ -32,7 +32,8 @@ public class GMLFeatueAssociationTypeHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
+   *      java.net.URL)
    */
   public void marshall( Object object, Node node, URL context )
   {
@@ -40,7 +41,8 @@ public class GMLFeatueAssociationTypeHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL, org.kalypso.contribs.java.net.IUrlResolver)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver)
    */
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
   {
@@ -64,4 +66,11 @@ public class GMLFeatueAssociationTypeHandler implements IMarshallingTypeHandler
     throw new CloneNotSupportedException( "Clone is not supported" );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text )
+  {
+    throw new UnsupportedOperationException();
+  }
 }

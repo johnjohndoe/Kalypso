@@ -120,13 +120,4 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     //    return prefix + ( (IObservation)o ).getName();
     return "<Editieren...>";
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#parseType(java.lang.String)
-   */
-  public Object parseType( final String text )
-  {
-    // TODO implement it
-    return null;
-  }
 }

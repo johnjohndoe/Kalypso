@@ -30,6 +30,7 @@
 package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
+import java.text.ParseException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -94,6 +95,14 @@ public class ResourceFileTypeHandler implements IMarshallingTypeHandler
   public Object cloneObject( Object objectToClone ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException( "Not clonable!" );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
+  public Object parseType( final String text )
+  {
+    throw new UnsupportedOperationException();
   }
 
 }
