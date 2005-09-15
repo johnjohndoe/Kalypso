@@ -190,18 +190,21 @@
 			<mapping targetProperty="Ort" format="http://www.opengis.net/gml/srs/EPSG.xml#31468">
 				<metadata name="Rechtswert"/>
 				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
 		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="SpeicherCollectionAssociation/SpeicherMember" depth="zero" zmllink="Abgabe" context="${gmlPath}">
 			<mapping targetProperty="Ort" format="http://www.opengis.net/gml/srs/EPSG.xml#31468">
 				<metadata name="Rechtswert"/>
 				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
 		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="OmbrometerCollectionAssociation/OmbrometerMember" depth="zero" zmllink="Niederschlag_gemessen" context="${gmlPath}">
 			<mapping targetProperty="Ort" format="http://www.opengis.net/gml/srs/EPSG.xml#31468">
 				<metadata name="Rechtswert"/>
 				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
 			</mapping>
 		</kalypso.mapZmlMeta2Feature>
 	</target>

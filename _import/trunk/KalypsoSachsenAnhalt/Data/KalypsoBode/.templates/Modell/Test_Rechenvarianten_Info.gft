@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="featureview.template.kalypso.org
-C:\Programme_inst\eclipse\workspace\KalypsoCore\etc\schemas\template\featureview.xsd">
-	<layer xlink:href=".calculation.template.xml" featurePath="" linktype="gml" id="blubb"/>
+<featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<layer xlink:href=".calculation" featurePath="" linktype="gml" id="blubb"/>
 	<view typename="TubigControl" style="SWT.NONE">
 		<gridData grabExcessHorizontalSpace="false"/>
 		<gridLayout numColumns="1" horizontalSpacing="10"/>
-		
-		<group style="SWT.NONE" text="Szenario">
-			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
-			<gridLayout numColumns="2" horizontalSpacing="10" verticalSpacing="0"/>
-			<subcomposite property="ScenarioAssociation" style="SWT.NONE">
-				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"/>
-			</subcomposite>
-		</group>
-		
-		<group style="SWT.NONE" text="Steuerparameter eingeben">
+		<label text="Steuerparameter eingeben" style="0"/>
+		<group style="SWT.NONE" text="Steuerparameter">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 			<gridLayout numColumns="2" horizontalSpacing="10"/>
 			<subcomposite property="ControlAssociation" style="SWT.NONE">
 				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 			</subcomposite>
 		</group>
-		
-		<group style="0" text="Metadaten eingeben">
+		<label text="Metadaten eingeben" style="0"/>
+		<group style="0" text="Metadaten">
 			<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 			<gridLayout numColumns="2" horizontalSpacing="10"/>
 			<subcomposite property="MetadataAssociation" style="SWT.NONE">
@@ -30,32 +21,31 @@ C:\Programme_inst\eclipse\workspace\KalypsoCore\etc\schemas\template\featureview
 			</subcomposite>
 		</group>
 	</view>
-	<view typename="Scenario" style="SWT.NONE">
-			<gridLayout numColumns="2" horizontalSpacing="10"/>
-			<label property="scenarioName" style="0"/>
-			<text property="scenarioName" style="2048" editable="false">
-				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
-			</text>
-	</view>
 	<view typename="Control" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
 		<label property="startsimulation" style="0"/>
-		<text property="startsimulation" style="2048">
+		<text property="startsimulation" style="2048" editable="false">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
 		<label property="startforecast" style="0"/>
-		<text property="startforecast" style="2048">
+		<text property="startforecast" style="2048" editable="false">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
-		<!-- wird beim Erstellen einer Rechenvariante nicht angezeigt
-			<label text="Batches" style="SWT.NONE">
-				<gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"/>
-			</label>
-			<subcomposite property="BatchIDCollectionAssociation" style="SWT.BORDER"/>
-		-->
+<!--		
+		<label text="Batches" style="SWT.NONE">
+			<gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"/>
+		</label>
+-->		
+		<subcomposite property="BatchIDCollectionAssociation" style="SWT.NONE">
+			<gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" horizontalSpan="2" />
+		</subcomposite>
 	</view>
 	<view typename="Metadata" style="SWT.NONE">
 		<gridLayout numColumns="2" horizontalSpacing="10"/>
+		<label property="scenarioName" style="0"/>
+		<text property="scenarioName" style="SWT.BORDER" editable="false">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+		</text>
 		<label property="editor" style="0"/>
 		<text property="editor" style="2048">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
@@ -68,11 +58,28 @@ C:\Programme_inst\eclipse\workspace\KalypsoCore\etc\schemas\template\featureview
 			<gridData verticalAlignment="1" horizontalAlignment="1"/>
 		</label>
 		<text property="comment" style="2050">
+			<!-- hier kann ein heightHint eine VergrÃ¶ÃŸerung bewirken, nur auf was wird der Hint gesetzt? -->
 			<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 		</text>
 		<label property="calctime" style="0"/>
 		<text property="calctime" style="2048">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 		</text>
+	</view>
+	
+	<view typename="BatchIDCollection" style="SWT.NONE">
+		<gridLayout numColumns="1" horizontalSpacing="10"/>
+		<subcomposite property="BatchIDAssociation" style="SWT.NONE">
+			<gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" horizontalSpan="2" />
+		</subcomposite>
+	</view>
+	<view typename="BatchID" style="SWT.NONE">
+		<gridLayout numColumns="1" horizontalSpacing="10"/>
+        <radiobutton text="oberhalb W" style="SWT.NONE" tooltip="" property="id" valueToSet="run1.bat">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </radiobutton>
+        <radiobutton text="unterhalb W" style="SWT.NONE" tooltip="" property="id" valueToSet="run2.bat">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </radiobutton>
 	</view>
 </featuretemplate>

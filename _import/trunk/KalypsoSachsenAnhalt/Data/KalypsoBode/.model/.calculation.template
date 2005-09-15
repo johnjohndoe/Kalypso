@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TubigControl fid="foo" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.tubig.control" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="org.kalypso.tubig.control
 project:/.model/schema/control.xsd">
+	<ScenarioAssociation>
+		<Scenario>
+			<scenarioId>:scenarioId:</scenarioId>
+			<scenarioName>:scenarioName:</scenarioName>
+			<scenarioDescription>:scenarioDescription:</scenarioDescription>
+		</Scenario>
+	</ScenarioAssociation>
 	<ControlAssociation>
 		<Control fid="BodeControl">
 			<startsimulation>:startsim:</startsimulation>
@@ -18,9 +25,6 @@ project:/.model/schema/control.xsd">
 	</ControlAssociation>
 	<MetadataAssociation>
 		<Metadata fid="BodeMetaData">
-	        <scenarioId>:scenarioId:</scenarioId>
-	        <scenarioName>:scenarioName:</scenarioName>
-	        <scenarioDescription>:scenarioDescription:</scenarioDescription>
 			<editor>:user:</editor>
 			<description>- bitte ausfüllen -</description>
 			<comment>- bitte ausfüllen -</comment>
