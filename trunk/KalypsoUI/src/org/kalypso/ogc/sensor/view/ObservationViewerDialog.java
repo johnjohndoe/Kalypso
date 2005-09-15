@@ -228,7 +228,8 @@ public class ObservationViewerDialog extends ResizableDialog
           final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
           Object content = clipboard.getContents( TextTransfer.getInstance() );
           if( content != null && content instanceof String )
-            setInput( ZmlFactory.createZMLFromClipboardString( "clipboard", (String)content, axis ) );
+            setInput( ZmlFactory.createZMLFromClipboardString( ( (IObservation)m_input ).getName(), (String)content,
+                axis ) );
           else
             ; // TODO messagebox
           clipboard.dispose();
@@ -239,7 +240,7 @@ public class ObservationViewerDialog extends ResizableDialog
         // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelImportListener, "<-- Zwischenspeicher", "Aus Zwischenspeicher importieren",
+      result.add( new ButtonControl( exelImportListener, "Import Zwischenspeicher", "Aus Zwischenspeicher importieren",
           SWT.PUSH ) );
     }
     if( ( m_buttonControls & BUTTON_EXEL_EXPORT ) == BUTTON_EXEL_EXPORT )
@@ -272,7 +273,7 @@ public class ObservationViewerDialog extends ResizableDialog
         // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelExportListener, "--> Zwischenspeicher", "In Zwischenspeicher exportieren",
+      result.add( new ButtonControl( exelExportListener, "Export Zwischenspeicher", "In Zwischenspeicher exportieren",
           SWT.PUSH ) );
     }
     return (ButtonControl[])result.toArray( new ButtonControl[result.size()] );
