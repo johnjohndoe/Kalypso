@@ -181,7 +181,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
       if( targetId == null || targetId.equals( "0" ) )
         continue;
 
-      final String ombrometerHref = "ID" + targetId;
+      final String ombrometerHref = "Ombrometer-" + targetId;
       final String elementId = f.getId() + "-gewicht-" + count++;
 
       // neues Feature: 'GewichtungElement'
