@@ -299,8 +299,8 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_10.gft"/>
-		<arg name="selectFeatureID" value="ID570250"/>
-		<arg name="pantoFeatureId" value="ID570250"/>
+		<arg name="selectFeatureID" value="570250"/>
+		<arg name="pantoFeatureId" value="570250"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 20 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -353,8 +353,8 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_20.gft"/>
-		<arg name="selectFeatureID" value="ID573100"/>
-		<arg name="pantoFeatureId" value="ID573100"/>
+		<arg name="selectFeatureID" value="573100"/>
+		<arg name="pantoFeatureId" value="573100"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 30 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -407,8 +407,8 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_30.gft"/>
-		<arg name="selectFeatureID" value="ID575406"/>
-		<arg name="pantoFeatureId" value="ID575406"/>
+		<arg name="selectFeatureID" value="575406"/>
+		<arg name="pantoFeatureId" value="575406"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 40 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -461,8 +461,8 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_40.gft"/>
-		<arg name="selectFeatureID" value="ID576470"/>
-		<arg name="pantoFeatureId" value="ID576470"/>
+		<arg name="selectFeatureID" value="576470"/>
+		<arg name="pantoFeatureId" value="576470"/>
 	</page>	
     <!-- TS-Steuerungs-Gruppe 50 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -545,8 +545,8 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_55.gft"/>
-		<arg name="selectFeatureID" value="ID579330"/>
-		<arg name="pantoFeatureId" value="ID579330"/>
+		<arg name="selectFeatureID" value="579330"/>
+		<arg name="pantoFeatureId" value="579330"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 60 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Überleitungsperre Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -599,8 +599,8 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_60.gft"/>	
-		<arg name="selectFeatureID" value="ID579001"/>
-		<arg name="pantoFeatureId" value="ID579001"/>
+		<arg name="selectFeatureID" value="579001"/>
+		<arg name="pantoFeatureId" value="579001"/>
 	</page>
     <!-- TS-Steuerungs-Gruppe 65 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -624,8 +624,8 @@
       <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_65.gft"/>
-		<arg name="selectFeatureID" value="ID579012"/>
-		<arg name="pantoFeatureId" value="ID579012"/>
+		<arg name="selectFeatureID" value="579012"/>
+		<arg name="pantoFeatureId" value="579012"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 70 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -678,8 +678,8 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_70.gft"/>
-		<arg name="selectFeatureID" value="ID579006"/>
-		<arg name="pantoFeatureId" value="ID579006"/>
+		<arg name="selectFeatureID" value="579006"/>
+		<arg name="pantoFeatureId" value="579006"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 80 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -732,14 +732,14 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_80.gft"/>
-		<arg name="selectFeatureID" value="ID553050"/>
-		<arg name="pantoFeatureId" value="ID553050"/>
+		<arg name="selectFeatureID" value="553050"/>
+		<arg name="pantoFeatureId" value="553050"/>
 	</page>
 	
 		
 	
 	<!-- BERECHNUNG - und Ergebnisdarstellung -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Ergebnisse Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung / Ergebnisse - Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg10"/>
@@ -774,7 +774,7 @@
 		<arg name="buttonLaunch" value="runCalculation"/>
 	</page>
 	
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg20"/>
@@ -804,7 +804,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg30"/>
@@ -834,7 +834,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg40"/>
@@ -864,7 +864,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg50"/>
@@ -894,7 +894,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg55"/>
@@ -923,7 +923,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Überlauf Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Überleitungssperre Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg60"/>
@@ -953,7 +953,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg70"/>
@@ -983,7 +983,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg80"/>
@@ -1009,6 +1009,38 @@
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Volumen Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg_TS"/>
+		<!--
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg_TS.html"/>
+-->
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Inhalt_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss#color=0xff8040"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
