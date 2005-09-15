@@ -40,7 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Stroke;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -82,6 +84,10 @@ public class KalypsoStatusUtils
       .getResource( "resource/write.gif" ), "write" );
 
   private final static Color COLOR_LIGHTYELLOW = new Color( 248, 243, 192 );
+
+  private final static Stroke STROKE_DASHED = new BasicStroke( 1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+      10.0f, new float[]
+      { 10.0f }, 0.0f );
 
   private KalypsoStatusUtils()
   {
@@ -306,7 +312,7 @@ public class KalypsoStatusUtils
   {
     if( bit == 0 || mask == 0 )
       return mask == bit;
-    
+
     return ( mask & bit ) == bit;
   }
 
@@ -402,7 +408,7 @@ public class KalypsoStatusUtils
   {
     if( ( mask & 0 ) == 0 )
       return null;
-    
+
     // currently returns null, but can be customized in the near
     // future
     return null;
@@ -424,33 +430,43 @@ public class KalypsoStatusUtils
   }
 
   /**
-   * Combines the stati according to the policy defined when interpolating
-   * the corresponding value-axes.
+   * @return stroke depending on the given status-mask
+   */
+  public static Stroke getStrokeFor( final int mask )
+  {
+    if( checkMask( mask, KalypsoStati.BIT_DERIVATED ) )
+      return STROKE_DASHED;
+
+    return null;
+  }
+
+  /**
+   * Combines the stati according to the policy defined when interpolating the corresponding value-axes.
    */
   public static int performInterpolation( final int status1, final int status2 )
   {
-    return (status1 | status2 ) & KalypsoStati.MASK_INTERPOLATION;
+    return ( status1 | status2 ) & KalypsoStati.MASK_INTERPOLATION;
   }
-  
+
   /**
-   * Combines the stati according to the policy defined when performing arithmetic
-   * operations on the corresponding value-axes.
+   * Combines the stati according to the policy defined when performing arithmetic operations on the corresponding
+   * value-axes.
    */
   public static int performArithmetic( final int[] stati )
   {
     int status = 0;
     for( int i = 0; i < stati.length; i++ )
       status |= stati[i];
-    
+
     return status & KalypsoStati.MASK_ARITHMETIC;
   }
- 
+
   /**
-   * Combines the stati according to the policy defined when performing arithmetic
-   * operations on the corresponding value-axes.
+   * Combines the stati according to the policy defined when performing arithmetic operations on the corresponding
+   * value-axes.
    */
   public static int performArithmetic( final int status1, final int status2 )
   {
-    return (status1 | status2 ) & KalypsoStati.MASK_ARITHMETIC;
+    return ( status1 | status2 ) & KalypsoStati.MASK_ARITHMETIC;
   }
 }

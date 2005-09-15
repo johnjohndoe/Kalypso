@@ -288,4 +288,27 @@ class CurveDataset extends AbstractIntervalXYDataset
       renderer.setSeriesPaint( i, color );
     }
   }
+
+  /**
+   * Return the status of the item in the given serie.
+   * 
+   * @return status-number or null if not existing
+   */
+  public Number getStatusFor( int series, int item )
+  {
+    synchronized( m_curves )
+    {
+      try
+      {
+        final Number value = ( (XYCurveSerie)m_curves.get( series ) ).getStatus( item );
+        
+        return value;
+      }
+      catch( SensorException e )
+      {
+        e.printStackTrace();
+        return null;
+      }
+    }
+  }
 }

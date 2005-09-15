@@ -354,9 +354,9 @@ public class ObservationPlot extends XYPlot
       final int pos = getAdequateDatasetPos();
       setDataset( pos, cds );
 
-      final XYItemRenderer renderer = getRenderer( yAxis.getType() );
+      final XYItemRenderer renderer = getRenderer( yAxis.getType(), pos );
       setRenderer( pos, renderer );
-
+      
       mapDatasetToDomainAxis( pos, ( (Integer)m_chartAxes2Pos.get( m_diag2chartAxis.get( xDiagAxis ) ) ).intValue() );
       mapDatasetToRangeAxis( pos, ( (Integer)m_chartAxes2Pos.get( m_diag2chartAxis.get( yDiagAxis ) ) ).intValue() );
     }
@@ -641,15 +641,16 @@ public class ObservationPlot extends XYPlot
   /**
    * Returns the adequate renderer for the given axis type.
    * 
-   * @param axisType
-   * @return renderer
+   * @param pos position of the renderer/dataset in the plot
    */
-  private final XYItemRenderer getRenderer( final String axisType )
+  private final XYItemRenderer getRenderer( final String axisType, int pos )
   {
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new XYBarRenderer();
 
-    return new StandardXYItemRenderer( StandardXYItemRenderer.LINES );
+    final XYCurveRenderer renderer = new XYCurveRenderer( StandardXYItemRenderer.LINES );
+    renderer.setPosition( pos );
+    return renderer;
   }
 
   /**

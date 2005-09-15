@@ -80,18 +80,18 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
   {
     final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 
-    final Number n = (Number)value;
-    if( n == null )
-      return label;
-
-    final RenderingRule[] r = m_model.findRules( row, column );
-
     // reset visual settings
     label.setToolTipText( null );
     label.setForeground( null );
     label.setBackground( null );
     label.setIcon( null );
     label.setFont( null );
+
+    final Number n = (Number)value;
+    if( n == null )
+      return label;
+
+    final RenderingRule[] r = m_model.findRules( row, column );
 
     // different handling when cell is selected/focus
     if( isSelected )
