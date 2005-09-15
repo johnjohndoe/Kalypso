@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="KalypsoGridInterpolation"
+   id="org.kalypso.grid.interpolation"
    name="KalypsoGridInterpolation"
    version="1.0.0"
    provider-name="kalypso.org"
@@ -15,10 +15,10 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="KalypsoGridInterpolation.actionSet1"
+            label="org.kalypso.grid.interpolation.actionSet1"
             description="Gis &amp;Tools"
             visible="true"
-            id="KalypsoGridInterpolation.actionSet1">
+            id="org.kalypso.grid.interpolation.actionSet1">
          <action
                toolbarPath="grid"
                label="%org.kalypso.interpolate.action.label"

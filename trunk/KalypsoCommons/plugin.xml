@@ -11,9 +11,6 @@
       <library name="KalypsoCommons.jar">
          <export name="*"/>
       </library>
-      <library name="lib/ant-1.6.2.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/commons-io-1.0.jar">
          <export name="*"/>
       </library>
@@ -27,6 +24,7 @@
 
    <requires>
       <import plugin="org.junit"/>
+      <import plugin="org.apache.ant" export="true"/>
       <import plugin="org.kalypso.contribs.java" export="true"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
