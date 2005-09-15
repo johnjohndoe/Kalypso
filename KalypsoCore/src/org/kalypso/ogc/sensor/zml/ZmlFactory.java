@@ -48,7 +48,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -89,6 +88,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
@@ -665,7 +665,6 @@ public class ZmlFactory
    */
   public static Object createZMLFromClipboardString( final String name, final String content, final IAxis[] axis )
   {
-    final NumberFormat numberFormat = NumberFormat.getInstance();
     final String[] rows = content.split( "\\n" );
     final List collector = new ArrayList();
     for( int i = 0; i < rows.length; i++ )
@@ -684,7 +683,7 @@ public class ZmlFactory
             final Class dataClass = axis[ax].getDataClass();
             final Object keyValue;
             if( Number.class.isAssignableFrom( dataClass ) )
-              keyValue = numberFormat.parseObject( stringValue );
+              keyValue = TimeserieUtils.getNumberFormatFor(axis[ax].getType()).parseObject( stringValue );
             else
               keyValue = SpecialPropertyMapper.cast( stringValue, dataClass, false, false );
             if( collector.contains( keyValue ) )
@@ -705,7 +704,7 @@ public class ZmlFactory
               final String stringValue = cells[ax];
               final Class dataClass = axis[ax].getDataClass();
               if( Number.class.isAssignableFrom( dataClass ) )
-                rowValues[ax] = numberFormat.parseObject( stringValue );
+                rowValues[ax] = TimeserieUtils.getNumberFormatFor(axis[ax].getType()).parseObject( stringValue );
               else
                 rowValues[ax] = SpecialPropertyMapper.cast( stringValue, dataClass, true, false );
             }
@@ -744,7 +743,6 @@ public class ZmlFactory
   public static String createClipboardStringFrom( final IObservation observation, final IRequest request )
       throws SensorException
   {
-    final NumberFormat numberformat = NumberFormat.getInstance();
     final StringBuffer result = new StringBuffer();
     final ITuppleModel values = observation.getValues( request );
     final IAxis[] axes = values.getAxisList();
@@ -769,7 +767,7 @@ public class ZmlFactory
         {
           if( value instanceof Number )
           {
-            stringValue = numberformat.format( value );
+            stringValue = TimeserieUtils.getNumberFormatFor(sortedAxes[col].getType()).format( value );
           }
           else
             stringValue = (String)SpecialPropertyMapper.cast( value, String.class, true, false );
