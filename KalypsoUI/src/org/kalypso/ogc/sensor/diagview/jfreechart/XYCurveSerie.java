@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.jfree.data.general.Series;
@@ -50,6 +51,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * A CurveSerie.
@@ -69,6 +71,8 @@ class XYCurveSerie extends Series
   private transient final DiagViewCurve m_curve;
 
   private transient ITuppleModel m_values = null;
+
+  private transient IAxis m_statusAxis = null;
 
   /**
    * Constructor. Fetches the values (ITuppleModel).
@@ -104,7 +108,18 @@ class XYCurveSerie extends Series
     {
       m_values = obs.getValues( m_curve.getArguments() );
 
-      if( m_values == null )
+      if( m_values != null )
+      {
+        try
+        {
+          m_statusAxis = KalypsoStatusUtils.findStatusAxisFor( m_values.getAxisList(), m_yAxis );
+        }
+        catch( NoSuchElementException ignored )
+        {
+          // empty
+        }
+      }
+      else
         logger.warning( "!!! Values null for Observation: " + obs );
     }
   }
@@ -141,9 +156,23 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_yAxis );
 
     if( obj instanceof Number )
-    {
       return (Number)obj;
-    }
+
+    return null;
+  }
+
+  /**
+   * @return the kalypso-status of the given item, or null if no status
+   */
+  public Number getStatus( int item ) throws SensorException
+  {
+    if( m_statusAxis == null )
+      return null;
+
+    final Object obj = m_values.getElement( item, m_statusAxis );
+
+    if( obj instanceof Number )
+      return (Number)obj;
 
     return null;
   }

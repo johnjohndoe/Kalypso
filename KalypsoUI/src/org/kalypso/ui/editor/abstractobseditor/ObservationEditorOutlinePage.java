@@ -1,6 +1,8 @@
 package org.kalypso.ui.editor.abstractobseditor;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -29,6 +31,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.internal.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.views.contentoutline.ContentOutlinePage2;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
@@ -87,20 +90,21 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   }
 
   /**
-   * @return the selected theme or null
+   * @return the selected items or empty array
    */
-  public ObsViewItem getSelectedItem()
+  public ObsViewItem[] getSelectedItems()
   {
     final ISelection sel = getSelection();
+    final List items = new ArrayList();
 
     if( sel instanceof IStructuredSelection )
     {
-      final Object element = ( (IStructuredSelection)sel ).getFirstElement();
-      if( element instanceof ObsViewItem )
-        return (ObsViewItem)element;
+      final IStructuredSelection structSel = (IStructuredSelection)sel;
+
+      Arrays.addAllOfClass( structSel.toList(), items, ObsViewItem.class );
     }
 
-    return null;
+    return (ObsViewItem[])items.toArray( new ObsViewItem[items.size()] );
   }
 
   /**

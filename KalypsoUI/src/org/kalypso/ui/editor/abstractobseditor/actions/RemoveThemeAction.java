@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.abstractobseditor.actions;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
 import org.kalypso.ogc.sensor.commands.RemoveThemeCommand;
@@ -68,12 +69,21 @@ public class RemoveThemeAction extends FullAction
    */
   public void run()
   {
-    final ObsViewItem item = m_page.getSelectedItem();
+    final ObsViewItem[] items = m_page.getSelectedItems();
 
-    if( item != null
-        && MessageDialog.openConfirm( m_page.getSite().getShell(), "Zeitreihe entfernen",
-            "Wollen Sie wirklich die Zeitreihe " + item.getName() + " entfernen" ) )
+    if( items.length > 0 )
+    {
+      final String str = ArrayUtils.toString( items, ", " );
+      final String msg = "Wollen Sie wirklich die Zeitreihe" + ( items.length > 1 ? "n " : " " ) + str + " entfernen?";
+      if( MessageDialog.openConfirm( m_page.getSite().getShell(), "Zeitreihe entfernen", msg ) )
+      {
+        for( int i = 0; i < items.length; i++ )
+        {
+          final ObsViewItem item = items[i];
 
-      m_page.getEditor().postCommand( new RemoveThemeCommand( m_page.getView(), item ), null );
+          m_page.getEditor().postCommand( new RemoveThemeCommand( m_page.getView(), item ), null );
+        }
+      }
+    }
   }
 }
