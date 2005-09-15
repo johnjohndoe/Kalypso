@@ -42,6 +42,7 @@ package org.kalypso.contribs.java.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -64,9 +65,34 @@ public final class Arrays
     return v;
   }
 
+  /**
+   * Add all elementsToAdd to the given collection.
+   */
   public static void addAll( final Collection c, final Object[] elementsToAdd )
   {
     c.addAll( Arrays.asList( elementsToAdd ) );
+  }
+
+  /**
+   * Add all object from source of the class desiredClass to the dest collection. Either instances of the desired class
+   * or subclasses will be accepted.
+   * 
+   * @param source
+   *          object from this source will be added to dest if they are instances of the desiredclass
+   * @param dest
+   *          destination
+   * @param desiredclass
+   *          instances of this class or subclasses of it will be added to dest
+   */
+  public static void addAllOfClass( final Collection source, final Collection dest, final Class desiredclass )
+  {
+    for( final Iterator it = source.iterator(); it.hasNext(); )
+    {
+      final Object obj = it.next();
+      
+      if( desiredclass.isAssignableFrom( obj.getClass() ) )
+        dest.add( obj );        
+    }
   }
 
   /**
