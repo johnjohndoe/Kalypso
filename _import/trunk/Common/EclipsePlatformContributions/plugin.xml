@@ -4,7 +4,7 @@
    id="org.kalypso.contribs.eclipseplatform"
    name="EclipsePlatformContributions Plug-in"
    version="0.0.1"
-   provider-name="bce.org"
+   provider-name="kalypso.org"
    class="org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin">
 
    <runtime>
