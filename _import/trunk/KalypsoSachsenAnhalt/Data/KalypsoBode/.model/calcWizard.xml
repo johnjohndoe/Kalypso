@@ -619,6 +619,6 @@
 			</arg>
 		</arg>
 		<!-- Speicher-Exporte noch konfigurieren (feste Tabellen, feste Diagramme) -->
-		<!-- oder zweite Export-Seite -->
+		<!-- ggf. zweite Export-Seite für Speicher-Berichte -->
 	</page>
 </calcwizard>

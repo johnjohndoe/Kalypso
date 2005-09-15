@@ -15,5 +15,8 @@
     <observation linktype="zml" ns1:href="%href3%" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Niederschlag" editable="true" id="c5" name="Niederschlag [%axisunit%]" width="50"/>
     </observation>
+    <observation linktype="zml" ns1:href="%href4%" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Schnee" editable="true" id="c5" name="Schnee [%axisunit%]" width="50"/>
+    </observation>
 </obstableview>
 
