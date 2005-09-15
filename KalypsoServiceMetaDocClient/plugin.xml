@@ -28,7 +28,6 @@
       <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.services.core.client"/>
       <import plugin="org.kalypso.ui"/>
-      <import plugin="org.kalypso.services.metadoc"/>
       <import plugin="org.kalypso.metadoc"/>
    </requires>
 
