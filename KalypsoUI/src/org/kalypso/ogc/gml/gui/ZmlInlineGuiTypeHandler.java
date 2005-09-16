@@ -32,14 +32,12 @@ package org.kalypso.ogc.gml.gui;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.template.featureview.ButtonType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;

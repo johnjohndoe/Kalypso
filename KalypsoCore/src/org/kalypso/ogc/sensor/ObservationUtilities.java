@@ -4,7 +4,7 @@
  Copyright (C) 2004, 2005 by:
 
  Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
+ Institute of River and Coastal Engineering
  Denickestr. 22
  21073 Hamburg, Germany
  http://www.tuhh.de/wb
