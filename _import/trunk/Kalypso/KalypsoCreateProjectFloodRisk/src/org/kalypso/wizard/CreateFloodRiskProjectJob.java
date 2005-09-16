@@ -83,6 +83,7 @@ import org.kalypso.floodrisk.tools.Number;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -399,7 +400,7 @@ public class CreateFloodRiskProjectJob extends Job
     String shapeBase = ( m_workspacePath.append( m_projectHandel.getFullPath().append(
         "/Landuse/" + FileUtilities.nameWithoutExtension( m_landuseDataFile.getName().toString() ) ) ) ).toString();
     landuseShapeWS = ShapeSerializer.deserialize( shapeBase, m_landuseCooSystem );
-    return new KalypsoFeatureTheme( new CommandableWorkspace( landuseShapeWS ), "featureMember", "Landnutzung" );
+    return new KalypsoFeatureTheme( new CommandableWorkspace( landuseShapeWS ), "featureMember", "Landnutzung", new FeatureSelectionManager2() );
   }
 
   /**
