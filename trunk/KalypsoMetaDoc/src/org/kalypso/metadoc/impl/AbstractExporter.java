@@ -87,6 +87,14 @@ public abstract class AbstractExporter implements IExporter
   }
 
   /**
+   * @see org.kalypso.metadoc.IExporter#setName(java.lang.String)
+   */
+  public void setName( final String name )
+  {
+    m_name = name;
+  }
+  
+  /**
    * @see org.kalypso.metadoc.IExporter#getDescription()
    */
   public final String getDescription()

@@ -54,6 +54,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.TableCellRenderer;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -106,6 +107,14 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   protected ObservationTablePanel m_panel = null;
 
   protected String m_currentScenarioName = "";
+
+  /**
+   * if the amount of columns is equal or bigger than this threshold, then the autoResizeMode property is set to
+   * AUTO_RESIZE_OFF
+   * <p>
+   * if value is < 0 then function is not used
+   */
+  private int m_thresholdColumnsAutoResizeModeOff = -1;
 
   public ObservationTable( final TableView template )
   {
@@ -166,6 +175,28 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     m_view.addObsViewEventListener( this );
   }
 
+  /**
+   * @see javax.swing.JTable#columnAdded(javax.swing.event.TableColumnModelEvent)
+   */
+  public void columnAdded( TableColumnModelEvent e )
+  {
+    super.columnAdded( e );
+
+    if( m_thresholdColumnsAutoResizeModeOff >= 0 && getColumnCount() >= m_thresholdColumnsAutoResizeModeOff )
+      setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+  }
+
+  /**
+   * @see javax.swing.JTable#columnRemoved(javax.swing.event.TableColumnModelEvent)
+   */
+  public void columnRemoved( TableColumnModelEvent e )
+  {
+    super.columnRemoved( e );
+
+    if( m_thresholdColumnsAutoResizeModeOff >= 0 && getColumnCount() < m_thresholdColumnsAutoResizeModeOff )
+      setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
+  }
+
   public void dispose()
   {
     if( m_excelCp != null )
@@ -193,7 +224,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       protected void runIntern() throws Throwable
       {
         final int evenType = evt.getType();
-        
+
         // REFRESH ONE COLUMN
         if( evenType == ObsViewEvent.TYPE_REFRESH && evt.getObject() instanceof TableViewColumn )
         {
@@ -207,7 +238,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         if( evenType == ObsViewEvent.TYPE_REFRESH_ITEMSTATE && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
-          
+
           if( column.isShown() )
             model.addColumn( column );
           else
@@ -376,5 +407,10 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   public String getCurrentScenarioName()
   {
     return m_currentScenarioName;
+  }
+
+  public void setThresholdColumnsAutoResizeModeOff( final int thresholdColumnsAutoResizeModeOff )
+  {
+    m_thresholdColumnsAutoResizeModeOff = thresholdColumnsAutoResizeModeOff;
   }
 }
