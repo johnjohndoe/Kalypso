@@ -31,7 +31,6 @@ package org.kalypso.ogc.gml.typehandler;
 
 import java.io.StringReader;
 import java.net.URL;
-import java.text.ParseException;
 
 import org.apache.tools.ant.util.ReaderInputStream;
 import org.kalypso.contribs.java.net.IUrlResolver;

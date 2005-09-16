@@ -32,7 +32,6 @@ package org.kalypso.ogc.gml.typehandler;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.text.ParseException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;

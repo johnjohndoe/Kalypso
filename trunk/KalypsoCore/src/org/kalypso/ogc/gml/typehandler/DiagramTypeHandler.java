@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
-import java.text.ParseException;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.xml.XMLUtilities;

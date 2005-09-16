@@ -30,7 +30,6 @@
 package org.kalypso.ogc.gml.typehandler;
 
 import java.net.URL;
-import java.text.ParseException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
