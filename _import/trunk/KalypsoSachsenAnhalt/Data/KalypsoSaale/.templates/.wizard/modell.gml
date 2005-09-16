@@ -7457,7 +7457,7 @@
         </pegel:Gebiet>
       </pegel:PegelMember>
       <pegel:PegelMember>
-        <pegel:Gebiet fid="ID553050">
+        <pegel:Gebiet fid="Moni">
           <pegel:PNR>553050</pegel:PNR>
           <pegel:Name>Bad Liebenwerda</pegel:Name>
           <pegel:Gewaesser>Schwarze Elster</pegel:Gewaesser>
