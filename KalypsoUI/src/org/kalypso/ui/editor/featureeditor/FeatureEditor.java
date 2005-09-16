@@ -106,7 +106,7 @@ public class FeatureEditor extends EditorPart
   protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
       new DefaultCommandManager(), m_dirtyRunnable );
 
-  private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget );
+  private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget, 5, 5 );
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()

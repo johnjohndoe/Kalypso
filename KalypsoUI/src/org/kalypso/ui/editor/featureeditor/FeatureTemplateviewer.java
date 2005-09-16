@@ -106,7 +106,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private String m_featurePath;
 
-  private FeatureComposite m_featureComposite = new FeatureComposite( null, null, new FeatureSelectionManager2(), new URL[] {} );
+  private FeatureComposite m_featureComposite = new FeatureComposite( null, null, new FeatureSelectionManager2(),
+      new URL[] {} );
 
   private Label m_label;
 
@@ -127,9 +128,16 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private ScrolledCompositeCreator m_creator;
 
-  public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
+  private final int m_marginWidth;
+
+  private final int m_marginHeight;
+
+  public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget, final int marginHeight,
+      final int marginWidth )
   {
     m_commandtarget = commandtarget;
+    m_marginHeight = marginHeight;
+    m_marginWidth = marginWidth;
 
     try
     {
@@ -265,12 +273,16 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   public Composite createControls( final Composite parent, final int style )
   {
+    final GridLayout gridLayout = new GridLayout();
+    gridLayout.marginHeight = m_marginHeight;
+    gridLayout.marginWidth = m_marginWidth;
+    
     m_creator = new ScrolledCompositeCreator( null )
     {
       protected Control createContents( final Composite scrollParent, final int contentStyle )
       {
         final Composite panel = new Composite( scrollParent, contentStyle );
-        panel.setLayout( new GridLayout() );
+        panel.setLayout( gridLayout );
         panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return panel;
       }
