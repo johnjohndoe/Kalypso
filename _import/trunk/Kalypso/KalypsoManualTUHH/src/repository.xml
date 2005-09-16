@@ -75,8 +75,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository_gesamt.png" revisionflag="added"
-                     scale="30" />
+          <imagedata fileref="img/repository/repository_gesamt.png"
+                     revisionflag="added" scale="30" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -118,7 +118,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository_schaltflaechen.png" scale="70" />
+          <imagedata fileref="img/repository/repository_schaltflaechen.png"
+                     scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -140,7 +141,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository_import_lokal.png" scale="50" />
+          <imagedata fileref="img/repository/repository_import_lokal.png"
+                     scale="50" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -174,7 +176,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository_einstellungen.png" scale="70" />
+          <imagedata fileref="img/repository/repository_einstellungen.png"
+                     scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -222,7 +225,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository_export_zeitreihen.png" scale="50" />
+          <imagedata fileref="img/repository/repository_export_zeitreihen.png"
+                     scale="50" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -238,7 +242,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository_export_zeitreihen2.png"
+          <imagedata fileref="img/repository/repository_export_zeitreihen2.png"
                      scale="50" />
         </imageobject>
       </mediaobject>

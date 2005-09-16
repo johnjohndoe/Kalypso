@@ -15,11 +15,11 @@
   linkend="anwendungsfaelle" /> beschriebenen Anwendungsfällen und Anwendern.
   Die Benutzerrechte werden bei vorhandener Schnittstelle zur
   Benutzerverwaltung durch diese übergeben. Ist eine Benutzerverwaltung nicht
-  vorgesehen, so erfolgt der Login durch ein Passwort. Wird die
+  vorgesehen, so erfolgt der Login durch ein einheitliches Passwort. Wird die
   Rechteverwaltung nicht benötigt, so erfolgt der Login automatisch.</para>
 
-  <para>Der Programm-Start von KALYPSO erfolgt durch Doppelklick auf das
-  Desktop-Symbol KALYPSO.</para>
+  <para>Der Programm-Start von KALYPSO erfolgt durch das ausführen des in
+  <xref linkend="client-installation" /> erstellten Linkes.</para>
 
   <section id="kalypso_startseite">
     <sectioninfo>
@@ -39,7 +39,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/KALYPSO_startseite.png" scale="50" />
+            <imagedata fileref="img/Programm-Start/startseite.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure></para>
@@ -70,5 +70,11 @@
     besteht keine Möglichkeit der Ansichtsauswahl. Dem einfachen Anwender
     steht ausschließlich die <guibutton>Hochwasser Vorhersage</guibutton> als
     Wizard Perspektive zur Verfügung.</para>
+
+    <para>Hinweis: Die Startseite ist nur bei vorhandenem und korrekt
+    gestartetem Server verfügbar. Ist kein Server vorhanden, so ist lediglich
+    der KALYPSO-Modeler verfügbar. Dieser kann über das Menü &lt;Fenster&gt;
+    Perspective öffnen gestartet werden (siehe <xref
+    linkend="grafische_oberflaeche" /> ).</para>
   </section>
 </chapter>

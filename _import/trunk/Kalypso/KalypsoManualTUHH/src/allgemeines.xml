@@ -19,7 +19,7 @@
     Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
     numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
     einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
-    Abstraktionsschicht dar mit folgenden Eigenschaften:</para>
+    Abstraktionsschicht mit folgenden Eigenschaften dar:</para>
 
     <itemizedlist>
       <listitem>
@@ -43,9 +43,10 @@
     <itemizedlist>
       <listitem>
         <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
-        Hamburg - Tel. 040 / 42878-3761 - www.tuhh.de/wb</para>
+        Hamburg - Tel. 040 / 42878-3761 /-4181 - www.tuhh.de/wb</para>
 
-        <para><graphic fileref="img/wasserbau-logo.png" scale="" /></para>
+        <para><graphic fileref="img/allgemeines/wasserbau-logo.png"
+        scale="" /></para>
       </listitem>
     </itemizedlist>
 
@@ -57,7 +58,8 @@
         Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
         info@bjoernsen.de</para>
 
-        <para><graphic fileref="img/000_001_bce_sw_300.png" /></para>
+        <para><graphic
+        fileref="img/allgemeines/000_001_bce_sw_300.png" /></para>
       </listitem>
     </itemizedlist>
 
@@ -88,7 +90,7 @@
     </section>
   </section>
 
-  <section id="kalypso_installation_lhwz_sachsen">
+  <section id="kalypso_installation">
     <sectioninfo>
       <date><indexterm>
           <primary>Installation</primary>
@@ -99,7 +101,7 @@
 
     <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
     Modell-Plugins realisierten modularen Funktionsumfang. Folgende
-    serverseitigen Dienste sind als installation auf dem physisch
+    serverseitigen Dienste sind als Installation auf dem physisch
     eigenständigen KALYPSO-Server möglich:</para>
 
     <itemizedlist>
@@ -121,6 +123,11 @@
       </listitem>
     </itemizedlist>
 
+    <para>Sollten bei den verwendeten Modellen neben dem Rechen-Dienst keine
+    serverseitigen Dienste erforderlich sein, so ist keine Serverinstallation
+    notwendig. Für diesen Fall beinhaltet die Client-Installation einen
+    lokalen Rechendienst, welcher die Modellberechnung ermöglicht.</para>
+
     <section>
       <sectioninfo>
         <date><indexterm>
@@ -130,10 +137,12 @@
 
       <title>Server-Installation</title>
 
-      <para></para>
+      <para>Die Server-Installation bedarf aufgrund der spezifischen
+      Netzwerkeigenschaften einer direkten Abstimmung und Anpassung und kann
+      nicht verallgemeinert beschrieben werden.</para>
     </section>
 
-    <section>
+    <section id="client-installation">
       <sectioninfo>
         <date><indexterm>
             <primary>Installation-Client</primary>
@@ -142,7 +151,89 @@
 
       <title>Client-Installation</title>
 
-      <para></para>
+      <para>Die Client-Installation wird auf Basis des gelieferten
+      ZIP-Archives durchgeführt. Zur Installation wird das ZIP-Archiv an den
+      gewünschten Installationsort entpackt. Zum Programmstart muss der im
+      Hauptverzeichnis enthaltene Link Kalypso.lnk entsprechend des
+      Installationsortes und des gewünschten Arbeitsverzeichnisses (Workspace)
+      angepasst werden. Hierzu ist der Pfad der Zielanwedung durch den
+      aktuellen Installationspfad zu ersetzen. Außerdem wird ein
+      Arbeitsverzeichnis für die Modelldaten angelegt und der Pfad
+      entsprechend im Link angegeben.<table>
+          <title>Erläuterung der Eigenschaften</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>Link</entry>
+
+                <entry>Beispiel</entry>
+
+                <entry>Bemerkung</entry>
+              </row>
+
+              <row>
+                <entry>...\eclipse.exe</entry>
+
+                <entry>D:\Programme\KalypsoClient\eclipse.exe</entry>
+
+                <entry>Lokales Installationsverzeichnis</entry>
+              </row>
+
+              <row>
+                <entry>-dev lib</entry>
+
+                <entry></entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
+                <entry>-data %Workspace%</entry>
+
+                <entry>-data D:\runtime-workspace</entry>
+
+                <entry>lokales Arbeitsverzeichnis</entry>
+              </row>
+
+              <row>
+                <entry>-consoleLog</entry>
+
+                <entry></entry>
+
+                <entry>Console (optional)</entry>
+              </row>
+
+              <row>
+                <entry>-nl de_DE</entry>
+
+                <entry>-nl en_EN</entry>
+
+                <entry>Sprache (optional)</entry>
+              </row>
+
+              <row>
+                <entry>-vmargs -Xmx250m</entry>
+
+                <entry></entry>
+
+                <entry>Speicherfreigabe in Abhängigkeit des vorhandenen
+                Arbeitsspeichers beliebig wählbar</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
+
+      <para>Die Installation enthält alle zur Kalypso-Anwedung erforderlichen
+      Plugins, sowie ein eigenständiges Java Runtime Environment.</para>
+
+      <para>Nachdem die Installation durchgeführt wurde kann das Programm
+      durch Doppelklick des Linkes gestartet werden. Nachdem das Programm
+      gestartet wurde, müssen einmalig Voreinstellungen getroffen werden.
+      Diese befinden sich im Menu <guimenuitem>Fenster</guimenuitem> unter
+      <guimenuitem>Benutzervorgaben</guimenuitem> im Themenbereich Kalypso.
+      Beim Verlassen des Programmes werden die Einstellung im aktuellen
+      Workspace für die nachfolgenden Arbeitssitzungen gespeichert.</para>
     </section>
 
     <section>
@@ -208,8 +299,8 @@
 
     <title>Datenmanagement</title>
 
-    <para>Die in <xref linkend="kalypso_installation_lhwz_sachsen" />
-    beschriebene Client-Server-Architektur basiert auf folgendem
+    <para>Die in <xref linkend="kalypso_installation" /> beschriebene
+    Client-Server-Architektur basiert auf folgendem
     Datenmanagement-Prinzip:</para>
 
     <para>Für die Bearbeitung mit KALYPSO können lokale oder auf dem

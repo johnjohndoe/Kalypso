@@ -12,7 +12,20 @@
   <title>Grafische Oberfläche</title>
 
   <para>Im vorliegenden Kapitel wird die grafische Benutzeroberfläche (GUI)
-  für den KALYPSO Modeler (Expertenmodus) erläutert.</para>
+  für den KALYPSO Modeler (Expertenmodus) erläutert. Die KALYPSO Modeler
+  Perspektive kann entweder über das vorhandene Symbol in der Auswahlleiste
+  oder über das Menü <guimenuitem>Fenster</guimenuitem> geöffnet
+  werden.</para>
+
+  <figure>
+    <title>KALYPSO Modeler Perspektive öffnen</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="img/gui/perspektive_modeler.png" scale="70" />
+      </imageobject>
+    </mediaobject>
+  </figure>
 
   <section id="allgemeines_zur_gui">
     <title>Allgemeines zur GUI</title>
@@ -57,6 +70,17 @@
         der Kartenvorlage verknüpft sind. Ebenfalls sind Zeitreihenwerte mit
         der Tabellenansicht darstellbar und veränderbar.</para>
       </listitem>
+
+      <listitem>
+        <para>Feature-Ansicht: Die Feature Ansicht ermöglicht den Zugriff auf
+        alle Daten des selektierten Elementes.</para>
+      </listitem>
+
+      <listitem>
+        <para>Baumansicht: Die Baumansicht stellt eine Gesamtübersicht der
+        betrachteten Daten in Baumform bereit. Innere Abhangigkeiten sind so
+        editierbar.</para>
+      </listitem>
     </itemizedlist>
 
     <para>Die Ergonomie und Logik der Oberfläche ist ähnlich wie bei gängigen
@@ -76,7 +100,7 @@
       <para>Der Navigator öffnet sich automatisch beim Start des Expertenmodus
       und zeigt die lokal verfügbaren Modelle an.</para>
 
-      <para>Die Ansichten für Karten, Tabellen und Diagramme werden geöffnet,
+      <para>Die Ansichten für Karten, Tabellen und Diagrammen werden geöffnet,
       indem die jeweilige Datei - d.h. Kartenvorlage (*.gmt), GIS-Tabelle
       (*.gtt), Diagramm (*.odt) oder Zeitreihentabelle (*.ott) - im Navigator
       ausgewählt wird. Wenn dabei die rechte Maustaste gedrückt wird, kann
@@ -84,14 +108,14 @@
       konfigurierter Editor gewählt werden. Z.B. ist dies im Falle der
       Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
       linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
-      Tabelen-Editor.</para>
+      Tabellen-Editor.</para>
 
       <figure id="gis_view_editor">
         <title>Öffnen einer Karte anhand des Karten-Editors</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/GISviewEditor.png" scale="50" />
+            <imagedata fileref="img/gui/GISviewEditor.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -128,7 +152,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Mehrere_Ansichten.png" scale="50" />
+            <imagedata fileref="img/gui/Mehrere_Ansichten.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -174,7 +198,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/expert_fernster.png" scale="50" />
+            <imagedata fileref="img/gui/expert_fenster.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -222,7 +246,7 @@
 
       <itemizedlist>
         <listitem>
-          <para>Kartenvorlage (*.gmt)</para>
+          <para>Kartenvorlage <xref linkend="menu_karte" /> (*.gmt)</para>
 
           <para>Diese Vorlage dient zum Visualisieren von Modelldaten in einer
           Kartendarstellung.</para>
@@ -255,6 +279,13 @@
           <para>Die Werte von Zeitreihen im zml-Format werden in Form einer
           Tabelle dargestellt. Die Werte sind in der Tabelle
           editierbar.</para>
+        </listitem>
+
+        <listitem>
+          <para>Featurevorlage (*.gft)</para>
+
+          <para>Diese Vorlage dient der Ansicht einzelner Elemente. Sie stellt
+          eine Gesamtübersicht der Daten eines Elementes dar.</para>
         </listitem>
       </itemizedlist>
 
@@ -304,7 +335,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gis_karte2.png" scale="50" />
+            <imagedata fileref="img/gui/navi_karte.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -316,8 +347,8 @@
       (importierte) ESRI Shape Dateien, Geometriedaten aus einer GML-Instanz,
       Rasterdaten oder Daten von einem Web Feature Service bzw. Web Map
       Service hinzuzufügen. Durch einen Doppelklick auf die gewünschte
-      Datenform wird der spezifische Assistent zum Datenimport gestartet.
-      </para>
+      Datenform wird der spezifische Assistent zum Datenimport
+      gestartet.</para>
 
       <para>Das Layout der Karten-Ansicht bzw. der Kartenvorlage wird anhand
       des Style-Editors angepasst (siehe <xref linkend="style_editor" />).
@@ -344,7 +375,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/style_editor.png" scale="50" />
+            <imagedata fileref="img/gui/style_editor.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -363,7 +394,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/gis_neue_karte.png" scale="60" />
+              <imagedata fileref="img/gui/gis_neue_karte.png" scale="60" />
             </imageobject>
           </mediaobject>
         </figure>Mit Hilfe des Assistenten kann der Speicherort sowie der Name
@@ -387,23 +418,18 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/tabelle2.png" scale="50" />
+            <imagedata fileref="img/gui/navi_tabelle.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
 
       <para>Die wesentliche Funktion zur Steuerung der Tabellen-Ansicht
-      besteht darin, Spalten der Tabelle ein- und auszublenden. Dies wird mit
-      Auswahl von <guimenu>Tabelle --&gt; Spalten</guimenu> gemacht, indem die
-      darzustellenden Spalten per Mausklick ausgewählt und aktiviert (Häckchen
-      an) bzw. deaktiviert werden können.</para>
-
-      <para>Alternativ zum Menü <guimenu>Tabelle</guimenu> kann auch in die
-      Tabellen-Ansicht geklickt werden. Wenn die rechte Maustaste gedrückt
-      wird, erscheint ebenfalls eine Liste der verfügbaren Spaltenthemen, die
-      analog zu vorher für die Ansicht aktiviert bzw. deaktiviert werden
-      können. Wenn eine Zelle in der Tabelle zum Editieren geöffnet ist, dann
-      ist kein Funktionsmenü über die rechte Maustaste verfügbar.</para>
+      besteht darin, Spalten der Tabelle ein- und auszublenden. Durch drücken
+      der rechten maustaste in der Tabelle wird eine Ausswahlliste geöffnet,
+      welche alle verfügbaren Parameter aufführt. Spalten können ein- und
+      ausgeblendet werden, indem die darzustellenden Spalten per Mausklick
+      ausgewählt und aktiviert (Häckchen an) bzw. deaktiviert werden
+      können.</para>
 
       <para>Die vorgenommenen Änderungen an der Tabellen-Ansicht werden in der
       aufgerufenen Tabellenvorlage aktualisiert, sobald die Speicherung
@@ -421,7 +447,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Button-Tabelle.png" scale="50" />
+            <imagedata fileref="img/gui/Button-Tabelle.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -442,7 +468,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/ansichtsauswahl.png" scale="50" />
+            <imagedata fileref="img/gui/ansichtsauswahl.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -452,7 +478,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/tabellen-ansicht_zml.png" scale="30" />
+            <imagedata fileref="img/gui/tabellen-ansicht_zml.png" scale="30" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -513,7 +539,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/diagramm.png" scale="30" />
+            <imagedata fileref="img/gui/diagramm.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -523,7 +549,9 @@
       der entsprechende Abschnitt durch Aufspannen eines Rechteckes mit der
       linken Maustaste zu markieren. Nach Setzen des ersten Zaun-Eckpunktes
       (obere linke Ecke) wird die linke Maustaste beim Aufspannen des Zaunes
-      gedrückt gehalten.</para>
+      gedrückt gehalten. Um auf den Gesamtausschnitt zu zoomen, wird
+      entgegengesetz (von rechter unteren Ecke nach links oben) gezoomt
+      .</para>
     </section>
 
     <section id="zeitreihen_bearbeiten">
@@ -537,12 +565,13 @@
       des Grafikprogramms verwiesen.</para>
 
       <para>Um das Grafikprogramm aus der KALYPSO-Oberfläche zu starten,
-      müssen die zu öffnenden Zeitreihen in einer Diagramm-Vorlage (*.odt)
-      abgespeichert werden. Dies kann unter <guimenu>Datei -&gt; Speichern
-      unter</guimenu> bei aktivierter Diagramm-Ansicht geschehen.
-      Diagramm-Vorlagen können in einem beliebigen Ordner im lokalen
-      Arbeitsbereich gespeichert werden. Zu beachten ist, dass die Dateiendung
-      *.odt beim Speichern mit angegeben werden muss.</para>
+      können die zu öffnenden Zeitreihen dirket mit dem Grafikprogramm
+      geöffnet oder in einer Diagramm-Vorlage (*.odt) abgespeichert werden.
+      Dies kann unter <guimenu>Datei -&gt; Speichern unter</guimenu> bei
+      aktivierter Diagramm-Ansicht geschehen. Diagramm-Vorlagen können in
+      einem beliebigen Ordner im lokalen Arbeitsbereich gespeichert werden. Zu
+      beachten ist, dass die Dateiendung *.odt beim Speichern mit angegeben
+      werden muss.</para>
 
       <para>Wird eine Diagramm-Vorlage im Navigator-Fenster markiert,
       erscheint in der Werkzeug-Leiste die Schaltfläche zum Öffnen der Vorlage
@@ -553,13 +582,25 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/button-grafik.png" scale="50" />
+            <imagedata fileref="img/gui/button-grafik.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
 
       <para>Durch Klick auf die Schaltfläche öffnet sich das Grafik-Programm
       mit den in der Diagramm-Vorlage abgespeicherten Zeitreihen.</para>
+    </section>
+
+    <section>
+      <title>Baumansicht</title>
+
+      <para>cfdeu</para>
+    </section>
+
+    <section>
+      <title>Feature Ansicht</title>
+
+      <para>de</para>
     </section>
   </section>
 
@@ -590,7 +631,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/expert_modell.png" scale="50" />
+            <imagedata fileref="img/gui/expert_modell.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -765,24 +806,25 @@
         Modelldaten in der KALYPSO-Oberfläche visualisiert und mit Hilfe der
         einzelnen Ansichten Änderungen in den Modellparametern vorgenommen
         werden können. Dazu werden in der KALYPSO-Oberfläche eine Karten- und
-        eine Tabellenansicht der Einzugsgebiete für das Vorhersagemodell Weiße
-        Elster geöffnet (<xref linkend="modellparameter_edit" />).</para>
+        eine Tabellenansicht geöffnet (<xref
+        linkend="modellparameter_edit" />).</para>
 
         <figure id="modellparameter_edit">
           <title>Ansicht zur Änderung von Modellparametern</title>
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/modellparameter_edit.png" scale="30" />
+              <imagedata fileref="img/gui/modellparameter_edit.png" scale="30" />
             </imageobject>
           </mediaobject>
         </figure>
 
-        <para>Wird ein Teilgebiet in der Karte ausgewählt, erfolgt
-        gleichzeitig eine Markierung der entsprechenden Tabellenzeile. Genauso
-        kann dieser Vorgang umgekehrt werden: Durch Markieren einer Zeile der
-        Tabelle wird gleichzeitig das entsprechende Teilgebiet der Karte
-        hervorgehoben.</para>
+        <para>Wird ein Teilgebiet in der Karte ausgewählt (Menüpunkt
+        <guimenuitem>Feature Selektieren</guimenuitem> auf dem aktiven Layer),
+        erfolgt gleichzeitig eine Markierung der entsprechenden Tabellenzeile.
+        Genauso kann dieser Vorgang umgekehrt werden: Durch Markieren einer
+        Zeile der Tabelle wird gleichzeitig das entsprechende Teilgebiet der
+        Karte hervorgehoben.</para>
 
         <para>Zum Ändern von Modellparametern des ausgewählten Teilgebietes
         können die Werte in der Tabelle editiert werden. Im vorliegenden Fall
@@ -795,11 +837,18 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/modellparameter_edit_gross.png"
+              <imagedata fileref="img/gui/modellparameter_edit_gross.png"
                          scale="50" />
             </imageobject>
           </mediaobject>
         </figure>
+
+        <para>Für globale Änderungen kann durch Selektion mehrerer
+        Tabellenzeilen der Wert einer Zelle auch an alle weiteren übertragen
+        werden. Hierzu sind zunächst alle Tabellenzeilen mit Hilfe der
+        Shift-Taste zu selektieren. Im Anschluss an die Selektion ist in der
+        zu übernehmenden Zelle durch drücken der rechten Maustaste die Option
+        Wert übertragen verfügbar, welche dann auszuführen ist.</para>
 
         <para>Durch Auswahl des Menüs Tabelle -&gt; Daten speichern wird der
         geänderte Wert in die Modelldaten im lokalen Arbeitsverzeichnis
@@ -828,7 +877,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/expert_rechenvariante.png" scale="50" />
+            <imagedata fileref="img/gui/expert_rechenvariante.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -972,7 +1021,7 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/expert_tabelle.png" scale="50" />
+                <imagedata fileref="img/gui/expert_tabelle.png" scale="50" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -994,7 +1043,8 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/expert_berichtsablage.png" scale="50" />
+                <imagedata fileref="img/gui/expert_berichtsablage.png"
+                           scale="50" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -1012,7 +1062,8 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/expert_tabelle_export.png" scale="50" />
+                <imagedata fileref="img/gui/expert_tabelle_export.png"
+                           scale="50" />
               </imageobject>
             </mediaobject>
           </figure>
