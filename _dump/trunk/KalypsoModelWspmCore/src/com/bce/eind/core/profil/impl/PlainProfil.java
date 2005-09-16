@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.bce.eind.ProfilBuildingFactory;
 import com.bce.eind.core.profil.IPlainProfil;
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
@@ -17,6 +18,7 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.impl.buildings.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
 import com.bce.eind.core.profil.impl.devider.ProfilDevider;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
@@ -74,7 +76,8 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   public PointProperty[] addPointProperty( final PointProperty pointProperty )
 
   {
-    if (pointProperty == null)return null;
+    if( pointProperty == null )
+      return null;
     final PointProperty[] depending = m_points.getDependenciesFor( pointProperty );
     final PointProperty[] newProperties = new PointProperty[depending.length + 1];
 
@@ -86,7 +89,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
     if( pointProperty == PointProperty.RAUHEIT )
     {
-      pointProperty.setParameter(RAUHEIT_PROPERTY.class, IProfilConstants.DEFAULT_RAUHEIT_TYP );
+      pointProperty.setParameter( RAUHEIT_PROPERTY.class, IProfilConstants.DEFAULT_RAUHEIT_TYP );
     }
     return newProperties;
   }
@@ -293,14 +296,13 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
+   * @throws ProfilDataException
    * @see com.bce.eind.core.profilinterface.IProfil#removeBuilding()
    */
-  public IProfilBuilding removeBuilding( )
+  public IProfilBuilding removeBuilding( ) throws ProfilDataException
   {
     final IProfilBuilding oldBuilding = m_building;
-    for( final PointProperty property : m_building.getProfilPointProperties() )
-      removePointProperty( property );
-
+    ((AbstractProfilBuilding)m_building).removeProfilProperties(this );
     m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
 
     return oldBuilding;
@@ -376,21 +378,8 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
     removeBuilding();
     m_building = ProfilBuildingFactory.createProfilBuilding( buildingTyp );
 
-    for( final PointProperty property : m_building.getProfilPointProperties() )
-      addPointProperty( property );
+    ((AbstractProfilBuilding)m_building).addProfilProperties(this );
 
-    if( buildingTyp == BUILDING_TYP.BRUECKE )
-    {
-      for( final Iterator<IProfilPoint> pktIt = m_points.iterator(); pktIt.hasNext(); )
-      {
-        final ProfilPoint pkt = (ProfilPoint)pktIt.next();
-
-        final double h = pkt.getValueFor( PointProperty.HOEHE );
-        pkt.setValueFor( PointProperty.OBERKANTEBRUECKE, h );
-        pkt.setValueFor( PointProperty.UNTERKANTEBRUECKE, h );
-
-      }
-    }
   }
 
   /**
@@ -449,9 +438,9 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
     { new PointChange( point, pointProperty, value ) } );
   }
 
-  public void setValueFor( IProfilDevider devider, Object property,Object value )
+  public void setValueFor( IProfilDevider devider, Object property, Object value )
   {
-    ((ProfilDevider)devider).setValueFor( property,value );
+    ((ProfilDevider)devider).setValueFor( property, value );
 
   }
 

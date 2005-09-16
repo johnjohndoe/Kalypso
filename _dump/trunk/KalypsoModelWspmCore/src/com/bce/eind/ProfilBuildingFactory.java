@@ -11,6 +11,7 @@ import com.bce.eind.core.profil.impl.buildings.KreisProfilBuilding;
 import com.bce.eind.core.profil.impl.buildings.MaulProfilBuilding;
 import com.bce.eind.core.profil.impl.buildings.NoneProfilBuilding;
 import com.bce.eind.core.profil.impl.buildings.TrapezProfilBuilding;
+import com.bce.eind.core.profil.impl.buildings.WehrProfilBuilding;
 
 /**
  * @author kimwerner
@@ -34,6 +35,8 @@ public class ProfilBuildingFactory
         return new MaulProfilBuilding();
       case BRUECKE:
         return new BrueckeProfilBuilding();
+      case WEHR:
+        return new WehrProfilBuilding();
       default:
         return new NoneProfilBuilding();
     }

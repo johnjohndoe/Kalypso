@@ -8,12 +8,14 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilBuildingException;
+import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
-import com.bce.eind.core.result.IResultSet.TYPE;
+import com.bce.eind.core.profil.impl.PlainProfil;
 
 /**
  * @author kimwerner
@@ -26,14 +28,29 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
 
   private final PointProperty[] m_pointProperties;
 
-  public AbstractProfilBuilding( final BUILDING_TYP buildingTyp, final Collection<BUILDING_PROPERTY> properties, final PointProperty[] pointProperties )
+  public AbstractProfilBuilding( final BUILDING_TYP buildingTyp,
+      final Collection<BUILDING_PROPERTY> properties, final PointProperty[] pointProperties )
   {
     m_buildingTyp = buildingTyp;
     m_pointProperties = pointProperties == null ? new PointProperty[] {} : pointProperties;
-    
+
     for( final BUILDING_PROPERTY property : properties )
       m_buildingValues.put( property, new Double( 0.0 ) );
   }
+
+  @SuppressWarnings("unused")
+  public  void addProfilProperties( final PlainProfil profil ) throws ProfilDataException
+  {
+    for( final PointProperty property : getProfilPointProperties() )
+      profil.addPointProperty( property );
+  }
+  @SuppressWarnings("unused")
+  public void removeProfilProperties( final PlainProfil profil ) throws ProfilDataException
+  {
+    for( final PointProperty property : getProfilPointProperties() )
+      profil.removePointProperty( property );
+  }
+  
 
   /**
    * @return Returns the buildingTyp.
@@ -52,7 +69,8 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   }
 
   /**
-   * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY, TYPE)
+   * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY,
+   *      TYPE)
    */
   public double getValue( BUILDING_PROPERTY buildingValue ) throws ProfilBuildingException
   {
@@ -62,7 +80,7 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
   }
 
   /**
-   * @return 
+   * @return
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#setValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY,
    *      double)
    */
@@ -72,14 +90,14 @@ public abstract class AbstractProfilBuilding implements IProfilBuilding
     if( !m_buildingValues.containsKey( property ) )
       throw new ProfilBuildingException( "ungültige Eigenschaft für dieses Gebäude" );
 
-      final Double oldValue = m_buildingValues.get( property );
-      if( oldValue.compareTo( value ) != 0 )
-      {
-        m_buildingValues.put( property, value );
-        return true;
-      }
-      
-      return false;
+    final Double oldValue = m_buildingValues.get( property );
+    if( oldValue.compareTo( value ) != 0 )
+    {
+      m_buildingValues.put( property, value );
+      return true;
+    }
+
+    return false;
   }
 
   /**

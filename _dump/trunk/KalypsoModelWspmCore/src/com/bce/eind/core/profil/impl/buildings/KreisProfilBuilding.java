@@ -16,4 +16,5 @@ public class KreisProfilBuilding extends AbstractProfilBuilding
         BUILDING_PROPERTY.BEZUGSPUNKT_Y, BUILDING_PROPERTY.BREITE,
         BUILDING_PROPERTY.SOHLGEFAELLE, BUILDING_PROPERTY.RAUHEIT ), null );
   }
+
 }

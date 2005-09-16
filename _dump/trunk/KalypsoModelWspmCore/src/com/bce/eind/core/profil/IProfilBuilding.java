@@ -24,4 +24,5 @@ public interface IProfilBuilding
       throws ProfilBuildingException;
 
   public boolean hasProperty( final BUILDING_PROPERTY profilBuildingProperty );
+ 
 }

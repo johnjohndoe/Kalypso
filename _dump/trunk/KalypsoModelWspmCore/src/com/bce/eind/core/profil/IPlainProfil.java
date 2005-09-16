@@ -128,8 +128,9 @@ public interface IPlainProfil
 
   /**
    * @return das entfernte Bauwerk
+   * @throws ProfilDataException 
    */
-  public IProfilBuilding removeBuilding( );
+  public IProfilBuilding removeBuilding( ) throws ProfilDataException;
 
   /**
    * @param devider

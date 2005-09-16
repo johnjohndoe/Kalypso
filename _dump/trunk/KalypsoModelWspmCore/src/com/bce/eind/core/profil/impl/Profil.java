@@ -283,11 +283,20 @@ public class Profil implements IProfil, IProfilConstants
    */
   public IProfilBuilding removeBuilding( )
   {
-    final IProfilBuilding building = m_profil.removeBuilding();
+    final IProfilBuilding building;
+    try
+    {
+      building = m_profil.removeBuilding();
+      fireBuildingChanged();
 
-    fireBuildingChanged();
+      return building;
+    }
+    catch( ProfilDataException e )
+    {
+      return null;
+    }
 
-    return building;
+    
   }
 
   public IProfilDevider removeDevider( IProfilDevider devider )
