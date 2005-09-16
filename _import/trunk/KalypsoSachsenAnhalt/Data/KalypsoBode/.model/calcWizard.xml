@@ -20,10 +20,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag_gemessen"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf -->
 		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
@@ -50,10 +51,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
 	<!-- Wasserstand / Abfluss (Messung) -->
@@ -76,7 +78,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -84,6 +86,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Abgabe Speicher (Messung und Prognose) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -105,10 +108,15 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
          Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE UNTERHALB WENDEFURTH -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose unterhalb Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -140,6 +148,7 @@
 		<!-- 
          Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf für Berechnung -->
 		<arg name="buttonText" value="Q-Prognose uh. Wendefurth"/>
@@ -172,10 +181,11 @@
 		
 		Diagramm 
 	    <arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
 		 
         Tabelle 
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 -->
 	<!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
@@ -200,7 +210,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -208,6 +218,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE OBERHALB SPEICHER -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose oberhalb Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -238,6 +249,7 @@
 		<!--
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf für Berechnung -->
 		<arg name="buttonText" value="Q-Prognose oh. Speicher"/>
@@ -268,7 +280,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Ganglinie_gemessen"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Ganglinie_gemessen"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
@@ -276,6 +288,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Abgabe Speicher (Messung und ggf. auch Prognose (wird f. BAT3 benötigt)) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -297,10 +310,15 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 3  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
@@ -325,8 +343,8 @@
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
 		<!-- orange (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
@@ -365,8 +383,8 @@
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
 		<!-- orange (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
@@ -405,8 +423,8 @@
 		Diagramm -->
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss##linkColumn=Zufluss_gerechnet#color=0xff8040"/>
 		<!-- orange (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
@@ -455,9 +473,11 @@
         Exporte  -->
 		<!-- Name of the feature-property, used for display/selection purposes -->
 		<arg name="pegelNameProperty" value="Name"/>
+        <arg name="resultProperty" value="Ganglinie_gerechnet"/>
 		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="name" value="Vorhersagepegel"/>
 			<arg name="nameproperty" value="Name"/>
 			<arg name="width" value="800"/>
 			<arg name="height" value="600"/>
@@ -484,6 +504,7 @@
 		<!-- Scheitelwert-Tabelle -->
 		<arg name="exporter3">
 			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Pegelübersicht (Scheitelwerte)"/>
 			<arg name="documentName" value="scheitelwert.csv"/>
 			<arg name="separator" value=";"/>
 			<!--arg name="charset" value="cp1252"/-->
@@ -524,7 +545,7 @@
 			</arg>
 			<arg name="obs6">
 				<arg name="label" value="Ditfurth"/>
-				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ditfurth.zml"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ditfurt.zml"/>
 			</arg>
 			<arg name="obs7">
 				<arg name="label" value="Wegeleben"/>
@@ -573,10 +594,6 @@
 			<arg name="obs18">
 				<arg name="label" value="Trautenstein"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Trautenstein.zml"/>
-			</arg>
-			<arg name="obs19">
-				<arg name="label" value="Wendefurth"/>
-				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Wendefurth.zml"/>
 			</arg>
 		</arg>
 		<!-- Speicher-Exporte noch konfigurieren (feste Tabellen, feste Diagramme) -->

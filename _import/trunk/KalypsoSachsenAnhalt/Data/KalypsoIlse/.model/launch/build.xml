@@ -18,11 +18,6 @@
 			<fileset dir="${modell.template.dir}">
 				<include name="modell.gml" />
 				<include name="Info_Rechenvariante.gft" />
-				<include name="wiskiimport_messung_120_h_vorhersage.gml" />
-				<include name="wiskiimport_messung_48_h_vorhersage.gml" />
-				<include name="wiskiimport_gesamt.gml" />
-				<include name="wiskiimport_vorhersage.gml" />
-				<include name="wiskiexport_prognose.gml" />
 				<include name="**/*.gmt" />		<!-- Kartenansichten -->
 				<include name="**/*.ott" />		<!-- Zeitreihen-Tabellen -->
 				<include name="**/*.gtt" />		<!-- GIS-Tabellen (Parameteransichten) -->
@@ -91,22 +86,22 @@
 		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
 		<echo message="Zeitreihen werden von WISKI geladen" />
 		
-		<kalypso.copyObservation gml="${calc.url}/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
 			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_48}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<kalypso.copyObservation gml="${calc.url}/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
 			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<kalypso.copyObservation gml="${calc.url}/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
 			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<kalypso.copyObservation gml="${calc.url}/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
 			<source property="${wiski_vergangenheit_link}" from="${startforecast}" to="${stopsim_48}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
@@ -171,7 +166,7 @@
         <echo message="Vorhersagezeitreihen werden exportiert"/>
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
 
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${calc.url}/wiskiexport_prognose.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
     </target>
 
 	<!-- ================================= 

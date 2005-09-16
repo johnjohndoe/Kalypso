@@ -13,7 +13,7 @@
 			</subcomposite>
 		</group>
 		
-		<group style="SWT.NONE" text="Steuerparameter eingeben">
+		<group style="SWT.NONE" text="Steuerparameter">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
 			<gridLayout numColumns="2" horizontalSpacing="10"/>
 			<subcomposite property="ControlAssociation" style="SWT.NONE">
@@ -21,7 +21,7 @@
 			</subcomposite>
 		</group>
 		
-		<group style="0" text="Metadaten eingeben">
+		<group style="0" text="Metadaten">
 			<gridData horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 			<gridLayout numColumns="2" horizontalSpacing="10"/>
 			<subcomposite property="MetadataAssociation" style="SWT.NONE">
@@ -79,7 +79,7 @@
 	</view>
 	<view typename="BatchID" style="SWT.NONE">
  		<gridLayout numColumns="1" horizontalSpacing="10"/>
-        <radiobutton text="Q-Prognose uh. Wendefurth" style="SWT.NONE" tooltip="Abfluss-Prognose unterhalb Wendefurth" property="id" valueToSet="RUN1.BAT">
+        <radiobutton text="Q-Prognose uh. Wendefurth" style="SWT.NONE" tooltip="Abfluss-Prognose unterhalb Wendefurth" property="id" valueToSet="run1.bat">
             <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
         </radiobutton>
         <radiobutton text="Q-Prognose oh. Speicher" style="SWT.NONE" tooltip="Abfluss-Prognose oberhalb Speicher" property="id" valueToSet="run2.bat">

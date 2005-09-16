@@ -22,10 +22,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="selected"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf -->
 		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
@@ -54,10 +55,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Saale / Ilm-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Saale / Ilm" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -80,10 +82,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Weiße Elster -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -106,10 +109,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Unstrut / Eichsfeld-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Unstrut / Eichsfeld" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -132,10 +136,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Flachland Süd-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete -  Flachland Süd" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -158,10 +163,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Harz -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Harz" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -184,10 +190,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Flachland Nord-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Flachland Nord" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -197,7 +204,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Nord.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Th_Wald"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -210,10 +217,11 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Niederschlag"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - Talsperren -->
 	<!-- Inhalt Talsperren  (Messung) -->
@@ -224,7 +232,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Saale"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -237,7 +245,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Inhalt"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Inhalt"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
@@ -245,6 +253,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>	
 	<!-- KONTROLLE DER ZEITREIHEN - WASSERSTAND / ABFLUSS (Messung und manchmal auch Prognose) -->
 	<!-- abwechselnd mit STEUERUNG DER TALSPERREN -->
@@ -256,7 +265,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_10.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_W_Elster"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -269,7 +278,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -277,6 +286,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -285,7 +295,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_10.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Unstrut"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -299,7 +309,7 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_10.gft"/>
-		<arg name="selectFeatureID" value="570250"/>
+		<arg name="selectFeatureID" value="Speicher-570250"/>
 		<arg name="pantoFeatureId" value="570250"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
@@ -311,7 +321,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_20.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Flach_S"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -324,7 +334,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -332,6 +342,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -340,7 +351,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_20.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Harz"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -354,8 +365,9 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_20.gft"/>
-		<arg name="selectFeatureID" value="573100"/>
-		<arg name="pantoFeatureId" value="573100"/>
+		<arg name="selectFeatureID" value="Speicher-573100"/>
+		<arg name="pantoFeatureId" value="Speicher-573100"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 30 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -365,7 +377,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_30.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Flach_N"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -378,7 +390,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -386,6 +398,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -394,7 +407,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_30.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Inhalt_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -408,8 +421,9 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_30.gft"/>
-		<arg name="selectFeatureID" value="575406"/>
-		<arg name="pantoFeatureId" value="575406"/>
+		<arg name="selectFeatureID" value="Speicher-575406"/>
+		<arg name="pantoFeatureId" value="Speicher-575406"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 40 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -419,7 +433,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_40.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_10"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -432,7 +446,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -440,6 +454,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -448,7 +463,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_40.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_10"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -462,8 +477,9 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_40.gft"/>
-		<arg name="selectFeatureID" value="576470"/>
-		<arg name="pantoFeatureId" value="576470"/>
+		<arg name="selectFeatureID" value="Speicher-576470"/>
+		<arg name="pantoFeatureId" value="Speicher-576470"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>	
     <!-- TS-Steuerungs-Gruppe 50 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -473,7 +489,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_50.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_20"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -486,7 +502,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -494,6 +510,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 55 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -503,7 +520,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_55.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_20"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -516,7 +533,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -524,6 +541,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der HWS Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -532,7 +550,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_55.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_30"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -546,8 +564,9 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_55.gft"/>
-		<arg name="selectFeatureID" value="579330"/>
-		<arg name="pantoFeatureId" value="579330"/>
+		<arg name="selectFeatureID" value="Speicher-579330"/>
+		<arg name="pantoFeatureId" value="Speicher-579330"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 60 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Überleitungsperre Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -557,7 +576,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_60.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_30"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -570,7 +589,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -578,6 +597,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Überleitungssperre Königshütte" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -586,7 +606,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_60.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_40"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -600,8 +620,9 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_60.gft"/>	
-		<arg name="selectFeatureID" value="579001"/>
-		<arg name="pantoFeatureId" value="579001"/>
+		<arg name="selectFeatureID" value="Speicher-579001"/>
+		<arg name="pantoFeatureId" value="Speicher-579001"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
     <!-- TS-Steuerungs-Gruppe 65 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -611,7 +632,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_65.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_40"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -625,8 +646,9 @@
       <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_65.gft"/>
-		<arg name="selectFeatureID" value="579012"/>
-		<arg name="pantoFeatureId" value="579012"/>
+		<arg name="selectFeatureID" value="Speicher-579012"/>
+		<arg name="pantoFeatureId" value="Speicher-579012"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 70 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -636,7 +658,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_70.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_50"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -649,7 +671,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -657,6 +679,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -665,7 +688,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_70.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_55"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -679,8 +702,9 @@
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_70.gft"/>
-		<arg name="selectFeatureID" value="579006"/>
-		<arg name="pantoFeatureId" value="579006"/>
+		<arg name="selectFeatureID" value="Speicher-579006"/>
+		<arg name="pantoFeatureId" value="Speicher-579006"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 80 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -690,7 +714,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_80.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_55"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -703,7 +727,7 @@
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
-		<arg name="timeserie1" value="nameColumn=Name#linkColumn=Durchfluss"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -711,6 +735,7 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -719,7 +744,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_80.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_60"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -733,12 +758,12 @@
        <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_80.gft"/>
-		<arg name="selectFeatureID" value="553050"/>
-		<arg name="pantoFeatureId" value="553050"/>
+		<arg name="selectFeatureID" value="Speicher-553050"/>
+		<arg name="pantoFeatureId" value="Speicher-553050"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	
 		
-	
 	<!-- BERECHNUNG - und Ergebnisdarstellung -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung / Ergebnisse - Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -747,7 +772,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg10.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_60"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -782,7 +807,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg20.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_65"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -812,7 +837,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg30.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_70"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -842,7 +867,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg40.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -872,7 +897,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg50.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -902,7 +927,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg55.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -931,7 +956,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg60.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -961,7 +986,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg70.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -991,7 +1016,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg80.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -1021,7 +1046,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg_TS.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -1055,7 +1080,7 @@
 		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html"/>
 -->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -1081,6 +1106,7 @@
         Exporte  -->
 		<!-- Name of the feature-property, used for display/selection purposes -->
 		<arg name="pegelNameProperty" value="Name"/>
+        <arg name="resultProperty" value="Durchfluss_gerechnet"/>
 		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>

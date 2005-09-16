@@ -3,11 +3,11 @@
     <layer featurePath="#fid#ID573100" id="ID_1" linktype="gml" ns1:href="modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink"/>
     <view typename="Speicher" style="SWT.NONE">
         <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
-        <gridLayout numColumns="3"/>
+        <gridLayout numColumns="3" marginHeight="0"/>
         
  		<group style="SWT.NONE" text="">
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" horizontalSpan="2"/>
-			<gridLayout numColumns="2" horizontalSpacing="10"/>
+			<gridLayout numColumns="2" horizontalSpacing="0" marginHeight="0"/>
 	        <label text="Name" style="SWT.NONE" tooltip="Name der Talsperre" visible="true">
 	        </label>
 	        <text editable="false" property="TS_NAME" style="SWT.NONE" tooltip="Name der Talsperre">
@@ -38,9 +38,9 @@
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
 	        </text>
 	
-		        <label style="SWT.NONE" visible="false">
-		            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-		        </label>
+	        <label style="SWT.NONE" visible="false">
+	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+	        </label>
 			<group style="SWT.NONE" text="Steuerungsart">
 				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" horizontalSpan="2"/>
 				<gridLayout numColumns="2" horizontalSpacing="10"/>
@@ -79,6 +79,9 @@
 		            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 		        </label>
 	        </group>
+	         <label style="SWT.NONE" visible="false">
+	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+	        </label>
         </group>
 
         <label style="SWT.NONE" visible="false">
