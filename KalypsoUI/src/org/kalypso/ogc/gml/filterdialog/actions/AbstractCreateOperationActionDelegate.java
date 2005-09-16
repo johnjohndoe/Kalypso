@@ -32,46 +32,58 @@ package org.kalypso.ogc.gml.filterdialog.actions;
 import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
+import org.eclipse.ui.IActionDelegate;
+import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public class CreateOGCLogicalOROpsActionDelegate extends AbstractCreateOperationActionDelegate
+public abstract class AbstractCreateOperationActionDelegate implements IActionDelegate
 {
-  private IStructuredSelection m_selection;
+
+  protected IStructuredSelection m_selection;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  public abstract void run( IAction action );
+
+  /**
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  public void selectionChanged( IAction action, ISelection selection )
   {
-    if( m_selection != null && action.isEnabled() )
+    action.setEnabled( false );
+    if( selection instanceof IStructuredSelection )
     {
-      if( m_selection instanceof TreeSelection )
+      m_selection = (IStructuredSelection)selection;
+      Object firstElement = m_selection.getFirstElement();
+      if( firstElement instanceof ComplexFilter )
       {
-        Object firstElement = m_selection.getFirstElement();
-        if( firstElement instanceof ComplexFilter )
-        {
-          ComplexFilter filter = (ComplexFilter)firstElement;
-          filter.setOperation( new LogicalOperation( OperationDefines.OR, new ArrayList() ) );
-        }
-        if( firstElement instanceof LogicalOperation )
-        {
-          LogicalOperation operation = (LogicalOperation)firstElement;
-          //add new Logical Operation
-          ArrayList arguments = operation.getArguments();
-          if( arguments == null )
-            arguments = new ArrayList();
-          arguments.add( new LogicalOperation( OperationDefines.OR, new ArrayList() ) );
-        }
-        ( (TreeSelection)m_selection ).structureChanged();
+        Operation operation = ( (ComplexFilter)firstElement ).getOperation();
+        if( operation == null )
+          action.setEnabled( true );
+      }
+      if( firstElement instanceof LogicalOperation )
+      {
+        int operatorId = ( (LogicalOperation)firstElement ).getOperatorId();
+        ArrayList arguments = ( (LogicalOperation)firstElement ).getArguments();
+        if( arguments == null || arguments.size() < 2
+            && ( operatorId == OperationDefines.AND || operatorId == OperationDefines.OR ) )
+          action.setEnabled( true );
+        if( arguments == null || arguments.size() < 1 && operatorId == OperationDefines.NOT )
+          action.setEnabled( true );
       }
     }
-  }
 
+  }
 }

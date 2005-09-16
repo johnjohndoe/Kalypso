@@ -506,6 +506,17 @@
              adaptable="false"
              objectClass="org.kalypsodeegree.filterencoding.Filter"
              id="org.kalypso.objectclass.fiterencoding.filter">
+          <menu
+                label="Neuer Filter..."
+                id="org.kalypso.objectclass.filterencoding.filter.menu">
+             <separator name="filter"/>
+             <separator name="operations"/>
+          </menu>
+          <menu
+                label="%Extension.popupMenus.filterencoding.newOperation"
+                id="org.kalypso.objectclass.filterencoding.filter.operation.menu">
+             <separator name="operations"/>
+          </menu>
           <action
                 label="Complex Filter"
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCComplexFilter"
@@ -525,22 +536,26 @@
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCElseFilter"
                 menubarPath="org.kalypso.objectclass.filterencoding.filter.menu/filter"
                 id="org.kalypso.objectclass.filterencoding.create.elsefilter"/>
-          <menu
-                label="Neuer Filter..."
-                id="org.kalypso.objectclass.filterencoding.filter.menu">
-             <separator name="filter"/>
-             <separator name="operations"/>
-          </menu>
           <action
                 label="Spatial Operation"
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCSpatialOperationDelegate"
                 menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
                 id="org.kalypso.objectclass.filterencoding.create.spatialoperation"/>
-          <menu
-                label="%Extension.popupMenus.filterencoding.newOperation"
-                id="org.kalypso.objectclass.filterencoding.filter.operation.menu">
-             <separator name="operations"/>
-          </menu>
+          <action
+                label="Comparison Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCComparisionOpsActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
+                id="org.kalypso.objcetclass.filterencoding.create.comparisonoperation"/>
+          <action
+                label="Between Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCBetweenOperationActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
+                id="org.kalypso.objectclass.filterencoding.create.betweenopeartion"/>
+          <action
+                label="IsLike Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCIsLikeOperationActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
+                id="org.kalypso.objectclass.filterencoding.create.islikeopeartion"/>
           <action
                 label="AND"
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalANDOpsActionDelegate"
@@ -548,30 +563,20 @@
                 menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
                 id="org.kalypso.objectclass.filterencoding.create.operation.logicaloperationand"/>
           <action
-                label="NOT"
-                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalNOTOpsActionDelegate"
-                menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
-                id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
-          <action
                 label="OR"
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalOROpsActionDelegate"
                 menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
                 id="org.kalypso.objectclass.fiterencoding.create.logicaloperationor"/>
           <action
-                label="Comparison Operation"
-                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCComparisionOpsActionDelegate"
+                label="NOT"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalNOTOpsActionDelegate"
                 menubarPath="org.kalypso.objectclass.filterencoding.filter.operation.menu/operations"
-                id="org.kalypso.objcetclass.filterencoding.create.comparisonoperation"/>
+                id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
   </objectContribution>
        <objectContribution
              adaptable="false"
              objectClass="org.kalypsodeegree.filterencoding.Operation"
              id="org.kalypso.objectclass.filterenconding.operation">
-          <action
-                label="Spatial Operation"
-                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCSpatialOperationDelegate"
-                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
-                id="org.kalypso.objectclass.filterencoding.create.operation.spatialopeation"/>
           <menu
                 label="%Extension.popupMenus.filterencoding.newOperation"
                 id="org.kalypso.objectclass.filterencoding.operation.menu">
@@ -579,26 +584,41 @@
              <groupMarker name="logicalgroup"/>
           </menu>
           <action
+                label="Spatial Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCSpatialOperationDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
+                id="org.kalypso.objectclass.filterencoding.create.operation.spatialopeation"/>
+          <action
+                label="Comparison Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCComparisionOpsActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
+                id="org.kalypso.objcetclass.filterencoding.create.comparisonoperation"/>
+          <action
+                label="Between Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCBetweenOperationActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
+                id="org.kalypso.objectclass.filterencoding.create.betweenopeartion"/>
+          <action
+                label="IsLike Operation"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCIsLikeOperationActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
+                id="org.kalypso.objectclass.filterencoding.create.islikeopeartion"/>
+          <action
                 label="AND"
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalANDOpsActionDelegate"
                 style="push"
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
                 id="org.kalypso.objectclass.filterencoding.create.operation.logicaloperationand"/>
           <action
-                label="NOT"
-                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalNOTOpsActionDelegate"
-                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
-                id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
-          <action
                 label="OR"
                 class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalOROpsActionDelegate"
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
                 id="org.kalypso.objectclass.fiterencoding.create.logicaloperationor"/>
           <action
-                label="Comparison Operation"
-                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCComparisionOpsActionDelegate"
-                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
-                id="org.kalypso.objcetclass.filterencoding.create.comparisonoperation"/>
+                label="NOT"
+                class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalNOTOpsActionDelegate"
+                menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
+                id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
        </objectContribution>
    </extension>
    <extension

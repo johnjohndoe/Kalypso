@@ -32,18 +32,19 @@ package org.kalypso.ogc.gml.filterdialog.actions;
 import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
-import org.kalypsodeegree_impl.filterencoding.OperationDefines;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public class CreateOGCLogicalOROpsActionDelegate extends AbstractCreateOperationActionDelegate
+public class CreateOGCBetweenOperationActionDelegate extends AbstractCreateOperationActionDelegate
 {
-  private IStructuredSelection m_selection;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -55,23 +56,21 @@ public class CreateOGCLogicalOROpsActionDelegate extends AbstractCreateOperation
       if( m_selection instanceof TreeSelection )
       {
         Object firstElement = m_selection.getFirstElement();
+        PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( null, null, null );
         if( firstElement instanceof ComplexFilter )
+          ( (ComplexFilter)firstElement ).setOperation( operation );
+        else if( firstElement instanceof LogicalOperation )
         {
-          ComplexFilter filter = (ComplexFilter)firstElement;
-          filter.setOperation( new LogicalOperation( OperationDefines.OR, new ArrayList() ) );
-        }
-        if( firstElement instanceof LogicalOperation )
-        {
-          LogicalOperation operation = (LogicalOperation)firstElement;
-          //add new Logical Operation
-          ArrayList arguments = operation.getArguments();
+          ArrayList arguments = ( (LogicalOperation)firstElement ).getArguments();
           if( arguments == null )
             arguments = new ArrayList();
-          arguments.add( new LogicalOperation( OperationDefines.OR, new ArrayList() ) );
+          arguments.add( operation );
+          ( (LogicalOperation)firstElement ).setArguments( arguments );
         }
         ( (TreeSelection)m_selection ).structureChanged();
       }
     }
+
   }
 
 }
