@@ -32,15 +32,20 @@ package org.kalypso.ogc.gml.filterdialog.dialog;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -49,16 +54,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.internal.ide.StatusUtil;
+import org.kalypso.ogc.gml.filterdialog.ShapeFileImportDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.gml.GMLException;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.filterencoding.ArithmeticExpression;
 import org.kalypsodeegree_impl.filterencoding.Literal;
@@ -93,6 +98,8 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
   public static TreeSet m_supportedOperations;
 
   private TreeSet m_allSupportedCompOps = new TreeSet();
+
+  private static IErrorMessageReciever m_errorMessageReciever;
 
   private FilterCompositeFactory()
   {
@@ -133,10 +140,11 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
     return m_allSupportedCompOps;
   }
 
-  public static FilterCompositeFactory getInstance( TreeSet supportedOperations )
+  public static FilterCompositeFactory getInstance( IErrorMessageReciever errorMessageReciever,
+      TreeSet supportedOperations )
   {
     m_supportedOperations = supportedOperations;
-
+    m_errorMessageReciever = errorMessageReciever;
     return m_factory;
   }
 
@@ -165,7 +173,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
         if( operatorName == null )
           operatorName = "Unbekannter IsLike Operator";
         ( (Group)parent ).setText( "Eigenschaften-" + operatorName );
-        c = new PropertyIsCOMPOperationComposite( parent, SWT.NULL );
+        c = new PropertyIsLikeOperationComposite( parent, SWT.NULL );
 
       }
       else if( operation instanceof SpatialOperation )
@@ -196,6 +204,8 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
     private Label m_supportedOpsLable;
 
     private Combo m_supportedOpsCombo;
+
+    private Button m_loadExternalGeom;
 
     public SpatialComposite( Composite parent, int style )
     {
@@ -230,16 +240,10 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
 
         public void widgetSelected( SelectionEvent e )
         {
-          Combo c = ( (Combo)e.widget );
-          String item = c.getItem( c.getSelectionIndex() );
+          String item = m_supportedOpsCombo.getItem( m_supportedOpsCombo.getSelectionIndex() );
           int newOperationId = OperationDefines.getIdByName( item );
           ( (SpatialOperation)m_operation ).setOperatorId( newOperationId );
-          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
-        }
-
-        public void widgetDefaultSelected( SelectionEvent e )
-        {
-          widgetSelected( e );
+          fireModellEvent( new ModellEvent( FilterCompositeFactory.this, ModellEvent.WIDGET_CHANGE ) );
         }
       } );
       //set Geometry
@@ -253,10 +257,10 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       {
         public void widgetSelected( SelectionEvent e )
         {
-          Combo c = (Combo)e.widget;
-          PropertyName pn = new PropertyName( c.getItem( c.getSelectionIndex() ) );
-          ( (SpatialOperation)m_operation ).setProperty( pn );
-          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
+          String operationName = m_combo.getItem( m_combo.getSelectionIndex() );
+          int operationID = OperationDefines.getIdByName( operationName );
+          ( (SpatialOperation)m_operation ).setOperatorId( operationID );
+          updateOperation( null );
         }
       } );
 
@@ -277,7 +281,6 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       }
       else
       {
-        m_combo.add( "...", 0 );
         m_combo.select( 0 );
       }
       m_geomLable = new Label( this, SWT.NULL );
@@ -293,47 +296,22 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       m_loadButton
           .setToolTipText( "Ermöglicht das laden eines neuen geometrischen Operators aus dem Zeichungs-Thema der Karte" );
       m_loadButton.setSelection( false );
-      m_loadButton.addSelectionListener( new SelectionListener()
+      m_loadButton.addSelectionListener( new SelectionAdapter()
       {
 
         public void widgetSelected( SelectionEvent e )
         {
-          Button button = (Button)e.widget;
-          if( button.getSelection() )
+          if( m_loadButton.getSelection() )
           {
             m_scrabLayerCombo.setVisible( true );
             MessageDialog.openInformation( getShell(), "Unimplemented Action", "Select the geometry from the list!" );
             //dummy geometry, just for testing
             GM_Object geom = GeometryFactory.createGM_Point( 100, 200, KalypsoGisPlugin.getDefault()
                 .getCoordinatesSystem() );
-            GMLGeometry gml = null;
-            try
-            {
-              //update GMLGeometry
-              gml = GMLFactory.createGMLGeometry( null, geom );
-              ( (SpatialOperation)m_operation ).setGeometry( gml );
-              m_text.setText( gml.getName() );
-            }
-            catch( GMLException e1 )
-            {
-              //TODO What shall we do? good question....
-              e1.printStackTrace();
-            }
-            catch( GM_Exception e2 )
-            {
-              //TODO What shall we do? good question....
-              e2.printStackTrace();
-            }
-            fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
+            updateOperation( geom );
           }
           else
             m_scrabLayerCombo.setVisible( false );
-
-        }
-
-        public void widgetDefaultSelected( SelectionEvent e )
-        {
-          widgetSelected( e );
 
         }
       } );
@@ -345,10 +323,57 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
           "ScrabPoint_3" } );
       m_scrabLayerCombo.select( 0 );
       m_scrabLayerCombo.setVisible( false );
-      this.setFocus();
+      m_loadExternalGeom = new Button( this, SWT.NONE );
+      m_loadExternalGeom.setText( "Durchsuchen ..." );
+      m_loadExternalGeom.setToolTipText( "Laden eines Geometry-Operatrors aus einer Datei aus dem Workspace" );
+      m_loadExternalGeom.addSelectionListener( new SelectionAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        public void widgetSelected( SelectionEvent e )
+        {
+          GM_Object geom = null;
+          ShapeFileImportDialog dialog = new ShapeFileImportDialog( getShell(), false );
+          int open = dialog.open();
+          if( open == Window.OK )
+          {
+            geom = dialog.getGeometry();
+          }
+          updateOperation( geom );
+        }
 
+      } );
     }
 
+    private boolean updateOperation( GM_Object newGeometry )
+    {
+      SpatialOperation spatialOperation = (SpatialOperation)m_operation;
+      GMLGeometry gml = null;
+      try
+      {
+        GM_Object oldGeometry = spatialOperation.getGeometryLiteral();
+        if( oldGeometry == null && newGeometry == null )
+          return false;
+        if( oldGeometry == null || !oldGeometry.equals( newGeometry ) )
+        {
+          gml = GMLFactory.createGMLGeometry( null, newGeometry );
+          spatialOperation.setGeometry( gml );
+          m_text.setText( gml.getName() );
+        }
+        PropertyName oldPropertyName = spatialOperation.getPropertyName();
+        PropertyName newPropertyName = new PropertyName( m_combo.getItem( m_combo.getSelectionIndex() ) );
+        ( (SpatialOperation)m_operation ).setProperty( newPropertyName );
+      }
+      catch( Exception e )
+      {
+        IStatus status = StatusUtil.newStatus( Status.WARNING, e.getLocalizedMessage(), e );
+        ErrorDialog.openError( getShell(), "Fehler beim erstellen des Geometrie-Operators", e.getMessage(), status );
+        return false;
+      }
+      fireModellEvent( new ModellEvent( FilterCompositeFactory.this, ModellEvent.WIDGET_CHANGE ) );
+      return true;
+    }
   }
 
   class LogicalOperatorComposite extends Composite
@@ -397,8 +422,9 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       }//is the case when an new (empty) filter operation is to be displayed
       else if( m_operation == null )
       {
-        m_operation = new PropertyIsCOMPOperation( m_operation.getOperatorId(), new PropertyName( EMPTY_VALUE ),
-            new Literal( EMPTY_VALUE ) );
+        PropertyName propertyName = new PropertyName( FilterCompositeFactory.EMPTY_VALUE );
+        Literal literal = new Literal( FilterCompositeFactory.EMPTY_VALUE );
+        m_operation = new PropertyIsCOMPOperation( m_operation.getOperatorId(), propertyName, literal );
       }
       setLayout( new GridLayout( 2, false ) );
       GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
@@ -406,7 +432,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       //possible oprations (they have been initialized when calling the factory)
       m_supportedOpsLable = new Label( this, SWT.NULL );
       m_supportedOpsLable.setText( "Operation" );
-      m_supportedOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
+      m_supportedOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
       m_supportedOpsCombo.setLayoutData( data1 );
       String[] namesOps = null;
       if( m_supportedOperations == null )
@@ -423,25 +449,16 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
 
         public void widgetSelected( SelectionEvent e )
         {
-          Combo c = ( (Combo)e.widget );
-          String item = c.getItem( c.getSelectionIndex() );
+          String item = m_supportedOpsCombo.getItem( m_supportedOpsCombo.getSelectionIndex() );
           int newOperationId = OperationDefines.getIdByName( item );
-          //TODO only implemented with propery name and liteal ?? is that all ??
-          ( (PropertyIsCOMPOperation)m_operation ).setOperatorId( newOperationId );
-          ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( new PropertyName( m_firstRowCombo.getText()
-              .trim() ) );
-          ( (PropertyIsCOMPOperation)m_operation )
-              .setSecondExperssion( new Literal( m_secondRowText.getText().trim() ) );
-          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
+          PropertyIsCOMPOperation comparisonOperation = (PropertyIsCOMPOperation)m_operation;
+          comparisonOperation.setOperatorId( newOperationId );
+          updateOperation( newOperationId );
         }
 
-        public void widgetDefaultSelected( SelectionEvent e )
-        {
-          widgetSelected( e );
-        }
       } );
       m_firstRowLabel = new Label( this, SWT.FILL );
-      m_firstRowCombo = new Combo( this, SWT.FILL );
+      m_firstRowCombo = new Combo( this, SWT.FILL | SWT.READ_ONLY );
       GridData data = new GridData( GridData.FILL_HORIZONTAL );
       data.widthHint = STANDARD_WIDTH_FIELD;
       m_firstRowCombo.setLayoutData( data );
@@ -449,34 +466,14 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       {
         public void widgetSelected( SelectionEvent e )
         {
-          Combo c = (Combo)e.widget;
-          String item = c.getItem( c.getSelectionIndex() );
+          int selectionIndex = m_firstRowCombo.getSelectionIndex();
+          String item = m_firstRowCombo.getItem( selectionIndex );
           FeatureTypeProperty ftp = m_ft.getProperty( item );
+          String text = m_secondRowText.getText();
           TextFieldValidator validator = new TextFieldValidator( ftp );
-          String test = validator.isValid( m_secondRowText.getText() );
-          if( test != null )
-          {
-            Image image = getDisplay().getSystemImage( SWT.ICON_ERROR );
-            m_errorLabel.setImage( image );
-            m_errorMessage.setText( test );
-            m_secondRowText.setFocus();
-            m_secondRowText.setText( "Bitte eine Zahl eingeben" );
-            m_secondRowText.selectAll();
-            pack();
-          }
-          else
-          {
-            m_errorMessage.setText( "" );
-            m_errorLabel.setImage( null );
-            m_firstRowCombo.setFocus();
-            //update model data
-            PropertyName pn = new PropertyName( item );
-            ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( pn );
-            Literal l = new Literal( m_secondRowText.getText().trim() );
-            ( (PropertyIsCOMPOperation)m_operation ).setSecondExperssion( l );
-            System.out.print( "" );
-          }
-          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
+          String test = validator.isValid( text );
+          m_errorMessageReciever.setErrorMessage( test );
+          updateOperation( m_operation.getOperatorId() );
         }
       } );
       m_secondRowLabel = new Label( this, SWT.FILL );
@@ -484,56 +481,51 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       m_secondRowText.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       m_secondRowText.addFocusListener( new FocusListener()
       {
-
         public void focusGained( FocusEvent e )
         {
         // do nothing
-
         }
 
         public void focusLost( FocusEvent e )
         {
           String item = m_firstRowCombo.getItem( m_firstRowCombo.getSelectionIndex() );
           FeatureTypeProperty ftp = m_ft.getProperty( item );
-          if( item != null && ftp != null )
+          String text = m_secondRowText.getText();
+          TextFieldValidator validator = new TextFieldValidator( ftp );
+          m_errorMessageReciever.setErrorMessage( validator.isValid( text ) );
+          int operatorId = m_operation.getOperatorId();
+          updateOperation( operatorId );
+
+        }
+      } );
+      m_secondRowText.addKeyListener( new KeyListener()
+      {
+
+        public void keyPressed( KeyEvent e )
+        {
+        // do nothing
+
+        }
+
+        public void keyReleased( KeyEvent e )
+        {
+          if( e.keyCode == SWT.CR )
           {
+            String item = m_firstRowCombo.getItem( m_firstRowCombo.getSelectionIndex() );
+            FeatureTypeProperty ftp = m_ft.getProperty( item );
+            String text = m_secondRowText.getText();
             TextFieldValidator validator = new TextFieldValidator( ftp );
-            String test = null;
-            if( m_secondRowText.getText() != "" )
-              test = validator.isValid( m_secondRowText.getText() );
-            if( test != null )
-            {
-              Image image = getDisplay().getSystemImage( SWT.ICON_ERROR );
-              m_errorLabel.setImage( image );
-              m_errorMessage.setText( test );
-              m_secondRowText.setFocus();
-              m_secondRowText.setText( "Bitte eine Zahl eingeben" );
-              m_secondRowText.selectAll();
-              pack();
-            }
-            else
-            {
-              m_errorMessage.setText( "" );
-              m_errorLabel.setImage( null );
-              m_firstRowCombo.setFocus();
-              PropertyName pn = new PropertyName( item );
-              ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( pn );
-              Literal l = new Literal( m_secondRowText.getText().trim() );
-              ( (PropertyIsCOMPOperation)m_operation ).setSecondExperssion( l );
-            }
+            m_errorMessageReciever.setErrorMessage( validator.isValid( text ) );
+            int operatorId = m_operation.getOperatorId();
+            updateOperation( operatorId );
+
           }
+
         }
       } );
 
-      //Error Panel
-      m_errorLabel = new Label( this, SWT.NULL );
-      m_errorMessage = new Text( this, SWT.FILL | SWT.READ_ONLY | SWT.MULTI );
-      GridData data2 = new GridData();
-      data2.widthHint = 150;
-      data2.heightHint = 30;
-      m_errorMessage.setLayoutData( data2 );
-      m_errorMessage.setText( "" );
-
+      m_firstRowLabel.setText( "Feld" );
+      m_secondRowLabel.setText( "Wert" );
       FeatureTypeProperty[] properties = m_ft.getProperties();
       for( int i = 0; i < properties.length; i++ )
       {
@@ -543,15 +535,37 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       }
       if( firstExpression instanceof PropertyName && secondExpression instanceof Literal )
       {
-        m_firstRowLabel.setText( firstExpression.getExpressionName().trim() );
-        m_secondRowLabel.setText( secondExpression.getExpressionName().trim() );
-        m_secondRowText.setText( ( (Literal)secondExpression ).getValue() );
+        if( firstExpression != null && secondExpression != null )
+        {
+          String[] items = m_firstRowCombo.getItems();
+          int index = ArrayUtils.indexOf( items, ( (PropertyName)firstExpression ).getValue() );
+          if( index > 0 )
+            m_firstRowCombo.select( index );
+          String value = ( (Literal)secondExpression ).getValue();
+          m_secondRowText.setText( value );
+        }
+
+        //        m_firstRowLabel.setText( "Feld" );
+        //        m_secondRowLabel.setText( "Wert" );
+        //        m_secondRowText.setText( ( (Literal)secondExpression ).getValue() );
       }
       else if( firstExpression instanceof PropertyName && secondExpression instanceof ArithmeticExpression )
       {
         //not implemented
       }
     }//only for "expr1 instance PropertyName" and "expr2 instanceof Literal"
+
+    private boolean updateOperation( int operationID )
+    {
+      PropertyIsCOMPOperation comparisonOperation = (PropertyIsCOMPOperation)m_operation;
+      comparisonOperation.setOperatorId( operationID );
+      String propertyName = m_firstRowCombo.getText().trim();
+      String literalName = m_secondRowText.getText().trim();
+      comparisonOperation.setFirstExperssion( new PropertyName( propertyName ) );
+      comparisonOperation.setSecondExperssion( new Literal( literalName ) );
+      fireModellEvent( new ModellEvent( FilterCompositeFactory.this, ModellEvent.WIDGET_CHANGE ) );
+      return true;
+    }
 
   }
 
@@ -572,19 +586,34 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
 
     private Text m_thirdRowText;
 
+    private Text m_wildCard;
+
+    private Label m_wildCardLabel;
+
+    private Label m_singleCharLabel;
+
+    private Text m_singleChar;
+
+    private Label m_escpapeCharLabel;
+
+    private Text m_escpapeChar;
+
     public PropertyIsLikeOperationComposite( Composite parent, int style )
     {
       super( parent, style );
-      PropertyName firstExpression = null;
-      Literal secondExpression = null;
-      if( m_operation != null )
-      {
-        firstExpression = ( (PropertyIsLikeOperation)m_operation ).getPropertyName();
-        secondExpression = ( (PropertyIsLikeOperation)m_operation ).getLiteral();
-      }
-      else if( m_operation == null )
+      PropertyName firstExpression = ( (PropertyIsLikeOperation)m_operation ).getPropertyName();
+      Literal secondExpression = ( (PropertyIsLikeOperation)m_operation ).getLiteral();
+      if( firstExpression == null && secondExpression == null )
       {
         firstExpression = new PropertyName( EMPTY_VALUE );
+        secondExpression = new Literal( EMPTY_VALUE );
+      }
+      else if( firstExpression == null && secondExpression != null )
+      {
+        firstExpression = new PropertyName( EMPTY_VALUE );
+      }
+      else if( firstExpression != null && secondExpression == null )
+      {
         secondExpression = new Literal( EMPTY_VALUE );
       }
       setLayout( new GridLayout( 2, false ) );
@@ -598,35 +627,29 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       {
         public void widgetSelected( SelectionEvent e )
         {
-          Combo c = (Combo)e.widget;
-          String item = c.getItem( c.getSelectionIndex() );
-          FeatureTypeProperty ftp = m_ft.getProperty( item );
-          TextFieldValidator validator = new TextFieldValidator( ftp );
-          String test = validator.isValid( m_secondRowText.getText() );
-          if( test != null )
-          {
-            Image image = getDisplay().getSystemImage( SWT.ICON_ERROR );
-            m_errorLabel.setImage( image );
-            m_errorMessage.setText( test );
-            m_secondRowText.setFocus();
-            m_secondRowText.setText( "Bitte eine Zahl eingeben" );
-            m_secondRowText.selectAll();
-            pack();
-          }
+          String item = m_firstRowCombo.getItem( m_firstRowCombo.getSelectionIndex() );
+          PropertyName propertyName = ( (PropertyIsLikeOperation)m_operation ).getPropertyName();
+          if( propertyName == null )
+            propertyName = new PropertyName( item );
           else
-          {
-            m_errorMessage.setText( "" );
-            m_errorLabel.setImage( null );
-            m_firstRowCombo.setFocus();
-            //update model data
-            PropertyName pn = new PropertyName( item );
-            ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( pn );
-            Literal l = new Literal( m_secondRowText.getText().trim() );
-            ( (PropertyIsCOMPOperation)m_operation ).setFirstExperssion( l );
-          }
-          fireModellEvent( new ModellEvent( FilterCompositeFactory.getInstance( null ), ModellEvent.WIDGET_CHANGE ) );
+            propertyName.setValue( item );
+          ( (PropertyIsLikeOperation)m_operation ).setPropertyName( propertyName );
+          fireModellEvent( new ModellEvent( FilterCompositeFactory.this, ModellEvent.WIDGET_CHANGE ) );
         }
       } );
+      FeatureTypeProperty[] properties = m_ft.getProperties();
+      for( int i = 0; i < properties.length; i++ )
+      {
+        FeatureTypeProperty property = properties[i];
+        if( SpecialPropertyMapper.isValidMapping( String.class.getName(), property.getType() ) )
+          m_firstRowCombo.add( property.getName() );
+      }
+      String value = firstExpression.getValue();
+      int index = ArrayUtils.indexOf( m_firstRowCombo.getItems(), value );
+      if( index >= 0 )
+        m_firstRowCombo.select( index );
+      else
+        m_firstRowCombo.select( 0 );
       m_secondRowLabel = new Label( this, SWT.FILL );
       m_secondRowLabel.setText( secondExpression.getExpressionName().trim() );
       m_secondRowText = new Text( this, SWT.FILL | SWT.BORDER );
@@ -637,8 +660,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
 
         public void focusGained( FocusEvent e )
         {
-        // do nothing
-
+          //do nothing
         }
 
         public void focusLost( FocusEvent e )
@@ -649,52 +671,38 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
           {
             TextFieldValidator validator = new TextFieldValidator( ftp );
             String test = validator.isValid( m_secondRowText.getText() );
-            if( test != null )
-            {
-              Image image = getDisplay().getSystemImage( SWT.ICON_ERROR );
-              m_errorLabel.setImage( image );
-              m_errorMessage.setText( test );
-              m_secondRowText.setFocus();
-              m_secondRowText.setText( "Bitte eine Zahl eingeben" );
-              m_secondRowText.selectAll();
-              pack();
-            }
+            m_errorMessageReciever.setErrorMessage( test );
+            String str = m_secondRowText.getText().trim();
+            Literal literal = ( (PropertyIsLikeOperation)m_operation ).getLiteral();
+            if( literal == null )
+              literal = new Literal( str );
             else
-            {
-              m_errorMessage.setText( "" );
-              m_errorLabel.setImage( null );
-              m_firstRowCombo.setFocus();
-            }
+              literal.setValue( str );
+            ( (PropertyIsLikeOperation)m_operation ).setLiteral( literal );
+            fireModellEvent( new ModellEvent( FilterCompositeFactory.this, ModellEvent.WIDGET_CHANGE ) );
           }
         }
       } );
-      //
-      m_thirdRowText = new Text( this, SWT.FILL | SWT.READ_ONLY );
-      m_thirdRowText.setText( "Wildcard: '" + ( (PropertyIsLikeOperation)m_operation ).getWildCard()
-          + "'  SingleChar: '" + ( (PropertyIsLikeOperation)m_operation ).getSingleChar() + "'  Escape: '"
-          + ( (PropertyIsLikeOperation)m_operation ).getEscapeChar() );
-      GridData data3 = new GridData();
-      data3.verticalSpan = 2;
-      m_thirdRowText.setLayoutData( data3 );
-      //Error panel
-      m_errorLabel = new Label( this, SWT.NULL );
-      m_errorMessage = new Text( this, SWT.FILL | SWT.READ_ONLY | SWT.MULTI );
-      GridData data2 = new GridData();
-      data2.widthHint = 150;
-      data2.heightHint = 30;
-      m_errorMessage.setLayoutData( data2 );
-      m_errorMessage.setText( "" );
-
-      FeatureTypeProperty[] properties = m_ft.getProperties();
-      for( int i = 0; i < properties.length; i++ )
-      {
-        FeatureTypeProperty property = properties[i];
-        if( SpecialPropertyMapper.isValidMapping( String.class.getName(), property.getType() ) )
-          m_firstRowCombo.add( property.getName() );
-      }
+      Group parameterGroup = new Group( this, SWT.LEFT );
+      GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
+      data3.horizontalSpan = 2;
+      parameterGroup.setLayoutData( data3 );
+      parameterGroup.setLayout( new GridLayout( 2, true ) );
+      parameterGroup.setText( "Spezial Zeichen" );
+      m_wildCardLabel = new Label( parameterGroup, SWT.NONE );
+      m_wildCardLabel.setText( "Wildcard:" );
+      m_wildCard = new Text( parameterGroup, SWT.NONE | SWT.READ_ONLY );
+      m_wildCard.setText( String.valueOf( ( (PropertyIsLikeOperation)m_operation ).getWildCard() ) );
+      m_singleCharLabel = new Label( parameterGroup, SWT.NONE );
+      m_singleCharLabel.setText( "Einzelnes Zeichen:" );
+      m_singleChar = new Text( parameterGroup, SWT.NONE | SWT.READ_ONLY );
+      m_singleChar.setText( String.valueOf( ( (PropertyIsLikeOperation)m_operation ).getSingleChar() ) );
+      m_escpapeCharLabel = new Label( parameterGroup, SWT.NONE );
+      m_escpapeCharLabel.setText( "Escape Zeichen:" );
+      m_escpapeChar = new Text( parameterGroup, SWT.NONE | SWT.READ_ONLY );
+      m_escpapeChar.setText( String.valueOf( ( (PropertyIsLikeOperation)m_operation ).getEscapeChar() ) );
 
     }
-
   }
 
   class PropertyIsNullOperationComposite extends Composite
@@ -776,10 +784,23 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
             Float.parseFloat( newText );
           if( type.equals( Integer.class.getName() ) )
             Integer.parseInt( newText );
+          if( GeometryUtilities.isGeometry( ftp ) )
+          {
+            String geomString = GeometryUtilities.getClass( ftp ).getName().replaceAll( ".+\\.", "" );
+            if( newText.equals( geomString ) )
+            {
+              return "Falscher Geometerie-Typ gewählt!";
+            }
+          }
+          if( type.equals( String.class.getName() ) )
+          {
+            if( newText == null || newText.length() == 0 )
+              return "Das Werte Feld darf nicht leer sein, bitte Text eingeben";
+          }
         }
         catch( NumberFormatException e )
         {
-          return "Format Fehler!";
+          return "Format Fehler! Es wird ein Wert vom Typ: " + type.replaceAll( ".+\\.", "" );
         }
         return null;
       }

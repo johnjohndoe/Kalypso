@@ -32,11 +32,8 @@ package org.kalypso.ogc.gml.filterdialog.actions;
 import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IActionDelegate;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
-import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -44,7 +41,7 @@ import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 /**
  * @author kuepfer
  */
-public class CreateOGCLogicalANDOpsActionDelegate implements IActionDelegate
+public class CreateOGCLogicalANDOpsActionDelegate extends AbstractCreateOperationActionDelegate
 {
   private IStructuredSelection m_selection;
 
@@ -77,35 +74,4 @@ public class CreateOGCLogicalANDOpsActionDelegate implements IActionDelegate
     }
   }
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged( IAction action, ISelection selection )
-  {
-    action.setEnabled( false );
-    if( selection instanceof IStructuredSelection )
-    {
-      m_selection = (IStructuredSelection)selection;
-      Object firstElement = m_selection.getFirstElement();
-      Operation operation = null;
-      if( firstElement instanceof ComplexFilter )
-      {
-        operation = ( (ComplexFilter)firstElement ).getOperation();
-        if( operation == null )
-          action.setEnabled( true );
-      }
-      if( firstElement instanceof LogicalOperation )
-      {
-        operation = (LogicalOperation)firstElement;
-        int opsId = operation.getOperatorId();
-        ArrayList arguments = ( (LogicalOperation)operation ).getArguments();
-        if( arguments == null || arguments.size() < 2
-            && ( opsId == OperationDefines.AND || opsId == OperationDefines.OR ) )
-          action.setEnabled( true );
-        if( arguments == null || arguments.size() < 1 && opsId == OperationDefines.NOT )
-          action.setEnabled( true );
-      }
-    }
-  }
 }

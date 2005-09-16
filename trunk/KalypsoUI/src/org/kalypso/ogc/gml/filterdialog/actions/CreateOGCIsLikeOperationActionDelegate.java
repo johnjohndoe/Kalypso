@@ -32,18 +32,19 @@ package org.kalypso.ogc.gml.filterdialog.actions;
 import java.util.ArrayList;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
-import org.kalypsodeegree_impl.filterencoding.OperationDefines;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 
 /**
+ * 
+ * TODO: insert type comment here
+ * 
  * @author kuepfer
  */
-public class CreateOGCLogicalOROpsActionDelegate extends AbstractCreateOperationActionDelegate
+public class CreateOGCIsLikeOperationActionDelegate extends AbstractCreateOperationActionDelegate
 {
-  private IStructuredSelection m_selection;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -58,7 +59,7 @@ public class CreateOGCLogicalOROpsActionDelegate extends AbstractCreateOperation
         if( firstElement instanceof ComplexFilter )
         {
           ComplexFilter filter = (ComplexFilter)firstElement;
-          filter.setOperation( new LogicalOperation( OperationDefines.OR, new ArrayList() ) );
+          filter.setOperation( new PropertyIsLikeOperation( null, null, '*', '$', '/' ) );
         }
         if( firstElement instanceof LogicalOperation )
         {
@@ -67,11 +68,11 @@ public class CreateOGCLogicalOROpsActionDelegate extends AbstractCreateOperation
           ArrayList arguments = operation.getArguments();
           if( arguments == null )
             arguments = new ArrayList();
-          arguments.add( new LogicalOperation( OperationDefines.OR, new ArrayList() ) );
+          arguments.add( new PropertyIsLikeOperation( null, null, '*', '$', '/' ) );
         }
         ( (TreeSelection)m_selection ).structureChanged();
       }
     }
-  }
 
+  }
 }

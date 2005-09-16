@@ -43,7 +43,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -84,7 +84,7 @@ import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 /**
  * @author kuepfer
  */
-public class FilterDialog extends Dialog implements ModellEventListener
+public class FilterDialog extends TitleAreaDialog implements ModellEventListener, IErrorMessageReciever
 {
   protected final FeatureType m_featureType;
 
@@ -113,7 +113,7 @@ public class FilterDialog extends Dialog implements ModellEventListener
     m_root = new FilterRootElement();
     if( root != null )
       m_root.addChild( root );
-    m_filterCompositeFactory = FilterCompositeFactory.getInstance( null );
+    m_filterCompositeFactory = FilterCompositeFactory.getInstance( FilterDialog.this, null );
     m_filterCompositeFactory.addModellListener( this );
     setShellStyle( getShellStyle() | SWT.MAX );
   }
@@ -121,15 +121,15 @@ public class FilterDialog extends Dialog implements ModellEventListener
   protected Control createDialogArea( Composite parent )
   {
     m_main = (Composite)super.createDialogArea( parent );
-    m_main.setLayout( new GridLayout( 2, true ) );
+    //    m_main.setLayout( new GridLayout( 2, true ) );
     //    applyDialogFont( m_main );
     //tree-group
     m_treeGroup = new Group( m_main, SWT.FILL );
     m_treeGroup.setText( "Filter für " + m_featureType.getName() );
-    m_treeGroup.setLayoutData( new GridData( 280, 200 ) );
+    m_treeGroup.setLayoutData( new GridData( 280, 180 ) );
     m_treeGroup.setLayout( new GridLayout() );
     //tree-viewer
-    m_viewer2 = new TreeViewer( m_treeGroup, SWT.FILL )
+    m_viewer2 = new TreeViewer( m_treeGroup, SWT.FILL | SWT.V_SCROLL )
     {
       public ISelection getSelection()
       {
@@ -185,8 +185,8 @@ public class FilterDialog extends Dialog implements ModellEventListener
           if( firstElement instanceof Operation )
           {
             Object oldValue = firstElement;
-            FilterCompositeFactory.getInstance( null ).createFilterElementComposite( (Operation)firstElement,
-                m_propGroup, m_featureType );
+            FilterCompositeFactory.getInstance( FilterDialog.this, null ).createFilterElementComposite(
+                (Operation)firstElement, m_propGroup, m_featureType );
             //            m_root.firePropertyChange( FilterRootElement.OPERATION_ADDED, oldValue, firstElement );
           }
           else if( firstElement instanceof FeatureFilter )
@@ -370,6 +370,15 @@ public class FilterDialog extends Dialog implements ModellEventListener
       m_viewer2.expandAll();
 
     }
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever#setErrorMessage(java.lang.String)
+   */
+  public void setErrorMessage( String message )
+  {
+    super.setErrorMessage( message );
 
   }
 }

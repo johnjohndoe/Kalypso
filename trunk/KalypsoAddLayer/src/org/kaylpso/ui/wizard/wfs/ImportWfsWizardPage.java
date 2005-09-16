@@ -325,6 +325,15 @@ public class ImportWfsWizardPage extends WizardPage
 
     //dummy to keep the layoutaut
     //    new Label( fieldGroup, SWT.NONE ).setLayoutData( new GridData() );
+    m_authentification = new Button( fieldGroup, SWT.CHECK | SWT.LEFT );
+    GridData gridDataAuth = new GridData( GridData.FILL_HORIZONTAL );
+    gridDataAuth.horizontalSpan = 2;
+    m_authentification.setLayoutData( gridDataAuth );
+    m_authentification.setText( "Authentifizierung" );
+    m_authentification
+        .setToolTipText( "Einblenden der Eingabefelder für Benutzername und Passwort für den Zugriff auf geschützte Services" );
+    m_authentification.setSelection( false );
+    m_authentification.addSelectionListener( m_authSelectionListener );
 
     // usr
     m_labelUser = new Label( fieldGroup, SWT.NONE );
@@ -350,12 +359,6 @@ public class ImportWfsWizardPage extends WizardPage
     m_pass.addSelectionListener( m_passSelectionListener );
     m_pass.setVisible( false );
 
-    m_authentification = new Button( fieldGroup, SWT.CHECK );
-    m_authentification.setText( "Authentifizierung" );
-    m_authentification
-        .setToolTipText( "Einblenden der Eingabefelder für Benutzername und Passwort für den Zugriff auf geschützte Services" );
-    m_authentification.setSelection( false );
-    m_authentification.addSelectionListener( m_authSelectionListener );
     /*
      * add advanced stuff
      * 
