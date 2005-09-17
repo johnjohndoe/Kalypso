@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org">
-    <layer featurePath="#fid#ID570250" id="ID_1" linktype="gml" ns1:href="modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+<!--
+    <layer featurePath="#fid#Speicher-570250" id="ID_1" linktype="gml" ns1:href="modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+-->    
     <view typename="Speicher" style="SWT.NONE">
         <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
         <gridLayout numColumns="3"/>

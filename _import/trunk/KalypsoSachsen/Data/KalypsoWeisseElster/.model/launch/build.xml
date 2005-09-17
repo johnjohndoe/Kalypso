@@ -22,7 +22,6 @@
           target: create			Rechenvariante erzeugen
          ================================= 
     -->
-
     <target name="create" description="Erzeugt eine Rechenvariante">
         <echo message="Rechenvariante anlegen: ${calc.dir}" />
         <!-- copy modell -->
@@ -299,7 +298,7 @@
     </target>
 
     <target name="updateObsGebT" depends="setProperties">
-        <echo message="rechen Temperaturen (Messung) auf gebiete um" />
+        <echo message="rechne Temperaturen (Messung) auf gebiete um" />
         <kalypso.copyObservation gml="${project.url}/.model/observationConf/ObsTGebMapping.gml"
                                  featurePath="mappingMember"
                                  context="${calc.url}"

@@ -306,11 +306,12 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_10.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
         <!--
         FeatureView -->
 		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_10.gft"/>
 		<arg name="selectFeatureID" value="Speicher-570250"/>
-		<arg name="pantoFeatureId" value="570250"/>
+		<arg name="pantoFeatureId" value="Speicher-570250"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 20 -->

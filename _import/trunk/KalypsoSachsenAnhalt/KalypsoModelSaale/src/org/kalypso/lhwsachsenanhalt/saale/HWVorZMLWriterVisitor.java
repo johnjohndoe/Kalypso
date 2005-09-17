@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -71,7 +72,7 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
 {
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
 
-  private final HWVOR00Converter m_converter = new HWVOR00Converter();
+  private final HWVOR00Converter m_converter;
 
   private final URL m_context;
 
@@ -90,8 +91,9 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
   private Map m_metadataMap = new HashMap();
 
   public HWVorZMLWriterVisitor( final String linkProperty, final String dataAxis, final IUrlResolver resolver,
-      final URL context )
+      final URL context, final Date currentTime )
   {
+    m_converter = new HWVOR00Converter( currentTime );
     m_linkProperty = linkProperty;
     m_dataAxis = dataAxis;
     m_resolver = resolver;
@@ -118,6 +120,7 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
       // delete all non-digits and we have the original number.
       final String id = href.replaceAll( "\\D", "" );
       final IObservation observation = ZmlFactory.parseXML( m_resolver.resolveURL( m_context, href ), id );
+      
       final MetadataList obsMeta = observation.getMetadataList();
       final MetadataList clonedMeta = new MetadataList();
       clonedMeta.putAll( obsMeta );

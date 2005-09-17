@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -42,6 +43,7 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
 
 /**
  * <p>
@@ -192,19 +194,34 @@ public class SaaleCalcJob implements ICalcJob
     stammdatdir.mkdir();
 
     // gml nur einmal lesen
-    final URL gmlContext = inputProvider.getURLForID( "MODELL" );
-    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( gmlContext );
+    final URL gmlURL = inputProvider.getURLForID( "MODELL" );
+    final URL controlURL = inputProvider.getURLForID( "CONTROL" );
+    final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( gmlURL );
 
     // braucht mans?
     writeHwzugrStv( hwvordir );
     writeStammdaten( stammdatdir, modellWorkspace );
-    writeDaten( datendir, modellWorkspace, gmlContext );
+    final Date currentTime = readCurrentTime( controlURL );
+    writeDaten( datendir, modellWorkspace, gmlURL, currentTime );
     final File exeFile = copyExeToDir( hwvordir );
 
     m_logger.info( "Eingangsdaten für HWVOR00.exe wurden erzeugt." );
     m_logger.info( "" );
 
     return new SaaleInputBean( hwvordir, datendir, exeFile );
+  }
+
+  /**
+   * Die aktuelle Zeit aus den Steuerparametern lesen.
+   * 
+   * @throws Exception
+   */
+  private Date readCurrentTime( final URL controlURL ) throws Exception
+  {
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( controlURL );
+    final FindPropertyByNameVisitor visitor = new FindPropertyByNameVisitor( "startforecast" );
+    workspace.accept( visitor, "", FeatureVisitor.DEPTH_INFINITE );
+    return (Date)visitor.getResult();
   }
 
   private File copyExeToDir( final File hwvordir ) throws IOException
@@ -218,18 +235,16 @@ public class SaaleCalcJob implements ICalcJob
   {
     final File hwzugrstv = new File( hwvordir, "Hwzugr.stv" );
 
-    final String hwvorPath = hwvordir.getAbsolutePath();
-
     PrintWriter writer = null;
     try
     {
       writer = new PrintWriter( new BufferedWriter( new FileWriter( hwzugrstv ) ) );
-      writer.println( hwvorPath + "\\" + HWDIR_DATEN + "\\" );
-      writer.println( hwvorPath + "\\" + HWDIR_STAMMDAT + "\\" );
-      //      writer.println( hwvorPath + "\\" + HWDIR_WQ +"\\" );
+      writer.println( HWDIR_DATEN + "\\" );
+      writer.println( HWDIR_STAMMDAT + "\\" );
+      //      writer.println( HWDIR_WQ +"\\" );
       writer.println(); // empty path, so no popups regarding missing WQ-files
-      writer.println( hwvorPath + "\\" + HWDIR_AUSGABE + "\\" );
-      writer.println( hwvorPath + "\\" + HWDIR_ARCHIV + "\\" );
+      writer.println( HWDIR_AUSGABE + "\\" );
+      writer.println( HWDIR_ARCHIV + "\\" );
       writer.println( "SA" );
       writer.println( "versteckt" );
       writer.close();
@@ -268,8 +283,8 @@ public class SaaleCalcJob implements ICalcJob
         stammdatURL, externData );
   }
 
-  private void writeDaten( final File datendir, final GMLWorkspace modellWorkspace, final URL context )
-      throws IOException, JAXBException, GmlConvertException
+  private void writeDaten( final File datendir, final GMLWorkspace modellWorkspace, final URL context,
+      final Date currentTime ) throws IOException, JAXBException, GmlConvertException
   {
     final IUrlResolver resolver = new UrlUtilities();
 
@@ -279,20 +294,22 @@ public class SaaleCalcJob implements ICalcJob
     convertGml( externData, datenURL, "Daten/hwablauf.vor", "hwablauf_vor.gmc" );
 
     featurezml2vor( modellWorkspace, "Durchfluss", "PegelCollectionAssociation/PegelMember", new File( datendir,
-        "Q_dat.vor" ), TimeserieConstants.TYPE_RUNOFF, resolver, context );
+        "Q_dat.vor" ), TimeserieConstants.TYPE_RUNOFF, resolver, context, currentTime );
     featurezml2vor( modellWorkspace, "Niederschlag", "PegelCollectionAssociation/PegelMember[Gebiet]", new File(
-        datendir, "P_dat.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context );
+        datendir, "P_dat.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context, currentTime );
     featurezml2vor( modellWorkspace, "Schnee", "PegelCollectionAssociation/PegelMember[Gebiet]", new File( datendir,
-        "SNDAT.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context );
+        "SNDAT.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context, currentTime );
     featurezml2vor( modellWorkspace, "Inhalt", "SpeicherCollectionAssociation/SpeicherMember", new File( datendir,
-        "Tsdat.vor" ), TimeserieConstants.TYPE_VOLUME, resolver, context );
+        "Tsdat.vor" ), TimeserieConstants.TYPE_VOLUME, resolver, context, currentTime );
   }
 
   private void featurezml2vor( final GMLWorkspace workspace, final String linkProperty, final String featurePath,
-      final File file, final String axisType, final IUrlResolver resolver, final URL context ) throws IOException
+      final File file, final String axisType, final IUrlResolver resolver, final URL context, final Date currentTime )
+      throws IOException
   {
     m_logger.info( "Schreibe Zeitreihen: " + linkProperty );
-    final HWVorZMLWriterVisitor visitor = new HWVorZMLWriterVisitor( linkProperty, axisType, resolver, context );
+    final HWVorZMLWriterVisitor visitor = new HWVorZMLWriterVisitor( linkProperty, axisType, resolver, context,
+        currentTime );
     workspace.accept( visitor, featurePath, FeatureVisitor.DEPTH_ZERO );
     m_metadataMap.putAll( visitor.getMetadataMap() );
     final boolean bSuccess = visitor.writeObservations( file );

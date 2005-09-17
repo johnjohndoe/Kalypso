@@ -7,6 +7,9 @@
 		<visitor featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" visitorid="org.kalypso.model.saale.MetGebStdVisitor">
 			<argument name="metGebPath" value="Stammdat/Met_Geb.std"/>
 			<argument name="link" value="gewichtung"/>
+			<!-- Causes to write a config file for dwd2zml conversion to the given location. -->
+			<argument name="dwd2zml_config" value="../dwd2zmlConf.xml"/>
+			<argument name="dwd2zml_targetLink" value="Niederschlag"/>
 		</visitor>
 	</changesource>
 </gmlconvert>

@@ -50,6 +50,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.ParseException;
+import java.util.Calendar;
 
 import junit.framework.TestCase;
 
@@ -67,11 +68,16 @@ public class HWVOR00ConvertTest extends TestCase
     final IObservation[] observations = HWVOR00Converter.toZML( TimeserieConstants.TYPE_RAINFALL, reader );
     reader.close();
 
-    final File file = File.createTempFile( "zmlWriterTest", "csv" );
+    final File file = File.createTempFile( "zmlWriterTest", ".csv" );
     file.deleteOnExit();
 
-    final Writer out = new BufferedWriter( new FileWriter( "C:\\test.txt" ) );
-    final HWVOR00Converter conv = new HWVOR00Converter();
+    final Writer out = new BufferedWriter( new FileWriter( file ) );
+    
+    final Calendar cal = Calendar.getInstance();
+    cal.clear();
+    cal.set( 2004, 2, 5, 7, 0 );
+    
+    final HWVOR00Converter conv = new HWVOR00Converter( cal.getTime() );
     conv.addObservation( observations[0], "555000", "date", "N" );
     conv.addObservation( observations[1], "505050", "date", "N" );
     conv.toHWVOR00( out );

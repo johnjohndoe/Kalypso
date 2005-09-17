@@ -48,6 +48,7 @@ import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -62,9 +63,18 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 
+/**
+ * Converter to write observations into a hwvor file.
+ * <p>
+ * Each observation will be filtered with an interpolation filter to exactly write 264 values with a step of 1 hour
+ * </p>
+ */
 public class HWVOR00Converter
 {
   private TreeMap m_obsMap;
@@ -75,8 +85,23 @@ public class HWVOR00Converter
 
   public static final SimpleDateFormat HWVOR00_DATE = new SimpleDateFormat( "dd.M.yyyy H:mm" );
 
-  public HWVOR00Converter()
+  private final IRequest m_request;
+
+  /**
+   * @param currentTime
+   *          The timeseries are written such: currentTime - 120h to currentTime + 148h step 1h
+   */
+  public HWVOR00Converter( final Date currentTime )
   {
+    final Calendar cal = Calendar.getInstance();
+    cal.setTime( currentTime );
+    cal.add( Calendar.HOUR_OF_DAY , -120 );
+    final Date startTime = cal.getTime();
+    cal.add( Calendar.HOUR_OF_DAY, 120 + 144 );
+    final Date stopTime = cal.getTime();
+    
+    m_request = new ObservationRequest( startTime, stopTime );
+
     m_obsMap = new TreeMap();
     m_obsNames = new ArrayList();
     m_obsNum = 0;
@@ -87,7 +112,8 @@ public class HWVOR00Converter
     return m_obsNames.isEmpty();
   }
 
-  public void addObservation( final IObservation inObs, final String obsName, final String timeAxis, final String dataAxis )
+  public void addObservation( final IObservation inObs, final String obsName, final String timeAxis,
+      final String dataAxis )
   {
     IAxis axTime;
     IAxis axData;
@@ -99,7 +125,10 @@ public class HWVOR00Converter
 
     try
     {
-      tplValues = inObs.getValues( null );
+      final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0 );
+      filter.initFilter( null, inObs, null );
+
+      tplValues = filter.getValues( m_request );
       axTime = ObservationUtilities.findAxisByType( tplValues.getAxisList(), timeAxis );
       axData = ObservationUtilities.findAxisByType( tplValues.getAxisList(), dataAxis );
 
@@ -119,7 +148,7 @@ public class HWVOR00Converter
         }
       }
     }
-    catch( SensorException exp )
+    catch( final SensorException exp )
     {
       // TODO Exception handling verbessern
       //exp;
@@ -182,7 +211,7 @@ public class HWVOR00Converter
       final String inputline = reader.readLine();
       if( inputline == null )
         break;
-      
+
       lines.add( new StringTokenizer( inputline, "\t" ) );
     }
 
