@@ -158,7 +158,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
         return filter;
       }
-      catch( Exception e ) // generic exception caught for simplicity
+      catch( final Exception e ) // generic exception caught for simplicity
       {
         e.printStackTrace();
         throw new UndeclaredThrowableException( e );

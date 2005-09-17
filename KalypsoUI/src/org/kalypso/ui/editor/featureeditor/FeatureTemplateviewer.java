@@ -208,12 +208,17 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       }
       else
       {
-        m_featurePath = props.getProperty( "featurepath", "/" );
-        href = props.getProperty( "href", "" );
+        m_featurePath = props.getProperty( "featurepath", "" );
+        href = props.getProperty( "href", null );
         linktype = props.getProperty( "linktype", "gml" );
       }
-      m_key = new PoolableObjectType( linktype, href, context );
-      m_pool.addPoolListener( this, m_key );
+      
+      // only load, if href non null; in this case, the feature must be set via setFeature()
+      if( href != null )
+      {
+        m_key = new PoolableObjectType( linktype, href, context );
+        m_pool.addPoolListener( this, m_key );
+      }
     }
     catch( final JAXBException e )
     {
@@ -241,14 +246,14 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
     if( m_panel == null || m_panel.isDisposed() )
       return;
-
+    
     m_panel.getDisplay().asyncExec( new Runnable()
-    {
-      public void run()
-      {
-        updateControls();
-      }
-    } );
+        {
+          public void run()
+          {
+            updateControls();
+          }
+        } );
   }
 
   /**
@@ -276,7 +281,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     final GridLayout gridLayout = new GridLayout();
     gridLayout.marginHeight = m_marginHeight;
     gridLayout.marginWidth = m_marginWidth;
-    
+
     m_creator = new ScrolledCompositeCreator( null )
     {
       protected Control createContents( final Composite scrollParent, final int contentStyle )
@@ -306,8 +311,16 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   protected void updateControls()
   {
+    final Object featureFromPath = m_workspace == null ? null : m_workspace.getFeatureFromPath( m_featurePath );
+    final Feature feature = featureFromPath instanceof Feature ? (Feature)featureFromPath : null;
+
+    final String errorMessage = "Kein Feature für Featurepath: " + m_featurePath;
+
     try
     {
+      if( m_panel == null || m_panel.isDisposed() )
+        return;
+
       if( m_label != null && !m_label.isDisposed() )
         m_label.dispose();
 
@@ -319,20 +332,14 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       if( m_workspace == null )
       {
-        if( m_panel != null && !m_panel.isDisposed() )
-        {
-          m_label = new Label( m_panel, SWT.CENTER );
-          m_label.setText( "laden..." );
-          m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        }
+        m_label = new Label( m_panel, SWT.CENTER );
+        m_label.setText( "laden..." );
+        m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return;
       }
 
-      final Object featureFromPath = m_workspace.getFeatureFromPath( m_featurePath );
-      if( featureFromPath instanceof Feature )
+      if( feature != null )
       {
-        final Feature feature = (Feature)featureFromPath;
-
         m_featureComposite.setFeature( m_workspace, feature );
         final Control control = m_featureComposite.createControl( m_panel, SWT.NONE, feature.getFeatureType() );
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -348,6 +355,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       else
       {
         // todo Fehlermeldung anzeigen
+        m_label = new Label( m_panel, SWT.CENTER );
+        m_label.setText( errorMessage );
+        m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
       }
     }
     catch( final Exception e )
@@ -398,5 +408,16 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   public Feature getFeature()
   {
     return m_featureComposite.getFeature();
+  }
+
+  public Control getControl()
+  {
+    return m_panel;
+  }
+
+  public void setFeature( final CommandableWorkspace workspace, final Feature feature )
+  {
+    m_featurePath = workspace.getFeaturepathForFeature( feature ).toString();
+    setWorkspace( workspace );
   }
 }

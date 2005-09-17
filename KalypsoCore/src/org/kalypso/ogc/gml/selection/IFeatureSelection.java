@@ -35,14 +35,37 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public interface IFeatureSelection extends IStructuredSelection
 {
-  /** Returns the workspace containing the given feature */
+  /**
+   * Returns the workspace containing the given feature *
+   * 
+   * @param feature
+   *          Must be an element of this selection
+   */
   public CommandableWorkspace getWorkspace( final Feature feature );
 
+  /**
+   * @param feature
+   *          Must be an element of this selection
+   */
   public Feature getParentFeature( final Feature feature );
 
+  /**
+   * @param feature
+   *          Must be an element of this selection
+   */
   public String getParentFeatureProperty( final Feature feature );
-  
+
+  /** Extracs all features of this selection together with each parent and workspace. */
   public EasyFeatureWrapper[] getAllFeatures();
 
   public IFeatureSelectionManager getSelectionManager();
+  
+  /** In addition to the normal selection, one feature may have the focus. */
+  public Feature getFocusedFeature();
+
+  /**
+   * This is the focused property of the focused feature. This is for example used in the table, where each cell
+   * represents a property of one feature.
+   */
+  public String getFocusedProperty();
 }

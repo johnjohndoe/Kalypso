@@ -80,6 +80,16 @@ public class GMLWeightingTask extends Task
 
   private String m_propZMLTarget; // e.g. "Niederschlag"
 
+  /** What to do, if the target-zml already exists.
+   * <p>Possible values:</p>
+   * <ul>
+   * <li>combine: read old target, and only replace the new values.</li>
+   * <li>overwrite: Overwrite target with new values.</li>
+   * </ul>
+   * <p>Default is: overwrite</p>
+   *  */
+  private String m_handleExistingTarget;
+  
   private String m_propRelationWeightMember; // e.g. "gewichtung"
 
   private String m_propWeight; // e.g. "faktor"
@@ -137,6 +147,18 @@ public class GMLWeightingTask extends Task
         // 3. find target
         final TimeseriesLink targetLink = (TimeseriesLink)targetFE.getProperty( m_propZMLTarget );
         final URL targetURL = urlResolver.resolveURL( m_targetContext, targetLink.getHref() );
+        
+        // TODO: if target exists, create a combination filter
+        if( "combine".equals( m_handleExistingTarget ) )
+        {
+          // TODO: @MARC: siehe meine Mail
+          // hier sollte noch ein Filter zusätzlicher Filter angewendet werden,
+          // der bewirkt, dass die Zeitreihe aus 'targetLink' mit mit den Werten 
+          // aus dem NOperationFilter überschrieben wird
+          // das ganze aber nur, wenn targetLink existiert. Wenn targetLink nicht existiert,
+          // soll einfach das Ergebnis vmo NOperationFilter rausgeschrieben werden.
+        }
+        
         // 4. build n-operation filter
         final NOperationFilter nOperationFilter = filterFac.createNOperationFilter();
         nOperationFilter.setOperator( "+" );
@@ -217,6 +239,11 @@ public class GMLWeightingTask extends Task
     }
   }
 
+  public void setHandleExistingTarget( final String handleExistingTarget )
+  {
+    m_handleExistingTarget = handleExistingTarget;
+  }
+  
   /**
    * 
    * @param targetMapping

@@ -102,7 +102,7 @@ public class KalypsoLoginDialog extends TitleAreaDialog
     m_useScenarios = isAskForScenario;
     m_scenarios = scenarios;
 
-    setShellStyle( SWT.SYSTEM_MODAL );
+    setShellStyle( SWT.SYSTEM_MODAL | SWT.ON_TOP );
   }
 
   /**

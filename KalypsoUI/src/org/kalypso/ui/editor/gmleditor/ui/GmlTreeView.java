@@ -500,6 +500,24 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       return m_selectionManager;
     }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
+     */
+    public Feature getFocusedFeature()
+    {
+      // the tree doesn't support focused features
+      return null;
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
+     */
+    public String getFocusedProperty()
+    {
+      // the tree doesn't support focused features
+      return null;
+    }
   }
 
 }

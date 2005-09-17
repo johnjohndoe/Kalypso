@@ -53,11 +53,13 @@ import javax.xml.bind.JAXBException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
@@ -238,6 +240,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private final IFeatureSelectionManager m_selectionManager;
 
+  private Feature m_focusedFeature;
+
+  private String m_focusedProperty;
+
   /**
    * @param parent
    * @param templateTarget
@@ -267,44 +273,53 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE );
     m_tableCursor = tc;
-    tc.addSelectionListener( new SelectionListener()
+
+    final OpenStrategy strategy = new OpenStrategy( tc );
+    strategy.addSelectionListener( new SelectionAdapter()
     {
       public void widgetSelected( final SelectionEvent e )
       {
-        cursorChanged();
-      }
-
-      public void widgetDefaultSelected( final SelectionEvent e )
-      {
-        cursorChanged();
+        handleTableCursorSelected();
       }
     } );
+
+    strategy.addPostSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      public void widgetSelected( SelectionEvent e )
+      {
+        handleTableCursorPostSelected();
+      }
+    } );
+
+  }
+
+  protected void handleTableCursorPostSelected()
+  {
+    cursorChanged();
+
+    firePostSelectionChanged( new SelectionChangedEvent( this, getSelection() ) );
+  }
+
+  protected void handleTableCursorSelected()
+  {
+    cursorChanged();
+
+    fireSelectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }
 
   protected void cursorChanged()
   {
-    //    final TableItem row = m_tableCursor.getRow();
-    //    final int column = m_tableCursor.getColumn();
+    final TableItem row = m_tableCursor.getRow();
+    final int column = m_tableCursor.getColumn();
 
-    //    if( row != null )
-    //      m_lastSelectedFE = (Feature)row.getData();
-    //
-    //    if( column >= 0 && column < m_modifier.length )
-    //      m_lastSelectedFTP = m_modifier[column].getFeatureTypeProperty();
+    m_focusedFeature = row == null ? null : (Feature)row.getData();
 
-    final int[] selectionIndices = getTable().getSelectionIndices();
-    final ArrayList list = new ArrayList();
-    for( int i = 0; i < selectionIndices.length; i++ )
-    {
-      final int index = selectionIndices[i];
-      list.add( getElementAt( index ) );
-    }
-
-    //    // fireSelectionChanged( new KalypsoSelectionChangedEvent( this, this, selection ) );
-    //    final IKalypsoFeatureTheme theme = getTheme();
-    //    final IStructuredSelection selection = new FeatureThemeSelection( theme, this, new StructuredSelection( list ),
-    //        m_lastSelectedFTP, m_lastSelectedFE );
-    //    theme.getSelectionManager().setSelection( selection );
+    final FeatureTypeProperty focusedProperty = ( column < 0 || column > m_modifier.length - 1 ) ? null
+        : m_modifier[column].getFeatureTypeProperty();
+    m_focusedProperty = focusedProperty == null ? null : focusedProperty.getName();
   }
 
   public void dispose()
@@ -912,7 +927,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( theme == null )
       return selection;
 
-    return new KalypsoFeatureThemeSelection( selection.toList(), theme, m_selectionManager );
+    return new KalypsoFeatureThemeSelection( selection.toList(), theme, m_selectionManager, m_focusedFeature,
+        m_focusedProperty );
   }
 
   protected void inputChanged( final Object input, final Object oldInput )

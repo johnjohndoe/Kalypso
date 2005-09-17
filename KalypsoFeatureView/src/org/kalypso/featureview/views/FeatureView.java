@@ -55,8 +55,8 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * adapts {@link org.eclipse.jface.viewers.ISelectionProvider}or
  * {@linked org.eclipse.jface.viewers.IPostSelectionProvider}.</li>
  * <li>In preference, the view listens to post-selections, in order to change the shown feature not too often.</li>
- * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes
- * (i.e. made by the user) in the feature-control will be immediately postet into the given
+ * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes (i.e. made by
+ * the user) in the feature-control will be immediately postet into the given
  * {@link org.kalypso.ogc.gml.mapmodel.CommandableWorkspace}.</li>
  * <li>If the current selection changes to something not viewable, the last shown feature continues to be shown. If the
  * source of the shown feature is closed, the view releases the feature.</li>
@@ -82,7 +82,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
 {
   private static final String _KEIN_FEATURE_SELEKTIERT_ = "<kein Feature selektiert>";
 
-  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null, KalypsoCorePlugin.getDefault().getSelectionManager() );
+  protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null, KalypsoCorePlugin
+      .getDefault().getSelectionManager() );
 
   protected final JobExclusiveCommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -149,9 +150,9 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private Feature featureFromSelection( final IFeatureSelection featureSel )
   {
-    //    final Feature focusedFeature = featureSel.getFocusedFeature();
-    //    if( focusedFeature != null )
-    //      return focusedFeature;
+    final Feature focusedFeature = featureSel.getFocusedFeature();
+    if( focusedFeature != null )
+      return focusedFeature;
 
     for( final Iterator sIt = featureSel.iterator(); sIt.hasNext(); )
     {
