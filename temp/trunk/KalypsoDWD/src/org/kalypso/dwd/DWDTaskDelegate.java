@@ -73,7 +73,6 @@ import org.kalypso.zml.ObservationType;
  */
 public class DWDTaskDelegate
 {
-
   private Properties m_metadata = null;
 
   public void execute( final ILogger logger, final URL obsRasterURL, final URL dwd2zmlConfUrl,
