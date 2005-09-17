@@ -531,7 +531,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       return StructuredSelection.EMPTY;
 
     return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme)activeTheme,
-        m_selectionManager );
+        m_selectionManager, null, null );
   }
 
   protected void globalSelectionChanged( final IFeatureSelection selection )
@@ -540,21 +540,11 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     {
       // TODO: only repaint, if selection contains features contained in my themes changes
     }
-    //    final List selectedElements = selection.toList();
-    //    
-    //    final IKalypsoTheme[] allThemes = getMapModell().getAllThemes();
-    //    for( int i = 0; i < allThemes.length; i++ )
-    //    {
-    //      final IKalypsoTheme theme = allThemes[i];
-    //      if( theme instanceof IKalypsoFeatureTheme )
-    //      {
-    //        final IKalypsoFeatureTheme featureTheme = theme;
-    //        final FeatureList featureList = featureTheme.getFeatureList();
-    //      }
-    //    }
 
     setValidAll( false );
     repaint();
+    
+    fireSelectionChanged();
   }
 
   public void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode,
@@ -633,7 +623,11 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     // nothing was choosen by the user, dont do anything
     // TODO: maybe clear selection?
     if( features.isEmpty() )
+    {
+      // TODO: this should to the widget-manager?
+      repaint();
       return;
+    }
 
     // remove all selected features from this theme
     // TODO: maybe only visible??

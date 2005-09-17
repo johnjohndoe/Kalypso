@@ -43,7 +43,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
-import org.kalypso.ogc.gml.selection.IFocusedFeatureSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public class FeatureSetPropertyActionDelegate implements IActionDelegate
 {
-  private IFocusedFeatureSelection m_selection = null;
+  private IFeatureSelection m_selection = null;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -107,14 +107,14 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
     action.setEnabled( false );
     m_selection = null;
 
-    if( selection instanceof IFocusedFeatureSelection
-        && FeatureSelectionHelper.getFeatureCount( (IFocusedFeatureSelection)selection ) > 0 )
+    if( selection instanceof IFeatureSelection
+        && FeatureSelectionHelper.getFeatureCount( (IFeatureSelection)selection ) > 0 )
     {
-      m_selection = (IFocusedFeatureSelection)selection;
+      m_selection = (IFeatureSelection)selection;
       final Feature focusedFeature = m_selection.getFocusedFeature();
       final String focusedProperty = m_selection.getFocusedProperty();
       final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
-      if( ftp != null && m_selection.size() >= 2 )
+      if( focusedFeature != null && ftp != null && m_selection.size() >= 2 )
       {
         action.setEnabled( true );
         final String text = action.getText();
@@ -124,4 +124,6 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
       }
     }
   }
+  
+  
 }

@@ -225,4 +225,22 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   {
     return this;
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
+   */
+  public Feature getFocusedFeature()
+  {
+    // The feature manager doesn't support the focused feature
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
+   */
+  public String getFocusedProperty()
+  {
+    // The feature manager doesn't support the focused feature
+    return null;
+  }
 }

@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.contribs.java.net.IUrlResolver;
@@ -72,6 +73,8 @@ public class ChangeSourceTypeHandler implements ISourceHandler
 
   private final Map m_externData;
 
+  private final DisposeHelper m_disposer = new DisposeHelper();
+
   public ChangeSourceTypeHandler( final IUrlResolver resolver, final URL context, final ChangeSourceType type,
       final Map externData )
   {
@@ -91,6 +94,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
       final GMLWorkspace inputGML = GmlConvertFactory.loadSource( m_resolver, m_context, m_type.getSource(),
           m_externData );
       applyVisitors( inputGML, m_type.getVisitor() );
+      m_disposer.dispose();
       return inputGML;
     }
     catch( final ClassUtilityException e )
@@ -111,11 +115,15 @@ public class ChangeSourceTypeHandler implements ISourceHandler
       final String visitorClass = visitorType.getVisitorclass();
       final String visitorID = visitorType.getVisitorid();
       final FeatureVisitor visitor = createVisitor( visitorClass, visitorID, arguments );
+      
+      // HACK: bit of a hack in order to allow visitors to be disposed, if they have such a method.
+      m_disposer.addDisposeCandidate( visitor );
       inputGML.accept( visitor, featurePath, FeatureVisitor.DEPTH_INFINITE );
     }
   }
 
-  private FeatureVisitor createVisitor( final String visitorClass, final String visitorID, final Properties arguments ) throws ClassUtilityException, GmlConvertException
+  private FeatureVisitor createVisitor( final String visitorClass, final String visitorID, final Properties arguments )
+      throws ClassUtilityException, GmlConvertException
   {
     if( visitorClass != null )
     {

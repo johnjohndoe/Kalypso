@@ -60,6 +60,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
 {
   protected IObservation m_obs = null;
 
+  /** Never used? */
   protected Object m_conf = null;
 
   protected URL m_context = null;

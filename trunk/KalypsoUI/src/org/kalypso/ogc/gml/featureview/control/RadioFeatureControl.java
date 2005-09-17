@@ -138,18 +138,8 @@ public class RadioFeatureControl extends AbstractFeatureControl
     final String name = getFeatureTypeProperty().getName();
     final Object currentFeatureValue = feature.getProperty( name );
     
-    System.out.println( "Button selected; currentFeatureValue = " + currentFeatureValue );
-    System.out.println( "Button selected; m_valueToSet = " + m_valueToSet );
-    
     if( !m_valueToSet.equals( currentFeatureValue ) )
-    {
-      
-    System.out.println( "Button selected; changing feature" );
-      
       fireFeatureChange( new FeatureChange( feature, name, m_valueToSet ) );
-      // needed?
-      //      fireModified( e );
-    }
   }
 
   /**
@@ -158,13 +148,9 @@ public class RadioFeatureControl extends AbstractFeatureControl
   public void updateControl()
   {
     final Object currentFeatureValue = getFeature().getProperty( getFeatureTypeProperty().getName() );
-    System.out.println( "Updating control: currentFeatureValue = " +  currentFeatureValue );
-    
     final boolean toBeSelected = currentFeatureValue.equals( m_valueToSet );
-    System.out.println( "Updating control: toBeSelected = " +  toBeSelected );
     if( toBeSelected != m_radio.getSelection() )
     {
-    System.out.println( "Updating control: changing selection" );
       m_radio.setSelection( toBeSelected );
     }
   }

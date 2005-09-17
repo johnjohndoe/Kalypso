@@ -20,7 +20,7 @@ public class CollectorVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean visit( final Feature f )
+  public synchronized boolean visit( final Feature f )
   {
     m_results.add( f );
     return true;
@@ -28,13 +28,17 @@ public class CollectorVisitor implements FeatureVisitor
 
   /**
    * Returns alle visited features.
+   * <p>
+   * IMPORTANT: this method has been synchronized since toggel between radio buttons cause a
+   * ArrayIndexOutOfBoundsException in the first line.
+   * </p>
    * 
    * @param reset
    *          if true, resets the inner result set, so next call to getResults results in empty array.
    */
-  public Feature[] getResults( final boolean reset )
+  public synchronized Feature[] getResults( final boolean reset )
   {
-    final Feature[] features = (Feature[])m_results.toArray( new Feature[m_results.size()] );
+    final Feature[] features = (Feature[])m_results.toArray( new Feature[0] );
     if( reset )
       m_results.clear();
     return features;
