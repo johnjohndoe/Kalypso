@@ -169,8 +169,12 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns true if this envelope and the submitted intersects
    */
-  public boolean intersects( GM_Envelope bb )
+  public boolean intersects( final GM_Envelope bb )
   {
+    // TODO: true or false?
+    if( bb == null )
+      return true;
+    
     // coordinates of this GM_Envelope's BBOX
     double minx1 = min.getX();
     double miny1 = min.getY();
@@ -435,6 +439,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.14  2005/09/18 16:22:58  belger
+ * *** empty log message ***
+ *
  * Revision 1.13  2005/07/21 02:56:47  doemming
  * *** empty log message ***
  *

@@ -42,7 +42,6 @@ package org.kalypso.loader;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -52,6 +51,8 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.util.SafeRunnable;
 
 /**
  * @author belger
@@ -112,8 +113,19 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   {
     beforeObjectInvalid();
 
-    for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
-      ( (ILoaderListener)iter.next() ).onLoaderObjectInvalid( oldObject, bCannotReload );
+    // protect against concurrent modification exception and broken listeners
+    final ILoaderListener[] ls = (ILoaderListener[])m_listener.toArray( new ILoaderListener[m_listener.size()] );
+    for( int i = 0; i < ls.length; i++ )
+    {
+      final ILoaderListener listener = ls[i];
+      Platform.run( new SafeRunnable()
+      {
+        public void run() throws Exception
+        {
+          listener.onLoaderObjectInvalid( oldObject, bCannotReload );
+        }
+      } );
+    }
   }
 
   protected void beforeObjectInvalid()

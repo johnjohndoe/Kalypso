@@ -109,7 +109,7 @@ public class WorldToScreenTransform implements GeoTransform
    * @param destRect
    *          is the boundary of the destination rectangle (for example a region on the screen)
    */
-  public WorldToScreenTransform( GM_Envelope sourceRect, GM_Envelope destRect )
+  public WorldToScreenTransform( final GM_Envelope sourceRect, final GM_Envelope destRect )
   {
     setSourceRect( sourceRect );
     setDestRect( destRect );
@@ -150,6 +150,8 @@ public class WorldToScreenTransform implements GeoTransform
    */
   public void setSourceRect( GM_Envelope rect )
   {
+    if( rect == null )
+      throw new NullPointerException();
 
     sourceRect = rect;
 
@@ -174,7 +176,6 @@ public class WorldToScreenTransform implements GeoTransform
    */
   public void setSourceRect( double xMin, double yMin, double xMax, double yMax )
   {
-
     double dum = 0;
 
     if( xMin > xMax )
@@ -191,14 +192,7 @@ public class WorldToScreenTransform implements GeoTransform
       yMin = dum;
     }
 
-    sourceRect = GeometryFactory.createGM_Envelope( xMin, yMin, xMax, yMax );
-
-    if( destRect != null )
-    {
-      calculateQX();
-      calculateQY();
-    }
-
+    setSourceRect( GeometryFactory.createGM_Envelope( xMin, yMin, xMax, yMax ) );
   }
 
   public GM_Envelope getSourceRect()
@@ -214,6 +208,9 @@ public class WorldToScreenTransform implements GeoTransform
    */
   public void setDestRect( GM_Envelope rect )
   {
+    if( rect == null )
+      throw new NullPointerException();
+
     destRect = rect;
     if( ( sourceRect != null ) && ( destRect != null ) )
     {
@@ -253,14 +250,7 @@ public class WorldToScreenTransform implements GeoTransform
       yMin = dum;
     }
 
-    destRect = GeometryFactory.createGM_Envelope( xMin, yMin, xMax, yMax );
-
-    if( sourceRect != null )
-    {
-      calculateQX();
-      calculateQY();
-    }
-
+    setDestRect( GeometryFactory.createGM_Envelope( xMin, yMin, xMax, yMax ) );
   }
 
   public GM_Envelope getDestRect()
@@ -275,7 +265,7 @@ public class WorldToScreenTransform implements GeoTransform
    *          x-coordinate of a point in the source coordinate system.
    * @return the x-coordinate of the submitted value in the destination coordinate system.
    */
-  public double getDestX( double xsource )
+  public double getDestX( final double xsource )
   {
     return destRect.getMin().getX() + ( xsource - sourceRect.getMin().getX() ) * qx;
   }
