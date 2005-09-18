@@ -102,7 +102,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
   private final List m_selectionListeners = new ArrayList( 5 );
 
-  private IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
+  private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
   {
     public void selectionChanged( final IFeatureSelection selection )
     {
@@ -376,10 +376,13 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return m_boundingBox;
   }
 
-  public void setBoundingBox( GM_Envelope wishBBox )
+  public void setBoundingBox( final GM_Envelope wishBBox )
   {
     m_wishBBox = wishBBox;
     m_boundingBox = adjustBoundingBox( m_wishBBox );
+    if( m_boundingBox == null )
+      return;
+    
     m_projection.setSourceRect( m_boundingBox );
     /*
      * if( m_model != null ) { if( m_model.getCoordinatesSystem() != null ) m_projection.setSourceCS(
@@ -387,6 +390,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
      */
     // redraw
     onModellChange( null );
+    
+    repaint();
   }
 
   private GM_Envelope adjustBoundingBox( GM_Envelope env )
@@ -668,8 +673,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     }
 
     selectionManager2.changeSelection( toRemove, toAdd );
-
-    fireSelectionChanged();
   }
 
   private final void fireSelectionChanged()

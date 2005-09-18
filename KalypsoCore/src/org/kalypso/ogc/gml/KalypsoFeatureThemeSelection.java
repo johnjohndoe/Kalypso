@@ -102,7 +102,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
   }
 
   /** Return a new selection wich contains all features from the given selection wich are contained in the theme. */
-  private static IStructuredSelection filter( final List selection, final IKalypsoFeatureTheme theme )
+  public static IStructuredSelection filter( final List selection, final IKalypsoFeatureTheme theme )
   {
     // TODO: only visible features?
     final FeatureList featureList = theme.getFeatureList();

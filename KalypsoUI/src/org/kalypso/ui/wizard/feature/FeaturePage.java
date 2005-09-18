@@ -134,7 +134,8 @@ public class FeaturePage extends WizardPage
    */
   public void dispose()
   {
-    m_featureComposite.dispose();
+    if( m_featureComposite != null )
+      m_featureComposite.dispose();
   }
 
   /**

@@ -58,21 +58,13 @@ import org.kalypso.util.pool.ResourcePool;
  */
 public final class PooledObsProvider implements IObsProvider, IPoolListener
 {
-//  private static final int STATUS_DISPOSED = 0;
-
-//  private static final int STATUS_LOADED = 1;
-
-//  private static final int STATUS_ERROR = 2;
-
-//  private static final int STATUS_LOADING = 3;
+  private boolean m_isDisposed = false;
 
   private final List m_listeners = new ArrayList();
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
   private IObservation m_observation;
-
-//  private int m_loadedStatus;
 
   private final IPoolableObjectType m_key;
 
@@ -81,7 +73,6 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   public PooledObsProvider( final IPoolableObjectType key, final IRequest args )
   {
     m_args = args;
-//    m_loadedStatus = STATUS_LOADING;
     m_key = key;
 
     m_pool.addPoolListener( this, key );
@@ -89,9 +80,9 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
 
   public void dispose()
   {
+    m_isDisposed = true;
+    
     m_pool.removePoolListener( this );
-
-//    m_loadedStatus = STATUS_DISPOSED;
   }
 
   public IObservation getObservation()
@@ -106,8 +97,6 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-//    m_loadedStatus = STATUS_LOADING;
-
     if( key == m_key )
       setObservation( null );
   }
@@ -120,9 +109,8 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
    */
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-//    m_loadedStatus = newValue == null ? STATUS_ERROR : STATUS_LOADED;
-
-    setObservation( (IObservation)newValue );
+    if( !m_isDisposed )
+      setObservation( (IObservation)newValue );
   }
 
   private void setObservation( final IObservation obs )
@@ -143,11 +131,6 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
         ( (IObsProviderListener)listeners[i] ).obsProviderChanged();
     }
   }
-
-//  public boolean isLoading()
-//  {
-//    return m_loadedStatus == STATUS_LOADING;
-//  }
 
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#addListener(org.kalypso.ogc.sensor.template.IObsProviderListener)

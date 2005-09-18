@@ -91,6 +91,9 @@ public class GisTemplateLoadedThread extends Thread
 
   private boolean isLoaded()
   {
+    if( m_modell == null )
+      return false;
+    
     final IKalypsoTheme[] themes = m_modell.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
     {
