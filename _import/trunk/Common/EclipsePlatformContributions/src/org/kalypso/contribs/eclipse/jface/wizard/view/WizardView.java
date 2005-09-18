@@ -56,6 +56,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
@@ -94,6 +95,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.java.lang.CatchRunnable;
+import org.kalypso.contribs.java.lang.DisposeHelper;
 
 /**
  * A {@link org.eclipse.ui.IViewPart}which is a wizard container.
@@ -264,6 +266,8 @@ public class WizardView extends ViewPart implements IWizardContainer3
     setWizard( null );
 
     m_listeners.clear();
+    
+    m_disposeHelper.dispose();
   }
 
   /**
@@ -1476,6 +1480,8 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   private String pageDescription;
 
+  private DisposeHelper m_disposeHelper = new DisposeHelper();
+
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateMessage()
    */
@@ -1569,5 +1575,16 @@ public class WizardView extends ViewPart implements IWizardContainer3
     pageDescription = m_currentPage.getDescription();
     if( pageMessage == null )
       setMessage( m_currentPage.getDescription() );
+  }
+
+  /**
+   * @param imageDescriptor
+   */
+  public void setTitleImage( final ImageDescriptor imageDescriptor )
+  {
+    final Image image = imageDescriptor.createImage();
+    m_disposeHelper.addDisposeCandidate( image ); 
+
+    setTitleImage( image );
   }
 }

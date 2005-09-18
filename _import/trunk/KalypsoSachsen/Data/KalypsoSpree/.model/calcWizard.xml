@@ -46,10 +46,10 @@
 
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         
-        <arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
+        <arg name="ignoreType1" value="Q"/>
+        <arg name="ignoreType2" value="W"/>
+        <arg name="ignoreLabel1" value="Wasserstand"/>
+        <arg name="ignoreLabel2" value="Abfluss"/>
         
        	<arg name="maximizeMap" value="true"/>
     </page>
@@ -63,10 +63,10 @@
         <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
 		
-		<arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
+        <arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+        <arg name="ignoreLabel1" value="Wasserstand"/>
+        <arg name="ignoreLabel2" value="Abfluss"/>
 		
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         
@@ -100,10 +100,10 @@
         <arg name="rightSash" value="30"/>
         <arg name="selectionID" value="32"/>
         
-        <arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
+        <arg name="ignoreType1" value="Q"/>
+        <arg name="ignoreType2" value="W"/>
+        <arg name="ignoreLabel1" value="Wasserstand"/>
+        <arg name="ignoreLabel2" value="Abfluss"/>
 
         <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
         <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
@@ -152,10 +152,10 @@
         <arg name="tableTemplate" value=".templates/calcCase/flusslauf.gtt"/>
         <arg name="diagTemplate" value=".templates/calcCase/flusslauf.odt"/>
 
-        <arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
+        <arg name="ignoreType1" value="Q"/>
+        <arg name="ignoreType2" value="W"/>
+        <arg name="ignoreLabel1" value="Wasserstand"/>
+        <arg name="ignoreLabel2" value="Abfluss"/>
 
         <arg name="timeserie1" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie2" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
@@ -179,26 +179,26 @@
 	   pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
 	   
-	<arg name="mapTemplate" value=".templates/calcCase/pegel.gmt"/>
-	
+		<arg name="mapTemplate" value=".templates/calcCase/pegel.gmt"/>
+		
         <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
         <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
         <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
 		
-	<arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
+        <arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+        <arg name="ignoreLabel1" value="Wasserstand"/>
+        <arg name="ignoreLabel2" value="Abfluss"/>
 		
-	<arg name="pegelNameProperty" value="Name"/>
-	<arg name="resultProperty" value="Wasserstand_vorhersage"/>
+		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="resultProperty" value="Wasserstand_vorhersage"/>
 
-	<arg name="mainSash" value="40"/>
-	<arg name="rightSash" value="25"/>
-	<arg name="selectionID" value="256"/>
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="25"/>
+		<arg name="selectionID" value="256"/>
 
-	<arg name="exporter1">
+		<arg name="exporter1">
 		<arg name="id" value="featureWithTemplateExporter"/>
 		<arg name="nameproperty" value="Name"/>
 		<arg name="width" value="1024"/>
