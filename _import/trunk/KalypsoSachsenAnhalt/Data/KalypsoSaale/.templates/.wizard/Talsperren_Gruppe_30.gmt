@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-	<extent bottom="5721767.238838751" left="5196050.364086669" right="5272854.967313059" top="5785214.519764898"/>
-	<layers active="ID_1">
-		<layer name="Talsperren Gruppe 30" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember" id="ID_1" linktype="gml" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="sld" style="Speicher" ns1:href="project:/.styles/talsperren_gruppe_30.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
-		</layer>
-		<layer name="Talsperren" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember" id="ID_1a" linktype="gml" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-			<ns2:style linktype="sld" style="Speicher" ns1:href="project:/.styles/speicher.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
-		</layer>
-        <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_2" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-            <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/eingabepegel_ts_gruppe_30.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+    <extent bottom="5669985.839811623" left="5171301.037566987" right="5328462.150129882" srs="EPSG:31469" top="5795879.2964719515"/>
+    <layers active="ID_1">
+        <layer name="Talsperren Gruppe 30" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="Speicher" ns1:actuate="onRequest" ns1:href="project:/.styles/talsperren_gruppe_30.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
-        <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_8" linktype="shape" ns15:actuate="onRequest" ns15:href="project:/.shape/Gewässerflächen#EPSG:31468" ns15:type="simple" xmlns:ns15="http://www.w3.org/1999/xlink">
-            <ns16:style linktype="sld" style="seen" ns15:actuate="onRequest" ns15:href="project:/.styles/seen.sld" ns15:type="simple" xmlns:ns16="types.template.kalypso.org"/>
+        <layer name="Talsperren" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
+            <ns4:style linktype="sld" style="Speicher" ns3:actuate="onRequest" ns3:href="project:/.styles/speicher.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
         </layer>
-        <layer name="Gewässer" visible="true" featurePath="featureMember" id="ID_9" linktype="shape" ns17:actuate="onRequest" ns17:href="project:/.shape/Gewässer#EPSG:31468" ns17:type="simple" xmlns:ns17="http://www.w3.org/1999/xlink">
-            <ns18:style linktype="sld" style="sachsenrivers" ns17:actuate="onRequest" ns17:href="project:/.styles/styles.sld" ns17:type="simple" xmlns:ns18="types.template.kalypso.org"/>
+        <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_3" linktype="gml" ns5:actuate="onRequest" ns5:href="modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
+            <ns6:style linktype="sld" style="Eingabepegel" ns5:actuate="onRequest" ns5:href="project:/.styles/eingabepegel_ts_gruppe_30.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
         </layer>
-	</layers>
+        <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_4" linktype="shape" ns7:actuate="onRequest" ns7:href="project:/.shape/Gewässerflächen#EPSG:31468" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+            <ns8:style linktype="sld" style="seen" ns7:actuate="onRequest" ns7:href="project:/.styles/seen.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Gewässer" visible="true" featurePath="featureMember" id="ID_5" linktype="shape" ns9:actuate="onRequest" ns9:href="project:/.shape/Gewässer#EPSG:31468" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
+            <ns10:style linktype="sld" style="sachsenrivers" ns9:actuate="onRequest" ns9:href="project:/.styles/styles.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
+        </layer>
+    </layers>
 </gismapview>
+

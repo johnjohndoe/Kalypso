@@ -98,6 +98,10 @@
 			<source property="${ombrometerLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
 		</kalypso.copyObservation>
 
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="%featureName%-Name">
+			<source property="${ombrometerLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;%featureName%&lt;name/&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+		</kalypso.copyObservation>
+
 		<!-- 
 			TODO: Die HWVOR00.exe lässt das editieren der Volumenzeitreihen auch in der Zukunft zu.
 				Macht eigentlich keinen Sinn? Deshalb hier nur bis zum Istzeitpunkt.
@@ -118,11 +122,6 @@
 	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
 		<antcall target="updateForecastN" />
 
-		<!-- 
-		TODO: dieser Task sollte die eben erstellen Gebietsniederschläge nicht überschreiben
-		sondern nur die Vergangenheitswerte ergänzen. Dies wird über das handleExistingTarget gesteuert, 
-		ist aber leider noch nicht implementiert.
-		-->
 		<kalypso.gmlWeight 
 			modelurl="${calc.url}/modell.gml" 
 			featurepathtarget="PegelCollectionAssociation/PegelMember[Gebiet]" 

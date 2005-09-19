@@ -7,7 +7,7 @@
 			<featureproperty name="Bodenfrost" type="java.lang.Integer" format=""><column>1</column></featureproperty>
 			<featureproperty name="Feuchte" type="java.lang.Integer" format=""><column>2</column></featureproperty>
 			<featureproperty name="Schnee" type="java.lang.Integer" format=""><column>3</column></featureproperty>
-			<featureproperty name="Steuerung" type="java.lang.Integer" format=""><column>4</column></featureproperty>
+			<featureproperty name="Steuerung" type="java.lang.String" format=""><column>4</column></featureproperty>
 			<featureproperty name="Variante" type="java.lang.String" format=""><column>5</column></featureproperty>
 			<featureproperty name="STATUS" type="java.lang.String" format=""><column>6</column></featureproperty>
 			<featureproperty name="Reserve2" type="java.lang.String" format=""><column>7</column></featureproperty>

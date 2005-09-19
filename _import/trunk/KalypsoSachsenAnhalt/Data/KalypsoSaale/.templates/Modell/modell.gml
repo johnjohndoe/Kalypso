@@ -745,7 +745,7 @@
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>3</pegel:Steuerung>
+          <pegel:Steuerung>0</pegel:Steuerung>
           <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
@@ -3713,7 +3713,7 @@
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
+          <pegel:Steuerung>1</pegel:Steuerung>
           <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
@@ -7501,7 +7501,7 @@
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
           <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>0</pegel:Steuerung>
+          <pegel:Steuerung>1</pegel:Steuerung>
           <pegel:Variante>Test</pegel:Variante>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
@@ -19576,7 +19576,7 @@
           <speicher:STEUNAME>TS-Wendefurth, Bode-Anteil</speicher:STEUNAME>
           <speicher:UELNAME>Überleitung Rappbode</speicher:UELNAME>
           <speicher:DATEINAME/>
-          <speicher:ST_Art>-1</speicher:ST_Art>
+          <speicher:ST_Art>1</speicher:ST_Art>
           <speicher:QG1>25</speicher:QG1>
           <speicher:T1>4</speicher:T1>
           <speicher:T2>6</speicher:T2>

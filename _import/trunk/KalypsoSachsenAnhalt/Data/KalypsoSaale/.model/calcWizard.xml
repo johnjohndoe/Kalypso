@@ -309,7 +309,7 @@
 		<arg name="mapWidgetID" value=""/>
         <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_10.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
 		<arg name="selectFeatureID" value="Speicher-570250"/>
 		<arg name="pantoFeatureId" value="Speicher-570250"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
@@ -365,7 +365,7 @@
 		<arg name="maximizeMap" value="false"/>
         <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_20.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
 		<arg name="selectFeatureID" value="Speicher-573100"/>
 		<arg name="pantoFeatureId" value="Speicher-573100"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
@@ -421,7 +421,7 @@
 		<arg name="maximizeMap" value="false"/>
        <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_30.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
 		<arg name="selectFeatureID" value="Speicher-575406"/>
 		<arg name="pantoFeatureId" value="Speicher-575406"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
@@ -477,9 +477,9 @@
 		<arg name="maximizeMap" value="false"/>
        <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_40.gft"/>
-		<arg name="selectFeatureID" value="Speicher-576470"/>
-		<arg name="pantoFeatureId" value="Speicher-576470"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_Gebiet.gft"/>
+		<arg name="selectFeatureID" value="Pegel-576470"/>
+		<arg name="pantoFeatureId" value="Pegel-576470"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>	
     <!-- TS-Steuerungs-Gruppe 50 -->
@@ -564,7 +564,7 @@
 		<arg name="maximizeMap" value="false"/>
        <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_55.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
 		<arg name="selectFeatureID" value="Speicher-579330"/>
 		<arg name="pantoFeatureId" value="Speicher-579330"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
@@ -620,7 +620,7 @@
 		<arg name="maximizeMap" value="false"/>
         <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_60.gft"/>	
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_reduziert.gft"/>	
 		<arg name="selectFeatureID" value="Speicher-579001"/>
 		<arg name="pantoFeatureId" value="Speicher-579001"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
@@ -646,7 +646,7 @@
 		<arg name="maximizeMap" value="false"/>
       <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_65.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
 		<arg name="selectFeatureID" value="Speicher-579012"/>
 		<arg name="pantoFeatureId" value="Speicher-579012"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
@@ -702,7 +702,7 @@
 		<arg name="maximizeMap" value="false"/>
         <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_70.gft"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
 		<arg name="selectFeatureID" value="Speicher-579006"/>
 		<arg name="pantoFeatureId" value="Speicher-579006"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
@@ -758,9 +758,9 @@
 		<arg name="maximizeMap" value="false"/>
        <!--
         FeatureView -->
-		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_80.gft"/>
-		<arg name="selectFeatureID" value="Speicher-553050"/>
-		<arg name="pantoFeatureId" value="Speicher-553050"/>
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_Gebiet.gft"/>
+		<arg name="selectFeatureID" value="Pegel-553050"/>
+		<arg name="pantoFeatureId" value="Pegel-553050"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	
@@ -1111,6 +1111,7 @@
 		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="name" value="Vorhersagepegel"/>
 			<arg name="nameproperty" value="Name"/>
 			<arg name="width" value="800"/>
 			<arg name="height" value="600"/>

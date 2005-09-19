@@ -158,6 +158,7 @@
 		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="name" value="Vorhersagepegel"/>
 			<arg name="nameproperty" value="Name"/>
 			<arg name="width" value="800"/>
 			<arg name="height" value="600"/>
@@ -184,6 +185,7 @@
 		<!-- Scheitelwert-Tabelle -->
 		<arg name="exporter3">
 			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Pegelübersicht (Scheitelwerte)"/>
 			<arg name="documentName" value="scheitelwert.csv"/>
 			<arg name="separator" value=";"/>
 			<!--arg name="charset" value="cp1252"/-->
