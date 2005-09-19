@@ -125,9 +125,9 @@ public class AbstractObservationDecorator implements IObservation
     m_obs.removeListener( listener );
   }
   
-  public void fireChangedEvent()
+  public void fireChangedEvent( final Object source )
   {
-    m_obs.fireChangedEvent();
+    m_obs.fireChangedEvent( source );
   }
 
   public void setValues( ITuppleModel values ) throws SensorException

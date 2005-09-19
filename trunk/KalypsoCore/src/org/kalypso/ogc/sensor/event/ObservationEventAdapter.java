@@ -82,13 +82,13 @@ public class ObservationEventAdapter implements IObservationEventProvider
   /**
    * Fires obs changed event
    */
-  public void fireChangedEvent()
+  public void fireChangedEvent( final Object source )
   {
     final Object[] listeners = m_listeners.toArray();
     for( int i = 0; i < listeners.length; i++ )
     {
       final IObservationListener listener = (IObservationListener)listeners[i];
-      listener.observationChanged( m_obs );
+      listener.observationChanged( m_obs, source );
     }
   }
 

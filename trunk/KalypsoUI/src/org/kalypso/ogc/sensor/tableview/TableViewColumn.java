@@ -96,7 +96,13 @@ public class TableViewColumn extends ObsViewItem
     return m_dirty;
   }
 
-  public void setDirty( boolean dirty )
+  /**
+   * Set the dirty flag. Optionally an eventSource object can be passed, it designates
+   * the origin of the event.
+   * 
+   * @param eventSource [optional, can be null] designates the origin of the event
+   */
+  public void setDirty( boolean dirty, final Object eventSource )
   {
     m_dirty = dirty;
 
@@ -109,7 +115,7 @@ public class TableViewColumn extends ObsViewItem
     // Another solution could have been to give a reference of its IObservation to a
     // ITuppleModel... but I decided not to use that one.
     if( dirty )
-      getObservation().fireChangedEvent();
+      getObservation().fireChangedEvent( eventSource );
   }
 
   public Class getColumnClass()
@@ -138,7 +144,7 @@ public class TableViewColumn extends ObsViewItem
     {
       m_shown = shown;
 
-      getView().refresh( this );
+      getView().refreshItemState( this, null );
     }
   }
 

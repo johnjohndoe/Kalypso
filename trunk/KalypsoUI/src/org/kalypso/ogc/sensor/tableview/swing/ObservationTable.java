@@ -226,16 +226,16 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         final int evenType = evt.getType();
 
         // REFRESH ONE COLUMN
-        if( evenType == ObsViewEvent.TYPE_REFRESH && evt.getObject() instanceof TableViewColumn )
+        if( evenType == ObsViewEvent.TYPE_ITEM_DATA_CHANGED && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
-          model.refreshColumn( column );
+          model.refreshColumn( column, evt.getSource() );
 
           analyseObservation( column.getObservation(), true );
         }
 
         // REFRESH COLUMN ACCORDING TO ITS STATE
-        if( evenType == ObsViewEvent.TYPE_REFRESH_ITEMSTATE && evt.getObject() instanceof TableViewColumn )
+        if( evenType == ObsViewEvent.TYPE_ITEM_STATE_CHANGED && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
 
@@ -243,10 +243,12 @@ public class ObservationTable extends JTable implements IObsViewEventListener
             model.addColumn( column );
           else
             model.removeColumn( column );
+
+          analyseObservation( column.getObservation(), column.isShown() );
         }
 
         // ADD COLUMN
-        if( evenType == ObsViewEvent.TYPE_ADD && evt.getObject() instanceof TableViewColumn )
+        if( evenType == ObsViewEvent.TYPE_ITEM_ADD && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           if( column.isShown() )
@@ -256,7 +258,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         }
 
         // REMOVE COLUMN
-        if( evenType == ObsViewEvent.TYPE_REMOVE && evt.getObject() instanceof TableViewColumn )
+        if( evenType == ObsViewEvent.TYPE_ITEM_REMOVE && evt.getObject() instanceof TableViewColumn )
         {
           final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.removeColumn( column );
@@ -271,7 +273,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         }
 
         // REMOVE ALL
-        if( evenType == ObsViewEvent.TYPE_REMOVE_ALL )
+        if( evenType == ObsViewEvent.TYPE_ITEM_REMOVE_ALL )
         {
           model.clearColumns();
           dateRenderer.clearMarkers();

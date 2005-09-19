@@ -95,7 +95,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   {
     m_name = name;
 
-    getView().refresh( this );
+    getView().refreshItemState( this, null );
   }
 
   public ObsView getView()
@@ -114,7 +114,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     {
       m_shown = shown;
 
-      getView().refresh( this );
+      getView().refreshItemState( this, null );
     }
   }
 
@@ -131,15 +131,15 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     if( m_observation != null )
       m_observation.addListener( this );
 
-    observationChanged( m_observation );
+    observationChanged( m_observation, null );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation)
+   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation, java.lang.Object)
    */
-  public void observationChanged( final IObservation obs )
+  public void observationChanged( final IObservation obs, final Object source )
   {
-    m_view.refresh( this );
+    m_view.refreshItemData( this, source );
   }
 
   /**
@@ -157,9 +157,4 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   {
     return m_obsProvider.getArguments();
   }
-
-//  public boolean isLoading()
-//  {
-//    return m_obsProvider.isLoading();
-//  }
 }

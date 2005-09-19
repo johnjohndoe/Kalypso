@@ -47,5 +47,9 @@ package org.kalypso.ogc.sensor;
  */
 public interface IObservationListener
 {
-  public void observationChanged( final IObservation obs );
+  /**
+   * @param obs the observation that changed
+   * @param source the source of the change event, optional can be null
+   */
+  public void observationChanged( final IObservation obs, final Object source );
 }

@@ -220,7 +220,7 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   {
     m_ts.setValues( DataCenterTuppleModel.toTupples( values ) );
     
-    m_evtPrv.fireChangedEvent();
+    m_evtPrv.fireChangedEvent( null );
   }
 
   /**
@@ -256,10 +256,10 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
   }
   
   /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent()
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
    */
-  public void fireChangedEvent()
+  public void fireChangedEvent( final Object source )
   {
-    m_evtPrv.fireChangedEvent();
+    m_evtPrv.fireChangedEvent( source );
   }
 }

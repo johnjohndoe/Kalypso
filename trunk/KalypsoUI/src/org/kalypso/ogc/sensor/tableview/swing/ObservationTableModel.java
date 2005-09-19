@@ -49,20 +49,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
-import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -75,7 +68,6 @@ import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * TableModel das mit IObservation benutzt werden kann. Kann in eine JTable benutzt werden.
@@ -178,8 +170,11 @@ public class ObservationTableModel extends AbstractTableModel
     fireTableStructureChanged();
   }
 
-  public void refreshColumn( final TableViewColumn column ) throws SensorException
+  public void refreshColumn( final TableViewColumn column, final Object sourceObject ) throws SensorException
   {
+    if( sourceObject == this )
+      return;
+    
     final int pos = removeColumn( column );
     addColumn( column, pos );
   }
@@ -343,7 +338,7 @@ public class ObservationTableModel extends AbstractTableModel
         // then set value
         values.setElement( ix, aValue, col.getAxis() );
 
-        col.setDirty( true );
+        col.setDirty( true, this );
       }
       else
         m_logger.info( "Cannot setValue because key not found" );
@@ -457,79 +452,6 @@ public class ObservationTableModel extends AbstractTableModel
       final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
       return TimeserieUtils.getNumberFormat( col.getFormat() );
     }
-  }
-
-  public IStatus saveDirtyObservations( final IProgressMonitor monitor )
-  {
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
-
-    final Map map = getMappedColumns();
-
-    monitor.beginTask( "Zeitreihen speichern", map.size() );
-
-    try
-    {
-      for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
-      {
-        final Map.Entry entry = (Entry)it.next();
-        final IObservation obs = (IObservation)entry.getKey();
-        final List cols = (List)entry.getValue();
-
-        boolean obsSaved = false;
-
-        for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
-        {
-          final TableViewColumn col = (TableViewColumn)itCols.next();
-
-          if( col.isDirty() && !obsSaved )
-          {
-            try
-            {
-              KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
-
-              obsSaved = true;
-            }
-            catch( final LoaderException e )
-            {
-              e.printStackTrace();
-              status.addMessage( "Fehler beim speichern von " + obs, e );
-            }
-          }
-
-          col.setDirty( false );
-        }
-
-        monitor.worked( 1 );
-      }
-
-      return status;
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
-
-  /**
-   * Return a map from IObservation to TableViewColumn. Each IObservation is mapped to a list of TableViewColumns which
-   * are based on it.
-   */
-  public Map getMappedColumns()
-  {
-    final Map map = new HashMap();
-
-    for( final Iterator it = m_columns.iterator(); it.hasNext(); )
-    {
-      final TableViewColumn col = (TableViewColumn)it.next();
-      final IObservation obs = col.getObservation();
-
-      if( !map.containsKey( obs ) )
-        map.put( obs, new ArrayList() );
-
-      ( (ArrayList)map.get( obs ) ).add( col );
-    }
-
-    return map;
   }
 
   /**
