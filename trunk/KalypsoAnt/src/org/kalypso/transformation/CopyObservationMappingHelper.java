@@ -152,7 +152,7 @@ public class CopyObservationMappingHelper
       { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
       };
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver,
-        RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer );
+        RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer, null );
     workspace.accept( visitor, RESULT_LIST_PROP, 1 );
     logger.log( stringWriter.toString() );
   }
