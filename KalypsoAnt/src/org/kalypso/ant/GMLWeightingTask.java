@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
 /**
- * This Task generates from a numer of input zml files new zml output files. <br>
+ * This Task generates from a number of input zml files new zml output files. <br>
  * It uses a combination of operation and n-operation filters like this: <br>
  * <center><b>ZMLout = sum( f(i)*ZMLin(i) ) </b> </center> <br>
  * f(i): factor <br>
@@ -80,16 +80,6 @@ public class GMLWeightingTask extends Task
 
   private String m_propZMLTarget; // e.g. "Niederschlag"
 
-  /** What to do, if the target-zml already exists.
-   * <p>Possible values:</p>
-   * <ul>
-   * <li>combine: read old target, and only replace the new values.</li>
-   * <li>overwrite: Overwrite target with new values.</li>
-   * </ul>
-   * <p>Default is: overwrite</p>
-   *  */
-  private String m_handleExistingTarget;
-  
   private String m_propRelationWeightMember; // e.g. "gewichtung"
 
   private String m_propWeight; // e.g. "faktor"
@@ -109,15 +99,11 @@ public class GMLWeightingTask extends Task
    */
   public void execute() throws BuildException
   {
-    //    super.execute();
     try
     {
       final Task me = this;
       final ILogger logger = new ILogger()
       {
-        /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
-         */
         public void log( String message )
         {
           me.log( message );
@@ -147,18 +133,7 @@ public class GMLWeightingTask extends Task
         // 3. find target
         final TimeseriesLink targetLink = (TimeseriesLink)targetFE.getProperty( m_propZMLTarget );
         final URL targetURL = urlResolver.resolveURL( m_targetContext, targetLink.getHref() );
-        
-        // TODO: if target exists, create a combination filter
-        if( "combine".equals( m_handleExistingTarget ) )
-        {
-          // TODO: @MARC: siehe meine Mail
-          // hier sollte noch ein Filter zusätzlicher Filter angewendet werden,
-          // der bewirkt, dass die Zeitreihe aus 'targetLink' mit mit den Werten 
-          // aus dem NOperationFilter überschrieben wird
-          // das ganze aber nur, wenn targetLink existiert. Wenn targetLink nicht existiert,
-          // soll einfach das Ergebnis vmo NOperationFilter rausgeschrieben werden.
-        }
-        
+
         // 4. build n-operation filter
         final NOperationFilter nOperationFilter = filterFac.createNOperationFilter();
         nOperationFilter.setOperator( "+" );
@@ -166,7 +141,7 @@ public class GMLWeightingTask extends Task
 
         // 5. resolve weights
         final Feature[] weightFEs = workspace.resolveLinks( targetFE, m_propRelationWeightMember );
-        
+
         // 6. loop weights
         for( int j = 0; j < weightFEs.length; j++ )
         {
@@ -175,21 +150,21 @@ public class GMLWeightingTask extends Task
           if( sourceFE == null )
           {
             logger.log( "Linked source feature missing in Feature: " + weightFEs[j].getId() );
-            
+
             // IMPORTANT: just skips this weight; leads probably to wrong results
             continue;
           }
-          
+
           // 8. resolve property that is source zml reference
           final TimeseriesLink zmlLink = (TimeseriesLink)sourceFE.getProperty( m_propZMLSource );
           if( zmlLink == null )
           {
             logger.log( "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
-            
+
             // IMPORTANT: just skips this weight; leads probably to wrong results
             continue;
           }
-          
+
           // 9. build operation filter with parameters from gml
           final OperationFilter filter = filterFac.createOperationFilter();
           filterList.add( filter );
@@ -208,7 +183,7 @@ public class GMLWeightingTask extends Task
         writer.close();
         final String string = XMLUtilities.removeXMLHeader( writer.toString() );
         final String filterInline = XMLUtilities.prepareInLine( string ) + "#useascontext";
-        
+
         // 11. add mapping to result workspace
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, targetURL.toExternalForm() );
         logger.log( " Ziel-ZML " + targetURL );
@@ -239,13 +214,7 @@ public class GMLWeightingTask extends Task
     }
   }
 
-  public void setHandleExistingTarget( final String handleExistingTarget )
-  {
-    m_handleExistingTarget = handleExistingTarget;
-  }
-  
   /**
-   * 
    * @param targetMapping
    *          gml file that will be generated and includes the mapping that will be generated from the model
    */
@@ -255,7 +224,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param modelURL
    *          reference to the model that describes the mapping in a gml structure
    */
@@ -265,7 +233,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param targetContext
    *          context to use
    */
@@ -275,7 +242,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param featurePathTarget
    *          path to the features that contain the ZML-target properties and the references to weighting features
    */
@@ -285,7 +251,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param propRelationSourceFeature
    *          name of property that links from weighting feature to zml source feature
    */
@@ -295,7 +260,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param propRelationWeightMember
    *          name of property that links from zml target feature to the list of weighting features
    */
@@ -305,7 +269,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param propWeight
    *          property name of the weighting property, feature property type must be double
    */
@@ -315,7 +278,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param propZMLSource
    *          property name of the zml source property, feature property type must be TimeSeriesLink
    */
@@ -325,7 +287,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param propZMLTarget
    *          property name of the zml target property, feature property type must be TimeSeriesLink
    */
@@ -335,7 +296,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param from
    *          beginning of measure periode
    */
@@ -345,10 +305,8 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param forecastFrom
    *          beginning of forecast periode (end of measure periode)
-   *  
    */
   public final void setForecastFrom( long forecastFrom )
   {
@@ -356,7 +314,6 @@ public class GMLWeightingTask extends Task
   }
 
   /**
-   * 
    * @param to
    *          end of forecast periode
    */
@@ -364,5 +321,4 @@ public class GMLWeightingTask extends Task
   {
     m_to = to;
   }
-
 }

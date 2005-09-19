@@ -295,6 +295,13 @@ public class KalypsoObservationService implements IObservationService
 
       throw new RemoteException( "Daten können nicht ausgelesen werden", e );
     }
+    
+    if( obs == null )
+    {
+      m_logger.info( "No observation for " + obean.getId() );
+
+      throw new RemoteException( "Daten können nicht ausgelesen werden: keine Zeitreihe gefunden für " + obean.getId() );
+    }
 
     FileOutputStream fos = null;
     try

@@ -258,7 +258,7 @@ public class ServiceRepositoryObservation implements IObservation
       // and clean temp stuff
       tmpFile.delete();
 
-      m_evtPrv.fireChangedEvent();
+      m_evtPrv.fireChangedEvent( null );
     }
     catch( Exception e ) // generic for simplicity
     {
@@ -327,9 +327,9 @@ public class ServiceRepositoryObservation implements IObservation
     m_evtPrv.clearListeners();
   }
   
-  public void fireChangedEvent()
+  public void fireChangedEvent( final Object source )
   {
-    m_evtPrv.fireChangedEvent();
+    m_evtPrv.fireChangedEvent( source );
   }
 
   public String getHref()

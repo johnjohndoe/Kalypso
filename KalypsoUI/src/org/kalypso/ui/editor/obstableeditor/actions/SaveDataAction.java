@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor.actions;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +55,9 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
@@ -77,9 +79,9 @@ public class SaveDataAction extends AbstractEditorActionDelegate
 
     final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
 
-    final ObservationTableModel model = ( (ObservationTableEditor)getEditor() ).getModel();
+    final TableView tableView = (TableView)( (ObservationTableEditor)getEditor() ).getView();
 
-    final Map map = model.getMappedColumns();
+    final Map map = TableViewUtils.buildObservationColumnsMap( Arrays.asList( tableView.getItems() ) );
     for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
     {
       final Map.Entry entry = (Entry)it.next();
@@ -129,7 +131,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
           obsSaved = true;
         }
 
-        col.setDirty( false );
+        col.setDirty( false, null );
       }
     }
 

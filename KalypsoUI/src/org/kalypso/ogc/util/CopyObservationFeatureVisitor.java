@@ -182,17 +182,6 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       {
         IOUtils.closeQuietly( stream );
       }
-
-      //      FolderUtilities.mkdirs( targetfile.getParent() );
-      //      final SetContentHelper thread = new SetContentHelper()
-      //      {
-      //        protected void write( final OutputStreamWriter w ) throws Throwable
-      //        {
-      //          final ObservationType type = ZmlFactory.createXML( resultObs, null );
-      //          ZmlFactory.getMarshaller().marshal( type, w );
-      //        }
-      //      };
-      //      thread.setFileContents( targetfile, true, true, new NullProgressMonitor() );
     }
     catch( final Exception e )
     {
@@ -226,13 +215,6 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         else
           throw new SensorException( e );
       }
-      //      m_summaryWriter.write( "Zeitreihe unbekannt: " + (
-      // (TimeseriesLink)f.getProperty( source.getProperty() ) ).getHref() );
-      // TODO: catch exception and log unknown obs
-      //      write( "Zeitreihe möglicherweise unbekannt: "
-      //          + ( (TimeseriesLink)feature.getProperty( prop ) ).getHref(),
-      // e.getLocalizedMessage(),
-      //          msgWriter, logWriter );
     }
 
     return (IObservation[])result.toArray( new IObservation[result.size()] );
@@ -308,5 +290,4 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       return filter;
     }
   }
-
 }

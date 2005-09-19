@@ -47,35 +47,35 @@ import java.util.EventObject;
  */
 public class ObsViewEvent extends EventObject
 {
-  public final static int TYPE_ADD = 1;
+  public final static int TYPE_ITEM_ADD = 1;
 
-  public final static int TYPE_REMOVE = 2;
+  public final static int TYPE_ITEM_REMOVE = 2;
 
-  public final static int TYPE_REMOVE_ALL = 4;
+  public final static int TYPE_ITEM_REMOVE_ALL = 4;
 
-  /** used for refreshing the whole template */
-  public final static int TYPE_REFRESH = 8;
+  public final static int TYPE_ITEM_DATA_CHANGED = 8;
 
-  /** used for item-state related events */
-  public final static int TYPE_REFRESH_ITEMSTATE = 16;
+  public final static int TYPE_ITEM_STATE_CHANGED = 16;
 
-  /** used for obs-view feature related events */
-  public final static int TYPE_REFRESH_FEATURES = 32;
+  public final static int TYPE_FEATURES_CHANGED = 32;
+  
+  public final static int TYPE_VIEW_CHANGED = 64;
   
   private final Object m_obj;
 
   private final int m_type;
 
 
-  public ObsViewEvent( final Object obj, final int type )
+  public ObsViewEvent( final Object eventObject, final int type )
   {
-    this( obj, obj, type );
+    this( eventObject, eventObject, type );
   }
 
-  public ObsViewEvent( final Object src, final Object obj, final int type )
+  public ObsViewEvent( final Object eventSource, final Object eventObject, final int type )
   {
-    super( src );
-    m_obj = obj;
+    super( eventSource != null ? eventSource : eventObject );
+    
+    m_obj = eventObject;
     m_type = type;
   }
 

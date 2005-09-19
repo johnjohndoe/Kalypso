@@ -134,21 +134,21 @@ public class DiagView extends ObsView
   {
     m_title = title;
 
-    refresh();
+    refreshView( null );
   }
 
   public void setLegendName( String name )
   {
     m_legendName = name;
 
-    refresh();
+    refreshView( null );
   }
 
   public void setShowLegend( boolean show )
   {
     m_showLegend = show;
 
-    refresh();
+    refreshView( null );
   }
 
   public DiagramAxis[] getDiagramAxes()
@@ -160,7 +160,7 @@ public class DiagView extends ObsView
   {
     m_axesMap.put( axis.getIdentifier(), axis );
 
-    refresh();
+    refreshView( null );
   }
 
   public DiagramAxis getDiagramAxis( final String diagAxisId )
@@ -192,7 +192,7 @@ public class DiagView extends ObsView
       {
         if( keyAxis == valueAxis[i] )
           continue;
-        
+
         final String type = valueAxis[i].getType();
         if( !type.equals( ignoreType ) )
         {
@@ -227,14 +227,14 @@ public class DiagView extends ObsView
             final ObsViewItem[] items = getItems();
             for( int j = 0; j < items.length; j++ )
             {
-              final AxisMapping[] mps = ((DiagViewCurve)items[j]).getMappings();
+              final AxisMapping[] mps = ( (DiagViewCurve)items[j] ).getMappings();
               if( mps[1].getObservationAxis().getType().equals( valueAxis[i].getType() ) )
                 found++;
             }
-            
+
             color = ColorUtilities.derivateColor( TimeserieUtils.getColorFor( valueAxis[i].getType() ), found );
           }
-          
+
           final String name = NameUtils.replaceTokens( tokenizedName, obs, valueAxis[i] );
 
           final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, mappings );

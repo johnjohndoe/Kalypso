@@ -46,6 +46,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,9 +57,12 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
@@ -69,6 +73,7 @@ import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType.RulesType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.xml.sax.InputSource;
 
 /**
@@ -76,7 +81,7 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public class TableViewUtils
+public final class TableViewUtils
 {
   public final static String OTT_FILE_EXTENSION = "ott";
 
@@ -193,7 +198,7 @@ public class TableViewUtils
     final ObstableviewType xmlTemplate = OTT_OF.createObstableview();
 
     xmlTemplate.setFeatures( StringUtils.join( template.getEnabledFeatures(), ';' ) );
-    
+
     // rendering rules
     final RulesType xmlRulesType = OTT_OF.createObstableviewTypeRulesType();
     xmlTemplate.setRules( xmlRulesType );
@@ -273,7 +278,7 @@ public class TableViewUtils
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
     }
-    
+
     final RulesType trules = xml.getRules();
     if( trules != null )
     {
@@ -296,5 +301,74 @@ public class TableViewUtils
     }
 
     return StatusUtilities.createStatus( stati, "Tabellenvorlage konnte nicht vollständig aktualisiert werden" );
+  }
+
+  /**
+   * Return a map from IObservation to TableViewColumn. Each IObservation is mapped to a list of TableViewColumns which
+   * are based on it.
+   */
+  public static Map buildObservationColumnsMap( final List tableViewColumns )
+  {
+    final Map map = new HashMap();
+
+    for( final Iterator it = tableViewColumns.iterator(); it.hasNext(); )
+    {
+      final TableViewColumn col = (TableViewColumn)it.next();
+      final IObservation obs = col.getObservation();
+
+      if( !map.containsKey( obs ) )
+        map.put( obs, new ArrayList() );
+
+      ( (ArrayList)map.get( obs ) ).add( col );
+    }
+
+    return map;
+  }
+
+  /**
+   * Save the dirty observations
+   */
+  public static IStatus saveDirtyObservations( final List tableViewColumns, final IProgressMonitor monitor )
+  {
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
+
+    final Map map = buildObservationColumnsMap( tableViewColumns );
+
+    monitor.beginTask( "Zeitreihen speichern", map.size() );
+
+    for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
+    {
+      final Map.Entry entry = (Entry)it.next();
+      final IObservation obs = (IObservation)entry.getKey();
+      final List cols = (List)entry.getValue();
+
+      boolean obsSaved = false;
+
+      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
+      {
+        final TableViewColumn col = (TableViewColumn)itCols.next();
+
+        if( col.isDirty() && !obsSaved )
+        {
+          try
+          {
+            KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
+
+            obsSaved = true;
+          }
+          catch( final LoaderException e )
+          {
+            e.printStackTrace();
+            status.addMessage( "Fehler beim speichern von " + obs, e );
+          }
+        }
+
+        col.setDirty( false, null );
+      }
+
+      monitor.worked( 1 );
+    }
+
+    return status;
   }
 }

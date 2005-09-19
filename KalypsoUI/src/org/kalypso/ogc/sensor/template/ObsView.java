@@ -151,7 +151,7 @@ public abstract class ObsView implements IObsViewEventProvider
       m_items.clear();
     }
 
-    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_REMOVE_ALL ) );
+    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_ITEM_REMOVE_ALL ) );
   }
 
   public final void addItem( final ObsViewItem item )
@@ -161,7 +161,7 @@ public abstract class ObsView implements IObsViewEventProvider
       m_items.add( item );
     }
 
-    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_ADD ) );
+    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_ITEM_ADD ) );
   }
 
   public final void removeItem( final ObsViewItem item )
@@ -172,7 +172,7 @@ public abstract class ObsView implements IObsViewEventProvider
       item.dispose();
     }
 
-    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_REMOVE ) );
+    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_ITEM_REMOVE ) );
   }
 
   public ObsViewItem[] getItems()
@@ -183,14 +183,19 @@ public abstract class ObsView implements IObsViewEventProvider
     }
   }
 
-  public final void refresh( final ObsViewItem item )
+  public final void refreshView( final Object source )
   {
-    fireObsViewChanged( new ObsViewEvent( item, ObsViewEvent.TYPE_REFRESH_ITEMSTATE ) );
+    fireObsViewChanged( new ObsViewEvent( source, this, ObsViewEvent.TYPE_VIEW_CHANGED ) );
   }
 
-  public final void refresh()
+  public final void refreshItemData( final ObsViewItem item, final Object source )
   {
-    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_REFRESH ) );
+    fireObsViewChanged( new ObsViewEvent( source, item, ObsViewEvent.TYPE_ITEM_DATA_CHANGED ) );
+  }
+  
+  public final void refreshItemState( final ObsViewItem item, final Object source )
+  {
+    fireObsViewChanged( new ObsViewEvent( source, item, ObsViewEvent.TYPE_ITEM_STATE_CHANGED ) );
   }
 
   public void addObsViewEventListener( IObsViewEventListener l )
@@ -290,7 +295,7 @@ public abstract class ObsView implements IObsViewEventProvider
     else
       m_enabledFeatures.remove( featureName );
 
-    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_REFRESH_FEATURES ) );
+    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_FEATURES_CHANGED ) );
   }
 
   /**

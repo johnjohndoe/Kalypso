@@ -51,7 +51,10 @@ public interface IObservationEventProvider
 
   public void removeListener( final IObservationListener listener );
 
-  public void fireChangedEvent();
+  /**
+   * @param source optional source of the event, can be null
+   */
+  public void fireChangedEvent( final Object source );
   
   public void clearListeners();
 }
