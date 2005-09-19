@@ -40,6 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 
@@ -109,6 +113,25 @@ public class NameUtils
       index = stop + 1;
     }
 
+    return result;
+  }
+
+  /**
+   * Replace the tokens found in formatString with the corresponding values from the mapping in the properties
+   * 
+   * TODO gibt es nicht schon sowas?
+   */
+  public static String replaceTokens( final String formatString, final Properties properties )
+  {
+    String result = formatString;
+    
+    for( Iterator it = properties.entrySet().iterator(); it.hasNext(); )
+    {
+      final Map.Entry entry = (Map.Entry)it.next();
+      
+      result = result.replaceAll( (String)entry.getKey(), (String)entry.getValue() );
+    }
+    
     return result;
   }
 

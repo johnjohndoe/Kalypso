@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
+import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -238,8 +239,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter ); // use insertQueryPart, not insertFilter, because
     // filter variable might also contain request spec
     final String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
+    
+    final Properties properties = new Properties();
+    properties.setProperty( NameUtils.TOKEN_OBSNAME , (String)feature.getProperty( "Name") );
+    final String completeSourceref = NameUtils.replaceTokens( sourceref, properties );
 
-    final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
+    final URL sourceURL = new UrlResolver().resolveURL( m_context, completeSourceref );
 
     try
     {
