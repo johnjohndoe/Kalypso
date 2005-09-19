@@ -30,7 +30,6 @@
 package org.kalypso.contribs.java.util.logging;
 
 /**
- * 
  * simple logger as interface
  * 
  * @author doemming

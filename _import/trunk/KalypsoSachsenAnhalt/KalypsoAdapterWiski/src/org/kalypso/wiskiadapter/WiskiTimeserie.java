@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 
 import org.kalypso.commons.conversion.units.SIConverter;
 import org.kalypso.ogc.sensor.DateRange;
@@ -347,7 +348,7 @@ public class WiskiTimeserie implements IObservation
     if( !call.isSuccess() )
       throw new SensorException( "Konnte Daten nicht zurückschreiben." );
 
-    m_evtPrv.fireChangedEvent();
+    m_evtPrv.fireChangedEvent( null );
   }
 
   /**
@@ -384,11 +385,11 @@ public class WiskiTimeserie implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent()
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
    */
-  public void fireChangedEvent()
+  public void fireChangedEvent( final Object source )
   {
-    m_evtPrv.fireChangedEvent();
+    m_evtPrv.fireChangedEvent( source );
   }
 
   /**
@@ -508,7 +509,14 @@ public class WiskiTimeserie implements IObservation
         final String level = (String)map.get( "epv_name" );
         final String value = (String)map.get( "epv_value" );
 
-        md.setProperty( WiskiUtils.wiskiMetadataName2Kalypso( level ), value );
+        try
+        {
+          md.setProperty( WiskiUtils.wiskiMetadataName2Kalypso( level ), value );
+        }
+        catch( final IllegalArgumentException e )
+        {
+          Logger.getLogger( getClass().getName() ).warning( "Metadata-Eigenschaft nicht erkannt: " + level );
+        }
       }
     }
   }
