@@ -40,7 +40,7 @@ public class TubigConst
    * @author Thül
    */
 
-  // TODO Monika Konstenten ggf. auf die Dateien verteilen, bzw. eine weitere Properties-Datei machen (wg.
+  // TODO Monika Konstanten ggf. auf die Dateien verteilen, bzw. eine weitere Properties-Datei machen (wg.
   // Internationalisierung)
   // TUBIG-Datenformate
   public static final String TUBIG_NUMBER_FORMAT = "%10.5f";
