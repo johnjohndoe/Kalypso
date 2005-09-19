@@ -118,21 +118,43 @@ public class NameUtils
 
   /**
    * Replace the tokens found in formatString with the corresponding values from the mapping in the properties
-   * 
+   * <p>
    * TODO gibt es nicht schon sowas?
    */
   public static String replaceTokens( final String formatString, final Properties properties )
   {
     String result = formatString;
-    
+
     for( Iterator it = properties.entrySet().iterator(); it.hasNext(); )
     {
       final Map.Entry entry = (Map.Entry)it.next();
-      
+
       result = result.replaceAll( (String)entry.getKey(), (String)entry.getValue() );
     }
-    
+
     return result;
+  }
+
+  /**
+   * Replace the tokens found in formatString with the corresponding values from the mapping in the properties
+   * <p>
+   * TODO gibt es nicht schon sowas?
+   * <p>
+   * Die Liste der Tokens und deren Ersetzung in der Form:
+   * <p>
+   * tokenName-featurePropertyName;tokenName-featurePropertyName;...
+   */
+  public static String replaceTokens( final String formatString, final String tokens )
+  {
+    final Properties properties = new Properties();
+    final String[] strings = tokens.split( ";" );
+    for( int i = 0; i < strings.length; i++ )
+    {
+      final String[] splits = strings[i].split( "-" );
+      properties.setProperty( splits[0], splits[1] );
+    }
+
+    return replaceTokens( formatString, properties );
   }
 
   //  /**

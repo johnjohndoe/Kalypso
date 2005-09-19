@@ -93,6 +93,15 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   private final Properties m_metadata;
 
   /**
+   * Die Liste der Tokens und deren Ersetzung in der Form:
+   * <p>
+   * tokenName-featurePropertyName;tokenName-featurePropertyName;...
+   * <p>
+   * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als Request-Name zu setzen)
+   */
+  private final String m_tokens;
+
+  /**
    * @param context
    *          context to resolve relative url
    * @param urlResolver
@@ -107,7 +116,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    */
   public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
       final String targetobservation, final Source[] sources, final Properties metadata, final Date forecastFrom,
-      final Date forecastTo, final PrintWriter logWriter )
+      final Date forecastTo, final PrintWriter logWriter, final String tokens )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -117,6 +126,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     m_forecastFrom = forecastFrom;
     m_forecastTo = forecastTo;
     m_logWriter = logWriter;
+    m_tokens = tokens;
   }
 
   /**
@@ -238,13 +248,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     else
       href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter ); // use insertQueryPart, not insertFilter, because
     // filter variable might also contain request spec
-    final String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
+    String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
     
-    final Properties properties = new Properties();
-    properties.setProperty( NameUtils.TOKEN_OBSNAME , (String)feature.getProperty( "Name") );
-    final String completeSourceref = NameUtils.replaceTokens( sourceref, properties );
+    // token replacement
+    if( m_tokens != null && m_tokens.length() > 0 )
+      sourceref = NameUtils.replaceTokens( sourceref, m_tokens );
 
-    final URL sourceURL = new UrlResolver().resolveURL( m_context, completeSourceref );
+    final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
 
     try
     {

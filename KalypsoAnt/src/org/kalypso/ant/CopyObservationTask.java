@@ -90,6 +90,15 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   private long m_forecastTo = -1;
 
   /**
+   * Die Liste der Tokens und deren Ersetzung in der Form:
+   * <p>
+   * tokenName-featurePropertyName;tokenName-featurePropertyName;...
+   * <p>
+   * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als Request-Name zu setzen)
+   */
+  private String m_tokens = "";
+  
+  /**
    * Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be
    * written to 'targetobservation'
    */
@@ -122,7 +131,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
         .toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
     
     return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs,
-        m_metadata, forecastFrom, forecastTo, logWriter );
+        m_metadata, forecastFrom, forecastTo, logWriter, m_tokens );
   }
 
   public final String getTargetobservation()
@@ -239,6 +248,16 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   public final void setForecastTo( long forecastTo )
   {
     m_forecastTo = forecastTo;
+  }
+  
+  public String getTokens()
+  {
+    return m_tokens;
+  }
+  
+  public void setTokens( String tokens )
+  {
+    m_tokens = tokens;
   }
 
   public final static class Metadata
