@@ -160,13 +160,16 @@ public final class ZmlURL
   /**
    * Insert the filter and/or the request found in the query-part and return the result.
    * 
-   * @param href the zml url to update
-   * @param queryPart may contain a filter spec (embodied within %lt;filter/&gt; tags) and may also contain a request spec (embodied within %lt;request/&gt; tags)
+   * @param href
+   *          the zml url to update
+   * @param queryPart
+   *          may contain a filter spec (embodied within %lt;filter/&gt; tags) and may also contain a request spec
+   *          (embodied within %lt;request/&gt; tags)
    */
   public static String insertQueryPart( final String href, final String queryPart )
   {
     String newHref = href;
-    
+
     final int fp1 = queryPart.indexOf( ZmlURLConstants.TAG_FILTER1 );
     final int fp2 = queryPart.indexOf( ZmlURLConstants.TAG_FILTER2 );
     if( fp1 != -1 && fp2 != -1 )
@@ -174,7 +177,7 @@ public final class ZmlURL
       final String filter = queryPart.substring( fp1, fp2 + ZmlURLConstants.TAG_FILTER2.length() );
       newHref = insertFilter( newHref, filter );
     }
-    
+
     final int rp1 = queryPart.indexOf( ZmlURLConstants.TAG_REQUEST1 );
     final int rp2 = queryPart.indexOf( ZmlURLConstants.TAG_REQUEST2 );
     if( rp1 != -1 && rp2 != -1 )
@@ -182,10 +185,10 @@ public final class ZmlURL
       final String request = queryPart.substring( rp1, rp2 + ZmlURLConstants.TAG_REQUEST2.length() );
       newHref = insertRequest( newHref, request );
     }
-    
+
     return newHref;
   }
-  
+
   /**
    * Insert the filter spec into the zml url. Return the newly build url string.
    * <p>
@@ -200,7 +203,7 @@ public final class ZmlURL
   {
     if( filter == null || filter.length() == 0 )
       return href;
-    
+
     // first remove the existing filter spec (does nothing if not present)
     String tmp = href.replaceFirst( ZmlURLConstants.TAG_FILTER1 + ".*" + ZmlURLConstants.TAG_FILTER2, "" );
 
@@ -236,13 +239,13 @@ public final class ZmlURL
       if( requestType == null )
         requestType = RequestFactory.OF.createRequest();
       // the original request parameters have higher priority
-      if(requestType.getName()==null)
+      if( requestType.getName() == null )
         requestType.setName( request.getName() );
-      if(requestType.getAxes()==null)
+      if( requestType.getAxes() == null )
         requestType.setAxes( StringUtils.join( request.getAxisTypes(), "," ) );
-      if(requestType.getStatusAxes()==null)
+      if( requestType.getStatusAxes() == null )
         requestType.setStatusAxes( StringUtils.join( request.getAxisTypesWithStatus(), "," ) );
-      
+
       if( request.getDateRange() != null )
       {
         final Calendar from = Calendar.getInstance();
@@ -255,7 +258,7 @@ public final class ZmlURL
       }
 
       final String xmlStr = RequestFactory.buildXmlString( requestType, false );
-      
+
       return insertRequest( href, xmlStr );
     }
     catch( final Exception e )
@@ -263,7 +266,7 @@ public final class ZmlURL
       throw new SensorException( e );
     }
   }
-  
+
   /**
    * Insert the request spec into the zml url. Return the newly build url string.
    * <p>
@@ -290,6 +293,17 @@ public final class ZmlURL
     if( strs.length >= 2 )
       tmpUrl += strs[1];
 
-    return tmpUrl;    
+    return tmpUrl;
+  }
+
+  /**
+   * Return true if the href represents the "empty-id" (which is either "kalypso-ocs://LEER" or "kalypso-ocs://DUMMY")
+   * 
+   * @return true if the given href contains "LEER" or "DUMMY"
+   */
+  public static boolean isEmpty( final String href )
+  {
+    final String id = getIdentifierPart( href );
+    return id.equalsIgnoreCase( "kalypso-ocs://LEER" ) || id.equalsIgnoreCase( "kalypso-ocs://DUMMY" );
   }
 }

@@ -45,9 +45,6 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class GmlTreeDropAdapter extends ViewerDropAdapter
@@ -57,6 +54,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
   public GmlTreeDropAdapter( GmlTreeView viewer )
   {
     super( viewer.getTreeViewer() );
+    
     m_viewer = viewer;
     setFeedbackEnabled( true );
     setScrollExpandEnabled( true );
@@ -269,5 +267,4 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     }
     return true;
   }
-
 }
