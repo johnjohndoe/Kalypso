@@ -112,18 +112,21 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
     {
       m_selection = (IFeatureSelection)selection;
       final Feature focusedFeature = m_selection.getFocusedFeature();
-      final String focusedProperty = m_selection.getFocusedProperty();
-      final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
-      if( focusedFeature != null && ftp != null && m_selection.size() >= 2 )
+
+      if( focusedFeature != null )
       {
-        action.setEnabled( true );
-        final String text = action.getText();
-        final String lang = KalypsoGisPlugin.getDefault().getLang();
-        final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + ftp.getAnnotation( lang ).getLabel() + ")";
-        action.setText( newText );
+        final String focusedProperty = m_selection.getFocusedProperty();
+        final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
+        if( ftp != null && m_selection.size() >= 2 )
+        {
+          action.setEnabled( true );
+          final String text = action.getText();
+          final String lang = KalypsoGisPlugin.getDefault().getLang();
+          final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + ftp.getAnnotation( lang ).getLabel() + ")";
+          action.setText( newText );
+        }
       }
     }
   }
-  
-  
+
 }

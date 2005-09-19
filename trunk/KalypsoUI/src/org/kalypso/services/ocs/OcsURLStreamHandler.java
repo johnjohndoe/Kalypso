@@ -43,6 +43,7 @@ package org.kalypso.services.ocs;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
@@ -51,6 +52,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -69,6 +71,8 @@ import org.osgi.service.url.AbstractURLStreamHandlerService;
  */
 public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 {
+  private final Logger m_logger = Logger.getLogger( getClass().getName() );
+
   /**
    * @see java.net.URLStreamHandler#openConnection(java.net.URL)
    */
@@ -76,13 +80,32 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
   {
     final String href = u.toExternalForm();
 
+    m_logger.info( "Lade ZML: " + href );
+    
     // use the default url connection if this is not a kalypso server-side one
-    if( !ZmlURL.isServerSide( href ) )
+    if( !ZmlURL.isServerSide( href ) && !ZmlURL.isEmpty( href ) )
       return u.openConnection();
 
     // create a local temp file for storing the zml
     final File file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "zml-proxy", "zml", "zml" );
     file.deleteOnExit();
+
+    // check if an empty id is provided, in that case use the request if provided
+    if( ZmlURL.isEmpty( href ) )
+    {
+      try
+      {
+        m_logger.warning( "Leere Zeitreihe angefordert..." );
+        
+        return tryWithRequest( href, file );
+      }
+      catch( final Exception e )
+      {
+        m_logger.warning( "Leere Zeitreihe konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+
+        throw new IOException( "Leere Zeitreihe konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+      }
+    }
 
     InputStream ins = null;
 
@@ -103,29 +126,19 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     catch( final Exception e ) // generic exception caught for simplicity
     {
       String exceptionMessage = e.getLocalizedMessage();
-      
-      final Logger log = Logger.getLogger( getClass().getName() );
-      log.info( "Link konnte nicht aufgelöst werden: " + href +
-          "\nFehler: " + exceptionMessage );
+
+      m_logger.info( "Link konnte nicht aufgelöst werden: " + href + "\nFehler: " + exceptionMessage );
 
       try
       {
-        log.warning( "Es wird versucht, eine Default-Zeitreihe zu erzeugen..." );
+        m_logger.warning( "Es wird versucht, eine Default-Zeitreihe zu erzeugen..." );
         
-        // we might be here because the server is down. If the href contains
-        // a request, let create a default observation according to it.
-        final IObservation obs = RequestFactory.createDefaultObservation( href );
-        
-        log.info( "Default-Zeitreihe " + obs.getName() + " wurde erzeugt." );
-
-        ZmlFactory.writeToFile( obs, file );
-
-        return file.toURL().openConnection();
+        return tryWithRequest( href, file );
       }
       catch( final Exception se )
       {
-        log.warning( "Default-Zeitreihe konnte nicht erzeugt werden." );
-        
+        m_logger.warning( "Default-Zeitreihe konnte nicht erzeugt werden." );
+
         exceptionMessage += "\n" + se.getLocalizedMessage();
       }
 
@@ -135,5 +148,19 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     {
       IOUtils.closeQuietly( ins );
     }
+  }
+
+  private URLConnection tryWithRequest( final String href, final File file ) throws SensorException,
+      MalformedURLException, IOException
+  {
+    // we might be here because the server is down. If the href contains
+    // a request, let create a default observation according to it.
+    final IObservation obs = RequestFactory.createDefaultObservation( href );
+
+    m_logger.info( "Default-Zeitreihe " + obs.getName() + " wurde erzeugt." );
+
+    ZmlFactory.writeToFile( obs, file );
+
+    return file.toURL().openConnection();
   }
 }
