@@ -33,11 +33,13 @@ public class WehrProfilBuilding extends AbstractProfilBuilding
       profil.setValueFor( pt, PointProperty.OBERKANTEWEHR, h );
 
     }
-    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.WEHR );
-    if((devider == null)||( devider.length < 2 ))
-      profil.addDevider( points.getLast(), DEVIDER_TYP.WEHR );
-    if((devider == null)||( devider.length < 1 ))
-      profil.addDevider( points.getFirst(), DEVIDER_TYP.WEHR );
+    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE);
+    final IProfilDevider leftDev = profil.addDevider(points.getFirst(),DEVIDER_TYP.WEHR);
+    final IProfilDevider rightDev = profil.addDevider(points.getLast(),DEVIDER_TYP.WEHR);
+    if((devider != null)&&( devider.length > 0 ))
+      profil.moveDevider(leftDev,devider[0].getPoint());
+    if((devider != null)&&( devider.length > 1 ))
+      profil.moveDevider(rightDev,devider[1].getPoint());
   }
 
   @Override

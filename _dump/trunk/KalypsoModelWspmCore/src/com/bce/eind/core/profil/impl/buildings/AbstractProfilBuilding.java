@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilBuildingException;

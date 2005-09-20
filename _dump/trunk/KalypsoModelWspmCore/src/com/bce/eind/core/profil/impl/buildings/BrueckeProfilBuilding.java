@@ -8,7 +8,6 @@ import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
 /**
