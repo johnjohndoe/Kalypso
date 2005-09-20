@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dwdzmlConf xmlns="dwdzml.dwd.kalypso.org">
-<!-- Testhalber anderer Key um Werte zu erzeugen, hat aber auch nicht geklaplt.-->
-<!--    <dwdKey>11</dwdKey> -->
-    <dwdKey>424</dwdKey>
+    <dwdKey>424</dwdKey> <!-- es ist eine Niderschlagskey -->
     <numberOfCells>3886</numberOfCells>
     <defaultStatusValue>1</defaultStatusValue>
     <target>

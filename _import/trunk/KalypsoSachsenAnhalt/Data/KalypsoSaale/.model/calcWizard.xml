@@ -6,10 +6,7 @@
 		<!-- 
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Ombrometer"/>
-		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -39,10 +36,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Thür_Wald"/>
-		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Thür_Wald.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -66,10 +60,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Saale_Ilm"/>
-		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Saale_Ilm.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -93,10 +84,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_W_Elster"/>
-		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_W_Elster.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -120,10 +108,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Unstrut_Eich"/>
-		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Unstrut_Eich.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -147,10 +132,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Flach_Süd"/>
-		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Süd.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -174,10 +156,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Harz"/>
-		<!--
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Harz.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -201,10 +180,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Flach_Nord"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Nord.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Th_Wald"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Nord.html#NS_Gebiete_Th_Wald"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -229,10 +205,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Inhalt_TS"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Saale"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html#NS_Gebiete_Saale"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -262,10 +235,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_10"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_10.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_W_Elster"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_10.html#NS_Gebiete_W_Elster"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -292,10 +262,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_10"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_10.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Unstrut"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_10.html#NS_Gebiete_Unstrut"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -319,10 +286,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_20"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_20.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Flach_S"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_20.html#NS_Gebiete_Flach_S"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -349,10 +313,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_20"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_20.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Harz"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_20.html#NS_Gebiete_Harz"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -375,10 +336,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_30"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_30.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#NS_Gebiete_Flach_N"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_30.html#NS_Gebiete_Flach_N"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -405,10 +363,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_30"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_30.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Inhalt_TS"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_30.html#Inhalt_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -431,10 +386,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_40"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_40.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_10"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_40.html#Q_TS_Gruppe_10"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -461,10 +413,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_40"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_40.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_10"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_40.html#Steu_TS_Gruppe_10"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -487,10 +436,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_50"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_50.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_20"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_50.html#Q_TS_Gruppe_20"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -518,10 +464,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_55"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_55.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_20"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_55.html#Steu_TS_Gruppe_20"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -548,10 +491,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_55"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_55.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_30"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_55.html#Q_TS_Gruppe_30"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -574,10 +514,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_60"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_60.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_30"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_60.html#Steu_TS_Gruppe_30"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -604,10 +541,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_60"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_60.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_40"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_60.html#Q_TS_Gruppe_40"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -630,10 +564,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_65"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_65.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_40"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_65.html#Steu_TS_Gruppe_40"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -656,10 +587,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_70"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_70.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_50"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_70.html#Q_TS_Gruppe_50"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -686,10 +614,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_70"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_70.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_55"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_70.html#Q_TS_Gruppe_55"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -712,10 +637,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_80"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_80.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_55"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_80.html#Steu_TS_Gruppe_55"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -742,10 +664,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_80"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_80.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_60"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_80.html#Q_TS_Gruppe_60"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -770,10 +689,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg10"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg10.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_60"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg10.html#Steu_TS_Gruppe_60"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -805,10 +721,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg20"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg20.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Steu_TS_Gruppe_65"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg20.html#Steu_TS_Gruppe_65"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -835,10 +748,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg30"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg30.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Q_TS_Gruppe_70"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg30.html#Q_TS_Gruppe_70"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -865,10 +775,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg40"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg40.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg40.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -895,10 +802,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg50"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg50.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg50.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -925,10 +829,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg55"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg55.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg55.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -954,10 +855,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg60"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg60.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg60.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -984,10 +882,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg70"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg70.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg70.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -1014,10 +909,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg80"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg80.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg80.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -1044,10 +936,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg_TS"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg_TS.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg_TS.html#Berichtsablage_Pegel"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -1078,10 +967,7 @@
 		<!-- 
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Pegel"/>
-		<!--
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html"/>
--->
-		<arg name="htmlFilePath" value=".model/wizardhtml/Navigation_ori.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html#Berichtsablage_Pegel"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -1096,7 +982,6 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
-		<arg name="timeserie4" value="nameString=%axisname%#linkColumn=Schnee"/>
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -1121,7 +1006,6 @@
 				<arg name="href1" value="Durchfluss"/>
 				<arg name="href2" value="Durchfluss_gerechnet"/>
 				<arg name="href3" value="Niederschlag"/>
-				<arg name="href4" value="Schnee"/>
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Abflussgrafik"/>

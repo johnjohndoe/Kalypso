@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WiskiCollection fid="root" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.wiski">
 	<WiskiMember>
-		<WiskiMember>
-			<Wiski fid="Wiski_Q_0">
-				<lokal>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Staßfurt.zml" linktype="zml"/>
-				</lokal>
-				<wiski_vergangenheit>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-				</wiski_vergangenheit>
-				<wiski_zukunft>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Staßfurt.W.Prognose.60" linktype="zml"/>
-				</wiski_zukunft>
-				<wiski_simulation_vergangenheit>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-				</wiski_simulation_vergangenheit>
-				<wiski_simulation_zukunft>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Staßfurt.W.Prognose.Sim.60" linktype="zml"/>
-				</wiski_simulation_zukunft>
-			</Wiski>
-		</WiskiMember>
-		<WiskiMember>
-			<Wiski fid="Wiski_Q_1">
-				<lokal>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Wegeleben.zml" linktype="zml"/>
-				</lokal>
-				<wiski_vergangenheit>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-				</wiski_vergangenheit>
-				<wiski_zukunft>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Wegeleben.W.Prognose.60" linktype="zml"/>
-				</wiski_zukunft>
-				<wiski_simulation_vergangenheit>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-				</wiski_simulation_vergangenheit>
-				<wiski_simulation_zukunft>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Wegeleben.W.Prognose.Sim.60" linktype="zml"/>
-				</wiski_simulation_zukunft>
-			</Wiski>
-		</WiskiMember>
-		<WiskiMember>
-			<Wiski fid="Wiski_Q_2">
-				<lokal>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Ditfurt.zml" linktype="zml"/>
-				</lokal>
-				<wiski_vergangenheit>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-				</wiski_vergangenheit>
-				<wiski_zukunft>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Ditfurt.W.Prognose.60" linktype="zml"/>
-				</wiski_zukunft>
-				<wiski_simulation_vergangenheit>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-				</wiski_simulation_vergangenheit>
-				<wiski_simulation_zukunft>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Ditfurt.W.Prognose.Sim.60" linktype="zml"/>
-				</wiski_simulation_zukunft>
-			</Wiski>
-		</WiskiMember>
-		<WiskiMember>
-			<Wiski fid="Wiski_Q_5">
-				<lokal>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Hadmersleben.zml" linktype="zml"/>
-				</lokal>
-				<wiski_vergangenheit>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-				</wiski_vergangenheit>
-				<wiski_zukunft>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Hadmersleben.W.Prognose.60" linktype="zml"/>
-				</wiski_zukunft>
-				<wiski_simulation_vergangenheit>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-				</wiski_simulation_vergangenheit>
-				<wiski_simulation_zukunft>
-					<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Hadmersleben.W.Prognose.Sim.60" linktype="zml"/>
-				</wiski_simulation_zukunft>
-			</Wiski>
-		</WiskiMember>
+		<Wiski fid="Wiski_Q_0">
+			<lokal>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Staßfurt.zml" linktype="zml"/>
+			</lokal>
+			<wiski_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
+			</wiski_vergangenheit>
+			<wiski_zukunft>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Staßfurt.W.Prognose.60" linktype="zml"/>
+			</wiski_zukunft>
+			<wiski_simulation_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
+			</wiski_simulation_vergangenheit>
+			<wiski_simulation_zukunft>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Staßfurt.W.Prognose.Sim.60" linktype="zml"/>
+			</wiski_simulation_zukunft>
+		</Wiski>
+	</WiskiMember>
+	<WiskiMember>
+		<Wiski fid="Wiski_Q_1">
+			<lokal>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Wegeleben.zml" linktype="zml"/>
+			</lokal>
+			<wiski_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
+			</wiski_vergangenheit>
+			<wiski_zukunft>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Wegeleben.W.Prognose.60" linktype="zml"/>
+			</wiski_zukunft>
+			<wiski_simulation_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
+			</wiski_simulation_vergangenheit>
+			<wiski_simulation_zukunft>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Wegeleben.W.Prognose.Sim.60" linktype="zml"/>
+			</wiski_simulation_zukunft>
+		</Wiski>
+	</WiskiMember>
+	<WiskiMember>
+		<Wiski fid="Wiski_Q_2">
+			<lokal>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Ditfurt.zml" linktype="zml"/>
+			</lokal>
+			<wiski_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
+			</wiski_vergangenheit>
+			<wiski_zukunft>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Ditfurt.W.Prognose.60" linktype="zml"/>
+			</wiski_zukunft>
+			<wiski_simulation_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
+			</wiski_simulation_vergangenheit>
+			<wiski_simulation_zukunft>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Ditfurt.W.Prognose.Sim.60" linktype="zml"/>
+			</wiski_simulation_zukunft>
+		</Wiski>
+	</WiskiMember>
+	<WiskiMember>
+		<Wiski fid="Wiski_Q_5">
+			<lokal>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Hadmersleben.zml" linktype="zml"/>
+			</lokal>
+			<wiski_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
+			</wiski_vergangenheit>
+			<wiski_zukunft>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Hadmersleben.W.Prognose.60" linktype="zml"/>
+			</wiski_zukunft>
+			<wiski_simulation_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
+			</wiski_simulation_vergangenheit>
+			<wiski_simulation_zukunft>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://Hadmersleben.W.Prognose.Sim.60" linktype="zml"/>
+			</wiski_simulation_zukunft>
+		</Wiski>
+	</WiskiMember>
+	<WiskiMember>
 		<Wiski fid="Wiski_Q_3">
 			<lokal>
 				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Nienhagen.zml" linktype="zml"/>

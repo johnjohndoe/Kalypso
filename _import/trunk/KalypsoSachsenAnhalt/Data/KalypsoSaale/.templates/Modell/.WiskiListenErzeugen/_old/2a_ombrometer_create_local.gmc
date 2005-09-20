@@ -5,6 +5,7 @@
 		<gmlsource xlink:href="../modell.gml"/>
 		<gmlsource xlink:href="wiskiimport_leer.gml"/>
 		<addFeaturesMapping fromPath="OmbrometerCollectionAssociation/OmbrometerMember" toPath="WiskiMember" fromID="NR" fid="Ombrometer-${fromID}" handleExisting="overwrite">
+			<map from="Name" to="name"/>
 			<map from="Niederschlag" to="lokal"/>
 		</addFeaturesMapping>
 	</featuremapping>
