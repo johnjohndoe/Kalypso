@@ -3,61 +3,57 @@ Kalypso Konfigurations und Deployment Projekt     Sachsen-Anhalt/Magdeburg
 --------------------------------------------------------------------------
 
 KalypsoConfSachsenAnhalt
- |--  \deploy                    da werden die deployed Dateien hinkopiert
- |--  \deployable-client
-   |--  \client                  beinhaltet die RCP
-   |--  build.xml                deploy von feature und plugins
- |--  \deployable-data
-   |-- \data                     data Verzeichnis auf dem Server
-   |-- build.xml                 deploy vom data-Verzeichnis + live checkout von den Modellen: Spree und WeisseElster
- |--  \deployable-services
-   |-- \KalypsoConf              Der KalypsoConf pseudo-Service
+ |-- \deploy                   Zwischenstation: da werden die temp-Dateien für's Deploy hinkopiert
+ |-- \deployable-server
+   |-- \webdav              	Der KalypsoConf pseudo-Service
+     |-- data					z.Z. leer
+     |-- schemata
+     |-- srvconf
+     |-- vorhersageconf
+     |-- kalypso-client.ini
+     |-- schemaCatalog.ini
    |-- build.xml                 deploy von allen services
-   |-- build-KalypsoConf.xml     sub-build file, wird von build.xml benutzt
+   |-- cvs-co.bat
+   |-- deploy-properties
+   |-- ssh8888.bat
+ |-- \deployable-tomcatStuff     
+   |-- bin
+   |-- common
+   |-- conf
+   |-- TomcatService.reg
+   |-- build.xml
  |-- \doc
    |-- tecdoc
- |-- \tomcatStuff                                  
 
-* Die Variable ${workspace} muss Ant bekannt sein (Siehe Eclipse Preferences,
-  Ant, Runtime)
-* Die default targets der einzelene build-Dateien sind für 
-  ein Kundendeploy ausgelegt
-* Alle Deploy-Dateien werden in das 'deploy'-Verzeichnis unter 
-  KalypsoConfSachsen erzeugt (ist CVS-ignorisiert)
-* Wichtig: wenn Änderungen in Dateien des data-Verzeichnis gemacht 
-  werden müssen, dann zuerst in deployable-data/data/...  und 
-  anschliessend auf dem Server deployen.
-* Wichtig: wenn Änderungen in Dateien des KalypsoConf-Verzeichnis 
-  gemacht werden müssen, dann zuerst in deployable-services/KalypsoConf/... 
-  und anschliessend auf dem Server deployen.
+
+* Die Variable ${workspace} muss Ant bekannt sein (Siehe Eclipse Preferences, Ant, Runtime)
+  - sie muss den Wert ${workspace_loc} haben wenn der Deploy aus Eclipse stattfindet
+  - sie muss den konkreten Wert (da wo der Workspace im Filesystem liegt) haben, im Fall 
+    eines Deploy aus der Kommandozeile
+* Die default targets der einzelene build-Dateien sind für ein Kundendeploy ausgelegt
+  Man soll berücksichtigen dass die Skripts auch für den internen Gebrauch (Deploy und Test
+  bei der Hydroinformatik/BCE) gedacht sind. Deswegen tauchen beide Arten von Targets.
+* die zwischenstation \deploy dient als temporäre Ablage aller Deploy-Dateien.
 * Sehr Wichtig: der Stand all dieser Dateien muss der Stand der LHZ 
   wiederspiegeln, d.h. man sollte keine TUHH oder BCE abhängige Änderungen 
   vornehmen, weil sonst ein Deploy vor Ort zu Inkonsistenz führen konnte. 
 
 Dienste
 ===========
-- build.xml benutzen (in KalypsoConfSachsenAnhalt/deployable-services)
-
 Beschreibung:
-- Erzeugt eine WAR pro Dienst (benutzt build.xml von jedem Dienst)
-
-NB: KalypsoConf wird auch als Dienst berücksichtigt, liegt aber direkt in
-das KalypsoConfSachsen Projekt (im Verzeichnis: deployable-services/KalypsoConf)
+- Erzeugt eine WAR pro Dienst (benutzt im Hintergrund build.xml von jedem Dienst)
 
 
 Daten und Konfiguration
 ===========================
+Alle Dateien liegen im Webdav-Verzeichnis. Beim Deploy werden allerdings die Dateien
+direkt hinkopiert (nicht über Webdav).
 
-  data
-    |-- conf
-    |-- mirrored
-      |-- prognose
-     
-- Direkte Kopie von data/conf, data/mirrored
-- Modelle werden aus dem CVS rausgecheckt
+Vor dem echten Deploy:
+- die Modelle werden aus dem CVS rausgecheckt
    * KalypsoBode (in Bode umgenannt)
    * KalypsoSaale (in Saale umgenannt)
-- Modelle werden aufgeräumt:
+- die Modelle werden aufgeräumt:
    * '.prognose' und 'Rechenvarianten' Verzeichnisse leeren
    * nach '.calculation'-Dateien suchen und entfernen
    * nach 'CVS'-Verzeichnisse suchen und entfernen
@@ -68,9 +64,10 @@ Daten und Konfiguration
 ========================================================================
 * Servername: der Name der Kalypso Server muss an verschiedene Stellen
   berücksichtigt werden. Unter anderem in:
-  - KalypsoConf/kalypso-client.ini
+  - kalypso-client.ini
   - %CATALINA_HOME%/conf/catalina.policy
   
-* Freigaben: folgende Freigaben müssen definiert sein:
-  - kalypso$
+* Freigaben: folgende Freigaben müssen z.Z. (leider) definiert sein:
   - KalypsoModelle$ --> data/mirrored/prognose
+  Grund: es liegt an die ModellNature die die Dateien z.Z. noch über File-Copy
+  synchronisiert.
