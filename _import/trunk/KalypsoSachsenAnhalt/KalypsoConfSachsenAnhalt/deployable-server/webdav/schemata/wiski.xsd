@@ -34,6 +34,7 @@
 		<complexContent>
 			<extension base="wiski:EmptyFeatureBaseType">
 				<sequence>
+					<element name="name" type="string" minOccurs="0"/>
 					<element name="lokal" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1"/>
 					<element name="wiski_vergangenheit" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1"/>
 					<element name="wiski_zukunft" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
