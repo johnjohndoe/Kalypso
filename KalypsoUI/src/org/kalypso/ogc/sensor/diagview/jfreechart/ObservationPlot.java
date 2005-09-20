@@ -649,7 +649,6 @@ public class ObservationPlot extends XYPlot
       return new XYBarRenderer();
 
     final XYCurveRenderer renderer = new XYCurveRenderer( StandardXYItemRenderer.LINES );
-    renderer.setPosition( pos );
     return renderer;
   }
 
