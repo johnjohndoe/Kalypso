@@ -322,4 +322,26 @@ public class FeatureHelper
     return afT;
   }
 
+  /**
+   * Create properties by using the property-value of the given feature for each of the replace-tokens
+   * 
+   * @param tokens
+   *          replace-tokens (tokenKey-featurePropertyName;...)
+   */
+  public static Properties createReplaceTokens( final Feature f, final String tokens )
+  {
+    final Properties properties = new Properties();
+    final String[] strings = tokens.split( ";" );
+    for( int i = 0; i < strings.length; i++ )
+    {
+      final String[] splits = strings[i].split( "-" );
+      String value = (String)f.getProperty( splits[1] );
+      if( value == null )
+        value = splits[1];
+
+      properties.setProperty( splits[0], value );
+    }
+
+    return properties;
+  }
 }

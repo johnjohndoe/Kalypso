@@ -68,6 +68,7 @@ import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author belger
@@ -252,7 +253,11 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     
     // token replacement
     if( m_tokens != null && m_tokens.length() > 0 )
-      sourceref = NameUtils.replaceTokens( sourceref, m_tokens );
+    {
+      final Properties properties = FeatureHelper.createReplaceTokens( feature, m_tokens );
+      
+      sourceref = NameUtils.replaceTokens( sourceref, properties );
+    }
 
     final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
 

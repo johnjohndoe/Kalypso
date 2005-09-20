@@ -142,11 +142,16 @@ public class CopyObservationMappingHelper
     final PrintWriter writer = new PrintWriter( stringWriter );
     final CopyObservationFeatureVisitor.Source[] sources;
     if( keepForecast )
+    {
+      // Note: the order is important for the ForecastFilter!
+      // so we put the target-obs in the first place since it is
+      // the first element that will be backed by the forecast-filter
       sources = new CopyObservationFeatureVisitor.Source[]
       {
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ) // forecast
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ), // forecast
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ) // measured
       };
+    }
     else
       sources = new CopyObservationFeatureVisitor.Source[]
       { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
