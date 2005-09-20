@@ -106,6 +106,13 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_48}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<!-- nach update immer Gebietsniederschlag aufrufen -->
+		<antcall target="gebietsniederschlag" />
 	</target>
 
 
