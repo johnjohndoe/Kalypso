@@ -148,8 +148,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void paint( final Graphics graphics, final GeoTransform projection, final double scale,
       final GM_Envelope bbox, final boolean selected )
   {
-    System.out.println( hashCode() );
-    
     // find all selected/unselected features in this theme
     final FeatureList featureList = getFeatureList();
     final List globalSelectedFeatures = m_selectionManager.toList();

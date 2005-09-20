@@ -208,8 +208,7 @@ public class GisTemplateMapModell implements IMapModell
     {
       GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
       GM_Envelope env = gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
-      System.out.println( env );
-
+      //System.out.println( env );
     }
     catch( Exception e )
     {

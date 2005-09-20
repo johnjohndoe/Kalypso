@@ -41,20 +41,15 @@
 
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
-import java.awt.Stroke;
-
 import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.urls.XYURLGenerator;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * @author schlienger
  */
 public class XYCurveRenderer extends StandardXYItemRenderer
 {
-  private int m_pos;
-
   public XYCurveRenderer()
   {
     super();
@@ -73,32 +68,5 @@ public class XYCurveRenderer extends StandardXYItemRenderer
   public XYCurveRenderer( int type, XYToolTipGenerator toolTipGenerator, XYURLGenerator urlGenerator )
   {
     super( type, toolTipGenerator, urlGenerator );
-  }
-  
-  /**
-   * Overriden to return status-specific stroke
-   * 
-   * @see org.jfree.chart.renderer.AbstractRenderer#getItemStroke(int, int)
-   */
-  public Stroke getItemStroke( int row, int column )
-  {
-    final CurveDataset dataset = (CurveDataset)getPlot().getDataset( m_pos );
-    final Number status = dataset.getStatusFor( row, column );
-    if( status != null )
-    {
-      final Stroke stroke = KalypsoStatusUtils.getStrokeFor( status.intValue() );
-      if( stroke != null )
-        return stroke;
-    }
-    
-    return super.getItemStroke( row, column );
-  }
-
-  /**
-   * @param pos of the renderer/dataset in the plot
-   */
-  public void setPosition( int pos )
-  {
-    m_pos = pos;
   }
 }

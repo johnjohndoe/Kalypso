@@ -40,9 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.status;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Stroke;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -84,10 +82,6 @@ public class KalypsoStatusUtils
       .getResource( "resource/write.gif" ), "write" );
 
   private final static Color COLOR_LIGHTYELLOW = new Color( 248, 243, 192 );
-
-  private final static Stroke STROKE_DASHED = new BasicStroke( 1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-      10.0f, new float[]
-      { 10.0f }, 0.0f );
 
   private KalypsoStatusUtils()
   {
@@ -426,17 +420,6 @@ public class KalypsoStatusUtils
       return COLOR_LIGHTYELLOW;
 
     // customisation possible in the near future...
-    return null;
-  }
-
-  /**
-   * @return stroke depending on the given status-mask
-   */
-  public static Stroke getStrokeFor( final int mask )
-  {
-    if( checkMask( mask, KalypsoStati.BIT_DERIVATED ) )
-      return STROKE_DASHED;
-
     return null;
   }
 
