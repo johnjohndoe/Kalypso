@@ -66,6 +66,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
+import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
 
 /**
  * Utilities when dealing with Observations which are Kalypso Timeseries.
@@ -118,7 +121,6 @@ public class TimeserieUtils
   /**
    * Finds out the list of alarmstufen metadata keys
    * 
-   * @param obs
    * @return list of metadata keys
    */
   public final static String[] findOutMDAlarmLevel( final IObservation obs )
@@ -129,7 +131,6 @@ public class TimeserieUtils
   /**
    * Returns the color to use when displaying the value of the given Alarmstufe.
    * 
-   * @param mdAlarm
    * @return color
    */
   public final static Color getColorForAlarmLevel( final String mdAlarm )
@@ -423,8 +424,8 @@ public class TimeserieUtils
    *          amount of rows of the TuppleModel that is randomly created
    * @throws SensorException
    */
-  public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues )
-      throws SensorException
+  public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows,
+      final boolean allowNegativeValues ) throws SensorException
   {
     final IAxis[] axes = new IAxis[axisTypes.length + 1];
     axes[0] = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_DATE, true );
@@ -457,13 +458,36 @@ public class TimeserieUtils
 
     return obs;
   }
-  
+
   /**
-   * @param gkr the Gausskrüger Rechtswert as string
+   * @param gkr
+   *          the Gausskrüger Rechtswert as string
    * @return the corresponding Gausskrüger Coordinate System Name
    */
   public static String getCoordinateSystemNameForGkr( final String gkr )
   {
-    return getProperties().getProperty( "GK_" + gkr.substring(0,1), "<konnte nicht ermittelt werden>" );
+    return getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), "<konnte nicht ermittelt werden>" );
+  }
+
+  /**
+   * Return the value of the alarmLevel in regard to the given axisType. The alarm-levels are stored according to the
+   * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
+   * 
+   * @param axisType
+   *          the type of the axis for which to convert the alarm-level
+   * @throws WQException
+   */
+  public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel,
+      final Date date ) throws SensorException, WQException
+  {
+    if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      return alarmLevel;
+
+    final IWQConverter converter = WQFactory.createWQConverter( obs );
+
+    if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) || axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
+      return new Double( converter.computeQ( date, alarmLevel.doubleValue() ) );
+
+    throw new WQException( "Kann die Alarmstufe nicht nach " + axisType + " konvertieren." );
   }
 }
