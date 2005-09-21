@@ -31,6 +31,8 @@ package org.kalypso.wiskiadapter;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
@@ -81,5 +83,13 @@ public class WiskiObservationManipulator implements IObservationManipulator
     {
       throw new SensorException( e );
     }
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+   */
+  public void setInitializationData( IConfigurationElement config, String propertyName, Object data ) throws CoreException
+  {
+    // empty
   }
 }
