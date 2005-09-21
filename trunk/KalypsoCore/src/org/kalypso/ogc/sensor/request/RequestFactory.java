@@ -35,14 +35,11 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -144,25 +141,6 @@ public class RequestFactory
     final MetadataList mdl = obs.getMetadataList();
     mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" );
     mdl.setProperty( ObservationConstants.MD_ORIGIN, "Request-Mechanismus" );
-
-    try
-    {
-      final IMergeObservationProvider provider = KalypsoCoreExtensions.getDefaultMergeObservationProvider();
-
-      if( provider != null )
-      {
-        final IObservation toMerge = provider.getObservationToMerge();
-
-        // currently only metadata is merged...
-        // maybe merge more stuff later?
-        mdl.putAll( toMerge.getMetadataList() );
-      }
-    }
-    catch( final CoreException e )
-    {
-      Logger.getLogger( RequestFactory.class.getName() ).warning(
-          "Default-Observation used for merging with request could not be created: " + e.getLocalizedMessage() );
-    }
 
     return obs;
   }

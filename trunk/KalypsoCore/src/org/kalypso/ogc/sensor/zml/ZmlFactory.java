@@ -82,6 +82,7 @@ import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.manipulator.ManipulatorExtensions;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -104,6 +105,7 @@ import org.kalypso.zml.AxisType.ValueLinkType;
 import org.kalypso.zml.request.RequestType;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
+
 
 /**
  * Factory for ZML-Files. ZML is a flexible format that covers following possibilities:
@@ -382,6 +384,9 @@ public class ZmlFactory
     // tricky: check if the observation is auto-proxyable using its own metadata
     // (for instance WQ)
     final IObservation autoProxyObs = AutoProxyFactory.getInstance().proxyObservation( proxyObs );
+    
+    // tricky: manipulate observation (if some manipulators were found)
+    ManipulatorExtensions.manipulateObservation( autoProxyObs, null );
 
     return autoProxyObs;
   }
