@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
-import java.io.StringReader;
 import java.util.NoSuchElementException;
 
 import org.kalypso.ogc.sensor.IAxis;
@@ -54,9 +53,6 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
-import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
-import org.xml.sax.InputSource;
 
 /**
  * WQTimeserieProxy for proxying W, Q, and V Timeseries.
@@ -124,7 +120,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     {
       // this exception is ignored since the source-status axis is optional
     }
-    
+
     m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class, false, false );
     m_axes[m_axes.length - 2] = m_destAxis;
 
@@ -158,40 +154,12 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     m_cachedArgs = args;
 
     return m_cachedModel;
-
-    //    return new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_destAxis,
-    //      m_destStatusAxis, getWQConverter() );
   }
 
-  /**
-   * Lazy loading of WQ-Relation
-   */
   private IWQConverter getWQConverter() throws SensorException
   {
     if( m_conv == null )
-    {
-      try
-      {
-        if( getMetadataList().containsKey( TimeserieConstants.MD_WQWECHMANN ) )
-        {
-          final String wechmann = getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
-
-          m_conv = WechmannFactory.parse( new InputSource( new StringReader( wechmann ) ) );
-        }
-        else if( getMetadataList().containsKey( TimeserieConstants.MD_WQTABLE ) )
-        {
-          final String wqtable = getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
-
-          m_conv = WQTableFactory.parse( new InputSource( new StringReader( wqtable ) ) );
-        }
-        else
-          throw new IllegalStateException( "Kann keine WQ-Observation erzeugen: WQ-Beziehung fehlt" );
-      }
-      catch( WQException e )
-      {
-        throw new SensorException( e );
-      }
-    }
+      m_conv = WQFactory.createWQConverter( this );
 
     return m_conv;
   }
