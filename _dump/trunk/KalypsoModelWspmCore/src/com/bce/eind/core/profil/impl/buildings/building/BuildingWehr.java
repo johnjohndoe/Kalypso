@@ -1,4 +1,4 @@
-package com.bce.eind.core.profil.impl.buildings;
+package com.bce.eind.core.profil.impl.buildings.building;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -12,10 +12,10 @@ import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
 import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
-public class WehrProfilBuilding extends AbstractProfilBuilding
+public class BuildingWehr extends AbstractProfilBuilding
 {
 
-  public WehrProfilBuilding( )
+  public BuildingWehr( )
   {
     super( BUILDING_TYP.WEHR, Arrays.asList( BUILDING_PROPERTY.WEHRART ), new PointProperty[]
     { PointProperty.OBERKANTEWEHR } );
@@ -33,13 +33,13 @@ public class WehrProfilBuilding extends AbstractProfilBuilding
       profil.setValueFor( pt, PointProperty.OBERKANTEWEHR, h );
 
     }
-    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE);
-    final IProfilDevider leftDev = profil.addDevider(points.getFirst(),DEVIDER_TYP.WEHR);
-    final IProfilDevider rightDev = profil.addDevider(points.getLast(),DEVIDER_TYP.WEHR);
-    if((devider != null)&&( devider.length > 0 ))
-      profil.moveDevider(leftDev,devider[0].getPoint());
-    if((devider != null)&&( devider.length > 1 ))
-      profil.moveDevider(rightDev,devider[1].getPoint());
+    final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
+    final IProfilDevider leftDev = profil.addDevider( points.getFirst(), DEVIDER_TYP.WEHR );
+    final IProfilDevider rightDev = profil.addDevider( points.getLast(), DEVIDER_TYP.WEHR );
+    if( (devider != null) && (devider.length > 0) )
+      profil.moveDevider( leftDev, devider[0].getPoint() );
+    if( (devider != null) && (devider.length > 1) )
+      profil.moveDevider( rightDev, devider[1].getPoint() );
   }
 
   @Override

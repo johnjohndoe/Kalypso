@@ -1,4 +1,4 @@
-package com.bce.eind.core.profil.impl.buildings;
+package com.bce.eind.core.profil.impl.buildings.building;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -13,9 +13,9 @@ import com.bce.eind.core.profil.impl.PlainProfil;
 /**
  * @author kimwerner
  */
-public class BrueckeProfilBuilding extends AbstractProfilBuilding
+public class BuildingBruecke extends AbstractProfilBuilding
 {
-  public BrueckeProfilBuilding( )
+  public BuildingBruecke( )
   {
     super( BUILDING_TYP.BRUECKE, Arrays.asList( BUILDING_PROPERTY.BREITE,
         BUILDING_PROPERTY.UNTERWASSER, BUILDING_PROPERTY.PFEILERFORM, BUILDING_PROPERTY.RAUHEIT ),

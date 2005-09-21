@@ -1,40 +1,34 @@
 /*
  * Created on 31.03.2005
  */
-package com.bce.eind.core.profil.impl.buildings;
+package com.bce.eind.core.profil.impl.buildings.building;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
 import com.bce.eind.core.profil.impl.PlainProfil;
+import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilBuilding implements IProfilBuilding
+public abstract class AbstractProfilBuilding extends AbstractBuilding
 {
-  private final BUILDING_TYP m_buildingTyp;
-
-  private final Map<BUILDING_PROPERTY, Double> m_buildingValues = new LinkedHashMap<BUILDING_PROPERTY, Double>();
-
+  
   private final PointProperty[] m_pointProperties;
 
   public AbstractProfilBuilding( final BUILDING_TYP buildingTyp,
       final Collection<BUILDING_PROPERTY> properties, final PointProperty[] pointProperties )
   {
-    m_buildingTyp = buildingTyp;
+    super (buildingTyp,properties);
+
     m_pointProperties = pointProperties == null ? new PointProperty[] {} : pointProperties;
 
-    for( final BUILDING_PROPERTY property : properties )
-      m_buildingValues.put( property, new Double( 0.0 ) );
   }
 
   @SuppressWarnings("unused")

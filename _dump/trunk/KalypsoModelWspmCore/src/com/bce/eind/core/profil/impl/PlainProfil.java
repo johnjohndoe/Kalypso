@@ -17,7 +17,7 @@ import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.impl.buildings.AbstractProfilBuilding;
+import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
 import com.bce.eind.core.profil.impl.devider.ProfilDevider;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
@@ -301,7 +301,11 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   public IProfilBuilding removeBuilding( ) throws ProfilDataException
   {
     final IProfilBuilding oldBuilding = m_building;
-    ((AbstractProfilBuilding)m_building).removeProfilProperties(this );
+    if( m_building instanceof AbstractProfilBuilding )
+    {
+      ((AbstractProfilBuilding)m_building).removeProfilProperties( this );
+
+    }
     m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
 
     return oldBuilding;
@@ -328,34 +332,19 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
    */
   public PointProperty[] removePointProperty( final PointProperty pointProperty )
   {
-    final PointProperty[] removeProperties;
-    if( (pointProperty == PointProperty.BEWUCHS_AX) | (pointProperty == PointProperty.BEWUCHS_AY)
-        | (pointProperty == PointProperty.BEWUCHS_DP) )
-    {
-      m_points.removeProperty( PointProperty.BEWUCHS_AX );
-      m_points.removeProperty( PointProperty.BEWUCHS_AY );
-      m_points.removeProperty( PointProperty.BEWUCHS_DP );
+    if( pointProperty == null )
+      return null;
+    final PointProperty[] depending = m_points.getDependenciesFor( pointProperty );
+    final PointProperty[] removedProperties = new PointProperty[depending.length + 1];
 
-      removeProperties = new PointProperty[]
-      { PointProperty.BEWUCHS_AX, PointProperty.BEWUCHS_AY, PointProperty.BEWUCHS_DP };
-    }
-    else if( (pointProperty == PointProperty.HOCHWERT)
-        | (pointProperty == PointProperty.RECHTSWERT) )
-    {
-      m_points.removeProperty( PointProperty.HOCHWERT );
-      m_points.removeProperty( PointProperty.RECHTSWERT );
+    System.arraycopy( depending, 0, removedProperties, 0, depending.length );
+    removedProperties[depending.length] = pointProperty;
 
-      removeProperties = new PointProperty[]
-      { PointProperty.HOCHWERT, PointProperty.RECHTSWERT };
-    }
-    else
+    for( PointProperty pp : removedProperties )
     {
-      m_points.removeProperty( pointProperty );
-      removeProperties = new PointProperty[]
-      { pointProperty };
+      m_points.removeProperty( pp );
     }
-
-    return removeProperties;
+    return removedProperties;
   }
 
   /**
@@ -376,9 +365,10 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   {
     removeBuilding();
     m_building = ProfilBuildingFactory.createProfilBuilding( buildingTyp );
-
-    ((AbstractProfilBuilding)m_building).addProfilProperties(this );
-
+    if( m_building instanceof AbstractProfilBuilding )
+    {
+      ((AbstractProfilBuilding)m_building).addProfilProperties( this );
+    }
   }
 
   /**

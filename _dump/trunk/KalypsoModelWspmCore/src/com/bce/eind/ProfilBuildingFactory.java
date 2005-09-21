@@ -5,13 +5,13 @@ package com.bce.eind;
 
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
-import com.bce.eind.core.profil.impl.buildings.BrueckeProfilBuilding;
-import com.bce.eind.core.profil.impl.buildings.EiProfilBuilding;
-import com.bce.eind.core.profil.impl.buildings.KreisProfilBuilding;
-import com.bce.eind.core.profil.impl.buildings.MaulProfilBuilding;
-import com.bce.eind.core.profil.impl.buildings.NoneProfilBuilding;
-import com.bce.eind.core.profil.impl.buildings.TrapezProfilBuilding;
-import com.bce.eind.core.profil.impl.buildings.WehrProfilBuilding;
+import com.bce.eind.core.profil.impl.buildings.BuildingNone;
+import com.bce.eind.core.profil.impl.buildings.building.BuildingBruecke;
+import com.bce.eind.core.profil.impl.buildings.building.BuildingWehr;
+import com.bce.eind.core.profil.impl.buildings.durchlass.BuildingEi;
+import com.bce.eind.core.profil.impl.buildings.durchlass.BuildingKreis;
+import com.bce.eind.core.profil.impl.buildings.durchlass.BuildingMaul;
+import com.bce.eind.core.profil.impl.buildings.durchlass.BuildingTrapez;
 
 /**
  * @author kimwerner
@@ -24,21 +24,21 @@ public class ProfilBuildingFactory
     switch( buildingTyp )
     {
       case NONE:
-        return new NoneProfilBuilding();
+        return new BuildingNone();
       case EI:
-        return new EiProfilBuilding();
+        return new BuildingEi();
       case KREIS:
-        return new KreisProfilBuilding();
+        return new BuildingKreis();
       case TRAPEZ:
-        return new TrapezProfilBuilding();
+        return new BuildingTrapez();
       case MAUL:
-        return new MaulProfilBuilding();
+        return new BuildingMaul();
       case BRUECKE:
-        return new BrueckeProfilBuilding();
+        return new BuildingBruecke();
       case WEHR:
-        return new WehrProfilBuilding();
+        return new BuildingWehr();
       default:
-        return new NoneProfilBuilding();
+        return new BuildingNone();
     }
 
   }

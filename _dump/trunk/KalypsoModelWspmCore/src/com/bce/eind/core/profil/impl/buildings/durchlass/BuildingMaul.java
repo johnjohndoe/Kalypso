@@ -1,4 +1,4 @@
-package com.bce.eind.core.profil.impl.buildings;
+package com.bce.eind.core.profil.impl.buildings.durchlass;
 
 import java.util.Arrays;
 
@@ -8,15 +8,15 @@ import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
 /**
  * @author kimwerner
  */
-public class MaulProfilBuilding extends AbstractProfilBuilding
+public class BuildingMaul extends AbstractProfilDurchlass
 {
 
-  public MaulProfilBuilding( )
+  public BuildingMaul( )
   {
     super( BUILDING_TYP.MAUL, Arrays.asList( BUILDING_PROPERTY.BEZUGSPUNKT_X,
         BUILDING_PROPERTY.BEZUGSPUNKT_Y, BUILDING_PROPERTY.HOEHE,
         BUILDING_PROPERTY.BREITE, BUILDING_PROPERTY.SOHLGEFAELLE,
-        BUILDING_PROPERTY.RAUHEIT ), null );
+        BUILDING_PROPERTY.RAUHEIT ) );
   }
 
  
