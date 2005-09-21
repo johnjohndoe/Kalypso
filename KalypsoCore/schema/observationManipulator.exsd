@@ -3,17 +3,17 @@
 <schema targetNamespace="org.kalypso.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.kalypso.core" id="requestObs2Merge" name="Default Observation To Merge"/>
+         <meta.schema plugin="org.kalypso.core" id="obsManipulator" name="Observation Manipulator"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+      See description for the IObservationManipulator interface.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="obsProvider"/>
+            <element ref="obsManipulator"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -39,7 +39,7 @@
       </complexType>
    </element>
 
-   <element name="obsProvider">
+   <element name="obsManipulator">
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -47,7 +47,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.ogc.sensor.request.IMergeObservationProvider"/>
+                  <meta.attribute kind="java" basedOn="org.kalypso.ogc.sensor.manipulator.IObservationManipulator"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -56,19 +56,9 @@
 
    <annotation>
       <appInfo>
-         <meta.section type="since"/>
-      </appInfo>
-      <documentation>
-         [Enter the first release in which this extension point appears.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
@@ -77,7 +67,6 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
       </documentation>
    </annotation>
 
@@ -86,16 +75,6 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
       </documentation>
    </annotation>
 

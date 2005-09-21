@@ -137,6 +137,20 @@ public class ObservationUtilities
 
     throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisType );
   }
+  
+  /**
+   * Return true if one of the axis is of the given type
+   */
+  public static boolean hasAxisOfType( final IAxis[] axes, final String axisType )
+  {
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( axes[i].getType().equalsIgnoreCase( axisType ) )
+        return true;
+    }
+    
+    return false;
+  }
 
   /**
    * Returns the axes that are compatible with the desired Dataclass

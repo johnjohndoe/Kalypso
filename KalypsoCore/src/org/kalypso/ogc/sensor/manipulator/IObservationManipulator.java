@@ -29,16 +29,23 @@
  */
 package org.kalypso.ogc.sensor.manipulator;
 
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * An IObservationManipulator is able to manipulate an IObservation in order to satisfy application specific
  * requirements.
+ * <p>
+ * It is for instance used on the server-side to perform additional tasks on the observation before it is returned to
+ * the client.
+ * <p>
+ * It is also used within the scope of the {@link org.kalypso.ogc.sensor.zml.ZmlFactory}where the corresponding
+ * extension point is asked for extensions of this sort.
  * 
- * @author schlienger (31.05.2005)
+ * @author schlienger
  */
-public interface IObservationManipulator
+public interface IObservationManipulator extends IExecutableExtension
 {
   /**
    * Manipulates the given observation. Example: extend its metadata according to external information, change the axes,
@@ -47,8 +54,9 @@ public interface IObservationManipulator
    * @param obs
    *          the observation to manipulate
    * @param data
-   *          some context specific data. Callers are responsible for setting this object to an application dependent
-   *          value. This argument is optional and implementers can decide whether or not to use it.
+   *          [optional, can be null] some context specific data. Callers are responsible for setting this object to an
+   *          application dependent value. This argument is optional and implementers can decide whether or not to use
+   *          it.
    */
   public void manipulate( final IObservation obs, final Object data ) throws SensorException;
 }
