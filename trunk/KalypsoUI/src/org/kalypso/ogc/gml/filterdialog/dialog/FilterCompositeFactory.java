@@ -66,8 +66,10 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.filterencoding.ArithmeticExpression;
+import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
 import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
+import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsCOMPOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
@@ -174,6 +176,14 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
           operatorName = "Unbekannter IsLike Operator";
         ( (Group)parent ).setText( "Eigenschaften-" + operatorName );
         c = new PropertyIsLikeOperationComposite( parent, SWT.NULL );
+
+      }
+      else if( operation instanceof PropertyIsBetweenOperation )
+      {
+        if( operatorName == null )
+          operatorName = "Unbekannter IsBetween Operator";
+        ( (Group)parent ).setText( "Eigenschaften-" + operatorName );
+        c = new PropertyIsBetweenComposite( parent, SWT.NULL );
 
       }
       else if( operation instanceof SpatialOperation )
@@ -660,7 +670,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
 
         public void focusGained( FocusEvent e )
         {
-          //do nothing
+        //do nothing
         }
 
         public void focusLost( FocusEvent e )
@@ -753,9 +763,78 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
 
   class PropertyIsBetweenComposite extends Composite
   {
+    private Label m_comboLabel;
+
+    private Combo m_firstRowCombo;
+
+    private Label m_comboLabel2;
+
+    private Text m_secondRowText;
+
+    private Label m_comboLabel3;
+
+    private Text m_thirdRowText;
+
     public PropertyIsBetweenComposite( Composite parent, int style )
     {
       super( parent, style );
+      PropertyName propertyName = ( (PropertyIsBetweenOperation)m_operation ).getPropertyName();
+      Expression upperBoundary = ( (PropertyIsBetweenOperation)m_operation ).getUpperBoundary();
+      Expression lowerBoundary = ( (PropertyIsBetweenOperation)m_operation ).getLowerBoundary();
+      if( propertyName == null )
+        propertyName = new PropertyName( EMPTY_VALUE );
+      if( upperBoundary == null )
+        upperBoundary = new BoundaryExpression( EMPTY_VALUE );
+      if( lowerBoundary == null )
+        lowerBoundary = new BoundaryExpression( EMPTY_VALUE );
+      setLayout( new GridLayout( 2, false ) );
+      GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
+      data1.widthHint = STANDARD_WIDTH_FIELD;
+      m_comboLabel = new Label( this, SWT.NULL );
+      m_comboLabel.setText( "Property Name" );
+      m_firstRowCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
+      GridData data = new GridData( GridData.FILL_HORIZONTAL );
+      data.widthHint = STANDARD_WIDTH_FIELD;
+      m_firstRowCombo.setLayoutData( data );
+      m_firstRowCombo.addSelectionListener( new SelectionAdapter()
+      {
+        public void widgetSelected( SelectionEvent e )
+        {
+          String operationName = m_firstRowCombo.getItem( m_firstRowCombo.getSelectionIndex() );
+          int operationID = OperationDefines.getIdByName( operationName );
+          ( (SpatialOperation)m_operation ).setOperatorId( operationID );
+          //          updateOperation( null );
+        }
+      } );
+
+      FeatureTypeProperty[] properties = m_ft.getProperties();
+      for( int i = 0; i < properties.length; i++ )
+      {
+        FeatureTypeProperty property = properties[i];
+        if( GeometryUtilities.isGeometry( property ) )
+          m_firstRowCombo.add( property.getName().trim() );
+      }
+      String[] items = m_firstRowCombo.getItems();
+      int index = ArrayUtils.indexOf( items, propertyName.getValue() );
+      if( index >= 0 )
+        m_firstRowCombo.select( index );
+      else
+        m_firstRowCombo.select( 0 );
+      m_comboLabel2 = new Label( this, SWT.NULL );
+      m_comboLabel2.setText( "Obere Grenze" );
+      m_secondRowText = new Text( this, SWT.FILL );
+      GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
+      data.widthHint = STANDARD_WIDTH_FIELD;
+      m_secondRowText.setLayoutData( data2 );
+//      m_secondRowText.setText();
+
+      m_comboLabel3 = new Label( this, SWT.NULL );
+      m_comboLabel3.setText( "Untere Grenze" );
+      m_thirdRowText = new Text( this, SWT.FILL );
+      GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
+      data.widthHint = STANDARD_WIDTH_FIELD;
+      m_thirdRowText.setLayoutData( data3 );
+
     }
   }
 
