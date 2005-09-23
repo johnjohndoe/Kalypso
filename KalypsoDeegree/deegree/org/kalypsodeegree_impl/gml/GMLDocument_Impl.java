@@ -104,15 +104,8 @@ import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 /**
- * 
- * 
- * <p>
- * ----------------------------------------------------------
- * </p>
- * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version 07.02.2001
- *          <p>
  */
 public class GMLDocument_Impl implements GMLDocument, Document, Element
 {

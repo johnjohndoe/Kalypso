@@ -102,7 +102,7 @@ public class GMLSchemaCache
   public GMLSchema getSchema( final String namespace, final URL schemaURL )
   {
     if( namespace == null )
-      throw new NullPointerException();
+      throw new NullPointerException( "Namespace darf nicht null sein" );
 
     Date validity = null;
     try
