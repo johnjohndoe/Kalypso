@@ -7,17 +7,18 @@ import java.util.LinkedList;
 import org.bce.java.lang.UnmodifiableLinkedList;
 
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilPoint.PARAMETER;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 /**
  * @author kimwerner
  */
 public class ProfilPoints extends LinkedList<IProfilPoint>
 {
-  private final HashMap<PointProperty, PointProperty[]> m_dependencies = new HashMap<PointProperty, PointProperty[]>();
+  private final HashMap<POINT_PROPERTY, POINT_PROPERTY[]> m_dependencies = new HashMap<POINT_PROPERTY, POINT_PROPERTY[]>();
 
-  private final LinkedList<PointProperty> m_pointProperties = new LinkedList<PointProperty>();
+  private final LinkedList<POINT_PROPERTY> m_pointProperties = new LinkedList<POINT_PROPERTY>();
 
   private LinkedList<IProfilPoint> m_unmodifiable = 
     new UnmodifiableLinkedList<IProfilPoint>( this );
@@ -25,16 +26,16 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   public ProfilPoints( )
   {
     super();
-    m_dependencies.put( PointProperty.RECHTSWERT, new PointProperty[]
-    { PointProperty.HOCHWERT } );
-    m_dependencies.put( PointProperty.HOCHWERT, new PointProperty[]
-    { PointProperty.RECHTSWERT } );
-    m_dependencies.put( PointProperty.BEWUCHS_AX, new PointProperty[]
-    { PointProperty.BEWUCHS_AY, PointProperty.BEWUCHS_DP } );
-    m_dependencies.put( PointProperty.BEWUCHS_AY, new PointProperty[]
-    { PointProperty.BEWUCHS_AX, PointProperty.BEWUCHS_DP } );
-    m_dependencies.put( PointProperty.BEWUCHS_DP, new PointProperty[]
-    { PointProperty.BEWUCHS_AY, PointProperty.BEWUCHS_AY } );
+    m_dependencies.put( POINT_PROPERTY.RECHTSWERT, new POINT_PROPERTY[]
+    { POINT_PROPERTY.HOCHWERT } );
+    m_dependencies.put( POINT_PROPERTY.HOCHWERT, new POINT_PROPERTY[]
+    { POINT_PROPERTY.RECHTSWERT } );
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AX, new POINT_PROPERTY[]
+    { POINT_PROPERTY.BEWUCHS_AY, POINT_PROPERTY.BEWUCHS_DP } );
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AY, new POINT_PROPERTY[]
+    { POINT_PROPERTY.BEWUCHS_AX, POINT_PROPERTY.BEWUCHS_DP } );
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_DP, new POINT_PROPERTY[]
+    { POINT_PROPERTY.BEWUCHS_AY, POINT_PROPERTY.BEWUCHS_AY } );
   }
 
   /*
@@ -45,13 +46,13 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   {
     final ProfilPoint point = new ProfilPoint();
 
-    for( final Iterator<PointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
+    for( final Iterator<POINT_PROPERTY> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
       point.addProperty( ecIt.next() );
     }
 
-    if( point.setValueFor( PointProperty.HOEHE, hoehe )
-        & point.setValueFor( PointProperty.BREITE, breite ) )
+    if( point.setValueFor( POINT_PROPERTY.HOEHE, hoehe )
+        & point.setValueFor( POINT_PROPERTY.BREITE, breite ) )
     {
       if( add( point ) )
         return point;
@@ -62,7 +63,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   public final IProfilPoint addPoint( final IProfilPoint thePointBefore )
   {
     final ProfilPoint point = new ProfilPoint();
-    for( final Iterator<PointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
+    for( final Iterator<POINT_PROPERTY> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
       point.addProperty( ecIt.next() );
     }
@@ -74,7 +75,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return point;
   }
 
-  public final void addProperty( final PointProperty pointProperty )
+  public final void addProperty( final POINT_PROPERTY pointProperty )
   {
     if( propertyExists( pointProperty ) )
       return;
@@ -87,24 +88,24 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
 
   }
 
-  public PointProperty[] getDependenciesFor( final PointProperty pointProperty )
+  public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY pointProperty )
   {
-    final PointProperty[] dep = m_dependencies.get( pointProperty );
-    return (dep == null) ? new PointProperty[] {} : dep;
+    final POINT_PROPERTY[] dep = m_dependencies.get( pointProperty );
+    return (dep == null) ? new POINT_PROPERTY[] {} : dep;
   }
 
-  public final LinkedList<PointProperty> getExistingProperties( )
+  public final LinkedList<POINT_PROPERTY> getExistingProperties( )
   {
     return m_pointProperties;
   }
 
-  public final LinkedList<PointProperty> getVisibleProperties( )
+  public final LinkedList<POINT_PROPERTY> getVisibleProperties( )
   {
-    LinkedList<PointProperty> visibleProperties = new LinkedList<PointProperty>();
-    for( final Iterator<PointProperty> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
+    LinkedList<POINT_PROPERTY> visibleProperties = new LinkedList<POINT_PROPERTY>();
+    for( final Iterator<POINT_PROPERTY> ecIt = m_pointProperties.iterator(); ecIt.hasNext(); )
     {
-      final PointProperty pointProperty = ecIt.next();
-      if( (Boolean)pointProperty.getParameter( PointProperty.PARAMETER.VISIBLE ) )
+      final POINT_PROPERTY pointProperty = ecIt.next();
+      if( (Boolean)pointProperty.getParameter( PARAMETER.VISIBLE ) )
         visibleProperties.add( pointProperty );
     }
     return visibleProperties;
@@ -115,7 +116,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   {
     if( m_pointProperties.size() != point.getProperties().size() )
       throw new ProfilDataException( "ungültiger Punkt" );
-    for( final Iterator<PointProperty> ppIt = point.getProperties().iterator(); ppIt.hasNext(); )
+    for( final Iterator<POINT_PROPERTY> ppIt = point.getProperties().iterator(); ppIt.hasNext(); )
     {
       if( !m_pointProperties.contains( ppIt.next() ) )
       {
@@ -137,7 +138,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
    * ProfilDataException e ) { e.printStackTrace(); } } return null; }
    */
 
-  public final boolean propertyExists( final PointProperty pointProperty )
+  public final boolean propertyExists( final POINT_PROPERTY pointProperty )
   {
     return m_pointProperties.contains( pointProperty );
   }
@@ -147,9 +148,9 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return this.remove( point );
   }
 
-  public final boolean removeProperty( final PointProperty pointProperty )
+  public final boolean removeProperty( final POINT_PROPERTY pointProperty )
   {
-    if( !(Boolean)pointProperty.getParameter( PointProperty.PARAMETER.OPTIONAL ) )
+    if( !(Boolean)pointProperty.getParameter( PARAMETER.OPTIONAL ) )
       return false;
     if( !(propertyExists( pointProperty )) )
       return true;
@@ -162,7 +163,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return true;
   }
 
-  public void setDependenciesFor( PointProperty pointProperty, PointProperty[] dependencies )
+  public void setDependenciesFor( POINT_PROPERTY pointProperty, POINT_PROPERTY[] dependencies )
   {
     m_dependencies.put( pointProperty, dependencies );
   }

@@ -1,13 +1,19 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
+
 
 public interface IProfilDevider
 {
-  
-  public Object getValueFor( final Object key);
+  public static enum DEVIDER_TYP
+  {
+    BORDVOLL, DURCHSTROEMTE, FLIESSZONE, WEHR;
+  }
 
-  //public void setValueFor( final Object key,final Object value );
+  public static enum DEVIDER_PROPERTY
+  {
+    BOESCHUNG, RAUHEIT, BEIWERT
+  };
+  public Object getValueFor( final Object key);
 
   public IProfilPoint getPoint( );
 

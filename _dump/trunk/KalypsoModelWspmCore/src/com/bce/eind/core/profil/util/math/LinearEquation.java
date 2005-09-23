@@ -1,7 +1,6 @@
 package com.bce.eind.core.profil.util.math;
 
 import java.awt.geom.Point2D;
-
 import java.util.NoSuchElementException;
 
 

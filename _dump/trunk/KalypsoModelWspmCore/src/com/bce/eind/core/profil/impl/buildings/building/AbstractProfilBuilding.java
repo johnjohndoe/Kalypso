@@ -6,11 +6,9 @@ package com.bce.eind.core.profil.impl.buildings.building;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 
@@ -20,27 +18,27 @@ import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 public abstract class AbstractProfilBuilding extends AbstractBuilding
 {
   
-  private final PointProperty[] m_pointProperties;
+  private final POINT_PROPERTY[] m_pointProperties;
 
   public AbstractProfilBuilding( final BUILDING_TYP buildingTyp,
-      final Collection<BUILDING_PROPERTY> properties, final PointProperty[] pointProperties )
+      final Collection<BUILDING_PROPERTY> properties, final POINT_PROPERTY[] pointProperties )
   {
     super (buildingTyp,properties);
 
-    m_pointProperties = pointProperties == null ? new PointProperty[] {} : pointProperties;
+    m_pointProperties = pointProperties == null ? new POINT_PROPERTY[] {} : pointProperties;
 
   }
 
   @SuppressWarnings("unused")
   public  void addProfilProperties( final PlainProfil profil ) throws ProfilDataException
   {
-    for( final PointProperty property : getProfilPointProperties() )
+    for( final POINT_PROPERTY property : getPointProperties() )
       profil.addPointProperty( property );
   }
   @SuppressWarnings("unused")
   public void removeProfilProperties( final PlainProfil profil ) throws ProfilDataException
   {
-    for( final PointProperty property : getProfilPointProperties() )
+    for( final POINT_PROPERTY property : getPointProperties() )
       profil.removePointProperty( property );
   }
   
@@ -48,7 +46,7 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   /**
    * @return Returns the buildingTyp.
    */
-  public BUILDING_TYP getBuildingTyp( )
+  public BUILDING_TYP getTyp( )
   {
     return m_buildingTyp;
   }
@@ -56,7 +54,7 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   /**
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getTableDataKeys()
    */
-  public PointProperty[] getProfilPointProperties( )
+  public POINT_PROPERTY[] getPointProperties( )
   {
     return m_pointProperties;
   }
@@ -102,9 +100,9 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfilBuilding#getProfilBuildingProperties()
+   * @see com.bce.eind.core.profil.IProfilBuilding#getBuildingProperties()
    */
-  public Collection<BUILDING_PROPERTY> getProfilBuildingProperties( )
+  public Collection<BUILDING_PROPERTY> getBuildingProperties( )
   {
     return Collections.unmodifiableCollection( m_buildingValues.keySet() );
   }

@@ -1,10 +1,9 @@
 /*
  * Created on 31.03.2005
  */
-package com.bce.eind;
+package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfilBuilding;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
 import com.bce.eind.core.profil.impl.buildings.BuildingNone;
 import com.bce.eind.core.profil.impl.buildings.building.BuildingBruecke;
 import com.bce.eind.core.profil.impl.buildings.building.BuildingWehr;

@@ -7,14 +7,14 @@ import junit.framework.TestCase;
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
-import com.bce.eind.core.profil.IProfilConstants.PROFIL_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.RAUHEIT_PROPERTY;
+import com.bce.eind.core.profil.IPlainProfil.PROFIL_PROPERTY;
+import com.bce.eind.core.profil.IPlainProfil.RAUHEIT_TYP;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.Profil;
 
 /**
@@ -60,12 +60,12 @@ public class ProfilDataTest extends TestCase
     assertEquals( "Trennfläche links:", p2, tpL );
     assertEquals( "Trennfläche rechts:", p3, tpR );
 
-    p.addPointProperty( PointProperty.RAUHEIT );
-    p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_PROPERTY.ks );
-    p.setValueFor( p2, PointProperty.RAUHEIT, 1.2345 );
+    p.addPointProperty( POINT_PROPERTY.RAUHEIT );
+    p.setProperty( PROFIL_PROPERTY.RAUHEIT_TYP, RAUHEIT_TYP.ks );
+    p.setValueFor( p2, POINT_PROPERTY.RAUHEIT, 1.2345 );
 
-    assertEquals( "Rauheit TrennflächenPkt links:", 1.2345, tpL.getValueFor( PointProperty.RAUHEIT ) );
-    assertEquals( "RauheitTyp:", RAUHEIT_PROPERTY.ks, p.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ) );
+    assertEquals( "Rauheit TrennflächenPkt links:", 1.2345, tpL.getValueFor( POINT_PROPERTY.RAUHEIT ) );
+    assertEquals( "RauheitTyp:", RAUHEIT_TYP.ks, p.getProperty( PROFIL_PROPERTY.RAUHEIT_TYP ) );
 
     return p;
   }
@@ -109,22 +109,22 @@ public class ProfilDataTest extends TestCase
   public void setGetBuilding( final IProfil p ) throws Exception
   {
     p.setBuilding( BUILDING_TYP.BRUECKE );
-    assertEquals( "neues Gebäude:", BUILDING_TYP.BRUECKE, p.getBuilding().getBuildingTyp() );
+    assertEquals( "neues Gebäude:", BUILDING_TYP.BRUECKE, p.getBuilding().getTyp() );
     final IProfilPoint firstPkt = p.getPoints().getFirst();
-    p.setValueFor( firstPkt, PointProperty.OBERKANTEBRUECKE, 1000.65432 );
-    p.setValueFor( firstPkt, PointProperty.UNTERKANTEBRUECKE, 1000.23456 );
-    p.getBuilding().setValue( BUILDING_PROPERTY.PFEILERFORM, 0.5 );
-    p.getBuilding().setValue( BUILDING_PROPERTY.RAUHEIT, 5.5 );
+    p.setValueFor( firstPkt, POINT_PROPERTY.OBERKANTEBRUECKE, 1000.65432 );
+    p.setValueFor( firstPkt, POINT_PROPERTY.UNTERKANTEBRUECKE, 1000.23456 );
+    p.setValueFor(p.getBuilding(), BUILDING_PROPERTY.PFEILERFORM, 0.5 );
+    p.setValueFor(p.getBuilding(),BUILDING_PROPERTY.RAUHEIT, 5.5 );
     assertEquals( "Pfeiler Formbeiwert:", 0.5, p.getBuilding().getValue(
         BUILDING_PROPERTY.PFEILERFORM ) );
     assertEquals( "Hoehe Unterkante: ", 1000.23456, firstPkt
-        .getValueFor( PointProperty.UNTERKANTEBRUECKE ) );
+        .getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE ) );
     p.removeBuilding();
-    assertEquals( "kein Gebäude:", BUILDING_TYP.NONE, p.getBuilding().getBuildingTyp() );
+    assertEquals( "kein Gebäude:", BUILDING_TYP.NONE, p.getBuilding().getTyp() );
 
     try
     {
-      firstPkt.getValueFor( PointProperty.UNTERKANTEBRUECKE );
+      firstPkt.getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE );
     }
     catch( ProfilDataException e )
     {

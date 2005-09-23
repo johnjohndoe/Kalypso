@@ -4,10 +4,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
 /**
@@ -19,8 +17,8 @@ public class BuildingBruecke extends AbstractProfilBuilding
   {
     super( BUILDING_TYP.BRUECKE, Arrays.asList( BUILDING_PROPERTY.BREITE,
         BUILDING_PROPERTY.UNTERWASSER, BUILDING_PROPERTY.PFEILERFORM, BUILDING_PROPERTY.RAUHEIT ),
-        new PointProperty[]
-        { PointProperty.UNTERKANTEBRUECKE, PointProperty.OBERKANTEBRUECKE } );
+        new POINT_PROPERTY[]
+        { POINT_PROPERTY.UNTERKANTEBRUECKE, POINT_PROPERTY.OBERKANTEBRUECKE } );
   }
 
   @Override
@@ -35,8 +33,8 @@ public class BuildingBruecke extends AbstractProfilBuilding
  
     for( IProfilPoint pt : points )
     {
-      final double h = pt.getValueFor( PointProperty.HOEHE );
-      profil.setValueFor( pt, PointProperty.OBERKANTEWEHR, h );
+      final double h = pt.getValueFor( POINT_PROPERTY.HOEHE );
+      profil.setValueFor( pt, POINT_PROPERTY.OBERKANTEWEHR, h );
     }
 
   }

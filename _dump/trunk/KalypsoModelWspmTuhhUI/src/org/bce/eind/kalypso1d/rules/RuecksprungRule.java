@@ -11,7 +11,7 @@ import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.PointProperty;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.validator.AbstractValidatorRule;
 import com.bce.eind.core.profil.validator.IValidatorMarkerCollector;
 
@@ -31,13 +31,13 @@ public class RuecksprungRule extends AbstractValidatorRule
       {
         if( prevPoint != null )
         {
-          final double x1 = prevPoint.getValueFor( PointProperty.BREITE );
-          final double x2 = point.getValueFor( PointProperty.BREITE );
+          final double x1 = prevPoint.getValueFor( POINT_PROPERTY.BREITE );
+          final double x2 = point.getValueFor( POINT_PROPERTY.BREITE );
 
           if( x2 < x1 )
             collector.createProfilMarker( true, "Gauss-Rücksprung bei Breite = "
                 + String.format( IProfilConstants.FMT_STATION, x2 ), "", profil.getPoints()
-                .indexOf( point ), PointProperty.BREITE.toString() );
+                .indexOf( point ), POINT_PROPERTY.BREITE.toString() );
         }
 
         prevPoint = point;

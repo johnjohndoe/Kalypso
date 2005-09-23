@@ -5,11 +5,9 @@ import java.util.LinkedList;
 
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
 public class BuildingWehr extends AbstractProfilBuilding
@@ -17,8 +15,8 @@ public class BuildingWehr extends AbstractProfilBuilding
 
   public BuildingWehr( )
   {
-    super( BUILDING_TYP.WEHR, Arrays.asList( BUILDING_PROPERTY.WEHRART ), new PointProperty[]
-    { PointProperty.OBERKANTEWEHR } );
+    super( BUILDING_TYP.WEHR, Arrays.asList( BUILDING_PROPERTY.WEHRART ), new POINT_PROPERTY[]
+    { POINT_PROPERTY.OBERKANTEWEHR } );
   }
 
   @Override
@@ -29,8 +27,8 @@ public class BuildingWehr extends AbstractProfilBuilding
     for( IProfilPoint pt : points )
     {
 
-      final double h = pt.getValueFor( PointProperty.HOEHE );
-      profil.setValueFor( pt, PointProperty.OBERKANTEWEHR, h );
+      final double h = pt.getValueFor( POINT_PROPERTY.HOEHE );
+      profil.setValueFor( pt, POINT_PROPERTY.OBERKANTEWEHR, h );
 
     }
     final IProfilDevider[] devider = profil.getDevider( DEVIDER_TYP.DURCHSTROEMTE );
@@ -40,6 +38,8 @@ public class BuildingWehr extends AbstractProfilBuilding
       profil.moveDevider( leftDev, devider[0].getPoint() );
     if( (devider != null) && (devider.length > 1) )
       profil.moveDevider( rightDev, devider[1].getPoint() );
+    profil.setValueFor(leftDev,IProfilDevider.DEVIDER_PROPERTY.BEIWERT,0.0);
+    profil.setValueFor(rightDev,IProfilDevider.DEVIDER_PROPERTY.BEIWERT,0.0);
   }
 
   @Override

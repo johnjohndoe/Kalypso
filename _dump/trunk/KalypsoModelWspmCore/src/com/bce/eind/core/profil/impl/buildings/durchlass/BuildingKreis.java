@@ -2,9 +2,6 @@ package com.bce.eind.core.profil.impl.buildings.durchlass;
 
 import java.util.Arrays;
 
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
-
 /**
  * @author kimwerner
  */

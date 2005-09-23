@@ -3,7 +3,7 @@ package org.bce.eind.kalypso1d.rules;
 import org.eclipse.core.runtime.CoreException;
 
 import com.bce.eind.core.profil.IProfil;
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.validator.AbstractValidatorRule;
 import com.bce.eind.core.profil.validator.IValidatorMarkerCollector;
 
@@ -45,7 +45,7 @@ public class TFRule extends AbstractValidatorRule
       String location = "";
       try
       {
-        final double valueFor = point.getValueFor( PointProperty.BREITE );
+        final double valueFor = point.getValueFor( POINT_PROPERTY.BREITE );
         location = String.format( "Breite = " + IProfilConstants.FMT_STATION , valueFor );
       }
       catch( final ProfilDataException e )

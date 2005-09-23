@@ -10,16 +10,15 @@ import java.util.Iterator;
 
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.PointProperty;
 
 /**
  * @author kimwerner
  */
 public class ProfilPoint implements IProfilPoint
 {
-  private final HashMap<PointProperty, Double> m_pointProperties = new HashMap<PointProperty, Double>();
+  private final HashMap<POINT_PROPERTY, Double> m_pointProperties = new HashMap<POINT_PROPERTY, Double>();
 
-  public final void addProperty( final PointProperty pointProperty )
+  public final void addProperty( final POINT_PROPERTY pointProperty )
   {
     m_pointProperties.put( pointProperty, new Double( 0 ) );
   }
@@ -32,10 +31,10 @@ public class ProfilPoint implements IProfilPoint
   public IProfilPoint clonePoint( )
   {
     final ProfilPoint point = new ProfilPoint();
-    for( final Iterator<PointProperty> tdkIt = m_pointProperties.keySet().iterator(); tdkIt
+    for( final Iterator<POINT_PROPERTY> tdkIt = m_pointProperties.keySet().iterator(); tdkIt
         .hasNext(); )
     {
-      final PointProperty tdk = tdkIt.next();
+      final POINT_PROPERTY tdk = tdkIt.next();
       point.addProperty( tdk );
       try
       {
@@ -54,12 +53,12 @@ public class ProfilPoint implements IProfilPoint
   /**
    * @see com.bce.eind.core.profil.IProfilPoint#getProperties()
    */
-  public Collection<PointProperty> getProperties( )
+  public Collection<POINT_PROPERTY> getProperties( )
   {
     return Collections.unmodifiableSet( m_pointProperties.keySet() );
   }
 
-  public final double getValueFor( final PointProperty pointProperty )
+  public final double getValueFor( final POINT_PROPERTY pointProperty )
       throws ProfilDataException
   {
     if( !(m_pointProperties.containsKey( pointProperty )) )
@@ -71,18 +70,18 @@ public class ProfilPoint implements IProfilPoint
   /**
    * @see com.bce.eind.core.profilinterface.IProfilPoint#hasTableData(com.bce.eind.core.profildata.tabledata.TableDataKey)
    */
-  public boolean hasProperty( PointProperty pointProperty )
+  public boolean hasProperty( POINT_PROPERTY pointProperty )
   {
     return m_pointProperties.containsKey( pointProperty );
 
   }
 
-  public final void removeProperty( final PointProperty pointProperty )
+  public final void removeProperty( final POINT_PROPERTY pointProperty )
   {
     m_pointProperties.remove( pointProperty );
   }
 
-  public final boolean setValueFor( final PointProperty pointProperty, final double value )
+  public final boolean setValueFor( final POINT_PROPERTY pointProperty, final double value )
         {
     if( !(m_pointProperties.containsKey( pointProperty )) )
       return false;
@@ -93,11 +92,11 @@ public class ProfilPoint implements IProfilPoint
  /* public final boolean isPosition( final double breite, final double hoehe )
       throws ProfilDataException
   {
-    final int breitePrecision = PointProperty.BREITE.getPrecision();
-    final int hoehePrecision = PointProperty.HOEHE.getPrecision();
+    final int breitePrecision = POINT_PROPERTY.BREITE.getPrecision();
+    final int hoehePrecision = POINT_PROPERTY.HOEHE.getPrecision();
 
-    final double deltaB = Math.abs( this.getValueFor( PointProperty.BREITE ) - breite );
-    final double deltaH = Math.abs( this.getValueFor( PointProperty.HOEHE ) - hoehe );
+    final double deltaB = Math.abs( this.getValueFor( POINT_PROPERTY.BREITE ) - breite );
+    final double deltaH = Math.abs( this.getValueFor( POINT_PROPERTY.HOEHE ) - hoehe );
     return ((deltaB < Math.exp( -breitePrecision )) & (deltaH < Math.exp( -hoehePrecision )));
   }*/
 }

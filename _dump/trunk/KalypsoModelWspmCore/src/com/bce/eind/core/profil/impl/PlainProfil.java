@@ -8,15 +8,20 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.bce.eind.ProfilBuildingFactory;
 import com.bce.eind.core.profil.IPlainProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.PointChange;
-import com.bce.eind.core.profil.PointProperty;
+import com.bce.eind.core.profil.ProfilBuildingException;
+import com.bce.eind.core.profil.ProfilBuildingFactory;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
 import com.bce.eind.core.profil.impl.devider.ProfilDevider;
@@ -43,8 +48,8 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   {
     m_profilMetaData = new HashMap<Object, Object>();
     m_points = new ProfilPoints();
-    m_points.addProperty( PointProperty.BREITE );
-    m_points.addProperty( PointProperty.HOEHE );
+    m_points.addProperty( POINT_PROPERTY.BREITE );
+    m_points.addProperty( POINT_PROPERTY.HOEHE );
     m_building = ProfilBuildingFactory.createProfilBuilding( BUILDING_TYP.NONE );
 
   }
@@ -70,25 +75,25 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#addPointProperty(com.bce.eind.core.profil.PointProperty)
+   * @see com.bce.eind.core.profil.IPlainProfil#addPointProperty(com.bce.eind.core.profil.POINT_PROPERTY)
    */
-  public PointProperty[] addPointProperty( final PointProperty pointProperty )
+  public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty )
 
   {
     if( pointProperty == null )
       return null;
-    final PointProperty[] depending = m_points.getDependenciesFor( pointProperty );
-    final PointProperty[] newProperties = new PointProperty[depending.length + 1];
+    final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
+    final POINT_PROPERTY[] newProperties = new POINT_PROPERTY[depending.length + 1];
 
     System.arraycopy( depending, 0, newProperties, 0, depending.length );
     newProperties[depending.length] = pointProperty;
 
-    for( PointProperty pd : newProperties )
+    for( POINT_PROPERTY pd : newProperties )
       m_points.addProperty( pd );
 
-    if( pointProperty == PointProperty.RAUHEIT )
+    if( pointProperty == POINT_PROPERTY.RAUHEIT )
     {
-      pointProperty.setParameter( RAUHEIT_PROPERTY.class, IProfilConstants.DEFAULT_RAUHEIT_TYP );
+      pointProperty.setParameter( RAUHEIT_TYP.class, IProfilConstants.DEFAULT_RAUHEIT_TYP );
     }
     return newProperties;
   }
@@ -105,8 +110,8 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
       try
       {
         IProfilPoint p = ptIt.next();
-        if( Math.abs( pkt.getValueFor( PointProperty.BREITE ) - breite ) > Math.abs( p
-            .getValueFor( PointProperty.BREITE )
+        if( Math.abs( pkt.getValueFor( POINT_PROPERTY.BREITE ) - breite ) > Math.abs( p
+            .getValueFor( POINT_PROPERTY.BREITE )
             - breite ) )
           pkt = p;
       }
@@ -126,7 +131,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
     final IProfilPoint pkt = findNearestPoint( breite );
     try
     {
-      final double xpos = pkt.getValueFor( PointProperty.BREITE );
+      final double xpos = pkt.getValueFor( POINT_PROPERTY.BREITE );
       return (Math.abs( xpos - breite ) <= delta) ? pkt : null;
     }
     catch( ProfilDataException e1 )
@@ -147,7 +152,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
       return findPoint( breite, delta );
     try
     {
-      if( pkt.getValueFor( PointProperty.BREITE ) == breite )
+      if( pkt.getValueFor( POINT_PROPERTY.BREITE ) == breite )
         return pkt;
     }
     catch( ProfilDataException e )
@@ -198,7 +203,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   /**
    * @see com.bce.eind.core.profilinterface.IProfil#getTableDataKeys()
    */
-  public LinkedList<PointProperty> getPointProperties( final boolean filterNonVisible )
+  public LinkedList<POINT_PROPERTY> getPointProperties( final boolean filterNonVisible )
   {
     if( filterNonVisible )
       return m_points.getVisibleProperties();
@@ -222,7 +227,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
    * @throws ProfilDataException
    * @see com.bce.eind.core.profilinterface.IProfil#getValuesFor(com.bce.eind.core.profildata.tabledata.ColumnKey)
    */
-  public double[] getValuesFor( final PointProperty pointProperty ) throws ProfilDataException
+  public double[] getValuesFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException
   {
     final double[] values = new double[m_points.size()];
     int i = 0;
@@ -257,8 +262,8 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
       final double hoehe ) throws ProfilDataException
   {
     final ProfilPoint point = (ProfilPoint)m_points.addPoint( thePointBefore );
-    point.setValueFor( PointProperty.HOEHE, hoehe );
-    point.setValueFor( PointProperty.BREITE, breite );
+    point.setValueFor( POINT_PROPERTY.HOEHE, hoehe );
+    point.setValueFor( POINT_PROPERTY.BREITE, breite );
 
     return point;
   }
@@ -270,12 +275,12 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   public boolean insertPoint( final IProfilPoint thePointBefore, final IProfilPoint point )
       throws ProfilDataException
   {
-    final Collection<PointProperty> newPP = point.getProperties();
-    final Collection<PointProperty> existingPP = point.getProperties();
+    final Collection<POINT_PROPERTY> newPP = point.getProperties();
+    final Collection<POINT_PROPERTY> existingPP = point.getProperties();
 
     if( newPP.size() != existingPP.size() )
       return false;
-    for( PointProperty pp : newPP )
+    for( POINT_PROPERTY pp : newPP )
     {
       if( !existingPP.contains( pp ) )
         return false;
@@ -328,19 +333,19 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#removePointProperty(com.bce.eind.core.profil.PointProperty)
+   * @see com.bce.eind.core.profil.IPlainProfil#removePointProperty(com.bce.eind.core.profil.POINT_PROPERTY)
    */
-  public PointProperty[] removePointProperty( final PointProperty pointProperty )
+  public POINT_PROPERTY[] removePointProperty( final POINT_PROPERTY pointProperty )
   {
     if( pointProperty == null )
       return null;
-    final PointProperty[] depending = m_points.getDependenciesFor( pointProperty );
-    final PointProperty[] removedProperties = new PointProperty[depending.length + 1];
+    final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
+    final POINT_PROPERTY[] removedProperties = new POINT_PROPERTY[depending.length + 1];
 
     System.arraycopy( depending, 0, removedProperties, 0, depending.length );
     removedProperties[depending.length] = pointProperty;
 
-    for( PointProperty pp : removedProperties )
+    for( POINT_PROPERTY pp : removedProperties )
     {
       m_points.removeProperty( pp );
     }
@@ -397,9 +402,9 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
   /**
    * @see com.bce.eind.core.profil.IPlainProfil#setValuesFor(java.util.List,
-   *      com.bce.eind.core.profil.PointProperty, double)
+   *      com.bce.eind.core.profil.POINT_PROPERTY, double)
    */
-  public void setValuesFor( final List<IProfilPoint> pointList, PointProperty pointProperty,
+  public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
       double value ) throws ProfilDataException
   {
     final List<PointChange> changes = new ArrayList<PointChange>( pointList.size() );
@@ -410,17 +415,17 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#setValuesFor(com.bce.eind.core.profil.PointProperty,
+   * @see com.bce.eind.core.profil.IPlainProfil#setValuesFor(com.bce.eind.core.profil.POINT_PROPERTY,
    *      double)
    */
-  public void setValuesFor( final PointProperty pointProperty, final double value )
+  public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
       throws ProfilDataException
   {
     final List<IProfilPoint> allPoints = getPoints();
     setValuesFor( allPoints, pointProperty, value );
   }
 
-  public void setValueFor( final IProfilPoint point, final PointProperty pointProperty,
+  public void setValueFor( final IProfilPoint point, final POINT_PROPERTY pointProperty,
       final double value ) throws ProfilDataException
   {
     setValues( new PointChange[]
@@ -431,6 +436,12 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   {
     ((ProfilDevider)devider).setValueFor( property, value );
 
+  }
+
+  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final double value ) throws ProfilBuildingException
+  {
+    ((AbstractBuilding)building).setValue(property,value);
+    
   }
 
 }

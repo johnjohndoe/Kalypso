@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
 
 public class ProfilDevider implements IProfilDevider
 {

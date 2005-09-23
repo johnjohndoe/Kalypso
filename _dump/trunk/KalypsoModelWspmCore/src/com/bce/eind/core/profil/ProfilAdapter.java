@@ -1,6 +1,7 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 
 /**
@@ -51,18 +52,18 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesAdded(com.bce.eind.core.profil.PointProperty[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesAdded(com.bce.eind.core.profil.POINT_PROPERTY[])
    */
-  public void onPointPropertiesAdded( PointProperty[] addedProperties )
+  public void onPointPropertiesAdded( POINT_PROPERTY[] addedProperties )
   {
   }
 
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesRemoved(com.bce.eind.core.profil.PointProperty[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesRemoved(com.bce.eind.core.profil.POINT_PROPERTY[])
    */
-  public void onPointPropertiesRemoved( PointProperty[] removedProperties )
+  public void onPointPropertiesRemoved( POINT_PROPERTY[] removedProperties )
   {
   }
 

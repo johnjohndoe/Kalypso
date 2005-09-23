@@ -7,8 +7,9 @@ import java.util.Iterator;
 
 import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.PointProperty;
 import com.bce.eind.core.profil.ProfilDataException;
+import com.bce.eind.core.profil.IProfilPoint.PARAMETER;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
 
 /**
@@ -22,11 +23,11 @@ public class ProfilUtil
     if( (startPoint == null) | (endPoint == null) )
       throw new ProfilDataException( "Profilpunkt existiert nicht" );
     final IProfilPoint point = startPoint.clonePoint();
-    for( final Iterator<PointProperty> ppIt = point.getProperties().iterator(); ppIt
+    for( final Iterator<POINT_PROPERTY> ppIt = point.getProperties().iterator(); ppIt
         .hasNext(); )
     {
-      final PointProperty ppp = ppIt.next();
-       if( (Boolean)ppp.getParameter(PointProperty.PARAMETER.INTERPOLATION))
+      final POINT_PROPERTY ppp = ppIt.next();
+       if( (Boolean)ppp.getParameter(PARAMETER.INTERPOLATION))
       {
         try
         {
@@ -54,7 +55,7 @@ public class ProfilUtil
     {
       if( point != null )
       {
-        if( point.getValueFor( (PointProperty.BREITE) ) == breite )
+        if( point.getValueFor( (POINT_PROPERTY.BREITE) ) == breite )
           return point;
       }
 

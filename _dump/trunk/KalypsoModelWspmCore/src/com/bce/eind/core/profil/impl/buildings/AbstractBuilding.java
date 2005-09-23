@@ -10,8 +10,6 @@ import java.util.Map;
 
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.ProfilBuildingException;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
 
 /**
  * @author kimwerner
@@ -34,7 +32,7 @@ public abstract class AbstractBuilding implements IProfilBuilding
   /**
    * @return Returns the buildingTyp.
    */
-  public BUILDING_TYP getBuildingTyp( )
+  public BUILDING_TYP getTyp( )
   {
     return m_buildingTyp;
   }
@@ -80,9 +78,9 @@ public abstract class AbstractBuilding implements IProfilBuilding
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfilBuilding#getProfilBuildingProperties()
+   * @see com.bce.eind.core.profil.IProfilBuilding#getBuildingProperties()
    */
-  public Collection<BUILDING_PROPERTY> getProfilBuildingProperties( )
+  public Collection<BUILDING_PROPERTY> getBuildingProperties( )
   {
     return Collections.unmodifiableCollection( m_buildingValues.keySet() );
   }

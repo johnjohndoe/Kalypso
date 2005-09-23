@@ -1,6 +1,7 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 
 
@@ -16,9 +17,9 @@ public interface IProfilListener
   
   public void onPointsRemoved( final IProfilPoint[] removedPoints );
   
-  public void onPointPropertiesAdded( final PointProperty[] addedProperties );
+  public void onPointPropertiesAdded( final POINT_PROPERTY[] addedProperties );
   
-  public void onPointPropertiesRemoved( final PointProperty[] removedProperties );
+  public void onPointPropertiesRemoved( final POINT_PROPERTY[] removedProperties );
   
   public void onBuildingChanged();
 

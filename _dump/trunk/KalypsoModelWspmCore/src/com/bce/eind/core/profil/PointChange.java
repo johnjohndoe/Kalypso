@@ -1,14 +1,16 @@
 package com.bce.eind.core.profil;
 
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+
 public final class PointChange
 {
   private final IProfilPoint m_point;
 
-  private final PointProperty m_column;
+  private final POINT_PROPERTY m_column;
 
   private final double m_newValue;
 
-  public PointChange( final IProfilPoint p, final PointProperty column, final double newValue )
+  public PointChange( final IProfilPoint p, final POINT_PROPERTY column, final double newValue )
   {
     m_point = p;
     m_column = column;
@@ -18,7 +20,7 @@ public final class PointChange
   /**
    * @return Returns the column.
    */
-  public PointProperty getColumn( )
+  public POINT_PROPERTY getColumn( )
   {
     return m_column;
   }

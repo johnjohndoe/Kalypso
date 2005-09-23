@@ -3,16 +3,24 @@ package com.bce.eind.core.profil;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
-import com.bce.eind.core.profil.IProfilConstants.DEVIDER_TYP;
-import com.bce.eind.core.profil.IProfilConstants.PROFIL_PROPERTY;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 /**
  * @author kimwerner
  */
 public interface IPlainProfil
 {
-  
+  public static enum RAUHEIT_TYP
+  {
+    ks, kst
+  };
+  public static enum PROFIL_PROPERTY
+  {
+    KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION,RAUHEIT_TYP, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
+  }
   /**
    * @param point
    * @param devider
@@ -27,9 +35,9 @@ public interface IPlainProfil
 
   /**
    * @param pointProperty
-   * @return PointProperty[] with all current pointproperties
+   * @return POINT_PROPERTY[] with all current pointproperties
    */
-  public PointProperty[] addPointProperty( final PointProperty pointProperty );
+  public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty );
 
   /**
    * sucht den nächsten Punkt bei breite ,findet aber auf jeden Fall den ersten Punkt in der Liste
@@ -75,9 +83,9 @@ public interface IPlainProfil
 
   /**
    * @param filterNonVisible
-   * @return LinkedList<PointProperty>
+   * @return LinkedList<POINT_PROPERTY>
    */
-  public LinkedList<PointProperty> getPointProperties( final boolean filterNonVisible );
+  public LinkedList<POINT_PROPERTY> getPointProperties( final boolean filterNonVisible );
 
   /**
    * @return
@@ -95,7 +103,7 @@ public interface IPlainProfil
    * @return double[] with values of pointproperty sorted by breite
    * @throws ProfilDataException 
    */
-  public double[] getValuesFor( final PointProperty pointProperty ) throws ProfilDataException;
+  public double[] getValuesFor( final POINT_PROPERTY pointProperty ) throws ProfilDataException;
 
   /**
    * Erzeugt einen neuen Punkt und fügt in in das Profil ein. Er wird genau in die Mitte des
@@ -147,7 +155,7 @@ public interface IPlainProfil
    * @param pointProperty
    * @return alle übriggebliebenen Eigenschaften
    */
-  public PointProperty[] removePointProperty( final PointProperty pointProperty );
+  public POINT_PROPERTY[] removePointProperty( final POINT_PROPERTY pointProperty );
 
   /**
    * @param key eine HashMap see IPlainProfil.PROPERTY
@@ -170,9 +178,12 @@ public interface IPlainProfil
    */
   public void setProperty( final Object key, final Object value );
 
-  public void setValueFor(IProfilPoint point,PointProperty property, double value) throws ProfilDataException;
+  public void setValueFor(IProfilPoint point,POINT_PROPERTY property, double value) throws ProfilDataException;
  
   public void setValueFor(IProfilDevider devider,Object property,Object value);
+  
+  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final double value) throws ProfilBuildingException;
+  
   
   public void setValues( final PointChange[] changes ) throws ProfilDataException;
   
@@ -182,15 +193,15 @@ public interface IPlainProfil
    * @param value
    * @throws ProfilDataException
     */
-  public void setValuesFor( final List<IProfilPoint> pointList, PointProperty pointProperty,
+  public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
       double value ) throws ProfilDataException;
   /**
    * @param pointProperty
    * @param value
    * @throws ProfilDataException
-   * ändert alle Punkte des Profils @see setValuesFor( final List<IProfilPoint> pointList, PointProperty pointProperty,
+   * ändert alle Punkte des Profils @see setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
    *   double value )
    */
-  public void setValuesFor( final PointProperty pointProperty, final double value )
+  public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
   throws ProfilDataException;
 }

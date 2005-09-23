@@ -5,9 +5,7 @@ package com.bce.eind.core.profil.impl.buildings.durchlass;
 
 import java.util.Collection;
 
-import com.bce.eind.core.profil.PointProperty;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_PROPERTY;
-import com.bce.eind.core.profil.IProfilConstants.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 
 /**
@@ -21,7 +19,7 @@ public abstract class AbstractProfilDurchlass extends AbstractBuilding
     super( buildingTyp, properties );
   }
 
-  public PointProperty[] getProfilPointProperties( )
+  public POINT_PROPERTY[] getPointProperties( )
   {
     return null;
   }
