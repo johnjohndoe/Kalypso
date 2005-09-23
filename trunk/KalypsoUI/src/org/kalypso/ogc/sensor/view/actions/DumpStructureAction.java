@@ -50,7 +50,6 @@ import org.kalypso.ui.ImageProvider;
 
 /**
  * DumpStructureAction
- * <p>
  * 
  * @author schlienger (16.06.2005)
  */
