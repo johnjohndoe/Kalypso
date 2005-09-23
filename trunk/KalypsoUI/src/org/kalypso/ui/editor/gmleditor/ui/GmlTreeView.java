@@ -366,7 +366,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       }
 
       m_workspace = ( (CommandableWorkspace)newValue );
-      m_workspace.addModellListener( this );
+      if( m_workspace != null )
+        m_workspace.addModellListener( this );
 
       final TreeViewer treeViewer = m_treeViewer;
       treeViewer.getControl().getDisplay().asyncExec( new Runnable()

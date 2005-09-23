@@ -110,7 +110,8 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
 
-      throw new LoaderException( "GML konnte nicht geladen werden: " + source, e );
+      throw new LoaderException( "GML konnte nicht geladen werden: " + source + ". Grund: " + e.getLocalizedMessage(),
+          e );
     }
     finally
     {

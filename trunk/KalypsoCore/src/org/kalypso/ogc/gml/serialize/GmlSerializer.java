@@ -52,6 +52,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
@@ -234,7 +235,7 @@ public final class GmlSerializer
   }
 
   private static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context,
-      final IUrlResolver urlResolver ) throws Exception, MalformedURLException, GmlSerializeException
+      final IUrlResolver urlResolver ) throws Exception, GmlSerializeException
   {
     final Document gmlAsDOM = XMLHelper.getAsDOM( inputSource, true );
     final GMLDocument_Impl gml = new GMLDocument_Impl( gmlAsDOM );
@@ -257,25 +258,35 @@ public final class GmlSerializer
 
   /**
    * Lädt ein schema anhand des gml-doc. Immer aus dem Cache. Zuerst per Namespace, dann per schemaLocation.
-   * 
-   * @throws MalformedURLException
-   * @throws GmlSerializeException
    */
-  private static GMLSchema loadSchemaForGmlDoc( final GMLDocument gmldoc ) throws MalformedURLException,
-      GmlSerializeException
+  private static GMLSchema loadSchemaForGmlDoc( final GMLDocument gmldoc ) throws GmlSerializeException
   {
     final String schemaURI = gmldoc.getDocumentElement().getNamespaceURI();
     final GMLSchema schema = GMLSchemaCatalog.getSchema( schemaURI );
     if( schema == null )
     {
-      final URL schemaLocation = gmldoc.getSchemaLocation();
-      final GMLSchema schema2 = GMLSchemaCatalog.getSchema( schemaLocation );
+      String errorMessage = ". Noch über die SchemaLocation: ";
 
-      if( schema2 == null )
-        throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden.\nWeder über den Namespace: "
-            + schemaURI + "\nNoch über die SchemaLocation: " + schemaLocation );
+      try
+      {
+        final URL schemaLocation = gmldoc.getSchemaLocation();
+        final GMLSchema schema2 = GMLSchemaCatalog.getSchema( schemaLocation );
 
-      return schema2;
+        if( schema2 != null )
+          return schema2;
+
+        errorMessage += schemaLocation;
+      }
+      catch( final MalformedURLException e )
+      {
+        errorMessage += e.getLocalizedMessage()
+            + ". Häufige Ursache ist ein fehlendes Schema im Cache (Kalypso-Server steht nicht zur Verfügung bzw. liefert nicht das notwendige Schema?)";
+
+        Logger.getLogger( GmlSerializer.class.getName() ).warning( errorMessage );
+      }
+
+      throw new GmlSerializeException( "GML-Schema konnte nicht geladen werden. Weder über den Namespace: "
+          + schemaURI + errorMessage );
     }
 
     return schema;
@@ -290,7 +301,7 @@ public final class GmlSerializer
     if( schemaURL != null )
       schema = new GMLSchema( schemaURL );
     else
-    //TODO load multiple Schema from schemaLocation -> Feature is composed of featureTypes from different schemas!!!
+      //TODO load multiple Schema from schemaLocation -> Feature is composed of featureTypes from different schemas!!!
       schema = loadSchemaForGmlDoc( gml );
 
     return createGMLWorkspace( gml, schema, schemaURL, null );
