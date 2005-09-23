@@ -523,7 +523,11 @@ public class ObservationTableModel extends AbstractTableModel
         final Object value = getValueAt( row, col );
 
         writer.write( separator );
-        writer.write( nf[col].format( value ) );
+        
+        if( nf[col] != null && value != null )
+            writer.write( nf[col].format( value ) );
+        else
+          writer.write( "<Fehler>" );
       }
 
       writer.newLine();
