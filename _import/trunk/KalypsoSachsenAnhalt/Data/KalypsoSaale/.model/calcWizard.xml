@@ -692,7 +692,7 @@
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- BERECHNUNG - und Ergebnisdarstellung -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung / Ergebnisse - Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Vorhersage / Ergebnisse - Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg10"/>

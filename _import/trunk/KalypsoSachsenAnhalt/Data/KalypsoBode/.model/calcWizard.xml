@@ -99,25 +99,20 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="60"/>
+		<arg name="rightSash" value="50"/>
 		<!--  
         Karte -->
-		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
-         Tabelle -->
+        Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
-	</page>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE UNTERHALB WENDEFURTH -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose unterhalb Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -301,22 +296,18 @@
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="60"/>
+		<arg name="rightSash" value="50"/>
 		<!--  
         Karte -->
-		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
-        Tabelle -->
+         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
