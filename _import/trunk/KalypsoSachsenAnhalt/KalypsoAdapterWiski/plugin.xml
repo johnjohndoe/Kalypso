@@ -28,5 +28,18 @@
             name="Wiski Data Provider"
             factory="org.kalypso.wiskiadapter.WiskiRepositoryFactory"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            objectClass="org.kalypso.wiskiadapter.WiskiRepository"
+            id="repositoryItem">
+         <action
+               label="Wiski List Dump"
+               class="org.kalypso.wiskiadapter.WiskiDump"
+               style="push"
+               id="wiskiListDump"/>
+      </objectContribution>
+   </extension>
 
 </plugin>

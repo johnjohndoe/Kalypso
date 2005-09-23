@@ -193,6 +193,11 @@ public class TsInfoItem implements IRepositoryItem
   {
     return m_group.getName();
   }
+  
+  String getWiskiStationName()
+  {
+    return m_map.getProperty( "station_name", "<?>" );
+  }
 
   /**
    * Return the name of the supergroup/gruppenart. The supergroup is the top structuring element.
