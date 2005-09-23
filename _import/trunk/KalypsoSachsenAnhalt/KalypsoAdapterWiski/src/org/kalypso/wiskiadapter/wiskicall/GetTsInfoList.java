@@ -60,28 +60,22 @@ public class GetTsInfoList implements IWiskiCall
   }
 
   /**
-   * Constructor with tsinfo_name. Note that groupId is ignored here (leaved as argument in order to overload
-   * constructor) and should be null. The one and only one tsinfolist with that tsinfo_name will be fetched from the
-   * wiski database.
-   * 
-   * @param groupId
-   *          not used, should be null
-   * @param tsinfo_name
-   *          name of the timeserie
+   * Constructor with a property-name and a value to look for within the given group
    */
-  public GetTsInfoList( final String groupId, final String tsinfo_name )
+  public GetTsInfoList( final String groupId, final String property, final String value )
   {
-    if( groupId != null )
-    {
-      // do nothing
-    }
-    
     filter = new SimpleRequestFilterTerm();
-    filter.addColumnReference( "tsinfo_name" );
-    filter.addOperator( "like" );
-    filter.addValue( tsinfo_name );
 
-    sort = null;
+    filter.addColumnReference( "tsinfo_group_ident" );
+    filter.addOperator( "like" );
+    filter.addValue( groupId );
+
+    filter.addColumnReference( property );
+    filter.addOperator( "like" );
+    filter.addValue( value );
+
+    sort = new SimpleRequestSortTerm();
+    sort.addColumnAscent( "tsinfo_name" );
   }
 
   public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,

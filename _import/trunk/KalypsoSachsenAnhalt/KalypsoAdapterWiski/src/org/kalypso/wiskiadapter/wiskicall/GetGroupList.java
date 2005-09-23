@@ -40,6 +40,21 @@ public class GetGroupList implements IWiskiCall
     sort = new SimpleRequestSortTerm();
     sort.addColumnAscent( "group_name" );
   }
+  
+  public GetGroupList( final String superGroupName, final String groupName )
+  {
+    filtergroup = new SimpleRequestFilterTerm();
+    filtergroup.addColumnReference( "supergroup_name" );
+    filtergroup.addOperator( "like" );
+    filtergroup.addValue( superGroupName );
+    
+    filtergroup.addColumnReference( "group_name" );
+    filtergroup.addOperator( "like" );
+    filtergroup.addValue( groupName );
+
+    sort = new SimpleRequestSortTerm();
+    sort.addColumnAscent( "group_name" );
+  }
 
   public void execute( final KiWWDataProviderRMIf wiski, final HashMap userData ) throws NoSuchObjectException,
       KiWWException, RemoteException

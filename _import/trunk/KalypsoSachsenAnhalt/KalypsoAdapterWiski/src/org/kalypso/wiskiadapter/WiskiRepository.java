@@ -3,13 +3,16 @@ package org.kalypso.wiskiadapter;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.RepositoryUtils;
-import org.kalypso.wiskiadapter.wiskicall.GetTsInfoList;
+import org.kalypso.wiskiadapter.wiskicall.GetSuperGroupList;
 import org.kalypso.wiskiadapter.wiskicall.IWiskiCall;
 
 import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
@@ -43,7 +46,7 @@ public class WiskiRepository extends AbstractRepository
 
   private final String m_password;
 
-  private IRepositoryItem[] m_children;
+  private Map m_children = null;
 
   /**
    * @param conf
@@ -139,33 +142,25 @@ public class WiskiRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    /*
-     * The wiski repository can directly find an item using the GetTsInfoList call. Once found, a TsInfoItem is created
-     * without a group since we do not want to load the whole hierarchy here.
-     * 
-     * Be aware that this could lead to unexpected results (since TsInfoItem.getParent() would return null)
-     */
-    final String wiskiId = RepositoryUtils.getItemId( id );
-    final GetTsInfoList call = new GetTsInfoList( null, wiskiId );
+    final String kalypsoWiskiId = RepositoryUtils.getItemId( id );
 
-    try
-    {
-      call.execute( m_wiski, m_userData );
+    final String parts[] = kalypsoWiskiId.split( "\\." );
+    if( parts.length != 3 )
+      throw new RepositoryException( "Der ID <" + id + "> ist kein gültiger Kalypso-Wiski-ID" );
 
-      if( call.getResultList().size() > 0 )
-      {
-        final HashMap map = (HashMap)call.getResultList().get( 0 );
-        return new TsInfoItem( this, map );
-      }
+    final String supergroupName = parts[0];
+    final String groupName = parts[1];
+    final String stationNo = parts[2];
 
+    final SuperGroupItem superGroup = (SuperGroupItem)getChildrenMap().get( supergroupName );
+    if( superGroup == null )
       return null;
-    }
-    catch( final Exception e )
-    {
-      throw new RepositoryException( e );
-    }
 
-    //return findItemRecursive( this, id );
+    final GroupItem group = superGroup.findGroup( groupName );
+    if( group == null )
+      return null;
+
+    return group.findTsInfo( "station_no", stationNo );
   }
 
   /**
@@ -197,16 +192,46 @@ public class WiskiRepository extends AbstractRepository
    */
   public IRepositoryItem[] getChildren() throws RepositoryException
   {
+    final Map map = getChildrenMap();
+
+    return (IRepositoryItem[])map.values().toArray( new IRepositoryItem[map.size()] );
+  }
+
+  /**
+   * Only used internally, lazy loading
+   */
+  private Map getChildrenMap() throws RepositoryException
+  {
     if( m_children == null )
     {
-      final String prop = WiskiUtils.getProperties().getProperty( WiskiUtils.PROP_SUPERGROUPNAMES );
+      final String prop = WiskiUtils.getProperty( WiskiUtils.PROP_SUPERGROUPNAMES );
       if( prop == null )
         throw new RepositoryException( "Gruppenliste in die Einstellungen (config.ini) nicht definiert" );
 
-      final String[] superGroupNames = prop.split( "," );
-      m_children = new IRepositoryItem[superGroupNames.length];
-      for( int i = 0; i < superGroupNames.length; i++ )
-        m_children[i] = new SuperGroupItem( this, superGroupNames[i] );
+      final String[] superGroupNames = prop.split( ";" );
+
+      final GetSuperGroupList call = new GetSuperGroupList( superGroupNames );
+      try
+      {
+        executeWiskiCall( call );
+      }
+      catch( final Exception e )
+      {
+        if( e instanceof RepositoryException )
+          throw (RepositoryException)e;
+        
+        throw new RepositoryException( "Gruppenarten konnte nicht ermittelt werden", e );
+      }
+
+      final List list = call.getResultList();
+
+      m_children = new HashMap( list.size() );
+      for( Iterator it = list.iterator(); it.hasNext(); )
+      {
+        final HashMap map = (HashMap)it.next();
+        final String name = (String)map.get( "supergroup_name" );
+        m_children.put( name, new SuperGroupItem( this, name ) );
+      }
     }
 
     return m_children;
@@ -220,10 +245,6 @@ public class WiskiRepository extends AbstractRepository
   /**
    * Performs a call on the wiski remote object. This should be used in order to allow automatic re-loging-in if the
    * session has timed out.
-   * 
-   * @throws RemoteException
-   * @throws KiWWException
-   * @throws RepositoryException
    */
   public void executeWiskiCall( final IWiskiCall call ) throws RemoteException, KiWWException, RepositoryException
   {

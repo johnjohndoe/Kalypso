@@ -126,8 +126,8 @@ public class WiskiTimeserie implements IObservation
       try
       {
         // 1. check if this is a prognose
-        boolean prognosed = m_tsinfo.getWiskiCustomId().indexOf( "Prognose" ) != -1;
-
+        boolean prognosed = m_tsinfo.isForecast();
+        
         final IsTsWritable call = new IsTsWritable( m_tsinfo.getWiskiId() );
         final WiskiRepository rep = (WiskiRepository)m_tsinfo.getRepository();
         rep.executeWiskiCall( call );
@@ -165,7 +165,7 @@ public class WiskiTimeserie implements IObservation
     {
       m_metadata = new MetadataList();
 
-      m_metadata.setProperty( ObservationConstants.MD_NAME, m_tsinfo.getWiskiName() );
+      m_metadata.setProperty( ObservationConstants.MD_NAME, m_tsinfo.getName() );
       m_metadata.setProperty( ObservationConstants.MD_DESCRIPTION, m_tsinfo.getWiskiDescription() );
       m_metadata.put( ObservationConstants.MD_ORIGIN, "Wiski" );
 
@@ -217,7 +217,7 @@ public class WiskiTimeserie implements IObservation
       if( req == null || req.getDateRange() == null )
       {
         dr = DateRange.createFromPastDays( Integer.valueOf(
-            WiskiUtils.getProperties().getProperty( WiskiUtils.PROP_NUMBER_OF_DAYS, "7" ) ).intValue() );
+            WiskiUtils.getProperty( WiskiUtils.PROP_NUMBER_OF_DAYS, "7" ) ).intValue() );
       }
       else
         dr = req.getDateRange();
@@ -419,21 +419,30 @@ public class WiskiTimeserie implements IObservation
       // 2. this failed, so next try is using sibling of other type
       // which might also contain a usable rating table
 
-      // try with sibling of other type: W or Q/V depending on our type
-      String otherType = null;
-      if( m_tsinfo.getWiskiType().equals( "W" ) )
+      // try with sibling of other parameter
+      final String prop = WiskiUtils.getProperty( "WQSEARCH_" + m_tsinfo.getWiskiGroupName() );
+      if( prop != null )
       {
-        if( useType.equals( TimeserieConstants.TYPE_RUNOFF ) )
-          otherType = "Q";
-        else
-          otherType = "V";
+        // step through the parameters that are possible siblings of the current one
+        final String[] parameters = prop.split( ";" );
+        for( int i = 0; i < parameters.length; i++ )
+        {
+          try
+          {
+            final TsInfoItem tsi = m_tsinfo.findSibling( parameters[i] );
+            if( tsi != null )
+            {
+              wqt = internFetchTable( tsi, rep, from, to );
+              break;
+            }
+          }
+          catch( final RepositoryException e )
+          {
+            // should not occur
+            e.printStackTrace();
+          }
+        }
       }
-      else
-        otherType = "W";
-
-      final TsInfoItem tsi = m_tsinfo.findSibling( otherType );
-      if( tsi != null )
-        wqt = internFetchTable( tsi, rep, from, to );
     }
 
     if( wqt != null )
@@ -459,6 +468,7 @@ public class WiskiTimeserie implements IObservation
       }
       catch( final WQException e )
       {
+        // should not occur
         e.printStackTrace();
       }
     }
@@ -504,6 +514,7 @@ public class WiskiTimeserie implements IObservation
     {
       for( final Iterator it = call.getAlarmList().iterator(); it.hasNext(); )
       {
+        // Beispiel: {epv_remark=null, epv_value=90, epv_id=513866742, epv_name=Alarmstufe_1, epv_type=0}
         final HashMap map = (HashMap)it.next();
 
         final String level = (String)map.get( "epv_name" );

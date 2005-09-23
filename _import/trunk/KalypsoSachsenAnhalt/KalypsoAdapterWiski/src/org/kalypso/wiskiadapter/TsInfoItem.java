@@ -1,19 +1,16 @@
 package org.kalypso.wiskiadapter;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.wiskiadapter.wiskicall.GetTsInfoList;
 
 /**
- * This item is adaptable into a wiski timeserie.
+ * This item is adaptable into a wiski timeserie. It represens a station.
  * 
  * @author schlienger
  */
@@ -74,14 +71,17 @@ public class TsInfoItem implements IRepositoryItem
   }
 
   /**
+   * Return the Kalypso-Wiski-ID which is built according to the following specification:
+   * <p>
+   * wiski://GRUPPENART.PARAMETERNAME.MESSSTELLENNUMMER
+   * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   public String getIdentifier()
   {
-    // return Wiski external name (not wiski intern id)
-    // this is the discussed solution with Kisters
-    // that is viable over time
-    return m_rep.getIdentifier() + getName();
+    //return m_rep.getIdentifier() + getName();
+    
+    return m_rep.getIdentifier() + getWiskiSuperGroupName() + "." + getWiskiGroupName() + "." + getWiskiStationNo();
   }
 
   /**
@@ -155,20 +155,6 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "tsinfo_id", "<?>" );
   }
 
-  String getWiskiName()
-  {
-    return m_map.getProperty( "stationparameter_longname", "<?>" );
-  }
-
-  /**
-   * @return the id (string) which can be used outside of wiski in a persistent and viable manner. This id is actually
-   *         defined by the administrator and is not likely to change for this timeserie.
-   */
-  String getWiskiCustomId()
-  {
-    return m_map.getProperty( "tsinfo_name", "<?>" );
-  }
-
   String getWiskiDescription()
   {
     final StringBuffer bf = new StringBuffer();
@@ -180,9 +166,52 @@ public class TsInfoItem implements IRepositoryItem
     return bf.toString();
   }
 
+  /**
+   * @return wiski internal station id
+   */
   String getWiskiStationId()
   {
     return m_map.getProperty( "station_id", "<?>" );
+  }
+
+  /**
+   * Return the station number (in german: Messstellennummer) in the Wiski sense.
+   * <p>
+   * This represents the third part of the Kalypso-Wiski-ID (GRUPPENART.PARAMETERNAME.MESSSTELLENNUMMER)
+   */
+  String getWiskiStationNo()
+  {
+    return m_map.getProperty( "station_no", "<?>" );
+  }
+
+  /**
+   * Return the name of the group/parameter. The group of a TsInfoItem is actually the Parameter in the Wiski sense.
+   * <p>
+   * This represents the second part of the Kalypso-Wiski-ID (GRUPPENART.PARAMETERNAME.MESSSTELLENNUMMER)
+   */
+  String getWiskiGroupName()
+  {
+    return m_group.getName();
+  }
+
+  /**
+   * Return the name of the supergroup/gruppenart. The supergroup is the top structuring element.
+   * <p>
+   * This represents the first part of the Kalypso-Wiski-ID (GRUPPENART.PARAMETERNAME.MESSSTELLENNUMMER)
+   */
+  String getWiskiSuperGroupName()
+  {
+    try
+    {
+      return m_group.getParent().getName();
+    }
+    catch( final RepositoryException e )
+    {
+      // can occur in extreme situations, so just print stack trace
+      e.printStackTrace();
+
+      return "<FEHLER IN SCHNITTSTELLE>";
+    }
   }
 
   int getWiskiDistUnitAsCalendarField()
@@ -211,42 +240,28 @@ public class TsInfoItem implements IRepositoryItem
   {
     final String strWiskiValue = m_map.getProperty( "tsinfo_distvalue" );
     if( strWiskiValue == null )
-      throw new IllegalStateException( "Wiski does not deliver which amount of the given time-unit to use (Property: tsinfo_distvalue)" );
-    
+      throw new IllegalStateException(
+          "Wiski does not deliver which amount of the given time-unit to use (Property: tsinfo_distvalue)" );
+
     return Integer.valueOf( strWiskiValue ).intValue();
+  }
+
+  /**
+   * Helper: finds a sibling timeserie (under same station) of the given parameter
+   */
+  TsInfoItem findSibling( final String parameterName ) throws RepositoryException
+  {
+    final SuperGroupItem supergroup = (SuperGroupItem)m_group.getParent();
+    final GroupItem group = supergroup.findGroup( parameterName );
+    
+    return group.findTsInfo( "station_no", getWiskiStationNo() );
   }
   
   /**
-   * Helper: finds a sibling timeserie (under same station) of the given otherType. For instance if 'this' is a
-   * timeserie named MyStation.Type.XX, then the timeserie named MyStation.otherType.XX is looked for.
+   * @return true if the container is designed for forecasts
    */
-  TsInfoItem findSibling( final String otherType )
+  boolean isForecast()
   {
-    final String name = getWiskiCustomId();
-    final String[] splits = name.split( "\\." );
-
-    if( splits.length < 2 )
-      return null;
-
-    splits[1] = otherType;
-    final String otherName = StringUtils.join( splits, '.' );
-    final GetTsInfoList call = new GetTsInfoList( null, otherName );
-    try
-    {
-      m_rep.executeWiskiCall( call );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-
-    if( call.getResultList().size() > 0 )
-    {
-      final HashMap map = (HashMap)call.getResultList().get( 0 );
-      return new TsInfoItem( m_rep/*m_group*/, map );
-    }
-
-    return null;
+    return getWiskiSuperGroupName().indexOf( WiskiUtils.getProperty( "FORECAST_SUPERGROUP" ) ) != -1;
   }
 }

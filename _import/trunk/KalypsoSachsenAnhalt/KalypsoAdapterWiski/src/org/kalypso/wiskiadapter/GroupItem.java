@@ -2,6 +2,7 @@ package org.kalypso.wiskiadapter;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -63,7 +64,7 @@ public class GroupItem implements IRepositoryItem
    */
   public IRepositoryItem getParent() throws RepositoryException
   {
-    return m_rep;
+    return m_parent;
   }
 
   /**
@@ -116,5 +117,30 @@ public class GroupItem implements IRepositoryItem
   {
     // nicht adaptable
     return null;
+  }
+
+  /**
+   * Find a TsInfoItem (child of this group) using a filter with the given property and value
+   * 
+   * @return null if not found
+   */
+  public TsInfoItem findTsInfo( final String property, final String value ) throws RepositoryException
+  {
+    try
+    {
+      final GetTsInfoList call = new GetTsInfoList( m_id, property, value );
+      m_rep.executeWiskiCall( call );
+
+      final List list = call.getResultList();
+      if( list.size() == 0 )
+        return null;
+
+      final HashMap map = (HashMap)list.get( 0 );
+      return new TsInfoItem( this, map );
+    }
+    catch( final Exception e ) // KiWWException and RemoteException
+    {
+      throw new RepositoryException( e );
+    }
   }
 }

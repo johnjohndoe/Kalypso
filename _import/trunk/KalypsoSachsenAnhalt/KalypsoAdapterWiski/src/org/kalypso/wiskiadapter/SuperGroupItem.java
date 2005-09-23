@@ -2,6 +2,7 @@ package org.kalypso.wiskiadapter;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -96,9 +97,6 @@ public class SuperGroupItem implements IRepositoryItem
     return m_children;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getRepository()
-   */
   public IRepository getRepository()
   {
     return m_rep;
@@ -108,5 +106,30 @@ public class SuperGroupItem implements IRepositoryItem
   {
     // nicht adaptable
     return null;
+  }
+
+  /**
+   * Find a group (child of this supergroup) which has the given name.
+   * 
+   * @return null if not found.
+   */
+  public GroupItem findGroup( final String groupName ) throws RepositoryException
+  {
+    try
+    {
+      final GetGroupList call = new GetGroupList( m_name, groupName );
+      m_rep.executeWiskiCall( call );
+
+      final List list = call.getResultList();
+      if( list.size() == 0 )
+        return null;
+
+      final HashMap map = (HashMap)list.get( 0 );
+      return new GroupItem( this, (String)map.get( "group_id" ), (String)map.get( "group_name" ) );
+    }
+    catch( final Exception e )
+    {
+      throw new RepositoryException( "Konnte Parameter <" + groupName + "> in <" + m_name + "> nicht finden.", e );
+    }
   }
 }

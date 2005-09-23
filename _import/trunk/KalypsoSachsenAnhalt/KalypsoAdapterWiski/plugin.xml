@@ -24,7 +24,7 @@
          name="Wiski Repository Factories"
          point="org.kalypso.repository.factories">
       <repository
-            conf="rmi://193.23.163.115:10991/KiWWDataProvider#-#em#123abc#de"
+            conf="rmi://193.23.163.115:10991/KiWWDataProvider#-#kmustermann#geheim#de"
             name="Wiski Data Provider"
             factory="org.kalypso.wiskiadapter.WiskiRepositoryFactory"/>
    </extension>

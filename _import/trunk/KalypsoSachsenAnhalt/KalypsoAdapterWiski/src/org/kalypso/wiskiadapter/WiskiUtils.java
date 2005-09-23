@@ -62,6 +62,16 @@ public final class WiskiUtils
       IOUtils.closeQuietly( ins );
     }
   }
+  
+  public static String getProperty( final String key )
+  {
+    return getProperties().getProperty( key );
+  }
+  
+  public static String getProperty( final String key, final String defaultValue )
+  {
+    return getProperties().getProperty( key, defaultValue );
+  }
 
   /**
    * Forces the properties to be reloaded for the next call to getProperties()
@@ -110,7 +120,7 @@ public final class WiskiUtils
    */
   public static String wiskiType2Kalypso( final String wiskiType )
   {
-    final String type = getProperties().getProperty( "TYPE_" + wiskiType );
+    final String type = getProperty( "TYPE_" + wiskiType );
 
     if( type == null )
       throw new IllegalArgumentException( "Wiski-Typ nicht erkannt: " + wiskiType );
@@ -123,7 +133,7 @@ public final class WiskiUtils
    */
   public static String wiskiMetadataName2Kalypso( final String wiskiName )
   {
-    final String md = getProperties().getProperty( "MD_" + wiskiName );
+    final String md = getProperty( "MD_" + wiskiName );
 
     if( md == null )
       throw new IllegalArgumentException( "Wiski-Name nicht erkannt: " + wiskiName );
@@ -136,7 +146,7 @@ public final class WiskiUtils
    */
   public static Integer wiskiStatus2Kalypso( final String wiskiStatus )
   {
-    final String status = getProperties().getProperty( "STATUS_" + wiskiStatus );
+    final String status = getProperty( "STATUS_" + wiskiStatus );
 
     if( status == null )
       throw new IllegalArgumentException( "Wiski-Status nicht erkannt: " + wiskiStatus );
