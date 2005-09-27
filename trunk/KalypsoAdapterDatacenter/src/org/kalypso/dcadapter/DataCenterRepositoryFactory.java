@@ -30,24 +30,17 @@ public class DataCenterRepositoryFactory extends AbstractRepositoryFactory
    */
   public boolean configureRepository()
   {
-    //    final Display display = new Display();
-    //    final Shell shell = new Shell( display );
-
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    boolean res = false;
 
     final ConfigDialog dlg = new ConfigDialog( shell );
     if( dlg.open() == Window.OK )
     {
       setConfiguration( dlg.getUrl() + "#" + dlg.getUsername() + "#" + dlg.getPassword() );
 
-      res = true;
+      return true;
     }
 
-    //    shell.dispose();
-    //    display.dispose();
-
-    return res;
+    return false;
   }
 
   /**
