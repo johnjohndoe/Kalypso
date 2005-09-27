@@ -205,11 +205,11 @@
 			<arg name="timeUnit" value="HOUR"/>
 			<arg name="timeStep" value="6"/>
 			<arg name="obs1">
-				<arg name="label" value="Silberhütte"/>
+				<arg name="label" value="Bühne-Hoppenstedt"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Bühne_Hoppenstedt.zml"/>
 			</arg>
 			<arg name="obs2">
-				<arg name="label" value="Meisdorf"/>
+				<arg name="label" value="Ilsenburg"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ilsenburg.zml"/>
 			</arg>
 		</arg>
@@ -235,11 +235,11 @@
 			<arg name="timeUnit" value="HOUR"/>
 			<arg name="timeStep" value="6"/>
 			<arg name="obs1">
-				<arg name="label" value="Silberhütte"/>
+				<arg name="label" value="Bühne-Hoppenstedt"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Bühne_Hoppenstedt.zml"/>
 			</arg>
 			<arg name="obs2">
-				<arg name="label" value="Meisdorf"/>
+				<arg name="label" value="Ilsenburg"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ilsenburg.zml"/>
 			</arg>
 		</arg>
