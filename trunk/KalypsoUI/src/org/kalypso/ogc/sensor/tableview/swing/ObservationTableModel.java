@@ -505,6 +505,8 @@ public class ObservationTableModel extends AbstractTableModel
 
       writer.write( separator );
       writer.write( tvc.getName() );
+      
+      col++;
     }
     
     writer.newLine();
@@ -527,7 +529,7 @@ public class ObservationTableModel extends AbstractTableModel
         if( nf[col] != null && value != null )
             writer.write( nf[col].format( value ) );
         else
-          writer.write( "<Fehler>" );
+          writer.write( "" );
       }
 
       writer.newLine();
