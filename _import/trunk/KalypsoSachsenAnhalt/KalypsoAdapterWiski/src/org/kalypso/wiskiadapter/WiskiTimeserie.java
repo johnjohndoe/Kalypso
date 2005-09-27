@@ -503,6 +503,9 @@ public class WiskiTimeserie implements IObservation
 
   /**
    * Helper for translating wiski alarm levels into kalypso metadata
+   * <p>
+   * Alarmlevels are "attached" to the timeserie, meaning that the unit of the
+   * alarmlevels is the same as the unit of the timeserie
    */
   private void fetchAlarmLevels( final MetadataList md ) throws NumberFormatException, RemoteException, KiWWException,
       RepositoryException

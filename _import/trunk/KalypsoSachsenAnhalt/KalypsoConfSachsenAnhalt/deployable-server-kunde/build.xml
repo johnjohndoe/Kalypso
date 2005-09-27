@@ -98,7 +98,7 @@
             <path path="${dist.webdav}/prognose/${pName}" />
         </pathconvert>
 
-        <exec executable="cmd.exe" dir="${project.path}/deployable-server">
+        <exec executable="cmd.exe" dir=".">
             <arg line="/C start cvs-co.bat ${user.name} ${copath} ${pPackage}" />
         </exec>
 
@@ -125,6 +125,10 @@
         <!-- use the central build-core script for the common projects -->
         <ant antfile="${workspace}/KalypsoBuild/central-build/build-core.xml" target="build-core" inheritAll="false" />
 
+            <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml"
+                 target="deploy"
+                 inheritAll="false" />
+        
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
         <ant antfile="${workspace}/KalypsoAdapterRobotron/etc/ant/build.xml" target="deploy" inheritAll="false" />
         <ant antfile="${workspace}/KalypsoAdapterWiski/etc/ant/build.xml" target="deploy" inheritAll="false" />

@@ -26,12 +26,6 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
  */
 public class WiskiRepository extends AbstractRepository
 {
-  /** expected number of items in the configuration string */
-  private final static int CONF_NB_ITEMS = 5;
-
-  /** separator of the configuration string */
-  private final static String CONF_SEP = "#";
-
   private final static Logger LOG = Logger.getLogger( WiskiRepository.class.getName() );
 
   private KiWWDataProviderRMIf m_wiski = null;
@@ -56,16 +50,16 @@ public class WiskiRepository extends AbstractRepository
   {
     super( name, factory, conf, readOnly );
 
-    final String[] items = conf.split( CONF_SEP );
-
-    if( items.length != CONF_NB_ITEMS )
-      throw new RepositoryException( "Configuration should have " + CONF_NB_ITEMS + " items separated by " + CONF_SEP );
-
-    m_url = items[0];
-    m_domain = items[1];
-    m_logonName = items[2];
-    m_password = items[3];
-    final String language = items[4];
+    final WiskiConfigValidator validator = new WiskiConfigValidator( );
+    final String msg = validator.isValid( conf );
+    if( msg != null )
+      throw new RepositoryException( msg );
+      
+    m_url = validator.getUrl();
+    m_domain = validator.getDomain();
+    m_logonName = validator.getLogonName();
+    m_password = validator.getPassword();
+    final String language = validator.getLanguage();
 
     m_userData = new HashMap();
     m_userData.put( "domain", m_domain );
