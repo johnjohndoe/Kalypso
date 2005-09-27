@@ -40,9 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.core.client;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -114,16 +116,19 @@ public class ProxyFactory
    */
   public Stub getAnyProxy( final String serviceName, final String intfName ) throws ServiceException
   {
+    final List list = new ArrayList();
+
     for( final Iterator itServer = getServers( serviceName ).iterator(); itServer.hasNext(); )
     {
       final String serverUrl = (String)itServer.next();
-      final Stub proxy = getCheckedProxy( serverUrl, serviceName, intfName );
+      final Stub proxy = getCheckedProxy( serverUrl, serviceName, intfName, list );
       if( proxy != null )
         return proxy;
     }
 
-    throw new ServiceException( "No Service available. Could not find any servicing server: " + serviceName + " - "
-        + intfName, null );
+    final Exception e = (Exception)( list.size() > 0 ? list.get( list.size() - 1 ) : new IllegalStateException(
+        "Keine Server-URL gefunden. Siehe Kalypso-Konfiguration." ) );
+    throw new ServiceException( "Dienst <" + serviceName + "> steht nicht zur Verfügung. Grund: " + e.getLocalizedMessage(), e );
   }
 
   /**
@@ -152,7 +157,7 @@ public class ProxyFactory
     for( final Iterator itServer = servers.iterator(); itServer.hasNext(); )
     {
       final String serverUrl = (String)itServer.next();
-      final Stub proxy = getCheckedProxy( serverUrl, serviceName, intfName );
+      final Stub proxy = getCheckedProxy( serverUrl, serviceName, intfName, null );
       if( proxy != null )
       {
         try
@@ -161,10 +166,10 @@ public class ProxyFactory
           final URL url = new URL( serverUrl );
           stubs.put( url.getHost() + "-" + url.getPort(), proxy );
         }
-        catch( MalformedURLException e )
+        catch( final MalformedURLException e )
         {
           e.printStackTrace();
-          // verver happens, if proxy = null
+          // never happens, if proxy != null
         }
       }
     }
@@ -193,9 +198,13 @@ public class ProxyFactory
   /**
    * Gets the proxy and checks, if it is available.
    * 
+   * @param exceptions
+   *          if not null, the exceptions that might occur during the execution of this method are stored in the list
+   * 
    * @return null, if proxy is not available
    */
-  private Stub getCheckedProxy( final String serverUrl, final String serviceName, final String intfName )
+  private Stub getCheckedProxy( final String serverUrl, final String serviceName, final String intfName,
+      final List exceptions )
   {
     try
     {
@@ -206,10 +215,22 @@ public class ProxyFactory
       // if we get here, service is ok
       return proxy;
     }
-    catch( Exception e ) // generic Exception is caught here for simplicity
+    catch( final InvocationTargetException e )
     {
-      return null;
+      e.printStackTrace();
+      
+      if( exceptions != null )
+        exceptions.add( e.getTargetException() );
     }
+    catch( final Exception e ) // generic Exception is caught here for simplicity
+    {
+      e.printStackTrace();
+      
+      if( exceptions != null )
+        exceptions.add( e );
+    }
+    
+    return null;
   }
 
   /** Creates the proxy for the given endpoint. Will be cached. */
