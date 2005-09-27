@@ -171,4 +171,22 @@
          install-size="0"
          version="1.0.0"/>
 
+   <plugin
+         id="org.kalypso.dwd"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.ui.addlayer"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="org.kalypso.ui.observationimport"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
 </feature>
