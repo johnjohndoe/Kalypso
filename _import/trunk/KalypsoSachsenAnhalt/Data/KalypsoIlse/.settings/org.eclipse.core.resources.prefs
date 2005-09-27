@@ -1,4 +1,4 @@
-#Tue Sep 27 10:44:40 CEST 2005
+#Tue Sep 27 11:20:40 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -183,6 +183,7 @@ encoding//Rechenvarianten/20041125_15_07/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QV_BWALDE.zml=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_14h45/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Bodenfeuchten.gtt=UTF-8
+encoding//.templates/Modell/wiskiexport_prognose.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h39/steuerparameter.gft=UTF-8
 encoding//.prognose/prognose13/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QP_BURGNEU.zml=UTF-8

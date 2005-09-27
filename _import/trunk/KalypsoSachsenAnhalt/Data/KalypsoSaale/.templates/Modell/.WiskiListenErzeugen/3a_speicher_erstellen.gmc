@@ -1,0 +1,12 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../wiskiimport_speicher.gml"/>
+	<featuremapping>
+		<gmlsource xlink:href="../modell.gml"/>
+		<gmlsource xlink:href="wiskiimport_leer.gml"/>
+		<addFeaturesMapping fromPath="SpeicherCollectionAssociation/SpeicherMember" toPath="WiskiMember" fromID="PNR" fid="Speicher-${fromID}" handleExisting="change">
+			<map from="Name" to="name"/>
+			<map from="Inhalt" to="lokal"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>

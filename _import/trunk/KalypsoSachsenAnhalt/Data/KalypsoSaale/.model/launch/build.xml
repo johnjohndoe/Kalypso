@@ -172,6 +172,16 @@
 		</kalypso.runCalculation>
 	</target>
 
+    <!-- ================================= 
+          target: exportVorhersagen              
+         ================================= -->
+
+    <target name="exportVorhersagen" depends="calculationProperties" description="Export der Prognosen">
+        <echo message="Vorhersagezeitreihen werden exportiert"/>
+		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    </target>
+
 	<!-- ================================= 
           target: updateLocations     
           Arbeitet auf der selektierten modell.gml   

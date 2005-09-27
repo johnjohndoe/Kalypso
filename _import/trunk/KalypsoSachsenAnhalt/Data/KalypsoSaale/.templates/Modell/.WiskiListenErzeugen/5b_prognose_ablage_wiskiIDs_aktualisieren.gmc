@@ -1,0 +1,17 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../wiskiexport_prognose.gml"/>
+	<changesource>
+		<gmlsource xlink:href="../wiskiexport_prognose.gml"/>
+		<visitor featurePath="WiskiMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="wiski_zukunft"/>
+			<argument name="href" value="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Durchfluss.${fidOnlyDigits}"/>
+		</visitor>
+		<visitor featurePath="WiskiMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="wiski_simulation_zukunft"/>
+			<argument name="href" value="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Durchfluss.${fidOnlyDigits}"/>
+		</visitor>
+	</changesource>
+</gmlconvert>
+
+

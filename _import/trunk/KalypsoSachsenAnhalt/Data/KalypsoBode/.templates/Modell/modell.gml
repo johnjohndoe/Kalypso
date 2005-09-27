@@ -18,7 +18,7 @@
         <tubigpegel:WasserlaufModell fid="WLM_Staßfurt">
           <tubigpegel:Name>Staßfurt</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5265120.666353023,5752160.263210346</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -49,7 +49,7 @@
         <tubigpegel:WasserlaufModell fid="WLM_Wegeleben">
           <tubigpegel:Name>Wegeleben</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5237817.466836101,5757262.4569166275</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -80,7 +80,7 @@
         <tubigpegel:WasserlaufModell fid="WLM_Ditfurt">
           <tubigpegel:Name>Ditfurt</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5238766.71591927,5751133.2589417035</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -111,7 +111,7 @@
         <tubigpegel:WasserlaufModell fid="WLM_Nienhagen">
           <tubigpegel:Name>Nienhagen</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5236078.022653717,5763414.323225588</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -142,7 +142,7 @@
         <tubigpegel:WasserlaufModell fid="WLM_Neugattersleben">
           <tubigpegel:Name>Neugattersleben</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5273131.126460996,5750908.695825978</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -173,7 +173,7 @@
         <tubigpegel:WasserlaufModell fid="WLM_Hadmersleben">
           <tubigpegel:Name>Hadmersleben</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5247443.86571238,5769896.309583677</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -204,7 +204,7 @@
         <tubigpegel:WasserlaufModell fid="WLM_Hausneindorf">
           <tubigpegel:Name>Hausneindorf</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5242962.026694506,5751581.344781446</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -235,7 +235,7 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Meisdorf">
           <tubigpegel:Name>Meisdorf</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5243204.612193139,5735094.576465873</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -295,7 +295,7 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Elend">
           <tubigpegel:Name>Elend</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5202064.849923498,5743158.864709639</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -355,11 +355,11 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Hasselfelde">
           <tubigpegel:Name>Hasselfelde</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5213844.941062603,5736803.356648105</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
-          <tubigpegel:Messstellennummer>4421200</tubigpegel:Messstellennummer>
+          <tubigpegel:Messstellennummer>579504</tubigpegel:Messstellennummer>
           <tubigpegel:Kurz_Name>hass</tubigpegel:Kurz_Name>
           <tubigpegel:istEingabePegel>true</tubigpegel:istEingabePegel>
           <tubigpegel:istErgebnisPegel>true</tubigpegel:istErgebnisPegel>
@@ -415,7 +415,7 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Mahndorf">
           <tubigpegel:Name>Mahndorf</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5222223.011338177,5757795.57484032</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -475,7 +475,7 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Silberhütte">
           <tubigpegel:Name>Silberhütte</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5229948.558568242,5729148.945125754</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -535,7 +535,7 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Königshütte_WB">
           <tubigpegel:Name>Königshütte-WB</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5207708.385630242,5742265.26812559</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -595,7 +595,7 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Steinerne_Renne">
           <tubigpegel:Name>Steinerne Renne</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5205705.650895029,5751283.956602088</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -655,7 +655,7 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Oschersleben">
           <tubigpegel:Name>Oschersleben</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5241071.153292574,5772263.0450663855</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -715,7 +715,7 @@
         <tubigpegel:Niederschlagsgebiet fid="NSGebiet_Trautenstein">
           <tubigpegel:Name>Trautenstein</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5209130.667362792,5737147.612297329</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -775,7 +775,7 @@
         <tubigpegel:Pegel fid="Pegel_Thale">
           <tubigpegel:Name>Thale</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5225486.406048773,5741212.732772261</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -795,7 +795,7 @@
         <tubigpegel:Pegel fid="Pegel_Wendefurth">
           <tubigpegel:Name>Wendefurth</tubigpegel:Name>
           <tubigpegel:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5218308.349121872,5742049.203931116</gml:coordinates>
             </gml:Point>
           </tubigpegel:Ort>
@@ -828,7 +828,7 @@
         <tubigombrometer:Ombrometer fid="Ombro_Weferlingen">
           <tubigombrometer:Name>Weferlingen</tubigombrometer:Name>
           <tubigombrometer:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5231071.410767844,5805231.416728718</gml:coordinates>
             </gml:Point>
           </tubigombrometer:Ort>
@@ -843,7 +843,7 @@
         <tubigombrometer:Ombrometer fid="Ombro_Ditfurt">
           <tubigombrometer:Name>Ditfurt</tubigombrometer:Name>
           <tubigombrometer:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5238766.71591927,5751133.2589417035</gml:coordinates>
             </gml:Point>
           </tubigombrometer:Ort>
@@ -858,7 +858,7 @@
         <tubigombrometer:Ombrometer fid="Ombro_Elend">
           <tubigombrometer:Name>Elend</tubigombrometer:Name>
           <tubigombrometer:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5202064.849923498,5743158.864709639</gml:coordinates>
             </gml:Point>
           </tubigombrometer:Ort>
@@ -873,7 +873,7 @@
         <tubigombrometer:Ombrometer fid="Ombro_Hasselfelde">
           <tubigombrometer:Name>Hasselfelde</tubigombrometer:Name>
           <tubigombrometer:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5213844.941062603,5736803.356648105</gml:coordinates>
             </gml:Point>
           </tubigombrometer:Ort>
@@ -888,7 +888,7 @@
         <tubigombrometer:Ombrometer fid="Ombro_Silberhütte">
           <tubigombrometer:Name>Silberhütte</tubigombrometer:Name>
           <tubigombrometer:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5229948.558568242,5729148.945125754</gml:coordinates>
             </gml:Point>
           </tubigombrometer:Ort>
@@ -903,7 +903,7 @@
         <tubigombrometer:Ombrometer fid="Ombro_Mahndorf">
           <tubigombrometer:Name>Mahndorf</tubigombrometer:Name>
           <tubigombrometer:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5222223.011338177,5757795.57484032</gml:coordinates>
             </gml:Point>
           </tubigombrometer:Ort>
@@ -934,7 +934,7 @@
         <tubigspeicher:Speicher fid="Speicher_KalteBode">
           <tubigspeicher:Name>HWR Kalte Bode</tubigspeicher:Name>
           <tubigspeicher:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5206105.143908598,5743473.354427688</gml:coordinates>
             </gml:Point>
           </tubigspeicher:Ort>
@@ -1462,7 +1462,7 @@
         <tubigspeicher:Speicher fid="Speicher_Rappbode">
           <tubigspeicher:Name>TS Rappbode</tubigspeicher:Name>
           <tubigspeicher:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5216625.661087754,5744001.801473191</gml:coordinates>
             </gml:Point>
           </tubigspeicher:Ort>
@@ -1981,7 +1981,7 @@
         <tubigspeicher:Speicher fid="Speicher_Wendefurth">
           <tubigspeicher:Name>TS Wendefurth</tubigspeicher:Name>
           <tubigspeicher:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5218272.876245457,5742160.857450546</gml:coordinates>
             </gml:Point>
           </tubigspeicher:Ort>
@@ -2545,7 +2545,7 @@
         <tubigspeicher:Überleitung fid="Überleitung_Rappbode">
           <tubigspeicher:Name>TS Königshütte</tubigspeicher:Name>
           <tubigspeicher:Ort>
-            <gml:Point srsName="http://www.opengis.net/gml/srs/EPSG.xml#31469">
+            <gml:Point srsName="EPSG:31469">
               <gml:coordinates cs="," decimal="." ts=" ">5210386.315687956,5741854.463837401</gml:coordinates>
             </gml:Point>
           </tubigspeicher:Ort>
