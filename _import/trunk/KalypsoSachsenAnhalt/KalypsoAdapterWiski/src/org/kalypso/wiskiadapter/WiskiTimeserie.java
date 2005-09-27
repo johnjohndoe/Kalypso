@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
@@ -292,9 +293,20 @@ public class WiskiTimeserie implements IObservation
     final LinkedHashMap value_tstamp_hash_lmap = new LinkedHashMap();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values.getAxisList(), Date.class );
-    final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( values.getAxisList(), Number.class, true );
-    //final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values
-    //  .getAxisList(), valueAxis );
+
+    // find corresponding axis type
+    final String wiskiType = m_tsinfo.getWiskiType();
+    final String kalypsoType = WiskiUtils.wiskiType2Kalypso( wiskiType );
+    final IAxis valueAxis;
+    try
+    {
+      valueAxis = ObservationUtilities.findAxisByType( values.getAxisList(), kalypsoType );
+    }
+    catch( final NoSuchElementException e )
+    {
+      throw new SensorException( "Die Zeitreihenwerte können nicht nach Wiski geschrieben werden" +
+      		". Keine Achse vom Typ " + kalypsoType + " wurde gefunden." );
+    }
 
     final ITuppleModel filteredValues = intfil.getValues( null );
     for( int ix = 0; ix < filteredValues.getCount(); ix++ )
@@ -303,8 +315,6 @@ public class WiskiTimeserie implements IObservation
 
       final Date date = (Date)filteredValues.getElement( ix, dateAxis );
       final Number value = (Number)filteredValues.getElement( ix, valueAxis );
-      //final Number status = (Number) filteredValues.getElement( ix,
-      // statusAxis );
 
       row.put( "timestamp", new Timestamp( date.getTime() ) );
       row.put( "tsc_value0", new Double( value.doubleValue() ) );

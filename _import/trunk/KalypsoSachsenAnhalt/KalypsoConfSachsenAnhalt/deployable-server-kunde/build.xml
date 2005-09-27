@@ -206,14 +206,17 @@
         <echo message="Building all services" />
     </target>
 
+    <target name="deploy-lhz-calcService" depends="build-CalcService">
+	    <copy tofile="${dist}/Kalypso_CalculationService.war"
+          file="${workspace}/KalypsoServiceCalc/build/deploy/jaxrpc-kalypsoservice_calculation.zip"
+          overwrite="true" />
+    </target>
+
     <target name="deploy-lhz"
-            depends="clean,prepare,build-services,copy-allconf,copy-data,co-sachsen-anhalt-models"
+            depends="clean,prepare,build-services,copy-allconf,copy-data,co-sachsen-anhalt-models, deploy-lhz-calcService"
             description="Deploy as File in the ${dist} dir for LHZ">
         <echo message="Copying the wars and all other stuff to ${dist} - Ready for sending to LHZ" />
 
-        <copy tofile="${dist}/Kalypso_CalculationService.war"
-              file="${workspace}/KalypsoServiceCalc/build/deploy/jaxrpc-kalypsoservice_calculation.zip"
-              overwrite="true" />
         <copy tofile="${dist}/Kalypso_MetaDocService.war"
               file="${workspace}/KalypsoServiceMetaDoc/build/deploy/jaxrpc-kalypsoservice_metadoc.zip"
               overwrite="true" />
