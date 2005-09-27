@@ -83,7 +83,7 @@ public class GMLSchema implements IGMLSchema
       }
 
       if( schema == null )
-        throw new GMLException( "Could not load schema: namespace='" + namespace + "', location='" + location + "'" );
+        throw new GMLException( "Konnte Schema nicht laden: namespace='" + namespace + "', location='" + location + "'" );
 
       m_importedSchemas.put( namespace, schema );
     }
