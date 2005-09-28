@@ -70,6 +70,8 @@ public class GetTsInfoList implements IWiskiCall
     filter.addOperator( "like" );
     filter.addValue( groupId );
 
+    filter.addOperator( "and" );
+    
     filter.addColumnReference( property );
     filter.addOperator( "like" );
     filter.addValue( value );

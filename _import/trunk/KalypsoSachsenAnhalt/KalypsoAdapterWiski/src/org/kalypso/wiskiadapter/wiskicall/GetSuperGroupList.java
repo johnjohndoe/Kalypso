@@ -48,6 +48,9 @@ public class GetSuperGroupList implements IWiskiCall
       filtergroup.addColumnReference( "supergroup_name" );
       filtergroup.addOperator( "like" );
       filtergroup.addValue( superGroupNames[i] );
+      
+      if( i < superGroupNames.length - 1 )
+        filtergroup.addOperator( "or" );
     }
 
     sort = new SimpleRequestSortTerm();

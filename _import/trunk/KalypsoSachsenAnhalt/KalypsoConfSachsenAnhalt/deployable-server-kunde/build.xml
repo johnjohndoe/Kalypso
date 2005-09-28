@@ -212,20 +212,28 @@
           overwrite="true" />
     </target>
 
-    <target name="deploy-lhz"
-            depends="clean,prepare,build-services,copy-allconf,copy-data,co-sachsen-anhalt-models, deploy-lhz-calcService"
-            description="Deploy as File in the ${dist} dir for LHZ">
-        <echo message="Copying the wars and all other stuff to ${dist} - Ready for sending to LHZ" />
-
-        <copy tofile="${dist}/Kalypso_MetaDocService.war"
-              file="${workspace}/KalypsoServiceMetaDoc/build/deploy/jaxrpc-kalypsoservice_metadoc.zip"
-              overwrite="true" />
+    <target name="deploy-lhz-obsService" depends="build-ObsService">
         <copy tofile="${dist}/Kalypso_ObservationService.war"
               file="${workspace}/KalypsoServiceObs/build/deploy/jaxrpc-kalypsoservice_observation.zip"
               overwrite="true" />
+    </target>
+
+    <target name="deploy-lhz-metaDocService" depends="build-MetaDocService">
+        <copy tofile="${dist}/Kalypso_MetaDocService.war"
+              file="${workspace}/KalypsoServiceMetaDoc/build/deploy/jaxrpc-kalypsoservice_metadoc.zip"
+              overwrite="true" />
+    </target>
+
+    <target name="deploy-lhz-userService" depends="build-UserService">
         <copy tofile="${dist}/Kalypso_UserService.war"
               file="${workspace}/KalypsoServiceUser/build/deploy/jaxrpc-kalypsoservice_user.zip"
               overwrite="true" />
+    </target>
+
+    <target name="deploy-lhz"
+            depends="clean,prepare,build-services,copy-allconf,copy-data,co-sachsen-anhalt-models,deploy-lhz-calcService,deploy-lhz-metaDocService,deploy-lhz-obsService,deploy-lhz-userService"
+            description="Deploy as File in the ${dist} dir for LHZ">
+        <echo message="Copying the wars and all other stuff to ${dist} - Ready for sending to LHZ" />
     </target>
 
 </project>

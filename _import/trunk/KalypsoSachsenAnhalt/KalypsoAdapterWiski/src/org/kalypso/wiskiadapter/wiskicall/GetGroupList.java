@@ -48,6 +48,8 @@ public class GetGroupList implements IWiskiCall
     filtergroup.addOperator( "like" );
     filtergroup.addValue( superGroupName );
     
+    filtergroup.addOperator( "and" );
+    
     filtergroup.addColumnReference( "group_name" );
     filtergroup.addOperator( "like" );
     filtergroup.addValue( groupName );

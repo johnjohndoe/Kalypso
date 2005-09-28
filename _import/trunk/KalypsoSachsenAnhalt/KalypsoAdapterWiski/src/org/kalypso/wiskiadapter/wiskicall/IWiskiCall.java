@@ -16,10 +16,6 @@ public interface IWiskiCall
 {
   /**
    * Performs a wiski call.
-   * 
-   * @throws NoSuchObjectException
-   * @throws KiWWException
-   * @throws RemoteException
    */
   public void execute( final KiWWDataProviderRMIf wiski, final HashMap userData ) throws NoSuchObjectException,
       KiWWException, RemoteException;
