@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5657535.32784702" left="5176160.087944426" right="5257685.502263732" srs="EPSG:31469" top="5726341.323884712"/>
+    <extent bottom="5668996.364294586" left="5191522.36904707" right="5242874.978045167" srs="EPSG:31469" top="5717785.477513391"/>
     <layers active="ID_2">
         <layer name="Niederschlagsgebiete - Weisse Elster" visible="false" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Niederschlagsgebiete" ns1:actuate="onRequest" ns1:href="project:/.styles/niederschlagsgebiete-Weisse Elster.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>

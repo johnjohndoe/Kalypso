@@ -1,4 +1,4 @@
-#Tue Sep 27 16:06:06 CEST 2005
+#Wed Sep 28 15:06:26 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -10,6 +10,7 @@ encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_SPWIESE.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_SAERI.zml=UTF-8
 encoding//.prognose/prognose9/calcCase.gml=UTF-8
+encoding//.prognose/Vorhersage-2005-09-28_11h52/.calculation=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Gesamtansicht.gmt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/calcCase.gml=UTF-8
@@ -33,6 +34,7 @@ encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_BOXBRG.zml=UTF-8
 encoding//.prognose/prognose1/results.gml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QV_SPWIESE.zml=UTF-8
+encoding//.prognose/Magdeburg-Bode-Vorhersage-2005-09-28_14h00/.calculation=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QV_BWALDE.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_BOXBRG.zml=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_17h24/zeitreihen/Diagramm.odt=UTF-8
@@ -197,8 +199,8 @@ encoding//.prognose/Vorhersage-03-11-2004_20h59/Gesamtansicht.gmt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gmv=Cp1252

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5721749.18310839" left="5196300.523457311" right="5273018.38130006" srs="EPSG:31469" top="5785025.906827747"/>
+    <extent bottom="5629225.034034094" left="5193672.689375836" right="5341475.421619017" srs="EPSG:31469" top="5769649.530046133"/>
     <layers active="ID_1">
         <layer name="Talsperren Gruppe 55" visible="true" featurePath="SpeicherCollectionAssociation/SpeicherMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Speicher" ns1:actuate="onRequest" ns1:href="project:/.styles/talsperren_gruppe_55.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
