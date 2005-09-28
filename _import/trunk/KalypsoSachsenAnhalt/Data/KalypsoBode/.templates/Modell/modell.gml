@@ -1941,7 +1941,7 @@
                 <tubigspeicher:EA fid="EA_rapp_9">
                   <tubigspeicher:Höhe>421.5</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>101.19</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>80.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>80.00001</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>0.0</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung>ZS = Stauziel Winter</tubigspeicher:Bemerkung>
                 </tubigspeicher:EA>
@@ -1950,7 +1950,7 @@
                 <tubigspeicher:EA fid="EA_rapp_10">
                   <tubigspeicher:Höhe>423.6</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>109.08</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>80.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>80.00002</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>0.0</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung>ZS = Stauziel Sommer = Vollstau</tubigspeicher:Bemerkung>
                 </tubigspeicher:EA>
@@ -1959,7 +1959,7 @@
                 <tubigspeicher:EA fid="EA_rapp_11">
                   <tubigspeicher:Höhe>424.1</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>111.08</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>80.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>80.00003</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>37.2</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung/>
                 </tubigspeicher:EA>
@@ -1968,7 +1968,7 @@
                 <tubigspeicher:EA fid="EA_rapp_12">
                   <tubigspeicher:Höhe>424.68</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>113.4</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>80.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>80.00004</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>118.1</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung>höchstes Stauziel</tubigspeicher:Bemerkung>
                 </tubigspeicher:EA>
@@ -2478,7 +2478,7 @@
                 <tubigspeicher:EA fid="EA_wend_11">
                   <tubigspeicher:Höhe>348.0</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>6.038</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>60.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>60.00001</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>0.0</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung/>
                 </tubigspeicher:EA>
@@ -2487,7 +2487,7 @@
                 <tubigspeicher:EA fid="EA_wend_12">
                   <tubigspeicher:Höhe>350.0</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>7.288</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>60.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>60.00002</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>0.0</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung/>
                 </tubigspeicher:EA>
@@ -2496,7 +2496,7 @@
                 <tubigspeicher:EA fid="EA_wend_13">
                   <tubigspeicher:Höhe>351.9</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>8.535</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>60.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>60.00003</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>0.0</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung>Vollstau</tubigspeicher:Bemerkung>
                 </tubigspeicher:EA>
@@ -2505,7 +2505,7 @@
                 <tubigspeicher:EA fid="EA_wend_14">
                   <tubigspeicher:Höhe>352.0</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>8.602</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>60.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>60.00004</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>3.7</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung/>
                 </tubigspeicher:EA>
@@ -2514,7 +2514,7 @@
                 <tubigspeicher:EA fid="EA_wend_15">
                   <tubigspeicher:Höhe>352.2</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>8.737</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>60.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>60.00005</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>18.7</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung/>
                 </tubigspeicher:EA>
@@ -2523,7 +2523,7 @@
                 <tubigspeicher:EA fid="EA_wend_16">
                   <tubigspeicher:Höhe>352.4</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>8.873</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>60.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>60.00006</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>40.4</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung/>
                 </tubigspeicher:EA>
@@ -2532,7 +2532,7 @@
                 <tubigspeicher:EA fid="EA_wend_17">
                   <tubigspeicher:Höhe>352.9</tubigspeicher:Höhe>
                   <tubigspeicher:Inhalt>9.215</tubigspeicher:Inhalt>
-                  <tubigspeicher:Grundablass>60.0</tubigspeicher:Grundablass>
+                  <tubigspeicher:Grundablass>60.00007</tubigspeicher:Grundablass>
                   <tubigspeicher:Überlauf>114.1</tubigspeicher:Überlauf>
                   <tubigspeicher:Bemerkung>ZH=höchstes Stauziel</tubigspeicher:Bemerkung>
                 </tubigspeicher:EA>
