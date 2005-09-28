@@ -79,4 +79,9 @@ public class KalypsoServiceMetaDocClientPlugin extends Plugin
   {
     return resourceBundle;
   }
+
+  public static String getID()
+  {
+    return getDefault().getBundle().getSymbolicName();
+  }
 }
