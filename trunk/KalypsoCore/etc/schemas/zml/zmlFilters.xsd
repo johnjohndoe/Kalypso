@@ -159,16 +159,25 @@
 	<element name="zmlFilter" type="filters:zmlFilterType" substitutionGroup="filters:filter"/>
 	
 	<!-- Filter: Linear-Progressive-Transformation -->
+   <!--    
+     policy: if dateBeginn or dateEnd is null,
+     than assume values in following order:
+        1. use from/to from request
+        2. use first/last from base observation
+    -->
+   
 	<complexType name="tranProLinFilterType">
 		<complexContent>
 			<extension base="filters:abstractFilterType">
 				<sequence>
 					<element ref="filters:filter" minOccurs="0"/>
 				</sequence>
-				<attribute type="dateTime" name="dateFrom"/>
-				<attribute type="dateTime" name="dateTo"/>
-				<attribute type="double" name="factorBegin"/>
-				<attribute type="double" name="factorEnd"/>
+				<attribute type="dateTime" name="dateBegin" use="optional"/>
+				<attribute type="dateTime" name="dateEnd" use="optional"/>
+               	<attribute name="operator" type="string" />                
+				<attribute type="double" name="operandBegin"/>
+				<attribute type="double" name="operandEnd"/>
+             	<attribute name="statusToMerge" type="int" default="0" use="optional"/>                
 			</extension>
 		</complexContent>
 	</complexType>

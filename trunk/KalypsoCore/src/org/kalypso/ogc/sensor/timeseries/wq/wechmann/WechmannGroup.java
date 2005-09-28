@@ -79,8 +79,9 @@ public class WechmannGroup implements IWQConverter
 
   /**
    * Returns the WechmannSet that is valid for the given date.
+   * @throws WQException
    */
-  public WechmannSet getFor( final Date d )
+  public WechmannSet getFor( final Date d ) throws WQException
   {
     final Date[] dates = (Date[])m_map.keySet().toArray( new Date[0] );
     int i = Arrays.binarySearch( dates, d );
@@ -88,9 +89,8 @@ public class WechmannGroup implements IWQConverter
     if( i < 0 )
       i = -i - 2;
 
-    // TODO: check this please (wenn d smaller than any validity)
     if( i < 0 )
-      return null;
+      throw new WQException("Fuer diesen Zeitpunkt ist keine WQ-Beziehung definiert");
 
     return (WechmannSet)m_map.get( dates[i] );
   }
