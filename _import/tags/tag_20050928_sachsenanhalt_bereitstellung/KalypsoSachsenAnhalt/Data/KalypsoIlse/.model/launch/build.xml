@@ -1,0 +1,214 @@
+<project default="fake">
+
+	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
+
+	<!-- ================================= 
+          target: fake                      nur damit das Projekt nicht schreit
+          ================================= -->
+	<target name="fake" />
+
+	<!-- ================================= 
+          target: create              
+         ================================= -->
+	<target name="create" description="Erzeugt eine Rechenvariante">
+		<echo message="Rechenvariante anlegen: ${calc.dir}" />
+
+		<echo message="Grunddaten und Vorlagen werden kopiert" />
+		<copy todir="${calc.dir}">
+			<fileset dir="${modell.template.dir}">
+				<include name="modell.gml" />
+				<include name="Info_Rechenvariante.gft" />
+				<include name="**/*.gmt" />		<!-- Kartenansichten -->
+				<include name="**/*.ott" />		<!-- Zeitreihen-Tabellen -->
+				<include name="**/*.gtt" />		<!-- GIS-Tabellen (Parameteransichten) -->
+			</fileset>
+		</copy>
+
+		<!-- 
+		<eclipse.refreshLocal resource="${calc.path}" depth="infinite"/>
+		-->
+	</target>
+
+	<!-- ================================= 
+          target: calculationProperties                      Initializes properties from .calculation
+         ================================= -->
+    <target name="calculationProperties">
+		<property name="HOURS_OF_DAY" value="11"/>
+
+    	<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
+			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}" />
+			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}" />
+			<property name="scenarioId" featurepath="MetadataAssociation" featureProperty="scenarioId" defaultValue=""/>
+		</kalypso.gmlProperty>
+		
+		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+		
+		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
+		<kalypso.multiequals arg1="${scenarioId}" arg2="katastrophentest">
+			<!-- Links fürs Abholen der Vorhersage-Zeitreihen -->
+			<property name="wiski_vergangenheit_link" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit"/>
+			
+			<!-- Links für die Ablage der Vorhersage-Zeitreihen -->
+			<property name="wiski_zukunft_link" valueThen="wiski_simulation_zukunft" valueElse="wiski_zukunft"/>
+		</kalypso.multiequals>
+    </target>
+
+	<!-- ================================= 
+          target: gebietsniederschlag              
+         ================================= -->
+	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
+		<kalypso.gmlWeight modelurl="${calc.url}/modell.gml" 
+			               	featurepathtarget="PegelCollectionAssociation/PegelMember[Niederschlagsgebiet]" 
+							propzmltarget="Niederschlag" 
+							proprelationweightmember="gewichtung" 
+							propweight="faktor" 
+							proprelationsourcefeature="ombrometerMember" 
+							propzmlsource="Niederschlag_gemessen" 
+							targetcontext="${calc.url}" 
+							from="${startsim}" 
+							forecastfrom="${startforecast}" 
+							to="${stopsim_48}" />
+		<!--
+		Das Argument targetmapping="C:\\TMP\\testMapping.gml" in der 
+		gmlweight-Task bewirkt, dass der Filter als GML an die angegebene Stelle
+		geschrieben wird.
+		-->
+	</target>
+	
+	<!-- ================================= 
+          target: update              
+         ================================= -->
+
+	<target name="update" depends="calculationProperties" description="Holt die Zeitreihen vom Zeitreihendienst">
+
+		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
+		<echo message="Zeitreihen werden von WISKI geladen" />
+		
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_48}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+			<source property="${wiski_vergangenheit_link}" from="${startforecast}" to="${stopsim_48}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_48}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<!-- nach update immer Gebietsniederschlag aufrufen -->
+		<antcall target="gebietsniederschlag" />
+	</target>
+
+
+	<!-- ================================= 
+          target: runCalculation              
+         ================================= -->
+	<target name="runCalculation" description="Führt die Berechnung durch">
+		<kalypso.runCalculation typeID="TubigV1.0" calcCaseFolder="${calc.path}">
+			<!-- Dateien relativ zur Rechenvariante (.../input/calc/) -->
+			<input id="MODELL_GML" path="modell.gml" relativeToCalcCase="true" />
+			<input id="CONTROL_GML" path=".calculation" relativeToCalcCase="true" />
+
+			<!-- Verzeichnisse relativ zur Rechenvariante (.../input/calc/) -->
+			<!-- optionales Attribut 'optional' könnte bei der Bode für die Speicher weg -->
+			<!-- Unterverzeichnisse Messung und Vorhersage! -->
+			<input id="QPegelDirIn" path="Zeitreihen/Pegel" relativeToCalcCase="true" />
+			<input id="QSpeicherDirIn" path="Zeitreihen/Speicherabgabe" relativeToCalcCase="true" optional="true" />
+			<!-- haben keine Unterverzeichnisse -->
+			<input id="VSpeicherDirIn" path="Zeitreihen/Speicher" relativeToCalcCase="true" optional="true" />
+			<input id="NsGebietDirIn" path="Zeitreihen/Gebietsniederschlag" relativeToCalcCase="true" />
+
+			<output id="Logs" path="Log-Dateien" relativeToCalcCase="true" />
+			<output id="Ergebnisse" path="" relativeToCalcCase="true" />
+
+			<!-- Verzeichnis wird geleert, bevor die neuen Ergebnisse geholt werden -->
+			<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true" />
+		</kalypso.runCalculation>
+	</target>
+	
+	
+    <!-- ================================= 
+          target: runs the batch which is given in the property  tubig.batch.name
+         ================================= -->
+    <target name="runBatch" description="--> description">
+    	<echo message="Rechne Batch: ${tubig.batch.name}"/>
+    	
+    	<!-- in .calculation wird zu rechnende Batch eingetragen ${tubig.batch.name} -->
+    	<replaceregexp file="${calc.dir}/.calculation" flags="s"
+    	               match="&lt;BatchIDCollectionAssociation&gt;(.*)&lt;/BatchIDCollectionAssociation&gt;"
+    	               replace="&lt;BatchIDCollectionAssociation&gt;
+    		                    &lt;BatchIDCollection fid=&quot;batches&quot;&gt;
+                                &lt;BatchIDAssociation&gt;
+    	                        &lt;BatchID fid=&quot;batchid_1&quot;&gt;
+                                &lt;id>${tubig.batch.name}&lt;/id&gt;
+                                &lt;/BatchID&gt;
+                                &lt;/BatchIDAssociation&gt;
+                                &lt;/BatchIDCollection&gt;
+                                &lt;/BatchIDCollectionAssociation&gt;"/>
+    	<!-- normales Starten der Rechnung -->
+    	<antcall target="runCalculation"/>
+    </target>
+
+    <!-- ================================= 
+          target: exportVorhersagen              
+         ================================= -->
+
+    <target name="exportVorhersagen" depends="calculationProperties" description="Export der Prognosen">
+        <echo message="Vorhersagezeitreihen werden exportiert"/>
+		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    </target>
+
+	<!-- ================================= 
+          target: updateLocations     
+          Arbeitet auf der selektierten modell.gml   
+         ================================= -->
+	<!--   TODO: do this every time, we do a update -> work with calc.url, because of the encoding problems -->
+	<!-- Achtung bei der Bode: das Koordinatensystem ist nicht einheitlich bei den ZMLs!!! -->
+	<!-- für Ilse ist EPSG:31468 richtig -->
+	<target name="updateLocations" description="Aktualisiert die geografische Verortung innerhalb der modell.gml anhand der Daten in der lokalen Zeitreihen">
+		<echo message="Aktualisiere ${modell.gml}" />
+		
+		<kalypso.propertyReplace name="gmlPath" value="platform:/resource${modell.gml}" regex="\\" replacement="/" />
+		
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Ganglinie_gemessen" context="${gmlPath}">
+			<mapping targetProperty="Ort">
+				<metadata name="Rechtswert"/>
+				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
+			</mapping>
+		</kalypso.mapZmlMeta2Feature>
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="SpeicherCollectionAssociation/SpeicherMember" depth="zero" zmllink="Abgabe" context="${gmlPath}">
+			<mapping targetProperty="Ort">
+				<metadata name="Rechtswert"/>
+				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
+			</mapping>
+		</kalypso.mapZmlMeta2Feature>
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="OmbrometerCollectionAssociation/OmbrometerMember" depth="zero" zmllink="Niederschlag_gemessen" context="${gmlPath}">
+			<mapping targetProperty="Ort">
+				<metadata name="Rechtswert"/>
+				<metadata name="Hochwert"/>
+				<metadata name="Koordinatensystem" />
+			</mapping>
+		</kalypso.mapZmlMeta2Feature>
+	</target>
+
+</project>

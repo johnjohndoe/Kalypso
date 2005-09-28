@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<repconf xmlns="conf.repository.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!-- INFO: sollte die Verbindung nicht klappen, checken ob smdhvzlapp in etc/hosts eingetragen ist -->
+		<repository
+		factory="org.kalypso.wiskiadapter.WiskiRepositoryFactory"
+		conf="rmi://smdhvzlapp:10991/KiWWDataProvider#-#kmustermann#geheim#de"
+		name="wiski" />
+
+</repconf>

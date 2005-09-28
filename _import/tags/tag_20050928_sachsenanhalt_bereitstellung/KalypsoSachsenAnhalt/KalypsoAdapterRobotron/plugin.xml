@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.adapter.robotron"
+   name="KalypsoAdapterRobotron"
+   version="1.0.0"
+   provider-name="kalypso.org">
+   <runtime>
+      <library name="lib/axis/axis.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axis/axis-ant.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axis/commons-discovery-0.2.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axis/commons-logging-1.0.4.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axis/jaxrpc.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axis/log4j-1.2.8.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axis/saaj.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/axis/wsdl4j-1.5.1.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.kalypso.services.user"/>
+      <import plugin="org.kalypso.auth"/>
+      <import plugin="org.kalypso.metadoc"/>
+      <import plugin="org.kalypso.jwsdp"/>
+   </requires>
+
+</plugin>

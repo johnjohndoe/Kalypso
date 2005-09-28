@@ -1,0 +1,222 @@
+Start Boundary Condition File for Exercise "Agger2D: Simulations in River & Coastal Engineering", SR, Jan11/2005.
+x
+   NE NMAT  NPX  NBX NWID NSID IPRT  NCL       IRO     IQGEN    ISTGEN    IDNOPT
+                                        IWIND     IRSLP     IHGEN     NCFLW     IBGEN
+    0    6    0    0    0    0    0    2    0    0    0    1    1    0    0   -1    0
+x
+  FEM     MORPH       P_BOTTOM             MINEDDY
+   AUSSTEU     ITURB           P_PRANDTL
+    0    0    0    0     0.135     0.197      50.0
+x
+     OMEGA     ,ELEV,   XSCALE,   ZSCALE,     DSET    ,DSETD,     UNOM,     HMIN   ,ASCALE      URFC
+     52.00    68.000      1.00      1.00     -0.03      0.02      0.25      0.00      1.00      0.80
+x
+ NITI     MBAND      NCYC      DELT   LI ITSI    JSPLPT IHOE IDEN     IGRAV
+      NITN    NSTART                        ISPLPT              ICONVG   IPASCHE  
+    0   20    0    0   15  0.000000    1    1    0    0    0    0    1    1    0
+ convx
+ convy
+ convh
+    0.0010    0.0010    0.0010 
+x
+  NMAT Zeilen Zuordnung von Rauhigkeitsklasse
+  zu                          4*Wirbel-Viscositaet  -Kst/+Ks      abst durchbaum   d50[mm]
+         1   1500.00   1500.00   1500.00   1500.00       0.15
+         2   1500.00   1500.00   1500.00   1500.00       0.25
+         3   1500.00   1500.00   1500.00   1500.00       0.25     10.0      3.50
+         4   1000.00   1000.00   1000.00   1000.00       0.25     10.0      3.50
+         5   1000.00   1000.00   1000.00   1000.00       0.25
+         6   1000.00   1000.00   1000.00   1000.00       0.50
+x
+           read(iin,'(60i5)')(line(j,k),k=1,60)
+   NCL Kontinuitaetslinien (d.h. Knotennummern der Linien)
+  317  323  329  306  264  265  266  267  268  269  342
+ 1099 1098 1108 1109 1088  413   31   32   33   34   35   36  414 1168 1157 1158 1159 1137 1136 1138
+            IQGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            einen Durchfluss qf in der Richtung qdir vorgeben
+         j        qf      qdir
+         1       0.1      0.00
+           IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     68.00
+x
+DYNAMISCHE Randbedingungen fuer den   1-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1      5.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     67.95
+x
+DYNAMISCHE Randbedingungen fuer den   2-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1     30.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     67.00
+x
+DYNAMISCHE Randbedingungen fuer den   3-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1     60.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     66.50
+x
+DYNAMISCHE Randbedingungen fuer den   4-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    100.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     66.25
+x
+DYNAMISCHE Randbedingungen fuer den   5-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    150.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     66.00
+x
+DYNAMISCHE Randbedingungen fuer den   6-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    190.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.85
+x
+DYNAMISCHE Randbedingungen fuer den   7-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    225.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.70
+x
+DYNAMISCHE Randbedingungen fuer den   8-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    255.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.55
+x
+DYNAMISCHE Randbedingungen fuer den   9-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    285.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.45
+x
+DYNAMISCHE Randbedingungen fuer den  10-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    315.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.35
+x
+DYNAMISCHE Randbedingungen fuer den  11-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    340.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.25
+x
+DYNAMISCHE Randbedingungen fuer den  12-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    355.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.15
+x
+DYNAMISCHE Randbedingungen fuer den  13-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    368.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.10
+x
+DYNAMISCHE Randbedingungen fuer den  14-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    368.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.10
+x
+DYNAMISCHE Randbedingungen fuer den  15-ten der NCYC Zeitschritte
+       nbx      nsid      delt     iqgen     ihgen    istgen     ncflw idenIwindIbgen
+         0         0   5.00000         1         1         0
+           IQGEN Zeilen: an NCL-Linie j Durchfluss qf in Richtung qdir vorgegeben.
+         (qdir=0.0 Geschwindigkeit senkrecht zum jeweiligen Liniensegment)
+         j        qf      qdir
+         1    368.00     0.000
+          IHGEN Zeilen, die an der jeweiligen Kontinuitaetslinie j
+            eine Wasserspiegelhoehe hf vorgeben
+         j        hf
+         2     65.10

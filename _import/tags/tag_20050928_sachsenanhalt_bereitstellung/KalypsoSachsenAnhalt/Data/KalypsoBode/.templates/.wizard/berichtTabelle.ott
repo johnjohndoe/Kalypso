@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <observation linktype="zml" ns1:href="%href1%" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c1" name="Abfluss - Beobachtung [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns1:href="%href2%" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c2" name="Abfluss - Rechnung [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns1:href="%href1%" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c3" name="Wasserstand - Beobachtung [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns1:href="%href2%" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c4" name="Wasserstand - Rechnung [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns1:href="%href3%" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Niederschlag" editable="true" id="c5" name="Niederschlag [%axisunit%]" width="50"/>
+    </observation>
+</obstableview>
+

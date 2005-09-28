@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="zeitreihen_repository">
+  <title>Zeitreihenbrowser</title>
+
+  <section>
+    <title>Allgemeines</title>
+
+    <para>Zur Verwaltung von Zeitreihen ist in der KALYPSO-Oberfläche eine
+    spezielle Perspektive vorgesehen: Die Zeitreihen-Ablage (Kalypso
+    Zeitreihenbrowser). Die Zeitreihen-Ablage ist eine Funktionalität, die mit
+    dem Expertenmodus verbunden und somit dem einfachen Anwender nicht
+    zugänglich ist. Sie erscheint standardmäßig in der KALYPSO-Oberfläche des
+    Experten, gleichgeordnet mit den Perspektiven KALYPSO Modeler und
+    Hochwasser Vorhersage. Die Perspektive kann, sofern sie geschlossen wurde,
+    über das Menü <guimenu>Fenster</guimenu> hinzugefügt werden (siehe auch
+    <xref linkend="arbeiten_mit_ansichten" />).</para>
+
+    <para></para>
+
+    <para>Die Funktion der Zeitreihen-Ablage besteht im Wesentlichen darin,
+    die in PSI-Compact verwalteten Wasserstands-, Niederschlags- und
+    Temperaturzeitreihen aus der KALYPSO-Oberfläche anzuschauen und zu
+    kontrollieren. Die dabei in der Zeitreihen-Ablage angezeigte Datenstruktur
+    (Baumstruktur) entspricht Eins zu Eins der Datenstruktur auf
+    PSI-Compact-Seite. Die Zeitreihen-Ablage ermöglicht ausdrücklich kein
+    Editieren der Zeitreihen innerhalb von PSI-Compact!</para>
+
+    <para></para>
+
+    <para>Mit der Zeitreihen-Ablage besteht zudem die Möglichkeit, weitere
+    Zeitreihen Repositories hinzuzufügen. Dabei kann es sich z.B. um
+    Fremddaten oder historische Daten aus einer lokalen Datenquelle handeln.
+    Voraussetzung ist allerdings, dass die in der Datenquelle enthaltenen
+    Zeitreihen im zml-Format vorliegen. Eine detaillierte Formatbeschreibung
+    ist in der Technischen Dokumentation nachzuschlagen.</para>
+
+    <para></para>
+
+    <para>Darüber hinaus stellt die Zeitreihen-Ablage ein wichtiges
+    Hilfsmittel beim Modellaufbau dar. Beispielsweise sind
+    Niederschlagsstationen oder Wasserstandspegel mit Einzugsgebieten oder
+    Berechnungsknoten in einem konkreten hydrologischen Modell zu verknüpfen.
+    Um diese Verknüpfung vorzunehmen, kann die Verknüpfung (Link) auf die
+    Zeitreihe per rechten Mausklick in die Zwischenablage gespeichert und an
+    der passenden Stelle in der entsprechenden Modelldatei eingefügt werden.
+    Eine nähere Beschreibung zum Modellaufbau und zu den dazu notwendigen
+    Arbeitsschritten ist ebenfalls in der Technischen Dokumentation
+    enthalten.</para>
+
+    <para></para>
+
+    <para>Eine weitere Funktionalität der Zeitreihen-Ablage besteht im
+    Datenexport. Somit können z.B. Zeitreihen aus PSI-Compact heruntergeladen
+    und in ein beliebiges Verzeichnis im Netzwerk oder lokal gespeichert
+    werden. Beim Export werden die Zeitreihen im zml-Format abgelegt. Der
+    Export von Zeitreihen ist in <xref
+    linkend="repository_zeitreihenverwaltung" /> beschrieben.</para>
+  </section>
+
+  <section id="repository_ansichten">
+    <title>Ablagen-Ansicht</title>
+
+    <para>Bei Anwahl der Perspektive über die entsprechende Schaltfläche
+    öffnet sich die vordefinierte Ablagen-Ansicht (<xref
+    linkend="repository_ansicht" />). Auf der linken Seite befindet sich das
+    Navigator-Fenster, in dem die Zeitreihen-Ablagen als Baumstruktur
+    angezeigt werden. Zur Darstellung der Zeitreihen ist eine Tabellen- und
+    eine Diagramm-Ansicht vorgesehen. Ist im Navigator-Fenster keine Zeitreihe
+    markiert, sind die Tabelle und das Diagramm leer. Eine simultane Ansicht
+    mehrerer Zeitreihen ist mit der Ablagen-Ansicht nicht möglich - die
+    Zeitreihen können nur einzeln betrachtet werden.</para>
+
+    <figure id="repository_ansicht">
+      <title>Ansicht der Zeitreihen-Ablage</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository/repository_gesamt.png"
+                     revisionflag="added" scale="30" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Unter dem Navigator-Fenster ist das Eigenschaften-Fenster gezeigt,
+    das die so genannten Metadaten der Zeitreihe enthält. Eine
+    Metadaten-Information kann z.B. der Stationsname sein. Die Metadaten sind
+    typspezifisch, d.h., dass Niederschlagsstationen prinzipiell andere
+    Metadaten enthalten können als Wasserstandspegel. Die einzelnen Zellen
+    enthalten nicht immer konkrete Werte, sondern es können auch Verknüpfungen
+    angegeben werden - wie im Falle der W-Q-Parameter.</para>
+
+    <para></para>
+
+    <para>Alle Fenster innerhalb der Ablagen-Ansicht können generell über das
+    Menü <guimenu>Fenster</guimenu> geöffnet werden. Die einzelnen Fenster
+    können vom Benutzer beliebig angeordnet und/oder verschoben werden. Es
+    gelten die gleichen Optionen wie im Expertenmodus (siehe auch <xref
+    linkend="arbeiten_mit_ansichten" />).</para>
+  </section>
+
+  <section id="repository_zeitreihenverwaltung">
+    <title>Zeitreihenverwaltung</title>
+
+    <para>Die Verwaltung der Zeitreihen-Ablagen erfolgt über Funktionen, die
+    anhand von Schaltflächen in der oberen Leiste des Ablagen-Fensters (<xref
+    linkend="repository_buttons" />) verfügbar sind. Hiermit kann der Benutzer
+    Anlagen zur Ansicht hinzufügen, Ablagen aus der Ansicht entfernen oder die
+    Einstellungen für eine Ablage ändern. Ein Speichern der Ablagen-Ansicht
+    ist nicht notwendig. Alle Einstellungen werden automatisch beim Schließen
+    von KALYPSO gespeichert und werden beim nächsten Programmstart wieder
+    geladen.</para>
+
+    <para>Im Einzelnen stehen die nachfolgend beschriebenen Funktionen zur
+    Verfügung.</para>
+
+    <figure id="repository_buttons">
+      <title>Schaltflächen in der Ablagen-Ansicht</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository/repository_schaltflaechen.png"
+                     scale="70" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para></para>
+
+    <para><emphasis role="bold">Ablage(n) hinzufügen</emphasis></para>
+
+    <para>Der Benutzer kann beliebig viele Zeitreihen-Ablagen in die
+    Oberfläche einlesen. Nach Auswahl der Schaltfläche erscheint ein
+    Auswahlfenster, in dem zwischen lokalen und auf dem Server gespeicherten
+    Zeitreihen Repositories gewählt werden kann. Wird eine lokale Ablage
+    gewählt, muss im nächsten Fenster der Pfad, das Kennzeichen (Name der
+    Ablage) sowie die Dateiendung der Zeitreihen (Standard: *.zml) angegeben
+    werden (<xref linkend="repository_import_lokal" />).</para>
+
+    <figure id="repository_import_lokal">
+      <title>Lokale Ablage hinzufügen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository/repository_import_lokal.png"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Wird dagegen der KALYPSO-Observations-Dienst gewählt, dann steht die
+    Schnittstelle zur Datenbank von PSI-Compact zur Verfügung und alle darin
+    befindlichen Zeitreihen.</para>
+
+    <para></para>
+
+    <para><emphasis role="bold">Ablage entfernen</emphasis></para>
+
+    <para>Mit dieser Schaltfläche wird eine Zeitreihen-Ablage aus der
+    aktuellen Ansicht entfernt. Die entsprechenden Verzeichnisse (lokal oder
+    auf dem Server) bleiben von diesem Löschvorgang jedoch physisch
+    unangetastet.</para>
+
+    <para></para>
+
+    <para><emphasis role="bold">Einstellungen der Ablage
+    setzen</emphasis></para>
+
+    <para>Mit dieser Option kann der Zeitraum für die Abfrage und
+    Visualisierung der Zeitreihen - für die jeweils markierte
+    Zeitreihen-Ablage - definiert werden. Es erscheint ein Auswahlfenster, in
+    dem der Benutzer den gewünschten Zeitraum der Betrachtung eingeben kann
+    (<xref linkend="repository_einstellungen" />).</para>
+
+    <figure id="repository_einstellungen">
+      <title>Definition der Einstellungen einer Ablage</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository/repository_einstellungen.png"
+                     scale="70" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Die Eingabe erfolgt entweder in Form der Anzahl der Tage oder durch
+    Angabe des gewünschten Zeitraums.</para>
+
+    <para>Wird bei der Anzahl der Tage ´0´ angegeben, werden alle Zeitreihen
+    für den gesamten, in der Ablage zur Verfügung stehenden Zeitraum
+    eingelesen, soweit dies von der jeweiligen Ablage unterstützt wird
+    (PSI-Compact hat eine Begrenzung von maximal 7 Monaten).</para>
+
+    <para></para>
+
+    <para><emphasis role="bold">Ablage aktualisieren</emphasis></para>
+
+    <para>Die Verzeichnisstruktur, der in der Ansicht enthaltenen
+    Zeitreihen-Ablagen, wird neu eingelesen.</para>
+
+    <para></para>
+
+    <para><emphasis role="bold">Alle Zweige des Baums
+    reduzieren</emphasis></para>
+
+    <para>Die Verzeichnisstruktur wird in der Ansicht bis auf die Überschrift
+    reduziert (´Zuklappen´).</para>
+
+    <para></para>
+
+    <para><emphasis role="bold">Alle Zweige des Baums
+    anzeigen</emphasis></para>
+
+    <para>Die Verzeichnisstruktur der Zeitreihen-Ablage wird vollständig
+    angezeigt (´Aufklappen´).</para>
+
+    <para><emphasis role="bold">Datei in ein lokales Verzeichnis
+    herunterladen</emphasis></para>
+
+    <para>Durch Klick auf die Schaltfläche im Zeitreihenfenster (<xref
+    linkend="repository_export" />) kann die aktuell markierte Zeitreihe als
+    Datei in ein beliebiges Verzeichnis gespeichert werden.</para>
+
+    <figure id="repository_export">
+      <title>Exportieren von Zeitreihen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository/repository_export_zeitreihen.png"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Es folgt eine Eingabe-Maske, in der der Zeitraum der zu
+    exportierenden Zeitreihe angebenen wird. Vom Programm vorgebenen wird ein
+    Zeitraum von 30 Tagen (vor der aktuellen Systemzeit). Optional kann vom
+    Benutzer auch ein fest definierter Zeitraum vorgegeben werden (<xref
+    linkend="repository_zeitraum" />).</para>
+
+    <figure id="repository_zeitraum">
+      <title>Definition des Zeitraums beim Export von Zeitreihen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/repository/repository_export_zeitreihen2.png"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Durch Klick auf Weiter öffnet sich die Eingabemaske zur Vorgabe des
+    Pfades und des Dateinamens, unter der die Zeitreihe abgespeichert werden
+    soll. Mit Bestätigung durch Klick auf Fertigstellen wird die Zeitreihe im
+    vorgegebenen Verzeichnis gespeichert. Der Export erfolgt - unabhängig von
+    der angegebenen Dateiendung - immer im zml-Format.</para>
+  </section>
+</chapter>

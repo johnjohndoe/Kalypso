@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<project name="RobotronAdapter" default="deploy">
+
+	<property name="project" value="${workspace}/KalypsoAdapterRobotron" />
+
+	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+	<property name="project-name" value="KalypsoAdapterRobotron" />
+
+	<path id="compile.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar" />
+		
+		<fileset dir="${workspace}/KalypsoAuth/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoMetaDoc/build/deploy" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceUser/build/deploy" includes="**/*.jar" />
+	</path>
+	
+</project>

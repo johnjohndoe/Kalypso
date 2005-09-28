@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project default="fake">
+
+	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
+
+	<!-- Definition der Quellen, der DWD-Raster (Vorhersage) -->
+	<!-- TODO: durch echte URLs ersetzen; zur Zeit linkt alles auf das lokale Projektverzeichnis -->
+	<!-- Scenario Normalbetrieb -->
+	<property name="szenario_EchtDwdUrl1" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
+	<property name="szenario_EchtDwdUrl2" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
+	<!-- Scenario Testbetrieb -->
+	<property name="szenario_TestDwdUrl1" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
+	<property name="szenario_TestDwdUrl2" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
+
+	<property name="dwdRasterLocalPath" value="${calc.dir}/dwd/lm_aktuell.txt" />
+	<property name="dwdRasterLocalURL" value="${calc.url}/dwd/lm_aktuell.txt" />
+
+	<!-- 
+		Ein paar Requests und Filter die mehrfach verwendet werden 
+	-->
+	<property name="requestN" value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;" />
+	<!-- N: sum-filter -->
+	<property name="filterN" value="${requestN}&lt;filter&gt;&lt;intervallFilter amount=&quot;1&quot; calendarField=&quot;HOUR_OF_DAY&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: fake                      nur damit das Projekt nicht schreit
+         - - - - - - - - - - - - - - - - - -->
+	<target name="fake" />
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: calculationProperties                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="calculationProperties">
+		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
+			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast" />
+			<!-- startsim = startforecast - 120h -->
+			<property name="startsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="-120" dateoffsetfield="11" />
+			<!-- stopsim = startforecast + 48h -->
+			<property name="stopsim" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="144" dateoffsetfield="11" />
+
+			<property name="scenarioId" featurepath="ScenarioAssociation" featureProperty="scenarioId" defaultValue="" />
+		</kalypso.gmlProperty>
+
+		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+
+		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
+		<kalypso.multiequals arg1="${scenarioId}" arg2="katastrophentest">
+			<!-- Links fürs Abholen der Vorhersage-Zeitreihen -->
+			<property name="pegelMessungLink" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit" />
+			<property name="ombrometerLink" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit" />
+			<property name="gebietsniederschlagLink" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit" />
+			<property name="speicherLink" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit" />
+			<property name="dwdRasterRemoteURLs" valueThen="${szenario_TestDwdUrl1},${szenario_TestDwdUrl2}" valueElse="${szenario_EchtDwdUrl1},${szenario_EchtDwdUrl2}" />
+
+			<!-- Links für die Ablage der Vorhersage-Zeitreihen -->
+			<!--			
+			<property name="vorhersageLinkNormal" valueThen="out3ObservationLink" valueElse="outObservationLink"/>
+			<property name="vorhersageLinkOben" valueThen="out4ObservationLink" valueElse="out1ObservationLink"/>
+			<property name="vorhersageLinkUnten" valueThen="out5ObservationLink" valueElse="out2ObservationLink"/>
+			-->
+		</kalypso.multiequals>
+	</target>
+
+	<!-- ================================= 
+          target: create              
+         ================================= -->
+	<target name="create" description="Erzeugt eine Rechenvariante">
+		<!-- TODO -->
+		<echo message="Rechenvariante anlegen: ${calc.dir}" />
+
+		<echo message="Grunddaten und Vorlagen werden kopiert" />
+		<copy todir="${calc.dir}">
+			<fileset dir="${modell.template.dir}">
+				<include name="modell.gml" />
+				<include name="**/*.gmt" />
+				<include name="**/*.gtt" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="update" depends="calculationProperties" description="Aktualisiert eine Rechenvariante">
+		<echo message="Zeitreihen von WISKI laden: ${calc.dir}" />
+
+		<echo message="Verzeichnisse werden erstellt" />
+		<mkdir dir="${calc.dir}/Durchfluss" />
+		<mkdir dir="${calc.dir}/Ombrometer" />
+		<mkdir dir="${calc.dir}/Niederschlag" />
+		<mkdir dir="${calc.dir}/Speicherinhalt" />
+		
+		
+		<!-- In den Filtern wird TokenReplacement gemacht, 
+		     um aus der Wiski-Property 'name' den Namen der Zeitreihe (Metadaten) zu generieren.
+		     Greift nur für leere Zeitreihen -->
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluss.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,W,Q&lt;/axes&gt;&lt;statusAxes&gt;W,Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_durchfluss_mit_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,W,Q&lt;/axes&gt;&lt;statusAxes&gt;W,Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+		
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_ombrometer.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+			<source property="${ombrometerLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+		
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+			<source property="${gebietsniederschlagLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<!-- 
+			TODO: Die HWVOR00.exe lässt das editieren der Volumenzeitreihen auch in der Zukunft zu.
+				Macht eigentlich keinen Sinn? Deshalb hier nur bis zum Istzeitpunkt.
+		-->
+
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_speicher.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+			<source property="${speicherLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,V&lt;/axes&gt;&lt;statusAxes&gt;V&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" />
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+		
+		<!-- nach update immer Gebietsniederschlag aufrufen -->
+		<antcall target="fetchRaster"/>
+		<antcall target="gebietsniederschlag"/>
+	</target>
+
+	<!-- ================================= 
+          target: gebietsniederschlag              
+         ================================= -->
+	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
+		<antcall target="updateForecastN" />
+		
+		<kalypso.gmlWeight 
+			modelurl="${calc.url}/modell.gml" 
+			featurepathtarget="PegelCollectionAssociation/PegelMember[Gebiet]" 
+			propzmltarget="Niederschlag" 
+			proprelationweightmember="gewichtung" 
+			propweight="faktor" 
+			proprelationsourcefeature="ombrometerMember" 
+			propzmlsource="Niederschlag" 
+			targetcontext="${calc.url}" 
+			from="${startsim}" 
+			forecastfrom="${startforecast}" 
+			to="${stopsim}" />
+	</target>
+
+	<!-- ================================= 
+          target: runCalculation              
+         ================================= -->
+	<target name="runCalculation">
+		<echo message="alte Ergebnisse werden gelöscht..." />
+		<delete verbose="true" includeemptydirs="true" failonerror="false">
+			<fileset dir="${calc.dir}/Ergebnisse" />
+		</delete>
+
+		<echo message="Modellrechnung wird durchgeführt: ${calc.dir}" />
+		<kalypso.runCalculation calccasefolder="${calc.path}" typeid="Saale_SA_V1">
+			<input id="CONTROL" path=".calculation" relativeToCalcCase="true" />
+			<input id="MODELL" path="modell.gml" relativeToCalcCase="true" />
+
+			<!--  implizit benötigte Daten (=Zeitreihen); id ist unwichtig -->
+			<input id="Durchfluss" path="Durchfluss" relativeToCalcCase="true" />
+			<input id="Niederschlag" path="Niederschlag" relativeToCalcCase="true" />
+			<input id="Schnee" path="Schnee" relativeToCalcCase="true" optional="true" />
+			<input id="Speicherinhalt" path="Speicherinhalt" relativeToCalcCase="true" />
+
+			<output id="LOG" path="Ergebnisse/Input_Output.log" relativeToCalcCase="true" />
+			<output id="ZML_RESULT" path="Ergebnisse" relativeToCalcCase="true" />
+			<output id="HWVOR00_LOG" path="Ergebnisse/HWQVOR.TXT" relativeToCalcCase="true" />
+		</kalypso.runCalculation>
+	</target>
+
+    <!-- ================================= 
+          target: exportVorhersagen              
+         ================================= -->
+
+    <target name="exportVorhersagen" depends="calculationProperties" description="Export der Prognosen">
+        <echo message="Vorhersagezeitreihen werden exportiert"/>
+		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    </target>
+
+	<!-- ================================= 
+          target: updateLocations     
+          Arbeitet auf der selektierten modell.gml   
+         ================================= -->
+	<target name="updateLocations" description="Aktualisiert die geografische Verortung innerhalb der modell.gml anhand der Daten in der lokalen Zeitreihen">
+		<echo message="Aktualisiere ${modell.gml}" />
+
+		<kalypso.propertyReplace name="gmlPath" value="platform:/resource${modell.gml}" regex="\\" replacement="/" />
+
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="PegelCollectionAssociation/PegelMember" depth="zero" zmllink="Durchfluss" context="${gmlPath}">
+			<mapping targetProperty="location">
+				<metadata name="Rechtswert" />
+				<metadata name="Hochwert" />
+				<metadata name="Koordinatensystem" />
+			</mapping>
+		</kalypso.mapZmlMeta2Feature>
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="SpeicherCollectionAssociation/SpeicherMember" depth="zero" zmllink="Inhalt" context="${gmlPath}">
+			<mapping targetProperty="location">
+				<metadata name="Rechtswert" />
+				<metadata name="Hochwert" />
+				<metadata name="Koordinatensystem" />
+			</mapping>
+		</kalypso.mapZmlMeta2Feature>
+		<kalypso.mapZmlMeta2Feature gml="${gmlPath}" featurepath="OmbrometerCollectionAssociation/OmbrometerMember" depth="zero" zmllink="Niederschlag" context="${gmlPath}">
+			<mapping targetProperty="location">
+				<metadata name="Rechtswert" />
+				<metadata name="Hochwert" />
+				<metadata name="Koordinatensystem" />
+			</mapping>
+		</kalypso.mapZmlMeta2Feature>
+	</target>
+
+	<!-- ================================= 
+          target: fetchRaster     
+	          Kopiert die DWD LM Datei in die aktuelle Rechenvariante
+         ================================= -->
+
+	<target name="fetchRaster" depends="calculationProperties">
+		<echo message="aktualisiere DWD-Raster im Rechenfall" />
+		<Kalypso.fetchFromURL context="${calc.url}" src="${dwdRasterRemoteURLs}" listseparator="," dest="${dwdRasterLocalPath}" />
+	</target>
+
+	<!-- ================================= 
+          target: updateForecast     
+					  	Raster auslesen und in berechnet.zml einfügen
+         ================================= -->
+	<target name="updateForecastN" depends="calculationProperties">
+		<echo message="aktualisiere Gebietsniederschläge (Vorhersage aus DWD-Raster ${dwdRasterLocalURL} )" />
+		<kalypso.dwdTask 
+			dwd2zmlconfurl="${project.url}/.templates/Modell/dwd2zmlConf.xml" 
+			obsrasterurl="${dwdRasterLocalURL}" 
+			targetcontext="${calc.dir}" description="raster zu zml" 
+			from="${startsim}" forecastfrom="${startforecast}" to="${stopsim}" zmlfilter="${filterN}">
+			<metadata name="Szenario" value="${scenarioId}" />
+		</kalypso.dwdTask>
+	</target>
+
+</project>

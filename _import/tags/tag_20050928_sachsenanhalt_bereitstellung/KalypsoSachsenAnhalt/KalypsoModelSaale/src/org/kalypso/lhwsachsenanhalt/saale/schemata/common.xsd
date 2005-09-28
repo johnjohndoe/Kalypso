@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.saale.common" version="0.1" xmlns:common="org.kalypso.saale.common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="basis/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="basis/obslink.xsd"/>
+
+	<complexType name="TimeseriesLinkType">
+		<sequence>
+			<element name="TimeseriesLink" type="obslink:TimeseriesLinkType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="EmptyFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+</schema>

@@ -1,0 +1,27 @@
+KoordinatenSysteme:  
+
+Der vollstaendige EPSG-Code ist die ID fuer ein Koordinatensystem.
+also "EPSG:4326" fuer Laengen-/Breitengrade
+"EPSG:31467" Gauss-Krueger Z3 ist .
+"EPSG:4284" Pulkovo wurde frueher in der DDR benutzt
+
+  EPSG:4326    WGS84 lat/lon 
+  EPSG:31467   Gauss-Krueger Zone 3
+  
+  EPSG:4004    Bessel 1841 
+  EPSG:4284    Pulkovo 1942 
+
+  EPSG:31492   old Gauss-Krueger Zone 2
+  EPSG:31493   old Gauss-Krueger Zone 3
+  EPSG:31494   old Gauss-Krueger Zone 4
+  EPSG:31495   old Gauss-Krueger Zone 5
+
+  EPSG:31466   Gauss-Krueger Zone 2
+  EPSG:31467   Gauss-Krueger Zone 3 z.B. Hamburg, koblenz
+  EPSG:31468   Gauss-Krueger Zone 4
+  EPSG:31469   Gauss-Krueger Zone 5 z.B. Dresden
+                                                                      
+  EPSG:4230E   D50 
+  EPSG:4231E   D87 
+  EPSG:4258E   TRS89                           
+  EPSG:4314D   HDN deutsches Hauptdreiecksnetz

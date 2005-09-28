@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.saale.speicher" version="0.1" xmlns:speicher="org.kalypso.saale.speicher" xmlns:common="org.kalypso.saale.common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
+	<import namespace="org.kalypso.saale.common" schemaLocation="common.xsd"/>
+
+	<element name="SpeicherCollectionAssociation" type="speicher:SpeicherCollectionAssociationType"/>
+	<complexType name="SpeicherCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="speicher:SpeicherCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SpeicherCollection" type="speicher:SpeicherCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SpeicherCollectionType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="speicher:SpeicherMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="SpeicherMember" type="speicher:SpeicherAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="SpeicherAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="speicher:Speicher"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Speicher" abstract="false" type="speicher:SpeicherType" substitutionGroup="gml:_Feature"/>
+	<complexType name="SpeicherType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element name="PNR"  type="string"> <annotation><documentation xml:lang="de"><label>Messstellennummer</label><tooltip>Messstellennummer des Abgabepegels</tooltip><description>Messstellennummer des Abgabepegels</description></documentation></annotation></element>
+					<element name="Name"  type="string"> <annotation><documentation xml:lang="de"><label>Name</label><tooltip>Name</tooltip><description>Name</description></documentation></annotation></element>
+					<element name="Gewaesser"  type="string"> <annotation><documentation xml:lang="de"><label>Gewässer</label><tooltip>Gewässer</tooltip><description>Gewässer</description></documentation></annotation></element>
+					<element name="MaxInhalt"  type="double"> <annotation><documentation xml:lang="de"><label>MaxInhalt</label><tooltip>MaxInhalt</tooltip><description>MaxInhalt zur Berechnung des aktuellen Hochwasserschutzraumes</description></documentation></annotation></element>
+					<element name="PNR-Zufluss"  type="string"> <annotation><documentation xml:lang="de"><label>Messstellennummer Zufluss</label><tooltip>Messstellennummer des Zuflusspegels</tooltip><description>Messstellennummer des Zuflusspegels</description></documentation></annotation></element>
+					<element name="PNR_ST"  type="string"> <annotation><documentation xml:lang="de"><label>PNR_ST</label><tooltip>Schlüsselnummer Steuerpegel</tooltip><description></description></documentation></annotation></element>
+					<element name="PNR_NA"  type="string"> <annotation><documentation xml:lang="de"><label>PNR_NA</label><tooltip>Schlüsselnummer Nutzabgabe (Überleitung)</tooltip><description></description></documentation></annotation></element>
+					<element name="TS_NAME"  type="string"> <annotation><documentation xml:lang="de"><label>TS_NAME</label><tooltip>Name der Talsperre</tooltip><description></description></documentation></annotation></element>
+					<element name="STEUNAME"  type="string"> <annotation><documentation xml:lang="de"><label>STEUNAME</label><tooltip>Name des Steuerpegels</tooltip><description></description></documentation></annotation></element>
+					<element name="UELNAME"  type="string"> <annotation><documentation xml:lang="de"><label>UELNAME</label><tooltip>Bezeichnung Überleitung</tooltip><description></description></documentation></annotation></element>
+					<element name="DATEINAME"  type="string"> <annotation><documentation xml:lang="de"><label>DATEINAME</label><tooltip>Bei Bedarf Name einer Steuerdatei analog HWSTEU.STV</tooltip><description></description></documentation></annotation></element>
+					<element name="ST_Art"  type="string"> <annotation><documentation xml:lang="de"><label>ST_Art</label><tooltip>standardmäßige Art der Steuerung gemäß Menü Vorhersage</tooltip><description></description></documentation></annotation></element>
+					<element name="QG1"  type="string"> <annotation><documentation xml:lang="de"><label>QG1</label><tooltip>mittlerer Ausuferungsdurchfluss, bezogen auf den in die Faltung gehenden Anteil (Abgabe+oberer Nebenfluss Pegel 1+2)</tooltip><description></description></documentation></annotation></element>
+					<element name="T1"  type="string"> <annotation><documentation xml:lang="de"><label>T1</label><tooltip>Laufzeit bei Q&lt;=QG1</tooltip><description></description></documentation></annotation></element>
+					<element name="T2"  type="string"> <annotation><documentation xml:lang="de"><label>T2</label><tooltip>Laufzeit bei Q>QG1</tooltip><description></description></documentation></annotation></element>
+					<element name="Q2"  type="string"> <annotation><documentation xml:lang="de"><label>Q2</label><tooltip>ständige Nutzabgabe der TS in Fremdnetz (Pegel NA)</tooltip><description></description></documentation></annotation></element>
+					<element name="QF3"  type="string"> <annotation><documentation xml:lang="de"><label>QF3</label><tooltip>normales Verhältnis Nutzabgabe/Hauptfluss Flussnetz</tooltip><description></description></documentation></annotation></element>
+					<element name="IKOR"  type="string"> <annotation><documentation xml:lang="de"><label>IKOR</label><tooltip>Sofern >0 wird „Nutzabgabe“ bei jeder Berechnung korrigiert; =0 Nutzabgabe konstant Q2; &lt;0 Nutzabgabe Anteil entsprechend QF3</tooltip><description></description></documentation></annotation></element>
+					<element name="INHALT_min"  type="string"> <annotation><documentation xml:lang="de"><label>INHALT_min</label><tooltip>min Totraum</tooltip><description></description></documentation></annotation></element>
+					<element name="INHALT_max"  type="string"> <annotation><documentation xml:lang="de"><label>INHALT_max</label><tooltip>Beginn Überlauf</tooltip><description></description></documentation></annotation></element>
+					<element name="I1"  type="string"> <annotation><documentation xml:lang="de"><label>I1</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE1"  type="string"> <annotation><documentation xml:lang="de"><label>QUE1</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I2"  type="string"> <annotation><documentation xml:lang="de"><label>I2</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE2"  type="string"> <annotation><documentation xml:lang="de"><label>QUE2</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I3"  type="string"> <annotation><documentation xml:lang="de"><label>I3</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE3"  type="string"> <annotation><documentation xml:lang="de"><label>QUE3</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I4"  type="string"> <annotation><documentation xml:lang="de"><label>I4</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE4"  type="string"> <annotation><documentation xml:lang="de"><label>QUE4</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I5"  type="string"> <annotation><documentation xml:lang="de"><label>I5</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE5"  type="string"> <annotation><documentation xml:lang="de"><label>QUE5</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I6"  type="string"> <annotation><documentation xml:lang="de"><label>I6</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE6"  type="string"> <annotation><documentation xml:lang="de"><label>QUE6</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I7"  type="string"> <annotation><documentation xml:lang="de"><label>I7</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE7"  type="string"> <annotation><documentation xml:lang="de"><label>QUE7</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I8"  type="string"> <annotation><documentation xml:lang="de"><label>I8</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE8"  type="string"> <annotation><documentation xml:lang="de"><label>QUE8</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I9"  type="string"> <annotation><documentation xml:lang="de"><label>I9</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE9"  type="string"> <annotation><documentation xml:lang="de"><label>QUE9</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="I10"  type="string"> <annotation><documentation xml:lang="de"><label>I10</label><tooltip>Inhalt</tooltip><description></description></documentation></annotation></element>
+					<element name="QUE10"  type="string"> <annotation><documentation xml:lang="de"><label>QUE10</label><tooltip>Überlaufmenge</tooltip><description></description></documentation></annotation></element>
+					<element name="NAmax"  type="string"> <annotation><documentation xml:lang="de"><label>NAmax</label><tooltip>Nutzabgabe als technische Grenze im Normalbetrieb</tooltip><description></description></documentation></annotation></element>
+					<element name="RE_KOR"  type="string"> <annotation><documentation xml:lang="de"><label>RE_KOR</label><tooltip>Feld für Abgleich Vergangenheit Talsperren</tooltip><description></description></documentation></annotation></element>
+					<element ref="gml:location"/>
+					<element name="Inhalt" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Inhalt_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Zufluss_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Abgabe_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Steuerung_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Überleitung_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

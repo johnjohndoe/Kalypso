@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.saale"
+   name="KalypsoSaalePlugin"
+   version="1.0.0"
+   provider-name="kalypso.org">
+   <runtime>
+      <library name="kalypsoSaale.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.kalypso.core"/>
+      <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.kalypso.services.calculation.local"/>
+      <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.dwd"/>
+   </requires>
+   <extension
+         point="org.kalypso.services.calculation.local.calcJob">
+      <calcJob
+            typeID="Saale_SA_V1"
+            catalogClass="org.kalypso.lhwsachsenanhalt.saale.SaaleUrlCatalog"
+            jobClass="org.kalypso.lhwsachsenanhalt.saale.SaaleCalcJob"/>
+   </extension>
+   <extension
+         point="org.kalypso.core.featureVisitor">
+      <visitor
+            class="org.kalypso.lhwsachsenanhalt.saale.utils.MetGebStdVisitor"
+            id="org.kalypso.model.saale.MetGebStdVisitor"/>
+   </extension>
+</plugin>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateStatisticJob">
+
+	<input id="DamageRaster" description="Räumliche Verteilung des Schadenspotenzials"/>
+	<input id="LanduseRasterData" description="Rasterdaten Landnutzung"/>
+	<input id="AdministrationUnitRasterData" description="Rasterdaten Verwaltungsgrenzen" optional="true"/>
+	<input id="ContextModel" description="Steuerungsdatei, LanduseCollection mit Zuordnung id - landuseProperty wird für die statistische Auswertung benötigt"/>
+	<input id="TemplateRaster" description="Schablone, Raster mit Rasterzellwerten 0 und 1, nur Rasterzellen mit dem Wert 1 werden ausgewertet" optional="true"/>
+	
+	<output id="StatisticData" description="Ergebnisse der statistischen Auswertung"/>
+	
+</modelspec>

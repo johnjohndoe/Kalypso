@@ -1,0 +1,227 @@
+
+html, body {
+      
+    text-align:center;
+    vertical-align:middle;
+    margin:15px 0 0 0;
+    padding:0;
+    height:100%;
+    overflow:hidden;
+    overflow:auto;
+    vertical-align:middle;
+}
+
+
+#content {
+    padding:5px 0 0 0;
+    height:95%;
+    overflow:auto;
+    vertical-align:middle;
+}
+
+
+
+#footer {
+    border-top:1px solid black;
+    position:fixed;
+    bottom:0px;
+    height:40px;
+    text-align:center;
+    padding:5px 25px 5px 5px;
+    width:100%;
+    background:#fff;
+    border-top:1px solid #096;
+}
+
+
+
+
+/* Button-Layouts  */
+
+
+
+/* Einfacher Button (1 Zeile=1 Button)*/
+#button {
+height:40px;
+margin:0;
+padding:0;
+display:block;
+}
+
+/* Verzweigte Button (1 Zeile=mehrere Button) */
+#button_bypass {
+height:40px;
+padding:0;
+margin:0 2px 0 2px;
+display:inline;
+}
+
+
+/* Grundlayout BUTTON bei Verlinkungen: einfacher  Button */
+#button a {
+margin:0;
+padding:0;
+font-family:tahoma, sans-serif;
+font-size:9px;
+line-height:100%;
+font-weight:normal;
+color:#000;
+text-decoration:none;
+border-top:2px solid #1EA3CF;
+border-bottom:2px solid #1EA3CF;
+background:#90D4ED;
+width:90px;
+height:25px;
+}
+
+
+#button a.activ {
+border-top:2px solid #096;
+border-bottom:2px solid #096;
+background:#CFC;
+}
+
+
+
+/* Grundlayout BUTTON bei Verlinkungen: verzweigter Button */
+#button_bypass a  {
+margin:0;
+padding:0;
+font-family:tahoma, sans-serif;
+font-size:9px;
+line-height:100%;
+font-weight:normal;
+color:#000;
+text-decoration:none;
+border-top:1px solid #1EA3CF;
+border-bottom:1px solid #1EA3CF;
+background:#90D4ED;
+width:60px;
+height:25px;
+}
+
+#button_bypass a.activ {
+border-top:2px solid #096;
+border-bottom:2px solid #096;
+background:#CFC;
+}
+
+
+/* Layout des verzweigenden Buttons: linke Hauptlinie */
+.bypass_top_l {
+background:url(bypass_top_l.gif) no-repeat center bottom #fff; 
+}
+
+
+/* Layout des verzweigenden Buttons: mittlere Hauptlinie */
+.bypass_top_m {
+background:url(bypass_top_m.gif) no-repeat center bottom #fff; 
+}
+
+
+/* Layout des verzweigenden Buttons: rechte Hauptlinie */
+.bypass_top_r {
+background:url(bypass_top_r.gif) no-repeat center bottom #fff; 
+}
+
+
+.abschluss {
+background:#fff;
+}
+
+
+/* Layout des linken verzweigenden Button */
+.bypass_l {
+background:url(bypass_l.gif) no-repeat center bottom #fff; 
+}
+
+
+/* Layout des linken verzweigenden Button, linke Hauptlinie*/
+.bypass_l_b {
+background:url(bypass_l_b.gif) no-repeat center bottom #fff; 
+}
+
+
+/* Layout des mittleren verzweigenden Button */
+.mitte  {
+background:url(direct.gif) no-repeat center bottom #fff; 
+}
+
+
+/* Layout des mittleren verzweigenden Button, mittlere Hauptlinie*/
+.mitte_b {
+background:url(direct_b.gif) no-repeat center bottom #fff; 
+}
+
+
+
+/* Layout des rechten verzweigenden Button */
+.bypass_r {
+background:url(bypass_r.gif) no-repeat center bottom #fff; 
+}
+
+/* Layout des rechten verzweigenden Button, rechte Hauptlinie*/
+.bypass_r_b {
+background:url(bypass_r_b.gif) no-repeat center bottom #fff; 
+}
+
+
+
+/* Direkte Verbindungslinien*/
+.direct {
+background:url(direct_b.gif) no-repeat center bottom #fff; 
+}
+
+
+
+
+/* Footer-Button, selberkl�rend */
+
+#footer a {
+padding:2px 10px 0 2px;
+width:50px;
+heigth:20px;
+display:inline;
+}
+
+#footer a.back {
+background:url(back.gif) no-repeat center;
+}
+#footer a:hover.back {
+background:url(back_hover.gif) no-repeat center;
+}
+
+
+#footer a.first {
+background:url(first.gif) no-repeat center;
+}
+#footer a:hover.first {
+background:url(first_hover.gif) no-repeat center;
+}
+
+
+#footer a.forward {
+background:url(forward.gif) no-repeat center;
+}
+#footer a:hover.forward {
+background:url(forward_hover.gif) no-repeat center;
+}
+
+
+#footer a.last {
+background:url(last.gif) no-repeat center;
+}
+#footer a:hover.last {
+background:url(last_hover.gif) no-repeat center;
+}
+
+
+#footer a.finish {
+background:url(finish.gif) no-repeat center;
+}
+
+#footer a:hover.finish {
+background:url(finish_hover.gif) no-repeat center;
+}
+
+

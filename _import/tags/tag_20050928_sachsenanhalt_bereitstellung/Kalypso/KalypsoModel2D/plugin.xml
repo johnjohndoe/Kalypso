@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.Model2D"
+   name="KalypsoModel2DCalcJob"
+   version="1.0.0">
+   <runtime>
+      <library name="kalypso2DCalcJob.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.kalypso.deegree"/>
+      <import plugin="org.kalypso.services.calculation.local"/>
+   </requires>
+   <extension
+         id="Kalypso2dCalcJob"
+         name="Kalypso2dCalcJob"
+         point="org.kalypso.services.calculation.local.calcJob">
+      <calcJob
+            typeID="KalypsoModel2D.calcJob1"
+            catalogClass="org.kalypsodeegree_impl.gml.schema.schemata.twoD.UrlCatalog2d"
+            jobClass="org.kalypso.calc2d.CalcJob2d"/>
+   </extension>
+
+</plugin>

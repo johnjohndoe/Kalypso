@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateFloodRiskJob">
+
+	<input id="AnnualDamageRasterData" description="Räumliche Verteilung des jährlichen Schadenserwartungswertes"/>
+	<input id="LanduseRasterData" description="Rasterdaten Landnutzung"/>
+	<input id="RiskContextModel" description="Steuerungsdatei, in der die Risikoklasseneinteilungen und deren Zuordnung zu den Landnutzungsarten festgelegt werden"/>
+	
+	<output id="FloodRiskRasterData" description="Schadensrisikokarte"/>
+	<output id="FloodRiskRasterStyle" description="Style zur Schadensrisikokarte"/>
+	
+</modelspec>

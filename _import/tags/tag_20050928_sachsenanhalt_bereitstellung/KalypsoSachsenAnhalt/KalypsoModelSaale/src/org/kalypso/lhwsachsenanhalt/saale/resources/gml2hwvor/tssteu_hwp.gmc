@@ -1,0 +1,44 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<csvtarget linktype="gml" xlink:href="TSSTEU.HWP" featurePath="SpeicherCollectionAssociation/SpeicherMember" delemiter="&#9;" writeHeader="true" >
+		<column>PNR_ST</column>
+		<column label="PNR_TS">PNR</column>
+		<column>PNR_NA</column>
+		<column>TS_NAME</column>
+		<column>STEUNAME</column>
+		<column>UELNAME</column>
+		<column default="">DATEINAME</column>
+		<column>ST_Art</column>
+		<column>QG1</column>
+		<column>T1</column>
+		<column>T2</column>
+		<column>Q2</column>
+		<column>QF3</column>
+		<column>IKOR</column>
+		<column>INHALT_min</column>
+		<column>INHALT_max</column>
+		<column>I1</column>
+		<column>QUE1</column>
+		<column>I2</column>
+		<column>QUE2</column>
+		<column>I3</column>
+		<column>QUE3</column>
+		<column>I4</column>
+		<column>QUE4</column>
+		<column>I5</column>
+		<column>QUE5</column>
+		<column>I6</column>
+		<column>QUE6</column>
+		<column>I7</column>
+		<column>QUE7</column>
+		<column>I8</column>
+		<column>QUE8</column>
+		<column>I9</column>
+		<column>QUE9</column>
+		<column>I10</column>
+		<column>QUE10</column>
+		<column>NAmax</column>
+		<column>RE_KOR</column>
+	</csvtarget>
+	<registersource registeredID="INTERNE_GML"/>
+</gmlconvert>

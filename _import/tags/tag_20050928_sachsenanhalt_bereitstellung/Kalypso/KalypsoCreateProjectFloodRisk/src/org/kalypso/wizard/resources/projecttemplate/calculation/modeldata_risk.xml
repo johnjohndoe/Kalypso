@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateFloodRiskJob">
+	<input id="AnnualDamageRasterData" path="Damage/annualDamage.gml" relativeToCalcCase="false"/>
+	<input id="LanduseRasterData" path="Landuse/landuseData.gml" relativeToCalcCase="false"/>
+	<input id="RiskContextModel" path="Control/riskContextModell.gml" relativeToCalcCase="false"/>
+	
+	<output id="FloodRiskRasterData" path="Risk/floodrisk.gml" relativeToCalcCase="false"/>
+	<output id="FloodRiskRasterStyle" path=".styles/floodrisk.sld" relativeToCalcCase="false"/>
+</modeldata>

@@ -1,0 +1,61 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
+	<changesource>
+		<gmlsource xlink:href="../modell.gml"/>
+		
+<!-- Pegel -->		
+		<visitor featurePath="PegelCollectionAssociation/PegelMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Durchfluss"/>
+			<argument name="href" value="Durchfluss/${fidOnlyDigits}.zml"/>
+		</visitor>
+		<visitor featurePath="PegelCollectionAssociation/PegelMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Durchfluss_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${fidOnlyDigits}.zml"/>
+		</visitor>
+		<visitor featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Niederschlag"/>
+			<argument name="href" value="Niederschlag/${fidOnlyDigits}.zml"/>
+		</visitor>
+		<visitor featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Schnee"/>
+			<argument name="href" value="Schnee/${fidOnlyDigits}.zml"/>
+		</visitor>
+		
+<!-- Speicher -->		
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Inhalt"/>
+			<argument name="href" value="Speicherinhalt/${fidOnlyDigits}.zml"/>
+		</visitor>
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Inhalt_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Speicherinhalt/${fidOnlyDigits}.zml"/>
+		</visitor>
+
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Zufluss_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${property:PNR-Zufluss}.zml"/>
+		</visitor>
+
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Abgabe_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${property:PNR}.zml"/>
+		</visitor>
+
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Steuerung_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${property:PNR_ST}.zml"/>
+		</visitor>
+
+		<visitor featurePath="SpeicherCollectionAssociation/SpeicherMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Überleitung_gerechnet"/>
+			<argument name="href" value="Ergebnisse/Durchfluss/${property:PNR_NA}.zml"/>
+		</visitor>
+
+<!-- Ombrometer -->
+		<visitor featurePath="OmbrometerCollectionAssociation/OmbrometerMember" visitorclass="org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor">
+			<argument name="link" value="Niederschlag"/>
+			<argument name="href" value="Ombrometer/${fidOnlyDigits}.zml"/>
+		</visitor>
+	</changesource>
+</gmlconvert>

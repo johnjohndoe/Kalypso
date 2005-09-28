@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<project name="KalypsoJavaApiContributionsBuild" default="deploy">
+
+	<property name="project" value="${workspace}/JavaApiContributions" />
+	
+	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+
+    <path id="compile.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar" />
+		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
+	</path>
+
+	<property name="project-name" value="JavaApiContributions" />
+</project>

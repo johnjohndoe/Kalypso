@@ -1,0 +1,1628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="17">
+	<!-- KONTROLLE UND UMRECHNUNG DER ZEITREIHEN - NIEDERSCHLAG -->
+	<!-- Niederschlag an Stationen (Messung) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Ombrometer" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!-- 
+        HTML-Navigation und pageID -->
+		<arg name="pageID" value="Ombrometer"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
+		<!--
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Ombrometer.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="selected"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+		<!-- 
+        Ant-Knopf -->
+		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
+		<arg name="buttonTooltip" value="Gebietsniederschlag mittels Gebietsniederschlagsmodell berechnen"/>
+		<arg name="buttonLaunch" value="niederschlagsmodell"/>
+	</page>
+	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
+	<!-- Niederschlagsgebiete Thüringer Wald -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Thüringer Wald" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Thür_Wald"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Thür_Wald.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Thür_Wald.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- Niederschlagsgebiete Saale / Ilm-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Saale / Ilm" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Saale_Ilm"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Saale_Ilm.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Saale_Ilm.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- Niederschlagsgebiete Weiße Elster -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_W_Elster"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_W_Elster.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Weiße_Elster.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- Niederschlagsgebiete Unstrut / Eichsfeld-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Unstrut / Eichsfeld" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Unstrut_Eich"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Unstrut_Eich.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Unstrut_Eichsfeld.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- Niederschlagsgebiete Flachland Süd-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete -  Flachland Süd" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Flach_Süd"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Süd.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Flachland_Süd.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- Niederschlagsgebiete Harz -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Harz" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Harz"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Harz.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Harz.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- Niederschlagsgebiete Flachland Nord-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Flachland Nord" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete_Flach_Nord"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Nord.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Flachland_Nord.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- KONTROLLE DER ZEITREIHEN - Talsperren -->
+	<!-- Inhalt Talsperren  (Messung) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Volumen / Wasserstände - Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Inhalt_TS"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Inhalt"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- KONTROLLE DER ZEITREIHEN - WASSERSTAND / ABFLUSS (Messung und manchmal auch Prognose) -->
+	<!-- abwechselnd mit STEUERUNG DER TALSPERREN -->
+	<!-- TS-Steuerungs-Gruppe 10 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_10"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_10.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_10.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_10"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_10.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_10.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
+		<arg name="selectFeatureID" value="Speicher-570250"/>
+		<arg name="pantoFeatureId" value="Speicher-570250"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 20 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_20"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_20.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_20.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_20"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_20.html"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_20.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
+		<arg name="selectFeatureID" value="Speicher-573100"/>
+		<arg name="pantoFeatureId" value="Speicher-573100"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 30 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_30"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_30.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_30.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_30"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_30.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_30.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
+		<arg name="selectFeatureID" value="Speicher-575406"/>
+		<arg name="pantoFeatureId" value="Speicher-575406"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 40 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_40"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_40.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_40.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_40"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_40.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_40.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_Gebiet.gft"/>
+		<arg name="selectFeatureID" value="Pegel-576470"/>
+		<arg name="pantoFeatureId" value="Pegel-576470"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 50 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_50"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_50.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_50.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 55 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_55"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_55.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_55.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der HWS Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_55"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_55.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_55.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
+		<arg name="selectFeatureID" value="Speicher-579330"/>
+		<arg name="pantoFeatureId" value="Speicher-579330"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 60 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Überleitungsperre Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_60"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_60.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_60.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Überleitungssperre Königshütte" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_60"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_60.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_60.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe_reduziert.gft"/>
+		<arg name="selectFeatureID" value="Speicher-579001"/>
+		<arg name="pantoFeatureId" value="Speicher-579001"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 65 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_65"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_65.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_65.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
+		<arg name="selectFeatureID" value="Speicher-579012"/>
+		<arg name="pantoFeatureId" value="Speicher-579012"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 70 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_70"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_70.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_70.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_70"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_70.html#Steu_TS_Gruppe_20"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_70.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_TS_Gruppe.gft"/>
+		<arg name="selectFeatureID" value="Speicher-579006"/>
+		<arg name="pantoFeatureId" value="Speicher-579006"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- TS-Steuerungs-Gruppe 80 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_TS_Gruppe_80"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_80.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_80.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Steu_TS_Gruppe_80"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_80.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="100"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren_Gruppe_80.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
+		<!--
+        FeatureView -->
+		<arg name="featureTemplate" value=".templates/.wizard/Steuerung_Gebiet.gft"/>
+		<arg name="selectFeatureID" value="Pegel-553050"/>
+		<arg name="pantoFeatureId" value="Pegel-553050"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+	</page>
+	<!-- BERECHNUNG - und Ergebnisdarstellung -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Vorhersage / Ergebnisse - Saale-Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg10"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg10.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_10.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<!-- 
+        Ant-Knopf -->
+		<arg name="buttonText" value="Vorhersage durchführen"/>
+		<arg name="buttonTooltip" value="Vorhersage durchführen"/>
+		<arg name="buttonLaunch" value="runCalculation"/>
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Talsperre Straußfurt" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg20"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg20.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_20.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Talsperre Kelbra" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg30"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg30.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_30.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Greiz / Weiße Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg40"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg40.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_40.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg50"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg50.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_50.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg55"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg55.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_55.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Überleitungssperre Königshütte und Talsperre Rappbode" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg60"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg60.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_60.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Talsperre Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg70"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg70.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_70.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Bad Liebenwerda / Schwarze Elster" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg80"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg80.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_TS_Gruppe_80.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - Volumen Talsperren" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_Erg_TS"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg_TS.html#Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Inhalt_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss#color=0xff8040"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+	</page>
+	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!-- 
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html#Berichtsablage_Pegel"/>
+		<!--
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="26"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Berichtspegel.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<!-- 
+        Exporte  -->
+		<!-- Name of the feature-property, used for display/selection purposes -->
+		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="resultProperty" value="Durchfluss_gerechnet"/>
+		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
+		<arg name="exporter1">
+			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="name" value="Vorhersagepegel"/>
+			<arg name="nameproperty" value="Name"/>
+			<arg name="width" value="800"/>
+			<arg name="height" value="600"/>
+			<arg name="imageFormat" value="png"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Durchfluss"/>
+				<arg name="href2" value="Durchfluss_gerechnet"/>
+				<arg name="href3" value="Niederschlag"/>
+				<arg name="href4" value="Schnee"/>
+			</arg>
+			<arg name="templateDiagQ">
+				<arg name="label" value="Abflussgrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagQ.odt"/>
+			</arg>
+			<arg name="templateDiagW">
+				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagW.odt"/>
+			</arg>
+			<arg name="templateTable">
+				<arg name="label" value="Übersichtstabelle (Q / W / P)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelle.ott"/>
+			</arg>
+		</arg>
+		<!-- Scheitelwert-Tabelle -->
+		<arg name="exporter3">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Pegelübersicht Wasserstand (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteW.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Pegel"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="W"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="Blankenstein"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="Kaulsdorf-Eichicht"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/572010.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="Saale-TS-Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570000.zml"/>
+			</arg>
+			<arg name="obs4">
+				<arg name="label" value="Kaulsdorf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570250.zml"/>
+			</arg>
+			<arg name="obs5">
+				<arg name="label" value="Schwarzburg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/572115.zml"/>
+			</arg>
+			<arg name="obs6">
+				<arg name="label" value="Rudolstadt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
+			</arg>
+			<arg name="obs7">
+				<arg name="label" value="Camburg-Stöben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
+			</arg>
+			<arg name="obs8">
+				<arg name="label" value="Gräfinau-Angstedt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/572890.zml"/>
+			</arg>
+			<arg name="obs9">
+				<arg name="label" value="Niedertrebra"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
+			</arg>
+			<arg name="obs10">
+				<arg name="label" value="Saaleck"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570340.zml"/>
+			</arg>
+			<arg name="obs11">
+				<arg name="label" value="Erfurt - Möbisburg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/574210.zml"/>
+			</arg>
+			<arg name="obs12">
+				<arg name="label" value="Nägelstedt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573010.zml"/>
+			</arg>
+			<arg name="obs13">
+				<arg name="label" value="Straußfurt Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573090.zml"/>
+			</arg>
+			<arg name="obs14">
+				<arg name="label" value="Straußfurt Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
+			</arg>
+			<arg name="obs15">
+				<arg name="label" value="Wasserthaleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575110.zml"/>
+			</arg>
+			<arg name="obs16">
+				<arg name="label" value="Hachelbich"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
+			</arg>
+			<arg name="obs17">
+				<arg name="label" value="Wippermündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575245.zml"/>
+			</arg>
+			<arg name="obs18">
+				<arg name="label" value="Oldisleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
+			</arg>
+			<arg name="obs19">
+				<arg name="label" value="oh. Bretleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573200.zml"/>
+			</arg>
+			<arg name="obs20">
+				<arg name="label" value="Ilfeld"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575660.zml"/>
+			</arg>
+			<arg name="obs21">
+				<arg name="label" value="Nordhausen"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575500.zml"/>
+			</arg>
+			<arg name="obs22">
+				<arg name="label" value="Sundhausen"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
+			</arg>
+			<arg name="obs23">
+				<arg name="label" value="Kelbra Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575402.zml"/>
+			</arg>
+			<arg name="obs24">
+				<arg name="label" value="Kelbra-Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575406.zml"/>
+			</arg>
+			<arg name="obs25">
+				<arg name="label" value="Stolberg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575700.zml"/>
+			</arg>
+			<arg name="obs26">
+				<arg name="label" value="Berga"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575710.zml"/>
+			</arg>
+			<arg name="obs27">
+				<arg name="label" value="Bennungen"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
+			</arg>
+			<arg name="obs28">
+				<arg name="label" value="Nikolausrieth"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575450.zml"/>
+			</arg>
+			<arg name="obs29">
+				<arg name="label" value="Laucha"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
+			</arg>
+			<arg name="obs30">
+				<arg name="label" value="Naumburg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
+			</arg>
+			<arg name="obs31">
+				<arg name="label" value="Greiz"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576470.zml"/>
+			</arg>
+			<arg name="obs32">
+				<arg name="label" value="Gera-Langenberg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576520.zml"/>
+			</arg>
+			<arg name="obs33">
+				<arg name="label" value="Zeitz"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
+			</arg>
+			<arg name="obs34">
+				<arg name="label" value="Kleindalzig"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576631.zml"/>
+			</arg>
+			<arg name="obs35">
+				<arg name="label" value="Böhlen"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/577570.zml"/>
+			</arg>
+			<arg name="obs36">
+				<arg name="label" value="Oberthau"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
+			</arg>
+			<arg name="obs37">
+				<arg name="label" value="Elstermündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576950.zml"/>
+			</arg>
+			<arg name="obs38">
+				<arg name="label" value="Halle-Trotha"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570810.zml"/>
+			</arg>
+			<arg name="obs39">
+				<arg name="label" value="Wippra"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/578410.zml"/>
+			</arg>
+			<arg name="obs40">
+				<arg name="label" value="Mansfeld-Leimbach"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/578420.zml"/>
+			</arg>
+			<arg name="obs41">
+				<arg name="label" value="Großschierstedt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
+			</arg>
+			<arg name="obs42">
+				<arg name="label" value="Bernburg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570910.zml"/>
+			</arg>
+			<arg name="obs43">
+				<arg name="label" value="Meisdorf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
+			</arg>
+			<arg name="obs44">
+				<arg name="label" value="Hausneindorf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579620.zml"/>
+			</arg>
+			<arg name="obs45">
+				<arg name="label" value="Mündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579621.zml"/>
+			</arg>
+			<arg name="obs46">
+				<arg name="label" value="Elend"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579305.zml"/>
+			</arg>
+			<arg name="obs47">
+				<arg name="label" value="Tanne"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579205.zml"/>
+			</arg>
+			<arg name="obs48">
+				<arg name="label" value="Trautenstein"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579405.zml"/>
+			</arg>
+			<arg name="obs49">
+				<arg name="label" value="HWR Kalte Bode -Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579306.zml"/>
+			</arg>
+			<arg name="obs50">
+				<arg name="label" value="Königsh./HWR - Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579330.zml"/>
+			</arg>
+			<arg name="obs51">
+				<arg name="label" value="Ül-Spere, Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579000.zml"/>
+			</arg>
+			<arg name="obs52">
+				<arg name="label" value="ÜL zur Rappbode"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579999.zml"/>
+			</arg>
+			<arg name="obs53">
+				<arg name="label" value="Rappbode-TS-Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579011.zml"/>
+			</arg>
+			<arg name="obs54">
+				<arg name="label" value="Rappbode-TS-Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
+			</arg>
+			<arg name="obs55">
+				<arg name="label" value="Rappbode-TS, TWA"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579013.zml"/>
+			</arg>
+			<arg name="obs56">
+				<arg name="label" value="Hirtenstieg/ÜL-Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579001.zml"/>
+			</arg>
+			<arg name="obs57">
+				<arg name="label" value="TS-Wendefurth, Bode-Anteil"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579014.zml"/>
+			</arg>
+			<arg name="obs58">
+				<arg name="label" value="TS-Wendefurth-Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
+			</arg>
+			<arg name="obs59">
+				<arg name="label" value="TS-Wendefurth-Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
+			</arg>
+			<arg name="obs60">
+				<arg name="label" value="Wegeleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
+			</arg>
+			<arg name="obs61">
+				<arg name="label" value="Mahndorf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
+			</arg>
+			<arg name="obs62">
+				<arg name="label" value="Mdg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579713.zml"/>
+			</arg>
+			<arg name="obs63">
+				<arg name="label" value="an Holtemme"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579069.zml"/>
+			</arg>
+			<arg name="obs64">
+				<arg name="label" value="Hadmersleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
+			</arg>
+			<arg name="obs65">
+				<arg name="label" value="Hilfspunkt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579084.zml"/>
+			</arg>
+			<arg name="obs66">
+				<arg name="label" value="Stassfurt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
+			</arg>
+			<arg name="obs67">
+				<arg name="label" value="Calbe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
+			</arg>
+			<arg name="obs68">
+				<arg name="label" value="Bad Liebenwerda"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/553050.zml"/>
+			</arg>
+			<arg name="obs69">
+				<arg name="label" value="Löben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/553061.zml"/>
+			</arg>
+		</arg>
+		<arg name="exporter4">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Pegelübersicht Abfluss (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteQ.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Pegel"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="Q"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="Blankenstein"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="Kaulsdorf-Eichicht"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/572010.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="Saale-TS-Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570000.zml"/>
+			</arg>
+			<arg name="obs4">
+				<arg name="label" value="Kaulsdorf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570250.zml"/>
+			</arg>
+			<arg name="obs5">
+				<arg name="label" value="Schwarzburg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/572115.zml"/>
+			</arg>
+			<arg name="obs6">
+				<arg name="label" value="Rudolstadt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
+			</arg>
+			<arg name="obs7">
+				<arg name="label" value="Camburg-Stöben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
+			</arg>
+			<arg name="obs8">
+				<arg name="label" value="Gräfinau-Angstedt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/572890.zml"/>
+			</arg>
+			<arg name="obs9">
+				<arg name="label" value="Niedertrebra"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
+			</arg>
+			<arg name="obs10">
+				<arg name="label" value="Saaleck"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570340.zml"/>
+			</arg>
+			<arg name="obs11">
+				<arg name="label" value="Erfurt - Möbisburg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/574210.zml"/>
+			</arg>
+			<arg name="obs12">
+				<arg name="label" value="Nägelstedt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573010.zml"/>
+			</arg>
+			<arg name="obs13">
+				<arg name="label" value="Straußfurt Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573090.zml"/>
+			</arg>
+			<arg name="obs14">
+				<arg name="label" value="Straußfurt Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
+			</arg>
+			<arg name="obs15">
+				<arg name="label" value="Wasserthaleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575110.zml"/>
+			</arg>
+			<arg name="obs16">
+				<arg name="label" value="Hachelbich"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
+			</arg>
+			<arg name="obs17">
+				<arg name="label" value="Wippermündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575245.zml"/>
+			</arg>
+			<arg name="obs18">
+				<arg name="label" value="Oldisleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
+			</arg>
+			<arg name="obs19">
+				<arg name="label" value="oh. Bretleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573200.zml"/>
+			</arg>
+			<arg name="obs20">
+				<arg name="label" value="Ilfeld"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575660.zml"/>
+			</arg>
+			<arg name="obs21">
+				<arg name="label" value="Nordhausen"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575500.zml"/>
+			</arg>
+			<arg name="obs22">
+				<arg name="label" value="Sundhausen"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
+			</arg>
+			<arg name="obs23">
+				<arg name="label" value="Kelbra Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575402.zml"/>
+			</arg>
+			<arg name="obs24">
+				<arg name="label" value="Kelbra-Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575406.zml"/>
+			</arg>
+			<arg name="obs25">
+				<arg name="label" value="Stolberg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575700.zml"/>
+			</arg>
+			<arg name="obs26">
+				<arg name="label" value="Berga"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575710.zml"/>
+			</arg>
+			<arg name="obs27">
+				<arg name="label" value="Bennungen"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
+			</arg>
+			<arg name="obs28">
+				<arg name="label" value="Nikolausrieth"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575450.zml"/>
+			</arg>
+			<arg name="obs29">
+				<arg name="label" value="Laucha"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
+			</arg>
+			<arg name="obs30">
+				<arg name="label" value="Naumburg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
+			</arg>
+			<arg name="obs31">
+				<arg name="label" value="Greiz"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576470.zml"/>
+			</arg>
+			<arg name="obs32">
+				<arg name="label" value="Gera-Langenberg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576520.zml"/>
+			</arg>
+			<arg name="obs33">
+				<arg name="label" value="Zeitz"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
+			</arg>
+			<arg name="obs34">
+				<arg name="label" value="Kleindalzig"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576631.zml"/>
+			</arg>
+			<arg name="obs35">
+				<arg name="label" value="Böhlen"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/577570.zml"/>
+			</arg>
+			<arg name="obs36">
+				<arg name="label" value="Oberthau"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
+			</arg>
+			<arg name="obs37">
+				<arg name="label" value="Elstermündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576950.zml"/>
+			</arg>
+			<arg name="obs38">
+				<arg name="label" value="Halle-Trotha"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570810.zml"/>
+			</arg>
+			<arg name="obs39">
+				<arg name="label" value="Wippra"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/578410.zml"/>
+			</arg>
+			<arg name="obs40">
+				<arg name="label" value="Mansfeld-Leimbach"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/578420.zml"/>
+			</arg>
+			<arg name="obs41">
+				<arg name="label" value="Großschierstedt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
+			</arg>
+			<arg name="obs42">
+				<arg name="label" value="Bernburg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570910.zml"/>
+			</arg>
+			<arg name="obs43">
+				<arg name="label" value="Meisdorf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
+			</arg>
+			<arg name="obs44">
+				<arg name="label" value="Hausneindorf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579620.zml"/>
+			</arg>
+			<arg name="obs45">
+				<arg name="label" value="Mündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579621.zml"/>
+			</arg>
+			<arg name="obs46">
+				<arg name="label" value="Elend"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579305.zml"/>
+			</arg>
+			<arg name="obs47">
+				<arg name="label" value="Tanne"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579205.zml"/>
+			</arg>
+			<arg name="obs48">
+				<arg name="label" value="Trautenstein"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579405.zml"/>
+			</arg>
+			<arg name="obs49">
+				<arg name="label" value="HWR Kalte Bode -Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579306.zml"/>
+			</arg>
+			<arg name="obs50">
+				<arg name="label" value="Königsh./HWR - Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579330.zml"/>
+			</arg>
+			<arg name="obs51">
+				<arg name="label" value="Ül-Spere, Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579000.zml"/>
+			</arg>
+			<arg name="obs52">
+				<arg name="label" value="ÜL zur Rappbode"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579999.zml"/>
+			</arg>
+			<arg name="obs53">
+				<arg name="label" value="Rappbode-TS-Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579011.zml"/>
+			</arg>
+			<arg name="obs54">
+				<arg name="label" value="Rappbode-TS-Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
+			</arg>
+			<arg name="obs55">
+				<arg name="label" value="Rappbode-TS, TWA"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579013.zml"/>
+			</arg>
+			<arg name="obs56">
+				<arg name="label" value="Hirtenstieg/ÜL-Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579001.zml"/>
+			</arg>
+			<arg name="obs57">
+				<arg name="label" value="TS-Wendefurth, Bode-Anteil"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579014.zml"/>
+			</arg>
+			<arg name="obs58">
+				<arg name="label" value="TS-Wendefurth-Zulauf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
+			</arg>
+			<arg name="obs59">
+				<arg name="label" value="TS-Wendefurth-Abgabe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
+			</arg>
+			<arg name="obs60">
+				<arg name="label" value="Wegeleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
+			</arg>
+			<arg name="obs61">
+				<arg name="label" value="Mahndorf"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
+			</arg>
+			<arg name="obs62">
+				<arg name="label" value="Mdg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579713.zml"/>
+			</arg>
+			<arg name="obs63">
+				<arg name="label" value="an Holtemme"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579069.zml"/>
+			</arg>
+			<arg name="obs64">
+				<arg name="label" value="Hadmersleben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
+			</arg>
+			<arg name="obs65">
+				<arg name="label" value="Hilfspunkt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579084.zml"/>
+			</arg>
+			<arg name="obs66">
+				<arg name="label" value="Stassfurt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
+			</arg>
+			<arg name="obs67">
+				<arg name="label" value="Calbe"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
+			</arg>
+			<arg name="obs68">
+				<arg name="label" value="Bad Liebenwerda"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/553050.zml"/>
+			</arg>
+			<arg name="obs69">
+				<arg name="label" value="Löben"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/553061.zml"/>
+			</arg>
+		</arg>
+		<!-- Speicher-Exporte noch konfigurieren (ggf. zweite Export-Seite für Speicher-Berichte) -->
+	</page>
+</calcwizard>

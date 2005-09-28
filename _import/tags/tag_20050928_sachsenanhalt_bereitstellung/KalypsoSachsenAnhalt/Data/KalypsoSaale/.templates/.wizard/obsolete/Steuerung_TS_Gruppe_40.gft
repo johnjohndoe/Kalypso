@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featuretemplate xmlns="featureview.template.kalypso.org">
+    <layer featurePath="#fid#Pegel-576470" id="ID_1" linktype="gml" ns1:href="modell.gml" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+    <view typename="Pegel" style="SWT.NONE">
+        <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+        <gridLayout numColumns="3"/>
+        
+		<group style="SWT.NONE" text="Steuerung Greiz / Weiße Elster">
+			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" horizontalSpan="2"/>
+			<gridLayout numColumns="2" horizontalSpacing="10"/>
+	        <radiobutton text="Berechnung" style="SWT.NONE" tooltip="" property="Steuerung" valueToSet="1">
+	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+	        </radiobutton>
+	        <label style="SWT.NONE" visible="false">
+	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+	        </label>
+	
+	        <radiobutton text="Vorgabe des Durchflusses" style="SWT.NONE" tooltip="" property="Steuerung" valueToSet="2">
+	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+	        </radiobutton>
+	        <label style="SWT.NONE" visible="false">
+	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+	        </label>
+        </group>
+
+        <label style="SWT.NONE" visible="false">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+    </view>
+</featuretemplate>
+

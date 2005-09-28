@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://elbe.wb.tu-harburg.de" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wb="http://elbe.wb.tu-harburg.de" xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- ==============================================================
+						global element declarations
+	 ============================================================== -->
+	<xsd:element name="BoundaryConditions">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="FirstParamGroup">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NE" type="xsd:integer"/>
+							<xsd:element name="NMAT" type="xsd:integer"/>
+							<xsd:element name="NPX" type="xsd:integer"/>
+							<xsd:element name="NBX" type="xsd:integer"/>
+							<xsd:element name="NWID" type="xsd:integer"/>
+							<xsd:element name="NSID" type="xsd:integer"/>
+							<xsd:element name="IPRT" type="xsd:integer"/>
+							<xsd:element name="NCL" type="xsd:integer"/>
+							<xsd:element name="IWIND" type="xsd:integer"/>
+							<xsd:element name="IRO" type="xsd:integer"/>
+							<xsd:element name="IRSLP" type="xsd:integer"/>
+							<xsd:element name="IQGEN" type="xsd:integer"/>
+							<xsd:element name="IHGEN" type="xsd:integer"/>
+							<xsd:element name="ISTGEN" type="xsd:integer"/>
+							<xsd:element name="NCFLW" type="xsd:integer"/>
+							<xsd:element name="IDNOPT" type="xsd:integer"/>
+							<xsd:element name="IBGEN" type="xsd:integer"/>
+							<xsd:element name="FEM" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="AUSSTEU" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="MORPH" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="ITURB" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="P_BOTTOM" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="P_PRANDTL" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="MINEDDY" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="Param" type="wb:paramType" minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SecondParamGroup">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="OMEGA" type="xsd:float"/>
+							<xsd:element name="ELEV" type="xsd:float"/>
+							<xsd:element name="XSCALE" type="xsd:float"/>
+							<xsd:element name="ZSCALE" type="xsd:float"/>
+							<xsd:element name="DSET" type="xsd:float"/>
+							<xsd:element name="DSETD" type="xsd:float"/>
+							<xsd:element name="UNOM" type="xsd:float"/>
+							<xsd:element name="HMIN" type="xsd:float"/>
+							<xsd:element name="ASCALE" type="xsd:float"/>
+							<xsd:element name="URFC" type="xsd:float"/>
+							<xsd:element name="Param" type="wb:paramType" minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="ThirdParamGroup">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NITI" type="xsd:double"/>
+							<xsd:element name="NITN" type="xsd:double"/>
+							<xsd:element name="MBAND" type="xsd:double"/>
+							<xsd:element name="NSTART" type="xsd:double"/>
+							<xsd:element name="NCYC" type="xsd:double"/>
+							<xsd:element name="DELT" type="xsd:double"/>
+							<xsd:element name="LI" type="xsd:double"/>
+							<xsd:element name="ITSI" type="xsd:double"/>
+							<xsd:element name="ISPLPT" type="xsd:double"/>
+							<xsd:element name="JSPLPT" type="xsd:double"/>
+							<xsd:element name="IHOE" type="xsd:double"/>
+							<xsd:element name="IDEN" type="xsd:double"/>
+							<xsd:element name="ICONVG" type="xsd:double"/>
+							<xsd:element name="IGRAV" type="xsd:double"/>
+							<xsd:element name="IPASCHE" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="Param" type="wb:paramType" minOccurs="0" maxOccurs="unbounded"/>
+							<!-- ..... -->
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="FourthParamGroup">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="viscosity" type="wb:viscosity" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="FifthParamGroup">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="line" type="wb:integerList" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SixthParamGroup" type="wb:paramTypeDischarge"/>
+				<xsd:element name="SeventhParamGroup" type="wb:dynamicParams"/>
+				<!--xsd:element name="FourthParamGroup" type="wb:viscosity" maxOccurs="unbounded"/-->
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<!-- ==============================================================
+					type definitions for state educational institutions
+		============================================================== -->
+	<xsd:complexType name="viscosity">
+		<xsd:sequence>
+			<xsd:element name="Name" type="xsd:integer"/>
+			<xsd:element name="WV1" type="xsd:float"/>
+			<xsd:element name="WV2" type="xsd:float"/>
+			<xsd:element name="WV3" type="xsd:float"/>
+			<xsd:element name="WV4" type="xsd:float"/>
+			<xsd:element name="ks" type="xsd:float"/>
+			<xsd:element name="abst" type="xsd:float" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="durchbaum" type="xsd:float" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="paramType">
+		<xsd:sequence>
+			<xsd:element name="NAME" type="xsd:string"/>
+			<xsd:element name="VALUE"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="dynamicParams">
+		<xsd:sequence>
+			<xsd:element name="nbx" type="xsd:float"/>
+			<xsd:element name="nsid" type="xsd:float"/>
+			<xsd:element name="delt" type="xsd:float"/>
+			<xsd:element name="iqgen" type="xsd:float"/>
+			<xsd:element name="ihgen" type="xsd:float"/>
+			<xsd:element name="istgen" type="xsd:float"/>
+			<xsd:element name="ncflw" type="xsd:float"/>
+			<xsd:element name="idenIwindIbgen" type="xsd:float" minOccurs="0"/>
+			<xsd:element name="firstLineParams" type="wb:paramType" maxOccurs="unbounded"/>
+			<xsd:element name="nclLine" type="wb:paramTypeDischarge"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="paramTypeDischarge">
+		<xsd:sequence>
+			<xsd:element name="ParamQF" type="wb:paramTypeQF" maxOccurs="unbounded"/>
+			<xsd:element name="ParamHF" type="xsd:double"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="paramTypeQF">
+		<xsd:sequence>
+			<xsd:element name="NAME" type="xsd:string"/>
+			<xsd:element name="qf" type="xsd:double"/>
+			<xsd:element name="qdir" type="xsd:double"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="integerList">
+		<xsd:list itemType="xsd:integer"/>
+	</xsd:simpleType>
+</xsd:schema>

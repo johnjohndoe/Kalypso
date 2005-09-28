@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="einfuehrung">
+  <?dbhh topicname="Allgemeines" topicid="2"?>
+
+  <chapterinfo>
+    <date><indexterm>
+        <primary>Einführung in KALYPSO</primary>
+      </indexterm></date>
+  </chapterinfo>
+
+  <title>Einführung</title>
+
+  <section id="allgemeines_zu_kalypso">
+    <title>Allgemeines zu KALYPSO</title>
+
+    <para>Das Programm-System KALYPSO Enterprise ist eine Open-Source
+    Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in Kooperation
+    mit dem Arbeitsbereich Wasserbau der Technischen Universität
+    Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
+    numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
+    einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
+    Abstraktionsschicht mit folgenden Eigenschaften dar:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>einheitliche Verwaltung und Strukturierung
+        hydrologisch-hydraulischer Modelle</para>
+      </listitem>
+
+      <listitem>
+        <para>zentrale Datenspeicherung (ggf. mit Datenbankanbindung)</para>
+      </listitem>
+
+      <listitem>
+        <para>Integration von hydrologischen und hydraulischen
+        Berechnungsverfahren auf Basis unterschiedlicher Rechenkerne</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Bezüglich näherer Informationen und Support wenden Sie sich bitte
+    an:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
+        Hamburg - Tel. 040 / 42878-3761 /-4181 - www.tuhh.de/wb</para>
+
+        <para><graphic fileref="img/allgemeines/wasserbau-logo.png"
+        scale="" /></para>
+      </listitem>
+    </itemizedlist>
+
+    <para>oder</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Björnsen Beratende Ingenieure GmbH - Maria Trost 3 - 56070
+        Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
+        info@bjoernsen.de</para>
+
+        <para><graphic
+        fileref="img/allgemeines/000_001_bce_sw_300.png" /></para>
+      </listitem>
+    </itemizedlist>
+
+    <section id="nymphe_kalypso">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>KALYPSO-Konzept</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Die Nymphe Kalypso</title>
+
+      <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
+      genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
+      Namen.</para>
+
+      <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem
+      sein Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel
+      Ogygia gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus
+      Liebe dort gefangen und wollte ihn zu Ihrem unsterblichen Ehemann
+      nehmen. Doch selbst nach Jahren des Umwerbens und Betörens von Kalypsos
+      Seite sehnte sich Odysseus immer noch nach seiner Frau und seinem
+      Sohn.</para>
+
+      <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
+      entsandte, ließ Kalypso Odysseus frei, sodass er seine Reise Richtung
+      Heimat fortsetzen konnte.</para>
+    </section>
+  </section>
+
+  <section id="kalypso_installation">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Installation</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>KALYPSO-Installation</title>
+
+    <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
+    Modell-Plugins realisierten modularen Funktionsumfang. Folgende
+    serverseitigen Dienste sind als Installation auf dem physisch
+    eigenständigen KALYPSO-Server möglich:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Durchführung von numerischen Modellberechnungen
+        (Rechen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Sollten bei den verwendeten Modellen neben dem Rechen-Dienst keine
+    serverseitigen Dienste erforderlich sein, so ist keine Serverinstallation
+    notwendig. Für diesen Fall beinhaltet die Client-Installation einen
+    lokalen Rechendienst, welcher die Modellberechnung ermöglicht.</para>
+
+    <section>
+      <sectioninfo>
+        <date><indexterm>
+            <primary>Installation-Server</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Server-Installation</title>
+
+      <para>Die Server-Installation bedarf aufgrund der spezifischen
+      Netzwerkeigenschaften einer direkten Abstimmung und Anpassung und kann
+      nicht verallgemeinert beschrieben werden.</para>
+    </section>
+
+    <section id="client-installation">
+      <sectioninfo>
+        <date><indexterm>
+            <primary>Installation-Client</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Client-Installation</title>
+
+      <para>Die Client-Installation wird auf Basis des gelieferten
+      ZIP-Archives durchgeführt. Zur Installation wird das ZIP-Archiv an den
+      gewünschten Installationsort entpackt. Zum Programmstart muss der im
+      Hauptverzeichnis enthaltene Link Kalypso.lnk entsprechend des
+      Installationsortes und des gewünschten Arbeitsverzeichnisses (Workspace)
+      angepasst werden. Hierzu ist der Pfad der Zielanwedung durch den
+      aktuellen Installationspfad zu ersetzen. Außerdem wird ein
+      Arbeitsverzeichnis für die Modelldaten angelegt und der Pfad
+      entsprechend im Link angegeben.<table>
+          <title>Erläuterung der Eigenschaften</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>Link</entry>
+
+                <entry>Beispiel</entry>
+
+                <entry>Bemerkung</entry>
+              </row>
+
+              <row>
+                <entry>...\eclipse.exe</entry>
+
+                <entry>D:\Programme\KalypsoClient\eclipse.exe</entry>
+
+                <entry>Lokales Installationsverzeichnis</entry>
+              </row>
+
+              <row>
+                <entry>-dev lib</entry>
+
+                <entry></entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
+                <entry>-data %Workspace%</entry>
+
+                <entry>-data D:\runtime-workspace</entry>
+
+                <entry>lokales Arbeitsverzeichnis</entry>
+              </row>
+
+              <row>
+                <entry>-consoleLog</entry>
+
+                <entry></entry>
+
+                <entry>Console (optional)</entry>
+              </row>
+
+              <row>
+                <entry>-nl de_DE</entry>
+
+                <entry>-nl en_EN</entry>
+
+                <entry>Sprache (optional)</entry>
+              </row>
+
+              <row>
+                <entry>-vmargs -Xmx250m</entry>
+
+                <entry></entry>
+
+                <entry>Speicherfreigabe in Abhängigkeit des vorhandenen
+                Arbeitsspeichers beliebig wählbar</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
+
+      <para>Die Installation enthält alle zur Kalypso-Anwedung erforderlichen
+      Plugins, sowie ein eigenständiges Java Runtime Environment.</para>
+
+      <para>Nachdem die Installation durchgeführt wurde kann das Programm
+      durch Doppelklick des Linkes gestartet werden. Nachdem das Programm
+      gestartet wurde, müssen einmalig Voreinstellungen getroffen werden.
+      Diese befinden sich im Menu <guimenuitem>Fenster</guimenuitem> unter
+      <guimenuitem>Benutzervorgaben</guimenuitem> im Themenbereich Kalypso.
+      Beim Verlassen des Programmes werden die Einstellung im aktuellen
+      Workspace für die nachfolgenden Arbeitssitzungen gespeichert.</para>
+    </section>
+
+    <section>
+      <sectioninfo>
+        <date><indexterm>
+            <primary>Update</primary>
+          </indexterm></date>
+      </sectioninfo>
+
+      <title>Update</title>
+
+      <para></para>
+    </section>
+  </section>
+
+  <section id="anwendungsfaelle">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Anwendungsfälle</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Anwendungsfälle</title>
+
+    <para>Die KALYPSO-Installation unterscheidet grundsätzlich drei
+    Anwendungsfälle:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">Administration</emphasis>: Der
+        Fachadministrator nimmt hauptsächlich die Aufgabe wahr, neue Modelle
+        bzw. Modelltypen in KALYPSO zu implementieren.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Modellierung</emphasis>: Der Modellaufbau,
+        die Modellpflege und -fortschreibung wird durch den Experten
+        (Modellierer) geleistet.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Anwendungsbetrieb</emphasis>: Im
+        Planungsfall müssen durch den Anwender schnell und zuverlässig
+        Modellberechnungen auf Basis vorhandener Modelle durchgeführt werden.
+        Zur Zeit besteht im Anwedungsbetrieb lediglich die Möglichkeit für
+        speziell aufbereitete Modelle eine Hochwasservorhersage
+        durchzuführen.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Die Benutzung von KALYPSO im Hinblick auf die Modellierung (<xref
+    linkend="grafische_oberflaeche" /> und <xref
+    linkend="zeitreihen_repository" />) und den Anwedungsbetrieb ist im
+    vorliegenden Handbuch beschrieben.</para>
+  </section>
+
+  <section id="datenmanagement">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Datenmanagement LHWZ</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Datenmanagement</title>
+
+    <para>Die in <xref linkend="kalypso_installation" /> beschriebene
+    Client-Server-Architektur basiert auf folgendem
+    Datenmanagement-Prinzip:</para>
+
+    <para>Für die Bearbeitung mit KALYPSO können lokale oder auf dem
+    KALYPSO-Server gespeicherte Modelle geladen werden. Diese aktuellen
+    Modelle - es können mehrere Modelle parallel geöffnet und bearbeitet
+    werden - werden im lokalen Arbeitsverzeichnis von KALYPSO verwaltet. Alle
+    Änderungen am Modell, das Anlegen neuer Rechenvarianten, etc. sind somit
+    im ersten Schritt nur wirksam für die lokale Modellversion.</para>
+
+    <para>Das Speichern des Modells (einschließlich Modellspezifikation,
+    Modelldatei, Vorlagen, gemessene und berechnete Zeitreihen sowie
+    Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels der
+    speziellen Menüs <guilabel>Modell</guilabel> und
+    <guimenu>Rechenvariante</guimenu> (siehe <xref
+    linkend="grundfunktionen" />) im Hauptmenü von KALYPSO angesteuert.</para>
+
+    <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent im
+    KALYPSO-Modeler (Expertenmodus), wo der Experte sehr detailliert und
+    gezielt den Datenaustausch zwischen Server und lokaler Ebene steuern
+    kann.</para>
+
+    <para>Für den Anwender und Planer bleibt das Datenmanagement verborgen, da
+    er automatisch durch den jeweiligen Wizard geführt wird.</para>
+  </section>
+
+  <section id="dokumentationen">
+    <title>Dokumentationen</title>
+
+    <para>Zur KALYPSO-Installation wurden Dokumentationen zu verschiedenen
+    Anwendungsbereichen erstellt, die im Folgenden aufgelistet sind.</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>KALYPSO-Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+
+      <listitem>
+        <para>Grafikprogramm-Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

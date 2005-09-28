@@ -1,0 +1,487 @@
+Protokoll 20.06.2005 
+---------------------
+
+Beginn:		 9:45
+Ende:		ca. 1:00	
+
+Tagesordnung:
+
+I. Jeder stellt seine Tätigkeit vor.
+
+	1) für welche Anwendung (welche Projekte)?
+	2) Welche Modelle werden verwendet?
+	3) Code
+	4) Erforderliche Überarbeitung von vorhandenem Code 
+	5) Anwender
+	6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	7) Anregungen/FeatureRequests
+
+II. Sonstiges
+--------------------------------------------------------------------------------------------------------
+Gernot:
+
+
+1) für welche Anwendung (welche Projekte)?
+
+-Sachsen
+	Hochwasserzentrum Sachsen
+	fast abgeschlossen, bereits Abnahme, Feintuning
+	Baustellen:	Unterstützung von Katastrophentestszenarien
+			Gebietsniederschlagsmodell clientseitig
+
+	Termin Ende Juli (nicht wirklich konkret)
+
+-Sachsen-Anhalt
+	Hochwasserzentrum
+	fast abgeschlossen
+	Termine verschieben sich nach hinten
+	Das Projekt läuft "schleppend", was die Datenbeschaffung anbelangt, da GIS-Daten teilweise nicht vorhanden sind
+
+	Termin Anfang August
+	Mitte/Ende Juli Installation
+	
+
+-FLOWS?
+
+-Optimierung auf TALSIM
+	evtl. neues Projekt
+
+
+
+2) Welche Modelle werden verwendet?
+
+-Spree (Sachsen)
+-Integration der Saale (Sachsen-Anhalt)
+
+
+	Saale ist Vorhersagemodell (kein richtiges NA-Modell)
+	ca. 60 Pegel, welche durch das Modell abgedeckt sind, viele Parameterlisten (CSV)
+
+	Stand:
+		Schema ist aufgebaut
+		Anstoßen vom Rechenkern fertig
+
+	Problem:
+		Programm ist nicht wirklich von außen anzustoßen (Entwickler des Programmes ist hier dran). - Rechendienst
+		Datengrundlage ist für Karten fast nicht da
+
+	Besonderheiten Code:
+		Im-/Export Skripting
+			Leeres Modell (leere Collections)
+			CSV wird in Speicher geladen (Features) - CSV (name, type, format) -> Workspace
+			FeatureMapping Workspace -> Aufbau/Änderung des leeren GML-Workspace
+			Mapping auslösen durch Editor (GML Konverter)
+
+			GML in CSV zurück (als Input für Rechenkern)
+
+			
+-Profileditor
+	Motivation:
+		Basisprogramm WspWin ist nicht mehr zu warten!
+		Ersetzen des Grafikeditors in wspWin.
+		Soll in Kalypso integrierbar sein.
+
+	Was ist schon da?:
+		Views: 	Grafik (SWT), Auswahl/Übersicht (Geländehöhen, Trennflächen, Durchströmte Bereiche, rauheiten, 					Koordinaten, Bewuchs, ...), Tabelle, Editor
+
+		Funktionalität:	Undo, Punkte löschen, interaktiv Punkte verschieben, Copy-Paste in Excel (Zwischenablage), 					Verküpfung Tabelle - Grafik, Ergebnisse werden aus Längsschnitt in Querprofil integriert
+				Validierung bei Veränderung am Profil (Probleme, Warnings) - Problems View von 							Eclipse verwendet (Zur Zeit z.B. Rücksprünge)
+				Meisten Datenarten sind editierbar (Ei, Brücken...), Wehre fehlen noch
+
+		SWTChart Framework (in CVS) als Unterstützung zum Zeichnen verwendet (Layer haben feste Farbzuordnungen...)
+
+	Offene Punkte:
+		Es ist Eclipse Plugin - jedoch verschiedene Views auf einem Editor - Integration?
+		Nur lesen schreiben für die *.prf Dateien (Profildateien)
+		Profileditor ist auf Eclipse 3.1 und Java 1.5 Programmiert - Integration?
+		Längsschnitt als Oberservation oder in der Grafik?
+
+	Plugins:
+
+		EclipsePlatformContributions
+		EclipseRCPContributions
+		JavaApiContributions
+			aufgund 3.1 und 3.0 Problematik trennen
+		ProfilResources
+		ProfilSerializer
+		SWTChart
+
+3) Code
+	hauptsächlich KalypsoCore, KalypsoUI, KalypsoAnt
+
+	Lokales Rechnen:
+		Idee	lokale Entwicklung, aber auch lokale Rechnungen (z.B. Anwendung Ingenieurbüros nur als ein 					"Programm")
+
+	KalypsoDebug:
+		Debug für Übersicht Resourcen Freigabe
+		Rechnung durchführen und Dateien Ergebnisse vergleichen (Testcases)
+			Compare Views von Eclipse verwendet
+
+4) Erforderliche Überarbeitung von vorhandenem Code 
+	Berichtsablage:
+		Zur Zeit nur Tabellen und einzel Ergebnisse
+		Erforderlich ist Vergleich zwischen mehreren Eregbnissen, Auswertung von Ergebnissen
+
+5) Anwender
+	BCE		Stefan Werner (NA-Modell)
+			(Rolf Schröder (NA-Modell))
+			evtl. zukünftig	Thomas (Profileditor)
+					Annette (Profileditor - Datenaufbereitung für SOBEC)
+	Sachsen		Büttner 
+			~3 User
+	Sachsen-Anhalt	2 User (Wiermann, Rose)
+
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	Monika	- 	Bode
+	Marc	-	Observation (WISKI), User-Service, Metadaten
+	Andreas	-	Gebietsniederschlagsmodell, GML
+
+7) Anregungen/FeatureRequests
+
+--------------------------------------------------------------------------------------------------------
+Monika:
+
+1) für welche Anwendung (welche Projekte)?
+-Sachsen-Anhalt
+	Abnahmeprotokoll
+	Bode, Ilse Modelle/ Rechendienste
+	Baustellen:	Wizard (flexibler gestalten aufgrund verschiedener Batch-Dateien)
+
+	Mitte/Ende Juli Installation
+			
+2) Welche Modelle werden verwendet?
+-Bode
+	Wasserlaufmodell, NA-Modell, Talsperrenmodelle 
+	Probleme: Batch-Dateien, EXE-Dateien (viele), Parameter- und Daten-Dateien liegen alle 
+	          in einem Verzeichnis. Damit ist das Modell sehr unübersichtlich und schwer
+	          nachvollziehbar. 
+	     
+
+-Ilse
+	NA-Modell
+	gleiches Modell wie Bode ohne Speicher, Wasserlaufmodell (kleine Schwester)
+
+3) Code
+	KalypsoTubigPlugin
+
+4) Erforderliche Überarbeitung von vorhandenem Code 
+	Wizard
+	Umrechnung Niederschlag (Ombrometer -> Gebietsniederschlag)
+
+5) Anwender
+	Sachsen-Anhalt
+
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	Marc	- Observations
+	Gernot	- FeatureEditor,...
+
+7) Anregungen/FeatureRequests
+
+--------------------------------------------------------------------------------------------------------
+Marc:
+
+1) für welche Anwendung (welche Projekte)?
+-Sachsen
+	PSI-Adapter
+-Sachsen-Anhalt
+	Wiski-Adapter (Kisters Produkt)
+
+2) Welche Modelle werden verwendet?
+-/-
+
+3) Code
+	-KalypsoRepository - Observations
+		Implementierungen:
+			File Repository (Lokales verzeichnis) - Root, Kennzeichen, Dateitypen
+			KalypsoPSICompactAdapter (PSI Datenbank - Sachsen)
+			KalypsoPSICompactImpl (PSIFake zu Testzwecken)
+			KalypsoWiskiAdapter (Wiski Datenbankanbindung - Sachsen-Anhalt)
+			virtuell (gefilterte zeitreihen)
+
+		ZeitreihenView:
+			JFreeChart
+			Speziell für Zeitreihen (x-Achse Zeit)
+			Unterstütze Typen - Niederschlag, Abfluss, Wasserstand, Temperatur, Volumen, Verdunstung
+		Ausblick:
+			JFreeChart durch SWTChart ersetzen
+			Datenmodell überarbeiten
+			In der View weitere Möglichkeiten der Bearbeitung/ Darstellungsweise hinzufügen
+	-GrafikLauncher - Adapter GrafikTool (Grohmann)
+		Öffnen von zeitreihen *.zml mit dem GrafikTool aus *.odt Vorlage
+		Kalypso ist hierfür "gesperrt", da die Zeitreihen geändert (nicht gelöscht) werden können
+		Es werden die Observations aktualisiert, nachdem das GrafikTool wieder geschlossen wird (kalypso ist wieder 		"verfügbar")
+	-Metadaten
+		WQ-Beziehungen/ Umrechnung
+			Wechmann Parameter (Sachsen) - Gültigkeitszeitraum, wasserstandsabhängig geteilte Funktionsparameter 
+			WQ Tabellen (Sachsen-Anhalt)
+		WQ Parameter Cache auf Serverseite, falls DB nicht zur Verfügung steht
+
+	-CoreServices (Grundprojekt für alle Dienste - Schnittstelle)
+	-KalypsoMetaDocService
+		Dokumentbausteine an externe Systeme
+			Tabellenexport
+			Diagrammexport
+			Kartenexport?
+	-kalypsoUserService
+		Sachsen		Anmeldung auf Basis des am System angemeldeten Users (Betriebssystemuser)
+		Sachsen-Anhalt	LDAP
+	-KalypsoRobotron - LDAP Zugriff
+	-kalypsoBuild
+		Einheitliches Build
+	-JWSDPInstallation
+		gehört zu Build
+		JWSDP immer dabei (Versionsunabhängig)
+	-kalypsoConf***
+		Sachsen
+		sachsenAnhalt
+		Localhost
+
+4) Erforderliche Überarbeitung von vorhandenem Code 
+Refaktoring (Observation) ITuppelModel unterstützt nicht das Hinzufügen von Werten
+
+5) Anwender
+	Sachsen
+	Sachsen-Anhalt
+
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	Andreas, Monika, Gernot
+	Jessica - Datacenter
+
+7) Anregungen/FeatureRequests
+	Unterstützten Datentyp Niederschlag in Intensität [mm/h] und Volumen [mm] unterscheiden 
+	Zeitreihenansichten - Farben nicht auf Datentyp
+
+--------------------------------------------------------------------------------------------------------
+Nadja:
+
+1) für welche Anwendung (welche Projekte)?
+-Stör (Schleswig-Holstein)
+	Ausweisung von Überschwemmungsflächen mit Schadenskarten und Risikokarten
+	Termin nach Nachfrage
+-FLOWS
+			
+2) Welche Modelle werden verwendet?
+-RisikoTool
+	Rasterformat:
+		Rasterformat aus GML3 übernommen (in den meisten Teilen)
+		Anzeige über Rastersymbolizer (ColorMap) in StyleEditor
+	Vorgehen:
+		Rasterung der Landnutzung (als Eingangsdaten im Shape)
+		Steuerungsdatei für Schädigungsfunktionen (werden mit Landnutzungsarten verlinkt), Vermögenswerte
+		Wasserstände für Hochwasser verschiedener Jährlichkeiten
+		Menü Risikoanalyse um Analyse zu starten (4 verschiedene CalcJobs)
+		Steuerungsdatei für Risiko (Einteilung des Risikos abhängig der Definition x[€/m²]~ Risikostufe
+		abhängig von der Landnutzung)
+		Locale Rechnung
+	Ergebnisse:
+		Schadenskarte jährlich [€/m²](Raster)
+		Risikokarte
+
+3) Code
+-KalypsoFloodRiskAnalysis
+-KalypsoCreateProjectFloodRisk
+	NewProjektWizard
+	Wasserstands- und Landnutzungsdaten werden aus den ASCII-Raster-Dateien abgefragt
+-KalypsoRaster
+	Datenkonvertierung
+
+4) Erforderliche Überarbeitung von vorhandenem Code 
+
+	Rechendienst nicht nur local verwenden, CalcCase Server
+5) Anwender
+	Schleswig Holstein STUA (Staatliches Umwelt Amt)
+	Stephan Kräßig
+	FLOWS
+
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	Es wird an der TUHH geklärt, wer zukünftik für das RisikoTool zuständig ist
+	
+7) Anregungen/FeatureRequests
+	Query-Methode zur Rasterung verwenden
+
+--------------------------------------------------------------------------------------------------------
+Andreas:
+
+1) für welche Anwendung (welche Projekte)?
+   Landeshochwasserzentrum Sachsen
+   TUHH: alle Projekte Unterstützung:
+	   	- Ing.-Büros und Übung: sehen dass Kalypso-NA läuft
+   		- Flows:  bisher Unterstützung Konzeption, demnächst: mehr
+   		- Risiko: bisher Unterstützung bei Integration in Kalypso
+
+2) Welche Modelle werden verwendet?
+	KalypsoNA
+		Optimierung
+		Zeitreihenmanagement
+			- Gebietsniederschlagsmodell aus Ombromterdaten
+			- Vorhersage aus DWD-Rasterdaten
+3) Code
+-Visualisierung von (geometrischen) Vernetzungen
+	VirtualFeatureTypeProperty (nur lesbar nicht in GML geschrieben, wird auf Anfrage erstellt)
+	Visualisierung der VirtualFeatureTypePropertys kann im StyleEditor bearbeitet/angepasst werden
+	Mögliche Relationen werden aus dem Schema ausgewertet
+
+-Niederschlagszeitreihen
+	Es gibt als Input: Ombrometermessstation und DWDRaster->Vorhersagezeitreihe
+	vorher serverseitiges virtuelles ZML Repository zur Generierung von Gebietsniederschlagszeitreihen
+	(über Filter - Kringing-Gewichtung)
+ 	Jetzt mapping.gml als Konfigurationsdatei clientseitig
+
+-KalypsoDWD
+	Rasterdateien liegen als (Mittel)Punktwolke vor (Rechtwert/Hochwert)
+	Rasterzellengöße ist nicht bekannt
+	verschneidung mit den Teilgebieten, prozentuale Wichtung
+	Bisher als Test, geplant als Task
+	
+-kalypsoNAAcidTest
+	Testdaten des NA-Modelles (um die Daten nicht im Code zu haben - veröffentlichung)
+
+-kalypsoOptimizePlugin
+	Im NA-Modell kalypso werden Parameter aufbauend auf SCE-Algorithmus optimiert
+	Zur Zeit im Wizard verwendet
+	IOptimizingCalcJob
+
+-kalypsoDeegree
+	Zunächst besierend auf deegree entwickelt
+	Da zu viele eigene Implementierungen (Shapeserializer...) vorhanden ist während der Zeit ein eigenes Projekt
+	Ende 2005 soll es deegree 2.0 geben - evtl. einige Teile hier erneut übernehmen (Koordinatensystemumrechnung...)
+-kalypsoCore
+
+4) Erforderliche Überarbeitung von vorhandenem Code 
+evtl. Refaktoring Auswahl Display Elemente in Karte
+Interface IOptimizingJob Refaktoring
+GML Geometrien um Editierfunktion erweitern
+GML Durchgängigkeit testen
+Tabellen editieren erweitern
+Tests schreiben
+
+5) Anwender
+	Sachsen-Anhalt
+	Ingenieurbüros
+	FLOWS
+	Gehad Ujel - Anwender NA-Modell, GML-Schema, Dokbook - Manual	
+
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	Marc und Gernot: allgemeine Konzeption, bzw. ZML-stuff
+	Jessica: NA-Modell
+	Christoph: Flows	
+
+7) Anregungen/FeatureRequests
+	OptimizingJob Clientseitig (Anmerkung: wer das braucht bitte an Andreas wenden).
+
+--------------------------------------------------------------------------------------------------------
+Jessica:
+
+Vorstellung NA-Modell
+- neues Projekt erstellen
+  import aus shape-files -> Generierung des initialen NA-Modellprojektes 
+  
+
+1) für welche Anwendung (welche Projekte)?
+- NA-Modell: Ingenieurbüros
+- NA-Modell: Studenten, Lehre			
+- NA-Modell: AB-Wasserbau intern
+
+2) Welche Modelle werden verwendet?
+diverse NA-Modelle, ObereKollau, Falkengraben, BasisTestModell, AdvancedTestModell...
+ 
+3) Code
+KalypsoNA: komplettieren der Unterstützung des kompletten NA-Modells
+Kalypso-TUHH-Manual
+
+4) Erforderliche Überarbeitung von vorhandenem Code 
+ - I18n komplettieren
+ - GUI (Beispiele: 2 x Save-Diskette)
+ - Ergebnissvisualisierung (Performance)
+ 
+5) Anwender
+Ingenieurbüros:
+ Jetzt: 
+ 	- Aufstellung von NA-Modellen in Hamburg
+ 	- Datenerhebung, Kalibrierung
+ Zukunft: Pflege der NA-Modelle
+Studenten:
+ Übung Surface-Hydrology, NA-Modell Aufstellung, Kalibrierung (seit letztem Monat)
+ AB-Wasserbau, die Kollegen (als Poweruser)
+ 2 "Hiwis" zur Unterstützung des Testbetriebes an den beiden Testmodellen
+
+Kooperation mit Montenegro/Serbien: Summer-School (NA-Modell)
+
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+Marc,Christoph, Gernot, Andreas
+
+7) Anregungen/FeatureRequests
+Handhabung von Diagrammen (außer Timeseries) in Kalypso
+
+--------------------------------------------------------------------------------------------------------
+Christoph:
+
+1) für welche Anwendung (welche Projekte)?
+-Flows
+	EU-Projekt - Interreg 3B
+	Projektgebiet Nordseeraum (Binnengewässer, keine Küste)
+	4 Arbeitspakete
+		(1) Mapping und Modelling (Darstellung in GIS; Berechnungsmodule Wasserspiegelllage; Grundwasser...)
+				Deutschland: 	Hamburg Kollau (NA-Modell und WspWin, Szenarienberechnung) (Claudia Brüning)
+								Lüneburg Elbeinzugsgebiet Geesthacht bis Hitzhacker (Landwirtschaft auf
+								Überschwemmten Flächen, Schadstofftransport...)
+		(2) Risikowahrnehmung in Zusammenhang mit Hochwasser, Was ist das tollerierbare Risiko?
+				Hamburg:		interactive learning groupes (Timm Ruben Geissler) 
+								Software für Bürger ihr Schadenspotential zu ermitteln und zu reduzieren, den Bürger
+								sensibilisieren - Internetbasiert (Timm Ruben Geissler) 
+		(3) Applikation (Stadt- und Raumplaner mit hochwasserrelevanten Daten versorgen und bei der Planung
+			unterstützen)
+				Hamburg:		DSS - in Kalypso (komplexe Simulationsprogramme vereinfachen, so dass ein Planer
+								hiermit arbeiten kann - in den Planungsprozess integrieren)
+		(4) InteractiveLearningPackage
+								Tutor je nach Wissensgrad werden Fragen gestellt
+								TV-Produktion
+	Norwegen, Schweden, Finnland, Holland, Deutschland
+	Testrelease: Februar 2006
+	Projektabschluss: Termin 30 Juni 2006
+	
+2) Welche Modelle werden verwendet?
+	NA-Modell
+	WspWin
+	DSS (in der Konzeptionellen Phase) 
+	
+3) Code
+-KalypsoAddLayerPlugin
+	Importieren verschiedener Datenformate in eine Karte (Shape, GML, WMS, WFS, Raster, Image - tiff, jpg, png -)
+	DefaultStyle Factory (In Anlehnung an SchemaCache)
+	ExtensionPoint in Karte und beim DatenImport im AddLayer-Wizard definiert
+	Probleme: 	FeaturePath bei Auswahl von Features aus GML
+				Wohin mit den Styles?
+				Was ist mit Datenquellen extern
+-KalypsoDeegree
+-KalypsoCore
+-KalypsoUI
+
+4) Erforderliche Überarbeitung von vorhandenem Code 
+	DefaultStyle Factory
+	Abfrage WMS, WFS... in Thread - schon umgesetzt?
+	Auswahl der GML Resource (AbstrakteTypen, SubstitutionGroupes, Baum)
+	
+5) Anwender
+	BSU (Behörde für Stadtentwicklung und Umwelt)
+	HSE (Hamburger Stadtentwässerung )
+	LGV (Landesbetrieb für Geoinformation und Vermessung )
+	Bezirksämter (Eimsbüttel, Hamburg-Nord)
+	TesterCommunity
+
+6) Schnittstellen/ Abhängigkeiten zu anderen Entwicklern
+	Gernot, Andreas, Jessica, Marc
+	
+7) Anregungen/FeatureRequests
+	*Beim Produzieren einer neuen Karte einmalig AddLayer durchlaufen
+	*Catalog für OWS (file cache oder so um metadaten der abgerufenen services vorzuhalten )
+	*Conf-file für statischen Catalog, der Benutzer soll eine feste Auswahl von OWS Addresssen 
+	 je nach Benutzerprofil vom Server erhalten.
+	 
+
+--------------------------------------------------------------------------------------------------------
+2) Sonstiges
+
+-Was passiert mit nicht gepflegten Plugins (Risikotool, 2D)?
+	Beim Refaktoring müssen alle Plugins berücksichtigt werden! (Workspace für Refaktoring oder Plugins öffnen/schließen)
+	Abhängigkeiten und Zuständigkeiten der plugins werden festgelegt.

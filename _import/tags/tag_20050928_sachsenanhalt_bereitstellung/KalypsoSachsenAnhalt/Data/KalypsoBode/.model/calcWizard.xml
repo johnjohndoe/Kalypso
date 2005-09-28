@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="25">
+	<!-- KONTROLLE UND UMRECHNUNG DER ZEITREIHEN - NIEDERSCHLAG -->
+	<!-- Niederschlag an Stationen (Messung) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!-- 
+        HTML-Navigation und pageID -->
+		<arg name="pageID" value="NS_Stationen"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Stationen.html"/>
+		<arg name="nextPage" value="NS_Gebiete"/>
+		<!--
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsstationen.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag_gemessen"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+		<!-- 
+        Ant-Knopf -->
+		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
+		<arg name="buttonTooltip" value="Gebietsniederschlag mittels Gebietsniederschlagsmodell berechnen"/>
+		<arg name="buttonLaunch" value="niederschlagsmodell"/>
+	</page>
+	<!-- Niederschlag in Gebieten (Messung - aus Umrechnung -  und Prognose) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="NS_Gebiete"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete.html"/>
+		<arg name="prevPage" value="NS_Stationen"/>
+		<arg name="nextPage" value="Q_uh_Wendefurth"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
+	<!-- Wasserstand / Abfluss (Messung) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse /  Wasserstände - Eingabepegel uh. Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_uh_Wendefurth"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_uh_Wendefurth.html"/>
+		<arg name="prevPage" value="NS_Gebiete"/>
+		<arg name="nextPage" value="Abgabe_Speicher"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!-- 
+         Karte  -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_uh_Wendefurth.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Ganglinie_gemessen"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- Abgabe Speicher (Messung und Prognose) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Abgabe_Speicher"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher.html"/>
+		<arg name="prevPage" value="Q_uh_Wendefurth"/>
+		<arg name="nextPage" value="Berechnung_bat1"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>	</page>
+	<!-- BERECHNUNG - Q-PROGNOSE UNTERHALB WENDEFURTH -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose unterhalb Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_bat1"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat1.html"/>
+		<arg name="prevPage" value="Abgabe_Speicher"/>
+		<!-- <arg name="nextPage" value="Abgabe_Speicher_gerechnet"/> -->
+		<arg name="nextPage" value="Q_oh_Speicher"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel_uh_Wendefurth.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+         Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+		<!-- 
+        Ant-Knopf für Berechnung -->
+		<arg name="buttonText" value="Q-Prognose uh. Wendefurth"/>
+		<arg name="buttonTooltip" value="Abfluss-Prognose unterhalb Wendefurth"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run1.bat"/>
+		</arg>
+	</page>
+	<!-- Seite auf der die gerechneten Speicheabgaben dargestellt werden (=2. Ergebnisseite)-->
+	<!-- ??? werden Abgaben in BAT 1 überhaupt gerechnet? -->
+	<!-- Abgabe Speicher (Prognose / gerechnet) -->
+	<!--
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ergebnisse Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+		
+        HTML-Navigation und pageID
+		<arg name="pageID" value="Abgabe_Speicher_gerechnet"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher_gerechnet.html"/>
+		<arg name="prevPage" value="Berechnung_bat1"/>
+		<arg name="nextPage" value="Q_oh_Speicher"/>
+		
+        Page-Layout 
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="60"/>
+		 
+        Karte 
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		
+		Diagramm 
+	    <arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
+		 
+        Tabelle 
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+-->
+	<!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
+	<!-- Wasserstand / Abfluss (Messung) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abflüsse / Wasserstände - Eingabepegel oh. Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Q_oh_Speicher"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_oh_Speicher.html"/>
+		<!-- <arg name="prevPage" value="Abgabe_Speicher_gerechnet"/> -->
+		<arg name="prevPage" value="Berechnung_bat1"/>
+		<arg name="nextPage" value="Berechnung_bat2"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Eingabepegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Ganglinie_gemessen"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- BERECHNUNG - Q-PROGNOSE OBERHALB SPEICHER -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose oberhalb Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_bat2"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat2.html"/>
+		<arg name="prevPage" value="Q_oh_Speicher"/>
+		<arg name="nextPage" value="Inhalt_Speicher"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel_oh_Speicher.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!--
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+		<!-- 
+        Ant-Knopf für Berechnung -->
+		<arg name="buttonText" value="Q-Prognose oh. Speicher"/>
+		<arg name="buttonTooltip" value="Abfluss-Prognose oberhalb Speicher"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run2.bat"/>
+		</arg>
+	</page>
+	<!-- KONTROLLE DER ZEITREIHEN - SPEICHERRECHNUNG ALLGEMEIN -->
+	<!-- Inhalt Speicher (Messung) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Volumen / Wasserstände - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Inhalt_Speicher"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html"/>
+		<arg name="prevPage" value="Berechnung_bat2"/>
+		<arg name="nextPage" value="Abgabe_Speicher_2"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_ohne_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Ganglinie_gemessen"/>
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- Abgabe Speicher (Messung und ggf. auch Prognose (wird f. BAT3 benötigt)) -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Abgabe_Speicher_2"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher_2.html"/>
+		<arg name="prevPage" value="Inhalt_Speicher"/>
+		<arg name="nextPage" value="Berechnung_bat3"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="50"/>
+		<arg name="rightSash" value="50"/>
+		<!--  
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="diagShowLegend" value="false"/>
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
+		<!-- 
+         Tabelle -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
+	<!-- SPEICHERRECHNUNG BAT 3  -->
+	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
+	<!-- dies Seite gilt auch für Bat4/5, abgesehen von der Überschrift -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Speicherrechnung bei Vorgabe der Abgaben" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_bat3"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat3.html"/>
+		<arg name="prevPage" value="Abgabe_Speicher_2"/>
+		<arg name="nextPage" value="Berichtsablage_Pegel"/>
+		<!-- 
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<!-- orange (255,128,64) -->
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<!-- 
+        Ant-Knopf für Berechnung -->
+		<arg name="buttonText" value="Speicherrechnung"/>
+		<arg name="buttonTooltip" value="Speicherrechnung bei Vorgabe der Abgaben"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run3.bat"/>
+		</arg>
+	</page>
+	<!-- SPEICHERRECHNUNG BAT 4  -->
+	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 4 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - TS-Steuerung ohne Optimierung" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!-- 
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_bat4"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat4.html"/>
+		<arg name="prevPage" value="Abgabe_Speicher_2"/>
+		<arg name="nextPage" value="Berichtsablage_Pegel"/>
+		<!--
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<!-- orange (255,128,64) -->
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<!-- 
+        Ant-Knopf für Berechnung -->
+		<arg name="buttonText" value="TS-Steuerung ohne Optim."/>
+		<arg name="buttonTooltip" value="TS-Steuerung ohne Optimierung"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run4.bat"/>
+		</arg>
+	</page>
+	<!-- SPEICHERRECHNUNG BAT 5  -->
+	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT5 -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - TS-Steuerung mit Optimierung" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!-- 
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berechnung_bat5"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat5.html"/>
+		<arg name="prevPage" value="Abgabe_Speicher_2"/>
+		<arg name="nextPage" value="Berichtsablage_Pegel"/>
+		<!--
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="0"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss##linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<!-- orange (255,128,64) -->
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<!-- 
+        Ant-Knopf für Berechnung -->
+		<arg name="buttonText" value="TS-Steuerung mit Optim."/>
+		<arg name="buttonTooltip" value="TS-Steuerung mit Optimierung"/>
+		<arg name="buttonLaunch" value="runBatch"/>
+		<arg name="buttonProperties">
+			<arg name="tubig.batch.name" value="run5.bat"/>
+		</arg>
+	</page>
+	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!-- 
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html"/>
+		<arg name="prevPage" value="Berechnung_bat3"/>
+		<!--
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="26"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Vorhersagepegel.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
+		
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="Q"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<!-- 
+        Exporte  -->
+		<!-- Name of the feature-property, used for display/selection purposes -->
+		<arg name="pegelNameProperty" value="Name"/>
+        <arg name="resultProperty" value="Ganglinie_gerechnet"/>
+		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
+		<arg name="exporter1">
+			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="name" value="Vorhersagepegel"/>
+			<arg name="nameproperty" value="Name"/>
+			<arg name="width" value="800"/>
+			<arg name="height" value="600"/>
+			<arg name="imageFormat" value="png"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Ganglinie_gemessen"/>
+				<arg name="href2" value="Ganglinie_gerechnet"/>
+				<arg name="href3" value="Niederschlag"/>
+			</arg>
+			<arg name="templateDiagQ">
+				<arg name="label" value="Abflussgrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagQ.odt"/>
+			</arg>
+			<arg name="templateDiagW">
+				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagW.odt"/>
+			</arg>
+			<arg name="templateTable">
+				<arg name="label" value="Übersichtstabelle (Q / W / P)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelle.ott"/>
+			</arg>
+		</arg>
+		<!-- Scheitelwert-Tabellen W / Q -->
+		<arg name="exporter3">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Pegelübersicht Wasserstand (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteW.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Pegel"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="Q"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="Silberhütte"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Silberhütte.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="Meisdorf"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Meisdorf.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="Hausneindorf"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml"/>
+			</arg>
+			<arg name="obs4">
+				<arg name="label" value="Abgabe TS Wendefurth"/>
+				<arg name="href" value="./Zeitreihen/Speicherabgabe/Wendefurth.zml"/>
+			</arg>
+			<arg name="obs5">
+				<arg name="label" value="Thale"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Thale.zml"/>
+			</arg>
+			<arg name="obs6">
+				<arg name="label" value="Ditfurth"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ditfurt.zml"/>
+			</arg>
+			<arg name="obs7">
+				<arg name="label" value="Wegeleben"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Wegeleben.zml"/>
+			</arg>
+			<arg name="obs8">
+				<arg name="label" value="Steinerne Renne"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Steinerne_Renne.zml"/>
+			</arg>
+			<arg name="obs9">
+				<arg name="label" value="Mahndorf"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Mahndorf.zml"/>
+			</arg>
+			<arg name="obs10">
+				<arg name="label" value="Nienhagen"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Nienhagen.zml"/>
+			</arg>
+			<arg name="obs11">
+				<arg name="label" value="Oschersleben"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Oschersleben.zml"/>
+			</arg>
+			<arg name="obs12">
+				<arg name="label" value="Hadmersleben"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hadmersleben.zml"/>
+			</arg>
+			<arg name="obs13">
+				<arg name="label" value="Staßfurt"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Staßfurt.zml"/>
+			</arg>
+			<arg name="obs14">
+				<arg name="label" value="Neugattersleben"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Neugattersleben.zml"/>
+			</arg>
+			<arg name="obs15">
+				<arg name="label" value="Elend"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Elend.zml"/>
+			</arg>
+			<arg name="obs16">
+				<arg name="label" value="Hasselfelde"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hasselfelde.zml"/>
+			</arg>
+			<arg name="obs17">
+				<arg name="label" value="Königshütte"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Königshütte.zml"/>
+			</arg>
+			<arg name="obs18">
+				<arg name="label" value="Trautenstein"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Trautenstein.zml"/>
+			</arg>
+		</arg>		
+		<arg name="exporter4">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Pegelübersicht Abfluss (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteQ.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Pegel"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="Q"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="Silberhütte"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Silberhütte.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="Meisdorf"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Meisdorf.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="Hausneindorf"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml"/>
+			</arg>
+			<arg name="obs4">
+				<arg name="label" value="Abgabe TS Wendefurth"/>
+				<arg name="href" value="./Zeitreihen/Speicherabgabe/Wendefurth.zml"/>
+			</arg>
+			<arg name="obs5">
+				<arg name="label" value="Thale"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Thale.zml"/>
+			</arg>
+			<arg name="obs6">
+				<arg name="label" value="Ditfurth"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ditfurt.zml"/>
+			</arg>
+			<arg name="obs7">
+				<arg name="label" value="Wegeleben"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Wegeleben.zml"/>
+			</arg>
+			<arg name="obs8">
+				<arg name="label" value="Steinerne Renne"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Steinerne_Renne.zml"/>
+			</arg>
+			<arg name="obs9">
+				<arg name="label" value="Mahndorf"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Mahndorf.zml"/>
+			</arg>
+			<arg name="obs10">
+				<arg name="label" value="Nienhagen"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Nienhagen.zml"/>
+			</arg>
+			<arg name="obs11">
+				<arg name="label" value="Oschersleben"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Oschersleben.zml"/>
+			</arg>
+			<arg name="obs12">
+				<arg name="label" value="Hadmersleben"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hadmersleben.zml"/>
+			</arg>
+			<arg name="obs13">
+				<arg name="label" value="Staßfurt"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Staßfurt.zml"/>
+			</arg>
+			<arg name="obs14">
+				<arg name="label" value="Neugattersleben"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Neugattersleben.zml"/>
+			</arg>
+			<arg name="obs15">
+				<arg name="label" value="Elend"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Elend.zml"/>
+			</arg>
+			<arg name="obs16">
+				<arg name="label" value="Hasselfelde"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hasselfelde.zml"/>
+			</arg>
+			<arg name="obs17">
+				<arg name="label" value="Königshütte"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Königshütte.zml"/>
+			</arg>
+			<arg name="obs18">
+				<arg name="label" value="Trautenstein"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Trautenstein.zml"/>
+			</arg>
+		</arg>
+		<!-- Speicher-Exporte noch konfigurieren ( ggf. zweite Export-Seite für Speicher-Berichte) -->
+<!--		
+		<arg name="exporter2">
+		<arg name="id" value="simpleTemplateExporter"/>
+		<arg name="width" value="1024"/>
+		<arg name="height" value="768"/>
+		<arg name="imageFormat" value="png"/>
+		<arg name="templateDiag">
+			<arg name="label" value="Abflußdiagramm, Gebiet obere Spree"/>
+			<arg name="href" value="project:/.templates/calcCase/berichtDiagObereSpree.odt"/>
+			<arg name="documentName" value="obereSpree"/>
+		</arg>
+	</arg>
+-->
+	</page>
+</calcwizard>

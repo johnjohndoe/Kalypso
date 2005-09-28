@@ -1,0 +1,24 @@
+EDITORS
+
+Table-Editor
+- öffnet .ott-Dateien
+- Erste Spalte Datum, folgende Spalten beinhalten die Werte der Zeitreihen
+
+Beschreibung .ott-Dateien: Observation Table Template
+- speichert die Einstellungen für die tabellarische Darstellung von Zeitreihen.
+- beinhaltet:
+	Liste der Zeitreihen mit Achsen
+	Liste der visuelle Status-Abhängige Eigenschaften (sog. RenderingRules)
+- Beispiel: Siehe KalypsoUtil - /etc/schemas/template/obstableview_example.ott
+
+
+
+DATUM VON-BIS
+
+- Eingabe möglich im Query Part der URL
+
+- PSICompact Adapter: wenn keine Angabe, nimmt default Einstellung aus der config.ini
+Datei die sich im resource Package vom Adapter befindet.
+
+- OCSUrlStreamHandler: wenn keine Angabe im Query part der URL und UI ist da, dann wird
+der Benutzer gefragt (DateRangeInputDialog)

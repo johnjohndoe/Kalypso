@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.tubig.speicher" version="0.1" xmlns:tubigspeicher="org.kalypso.tubig.speicher" xmlns:tubigcommon="org.kalypso.tubig.common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
+	<import namespace="org.kalypso.tubig.common" schemaLocation="common.xsd"/>
+	<element name="SpeicherCollectionAssociation" type="tubigspeicher:SpeicherCollectionAssociationType"/>
+	<complexType name="SpeicherCollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigspeicher:SpeicherCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SpeicherCollection" type="tubigspeicher:SpeicherCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+	<complexType name="SpeicherCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element ref="gml:boundedBy"/>
+					<element ref="tubigspeicher:SpeicherMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="SpeicherMember" type="tubigspeicher:SpeicherAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="SpeicherAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigspeicher:AbstractSpeicher"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="AbstractSpeicher" abstract="false" type="tubigspeicher:AbstractSpeicherType" substitutionGroup="gml:_Feature"/>
+	<complexType name="AbstractSpeicherType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Name" type="string"/>
+					<element name="Ort" type="gml:PointPropertyType"/>
+					<element name="Messstellennummer" type="string" minOccurs="1"/>
+					<element name="Kurz_Name" type="string" minOccurs="1"/>
+					<!-- lokal,  *.vsa, *.psa-->
+					<element name="Abgabe" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<!-- lokal,  *.zfl (nur Prognose)-->
+					<element name="Zufluss_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Speicher" abstract="false" type="tubigspeicher:SpeicherType" substitutionGroup="tubigspeicher:AbstractSpeicher"/>
+	<complexType name="SpeicherType">
+		<complexContent>
+			<extension base="tubigspeicher:AbstractSpeicherType">
+				<sequence>
+					<!-- lokal,  *.vvs einschließlich *.vwt über *.wvt-->
+					<element name="Ganglinie_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<!-- lokal,  *.pv-->
+					<element name="Ganglinie_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<!-- Stauraum-Parameter, *.sra -->
+					<element name="StauraumParameter" type="tubigspeicher:StauraumAssociationType"/>
+					<!-- Mindestabgabe-Parameter, *.qmi -->
+					<element name="MindestabgabeParameter" type="tubigspeicher:MindestabgabeAssociationType"/>
+					<!-- Maximalabgabe-Parameter, *.qma-->
+					<element name="MaximalabgabeParameter" type="tubigspeicher:MaximalabgabeAssociationType"/>
+					<!-- Trinkwasser-Parameter, *.twa -->
+					<element name="TrinkwasserParameter" type="tubigspeicher:TrinkwasserAssociationType"/>
+					<!-- Entlastungsanlagen-Parameter, *.lea -->
+					<element name="EACollectionAssociation" type="tubigspeicher:EACollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="Überleitung" abstract="false" type="tubigspeicher:ÜberleitungType" substitutionGroup="tubigspeicher:AbstractSpeicher"/>
+	<complexType name="ÜberleitungType">
+		<complexContent>
+			<extension base="tubigspeicher:AbstractSpeicherType">
+				<sequence>
+					<!-- das wüsste ich auch gerne... -->
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Stauraum-Parameter, *.sra -->
+	<complexType name="StauraumAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigspeicher:Stauraum"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Stauraum" type="tubigspeicher:StauraumType" substitutionGroup="gml:_Feature"/>
+	<complexType name="StauraumType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Totraum" type="double"/>
+					<element name="Reserveraum" type="double"/>
+					<element name="Betriebsraum" type="tubigcommon:MonatCollectionAssociationType"/>
+					<element name="Stauraum" type="double"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Mindestabgabe-Parameter, *.qmi -->
+	<complexType name="MindestabgabeAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigspeicher:Mindestabgabe"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Mindestabgabe" type="tubigspeicher:MindestabgabeType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MindestabgabeType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Mindestabgabe" type="tubigcommon:MonatCollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Maximalabgabe-Parameter, *.qma -->
+	<complexType name="MaximalabgabeAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigspeicher:Maximalabgabe"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Maximalabgabe" type="tubigspeicher:MaximalabgabeType" substitutionGroup="gml:_Feature"/>
+	<complexType name="MaximalabgabeType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Maximalabgabe" type="tubigcommon:MonatCollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- Trinkwasser-Parameter, *.twa -->
+	<complexType name="TrinkwasserAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigspeicher:Trinkwasser"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Trinkwasser" type="tubigspeicher:TrinkwasserType" substitutionGroup="gml:_Feature"/>
+	<complexType name="TrinkwasserType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Trinkwasser" type="tubigcommon:MonatCollectionAssociationType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- EA = Entlastungsanlagen, *.lea -->
+	<complexType name="EACollectionAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigspeicher:EACollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="EACollection" type="tubigspeicher:EACollectionType" substitutionGroup="gml:_FeatureCollection"/>
+	<complexType name="EACollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element ref="gml:boundedBy"/>
+					<element ref="tubigspeicher:EAMember" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="EAMember" type="tubigspeicher:EAAssociationType" substitutionGroup="gml:featureMember"/>
+	<complexType name="EAAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="tubigspeicher:EA"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="EA" type="tubigspeicher:AbstractEAType" substitutionGroup="gml:_Feature"/>
+	<complexType name="AbstractEAType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="Höhe" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Höhe [müNN]</label>
+								<tooltip>Höhe [müNN]</tooltip>
+								<description>Höhe [müNN]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="Inhalt" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Inhalt [Mio. m³]</label>
+								<tooltip>Inhalt [Mio. m³]</tooltip>
+								<description>Inhalt [Mio. m³]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="Grundablass" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Grundablass [m³/s]</label>
+								<tooltip>Grundablass [m³/s]</tooltip>
+								<description>Grundablass [m³/s]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="Überlauf" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überlauf [m³/s]</label>
+								<tooltip>Überlauf [m³/s]</tooltip>
+								<description>Überlauf [m³/s]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="Bemerkung" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bemerkung</label>
+								<tooltip>Bemerkung</tooltip>
+								<description>Bemerkung</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

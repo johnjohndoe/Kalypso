@@ -1,0 +1,17 @@
+A1 = Nummerierung
+A2= Pegel-Nummer
+A3 = Pegel-Name
+
+dann bringt diese Formel folgenden Text zusatnde (wird z.B. vom sumUpTableExporter benötigt):
+
+			<arg name="obs1">
+				<arg name="label" value="Blankenstein"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
+			</arg>
+
+
+=VERKETTEN("   <arg name="; ZEICHEN(34);"obs";A2;ZEICHEN(34);">";ZEICHEN(10);"    <arg name=";ZEICHEN(34);"label";ZEICHEN(34);" value=";ZEICHEN(34);C2;ZEICHEN(34);"/>";ZEICHEN(10);"    <arg name=";ZEICHEN(34);"href";ZEICHEN(34); " value=";ZEICHEN(34);"./Ergebnisse/Durchfluss/";B2;".zml";ZEICHEN(34);"/>";ZEICHEN(10);"   </arg>")
+
+wichtig hieran:
+zeichen(10) = Zeilenumbruch
+zeichen(34) = Anführungsstriche

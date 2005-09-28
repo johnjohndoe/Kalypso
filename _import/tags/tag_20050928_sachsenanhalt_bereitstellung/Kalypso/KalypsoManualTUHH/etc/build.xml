@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="kalypso-manual-tuhh" default="all" basedir="..">
+
+  <!-- Source properties -->
+  <property name="help.dir" value="src" />
+  <property name="build.dir" value="build"/>
+  <property name="build.doc.dir" value="${build.dir}/doc"/>
+  <property name="build.pdf.dir" value="${build.dir}/pdf"/>
+  <property name="build.html.dir" value="${build.dir}/html"/>
+  <property name="build.tex.dir" value="${build.dir}/tex"/>
+  <property name="build.eclipse.dir" value="${build.dir}/eclipse"/>
+  <property name="doc.name" value="main_driver.xml"/>
+  <property name="css.dir" value="${help.dir}/css"/>
+  <property name="image.dir" value="${help.dir}/img"/>
+
+  <target name="init">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${build.doc.dir}" />
+    <mkdir dir="${build.pdf.dir}" />
+    <mkdir dir="${build.html.dir}"/>
+    <mkdir dir="${build.tex.dir}"/>
+    <mkdir dir="${build.eclipse.dir}"/>
+  </target>
+
+  <target name="cleanup" description="cleans generated stuff except deployed stuff">
+    <delete>
+      <fileset dir="${build.dir}" includes="*/**" />
+    </delete>
+  </target>
+  
+  <target name="valid">
+
+    <antcall target="xmlvalid">
+      <param name="xmlvalid.xml" value="${help.dir}/${doc.name}"/>
+    </antcall>
+
+  </target>
+
+  <!-- MANUAL (html und pdf) -->
+  <target name="html"
+          depends="init,valid"
+          description="Erzeugt das Benutzerhandbuch - HTML-Version"
+  >
+
+    <antcall target="xslproc">
+      <param name="xslproc.out.dir" value="${build.html.dir}" />
+      <param name="xslproc.out.name" value="manual.html" />
+      <param name="xslproc.xsl" value="${help.dir}/manual-html.xsl" />
+      <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
+    </antcall>
+    
+    <copy todir="${build.html.dir}">
+      <fileset dir="${css.dir}" includes="*.*"/>
+    </copy>
+
+    <mkdir dir="${build.html.dir}/img"/>
+    <copy todir="${build.html.dir}/img">
+      <fileset dir="${image.dir}" includes="**/*"/>
+    </copy>
+  </target>
+
+  <target name="eclipse-help"
+          depends="init,valid"
+          description="Erzeugt das Benutzerhandbuch - Online-Help für Eclipse"
+  >
+
+    <antcall target="xslproc">
+      <param name="xslproc.out.dir" value="${build.eclipse.dir}" />
+      <param name="xslproc.out.name" value="manual.html" />
+      <param name="xslproc.xsl" value="${help.dir}/manual-eclipse.xsl" />
+      <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
+    </antcall>
+    
+    <copy todir="${build.eclipse.dir}">
+      <fileset dir="${css.dir}" includes="*.*"/>
+    </copy>
+
+    <mkdir dir="${build.eclipse.dir}/img"/>
+    <copy todir="${build.eclipse.dir}/img">
+      <fileset dir="${image.dir}" includes="**/*"/>
+    </copy>
+    
+    <copy todir="." file="${build.eclipse.dir}/toc.xml"/>
+    
+    <zip destfile="./doc.zip" basedir="${build.eclipse.dir}" includes="**/*" excludes="*.xml"/>
+  </target>
+    
+  <target name="pdf" description="Erstellt das Handbuch im PDF Format" depends="init,valid">
+    <copy todir="${build.tex.dir}">
+      <fileset dir="${help.dir}"
+               casesensitive="no"
+               includes="**/*.*"
+               excludes="**/CVS/**"
+      />
+    </copy>
+
+    <antcall target="pdfproc">
+      <param name="pdfproc.out.dir" value="${build.pdf.dir}" />
+      <param name="pdfproc.out.name" value="manual" />
+      <param name="pdfproc.xsl" value="${help.dir}/manual-tex.xsl" />
+      <param name="pdfproc.xml" value="${help.dir}/${doc.name}" />
+    </antcall>
+
+  </target>
+
+  <target name="xslproc" description="Transformiert ein XML mit einem XSL">
+    <!-- Benötigte Parameter: 
+  					'xslproc.out.name'  Name der Ausgabedatei
+  					'xslproc.out.dir'  Ausgabeverzeichnis
+  					'xslproc.xsl
+  					'xslproc.xml'
+  	-->
+    <exec executable="xsltproc.bat" failonerror="true">
+      <arg line="-o ${xslproc.out.dir}/${xslproc.out.name} ${xslproc.xsl} ${xslproc.xml}"/>
+    </exec>
+  </target>
+
+  <target name="pdfproc" description="Erzeugt aus DocBook PDF">
+    <!-- Benötigte Parameter: 
+  					'pdfproc.out.name'  Name der Ausgabedatei
+  					'pdfproc.out.dir'  Ausgabeverzeichnis
+  					'pdfproc.xsl		DocBook XSL
+  					'pdfproc.xml'		DocBook XML
+  					'tex.tmp.dir'		Temporäres Verzeichnis fürs texen
+  	-->
+
+    <antcall target="xslproc">
+      <param name="xslproc.out.name" value="${pdfproc.out.name}.tex" />
+      <param name="xslproc.out.dir" value="${build.tex.dir}" />
+      <param name="xslproc.xsl" value="${pdfproc.xsl}" />
+      <param name="xslproc.xml" value="${pdfproc.xml}" />
+    </antcall>
+
+    <exec executable="pdflatex.exe" dir="${build.tex.dir}">
+      <arg value="${pdfproc.out.name}.tex" />
+    </exec>
+
+    <exec executable="pdflatex.exe" dir="${build.tex.dir}">
+      <arg value="${pdfproc.out.name}.tex" />
+    </exec>
+
+    <copy todir="${pdfproc.out.dir}"
+          file="${build.tex.dir}/${pdfproc.out.name}.pdf"
+    >
+    </copy>
+  </target>
+
+
+  <target name="xmlvalid" description="xml validieren">
+    <!-- Benötigte Parameter: 'xmlvalid.xml'  
+  	-->
+    <exec executable="xmllint.bat" failonerror="true">
+      <arg line="--valid --postvalid ${xmlvalid.xml}" />
+    </exec>
+  </target>
+
+
+  <target name="all" depends="html,pdf"/>
+  
+</project>

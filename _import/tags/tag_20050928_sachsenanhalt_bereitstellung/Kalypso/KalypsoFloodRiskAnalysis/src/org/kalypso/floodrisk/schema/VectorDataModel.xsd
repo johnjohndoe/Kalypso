@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:vd="http://elbe.wb.tu-harburg.de/vectorData" targetNamespace="http://elbe.wb.tu-harburg.de/vectorData" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- =========================================================== -->
+	<!--Imports=========================================================== -->
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<!-- =========================================================== -->
+	<!-- VectorDataModel=========================================================== -->
+	<element name="VectorDataCollection" type="vd:VectorDataCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="VectorDataCollectionType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureCollectionType">
+				<sequence>
+					<element name="FeatureMember" type="vd:FeatureMemberAssociationType" maxOccurs="unbounded"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- FeatureMember=========================================================== -->
+	<complexType name="FeatureMemberAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="vd:Feature"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Feature" type="vd:FeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="FeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="GEOM" type="gml:PolygonPropertyType"/>
+					<element name="RasterProperty" type="string"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
