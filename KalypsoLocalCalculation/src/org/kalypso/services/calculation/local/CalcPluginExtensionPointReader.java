@@ -75,10 +75,10 @@ public class CalcPluginExtensionPointReader implements IUrlCatalog, ICalcJobFact
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IExtensionPoint point = registry.getExtensionPoint( KalypsoLocalCalculationPlugin.getDefault().getId(),
         IKalypsoLocalCalculationConstants.EXT_ELEMENT_CALCJOB );
-    //System.out.println( getClass().getName() + " ist extensionpoint da ?" );
+//    System.out.println( getClass().getName() + " ist extensionpoint da ?" );
     if( point == null )
     {
-      //System.out.println( getClass().getName() + " ... NEE" );
+//      System.out.println( getClass().getName() + " ... NEE" );
       return;
     }
 //    System.out.println( getClass().getName() + " ... OK" );
@@ -86,19 +86,19 @@ public class CalcPluginExtensionPointReader implements IUrlCatalog, ICalcJobFact
     final List catalogs = new LinkedList();
 
     final IExtension[] extensions = point.getExtensions();
-  //  System.out.println( getClass().getName() + "size extensions:"+extensions.length );
+//    System.out.println( getClass().getName() + "size extensions:"+extensions.length );
     for( int i = 0; i < extensions.length; i++ )
     {
       final IExtension extension = extensions[i];
       final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
-    //  System.out.println( getClass().getName() + "size confElements:"+configurationElements.length );
+//      System.out.println( getClass().getName() + "size confElements:"+configurationElements.length );
       for( int j = 0; j < configurationElements.length; j++ )
       {
         final IConfigurationElement element = configurationElements[j];
-      //  System.out.println( getClass().getName() + "element :"+element.getName());
+//        System.out.println( getClass().getName() + "element :"+element.getName());
         final String typeID = element.getAttribute( IKalypsoLocalCalculationConstants.EXT_ATTRIB_ID );
         
-        //System.out.println( getClass().getName() + "typeID :"+typeID);
+//        System.out.println( getClass().getName() + "typeID :"+typeID);
         m_elementHash.put( typeID, element );
 
         try
@@ -161,5 +161,4 @@ public class CalcPluginExtensionPointReader implements IUrlCatalog, ICalcJobFact
       throw new CalcJobServiceException( "Job-Klasse konnte nicht instantiiet werden für typ: " + typeID, e );
     }
   }
-
 }
