@@ -131,11 +131,9 @@ public class NaModelInnerCalcJob implements ICalcJob
   //  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_WeisseElster.exe";
   private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
 
-  private final String EXE_FILE_2_01_3000 = "start/kalypso_2.01_3000.exe";
-
-  private final String EXE_FILE_2_01_7500 = "start/kalypso_2.01_7500.exe";
-
   private final String EXE_FILE_2_02 = "start/kalypso_2.02.exe";
+
+  private final String EXE_FILE_2_03beta = "start/kalypso_2.0.3beta.exe";
 
   private boolean m_succeeded = false;
 
@@ -286,7 +284,8 @@ public class NaModelInnerCalcJob implements ICalcJob
       String line;
       while( ( line = reader.readLine() ) != null )
       {
-        if( line.indexOf( "berechnung wurde ohne fehler beendet" ) >= 0 || line.indexOf( "Berechnung wurde ohne Fehler beendet!" )>=0)
+        if( line.indexOf( "berechnung wurde ohne fehler beendet" ) >= 0
+            || line.indexOf( "Berechnung wurde ohne Fehler beendet!" ) >= 0 )
           m_succeeded = true;
       }
     }
@@ -649,10 +648,11 @@ public class NaModelInnerCalcJob implements ICalcJob
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
     else if( kalypsoNAVersion.equals( "v2.0.2" ) )
       m_kalypsoKernelPath = EXE_FILE_2_02;
-    else if( kalypsoNAVersion.equals( "kalypso2.01_3000" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_01_3000;
-    else if( kalypsoNAVersion.equals( "kalypso2.01_7500" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_01_7500;
+    else if( kalypsoNAVersion.equals( "test" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_03beta;
+    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "neuste" )
+        || kalypsoNAVersion.equals( "latest" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_03beta;    
     else
       m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
   }
@@ -915,7 +915,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     loadTSResults( "bof", catchmentFT, "name", TimeserieConstants.TYPE_WATERLEVEL, null, null, inputDir,
         modellWorkspace, logger, outputDir, 0.1d, conf );
 
-    
     //Straenge
     //    n Wasserstand Speicher .sph [muNN]
     loadTSResults( "sph", rhbChannelFT, "name", TimeserieConstants.TYPE_NORMNULL, null, null, inputDir,
@@ -923,9 +922,9 @@ public class NaModelInnerCalcJob implements ICalcJob
     //    n Speicherueberlauf .sup [m³/s]
     loadTSResults( "sup", rhbChannelFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir, modellWorkspace,
         logger, outputDir, 1.0d, conf );
-//        n Speicherinhalt .spi [hm³]
-        loadTSResults( "spi", rhbChannelFT, "name", TimeserieConstants.TYPE_VOLUME, null, null, inputDir,
-            modellWorkspace, logger, outputDir, 1.0d , conf);
+    //        n Speicherinhalt .spi [hm³]
+    loadTSResults( "spi", rhbChannelFT, "name", TimeserieConstants.TYPE_VOLUME, null, null, inputDir, modellWorkspace,
+        logger, outputDir, 1.0d, conf );
     //    n Talsperrenverdunstung .spv [m³/d]
     //    loadTSResults( "spv", catchmentFT, "name", TimeserieConstants.TYPE_RUNOFF, null, null, inputDir,
     //        modellWorkspace, logger, outputDir, 1.0d , idManager);
@@ -965,10 +964,11 @@ public class NaModelInnerCalcJob implements ICalcJob
       for( int i = 0; i < nodeFEs.length; i++ )
       {
         final Feature feature = nodeFEs[i];
-        if( resultFT == (modellWorkspace.getFeatureType("Node"))||resultFT == (modellWorkspace.getFeatureType("Catchment")))
+        if( resultFT == ( modellWorkspace.getFeatureType( "Node" ) )
+            || resultFT == ( modellWorkspace.getFeatureType( "Catchment" ) ) )
         {
-        if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
-          continue; // should not generate results
+          if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
+            continue; // should not generate results
         }
         //        final String key = FeatureHelper.getAsString( feature, keyPropName );
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
