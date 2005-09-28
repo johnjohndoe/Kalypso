@@ -108,6 +108,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
   private GM_Envelope m_maxEnv = null;
 
+  private WMSCapabilities m_wmsCaps;
+
   public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
       final CS_CoordinateSystem localCRS )
   {
@@ -127,9 +129,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
       final URLConnection c = url.openConnection();
       NetWorker.configureProxy( c );
-      c.addRequestProperty( "SERVICE", "WMS" );
-      c.addRequestProperty( "VERSION", "1.1.1" );
-      c.addRequestProperty( "REQUEST", "GetCapabilities" );
       // checks authentification TODO test if it works (this is a fast
       // implemention)
       //      if( NetWorker.requiresAuthentification(c) )
@@ -146,19 +145,27 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       //
       //        c.addRequestProperty( "Proxy-Authorization", epw );
       //      }
+      c.addRequestProperty( "SERVICE", "WMS" );
 
+      // TODO ask version in dialog before or try on error and begin with newest version
+	  	// TODO check with WMS-Specs if version is mandatory or not
+      //      c.addRequestProperty( "VERSION", "1.1.1");
+    
+      c.addRequestProperty( "REQUEST", "GetCapabilities" );
+          
       //create capabilites from the request
       final Reader reader = new InputStreamReader( c.getInputStream() );
-      final WMSCapabilities wmsCaps = wmsCapFac.createCapabilities( reader );
-      m_remoteWMS = new RemoteWMService( wmsCaps );
+      m_wmsCaps = wmsCapFac.createCapabilities( reader );
+
+      m_remoteWMS = new RemoteWMService( m_wmsCaps );
       //match the local with the remote coordiante system
-      CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( m_localCSR, wmsCaps, m_layers.split( "," ) );
+      CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( m_localCSR, m_wmsCaps, m_layers.split( "," ) );
       if( !crs[0].equals( m_localCSR ) )
         m_remoteCSR = crs[0];
       else
         m_remoteCSR = m_localCSR;
       //set max extent for Map Layer
-      m_maxEnv = WMSHelper.getMaxExtend( m_layers.split( "," ), wmsCaps, m_remoteCSR );
+      m_maxEnv = WMSHelper.getMaxExtend( m_layers.split( "," ), m_wmsCaps, m_remoteCSR );
     }
     catch( MalformedURLException e )
     {
@@ -229,7 +236,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
 
     final HashMap wmsParameter = new HashMap();
     wmsParameter.put( "SERVICE", "WMS" );
-    wmsParameter.put( "VERSION", "1.1.1" ); // 1.0.0 ??
+    wmsParameter.put( "VERSION", m_wmsCaps.getVersion() );
     wmsParameter.put( "REQUEST", "getMap" );
     wmsParameter.put( "LAYERS", m_layers );
     wmsParameter.put( "FORMAT", "image/png" );

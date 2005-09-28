@@ -72,6 +72,10 @@ public class ManipulatorExtensions
   public static IObservationManipulator[] getManipulators()
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    if( registry == null ) // e.g. if we are in a (non-plugin-) junit-test
+      return new IObservationManipulator[0];
+
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( MANIPULATOR_EXTENSION_POINT );
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
@@ -103,7 +107,7 @@ public class ManipulatorExtensions
   public static void manipulateObservation( final IObservation obs, final Object data ) throws SensorException
   {
     final IObservationManipulator[] manipulators = getManipulators();
-    
+
     for( int i = 0; i < manipulators.length; i++ )
       manipulators[i].manipulate( obs, data );
   }
