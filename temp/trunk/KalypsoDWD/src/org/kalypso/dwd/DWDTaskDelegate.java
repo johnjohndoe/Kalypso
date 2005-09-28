@@ -198,9 +198,15 @@ public class DWDTaskDelegate
           srcObs = new IObservation[]
           { forecastObservation };
 
-        // important: the forecast-filter is based on the target-obs
+        // important: the forecast-filter is based on the target-obs (if existing)
         // in order to keep its metadata & co
-        fc.initFilter( srcObs, targetObservation, targetContext.toURL() );
+        final IObservation baseObservation;
+        if( targetObservation != null )
+          baseObservation = targetObservation;
+        else
+          baseObservation = new SimpleObservation( axis );
+
+        fc.initFilter( srcObs, baseObservation, targetContext.toURL() );
 
         // ----------------
         // add all the metadata from task-parameters
