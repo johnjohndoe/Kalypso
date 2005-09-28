@@ -153,8 +153,8 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
-        "icons/metadoc/bericht_wiz.gif" );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin(
+        KalypsoServiceMetaDocClientPlugin.getID(), "icons/wizban/bericht_wiz.gif" );
 
     final Feature feature = prepareFeature( configuration );
     final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc,
