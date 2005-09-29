@@ -124,7 +124,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
     soilLabel.setText( SOIL_LABEL );
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
     m_soilCombo.setLayout( new GridLayout() );
-    GridData soilComboGridData = new GridData( GridData.FILL_HORIZONTAL | GridData.END );
+    GridData soilComboGridData = new GridData( GridData.END );
     soilComboGridData.grabExcessHorizontalSpace = true;
     m_soilCombo.setToolTipText( SOIL_COMBO_TOOLTIP );
     FeatureType catchmentFT = m_modelSchema.getFeatureType( CATCHMENT );
@@ -147,15 +147,19 @@ public class KalypsoNAProjectPreferences extends WizardPage
       }
     } );
     m_soilCombo.select( 1 );
-
+    m_soilLayerNo = m_soilCombo.getItem( 1 );
     Group channel = new Group( topComposite, SWT.NONE );
     channel.setText( "KM Stränge" );
     channel.setLayout( new GridLayout( 2, true ) );
-    channel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.END ) );
+    channel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     Label channelLabel = new Label( channel, SWT.NONE );
     channelLabel.setText( KMCHANNEL_LABEL );
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
     m_channelCombo.setToolTipText( KMCHANNEL_COMBO_TOOLTIP );
+    m_channelCombo.setLayout( new GridLayout() );
+    GridData channelComboGridData = new GridData( GridData.END );
+    channelComboGridData.grabExcessHorizontalSpace = true;
+    m_channelCombo.setLayoutData( channelComboGridData );
     FeatureType kmChannelFT = m_modelSchema.getFeatureType( KM_CHANNEL );
     int maxOccursKM = kmChannelFT.getMaxOccurs( KMCHANNEL_MEMBER );
     ArrayList noKMDischarge = new ArrayList();
@@ -173,11 +177,11 @@ public class KalypsoNAProjectPreferences extends WizardPage
         Combo combo = (Combo)e.widget;
         m_kmChannelNo = combo.getItem( combo.getSelectionIndex() );
         setPageComplete( validatePage() );
-
       }
     } );
-    m_channelCombo.select( maxOccursKM + 1 );
-    setPageComplete( false );
+    m_channelCombo.select( maxOccursKM );
+    m_kmChannelNo = m_channelCombo.getItem( maxOccursKM );
+    setPageComplete( validatePage() );
     setControl( topComposite );
   }
 
