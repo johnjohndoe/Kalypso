@@ -66,7 +66,7 @@ package org.kalypsodeegree.model.geometry;
  * jago
  *  
  */
-public interface GM_Envelope
+public interface GM_Envelope extends Cloneable
 {
   /**
    * @link aggregationByValue
@@ -130,4 +130,5 @@ public interface GM_Envelope
 
   GM_Envelope getMerged( GM_Position position );
 
+  public Object clone();
 }

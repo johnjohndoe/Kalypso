@@ -361,21 +361,13 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     if( pos != null )
     {
       if( pos.getX() < minx )
-      {
         minx = pos.getX();
-      }
       if( pos.getY() < miny )
-      {
         miny = pos.getY();
-      }
       if( pos.getX() > maxx )
-      {
         maxx = pos.getX();
-      }
       if( pos.getY() > maxy )
-      {
         maxy = pos.getY();
-      }
     }
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
 
@@ -393,21 +385,13 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     if( envelope != null )
     {
       if( envelope.getMin().getX() < minx )
-      {
         minx = envelope.getMin().getX();
-      }
       if( envelope.getMin().getY() < miny )
-      {
         miny = envelope.getMin().getY();
-      }
       if( envelope.getMax().getX() > maxx )
-      {
         maxx = envelope.getMax().getX();
-      }
       if( envelope.getMax().getY() > maxy )
-      {
         maxy = envelope.getMax().getY();
-      }
     }
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
   }
@@ -439,6 +423,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
+ * Revision 1.15  2005/09/29 12:35:21  doemming
+ * *** empty log message ***
+ *
  * Revision 1.14  2005/09/18 16:22:58  belger
  * *** empty log message ***
  *

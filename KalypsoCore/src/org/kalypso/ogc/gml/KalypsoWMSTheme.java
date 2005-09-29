@@ -42,11 +42,10 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -55,16 +54,13 @@ import java.util.Properties;
 
 import javax.media.jai.PlanarImage;
 import javax.media.jai.TiledImage;
-import javax.naming.OperationNotSupportedException;
 
 import org.deegree.services.OGCWebServiceClient;
 import org.deegree.services.OGCWebServiceEvent;
 import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.OGCWebServiceResponse;
-import org.deegree.services.WebServiceException;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
-import org.deegree.xml.XMLParsingException;
 import org.deegree_impl.services.OGCWebServiceEvent_Impl;
 import org.deegree_impl.services.wms.RemoteWMService;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
@@ -82,42 +78,50 @@ import org.w3c.dom.Document;
 /**
  * @author Kuepferle
  */
-public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServiceClient
+public class KalypsoWMSTheme extends AbstractKalypsoTheme
+//implements OGCWebServiceClient
 {
+  /** layerlist to fetch from WMS */
   private final String m_layers;
 
-  private TiledImage m_remoteImage = null;
-
-  private String m_source = null;
-
-  private String my_requestId = null;
-
-  private GM_Envelope m_requestedBBox = null;
-
-  private CS_CoordinateSystem m_localCSR = null;
-
+  /** remote WMS */
   private RemoteWMService m_remoteWMS;
 
-  private CS_CoordinateSystem m_remoteCSR = null;
+  /** source key */
+  private final String m_source;
 
-  //  private boolean m_authentification;
-  //
-  //  private String m_pass;
-  //
-  //  private String m_user;
+  /** bbox that is requested by last paint call */
+  GM_Envelope m_requestedEnvLocalSRS = null;
 
-  private GM_Envelope m_maxEnv = null;
+  /** the local CS */
+  private final CS_CoordinateSystem m_localSRS;
 
+  /** the remote CS, may be different from local */
+  private CS_CoordinateSystem m_remoteSRS = null;
+
+  /** max envelope of layer on WMS (local CS) */
+  private GM_Envelope m_maxEnvLocalSRS = null;
+
+  /** capabilities from WMS */
   private WMSCapabilities m_wmsCaps;
 
+  /** buffered image */
+  private Image m_buffer = null;
+
+  /** envelope of buffered image (local SRS) */
+  private GM_Envelope m_bufferEnvLocalSRS = null;
+
+  /** temporary locked request bbox to aviod multi requests on same bbox */
+  private GM_Envelope m_lockRequestEnvLocalSRS = null;
+
   public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
-      final CS_CoordinateSystem localCRS )
+      final CS_CoordinateSystem localSRS )
   {
     super( themeName, linktype.toUpperCase() );
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
     m_layers = sourceProps.getProperty( "LAYERS", "" );
     final String service = sourceProps.getProperty( "URL", "" );
-    m_localCSR = localCRS;
+    m_localSRS = localSRS;
     m_source = source;
 
     // TODO: maybe do this in a thread
@@ -125,8 +129,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     {
       final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
 
+      // TODO check: are the properties added twice ?? see also addRequestProperty below
       final URL url = new URL( service + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities" );
-
       final URLConnection c = url.openConnection();
       NetWorker.configureProxy( c );
       // checks authentification TODO test if it works (this is a fast
@@ -148,48 +152,32 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
       c.addRequestProperty( "SERVICE", "WMS" );
 
       // TODO ask version in dialog before or try on error and begin with newest version
-	  	// TODO check with WMS-Specs if version is mandatory or not
+      // TODO check with WMS-Specs if version is mandatory or not
       //      c.addRequestProperty( "VERSION", "1.1.1");
-    
+
       c.addRequestProperty( "REQUEST", "GetCapabilities" );
-          
+
       //create capabilites from the request
       final Reader reader = new InputStreamReader( c.getInputStream() );
       m_wmsCaps = wmsCapFac.createCapabilities( reader );
-
       m_remoteWMS = new RemoteWMService( m_wmsCaps );
+
       //match the local with the remote coordiante system
-      CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( m_localCSR, m_wmsCaps, m_layers.split( "," ) );
-      if( !crs[0].equals( m_localCSR ) )
-        m_remoteCSR = crs[0];
+      final CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( m_localSRS, m_wmsCaps, m_layers.split( "," ) );
+      if( !crs[0].equals( m_localSRS ) )
+        m_remoteSRS = crs[0];
       else
-        m_remoteCSR = m_localCSR;
+        m_remoteSRS = m_localSRS;
       //set max extent for Map Layer
-      m_maxEnv = WMSHelper.getMaxExtend( m_layers.split( "," ), m_wmsCaps, m_remoteCSR );
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-    }
-    catch( XMLParsingException e )
-    {
-      e.printStackTrace();
-    }
-    catch( WebServiceException e )
-    {
-      e.printStackTrace();
-    }
-    catch( OperationNotSupportedException e )
-    {
-      e.printStackTrace();
-      //TODO what is to do ??
+
+      // set max envelope
+      final GM_Envelope maxEnvRemoteSRS = WMSHelper.getMaxExtend( m_layers.split( "," ), m_wmsCaps, m_remoteSRS );
+      final GeoTransformer gt = new GeoTransformer( m_localSRS );
+      m_maxEnvLocalSRS = gt.transformEnvelope( maxEnvRemoteSRS, m_remoteSRS );
     }
     catch( Exception e )
     {
+      // nothing to do
       e.printStackTrace();
     }
   }
@@ -199,49 +187,77 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform geoTransform, final double scale, final GM_Envelope bbox,
+      final boolean selected )
   {
-    if( selected )
+    m_requestedEnvLocalSRS = bbox;
+    if( selected ) // image can not be selected
       return;
 
-    //the image is only updated when the wish bbox is ok
-    if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
+    if( m_buffer != null && m_bufferEnvLocalSRS.equals( m_requestedEnvLocalSRS ) )
+      g.drawImage( m_buffer, 0, 0, null );
+    else
     {
-
-      GM_Envelope remoteEnv = null;
+      final int width = (int)g.getClip().getBounds().getWidth();
+      final int height = (int)g.getClip().getBounds().getHeight();
       try
       {
-        GeoTransformer gt = new GeoTransformer( m_remoteCSR );
-        remoteEnv = gt.transformEnvelope( m_requestedBBox, m_localCSR );
-        WMSHelper.transformImage( m_remoteImage, remoteEnv, m_localCSR, m_remoteCSR, p, g );
-        //      g.setPaintMode();
-        //      g.drawImage( m_remoteImage, 0, 0, null );
+        updateImage( width, height, geoTransform, m_requestedEnvLocalSRS );
       }
       catch( Exception e )
       {
+        // simply do not paint it
         e.printStackTrace();
       }
     }
 
-    else
-    {
-      int width = (int)g.getClip().getBounds().getWidth();
-      int height = (int)g.getClip().getBounds().getHeight();
-      updateImage( width, height, bbox );
-    }
+    //the image is only updated when the wish bbox is ok
+    //    if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) && m_remoteImage != null )
+    //    {
+    //      GM_Envelope remoteEnv = null;
+    //      try
+    //      {
+    //        GeoTransformer gt = new GeoTransformer( m_remoteCSR );
+    //        remoteEnv = gt.transformEnvelope( m_requestedBBox, m_localCSR );
+    //        WMSHelper.transformImage( m_remoteImage, remoteEnv, m_localCSR, m_remoteCSR, geoTransform, g );
+    //      }
+    //      catch( Exception e )
+    //      {
+    //        e.printStackTrace();
+    //      }
+    //    }
   }
 
-  public void updateImage( int width, int height, GM_Envelope bbox )
+  public void updateImage( final int width, final int height, final GeoTransform geoTransformToLocalSRS,
+      GM_Envelope envRequestLocalSRS ) throws Exception
   {
+    // check if nothing to request
+    if( envRequestLocalSRS == null )
+      return;
+
+    // check if bbox is locked for request
+    if( m_lockRequestEnvLocalSRS != null && m_lockRequestEnvLocalSRS.equals( envRequestLocalSRS ) )
+      return;
+    // lock it now
+    final GM_Envelope targetEnvLocalSRS = (GM_Envelope)envRequestLocalSRS.clone();
+    m_lockRequestEnvLocalSRS = targetEnvLocalSRS;
 
     final HashMap wmsParameter = new HashMap();
     wmsParameter.put( "SERVICE", "WMS" );
     wmsParameter.put( "VERSION", m_wmsCaps.getVersion() );
     wmsParameter.put( "REQUEST", "getMap" );
     wmsParameter.put( "LAYERS", m_layers );
+    // TODO check for valid styles, otherwise deegree uses "STYLES=default"
+    // I guess kalypso should provide a style name allways (check with specs)
+    // some WMS-themes use style name="" and when deegree makes "STYLES=default" out of this, this does not work
+    // I think style name="" is also not valid (can we be flexible ?)
+    // ask me ( v.doemming@tuhh.de )
     wmsParameter.put( "FORMAT", "image/png" );
     wmsParameter.put( "TRANSPARENT", "TRUE" );
     wmsParameter.put( "EXCEPTIONS", "application/vnd.ogc.se_xml" );
+    wmsParameter.put( "WIDTH", "" + width );
+    wmsParameter.put( "HEIGHT", "" + height );
+    wmsParameter.put( "SRS", m_remoteSRS.getName() );
 
     //    if( m_authentification )
     //    {
@@ -254,93 +270,34 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
     //      wmsParameter.put("Proxy-Authorization", epw );
     //    }
 
-    GM_Envelope remoteEnv = null;
-    try
+    final GeoTransformer gt = new GeoTransformer( m_remoteSRS );
+    final GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( targetEnvLocalSRS, m_localSRS );
+    final String targetEnvRemoteSRSstring = WMSHelper.env2bboxString( targetEnvRemoteSRS );
+    wmsParameter.put( "BBOX", targetEnvRemoteSRSstring );
+
+    final String id = "KalypsoWMSRequest" + getName() + Long.toString( ( new Date() ).getTime() );
+    final OGCWebServiceRequest request = WMSProtocolFactory.createGetMapRequest( id, wmsParameter );
+    final OGCWebServiceClient client = new OGCWebServiceClient()
     {
-      //null pointer exception
-      wmsParameter.put( "SRS", m_remoteCSR.getName() );
-      GeoTransformer gt = new GeoTransformer( m_remoteCSR );
-      remoteEnv = gt.transformEnvelope( bbox, m_localCSR );
-    }
-    catch( Exception err )
-    {
-      err.printStackTrace();
-    }
-
-    wmsParameter.put( "WIDTH", "" + width );
-    wmsParameter.put( "HEIGHT", "" + height );
-
-    //    String bboxValue = env2bboxString( bbox );
-    String bboxValue = env2bboxString( remoteEnv );
-    wmsParameter.put( "BBOX", bboxValue );
-
-    try
-    {
-      if( m_requestedBBox != null && m_requestedBBox.equals( bbox ) )
-        return;
-
-      final String id = "KalypsoWMSRequest" + getName() + ( new Date() ).toString();
-      final OGCWebServiceRequest request = WMSProtocolFactory.createGetMapRequest( id, //java.lang.String
-          // id,
-          wmsParameter ); //java.util.HashMap model
-
-      OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, //source
-          request, //request
-          null, //message
-          this ); //client
-      m_requestedBBox = bbox;
-      //      my_requestBBox = remoteEnv;
-      my_requestId = id;
-      m_remoteWMS.doService( ogcWSEvent );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  //Helper
-  private static String env2bboxString( GM_Envelope env )
-  {
-    return round( env.getMin().getX() ) + "," + round( env.getMin().getY() ) + "," + round( env.getMax().getX() ) + ","
-        + round( env.getMax().getY() );
-  }
-
-  //Helper
-  private static String round( double value )
-  {
-    String result = "" + value;
-    if( result.length() > 8 )
-      return result.substring( 0, 8 );
-    return result;
-  }
-
-  /**
-   * @see org.deegree.services.OGCWebServiceClient#write(java.lang.Object)
-   */
-  public void write( final Object result )
-  {
-    if( result instanceof OGCWebServiceEvent )
-    {
-      OGCWebServiceResponse response = ( (OGCWebServiceEvent)result ).getResponse();
-
-      if( response instanceof WMSGetMapResponse )
+      public void write( Object responseEvent )
       {
-        // is it the response to the last request ?
-        if( !my_requestId.equals( ( (WMSGetMapResponse)response ).getRequest().getId() ) )
+        if( isObsolete( targetEnvLocalSRS ) )
           return;
-
-        Object map = ( (WMSGetMapResponse)response ).getMap();
-
-        if( map != null && map instanceof Image )
+        if( !( responseEvent instanceof OGCWebServiceEvent ) )
+          return;
+        final OGCWebServiceResponse response = ( (OGCWebServiceEvent)responseEvent ).getResponse();
+        if( !( response instanceof WMSGetMapResponse ) )
+          return;
+        try
         {
-          Image image = (Image)map;
-          PlanarImage remoteImage = PlanarImage.wrapRenderedImage( (RenderedImage)image );
-          m_remoteImage = new TiledImage( remoteImage, true );
+          final RenderedImage resultImage = (RenderedImage)( (WMSGetMapResponse)response ).getMap();
+          final PlanarImage remoteImage = PlanarImage.wrapRenderedImage( resultImage );
+          if( isObsolete( targetEnvLocalSRS ) )
+            return;
+          setImage( new TiledImage( remoteImage, true ), targetEnvLocalSRS, width, height, geoTransformToLocalSRS );
 
-          fireModellEvent( null );
         }
-        else
+        catch( Exception e )
         {
           final Document wmsException = ( (WMSGetMapResponse)response ).getException();
           if( wmsException != null )
@@ -360,7 +317,50 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
           }
         }
       }
+
+      private boolean isObsolete( GM_Envelope envLocalSRS )
+      {
+        return m_requestedEnvLocalSRS == null || !( m_requestedEnvLocalSRS.equals( envLocalSRS ) );
+      }
+    };
+
+    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, //source
+        request, //request
+        null, //message
+        client );
+
+    m_remoteWMS.doService( ogcWSEvent );
+  }
+
+  /**
+   * 
+   * @param image
+   * @param targetEnvLocalSRS
+   * @param width
+   * @param height
+   * @param geoTransform
+   */
+  protected synchronized void setImage( final TiledImage image, final GM_Envelope targetEnvLocalSRS, final int width,
+      final int height, final GeoTransform geoTransform )
+  {
+    try
+    {
+      final Image buffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+      final GeoTransformer geoTransformerToRemoteSRS = new GeoTransformer( m_remoteSRS );
+      final GM_Envelope remoteEnv = geoTransformerToRemoteSRS.transformEnvelope( targetEnvLocalSRS, m_localSRS );
+      // paint image on buffer
+      WMSHelper.transformImage( image, remoteEnv, m_localSRS, m_remoteSRS, geoTransform, buffer.getGraphics() );
+      m_buffer = buffer;
+      m_bufferEnvLocalSRS = targetEnvLocalSRS;
     }
+    catch( Exception e )
+    {
+      m_buffer = null;
+      m_bufferEnvLocalSRS = null;
+      e.printStackTrace();
+    }
+    // inform to paint new image
+    fireModellEvent( null );
   }
 
   /**
@@ -376,19 +376,13 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements OGCWebServi
    */
   public GM_Envelope getBoundingBox()
   {
-    GM_Envelope bbox = null;
-    try
-    {
-      GeoTransformer gt = new GeoTransformer( m_localCSR );
-      bbox = gt.transformEnvelope( m_maxEnv, m_remoteCSR );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    return bbox;
+    return m_maxEnvLocalSRS;
   }
 
+  /**
+   * 
+   * @return source key
+   */
   public String getSource()
   {
     return m_source;
