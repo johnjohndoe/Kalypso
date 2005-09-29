@@ -106,10 +106,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   static final String RIVER_PAGE = "page_type:river"; //$NON-NLS-1$
 
   static final String PROJECT_PAGE = "page_type:createNewProject"; //$NON-NLS-1$
+  
+  static final String PREFERENCE_PAGE = "page_type:preferences"; //$NON-NLS-1$
 
   private final String m_resourceBase = WizardMessages.getString( "KalypsoNAProjectWizard.ResourcePath" ); //$NON-NLS-1$
 
-  static final FeatureType dummyFeatureType = FeatureFactory
+  static final FeatureType m_dummyFeatureType = FeatureFactory
       .createFeatureType(
           "Gewässer", "wizard.kalypso.na", //$NON-NLS-1$ //$NON-NLS-2$
           new FeatureTypeProperty[]
@@ -136,29 +138,31 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
               1,
               1 }, null, null );
 
-  private KalypsoNAProjectWizardPage createMappingCatchmentPage;
+  private KalypsoNAProjectWizardPage m_createMappingCatchmentPage;
 
-  private KalypsoNAProjectWizardPage createMappingHydrotopPage;
+  private KalypsoNAProjectWizardPage m_createMappingHydrotopPage;
 
-  private KalypsoNAProjectWizardPage createMappingNodePage;
+  private KalypsoNAProjectWizardPage m_createMappingNodePage;
 
-  private KalypsoNAProjectWizardPage createMappingRiverPage;
+  private KalypsoNAProjectWizardPage m_createMappingRiverPage;
+  
+  private KalypsoNAProjectPreferences m_createPreferencePage;
 
-  private WizardNewProjectCreationPage createProjectPage;
+  private WizardNewProjectCreationPage m_createProjectPage;
 
   private GMLSchema m_modelSchema;
 
-  private GMLWorkspace modelWS;
+  private GMLWorkspace m_modelWS;
 
-  IPath workspacePath;
+  private IPath m_workspacePath;
 
-  IProject projectHandel;
+  private IProject m_projectHandel;
 
-  IPath m_modelPath;
+  private IPath m_modelPath;
 
-  ISelection m_selection;
+  private ISelection m_selection;
 
-  IWorkspace workspace;
+  private IWorkspace m_workspace;
 
   private GMLSchema m_hydrotopSchema;
 
@@ -170,7 +174,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   public KalypsoNAProjectWizard()
   {
-    super();
     try
     {
       m_modelSchema = GMLSchemaCatalog.getSchema( "http://www.tuhh.de/kalypsoNA" ); //$NON-NLS-1$
@@ -188,36 +191,39 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   {
     try
     {
-      createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      createProjectPage.setDescription( WizardMessages.getString( "KalypsoNAProjectWizard.DescriptionNewProjectPage" ) ); //$NON-NLS-1$
-      createProjectPage.setTitle( WizardMessages.getString( "KalypsoNAProjectWizard.TitleNewProjectPage" ) ); //$NON-NLS-1$
-      createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
-      addPage( createProjectPage );
+      m_createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
+      m_createProjectPage.setDescription( WizardMessages.getString( "KalypsoNAProjectWizard.DescriptionNewProjectPage" ) ); //$NON-NLS-1$
+      m_createProjectPage.setTitle( WizardMessages.getString( "KalypsoNAProjectWizard.TitleNewProjectPage" ) ); //$NON-NLS-1$
+      m_createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+      addPage( m_createProjectPage );
     }
     catch( Exception e )
     {
       e.printStackTrace();
     }
 
-    createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, WizardMessages
+    m_createPreferencePage = new KalypsoNAProjectPreferences( PREFERENCE_PAGE, m_modelSchema );
+    addPage( m_createPreferencePage );
+    
+    m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, WizardMessages
         .getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
 
-    addPage( createMappingCatchmentPage );
+    addPage( m_createMappingCatchmentPage );
 
-    createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, WizardMessages
+    m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, WizardMessages
         .getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG, dummyFeatureType );
-    addPage( createMappingRiverPage );
+        ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_dummyFeatureType );
+    addPage( m_createMappingRiverPage );
 
-    createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, WizardMessages
+    m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, WizardMessages
         .getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
-    addPage( createMappingNodePage );
-    createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, WizardMessages
+    addPage( m_createMappingNodePage );
+    m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, WizardMessages
         .getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
-    addPage( createMappingHydrotopPage );
+    addPage( m_createMappingHydrotopPage );
   }
 
   private FeatureType getFeatureType( String featureName )
@@ -247,8 +253,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
    */
   public boolean performFinish()
   {
-    workspacePath = createProjectPage.getLocationPath();
-    projectHandel = createProjectPage.getProjectHandle();
+    m_workspacePath = m_createProjectPage.getLocationPath();
+    m_projectHandel = m_createProjectPage.getProjectHandle();
 
     try
     {
@@ -256,10 +262,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       String[] nanature =
       { "org.kalypso.simulation.ui.ModelNature" }; //$NON-NLS-1$
       description.setNatureIds( nanature );
-      projectHandel.create( description, null );
-      projectHandel.open( null );
+      m_projectHandel.create( description, null );
+      m_projectHandel.open( null );
       //set charSet for the new project to the UTF-8 standard
-      projectHandel.setDefaultCharset( "UTF-8", null ); //$NON-NLS-1$
+      m_projectHandel.setDefaultCharset( "UTF-8", null ); //$NON-NLS-1$
     }
     catch( CoreException e )
     {
@@ -267,15 +273,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       e.printStackTrace();
     }
     //copy all the resources to the workspace into the new created project
-    copyResourcesToProject( workspacePath.append( projectHandel.getFullPath() ) );
+    copyResourcesToProject( m_workspacePath.append( m_projectHandel.getFullPath() ) );
     try
     {
       ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
       //open modell.gml and hydrotop.gml file to write imported feature
-      m_modelPath = new Path( projectHandel.getFullPath().append( "/modell.gml" ).toString() ); //$NON-NLS-1$
+      m_modelPath = new Path( m_projectHandel.getFullPath().append( "/modell.gml" ).toString() ); //$NON-NLS-1$
       URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );
-      modelWS = GmlSerializer.createGMLWorkspace( modelURL, new UrlResolver() );
-      m_hydPath = new Path( projectHandel.getFullPath().append( "/hydrotop.gml" ).toString() ); //$NON-NLS-1$
+      m_modelWS = GmlSerializer.createGMLWorkspace( modelURL, new UrlResolver() );
+      m_hydPath = new Path( m_projectHandel.getFullPath().append( "/hydrotop.gml" ).toString() ); //$NON-NLS-1$
       URL hydURL = new URL( ResourceUtilities.createURLSpec( m_hydPath ) );
       m_hydWS = GmlSerializer.createGMLWorkspace( hydURL, new UrlResolver() );
 
@@ -286,33 +292,33 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       e1.printStackTrace();
     }
     //map catchment shape file
-    HashMap catchmentMapping = createMappingCatchmentPage.getMapping();
+    HashMap catchmentMapping = m_createMappingCatchmentPage.getMapping();
 
     if( catchmentMapping != null && catchmentMapping.size() != 0 )
     {
-      List catchmentFeatureList = createMappingCatchmentPage.getFeatureList();
+      List catchmentFeatureList = m_createMappingCatchmentPage.getFeatureList();
       mapCatchment( catchmentFeatureList, catchmentMapping );
     }
     //map river shape file
-    HashMap riverMapping = createMappingRiverPage.getMapping();
+    HashMap riverMapping = m_createMappingRiverPage.getMapping();
     if( riverMapping != null && riverMapping.size() != 0 )
     {
-      List riverFeatureList = createMappingRiverPage.getFeatureList();
+      List riverFeatureList = m_createMappingRiverPage.getFeatureList();
       mapRiver( riverFeatureList, riverMapping );
     }
     //map node shape file
-    HashMap nodeMapping = createMappingNodePage.getMapping();
+    HashMap nodeMapping = m_createMappingNodePage.getMapping();
     if( nodeMapping != null && nodeMapping.size() != 0 )
     {
-      List nodeFeatureList = createMappingNodePage.getFeatureList();
+      List nodeFeatureList = m_createMappingNodePage.getFeatureList();
       mapNode( nodeFeatureList, nodeMapping );
     }
 
     //map hydrotop shape file
-    HashMap hydMapping = createMappingHydrotopPage.getMapping();
+    HashMap hydMapping = m_createMappingHydrotopPage.getMapping();
     if( hydMapping != null && hydMapping.size() != 0 )
     {
-      List hydFeatureList = createMappingHydrotopPage.getFeatureList();
+      List hydFeatureList = m_createMappingHydrotopPage.getFeatureList();
       mapHyd( hydFeatureList, hydMapping );
     }
 
@@ -322,12 +328,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     try
     {
       //model.gml
-      IPath modelPath2 = workspacePath.append( m_modelPath );
+      IPath modelPath2 = m_workspacePath.append( m_modelPath );
       OutputStreamWriter modelWriter = new FileWriter( modelPath2.toFile() );
-      GmlSerializer.serializeWorkspace( modelWriter, modelWS );
+      GmlSerializer.serializeWorkspace( modelWriter, m_modelWS );
       modelWriter.close();
       //hydrotop.gml
-      IPath hydPath = workspacePath.append( m_hydPath );
+      IPath hydPath = m_workspacePath.append( m_hydPath );
       OutputStreamWriter hydrotopWriter = new FileWriter( hydPath.toFile() );
       GmlSerializer.serializeWorkspace( hydrotopWriter, m_hydWS );
       hydrotopWriter.close();
@@ -346,10 +352,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       e2.printStackTrace();
       return false;
     }
-    createMappingCatchmentPage.dispose();
-    createMappingRiverPage.dispose();
-    createMappingNodePage.dispose();
-    createMappingHydrotopPage.dispose();
+    m_createMappingCatchmentPage.dispose();
+    m_createMappingRiverPage.dispose();
+    m_createMappingNodePage.dispose();
+    m_createMappingHydrotopPage.dispose();
     return true;
   }
 
@@ -418,7 +424,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   public void mapCatchment( List sourceFeatureList, HashMap mapping )
   {
 
-    Feature rootFeature = modelWS.getRootFeature();
+    Feature rootFeature = m_modelWS.getRootFeature();
     FeatureType modelFT = getFeatureType( "Catchment" ); //$NON-NLS-1$
     Feature catchmentCollectionFE = (Feature)rootFeature.getProperty( "CatchmentCollectionMember" ); //$NON-NLS-1$
     List catchmentList = (List)catchmentCollectionFE.getProperty( "catchmentMember" ); //$NON-NLS-1$
@@ -465,10 +471,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       {
         FeatureTypeProperty bodFtProp = modelFT.getProperty( "bodenkorrekturmember" );
         FeatureType bodenKorrekturFT = ( (FeatureAssociationTypeProperty_Impl)bodFtProp ).getAssociationFeatureTypes()[0];
-        Feature newFeature = modelWS.createFeature( bodenKorrekturFT );
+        Feature newFeature = m_modelWS.createFeature( bodenKorrekturFT );
         try
         {
-          modelWS.addFeatureAsComposition( targetFeature, "bodenkorrekturmember", j, newFeature );
+          m_modelWS.addFeatureAsComposition( targetFeature, "bodenkorrekturmember", j, newFeature );
         }
         catch( Exception e )
         {
@@ -482,7 +488,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   public void mapNode( List sourceFeatureList, HashMap mapping )
   {
 
-    Feature rootFeature = modelWS.getRootFeature();
+    Feature rootFeature = m_modelWS.getRootFeature();
     FeatureType modelFT = getFeatureType( "Node" ); //$NON-NLS-1$
     Feature nodeCollectionFE = (Feature)rootFeature.getProperty( "NodeCollectionMember" ); //$NON-NLS-1$
     List nodeList = (List)nodeCollectionFE.getProperty( "nodeMember" ); //$NON-NLS-1$
@@ -523,7 +529,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   public void mapRiver( List sourceFeatureList, HashMap mapping )
   {
 
-    Feature rootFeature = modelWS.getRootFeature();
+    Feature rootFeature = m_modelWS.getRootFeature();
 
     Feature channelCollectionFE = (Feature)rootFeature.getProperty( "ChannelCollectionMember" ); //$NON-NLS-1$
     List channelList = (List)channelCollectionFE.getProperty( "channelMember" ); //$NON-NLS-1$
@@ -595,10 +601,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         {
           FeatureTypeProperty kmFtProp = kmFT.getProperty( "KMParameterMember" );
           FeatureType kmParameterFT = ( (FeatureAssociationTypeProperty_Impl)kmFtProp ).getAssociationFeatureTypes()[0];
-          Feature newFeature = modelWS.createFeature( kmParameterFT );
+          Feature newFeature = m_modelWS.createFeature( kmParameterFT );
           try
           {
-            modelWS.addFeatureAsComposition( targetFeature, "KMParameterMember", j, newFeature );
+            m_modelWS.addFeatureAsComposition( targetFeature, "KMParameterMember", j, newFeature );
           }
           catch( Exception e )
           {
@@ -656,7 +662,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   {
     try
     {
-      projectHandel.delete( true, false, null );
+      m_projectHandel.delete( true, false, null );
     }
     catch( CoreException e )
     {
