@@ -11,18 +11,17 @@ public class ProfilDevider implements IProfilDevider
 
   private IProfilPoint m_point;
 
+  private String m_label;
+
   private final HashMap<Object, Object> m_properties = new HashMap<Object, Object>();
 
-  public ProfilDevider( DEVIDER_TYP typ )
-  {
-    m_Typ = typ;
-  }
-
-  public ProfilDevider( DEVIDER_TYP typ, IProfilPoint point )
+  public ProfilDevider(final DEVIDER_TYP typ,final IProfilPoint point )
   {
     m_Typ = typ;
     m_point = point;
   }
+
+ 
 
   public Object getValueFor( final Object key )
   {
@@ -52,5 +51,9 @@ public class ProfilDevider implements IProfilDevider
     return m_Typ;
   }
 
- 
+  public String getLabel( )
+  {
+    return m_label;
+  }
+
 }

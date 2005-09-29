@@ -18,5 +18,7 @@ public interface IProfilDevider
   public IProfilPoint getPoint( );
 
   public DEVIDER_TYP getTyp( );
+  
+
 
 }
