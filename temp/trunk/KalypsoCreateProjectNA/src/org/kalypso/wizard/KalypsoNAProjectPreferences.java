@@ -67,9 +67,9 @@ public class KalypsoNAProjectPreferences extends WizardPage
 
   private static final String CATCHMENT = "Catchment";
 
-  private String m_soilLayerNo = null;
+  String m_soilLayerNo = null;
 
-  private String m_kmChannelNo = null;
+  String m_kmChannelNo = null;
 
   private static final String SOIL_COMBO_TOOLTIP = "Eingabe der Anzahl Bodenschichten die erzeugt werden sollen";
 
@@ -123,16 +123,18 @@ public class KalypsoNAProjectPreferences extends WizardPage
     Label soilLabel = new Label( soil, SWT.NONE );
     soilLabel.setText( SOIL_LABEL );
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
-    m_soilCombo.setLayout( new GridLayout() );
-    GridData soilComboGridData = new GridData( GridData.END );
-    soilComboGridData.grabExcessHorizontalSpace = true;
-    m_soilCombo.setToolTipText( SOIL_COMBO_TOOLTIP );
     FeatureType catchmentFT = m_modelSchema.getFeatureType( CATCHMENT );
     int maxOccursSoil = catchmentFT.getMaxOccurs( SOIL_FT_NAME );
     ArrayList noSoilLayer = new ArrayList();
     for( int i = 0; i < maxOccursSoil + 1; i++ )
       noSoilLayer.add( String.valueOf( i ) );
     m_soilCombo.setItems( (String[])noSoilLayer.toArray( new String[maxOccursSoil] ) );
+    m_soilCombo.select( 1 );
+//    m_soilCombo.setLayout( new GridLayout() );
+    GridData soilComboGridData = new GridData( );
+    soilComboGridData.horizontalAlignment=GridData.END;
+    soilComboGridData.grabExcessHorizontalSpace = true;
+    m_soilCombo.setToolTipText( SOIL_COMBO_TOOLTIP );
     m_soilCombo.addSelectionListener( new SelectionAdapter()
     {
 
@@ -146,8 +148,9 @@ public class KalypsoNAProjectPreferences extends WizardPage
         setPageComplete( validatePage() );
       }
     } );
-    m_soilCombo.select( 1 );
     m_soilLayerNo = m_soilCombo.getItem( 1 );
+    
+    
     Group channel = new Group( topComposite, SWT.NONE );
     channel.setText( "KM Stränge" );
     channel.setLayout( new GridLayout( 2, true ) );
@@ -195,7 +198,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
     return m_kmChannelNo;
   }
 
-  private boolean validatePage()
+  boolean validatePage()
   {
     //  TODO wenn das NA Modell zukünftig ungleich fünf Abflüsse rechnen kann, dies entfernen!!
     if( !m_kmChannelNo.equals( String.valueOf( 5 ) ) )

@@ -467,7 +467,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       List list = new ArrayList();
       FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty( "bodenkorrekturmember", list );
       targetFeature.setProperty( bodenkorrekturProperty );
-      for( int j = 0; j < 3; j++ )
+      int soilLayerNo = Integer.parseInt(m_createPreferencePage.getSoilLayerNo());
+      for( int j = 0; j < soilLayerNo; j++ )
       {
         FeatureTypeProperty bodFtProp = modelFT.getProperty( "bodenkorrekturmember" );
         FeatureType bodenKorrekturFT = ( (FeatureAssociationTypeProperty_Impl)bodFtProp ).getAssociationFeatureTypes()[0];
@@ -592,12 +593,11 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         FeatureType kmFT = getFeatureType( "KMChannel" ); //$NON-NLS-1$
         targetFeature = FeatureFactory.createFeature( fid, kmFT, true );
 
-        // KMparameter erstellen
-        //TODO: Anzahl durch Dialog
         List list = new ArrayList();
         FeatureProperty kmParameterProperty = FeatureFactory.createFeatureProperty( "KMParameterMember", list );
         targetFeature.setProperty( kmParameterProperty );
-        for( int j = 0; j < 5; j++ )
+        int channelNo = Integer.parseInt(m_createPreferencePage.getKMChannelNo());
+        for( int j = 0; j < channelNo; j++ )
         {
           FeatureTypeProperty kmFtProp = kmFT.getProperty( "KMParameterMember" );
           FeatureType kmParameterFT = ( (FeatureAssociationTypeProperty_Impl)kmFtProp ).getAssociationFeatureTypes()[0];
