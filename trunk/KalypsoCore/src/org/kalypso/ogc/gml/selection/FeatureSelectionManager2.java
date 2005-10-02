@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -68,6 +69,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
    */
   public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd )
   {
+    System.out.println( "Removing selection: " + ArrayUtils.toString( featuresToRemove ) );
+    System.out.println( "Adding selection: " + ArrayUtils.toString( featuresToAdd ) );
+    
     final Set oldState = new HashSet( m_map.keySet() );
     
     for( int i = 0; i < featuresToRemove.length; i++ )
@@ -103,6 +107,8 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   public void clear()
   {
     m_map.clear();
+    
+    fireSelectionChanged();
   }
 
   /**
@@ -242,5 +248,13 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   {
     // The feature manager doesn't support the focused feature
     return null;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString()
+  {
+    return m_map.toString();
   }
 }

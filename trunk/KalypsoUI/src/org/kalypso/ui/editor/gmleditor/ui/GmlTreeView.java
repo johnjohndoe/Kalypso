@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.AbstractFeatureSelection;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -128,7 +129,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
     final Feature[] selectedFeatures = filterSelectedFeatures( m_treeViewer.getSelection() );
-    final boolean isEqual = FeatureSelectionHelper.compare( globalFeatures, selectedFeatures );
+    final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
     if( !isEqual )
     {
       final TreeViewer treeViewer = m_treeViewer;
@@ -136,16 +137,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       {
         public void run()
         {
-//          final Object[] currentExpansion = treeViewer.getExpandedElements();
           treeViewer.setSelection( selection, true );
           for( int i = 0; i < globalFeatures.length; i++ )
             m_contentProvider.expandElement( m_contentProvider.getParent( globalFeatures[i] ) );
-          
-//          final ArrayList list = new ArrayList(  );
-//          Arrays.addAll(list, currentExpansion );
-//          Arrays.addAll(list, globalFeatures );
-//
-//          treeViewer.setExpandedElements( list.toArray() );
         }
       } );
     }

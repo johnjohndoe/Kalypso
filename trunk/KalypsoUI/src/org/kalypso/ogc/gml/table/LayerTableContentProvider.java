@@ -44,13 +44,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
@@ -66,7 +67,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   {
     public void selectionChanged( final SelectionChangedEvent event )
     {
-      viewerSelectionChanged( event.getSelection() );
+      viewerSelectionChanged( (IStructuredSelection)event.getSelection() );
     }
   };
 
@@ -140,20 +141,26 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   /**
    * @param selection
    */
-  protected void viewerSelectionChanged( final ISelection selection )
+  protected void viewerSelectionChanged( final IStructuredSelection selection )
   {
     // remove all features in input from manager
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)m_viewer.getInput();
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
     if( featureList == null )
       return;
+
+    // if viewer selection and tree selection are the same, do nothing
+    final IStructuredSelection managerSelection = KalypsoFeatureThemeSelection.filter( m_selectionManager.toList(), theme );
+    final Object[] managerFeatures = managerSelection.toArray(  );
+    if( Arrays.equalsUnordered( managerFeatures, selection.toArray() ) )
+      return;
     
+    // TODO: remove only previously selected
     final Feature[] featuresToRemove = featureList.toFeatures();
 
     // add current selection
-    final IStructuredSelection structSel = (IStructuredSelection)selection;
-    final List wrappers = new ArrayList( structSel.size() );
-    for( final Iterator sIt = structSel.iterator(); sIt.hasNext(); )
+    final List wrappers = new ArrayList( selection.size() );
+    for( final Iterator sIt = selection.iterator(); sIt.hasNext(); )
     {
       final Object object = sIt.next();
       if( object instanceof Feature )

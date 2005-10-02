@@ -84,7 +84,10 @@ public class GisTemplateLoadedThread extends Thread
         e.printStackTrace();
       }
       if( maxWait-- < 0 ) // do not wait for ever
+      {
+        System.out.println( "Waited to long for map to load. Invoking runnable now." );
         break;
+      }
     }
     super.run();
   }

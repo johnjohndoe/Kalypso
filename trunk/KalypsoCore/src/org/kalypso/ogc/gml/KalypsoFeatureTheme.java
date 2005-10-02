@@ -78,7 +78,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final FeatureType m_featureType;
 
-  final FeatureList m_featureList;
+  protected final FeatureList m_featureList;
 
   private final IFeatureSelectionManager m_selectionManager;
 

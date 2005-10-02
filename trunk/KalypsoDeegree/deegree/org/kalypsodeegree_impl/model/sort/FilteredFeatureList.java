@@ -284,7 +284,13 @@ public class FilteredFeatureList implements FeatureList
    */
   public Object[] toArray( Object[] a )
   {
-    return toFeatures();
+    final Feature[] toFeatures = toFeatures();
+    if( a == null || a.length < toFeatures.length )
+      return toFeatures;
+    
+    System.arraycopy( toFeatures, 0, a, 0, toFeatures.length );    
+    
+    return a;
   }
 
   /**
