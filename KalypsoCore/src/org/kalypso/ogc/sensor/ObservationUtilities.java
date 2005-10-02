@@ -45,12 +45,14 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
@@ -137,7 +139,7 @@ public class ObservationUtilities
 
     throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisType );
   }
-  
+
   /**
    * Return true if one of the axis is of the given type
    */
@@ -148,7 +150,7 @@ public class ObservationUtilities
       if( axes[i].getType().equalsIgnoreCase( axisType ) )
         return true;
     }
-    
+
     return false;
   }
 
@@ -488,7 +490,7 @@ public class ObservationUtilities
   /**
    * @return array of positions, position of -1 means not mapable
    */
-  public static int[] getAxisMapping( final IAxis[] compareAxes,final IAxis[] testAxes )
+  public static int[] getAxisMapping( final IAxis[] compareAxes, final IAxis[] testAxes )
   {
     final int[] result = new int[compareAxes.length];
     for( int i = 0; i < compareAxes.length; i++ )
@@ -527,4 +529,89 @@ public class ObservationUtilities
     }
     return resultPos;
   }
+
+  /**
+   * 
+   * @param tuppleModel
+   * @param dateAxis
+   *          must be key axis (sorted)
+   * @param date
+   * @param minIndex
+   * @param maxIndex
+   * @return index next to date
+   * @throws SensorException
+   */
+  public static int findNextIndexForDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date,
+      int minIndex, int maxIndex ) throws SensorException
+  {
+    if( minIndex > maxIndex )
+    {
+      final int tmp = minIndex;
+      minIndex = maxIndex;
+      maxIndex = tmp;
+    }
+    final int smallesintervall = 10;
+    final long targetDate = date.getTime();
+    if( maxIndex - minIndex < smallesintervall )
+    {
+      int result = -1;
+      long bestDistance = -1;
+      for( int i = minIndex; i < maxIndex; i++ )
+      {
+        final Date rowDate = (Date)tuppleModel.getElement( i, dateAxis );
+        final long distance = Math.abs( rowDate.getTime() - targetDate );
+        if( i == minIndex || distance < bestDistance )
+        {
+          bestDistance = distance;
+          result = i;
+        }
+      }
+      return result;
+    }
+    // do recursion
+    int midIndex = ( minIndex + maxIndex ) / 2;
+    final Date date1 = (Date)tuppleModel.getElement( midIndex - 1, dateAxis );
+    final Date date2 = (Date)tuppleModel.getElement( midIndex, dateAxis );
+    if( Math.abs( date1.getTime() - targetDate ) < Math.abs( date2.getTime() - targetDate ) )
+      return findNextIndexForDate( tuppleModel, dateAxis, date, minIndex, midIndex );
+    return findNextIndexForDate( tuppleModel, dateAxis, date, midIndex, maxIndex );
+  }
+
+  /**
+   * 
+   * @param tuppleModel
+   * @param dateAxis
+   *          must be key axis (sorted)
+   * @param date
+   * @param minIndex
+   * @param maxIndex
+   * @return index before date
+   * @throws SensorException
+   */
+  public static int findIndexBeforeDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date,
+      int minIndex, int maxIndex ) throws SensorException
+  {
+    int index = findNextIndexForDate( tuppleModel, dateAxis, date, minIndex, maxIndex );
+    Date rowDate = (Date)tuppleModel.getElement( index, dateAxis );
+    if( rowDate.before( rowDate ) )
+      return index;
+    return index - 1;
+  }
+
+  public static double getInterpolatedValueAt( final ITuppleModel tuppelModel, final IAxis dateAxis,
+      final IAxis valueAxis, final Date date ) throws SensorException
+  {
+    int index = ObservationUtilities.findIndexBeforeDate( tuppelModel, dateAxis, date, 0, tuppelModel.getCount() );
+    // check range
+    if( index < 0 )
+      index = 0;
+    if( index + 1 >= tuppelModel.getCount() )
+      index = tuppelModel.getCount() - 2;
+    long d1 = ( (Date)tuppelModel.getElement( index, dateAxis ) ).getTime();
+    long d2 = ( (Date)tuppelModel.getElement( index + 1, dateAxis ) ).getTime();
+    double v1 = ( (Double)tuppelModel.getElement( index, valueAxis ) ).doubleValue();
+    double v2 = ( (Double)tuppelModel.getElement( index + 1, valueAxis ) ).doubleValue();
+    return MathUtils.interpolate( d1, d2, v1, v2, date.getTime() );
+  }
+
 }

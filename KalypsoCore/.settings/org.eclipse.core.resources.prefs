@@ -1,8 +1,9 @@
-#Tue Aug 16 18:16:59 CEST 2005
+#Fri Sep 30 20:04:48 CEST 2005
 encoding//schema/nativeObsAdapter.exsd=UTF-8
 encoding//etc/schemas/zml/beispiel-metadata.zml=UTF-8
 encoding//src/org/kalypso/ogc/gml/convert/resources=UTF-8
 encoding//src/org/kalypso/ogc/sensor/timeseries/wq/test/wq-test4.zml=UTF-8
+encoding//src/org/kalypso/ogc/sensor/timeseries/wq/test/wq-test3.zml=UTF-8
 encoding//src/org/kalypso/ogc/gml/test/spreemodell/modell.gml=UTF-8
 encoding//src/org/kalypso/ogc/sensor/filter/test/Niederschlag.zml=UTF-8
 encoding//etc/schemas/zml/beispiel.zml=UTF-8

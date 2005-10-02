@@ -177,7 +177,15 @@
                	<attribute name="operator" type="string" />                
 				<attribute type="double" name="operandBegin"/>
 				<attribute type="double" name="operandEnd"/>
-             	<attribute name="statusToMerge" type="int" default="0" use="optional"/>                
+             	<attribute name="statusToMerge" type="int" default="0" use="optional"/>
+				<attribute type="string" name="axisTypes" default="*" use="optional"/>
+                <!-- axistypes to transform
+                    exapmles:  axisTypes="QT" : Q and T axis will be transformed
+                    exapmles:  axisTypes="*" : all axis will be transformed
+                    exapmles:  axisTypes="" : all axis will be transformed
+                statusaxis gets operated with statusToMerge
+                dateaixs will never be transformed
+                -->                
 			</extension>
 		</complexContent>
 	</complexType>
