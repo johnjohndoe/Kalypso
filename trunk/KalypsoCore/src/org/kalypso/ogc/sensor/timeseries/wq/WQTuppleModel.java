@@ -69,7 +69,7 @@ public class WQTuppleModel extends AbstractTuppleModel
 
   /** source axis from the underlying model */
   private final IAxis m_srcAxis;
-  
+
   /** source-status axis from the underlying model [Important: this one is optional and can be null] */
   private final IAxis m_srcStatusAxis;
 
@@ -148,8 +148,7 @@ public class WQTuppleModel extends AbstractTuppleModel
 
       if( !m_values.containsKey( objIndex ) )
       {
-        final Number[] res = read( objIndex, axis, number );
-
+        final Number[] res = read( objIndex, number );
         m_values.put( objIndex, res[0] );
         m_stati.put( objIndex, res[1] );
       }
@@ -163,11 +162,11 @@ public class WQTuppleModel extends AbstractTuppleModel
     return m_model.getElement( index, axis );
   }
 
-  private Number[] read( final Integer objIndex, final IAxis axis, final Number number ) throws SensorException
+  private Number[] read( final Integer objIndex, final Number number ) throws SensorException
   {
     Double value = null;
     Integer status = null;
-
+    final IAxis axis = m_destAxis;
     final Date d = (Date)m_model.getElement( objIndex.intValue(), m_dateAxis );
 
     if( number != null )
@@ -209,6 +208,9 @@ public class WQTuppleModel extends AbstractTuppleModel
    */
   public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
+    final Integer objIndex = new Integer( index );
+    m_values.remove( objIndex );
+    m_stati.remove( objIndex );
     if( axis.equals( m_destAxis ) )
     {
       final Date d = (Date)m_model.getElement( index, m_dateAxis );
@@ -244,10 +246,6 @@ public class WQTuppleModel extends AbstractTuppleModel
     }
     else
     {
-      final Integer objIndex = new Integer( index );
-      m_values.remove( objIndex );
-      m_stati.remove( objIndex );
-
       m_model.setElement( index, element, axis );
     }
   }
@@ -316,4 +314,14 @@ public class WQTuppleModel extends AbstractTuppleModel
   {
     return m_converter;
   }
+
+  /**
+   * @return the base model
+   *  
+   */
+  public ITuppleModel getBaseModel()
+  {
+    return m_model;
+  }
+
 }
