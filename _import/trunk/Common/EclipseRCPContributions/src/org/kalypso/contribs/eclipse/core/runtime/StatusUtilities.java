@@ -60,6 +60,13 @@ import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
  */
 public final class StatusUtilities
 {
+  /**
+   * A status mask representing the combination of all available stati. Usefull e.g. for
+   * {@link org.eclipse.jface.dialogs.ErrorDialog#openError(org.eclipse.swt.widgets.Shell, java.lang.String, java.lang.String, org.eclipse.core.runtime.IStatus, int)}.
+   */
+  public static final int ALL_STATUS_MASK = IStatus.OK | IStatus.CANCEL | IStatus.INFO | IStatus.WARNING
+      | IStatus.ERROR;
+
   private StatusUtilities()
   {
   // wird nicht instantiiert
@@ -272,9 +279,13 @@ public final class StatusUtilities
    * Wraps the given status in a new status with the given severity. If the given status has already the given severity,
    * then it is simply returned.
    * 
-   * @param status the status to wrap
-   * @param severity the desired severity
-   * @param severityMask the severity-mask for which the wrapping takes place. If the given status does not match this severity-mask, no wrap takes place
+   * @param status
+   *          the status to wrap
+   * @param severity
+   *          the desired severity
+   * @param severityMask
+   *          the severity-mask for which the wrapping takes place. If the given status does not match this
+   *          severity-mask, no wrap takes place
    */
   public static IStatus wrapStatus( final IStatus status, final int severity, final int severityMask )
   {

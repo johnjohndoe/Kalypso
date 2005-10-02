@@ -13,7 +13,6 @@
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="1"/>
         <arg name="zmlTableShow" value="all"/>
 
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung"/>
@@ -27,7 +26,6 @@
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="4"/>
         <arg name="zmlTableShow" value="all"/>
         
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - Abgabe#linkColumn=Abgabe#color=0x0000ff"/>
@@ -41,7 +39,6 @@
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
 
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname% - Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
@@ -60,7 +57,6 @@
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="2"/>
         <arg name="zmlTableShow" value="all"/>
 		
         <arg name="ignoreType1" value="Q"/>
@@ -79,7 +75,6 @@
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="16"/>
         <arg name="zmlTableShow" value="all"/>
         
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Abfluss#color=0x0000ff"/>
@@ -98,7 +93,6 @@
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
-        <arg name="selectionID" value="32"/>
         
         <arg name="ignoreType1" value="Q"/>
         <arg name="ignoreType2" value="W"/>
@@ -111,6 +105,7 @@
         <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
         
        	<arg name="maximizeMap" value="true"/>
+       	<arg name="selectFeatureID" value="EZ_1"/>
 
        	<arg name="buttonText" value="Berechnung durchführen"/>
        	<arg name="buttonLaunch" value="runCalculation"/>
@@ -126,7 +121,6 @@
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
-        <arg name="selectionID" value="64"/>
 
         <arg name="ignoreType1" value="V"/>
         <arg name="ignoreType2" value="Q"/>
@@ -163,7 +157,6 @@
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
-        <arg name="selectionID" value="128"/>
         
        	<arg name="maximizeMap" value="true"/>
        	
@@ -196,7 +189,6 @@
 
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="25"/>
-		<arg name="selectionID" value="256"/>
 
 		<arg name="exporter1">
 		<arg name="id" value="featureWithTemplateExporter"/>

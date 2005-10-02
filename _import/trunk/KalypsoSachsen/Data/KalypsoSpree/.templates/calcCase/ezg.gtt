@@ -5,7 +5,7 @@
         <column editable="false" name="BodenfeuchteMin" width="116"/>
         <column editable="true" name="Bodenfeuchte" width="100"/>
         <column editable="false" name="BodenfeuchteMax" width="100"/>
-        <sort inverse="false" propertyName="BodenfeuchteMin"/>
+        <sort inverse="false" propertyName="Name"/>
     </layer>
 </gistableview>
 

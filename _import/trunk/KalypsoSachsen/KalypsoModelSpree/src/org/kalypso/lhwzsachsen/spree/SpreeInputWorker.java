@@ -348,7 +348,9 @@ public class SpreeInputWorker
       }
       catch( final SensorException se )
       {
-        LOGGER.log( Level.INFO, "ZML wurde nicht geladen: " + obsURL, se );
+        // todo: besser gleich ganz abbrechen?
+        if( tsDesc.isRequired )
+          LOGGER.log( Level.INFO, "ZML wurde nicht geladen: " + obsURL, se );
       }
     }
 

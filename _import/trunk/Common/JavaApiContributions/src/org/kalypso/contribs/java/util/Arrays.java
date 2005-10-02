@@ -42,6 +42,7 @@ package org.kalypso.contribs.java.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -89,9 +90,9 @@ public final class Arrays
     for( final Iterator it = source.iterator(); it.hasNext(); )
     {
       final Object obj = it.next();
-      
+
       if( desiredclass.isAssignableFrom( obj.getClass() ) )
-        dest.add( obj );        
+        dest.add( obj );
     }
   }
 
@@ -554,5 +555,24 @@ public final class Arrays
     list.add( object );
 
     return list.toArray( type );
+  }
+
+  /**
+   * Compare to arrays disregarding the order of the elements.
+   * <p>
+   * The two arrays are equivalent, if and only if they contain the same elements.
+   * </p>
+   */
+  public static boolean equalsUnordered( final Object[] array1, final Object[] array2 )
+  {
+    // shortcut for arrays of different length
+    if( array1.length != array2.length )
+      return false;
+
+    // wrap them into sets and compare the sets
+    final HashSet globalSet = new HashSet( Arrays.asList( array1 ) );
+    final HashSet set = new HashSet( Arrays.asList( array2 ) );
+
+    return globalSet.equals( set );
   }
 }
