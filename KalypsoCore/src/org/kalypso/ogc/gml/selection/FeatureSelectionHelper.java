@@ -42,8 +42,6 @@
 package org.kalypso.ogc.gml.selection;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,8 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * 
- * TODO: insert type comment here
+ * Helper methods for Feature-selection.
  * 
  * @author belger
  */
@@ -86,14 +83,6 @@ public class FeatureSelectionHelper
     }
 
     return (Feature[])features.toArray( new Feature[features.size()] );
-  }
-
-  public static boolean compare( final Feature[] globalFeatures, final Feature[] features )
-  {
-    final HashSet globalSet = new HashSet( Arrays.asList( globalFeatures ) );
-    final HashSet set = new HashSet( Arrays.asList( features ) );
-
-    return globalSet.equals( set );
   }
 
   /** Return the amount of features contained in the given selection. */

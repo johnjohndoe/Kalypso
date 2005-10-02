@@ -83,15 +83,15 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * einer Source l?dt.
  * </p>
  * <p>
- * Die ganze dynamic, also die ?berwachung, ob sich das Pool-Objekt ge?ndert etc. findet hier statt
+ * Die ganze dynamic, also die Überwachung, ob sich das Pool-Objekt geändert hat etc. findet hier statt
  * </p>
  * 
  * <p>
- * Hier findet auch die Verwaltung statt, ob sich Daten des Themas ge?ndert haben
+ * Hier findet auch die Verwaltung statt, ob sich Daten des Themas geändert haben
  * </p>
  * <p>
  * Implementiert unter anderem {@link org.kalypso.commons.command.ICommandTarget}, da sich die Daten des unterliegenden
- * Themas ?ndern k?nnen
+ * Themas ändern können
  * </p>
  * 
  * @author Belger
@@ -119,7 +119,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager )
+  public GisTemplateFeatureTheme( final LayerType layerType, final URL context,
+      final IFeatureSelectionManager selectionManager )
   {
     super( "<no name>" );
 
@@ -183,9 +184,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, double, org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox,
+      final boolean selected )
   {
     if( m_theme != null )
       m_theme.paint( g, p, scale, bbox, selected );
@@ -277,6 +281,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
       if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
       {
+        // clear the theme
         if( m_theme != null )
         {
           m_theme.removeModellListener( this );
@@ -287,7 +292,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         if( newValue == null )
           return;
 
-        m_theme = new KalypsoFeatureTheme( (CommandableWorkspace)newValue, m_featurePath, getName(), m_selectionManager );
+        final CommandableWorkspace commandableWorkspace = (CommandableWorkspace)newValue;
+        m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager );
 
         m_theme.addModellListener( this );
 
@@ -333,8 +339,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    LOGGER.info( "Object invalid: " + key + "   -  Object: " + oldValue );
-
     m_loaded = false;
 
     if( m_theme == null )
@@ -342,6 +346,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
+      // clear the theme
       m_theme.removeModellListener( this );
       m_theme.dispose();
       m_theme = null;
@@ -429,7 +434,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public FeatureList getFeatureListVisible( GM_Envelope env )
+  public FeatureList getFeatureListVisible( final GM_Envelope env )
   {
     if( m_theme != null )
       return m_theme.getFeatureListVisible( env );
@@ -451,5 +456,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       return false;
     m_loaded = true;
     return m_loaded;
+  }
+
+  public PoolableObjectType getLayerKey()
+  {
+    return m_layerKey;
   }
 }

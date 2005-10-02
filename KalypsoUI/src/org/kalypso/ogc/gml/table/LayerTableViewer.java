@@ -156,6 +156,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     public void selectionChanged( final IFeatureSelection selection )
     {
+      System.out.println( "GlobalSelectionChanged to: " + selection );
+
       final Feature[] features = FeatureSelectionHelper.getFeatures( selection );
       final List globalFeatureList = new ArrayList( Arrays.asList( features ) );
 
@@ -169,7 +171,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final Control control = getControl();
       if( control.isDisposed() )
         return;
-      control.getDisplay().asyncExec( new Runnable()
+      
+      control.getDisplay().syncExec( new Runnable()
       {
         public void run()
         {
@@ -180,8 +183,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
             {
               final IFeatureSelection currentSelection = (IFeatureSelection)tableSelection;
               final Feature[] currentFeatures = FeatureSelectionHelper.getFeatures( currentSelection );
-              if( !FeatureSelectionHelper.compare( globalFeatures, currentFeatures ) )
+              if( !org.kalypso.contribs.java.util.Arrays.equalsUnordered( globalFeatures, currentFeatures ) )
+              {
+                // setting table selection to:
                 setSelection( selection );
+              }
             }
           }
         }

@@ -206,8 +206,9 @@ public class GisTemplateMapModell implements IMapModell
 
     try
     {
+      // is this code still used?
       GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
-      GM_Envelope env = gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+      /*GM_Envelope env = */gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
       //System.out.println( env );
     }
     catch( Exception e )

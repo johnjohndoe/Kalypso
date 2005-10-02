@@ -92,7 +92,6 @@ public class MapModell implements IMapModell
 
   public void activateTheme( final IKalypsoTheme theme )
   {
-    // TODO: check, ob thema überhaupt hier vorhanden?
     m_activeTheme = theme;
     fireModellEvent( null );
   }
@@ -147,10 +146,12 @@ public class MapModell implements IMapModell
 
   public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
   {
-    final int themeSize = getThemeSize();
-    for( int i = 0; i < themeSize; i++ )
+    // directly access themes in order to avoid synchronization problems
+    final IKalypsoTheme[] themes = (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    // paint themes in reverse order
+    for( int i = themes.length; i > 0; i-- )
     {
-      final IKalypsoTheme theme = getTheme( themeSize - i - 1 );
+      final IKalypsoTheme theme = themes[ i - 1 ];
       if( isThemeEnabled( theme ) )
         theme.paint( g, p, scale, bbox, selected );
     }
@@ -159,14 +160,6 @@ public class MapModell implements IMapModell
   public IKalypsoTheme getTheme( final int pos )
   {
     return (IKalypsoTheme)m_themes.elementAt( pos );
-  }
-
-  public IKalypsoTheme getTheme( final String themeName )
-  {
-    for( int i = 0; i < m_themes.size(); i++ )
-      if( themeName.equals( ( (IKalypsoTheme)m_themes.elementAt( i ) ).getName() ) )
-        return (IKalypsoTheme)m_themes.elementAt( i );
-    return null;
   }
 
   public int getThemeSize()
@@ -203,11 +196,6 @@ public class MapModell implements IMapModell
     removeTheme( (IKalypsoTheme)m_themes.elementAt( pos ) );
   }
 
-  public void removeTheme( String themeName )
-  {
-    removeTheme( getTheme( themeName ) );
-  }
-
   public void removeTheme( IKalypsoTheme theme )
   {
     m_themes.remove( theme );
@@ -238,11 +226,13 @@ public class MapModell implements IMapModell
     GM_Envelope result = null;
     for( int i = 0; i < themes.length; i++ )
     {
-      if( isThemeEnabled( themes[i] ) )
+      final IKalypsoTheme kalypsoTheme = themes[i];
+
+      if( isThemeEnabled( kalypsoTheme ) )
       {
         try
         {
-          final GM_Envelope boundingBox = themes[i].getBoundingBox();
+          final GM_Envelope boundingBox = kalypsoTheme.getBoundingBox();
 
           if( result == null )
             result = boundingBox;
@@ -256,6 +246,7 @@ public class MapModell implements IMapModell
         }
       }
     }
+    
     return result;
   }
 

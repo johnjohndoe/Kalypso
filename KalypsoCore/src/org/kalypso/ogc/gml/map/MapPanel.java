@@ -196,9 +196,20 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
   }
 
   /**
+   * <p>
+   * This method was synchronized in order to fix bugs caused by threading issues concerning the setBoundBox method.
+   * </p>
+   * <p>
+   * The bug was fixed by this, an so far no dead locks are encountered. see also {@link #getBoundingBox()}and
+   * {@link #setBoundingBox(GM_Envelope)}
+   * </p>
+   * <p>
+   * Make sure, that no call to one of the 'fire...' methods is made in the synchronized code.
+   * </p>
+   * 
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
-  public void paint( Graphics g )
+  public synchronized void paint( final Graphics g )
   {
     paintMap( g );
     paintWidget( g );
@@ -225,8 +236,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     { // update dimension
       m_height = getHeight();
       m_width = getWidth();
-      // setBoundingBox( getBoundingBox() );
-      // setValidAll( false );
     }
 
     if( !hasValidMap() || m_mapImage == null )
@@ -234,22 +243,17 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final Rectangle clipBounds = g.getClipBounds();
       if( clipBounds != null )
       {
+        // BUGFIX: see method comment: the synchronization problem was exactly at this point, when the getBoundingBox method was
+        // called and immediatly afterwards the painting of the mapModell was called.
+        // Problem was, that the repaint method after setting the boundingBox did not
+        // cause a real repaint (maybe Swing checks if we are already repainting?)
+        // remark: even calling a repaint in a SwingWorker did not help
         m_mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(),
             getHeight(), model );
         setValidMap( m_mapImage != null );
       }
     }
 
-    // paint selection ?
-    /*
-     * if( !hasValidSelection() ) { selectionImage = new BufferedImage( getWidth(), getHeight(),
-     * BufferedImage.TYPE_INT_ARGB ); Graphics gr = selectionImage.getGraphics(); gr.setClip( 0, 0, getWidth(),
-     * getHeight() ); try { setValidSelection( true ); //myMapView.paintSelected( gr ); } catch( Exception e ) {
-     * e.printStackTrace(); } gr.dispose(); } // paint highlights ? if( !hasValidHighlight() ) { highlightImage = new
-     * BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB ); Graphics gr =
-     * highlightImage.getGraphics(); gr.setClip( 0, 0, getWidth(), getHeight() ); try { setValidHighlight( true );
-     * //myMapView.paintHighlighted( gr ); } catch( Exception e ) { e.printStackTrace(); } gr.dispose(); }
-     */
     if( xOffset != 0 && yOffset != 0 ) // to clear backround ...
     {
       final int left = Math.max( 0, xOffset );
@@ -268,12 +272,6 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     // draw map:
     g.drawImage( m_mapImage, xOffset, yOffset, null );
-    // draw selection:
-    //     g.setXORMode( Color.red );
-    //     g.drawImage( selectionImage, xOffset, yOffset, null );
-    // draw highlights:
-    // g.setXORMode( Color.green );
-    // g.drawImage( highlightImage, xOffset, yOffset, null );
     g.setPaintMode();
   }
 
@@ -371,27 +369,31 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     return m_projection;
   }
 
-  public GM_Envelope getBoundingBox()
+  public synchronized GM_Envelope getBoundingBox()
   {
     return m_boundingBox;
   }
 
-  public void setBoundingBox( final GM_Envelope wishBBox )
+  public synchronized void setBoundingBox( final GM_Envelope wishBBox )
   {
     m_wishBBox = wishBBox;
     m_boundingBox = adjustBoundingBox( m_wishBBox );
+
     if( m_boundingBox == null )
       return;
-    
+
     m_projection.setSourceRect( m_boundingBox );
-    /*
-     * if( m_model != null ) { if( m_model.getCoordinatesSystem() != null ) m_projection.setSourceCS(
-     * m_model.getCoordinatesSystem() ); }
-     */
-    // redraw
-    onModellChange( null );
-    
-    repaint();
+
+    // dont call onModellChange and inform the listeners
+    // this is dangerous (dead lock!) inside a synchronized method
+    // onModellChange( null );
+
+    // instead invalidate the map yourself
+    setValidAll( false );
+    clearOffset();
+
+    // has been already called by onModellChange
+    // repaint();
   }
 
   private GM_Envelope adjustBoundingBox( GM_Envelope env )
@@ -548,7 +550,7 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
 
     setValidAll( false );
     repaint();
-    
+
     fireSelectionChanged();
   }
 
