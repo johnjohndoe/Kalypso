@@ -41,8 +41,10 @@
 
 package org.kalypso.ogc.sensor.timeseries.envelope;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.NoSuchElementException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +59,7 @@ import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 
 /**
  * The Linear-Progressiv-Transformation Filter is used for creating 'lower and upper envelopes' in the sense of a
@@ -78,19 +81,23 @@ public class TranProLinFilter extends AbstractObservationFilter
 
   private IMathOperation m_operation;
 
+  private final String m_axisTypes;
+
   /**
    * @param statusToMerge
    *          status is merged to modified values as bitwise OR operation (use <code>statusToMerge=0</code> for
    *          unchanged status)
+   * @param axisTypes
    */
   public TranProLinFilter( final Date dateBegin, final Date dateEnd, final String operator, final double operandBegin,
-      final double operandEnd, final int statusToMerge )
+      final double operandEnd, final int statusToMerge, final String axisTypes )
   {
     m_dateBegin = dateBegin;
     m_dateEnd = dateEnd;
     m_operandBegin = operandBegin;
     m_operandEnd = operandEnd;
     m_statusToMerge = statusToMerge;
+    m_axisTypes = axisTypes;
     m_operation = MathOperationFactory.createMathOperation( operator );
     if( dateBegin != null && dateEnd != null && ( dateBegin.after( dateEnd ) || dateBegin.equals( dateEnd ) ) )
       throw new IllegalArgumentException( "Anfangsdatum und Enddatum sind nicht gültig: " + dateBegin + " - " + dateEnd );
@@ -101,12 +108,12 @@ public class TranProLinFilter extends AbstractObservationFilter
    */
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
-    final ITuppleModel values = super.getValues( args );
+    final ITuppleModel outerSource = super.getValues( args );
 
-    if( values.getCount() == 0 )
-      return values;
+    if( outerSource.getCount() == 0 )
+      return outerSource;
 
-    final IAxis[] axes = values.getAxisList();
+    final IAxis[] axes = outerSource.getAxisList();
 
     try
     {
@@ -114,7 +121,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
       Date dateBegin = m_dateBegin;
       Date dateEnd = m_dateEnd;
-      
+
       // policy if beginn/end is null assume values in following order:
       // 1. use from/to from request
       // 2. use first/last from base observation
@@ -130,9 +137,9 @@ public class TranProLinFilter extends AbstractObservationFilter
       }
       // try to assume from base tuppel model if needed
       if( dateBegin == null )
-        dateBegin = (Date)values.getElement( 0, dateAxis );
+        dateBegin = (Date)outerSource.getElement( 0, dateAxis );
       if( dateEnd == null )
-        dateEnd = (Date)values.getElement( values.getCount() - 1, dateAxis );
+        dateEnd = (Date)outerSource.getElement( outerSource.getCount() - 1, dateAxis );
 
       //      // iterate first time to know the real bounds
       //      Date tranpolinBegin = null;
@@ -148,56 +155,145 @@ public class TranProLinFilter extends AbstractObservationFilter
       //          tranpolinEnd = date;
       //      }
 
+      int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateBegin, 0,
+          outerSource.getCount() );
+      int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateEnd, sourceIndexBegin,
+          outerSource.getCount() );
+      int targetMaxRows = sourceIndexEnd - sourceIndexBegin;
+
       final long distTime = dateEnd.getTime() - dateBegin.getTime();
 
-      final IAxis[] valueAxes = ObservationUtilities.findAxesByClass( axes, Number.class );
-      final SimpleTuppleModel filtered = new SimpleTuppleModel( axes );
+      // sort axis
+      final List axesListToCopy = new ArrayList();
+      final List axesListToTransform = new ArrayList();
+      final List axesListStatus = new ArrayList();
+      for( int i = 0; i < axes.length; i++ )
+      {
+        final IAxis axis = axes[i];
+        if( axis.getDataClass() == Date.class ) // always copy date axis
+          continue;
+        //          axesListToCopy.add( axis );
+        else if( KalypsoStatusUtils.isStatusAxis( axis ) ) // special status axis
+          axesListStatus.add( axis );
+        else if( m_axisTypes == null || m_axisTypes.indexOf( axis.getType() ) > -1 ) // transform axis
+          axesListToTransform.add( axis );
+        else
+          axesListToCopy.add( axis ); // copy axis
+      }
+      final IAxis[] axesStatus = (IAxis[])axesListStatus.toArray( new IAxis[axesListStatus.size()] );
+      final IAxis[] axesCopy = (IAxis[])axesListToCopy.toArray( new IAxis[axesListToCopy.size()] );
+      final IAxis[] axesTransform = (IAxis[])axesListToTransform.toArray( new IAxis[axesListToTransform.size()] );
+      final Date[] targetDates = new Date[targetMaxRows];
+      for( int row = sourceIndexBegin; row < sourceIndexEnd; row++ )
+        targetDates[row] = (Date)outerSource.getElement( row, dateAxis );
+
+      final ITuppleModel innerSource;
+      // find inner source to initialize inner target model
+      if( outerSource instanceof WQTuppleModel )
+      {
+        final WQTuppleModel wqTuppleModel = (WQTuppleModel)outerSource;
+        innerSource = wqTuppleModel.getBaseModel();
+      }
+      else
+        innerSource = outerSource;
+
+      // initialize inner target
+      final Object[][] vallues = createValueArray( targetDates, innerSource.getAxisList().length, innerSource
+          .getPositionFor( dateAxis ) );
+      final SimpleTuppleModel innerTarget = new SimpleTuppleModel( innerSource.getAxisList(), vallues );
+
+      // initialize outer target
+      final ITuppleModel outerTarget;
+      if( outerSource instanceof WQTuppleModel )
+      {
+        final WQTuppleModel wqTuppleModel = (WQTuppleModel)outerSource;
+        outerTarget = new WQTuppleModel( innerTarget, axes, dateAxis, wqTuppleModel.getSrcAxis(), wqTuppleModel
+            .getSrcStatusAxis(), wqTuppleModel.getDestAxis(), wqTuppleModel.getDestStatusAxis(), wqTuppleModel
+            .getConverter() );
+      }
+      else
+        outerTarget = innerTarget;
+
+      //      final IAxis[] innerAxis = innerTarget.getAxisList();
 
       double deltaOperand = m_operandEnd - m_operandBegin;
       // iterate second time to perform transformation
-      for( int i = 0; i < values.getCount(); i++ )
+      int targetRow = 0;
+      for( int sourceRow = sourceIndexBegin; sourceRow < sourceIndexEnd; sourceRow++ )
       {
-        final Date date = (Date)values.getElement( i, dateAxis );
+        final Date date = (Date)outerSource.getElement( sourceRow, dateAxis );
 
-        if( date.compareTo( dateBegin ) >= 0 && date.compareTo( dateEnd ) <= 0 )
+        final long hereTime = date.getTime() - dateBegin.getTime();
+        final double hereCoeff = m_operandBegin + deltaOperand * ( (double)hereTime / (double)distTime );
+
+        // copy
+        for( int t = 0; t < axesCopy.length; t++ )
         {
-          final long hereTime = date.getTime() - dateBegin.getTime();
-
-          final double hereCoeff = m_operandBegin + deltaOperand * hereTime / distTime;
-
-          final Object[] tupple = new Object[valueAxes.length + 1];
-          for( int t = 0; t < valueAxes.length; t++ )
-          {
-            final IAxis axis = valueAxes[t];
-            if( !axis.getDataClass().equals( Date.class ) )
-            {
-              Number value = (Number)values.getElement( i, axis );
-
-              if( !KalypsoStatusUtils.isStatusAxis( axis ) )
-                value = new Double( m_operation.calculate( new double[]
-                {
-                    value.doubleValue(),
-                    hereCoeff } ) );
-              else
-                value = new Integer( KalypsoStatusUtils.performArithmetic( value.intValue(), m_statusToMerge ) );
-              tupple[values.getPositionFor( axis )] = value;
-            }
-          }
-
-          tupple[values.getPositionFor( dateAxis )] = date;
-
-          filtered.addTupple( tupple );
+          final IAxis axis = axesCopy[t];
+          final Object value = outerSource.getElement( sourceRow, axis );
+          outerTarget.setElement( targetRow, value, axis );
         }
+        // transform
+        //        for( int t = 0; t < axesTransform.length; t++ )
+        //        {
+        //          final IAxis axis = axesTransform[t];
+        //          final Object value = outerSource.getElement( sourceRow, axis );
+        //          outerTarget.setElement( targetRow, value, axis );
+        //        }
+
+        // status
+        for( int t = 0; t < axesStatus.length; t++ )
+        {
+          final IAxis axis = axesStatus[t];
+          Number value = (Number)outerSource.getElement( sourceRow, axis );
+          value = new Integer( KalypsoStatusUtils.performArithmetic( value.intValue(), m_statusToMerge ) );
+          outerTarget.setElement( targetRow, value, axis );
+        }
+
+        //transform
+        for( int t = 0; t < axesTransform.length; t++ )
+        {
+          final IAxis axis = axesTransform[t];
+          Number value = (Number)outerSource.getElement( sourceRow, axis );
+          value = new Double( m_operation.calculate( new double[]
+          {
+              value.doubleValue(),
+              hereCoeff } ) );
+          // important to set transformed last, as there may
+          // be dependencies to other axes
+          // (e.g. WQ-Transformation)
+          outerTarget.setElement( targetRow, value, axis );
+        }
+        targetRow++;
       }
-
-      return filtered;
+      return outerTarget;
     }
-    catch( final NoSuchElementException e )
+    catch( final Exception e )
     {
+      e.printStackTrace();
       final Logger logger = Logger.getLogger( getClass().getName() );
-      logger.log( Level.WARNING, "Umhüllende konnte nicht erzeugt werden.", e );
-
-      return values;
+      logger.log( Level.WARNING, "Umhüllende konnte nicht erzeugt werden. (WQ-Parameter vollständig ?)", e );
+      return outerSource;
     }
+  }
+
+  /**
+   * creates a nw ojectarray filled with <code>null</code> values and the given dates
+   * 
+   * @param targetDates
+   * @param columns
+   * @param positionForDate
+   * @return Objectarray
+   */
+  private Object[][] createValueArray( final Date[] targetDates, final int columns, final int positionForDate )
+  {
+    final Object[][] result = new Object[targetDates.length][columns];
+    for( int row = 0; row < targetDates.length; row++ )
+    {
+      Object[] objects = result[row];
+      Arrays.fill( objects, null );
+      result[row][positionForDate] = targetDates[row];
+    }
+    return result;
   }
 }

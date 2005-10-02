@@ -66,17 +66,21 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   private IAxis m_dateAxis;
 
   private IAxis m_srcAxis;
+
   private IAxis m_srcStatusAxis;
 
   private IAxis m_destAxis;
+
   private IAxis m_destStatusAxis;
 
   private final String m_proxyAxisType;
+
   private final String m_realAxisType;
 
   private IWQConverter m_conv = null;
 
   private IRequest m_cachedArgs = null;
+
   private ITuppleModel m_cachedModel = null;
 
   /**
@@ -145,7 +149,8 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
    */
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
-    if( m_cachedModel != null && ( m_cachedArgs == null && args == null || m_cachedArgs.equals( args ) ) )
+    if( m_cachedModel != null
+        && ( m_cachedArgs == null && args == null || ( m_cachedArgs != null && m_cachedArgs.equals( args ) ) ) )
       return m_cachedModel;
 
     m_cachedModel = new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis,
