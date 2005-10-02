@@ -134,6 +134,8 @@ public class NAConfiguration
 
   private String m_szenarioID = "";
 
+  private NaNodeResultProvider m_nodeResultProvider=null;
+
   private NAConfiguration( File asciiBaseDir, File gmlBaseDir, URL modelURL ) throws Exception
   {
     m_asciiBaseDir = asciiBaseDir;
@@ -418,4 +420,16 @@ public class NAConfiguration
     return m_szenarioID;
   }
 
+  /**
+   * @param nodeResultProvider
+   */
+  public void setNodeResultProvider( NaNodeResultProvider nodeResultProvider )
+  {
+    m_nodeResultProvider = nodeResultProvider;
+  }
+
+  public NaNodeResultProvider getNodeResultProvider()
+  {
+    return m_nodeResultProvider;
+  }
 }

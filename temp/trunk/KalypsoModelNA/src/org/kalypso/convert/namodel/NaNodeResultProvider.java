@@ -102,6 +102,17 @@ public class NaNodeResultProvider
     return res.resolveURL( m_context, href );
   }
 
+  public URL getMeasuredURL( final Feature nodeFE ) throws MalformedURLException
+  {
+    final TimeseriesLink link = (TimeseriesLink)nodeFE.getProperty( "pegelZR" );
+    if( link == null )
+      return null;
+    // optionen loeschen
+    final String href = link.getHref().replaceAll( "\\?.*", "" );
+    IUrlResolver res = new UrlUtilities();
+    return res.resolveURL( m_context, href );
+  }
+
   public boolean resultExists( Feature nodeFE )
   {
     if( !m_useResults )

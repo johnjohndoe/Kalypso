@@ -31,6 +31,7 @@ package org.kalypso.convert.namodel.timeseries;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
@@ -71,5 +72,17 @@ public class NATimeSettings
   public Calendar getCalendar()
   {
     return (Calendar)m_calendar.clone();
+  }
+
+  /**
+   * 
+   * @param date
+   * @return calendar 
+   */
+  public Calendar getCalendar( final Date date )
+  {
+    final Calendar result = getCalendar();
+    result.setTime( date );
+    return result;
   }
 }
