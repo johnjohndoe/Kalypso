@@ -607,11 +607,11 @@ public class ObservationUtilities
       index = 0;
     if( index + 1 >= tuppelModel.getCount() )
       index = tuppelModel.getCount() - 2;
-    long d1 = ( (Date)tuppelModel.getElement( index, dateAxis ) ).getTime();
-    long d2 = ( (Date)tuppelModel.getElement( index + 1, dateAxis ) ).getTime();
-    double v1 = ( (Double)tuppelModel.getElement( index, valueAxis ) ).doubleValue();
-    double v2 = ( (Double)tuppelModel.getElement( index + 1, valueAxis ) ).doubleValue();
-    return MathUtils.interpolate( d1, d2, v1, v2, date.getTime() );
+    final Date d1 = (Date)tuppelModel.getElement( index, dateAxis ) ;
+    final Date d2 =  (Date)tuppelModel.getElement( index + 1, dateAxis );
+    final double v1 = ( (Double)tuppelModel.getElement( index, valueAxis ) ).doubleValue();
+    final double v2 = ( (Double)tuppelModel.getElement( index + 1, valueAxis ) ).doubleValue();
+    return MathUtils.interpolate( d1.getTime(), d2.getTime(), v1, v2, date.getTime() );
   }
 
 }

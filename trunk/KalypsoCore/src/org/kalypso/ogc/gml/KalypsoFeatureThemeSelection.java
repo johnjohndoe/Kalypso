@@ -57,10 +57,15 @@ import org.kalypsodeegree.model.feature.FeatureList;
 public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
 {
   private final CommandableWorkspace m_workspace;
+
   private final Feature m_parentFeature;
+
   private final String m_parentPropertyName;
+
   private final IFeatureSelectionManager m_selectionManager;
+
   private final Feature m_focusedFeature;
+
   private final String m_focusedProperty;
 
   public KalypsoFeatureThemeSelection( final List selectedFeatures, final IKalypsoFeatureTheme filterTheme,
@@ -74,7 +79,9 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
     m_workspace = filterTheme.getWorkspace();
     final FeatureList featureList = filterTheme.getFeatureList();
     m_parentFeature = featureList == null ? null : featureList.getParentFeature();
-    m_parentPropertyName = featureList == null ? null : featureList.getParentFeatureTypeProperty().getName();
+
+    m_parentPropertyName = ( featureList == null || featureList.getParentFeatureTypeProperty() == null ) ? null
+        : featureList.getParentFeatureTypeProperty().getName();
   }
 
   /**

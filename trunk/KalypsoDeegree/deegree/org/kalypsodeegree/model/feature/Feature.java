@@ -25,6 +25,7 @@ public interface Feature extends DeegreeFeature
 
   public Object getVirtuelProperty( final String propertyName, final GMLWorkspace workspace );
 
+  public void setProperty( final String propertyName,final Object value);
   /** Uses the visitor on each property of this feature. */
   public void accept( final IFeaturePropertyVisitor visitor );
 }
