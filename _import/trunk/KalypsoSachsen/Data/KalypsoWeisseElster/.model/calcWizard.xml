@@ -59,9 +59,6 @@
 			
 	    	<arg name="maximizeMap" value="true"/>
 
-<!--			
-<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=a#nameColumn=Abfluss#linkColumn=zuflussZR"/>
--->
 <arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - Eingabe#linkColumn=zuflussZR"/>
 		</page>
 <!--
@@ -76,36 +73,9 @@
     (oder fuer jede wizardpage auch eine Diagrammvorlage ?)
  
   es gibt einen Button "berechnen" 
-  (evt.) gibt einen Button "ergebnis anpassen": ergebniszeitreihe wird mit pegel verschmolzen
-
   es gibt einen NEXT-Button:
  
--->
-<!-- old
-	<page className="org.kalypso.ui.calcwizard.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Bad Elster 1/17" 
-		imageLocation="icons/calcwizard/boden.gif" >
-		<arg name="mapTemplate" value=".templates/calcCase/control.gmt"/>
-		<arg name="featureTemplate" value=".templates/calcCase/control_1.gft"/> 
-
-		<arg name="mainSash" value="40"/>
-		<arg name="rightSash" value="30"/>
-		<arg name="selectionID" value="32"/>
-		<arg name="clearResultFolder" value="false"/>
-
-    	<arg name="selectFeatureID" value="Node1800"/>
-    	<arg name="maximizeMap" value="true"/>
-
-		<arg name="modelspec" value="modelspec_1.xml"/>
-		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=qberechnetZR"/>
-		<arg name="timeserie2" value="diagDateAxis=d#diagValueAxis=q#nameColumn=editor#linkColumn=pegelZR"/>
-
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
-	</page>
--->
-<!-- die seiten unterscheidet folgendes:
+die seiten unterscheidet folgendes:
 1. Name
 2. featuretemplate#href
 3. modelspec
@@ -122,7 +92,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_1.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -151,7 +121,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_2.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -180,7 +150,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_3.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -210,7 +180,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_4.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -239,7 +209,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_5.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -267,7 +237,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_6.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -294,7 +264,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_7.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -321,7 +291,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_8.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -348,7 +318,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_9.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -375,7 +345,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_10.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -402,7 +372,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_11.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -429,7 +399,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_12.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -456,7 +426,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_13.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -483,7 +453,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_14.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -510,7 +480,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_15.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -537,7 +507,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_16.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
@@ -565,7 +535,7 @@
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_17.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="50"/>
+		<arg name="rightSash" value="40"/>
 		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>

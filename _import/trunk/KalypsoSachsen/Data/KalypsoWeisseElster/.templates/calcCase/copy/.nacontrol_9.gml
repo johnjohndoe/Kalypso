@@ -46,6 +46,8 @@
     <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" ns1:href="Ergebnisse/Berechnet/Pegel_Weida.zml" ns1:type="simple"/>
   </qberechnetZR>
   <accuracyPrediction>3</accuracyPrediction>  
+  <useOffsetStartPrediction>true</useOffsetStartPrediction>
+  <useOffsetEndPrediction>false</useOffsetEndPrediction>
   <qAblageSpurMittlerer>
     <TimeseriesLink linktype="zml" ns1:href="Ergebnisse/Berechnet/Ablage/SpurM_Pegel_Weida.zml" ns1:type="simple" timeaxis="Datum" valueaxis="Abfluss" xmlns="obslink.zml.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink"/>
   </qAblageSpurMittlerer>
