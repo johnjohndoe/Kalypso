@@ -36,5 +36,6 @@
 	<classpathentry kind="src" path="/KalypsoModelTubig"/>
 	<classpathentry kind="src" path="/KalypsoPSICompactImpl"/>
 	<classpathentry kind="src" path="/KalypsoSimulationUI"/>
+	<classpathentry kind="src" path="/org.apache.ant"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
