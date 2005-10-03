@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
+import java.awt.Stroke;
 
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.template.IObsProvider;
@@ -57,14 +58,17 @@ public class DiagViewCurve extends ObsViewItem
 {
   private final Color m_color;
 
+  private final Stroke m_stroke;
+
   private final AxisMapping[] m_mappings;
 
-  public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color,
+  public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color, final Stroke stroke, 
       final AxisMapping[] mappings )
   {
     super( view, obsProvider, name );
 
     m_color = color;
+    m_stroke = stroke;
     m_mappings = mappings;
   }
 
@@ -76,6 +80,11 @@ public class DiagViewCurve extends ObsViewItem
   public Color getColor()
   {
     return m_color;
+  }
+  
+  public Stroke getStroke()
+  {
+    return m_stroke;
   }
 
   /**

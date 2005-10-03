@@ -469,10 +469,35 @@ public class FileUtilities
   /**
    * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
    * 
-   * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and replaced by the given replacement-string
+   * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
+   *         replaced by the given replacement-string
    */
   public static String validateName( final String fileName, final String replacement )
   {
     return fileName.replaceAll( INVALID_CHARACTERS, replacement );
+  }
+
+  /**
+   * Gets the name part of a path-like-string.
+   * <p>
+   * That is, everything after the last '/' or '\'.
+   * </p>
+   * <p>
+   * E.g. <code>C:/mydirectory/file.txt</code> gets <code>file.txt</code>
+   * </p>.
+   */
+  public static String nameFromPath( final String path )
+  {
+    final int lastIndexOfSlash = path.lastIndexOf( '/' );
+    final int lastIndexOfBackslash = path.lastIndexOf( '/' );
+    final int lastIndexOf = Math.max( lastIndexOfSlash, lastIndexOfBackslash );
+
+    if( lastIndexOf == -1 )
+      return path;
+
+    if( lastIndexOf + 1 == path.length() - 1 )
+      return "";
+
+    return path.substring( lastIndexOf + 1 );
   }
 }

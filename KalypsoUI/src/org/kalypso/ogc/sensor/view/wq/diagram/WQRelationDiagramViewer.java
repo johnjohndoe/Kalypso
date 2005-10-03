@@ -142,7 +142,7 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
       axmaps[1] = new AxisMapping( obs.getAxisList()[1], m_diagramAxisQ );
 
       final DiagViewCurve curve = new DiagViewCurve( m_diagView, new PlainObsProvider( obs, null ), obs.getName(),
-          ColorUtilities.random(), axmaps );
+          ColorUtilities.random(), null, axmaps );
 
       m_chart.getObservationPlot().addCurve( curve );
     }

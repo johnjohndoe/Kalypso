@@ -551,6 +551,8 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     setValidAll( false );
     repaint();
 
+    // TODO: should be fired in the SWT thread, because the global selection listeners
+    // need this
     fireSelectionChanged();
   }
 

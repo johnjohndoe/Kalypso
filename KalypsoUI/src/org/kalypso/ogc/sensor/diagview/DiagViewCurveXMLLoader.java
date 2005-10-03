@@ -139,7 +139,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
           : new PooledObsProvider( key, null );
             
-      final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, (AxisMapping[])mappings
+      final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, null, (AxisMapping[])mappings
           .toArray( new AxisMapping[0] ) );
       curve.setShown( tcurve.isShown() );
 

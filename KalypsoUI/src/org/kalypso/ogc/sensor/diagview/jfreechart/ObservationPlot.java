@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -354,7 +355,7 @@ public class ObservationPlot extends XYPlot
       final int pos = getAdequateDatasetPos();
       setDataset( pos, cds );
 
-      final XYItemRenderer renderer = getRenderer( yAxis.getType(), pos );
+      final XYItemRenderer renderer = getRenderer( yAxis.getType() );
       setRenderer( pos, renderer );
       
       mapDatasetToDomainAxis( pos, ( (Integer)m_chartAxes2Pos.get( m_diag2chartAxis.get( xDiagAxis ) ) ).intValue() );
@@ -364,7 +365,8 @@ public class ObservationPlot extends XYPlot
     // if a curve gets removed meanwhile, the mapping seriespos -> curvecolor
     // gets invalid! always reset all colors of all curves
     final Color curveColor = curve.getColor();
-    cds.addCurveSerie( serie, curveColor, getRenderer( indexOf( cds ) ) );
+    final Stroke curveStroke = curve.getStroke();
+    cds.addCurveSerie( serie, curveColor, curveStroke, getRenderer( indexOf( cds ) ) );
 
     m_serie2dataset.put( serie, cds );
 
@@ -640,10 +642,8 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Returns the adequate renderer for the given axis type.
-   * 
-   * @param pos position of the renderer/dataset in the plot
    */
-  private final XYItemRenderer getRenderer( final String axisType, int pos )
+  private final XYItemRenderer getRenderer( final String axisType )
   {
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new XYBarRenderer();

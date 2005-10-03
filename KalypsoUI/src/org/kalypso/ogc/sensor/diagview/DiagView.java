@@ -239,10 +239,10 @@ public class DiagView extends ObsView
 
             color = ColorUtilities.derivateColor( TimeserieUtils.getColorFor( valueAxis[i].getType() ), found );
           }
-
+          
           final String name = NameUtils.replaceTokens( tokenizedName, obs, valueAxis[i] );
 
-          final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, mappings );
+          final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, data.stroke, mappings );
 
           addItem( curve );
         }

@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.template;
 
 import java.awt.Color;
+import java.awt.Stroke;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
  */
 public abstract class ObsView implements IObsViewEventProvider
 {
-  public static final ItemData DEFAULT_ITEM_DATA = new ItemData( true, null );
+  public static final ItemData DEFAULT_ITEM_DATA = new ItemData( true, null, null );
 
   /** Additional hints for new items */
   public static class ItemData
@@ -76,10 +77,13 @@ public abstract class ObsView implements IObsViewEventProvider
 
     public final boolean editable;
 
-    public ItemData( final boolean bEditable, final Color c )
+    public final Stroke stroke;
+
+    public ItemData( final boolean bEditable, final Color c, final Stroke s )
     {
       this.color = c;
       this.editable = bEditable;
+      this.stroke = s;
     }
   }
 

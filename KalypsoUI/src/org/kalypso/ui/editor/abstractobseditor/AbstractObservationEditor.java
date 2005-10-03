@@ -183,6 +183,6 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
   {
     if( m_view != null )
       m_view.loadObservation( context, href, false, null, NameUtils.DEFAULT_ITEM_NAME,
-          new ObsView.ItemData( true, null ) );
+          new ObsView.ItemData( true, null, null ) );
   }
 }
