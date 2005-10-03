@@ -41,10 +41,11 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.awt.Color;
+import java.awt.Stroke;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.AbstractIntervalXYDataset;
@@ -62,39 +63,69 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 class CurveDataset extends AbstractIntervalXYDataset
 {
-  private final List m_curves = new ArrayList();
+  private final static class RendererInfo
+  {
+    private final Stroke m_stroke;
+    private final Color m_color;
+    private final XYCurveSerie m_xyc;
 
-  /** Map: curve -> color */
-  private final Map m_colors = new HashMap();
+    public RendererInfo( final XYCurveSerie xyc, final Color color, final Stroke stroke )
+    {
+      m_xyc = xyc;
+      m_color = color;
+      m_stroke = stroke;
+    }
+
+    public Color getColor()
+    {
+      return m_color;
+    }
+
+    public Stroke getStroke()
+    {
+      return m_stroke;
+    }
+    
+    public XYCurveSerie getSerie()
+    {
+      return m_xyc;
+    }
+  }
+
+  /**
+   * List of RendererInfo.
+   * <p>
+   * REMARK: we cannot use a map ore something similiar, because the hashCode of the XYCurveSeries is not
+   * well-implemented, causing different curves to be equal.
+   * </p>
+   */
+  private final List m_curves = Collections.synchronizedList( new ArrayList() );
 
   public CurveDataset()
   {
   // empty
   }
 
-  public void addCurveSerie( final XYCurveSerie xyc, final Color color, final XYItemRenderer renderer )
+  public void addCurveSerie( final XYCurveSerie xyc, final Color color, final Stroke stroke,
+      final XYItemRenderer renderer )
   {
-    synchronized( m_curves )
-    {
-      m_curves.add( xyc );
-      m_colors.put( xyc, color );
+    m_curves.add( new RendererInfo( xyc, color, stroke ) );
 
-      reconfigureRenderer( renderer );
+    reconfigureRenderer( renderer );
 
-      fireDatasetChanged();
-    }
+    fireDatasetChanged();
   }
 
   public void removeCurveSerie( final XYCurveSerie xyc )
   {
-    synchronized( m_curves )
+    for( final Iterator iter = m_curves.iterator(); iter.hasNext(); )
     {
-      if( m_curves.contains( xyc ) )
+      final RendererInfo element = (RendererInfo)iter.next();
+      if( element.getSerie() == xyc )
       {
-        m_curves.remove( xyc );
-        m_colors.remove( xyc );
-
+        iter.remove();
         fireDatasetChanged();
+        return;
       }
     }
   }
@@ -104,10 +135,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public int getSeriesCount()
   {
-    synchronized( m_curves )
-    {
-      return m_curves.size();
-    }
+    return m_curves.size();
   }
 
   /**
@@ -115,11 +143,8 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public String getSeriesName( int series )
   {
-    synchronized( m_curves )
-    {
-      final String name = ( (XYCurveSerie)m_curves.get( series ) ).getName();
-      return name;
-    }
+    final RendererInfo[] curveArray = getCurveArray();
+    return ( curveArray[series] ).getSerie().getName();
   }
 
   /**
@@ -127,17 +152,15 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public int getItemCount( int series )
   {
-    synchronized( m_curves )
+    final RendererInfo[] curveArray = getCurveArray();
+    try
     {
-      try
-      {
-        return ( (XYCurveSerie)m_curves.get( series ) ).getItemCount();
-      }
-      catch( SensorException e )
-      {
-        e.printStackTrace();
-        return 0;
-      }
+      return curveArray[series].getSerie().getItemCount();
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return 0;
     }
   }
 
@@ -156,18 +179,16 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public Number getX( int series, int item )
   {
-    synchronized( m_curves )
+    final RendererInfo[] curveArray = getCurveArray();
+    try
     {
-      try
-      {
-        final Number value = ( (XYCurveSerie)m_curves.get( series ) ).getXValue( item );
-        return value;
-      }
-      catch( SensorException e )
-      {
-        e.printStackTrace();
-        return null;
-      }
+      final Number value = curveArray[series].getSerie().getXValue( item );
+      return value;
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return null;
     }
   }
 
@@ -186,18 +207,16 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public Number getY( int series, int item )
   {
-    synchronized( m_curves )
+    final RendererInfo[] curveArray = getCurveArray();
+    try
     {
-      try
-      {
-        final Number value = ( (XYCurveSerie)m_curves.get( series ) ).getYValue( item );
-        return value;
-      }
-      catch( SensorException e )
-      {
-        e.printStackTrace();
-        return null;
-      }
+      final Number value = curveArray[series].getSerie().getYValue( item );
+      return value;
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return null;
     }
   }
 
@@ -282,10 +301,13 @@ class CurveDataset extends AbstractIntervalXYDataset
     if( renderer == null )
       return;
 
-    for( int i = 0; i < m_curves.size(); i++ )
+    final RendererInfo[] curveArray = getCurveArray();
+
+    for( int i = 0; i < curveArray.length; i++ )
     {
-      final Color color = (Color)m_colors.get( m_curves.get( i ) );
-      renderer.setSeriesPaint( i, color );
+      final RendererInfo info = curveArray[i];
+      renderer.setSeriesPaint( i, info.getColor() );
+      renderer.setSeriesStroke( i, info.getStroke() );
     }
   }
 
@@ -296,19 +318,23 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   public Number getStatusFor( int series, int item )
   {
-    synchronized( m_curves )
+    final RendererInfo[] curveArray = getCurveArray();
+    try
     {
-      try
-      {
-        final Number value = ( (XYCurveSerie)m_curves.get( series ) ).getStatus( item );
-        
-        return value;
-      }
-      catch( SensorException e )
-      {
-        e.printStackTrace();
-        return null;
-      }
+      final Number value = curveArray[series].getSerie().getStatus( item );
+
+      return value;
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return null;
     }
   }
+
+  private RendererInfo[] getCurveArray()
+  {
+    return (RendererInfo[])m_curves.toArray( new RendererInfo[m_curves.size()] );
+  }
+
 }

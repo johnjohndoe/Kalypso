@@ -59,6 +59,12 @@ public class TimeserieFeatureProps
 
   private final static String PROP_COLOR = "color";
 
+  /** Line width as float */
+  private final static String PROP_LINE_WIDTH = "lineWidth";
+  
+  /** Lenght of simple dash as float */
+  private final static String PROP_LINE_DASH = "lineDash";
+
   private final static String DEFAULT_NAMESTRING = "%obsname% (%axisname%)";
 
   private final String m_nameColumn;
@@ -73,17 +79,23 @@ public class TimeserieFeatureProps
 
   private final String m_color;
 
+  private final String m_lineWidth;
+
+  private final String m_lineDash;
+
   public TimeserieFeatureProps( final Properties props )
   {
     this( props.getProperty( PROP_NAMECOLUMN ), props.getProperty( PROP_NAMESTRING ), props
-        .getProperty( PROP_LINKCOLUM ), props.getProperty( PROP_FILTER ), props.getProperty( PROP_COLOR ) );
+        .getProperty( PROP_LINKCOLUM ), props.getProperty( PROP_FILTER ), props.getProperty( PROP_COLOR ), props.getProperty( PROP_LINE_WIDTH ), props.getProperty( PROP_LINE_DASH ) );
   }
 
   public TimeserieFeatureProps( final String nameColumn, final String nameString, final String linkColumn,
-      final String filter, final String color )
+      final String filter, final String color, final String lineWidth, final String lineDash )
   {
     m_nameColumn = nameColumn;
     m_color = color;
+    m_lineWidth = lineWidth;
+    m_lineDash = lineDash;
 
     if( nameColumn != null && nameString == null )
       m_nameString = "%featureprop%";
@@ -125,5 +137,15 @@ public class TimeserieFeatureProps
   public String getColor()
   {
     return m_color;
+  }
+
+  public String getLineWidth()
+  {
+    return m_lineWidth;
+  }
+
+  public String getLineDash()
+  {
+    return m_lineDash;
   }
 }
