@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class TableView extends ObsView
   public void addObservation( final IObsProvider provider, final String tokenizedName, final String[] ignoreTypes,
       final ItemData data )
   {
-    final List ignoreTypeList = Arrays.asList( ignoreTypes );
+    final List ignoreTypeList = ignoreTypes == null ? new ArrayList() : Arrays.asList( ignoreTypes );
 
     final IObservation obs = provider.getObservation();
 
