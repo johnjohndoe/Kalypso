@@ -138,7 +138,8 @@ public class SpreeInputWorker
           final TimeseriesLinkType tsLink = (TimeseriesLinkType)f.getProperty( "Wasserstand_vorhersage" );
           final String tsHref = tsLink.getHref();
 
-          final String name = FileUtilities.nameWithoutExtension( tsHref );
+          final String path = FileUtilities.nameWithoutExtension( tsHref );
+          final String name = FileUtilities.nameFromPath( path );
           tsmap.setAccuracy( name, (Double)property );
         }
 

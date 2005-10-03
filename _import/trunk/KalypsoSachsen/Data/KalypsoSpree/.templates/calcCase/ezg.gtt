@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org">
     <layer featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="./calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column editable="false" name="Name" width="100"/>
-        <column editable="false" name="BodenfeuchteMin" width="116"/>
-        <column editable="true" name="Bodenfeuchte" width="100"/>
-        <column editable="false" name="BodenfeuchteMax" width="100"/>
+        <column alignment="16777216" editable="false" format="" name="Name" width="100"/>
+        <column alignment="16777216" editable="false" format="" name="BodenfeuchteMin" width="116"/>
+        <column alignment="16777216" editable="true" format="" name="Bodenfeuchte" width="100"/>
+        <column alignment="16777216" editable="false" format="" name="BodenfeuchteMax" width="100"/>
+        <column alignment="16384" editable="true" name="accuracyPrediction" width="125"/>
         <sort inverse="false" propertyName="Name"/>
     </layer>
 </gistableview>

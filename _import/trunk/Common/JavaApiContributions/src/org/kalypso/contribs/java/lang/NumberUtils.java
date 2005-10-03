@@ -17,7 +17,7 @@ public final class NumberUtils
 
   public static final boolean isDouble( final String string )
   {
-    return !Double.isNaN( parseQuiet( string ) );
+    return !Double.isNaN( parseQuietDouble( string ) );
   }
 
   /**
@@ -37,7 +37,7 @@ public final class NumberUtils
    * The double can contain '.' or ','.
    * </p>
    */
-  public static final double parseQuiet( final String string )
+  public static final double parseQuietDouble( final String string )
   {
     try
     {

@@ -127,7 +127,7 @@
 	</target>
 	
     <!-- ================================= 
-          target: exportPrognosen              
+          target: exportVorhersagen              
          ================================= -->
     <target name="exportVorhersagen" depends="calculationProperties" description="Exportiert die Prognosen nach PSICompact">
         <echo message="Vorhersagezeitreihen werden nach PSICompact geschrieben..."/>

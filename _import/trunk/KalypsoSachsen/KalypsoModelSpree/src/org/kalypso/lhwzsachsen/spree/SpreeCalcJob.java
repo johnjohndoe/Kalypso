@@ -30,9 +30,9 @@ import org.apache.commons.io.output.NullOutputStream;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
@@ -713,22 +713,20 @@ public class SpreeCalcJob implements ICalcJob
     if( !writeUmhuellende )
       return;
 
-    // TODO: replace with first and last value of observation
-//    final IAxis axis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
-//    observation
-//    observation.getValues(null)
-    
-    
-    final DateRange forecastRange = TimeserieUtils.isForecast( observation );
-    if( forecastRange == null )
+    // get first and last date of observation
+    final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
+    final ITuppleModel values = observation.getValues(null);
+    final int valueCount = values.getCount();
+    if( valueCount < 2 )
       return;
-
+    
+    final Date startPrediction = (Date)values.getElement( 0, dateAxis );
+    final Date endPrediction = (Date)values.getElement( valueCount - 1, dateAxis );
+    
     final Calendar calBegin = Calendar.getInstance();
-    final Date startPrediction = forecastRange.getFrom();
     calBegin.setTime( startPrediction );
 
     final Calendar calEnd = Calendar.getInstance();
-    final Date endPrediction = forecastRange.getTo();
     calEnd.setTime( endPrediction );
 
     final long dayOfMillis = 1000 * 60 * 60 * 24;

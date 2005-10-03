@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org">
     <observation linktype="zml" ns1:href="%href3%" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c2" name="Wasserstand - Vorhersage" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c2" name="Wasserstand - Vorhersage [cm]" width="50"/>
+        <column axis="Abfluss" editable="true" id="c2" name="Abfluss - Vorhersage [m³/s]" width="50"/>
     </observation>
     <rules>
         <renderingrule mask="1">

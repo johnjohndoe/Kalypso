@@ -62,6 +62,8 @@
 					<element name="Wasserstand_gemessen" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Wasserstand_gerechnet" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="Wasserstand_vorhersage" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="Wasserstand_vorhersage_unten" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="Wasserstand_vorhersage_oben" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<element name="accuracyPrediction" type="double" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
