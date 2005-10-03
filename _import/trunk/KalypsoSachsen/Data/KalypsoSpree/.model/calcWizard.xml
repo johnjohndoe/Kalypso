@@ -111,9 +111,9 @@
         <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
         <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
-        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=10f"/>
-        <arg name="timeserie6" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=10f"/>
+        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
+        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie6" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
         
        	<arg name="buttonText" value="Berechnung durchführen"/>
        	<arg name="buttonLaunch" value="runCalculation"/>
@@ -168,9 +168,9 @@
 
         <arg name="timeserie1" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie2" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-        <arg name="timeserie3" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
-        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=10f"/>
-        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=10f"/>
+        <arg name="timeserie3" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
+        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
@@ -194,9 +194,9 @@
         <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
         <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage"/>
-        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=10f"/>
-        <arg name="timeserie6" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=10f"/>
+        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
+        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie6" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
 		
         <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -222,6 +222,8 @@
 				<arg name="href2" value="Wasserstand_gerechnet"/>
 				<arg name="href3" value="Wasserstand_vorhersage"/>
 				<arg name="href4" value="Niederschlag_rechnung"/>
+				<arg name="href5" value="Wasserstand_vorhersage_unten"/>
+				<arg name="href6" value="Wasserstand_vorhersage_oben"/>
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Abflußgrafik"/>

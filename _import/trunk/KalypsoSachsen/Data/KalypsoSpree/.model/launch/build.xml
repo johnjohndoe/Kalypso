@@ -135,8 +135,8 @@
 
     	<!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
     	<!-- TODO: Filter für Umhüllende konfigurieren -->
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="inObservationLink" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="inObservationLink" remoteobs="${vorhersageLinkOben}" runasync="false"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="inObservationLink" remoteobs="${vorhersageLinkUnten}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local2" remoteobs="${vorhersageLinkOben}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local3" remoteobs="${vorhersageLinkUnten}" runasync="false"/>
     </target>
 </project>

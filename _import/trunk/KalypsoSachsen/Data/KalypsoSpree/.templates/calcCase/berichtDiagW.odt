@@ -44,4 +44,16 @@
 			<mapping observation-axis="W" diagram-axis="W" />
 	   	</curve>
 	</observation>
+   	<observation linktype="zml" xlink:href="%href5%">
+		<curve id="C2" name="Wasserstand - Vorhersage" color="0;255;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
+   	<observation linktype="zml" xlink:href="%href6%">
+		<curve id="C2" name="Wasserstand - Vorhersage" color="0;255;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
 </obsdiagview>

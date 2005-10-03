@@ -4,22 +4,13 @@
         <column axis="Wasserstand" editable="true" id="c2" name="Wasserstand - Vorhersage [cm]" width="50"/>
         <column axis="Abfluss" editable="true" id="c2" name="Abfluss - Vorhersage [m³/s]" width="50"/>
     </observation>
-    <rules>
-        <renderingrule mask="1">
-            <foregroundcolor>0;0;0</foregroundcolor>
-            <backgroundcolor>0;153;0</backgroundcolor>
-            <tooltip>ok</tooltip>
-        </renderingrule>
-        <renderingrule mask="2">
-            <foregroundcolor>0;0;0</foregroundcolor>
-            <backgroundcolor>255;128;0</backgroundcolor>
-            <tooltip>eventuell nicht geeignet</tooltip>
-        </renderingrule>
-        <renderingrule mask="4">
-            <foregroundcolor>0;0;0</foregroundcolor>
-            <backgroundcolor>255;0;0</backgroundcolor>
-            <tooltip>nicht geeignet</tooltip>
-        </renderingrule>
-    </rules>
+    <observation linktype="zml" ns1:href="%href5%" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c2" name="Wasserstand - Vorhersage - Spur unten [cm]" width="50"/>
+        <column axis="Abfluss" editable="true" id="c2" name="Abfluss - Vorhersage - Spur unten [m³/s]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns1:href="%href6%" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c2" name="Wasserstand - Vorhersage - Spur oben [cm]" width="50"/>
+        <column axis="Abfluss" editable="true" id="c2" name="Abfluss - Vorhersage - Spur oben [m³/s]" width="50"/>
+    </observation>
 </obstableview>
 
