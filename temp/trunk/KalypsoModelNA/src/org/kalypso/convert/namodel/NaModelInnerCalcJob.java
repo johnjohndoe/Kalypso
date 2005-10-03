@@ -72,6 +72,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolver;
@@ -302,6 +304,8 @@ public class NaModelInnerCalcJob implements ICalcJob
           + " [cm/Tag] als Vorhersagegenauigkeit angenommen." );
     }
 
+    accuracyPrediction = ( (Double)rootFeature.getProperty( "accuracyPrediction" ) ).doubleValue();
+
     final Date startPrediction = conf.getSimulationForecastStart();
     final Date endPrediction = conf.getSimulationEnd();
 
@@ -317,10 +321,10 @@ public class NaModelInnerCalcJob implements ICalcJob
     final ITuppleModel resultValues = resultObservation.getValues( null );
     final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( resultObservation.getAxisList(), Date.class );
     final IAxis resultValueAxis = ObservationUtilities.findAxisByType( resultObservation.getAxisList(), axisType );
-    double resultValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
+    double calcValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
         startPrediction );
 
-    double overallOffset;
+    double deltaMeasureCalculation;
     try
     {
       final NaNodeResultProvider nodeResultProvider = conf.getNodeResultProvider();
@@ -331,13 +335,13 @@ public class NaModelInnerCalcJob implements ICalcJob
       final ITuppleModel pegelValues = pegelObservation.getValues( null );
       final IAxis pegelDateAxis = ObservationUtilities.findAxisByClass( pegelObservation.getAxisList(), Date.class );
       final IAxis pegelValueAxis = ObservationUtilities.findAxisByType( pegelObservation.getAxisList(), axisType );
-      double pegelValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis,
+      double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis,
           startPrediction );
-      overallOffset = pegelValue - resultValue;
+      deltaMeasureCalculation = measureValue - calcValue;
     }
     catch( Exception e )
     {
-      overallOffset = 0;
+      deltaMeasureCalculation = 0;
     }
 
     final NATimeSettings timeSettings = NATimeSettings.getInstance();
@@ -363,7 +367,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     //      IOUtils.closeQuietly( stream );
     //    }
     // test
-
     final File[] result = new File[]
     {
         getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ),
@@ -373,16 +376,28 @@ public class NaModelInnerCalcJob implements ICalcJob
     final long dayOfMillis = 1000 * 60 * 60 * 24;
     final double endOffest = accuracyPrediction
         * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)dayOfMillis ) );
+
+    final double offsetStartPrediction;
+    final double offsetEndPrediction;
+    if( FeatureHelper.booleanIsTrue( rootFeature, "useOffsetStartPrediction", false ) )
+      offsetStartPrediction = deltaMeasureCalculation;
+    else
+      offsetStartPrediction = 0;
+    if( FeatureHelper.booleanIsTrue( rootFeature, "useOffsetEndPrediction", false ) )
+      offsetEndPrediction = deltaMeasureCalculation;
+    else
+      offsetEndPrediction = 0;
+
     final double[] operandStart = new double[]
     {
-        overallOffset,
-        overallOffset,
-        overallOffset };
+        offsetStartPrediction,
+        offsetStartPrediction,
+        offsetStartPrediction };
     final double[] operandEnd = new double[]
     {
-        overallOffset,
-        overallOffset - endOffest,
-        overallOffset + endOffest };
+        offsetEndPrediction,
+        offsetEndPrediction - endOffest,
+        offsetEndPrediction + endOffest };
     final String[] sufix = new String[]
     {
         " - Spur Mitte",
@@ -1132,11 +1147,11 @@ public class NaModelInnerCalcJob implements ICalcJob
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
         final String feName = (String)feature.getProperty( titlePropName );
         final String observationTitle;
-        if(feName!=null && feName.length()>0)
-          observationTitle=feName;
+        if( feName != null && feName.length() > 0 )
+          observationTitle = feName;
         else
-          observationTitle=feature.getId();
-          
+          observationTitle = feature.getId();
+
         final String axisTitle = getTitleForSuffix( suffix );
 
         if( !ts.dataExistsForKey( key ) )
@@ -1240,8 +1255,8 @@ public class NaModelInnerCalcJob implements ICalcJob
         //        final IObservation resultObservation = new SimpleObservation(
         // pegelLink.getHref(), "ID", title, false, null, metadataList, axis,
         // qTuppelModel );
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", observationTitle, false, null,
-            metadataList, axis, qTuppelModel );
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", observationTitle,
+            false, null, metadataList, axis, qTuppelModel );
 
         // update with Scenario metadata
 

@@ -400,8 +400,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>optimieren</label>
-								<tooltip>schaltet Optimierung ein</tooltip>
-								<description>Schalter fuer Optimierung bei der Berechnung</description>
+								<tooltip>schaltet automatische Optimierung ein</tooltip>
+								<description>Schalter fuer automatische Optimierung bei der Berechnung</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>optimizing</label>
@@ -427,9 +427,9 @@
 					<element name="CatchmentsBianf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Opt.Faktor Bianf</label>
-								<tooltip/>
-								<description/>
+        						<label>Bodenfeuchte</label>
+								<tooltip>Korrekturfaktor fuer die Anfangsbodenfeuchte</tooltip>
+								<description>Korrekturfaktor fuer die Anfangsbodenfeuchte</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label/>
@@ -441,9 +441,9 @@
 					<element name="CatchmentsFaktorRetobTetint" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Opt. Faktor Retob, Retint</label>
-								<tooltip/>
-								<description/>
+								<label>Retention</label>
+								<tooltip>Korrekturfaktor Retention Oberflaechenabfluss natuerlicher Flaechen und Interflow</tooltip>
+								<description>Korrekturfaktor Retention Oberflaechenabfluss natuerlicher Flaechen und Interflow</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label/>
@@ -455,9 +455,9 @@
 					<element name="CatchmentsFaktn" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Opt. Faktor Niederschlag</label>
-								<tooltip>Korrekturwert fuer Niederschlag</tooltip>
-								<description/>
+								<label>Faktor Niederschlag</label>
+								<tooltip>Korrekturfaktor fuer Niederschlag</tooltip>
+								<description>Korrekturfaktor fuer Niederschlag</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Precipitation factor</label>
@@ -469,9 +469,9 @@
 					<element name="CatchmentsFaktorAigw" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Opt.Faktor Aigw</label>
-								<tooltip/>
-								<description/>
+                        		<label>Grundwasserstand</label>
+    							<tooltip>Korrekturfaktor Anfangsgrundwasserstand</tooltip>
+								<description>Korrekturfaktor Anfangsgrundwasserstand</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label/>
@@ -497,9 +497,9 @@
 					<element name="KMChannelsFaktorRkf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Opt. Faktor k</label>
-								<tooltip/>
-								<description/>
+                                <label>Faktor k</label>
+								<tooltip>Korrekturfaktor Speicherretention (Kalinin-Miljukov)</tooltip>
+								<description>Korrekturfaktor Speicherretention (Kalinin-Miljukov)</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>opt. factor k</label>
@@ -511,9 +511,9 @@
 					<element name="KMChannelsFaktorRnf" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Opt. Faktor n</label>
-								<tooltip/>
-								<description/>
+                                <label>Faktor n</label>
+								<tooltip>Korrekturfaktor Speicheranzahl (Kalinin-Miljukov)</tooltip>
+								<description>Korrekturfaktor Speicheranzahl (Kalinin-Miljukov)</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>opt. factor n</label>
@@ -575,12 +575,41 @@
 								<description>Genauigkeit der Vorhersage in cm pro Tag zur Berechnung der Umhuellenden</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>accuracyForecast</label>
+								<label>accuracy prediction</label>
 								<tooltip>Accuracy of prediction in cm per day in order to calculate confidence interval</tooltip>
 								<description>Accuracy of prediction in cm per day in order to calculate confidence interval</description>
 							</documentation>
 						</annotation>
 					</element>
+                    <element name="useOffsetStartPrediction" type="boolean" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Differenzausgleich Start Vorhersagespur</label>
+								<tooltip>Vorhersagespuren zu Beginn an Messung angleichen (keilförmig)</tooltip>
+								<description>Vorhersagespuren zu Beginn an Messung angleichen (keilförmig)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>offset prediction start</label>
+								<tooltip>adjust prediction tracks start to measurement (wedge shape)</tooltip>
+								<description>adjust prediction tracks start to measurement (wedge shape)</description>
+							</documentation>
+						</annotation>
+					</element>
+                    <element name="useOffsetEndPrediction" type="boolean" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Differenzausgleich Ende Vorhersagespur</label>
+								<tooltip>Vorhersagespuren am Ende um Anfangsdifferenz Messung-Berechnung versetzen (keilförmig)</tooltip>
+								<description>Vorhersagespuren am Ende um Anfangsdifferenz Messung-Berechnung versetzen (keilförmig)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>offset prediction end</label>
+								<tooltip>adjust prediction tracks end to measurement (wedge shape) offset: difference measurement-calculation</tooltip>
+								<description>adjust prediction tracks end to measurement (wedge shape) offset: difference measurement-calculation</description>
+							</documentation>
+						</annotation>
+					</element>
+                    
 					<element name="qAblageSpurMittlerer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
