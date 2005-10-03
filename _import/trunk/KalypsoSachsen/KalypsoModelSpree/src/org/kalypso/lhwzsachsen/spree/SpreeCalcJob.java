@@ -30,14 +30,18 @@ import org.apache.commons.io.output.NullOutputStream;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
@@ -45,12 +49,12 @@ import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypso.zml.ObservationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.xml.sax.InputSource;
 
 /**
  * <p>
@@ -86,8 +90,6 @@ public class SpreeCalcJob implements ICalcJob
   public static final String NAP_GEOM = "Ort";
 
   public static final Map NAP_MAP = new LinkedHashMap();
-
-  public static final String FEATURE_PROP_BODENFEUCHTE = "Bodenfeuchte";
 
   static
   {
@@ -355,37 +357,29 @@ public class SpreeCalcJob implements ICalcJob
     if( workspace == null )
       return;
 
-    // geänderte _nap lesen
-    final String napFilename = (String)props.get( DATA_NAPFILENAME );
-    final Collection napFeatures = ShapeSerializer.readFeaturesFromDbf( napFilename );
-
-    // Werte eventuell ändern
-    final FeatureType featureType = workspace.getFeatureType( NAP_NAME );
-    if( featureType == null )
-      return;
-
-    final Feature[] gmlFeatures = workspace.getFeatures( featureType );
-    if( gmlFeatures.length != napFeatures.size() )
-      return;
-
-    final Iterator iter = napFeatures.iterator();
-    for( int i = 0; i < gmlFeatures.length; i++ )
+    //////////////////////////////////////////////////
+    // NAP Werte (Bodenfeuchten) in GML Übertragen) //
+    //////////////////////////////////////////////////
+    final FeatureType napFT = workspace.getFeatureType( NAP_NAME );
+    if( napFT != null )
     {
-      final Feature napFeature = (Feature)iter.next();
-      final Feature gmlFeature = gmlFeatures[i];
-
-      final Double gmlValue = (Double)gmlFeature.getProperty( FEATURE_PROP_BODENFEUCHTE );
-      if( gmlValue == null || Math.abs( gmlValue.doubleValue() ) < 0.01 )
-      {
-        final double optimalValue = ( (Double)napFeature.getProperty( "VORFEUCHTE" ) ).doubleValue();
-
-        final FeatureProperty newValue = FeatureFactory.createFeatureProperty( FEATURE_PROP_BODENFEUCHTE, new Double(
-            optimalValue ) );
-        gmlFeature.setProperty( newValue );
-      }
+      final Feature[] napFeatures = workspace.getFeatures( napFT );
+      fetchNativeIntoGml( napFeatures, (String)props.get( DATA_NAPFILENAME ), "Bodenfeuchte", "VORFEUCHTE" );
     }
 
-    // gml in Ergebnisse schreiben
+    /////////////////////////////////////////////////////////////////
+    // FLP Werte (Empfehlung KorrekturLaufzeit) in GML Übertragen) //
+    /////////////////////////////////////////////////////////////////
+    final FeatureType flpFT = workspace.getFeatureType( FLP_NAME );
+    if( flpFT != null )
+    {
+      final Feature[] flpFeatures = workspace.getFeatures( flpFT );
+      fetchNativeIntoGml( flpFeatures, (String)props.get( DATA_FLPFILENAME ), "KorrekturEmpfehlungLaufzeit", "LZK_EMPF" );
+    }
+
+    /////////////////////////////////
+    // gml in Ergebnisse schreiben //
+    /////////////////////////////////
     final String outfilename = "calcCase.gml";
     final File outFile = new File( outdir, outfilename );
 
@@ -410,6 +404,30 @@ public class SpreeCalcJob implements ICalcJob
       {
         e1.printStackTrace();
       }
+    }
+  }
+
+  /**
+   * Überträgt Werte aus einer DBf in das GML
+   */
+  private void fetchNativeIntoGml( final Feature[] gmlFeatures, final String dbfFileName, final String gmlProperty,
+      final String dbfProperty )
+  {
+    final Collection dbfFeatures = ShapeSerializer.readFeaturesFromDbf( dbfFileName );
+
+    if( gmlFeatures.length != dbfFeatures.size() )
+      return;
+
+    final Iterator iter = dbfFeatures.iterator();
+    for( int i = 0; i < gmlFeatures.length; i++ )
+    {
+      final Feature dbfFeature = (Feature)iter.next();
+      final Feature gmlFeature = gmlFeatures[i];
+
+      final double optimalValue = ( (Double)dbfFeature.getProperty( dbfProperty ) ).doubleValue();
+
+      final FeatureProperty newValue = FeatureFactory.createFeatureProperty( gmlProperty, new Double( optimalValue ) );
+      gmlFeature.setProperty( newValue );
     }
   }
 
@@ -542,6 +560,9 @@ public class SpreeCalcJob implements ICalcJob
 
   public void writeResultsToFolder( final String tsFilename, final File outdir, final TSMap tsmap ) throws Exception
   {
+    ///////////////////
+    // TS-File lesen //
+    ///////////////////
     final Collection features = ShapeSerializer.readFeaturesFromDbf( tsFilename );
 
     final DateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
@@ -597,7 +618,9 @@ public class SpreeCalcJob implements ICalcJob
 
     final Date[] dateArray = (Date[])dates.toArray( new Date[dates.size()] );
 
-    // create ZML for each timeserie
+    ///////////////////////////////////
+    // create ZML for each timeserie //
+    ///////////////////////////////////
     for( int i = 0; i < TS_DESCRIPTOR.length; i++ )
     {
       final TSDesc desc = TS_DESCRIPTOR[i];
@@ -668,14 +691,57 @@ public class SpreeCalcJob implements ICalcJob
             metadata, achsen );
         observation.setValues( model );
 
-        final ObservationType observationType = ZmlFactory.createXML( observation, null );
-        final FileOutputStream outStream = new FileOutputStream( outFile );
-        ZmlFactory.getMarshaller().marshal( observationType, outStream );
-        outStream.close();
+        // umhüllenden parameter vom modell holen
+        // original und die zwei geänderten schreiben
+        writeVorhersageZml( observation, outFile, tsmap.getAccuracy( column ), column.startsWith( "QV_" ) );
       }
       else
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream( "resources/empty.zml" ) );
     }
+  }
+
+  /**
+   * Schreibt eine Vorhersagezeitreihe und ihre umhüllenden
+   */
+  private void writeVorhersageZml( final IObservation obs, final File outFile, final double accuracy, final boolean writeUmhuellende ) throws Exception
+  {
+    ZmlFactory.writeToFile( obs, outFile );
+
+    final InputSource is = new InputSource( outFile.getAbsolutePath() );
+    final IObservation observation = ZmlFactory.parseXML( is, "", null );
+    
+    if( !writeUmhuellende )
+      return;
+
+    // TODO: replace with first and last value of observation
+//    final IAxis axis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
+//    observation
+//    observation.getValues(null)
+    
+    
+    final DateRange forecastRange = TimeserieUtils.isForecast( observation );
+    if( forecastRange == null )
+      return;
+
+    final Calendar calBegin = Calendar.getInstance();
+    final Date startPrediction = forecastRange.getFrom();
+    calBegin.setTime( startPrediction );
+
+    final Calendar calEnd = Calendar.getInstance();
+    final Date endPrediction = forecastRange.getTo();
+    calEnd.setTime( endPrediction );
+
+    final long dayOfMillis = 1000 * 60 * 60 * 24;
+
+    final double endOffest = accuracy
+        * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)dayOfMillis ) );
+
+    final String baseName = FileUtilities.nameWithoutExtension( outFile.getName() );
+    
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "-", TimeserieConstants.TYPE_WATERLEVEL,
+        KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_unten.zml" ), "- Spur Unten" );
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffest, "+", TimeserieConstants.TYPE_WATERLEVEL,
+        KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_oben.zml" ), "- Spur Oben" );
   }
 
   /**

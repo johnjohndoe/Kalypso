@@ -1,0 +1,3 @@
+3.10.2005
+=========
+- Übernahme der Parameter 'KorekturLaufzeitEmpfehlung' aus der Modellrechnug

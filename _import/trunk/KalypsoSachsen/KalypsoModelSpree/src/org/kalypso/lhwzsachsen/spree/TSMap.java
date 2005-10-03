@@ -51,12 +51,11 @@ public class TSMap
   /** sortiert die Daten nach der Zeit */
   final Set m_dateSet = new TreeSet();
 
+  /** name (String) -> IObservation */
   private Map m_obsMap = new HashMap();
-
-  public TSMap()
-  {
-    super();
-  }
+  
+  /** name (String) -> accuracy (Double) */
+  private Map m_accuracyMap = new HashMap();
 
   public void addObservation( final IObservation obs, final String name ) throws SensorException,
       NoSuchElementException
@@ -110,9 +109,23 @@ public class TSMap
     return (Map)m_map.get( id );
   }
 
-  public MetadataList getMetadataFor( final String column )
+  public MetadataList getMetadataFor( final String name )
   {
-    final IObservation oldObs = (IObservation)m_obsMap.get( column );
+    final IObservation oldObs = (IObservation)m_obsMap.get( name );
     return oldObs == null ? null : oldObs.getMetadataList();
+  }
+
+  public void setAccuracy( final String name, final Double accuracy )
+  {
+    m_accuracyMap.put( name, accuracy );
+  }
+  
+  public double getAccuracy( final String name )
+  {
+    final Double accuracy = (Double)m_accuracyMap.get(name);
+    if( accuracy == null )
+      return 5d;
+    
+    return accuracy.doubleValue();
   }
 }

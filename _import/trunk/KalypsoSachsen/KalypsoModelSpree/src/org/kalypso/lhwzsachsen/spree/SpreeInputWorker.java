@@ -33,8 +33,10 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.FieldDescriptor;
@@ -107,6 +109,7 @@ public class SpreeInputWorker
       logwriter.println( "Erzeuge Zeitreihen-Datei: " + tsFilename );
       readZML( inputProvider, tsmap );
       calcNiederschlagsummen( tsmap );
+      applyAccuracyPrediction( workspace, tsmap );
       createTimeseriesFile( tsFilename, tsmap );
 
       return nativedir;
@@ -116,6 +119,34 @@ public class SpreeInputWorker
       e.printStackTrace();
       throw new CalcJobServiceException( "Fehler beim Erzeugen der Inputdateien", e );
     }
+  }
+
+  /**
+   * Liest die Parameter für die Umhüllende (accuracyPrediction) aus dem Workspace und schreibt sie an die jeweilige
+   * Zeitreihe in der TSMap
+   */
+  private static void applyAccuracyPrediction( final GMLWorkspace workspace, final TSMap tsmap )
+  {
+    final FeatureVisitor fv = new FeatureVisitor()
+    {
+      public boolean visit( final Feature f )
+      {
+        final Object property = f.getProperty( "accuracyPrediction" );
+        if( property instanceof Double )
+        {
+          // die Zuordnung erfolgt über den Namen des Links
+          final TimeseriesLinkType tsLink = (TimeseriesLinkType)f.getProperty( "Wasserstand_vorhersage" );
+          final String tsHref = tsLink.getHref();
+
+          final String name = FileUtilities.nameWithoutExtension( tsHref );
+          tsmap.setAccuracy( name, (Double)property );
+        }
+
+        return true;
+      }
+    };
+
+    workspace.accept( fv, "PegelCollectionAssociation/PegelMember", FeatureVisitor.DEPTH_ZERO );
   }
 
   private static void calcNiederschlagsummen( final TSMap tsmap )

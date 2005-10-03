@@ -20,12 +20,28 @@ public final class NumberUtils
     return !Double.isNaN( parseQuiet( string ) );
   }
 
-  /** Tries to parse a double, if fails, returns {@link java.lang.Double#NaN} */
+  /**
+   * Parses a string as double.
+   * <p>
+   * The double can contain '.' or ','.
+   * </p>
+   */
+  public static final double parseDouble( final String string ) throws NumberFormatException
+  {
+    return Double.parseDouble( string.replace( ',', '.' ) );
+  }
+
+  /**
+   * Tries to parse a double, if fails, returns {@link java.lang.Double#NaN}.
+   * <p>
+   * The double can contain '.' or ','.
+   * </p>
+   */
   public static final double parseQuiet( final String string )
   {
     try
     {
-      return Double.parseDouble( string.replace( ',', '.' ) );
+      return parseDouble( string );
     }
     catch( final Exception e )
     {
@@ -48,15 +64,11 @@ public final class NumberUtils
     }
   }
 
-  /**
-   * @param value
-   * @return integer
-   * @throws ParseException
-   */
-  public static int toInteger( String value ) throws ParseException
+  /** What is the difference to: <code>Integer.parseInt()</code>? */
+  public static int toInteger( final String value ) throws ParseException
   {
     final NumberFormat instance = NumberFormat.getInstance();
-    final Number number = instance.parse(value);
+    final Number number = instance.parse( value );
     return number.intValue();
   }
 }
