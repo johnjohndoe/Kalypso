@@ -1129,15 +1129,15 @@ public class NaModelInnerCalcJob implements ICalcJob
           if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
             continue; // should not generate results
         }
-        //        final String key = FeatureHelper.getAsString( feature, keyPropName );
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
-        final String feID = feature.getId();
         final String feName = (String)feature.getProperty( titlePropName );
-        final String title;
-        if( feName != null )
-          title = "Berechnung " + getTitleForSuffix( suffix ) + " " + feName;
+        final String observationTitle;
+        if(feName!=null && feName.length()>0)
+          observationTitle=feName;
         else
-          title = "Berechnung " + getTitleForSuffix( suffix ) + " (" + feID + ")";
+          observationTitle=feature.getId();
+          
+        final String axisTitle = getTitleForSuffix( suffix );
 
         if( !ts.dataExistsForKey( key ) )
           continue; // no results available
@@ -1159,7 +1159,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         }
 
         final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
-        final IAxis qAxis = new DefaultAxis( title, resultType, TimeserieUtils.getUnit( resultType ), Double.class,
+        final IAxis qAxis = new DefaultAxis( axisTitle, resultType, TimeserieUtils.getUnit( resultType ), Double.class,
             false );
         final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( qAxis, true );
         final IAxis[] axis = new IAxis[]
@@ -1240,7 +1240,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         //        final IObservation resultObservation = new SimpleObservation(
         // pegelLink.getHref(), "ID", title, false, null, metadataList, axis,
         // qTuppelModel );
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", title, false, null,
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", observationTitle, false, null,
             metadataList, axis, qTuppelModel );
 
         // update with Scenario metadata
