@@ -40,6 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -79,11 +82,13 @@ public class TableView extends ObsView
    * tableView.
    * 
    * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
-   *      java.lang.String, java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
+   *      java.lang.String, java.lang.String[], org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
-  public void addObservation( final IObsProvider provider, final String tokenizedName, final String ignoreType,
+  public void addObservation( final IObsProvider provider, final String tokenizedName, final String[] ignoreTypes,
       final ItemData data )
   {
+    final List ignoreTypeList = Arrays.asList( ignoreTypes );
+
     final IObservation obs = provider.getObservation();
 
     if( obs != null )
@@ -108,7 +113,7 @@ public class TableView extends ObsView
         {
           final IAxis valueAxis = ObservationUtilities.findAxisByName( axes, axes[i].getName() );
 
-          if( !valueAxis.getType().equals( ignoreType ) )
+          if( !ignoreTypeList.contains( valueAxis.getType() ) )
           {
             final TableViewColumn col = new TableViewColumn( this, provider.copy(), NameUtils.replaceTokens(
                 tokenizedName, obs, valueAxis ), data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils

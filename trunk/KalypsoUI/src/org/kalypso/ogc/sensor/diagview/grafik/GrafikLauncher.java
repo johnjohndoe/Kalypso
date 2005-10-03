@@ -169,7 +169,7 @@ public class GrafikLauncher
     {
       final URL context = ResourceUtilities.createURL( zmlFile );
 
-      final IStatus status = diag.loadObservation( context, context.toExternalForm(), false, "",
+      final IStatus status = diag.loadObservation( context, context.toExternalForm(), false, new String[0],
           NameUtils.DEFAULT_ITEM_NAME, ObsView.DEFAULT_ITEM_DATA, true );
 
       if( !status.isOK() )

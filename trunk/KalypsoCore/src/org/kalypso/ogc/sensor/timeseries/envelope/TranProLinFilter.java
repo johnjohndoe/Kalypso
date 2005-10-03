@@ -245,9 +245,9 @@ public class TranProLinFilter extends AbstractObservationFilter
         for( int t = 0; t < axesStatus.length; t++ )
         {
           final IAxis axis = axesStatus[t];
-          Number value = (Number)outerSource.getElement( sourceRow, axis );
-          value = new Integer( KalypsoStatusUtils.performArithmetic( value.intValue(), m_statusToMerge ) );
-          outerTarget.setElement( targetRow, value, axis );
+          final Number oldValue = (Number)outerSource.getElement( sourceRow, axis );
+          final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(), m_statusToMerge ) );
+          outerTarget.setElement( targetRow, newValue, axis );
         }
 
         //transform

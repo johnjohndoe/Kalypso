@@ -69,9 +69,6 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
    */
   public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd )
   {
-    System.out.println( "Removing selection: " + ArrayUtils.toString( featuresToRemove ) );
-    System.out.println( "Adding selection: " + ArrayUtils.toString( featuresToAdd ) );
-    
     final Set oldState = new HashSet( m_map.keySet() );
     
     for( int i = 0; i < featuresToRemove.length; i++ )
