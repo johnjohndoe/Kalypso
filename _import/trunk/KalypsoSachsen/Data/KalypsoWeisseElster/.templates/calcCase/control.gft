@@ -124,6 +124,24 @@ grabExcessHorizontalSpace="true"
 			<gridData grabExcessHorizontalSpace="true"/>
 		</checkbox>
 		</group>
+		
+		<!-- 
+		Umhuellende
+		-->
+		
+		<group text="Parameter Unhüllende" style="SWT.NONE">
+		<gridData horizontalAlignment="GridData.FILL" 
+		verticalAlignment="GridData.FILL"
+		grabExcessVerticalSpace="true"/>
+		<gridLayout numColumns = "2"/>
+			<label property="accuracyPrediction" style="SWT.NONE">
+				<gridData horizontalAlignment = "GridData.END"/>
+			</label>
+			<text property="accuracyPrediction" style="SWT.NONE">
+						<gridData widthHint="50" />
+			</text>
+		</group>
+		
 	</view>
 
 </featuretemplate>

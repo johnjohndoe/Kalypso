@@ -76,6 +76,21 @@
                       valueElse="${szenario_EchtDwdUrl1},${szenario_EchtDwdUrl2}" />
         </kalypso.multiequals>
 
+        <!-- links fuer pegelmapping -->
+        <kalypso.multiequals arg1="${scenarioId}" arg2="test">
+            <property name="pegelRemoteMessungLink" valueThen="remote6" valueElse="remote1" />
+            <property name="pegelRemoteSpurMLink" valueThen="remote7" valueElse="remote2" />
+            <property name="pegelRemoteSpurULink" valueThen="remote8" valueElse="remote3" />
+            <property name="pegelRemoteSpurOLink" valueThen="remote9" valueElse="remote4" />
+        </kalypso.multiequals>
+        <property name="pegelLocalMessungLink" value="local1" />
+        <property name="pegelLocalBerechnungLink" value="local2" />
+        <property name="pegelLocalSpurMLink" value="local3" />
+        <property name="pegelLocalSpurULink" value="local4" />
+        <property name="pegelLocalSpurOLink" value="local5" />
+        <property name="pegelMappingURL"
+                  value="${project.url}/.model/observationConf/PegelMapping.gml" />
+
         <kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
             <property name="stopsim"
                       featurepath="/"
@@ -121,18 +136,6 @@
 		-->
         <property name="filterT"
                   value="${requestT}&lt;filter&gt;&lt;intervallFilter amount=&quot;${intervalT.amount}&quot; calendarField=&quot;${intervalT.field}&quot; mode=&quot;intensity&quot;  defaultStatus=&quot;2&quot; defaultValue=&quot;5.0&quot;  xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
-        <!-- die Filter im Klartext: 
-
-			filterN="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" 
-			<filter>
-				<intervallFilter amount="15" calendarField="MINUTE" mode="sum" xmlns="filters.zml.kalypso.org"/>
-			</filter>" 
-			
-			filterQ="?&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;intensity&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
-			<filter>
-				<interpolationFilter amount="1" calendarField="HOUR_OF_DAY" defaultStatus="2" defaultValue="0.0" forceFill="true" xmlns="filters.zml.kalypso.org"/>
-			</filter>
-		 -->
 
         <echo message=" # " />
         <echo message=" # - Parameter-Informationen -" />
@@ -262,8 +265,21 @@
     </target>
 
     <target name="updatePegelMessung" depends="setProperties">
-        <echo message="aktualisiere Zufluesse (Messung)" />
-        <kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml"
+        <echo message="aktualisiere Pegel (Messung)" />
+
+        <kalypso.copyObservation gml="${pegelMappingURL}"
+                                 featurePath="mappingMember"
+                                 context="${calc.url}"
+                                 targetObservation="${pegelLocalMessungLink}"
+                                 forecastFrom="${startforecast}"
+                                 forecastTo="${stopsim}">
+            <source property="${pegelRemoteMessungLink}"
+                    from="${startsim}"
+                    to="${startforecast}"
+                    filter="${filterW}" />
+            <metadata name="Szenario" value="${scenarioId}" />
+        </kalypso.copyObservation>
+        <!--        <kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml"
                                  featurePath="mappingMember"
                                  context="${calc.url}"
                                  targetObservation="outObservationLink"
@@ -273,10 +289,11 @@
                     from="${startsim}"
                     to="${startforecast}"
                     filter="${filterW}" />
-            <!-- Vorhersage übernehmen -->
+			 Vorhersage übernehmen 
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
             <metadata name="Szenario" value="${scenarioId}" />
         </kalypso.copyObservation>
+  -->
     </target>
 
     <target name="updateObsT" depends="setProperties">
@@ -328,6 +345,22 @@
             <metadata name="Szenario" value="${scenarioId}" />
         </kalypso.dwdTask>
     </target>
+
+    <!--  
+    	Ergebnisablage:
+    	im Projekt ist das Ergebnis der Simulation gespeichert für die Pegel
+    	
+    	Anttask "KalypsoZmlEnvelope"
+    	ZML-result:  Ergebnis der Simulation
+    	ZML-measure: PegelMessung
+    	dateBegin:   
+    	dateEnd:
+    	dateCorrespond: Wert
+    	Möglichkeit:
+		Der Berechnungsdienst liefert schon die Umhüllende mit!
+		in nacontrol.gml wird ein dy/dx-Parameter für die umhüllende festgelegt.
+		
+    -->
 
     <target name="updateAll"
             depends="fetchRaster,updateForecastN,updateOmbrometer,updateMeasuredN,updateZuflussMessung,updateZuflussVorhersage,updatePegelMessung,updateObsT,updateForecastT,updateObsGebT"

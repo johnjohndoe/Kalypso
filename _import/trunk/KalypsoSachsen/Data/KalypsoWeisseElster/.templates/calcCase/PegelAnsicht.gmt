@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5563784.416946272" left="3649016.030632385" right="3826322.5855362304" srs="EPSG:31467" top="5713695.967658966"/>
+    <layers active="ID_1">
+        <layer name="MappingObservation" visible="true" featurePath="mappingMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/Rechenvarianten/pegell/.PegelMapping.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+            <ns2:style linktype="sld" style="MappingObservation" ns1:actuate="onRequest" ns1:href="project:/.styles/vorhersagepegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+
