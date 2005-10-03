@@ -99,6 +99,11 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public void addColumn( final TableViewColumn col ) throws SensorException
   {
+    // TODO: Marc: m_columns is often synchronized, but not always (e.g. at this point)
+    // make shure it is always synchronized, but leave out any code which
+    // may cause dead locks (like fire...() )
+    // REMARK: we still get ArrayIndexOutOfBounds Exceptions for m_columns
+    
     // columns should be in ascending order (since we always add them in that order)
     final Object[] cols = m_columns.toArray();
 

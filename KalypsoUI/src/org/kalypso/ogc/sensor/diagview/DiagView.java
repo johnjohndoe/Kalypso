@@ -41,7 +41,10 @@
 package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import org.kalypso.contribs.java.awt.ColorUtilities;
@@ -172,11 +175,13 @@ public class DiagView extends ObsView
    * Update the diagView with the new observation, perform best guess to know which curves will be added to it.
    * 
    * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
-   *      java.lang.String, java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
+   *      java.lang.String, java.lang.String[], org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
-  public void addObservation( final IObsProvider provider, final String tokenizedName, final String ignoreType,
+  public void addObservation( final IObsProvider provider, final String tokenizedName, final String ignoreTypes[],
       final ItemData data )
   {
+    final List ignoreTypeList = ignoreTypes == null ? new ArrayList() : Arrays.asList( ignoreTypes );
+    
     final IObservation obs = provider.getObservation();
     if( obs != null )
     {
@@ -194,7 +199,7 @@ public class DiagView extends ObsView
           continue;
 
         final String type = valueAxis[i].getType();
-        if( !type.equals( ignoreType ) )
+        if( !ignoreTypeList.contains( type ) )
         {
           final AxisMapping[] mappings = new AxisMapping[2];
 

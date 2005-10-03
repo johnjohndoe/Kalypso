@@ -156,8 +156,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     public void selectionChanged( final IFeatureSelection selection )
     {
-      System.out.println( "GlobalSelectionChanged to: " + selection );
-
       final Feature[] features = FeatureSelectionHelper.getFeatures( selection );
       final List globalFeatureList = new ArrayList( Arrays.asList( features ) );
 

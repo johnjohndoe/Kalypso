@@ -44,15 +44,12 @@ package org.kalypso.ogc.gml;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.IPoolListener;
-import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
@@ -75,51 +72,38 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author belger
  */
-public class RestoreSelectionListener implements IPoolListener
+public class RestoreSelectionHelper
 {
   private final IFeatureSelectionManager m_selectionManager;
 
-  /** Stored selection, if the workspace gets invalidated. */
+  /** Stored selection */
   private String[] m_oldSelectionState = null;
 
-  private CommandableWorkspace m_workspace;
+  private final PoolableObjectType m_key;
 
-  public RestoreSelectionListener( final PoolableObjectType key, final IFeatureSelectionManager selectionManager )
+  public RestoreSelectionHelper( final PoolableObjectType key, final IFeatureSelectionManager selectionManager )
+      throws CoreException
   {
+    m_key = key;
     m_selectionManager = selectionManager;
 
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-    pool.addPoolListener( this, key );
+    saveSelection( getWorkspace( m_key ) );
   }
 
-  public void dispose()
+  private CommandableWorkspace getWorkspace( final PoolableObjectType key ) throws CoreException
   {
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-    pool.removePoolListener( this );
+    final CommandableWorkspace workspace = (CommandableWorkspace)pool.getObject( key );
+    return workspace;
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
-   */
-  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
-  {
-    if( m_workspace != null )
-      saveSelection();
-
-    if( status.isOK() )
-      m_workspace = (CommandableWorkspace)newValue;
-    else
-      m_workspace = null;
-  }
-
-  public void restoreSelection()
+  public void restoreSelection() throws CoreException
   {
     // if we have nothing in store, just return
     if( m_oldSelectionState == null )
       return;
 
-    System.out.println( "Restoring selection to: " + ArrayUtils.toString( m_oldSelectionState ) );
+    final CommandableWorkspace workspace = getWorkspace( m_key );
 
     final List easyFeatures = new ArrayList( m_oldSelectionState.length );
     for( int i = 0; i < m_oldSelectionState.length; i++ )
@@ -127,31 +111,21 @@ public class RestoreSelectionListener implements IPoolListener
       final String fid = m_oldSelectionState[i];
       if( fid != null )
       {
-        final Feature feature = m_workspace.getFeature( fid );
+        final Feature feature = workspace.getFeature( fid );
         if( feature != null )
-          easyFeatures.add( new EasyFeatureWrapper( m_workspace, feature, null, null ) );
+          easyFeatures.add( new EasyFeatureWrapper( workspace, feature, null, null ) );
       }
     }
     final EasyFeatureWrapper[] easyArray = (EasyFeatureWrapper[])easyFeatures
         .toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
-    final Feature[] selectionToRemove = FeatureSelectionHelper.getFeatures(m_selectionManager);
+    final Feature[] selectionToRemove = FeatureSelectionHelper.getFeatures( m_selectionManager );
     m_selectionManager.changeSelection( selectionToRemove, easyArray );
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
-   */
-  public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
+  private void saveSelection( final CommandableWorkspace workspace )
   {
-    saveSelection();
-
-    m_workspace = null;
-  }
-
-  private void saveSelection()
-  {
-    final Feature[] features = FeatureSelectionHelper.getFeatures( m_selectionManager, m_workspace );
+    final Feature[] features = FeatureSelectionHelper.getFeatures( m_selectionManager, workspace );
 
     // do nothing, if no features where selected
     // this avoids concurrency problems if the same features are selected within another theme
@@ -170,7 +144,5 @@ public class RestoreSelectionListener implements IPoolListener
     }
     else
       m_oldSelectionState = null;
-
-    System.out.println( "Selection was saved to: " + ArrayUtils.toString( m_oldSelectionState ) );
   }
 }

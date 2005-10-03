@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -158,11 +159,12 @@ public class StringModifier implements IFeatureModifier
     else if( typeName.equals( "java.util.Date" ) )
       return DATE_FORMATTER.parse( text );
     else if( typeName.equals( "java.lang.Double" ) )
-      return new Double( NUMBER_FORMAT.parse( text ).doubleValue() );
+      // allways use NumberUtils to parse double, so to allow input of '.' or ','
+      return new Double( NumberUtils.parseDouble( text ) );
     else if( typeName.equals( "java.lang.Integer" ) )
       return new Integer( NUMBER_FORMAT.parse( text ).intValue() );
     else if( typeName.equals( "java.lang.Float" ) )
-      return new Float( NUMBER_FORMAT.parse( text ).floatValue() );
+      return new Float( NumberUtils.parseDouble( text ) );
     else if( typeName.equals( "java.lang.Long" ) )
       return new Long( NUMBER_FORMAT.parse( text ).longValue() );
     

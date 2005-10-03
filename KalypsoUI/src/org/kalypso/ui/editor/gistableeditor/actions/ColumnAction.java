@@ -69,7 +69,7 @@ public final class ColumnAction extends Action
     m_format = viewer.getColumnFormat( columnID );
 
     if( annotation != null )
-      setText( annotation.getLabel() + " (" + propertyName + ")" );
+      setText( annotation.getLabel() );
 
     m_commandTarget = commandTarget;
     m_viewer = viewer;

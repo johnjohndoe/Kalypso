@@ -244,6 +244,14 @@ public class WQTuppleModel extends AbstractTuppleModel
       if( m_srcStatusAxis != null )
         m_model.setElement( index, status, m_srcStatusAxis );
     }
+    else if( axis.equals( m_destStatusAxis ) )
+    {
+      // maybe just ignore??
+      // TODO: Marc: dieser Fall hat noch gefehlt. Bisher gabs einfach ne exception, wenn
+      // man versucht, die destStatusAxis zu beschreiben
+      // Was soll man tun?
+      // Dieser Fehler tauchte im tranPoLinFilter auf
+    }
     else
     {
       m_model.setElement( index, element, axis );

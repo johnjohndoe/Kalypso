@@ -228,28 +228,28 @@ public abstract class ObsView implements IObsViewEventProvider
    * Load an observation asynchronuously.
    */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
-      final String ignoreType, final String tokenizedName, final ItemData data )
+      final String[] ignoreTypes, final String tokenizedName, final ItemData data )
   {
-    return loadObservation( context, href, ignoreExceptions, ignoreType, tokenizedName, data, false );
+    return loadObservation( context, href, ignoreExceptions, ignoreTypes, tokenizedName, data, false );
   }
 
   /**
    * Loads an observation, if synchro is true, the load is performed synchronuously.
    */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
-      final String ignoreType, final String tokenizedName, final ItemData data, final boolean synchron )
+      final String[] ignoreTypes, final String tokenizedName, final ItemData data, final boolean synchron )
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
     final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
-    { this, data, ignoreType, tokenizedName }, synchron )
+    { this, data, ignoreTypes, tokenizedName }, synchron )
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
         final IObsProvider provider = new PooledObsProvider( key, null );
         try
         {
-          ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[3], (String)m_data[2],
+          ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[3], (String[])m_data[2],
               (ObsView.ItemData)m_data[1] );
         }
         finally
@@ -267,7 +267,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * given provider should be disposed and for each added item a copy of the given provider should be made.
    */
   protected abstract void addObservation( final IObsProvider provider, final String tokenizedName,
-      final String ignoreType, final ItemData data );
+      final String[] ignoreTypes, final ItemData data );
 
   public static Map mapItems( final ObsViewItem[] items )
   {
