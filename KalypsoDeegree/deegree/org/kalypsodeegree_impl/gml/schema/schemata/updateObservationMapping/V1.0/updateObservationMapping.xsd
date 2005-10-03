@@ -29,14 +29,32 @@
 	                <element name="point" type="gml:PointPropertyType" substitutionGroup="gml:_Geometry" minOccurs="0" maxOccurs="1"/>
 					<element name="lineString" type="gml:LineStringPropertyType" substitutionGroup="gml:_Geometry" minOccurs="0" maxOccurs="1"/>
 					<element name="polygon" type="gml:PolygonPropertyType" substitutionGroup="gml:_Geometry" minOccurs="0" maxOccurs="1"/>
+                    <!-- some fields for in observation -->
                     <element name="inObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
                     <element name="in1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <!-- some fields for out observation -->
                     <element name="outObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
                     <element name="out1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
                     <element name="out2ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
                     <element name="out3ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
                     <element name="out4ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
                     <element name="out5ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <!-- some fields for local observation -->
+                    <element name="local1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="local2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="local3" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="local4" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="local5" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <!-- some fields for remote observation -->
+                    <element name="remote1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="remote2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="remote3" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="remote4" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="remote5" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="remote6" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="remote7" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="remote8" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="remote9" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
                 </sequence>
             </extension>
         </complexContent>

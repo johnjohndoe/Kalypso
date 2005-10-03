@@ -49,7 +49,7 @@ public class MathUtils
    */
   public static double interpolate( long x1, long x2, double y1, double y2, long x )
   {
-    return y1 + ( y1 - y2 ) * ( x - x1 ) / ( x2 - x1 );
+    return y1 + ( y2 - y1 ) * ( ( (double)( x - x1 ) ) / ( (double)( x2 - x1 ) ) );
   }
 
 }

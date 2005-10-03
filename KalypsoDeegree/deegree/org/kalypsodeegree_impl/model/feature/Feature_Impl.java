@@ -191,7 +191,7 @@ public class Feature_Impl implements Feature
     final FeatureTypeProperty[] ftp = m_featureType.getProperties();
     for( int p = 0; p < ftp.length; p++ )
     {
-      if( GeometryUtilities.isGeometry(ftp[p])  )
+      if( GeometryUtilities.isGeometry( ftp[p] ) )
       {
         Object o = getProperty( p );
         if( o == null )
@@ -208,7 +208,7 @@ public class Feature_Impl implements Feature
     final FeatureTypeProperty[] vftp = m_featureType.getVirtuelFeatureTypeProperty();
     for( int p = 0; p < vftp.length; p++ )
     {
-      if( GeometryUtilities.isGeometry(vftp[p]))
+      if( GeometryUtilities.isGeometry( vftp[p] ) )
       {
         Object o = getVirtuelProperty( vftp[p].getName(), null );
         if( o == null )
@@ -261,7 +261,7 @@ public class Feature_Impl implements Feature
     {
       return;
     }
-    if( GeometryUtilities.isGeometry(ftp) )
+    if( GeometryUtilities.isGeometry( ftp ) )
       invalidEnvelope();
 
     int pos = m_featureType.getPropertyPosition( property.getName() );
@@ -402,5 +402,13 @@ public class Feature_Impl implements Feature
 
     for( int i = 0; i < ftps.length; i++ )
       FeatureFactory.accept( visitor, i, ftps[i], properties[i] );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
+   */
+  public void setProperty( String propertyName, Object value )
+  {
+    setProperty( FeatureFactory.createFeatureProperty( propertyName, value ) );
   }
 }
