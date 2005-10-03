@@ -376,4 +376,16 @@
     <target name="update" depends="updateAll" description="Aktualisiert eine Rechenvariante">
         <echo message="aktualisiere Zeitreihen: ${calc.dir}" />
     </target>
+    
+    
+    <target name="exportVorhersagen" depends="setProperties" description="Exportiert die Prognosen nach PSICompact">
+        <echo message="Vorhersagezeitreihen werden nach PSICompact geschrieben..."/>
+ 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
+
+     	<!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
+     	<!-- TODO: Filter für Umhüllende konfigurieren -->
+     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="${pegelLocalSpurMLink}" remoteobs="${pegelRemoteSpurMLink}" runasync="false"/>
+     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false"/>
+     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="${pegelLocalSpurOLink}" remoteobs="${pegelRemoteSpurOLink}" runasync="false"/>
+     </target>
 </project>

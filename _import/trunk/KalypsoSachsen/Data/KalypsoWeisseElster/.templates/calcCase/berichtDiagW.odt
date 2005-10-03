@@ -12,19 +12,50 @@
    	red;green;blue[;alpha]
    	
    	jeweils in [0-255]
+   	
+   	   		<arg name="tokens">
+			<arg name="title" value="name"/>
+			<arg name="href1" value="local1"/> Pegel Messung
+			<arg name="href2" value="local2"/> Pegel Berechnung
+			<arg name="href3" value="local3"/> SpurM
+			<arg name="href4" value="local4"/> SpurU
+			<arg name="href5" value="local5"/> SpurO		
+		</arg>
+   	
    	-->
+	<!-- Wasserstand_gemessen -->
+   	<observation linktype="zml" xlink:href="%href1%">
+		<curve id="C1" name="Wasserstand - Beobachtet" color="0;0;255" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
 
 	<!-- Wasserstand_gerechnet -->
-   	<observation linktype="zml" xlink:href="%href1%">
+   	<observation linktype="zml" xlink:href="%href2%">
 		<curve id="C2" name="Wasserstand - Rechnung" color="255;0;0" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="W" diagram-axis="W" />
 	   	</curve>
 	</observation>
 
-	<!-- Wasserstand_gemessen -->
-   	<observation linktype="zml" xlink:href="%href2%">
-		<curve id="C1" name="Wasserstand - Beobachtet" color="0;255;128" >
+	<!-- Wasserstand SpurM -->
+   	<observation linktype="zml" xlink:href="%href3%">
+		<curve id="C3" name="Wasserstand - Prognosespur mittlerer Wert" color="0;255;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
+	<!-- Wasserstand SpurU -->
+   	<observation linktype="zml" xlink:href="%href4%">
+		<curve id="C4" name="Wasserstand - Prognosespur oberer Wert" color="0;255;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="W" diagram-axis="W" />
+	   	</curve>
+	</observation>
+	<!-- Wasserstand SpurO -->
+   	<observation linktype="zml" xlink:href="%href5%">
+		<curve id="C5" name="Wasserstand - Prognosespur unterer Wert" color="0;255;0" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="W" diagram-axis="W" />
 	   	</curve>

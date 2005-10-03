@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5567462.536958797" left="3641341.0970040993" right="3818406.641909966" srs="EPSG:31467" top="5712602.25546"/>
+    <extent bottom="5565948.664264367" left="3708395.3515265253" right="3752509.605798365" srs="EPSG:31467" top="5602072.412102061"/>
     <layers active="ID_1">
         <layer name="MappingObservation" visible="true" featurePath="mappingMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/.model/observationConf/PegelMapping.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="MappingObservation" ns1:actuate="onRequest" ns1:href="project:/.styles/vorhersagepegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
