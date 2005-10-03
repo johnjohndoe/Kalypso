@@ -42,8 +42,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public class IDManager
