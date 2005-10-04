@@ -381,7 +381,8 @@ public class GrafikLauncher
 
     final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
         "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
-
+    
+    int cc = 1;
     final TypeObservation[] tobs = (TypeObservation[])odt.getObservation().toArray( new TypeObservation[0] );
     for( int i = 0; i < tobs.length; i++ )
     {
@@ -434,7 +435,6 @@ public class GrafikLauncher
 
       final List displayedAxes = new ArrayList( numberAxes.length );
 
-      int cc = 1;
       final List curves = tobs[i].getCurve();
       for( final Iterator itc = curves.iterator(); itc.hasNext(); )
       {
