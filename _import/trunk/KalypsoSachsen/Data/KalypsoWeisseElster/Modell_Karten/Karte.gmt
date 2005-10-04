@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5565513.052730593" left="5228741.257772118" right="5384866.152142603" top="5717000.574000965"/>
-    <layers active="ID_1">
+    <extent bottom="5567090.633943635" left="3654479.2523035794" right="3803147.0825491813" srs="EPSG:31467" top="5717026.961034336"/>
+    <layers>
         <layer name="Knoten" visible="true" featurePath="NodeCollectionMember/nodeMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="../modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Node" ns1:actuate="onRequest" ns1:href="../.styles/Node.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>

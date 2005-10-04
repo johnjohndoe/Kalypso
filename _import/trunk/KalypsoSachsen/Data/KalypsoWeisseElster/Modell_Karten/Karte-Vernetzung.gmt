@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5561992.504343972" left="4389690.088729193" right="4645661.41109723" top="5712746.504175283"/>
+    <extent bottom="5630333.057986744" left="3735613.87255809" right="3738993.6167569337" srs="EPSG:31467" top="5634967.463605111"/>
     <layers active="ID_4">
         <layer name="Netz-Knoten" visible="true" featurePath="NodeCollectionMember/nodeMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="../modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Node" ns1:actuate="onRequest" ns1:href="project:/.styles/net_node.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
