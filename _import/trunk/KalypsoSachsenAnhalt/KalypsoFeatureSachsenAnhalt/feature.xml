@@ -29,6 +29,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.junit"/>
+      <import plugin="org.apache.ant"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.compare"/>
@@ -130,12 +131,6 @@
          version="1.0.0"/>
 
    <plugin
-         id="org.kalypso.services.calculation.local"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.services.core.client"
          download-size="0"
          install-size="0"
@@ -148,12 +143,6 @@
          version="1.0.0"/>
 
    <plugin
-         id="org.kalypso.servies.metadoc.client"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.simulation.ui"
          download-size="0"
          install-size="0"
@@ -161,12 +150,6 @@
 
    <plugin
          id="org.kalypso.ui"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.saale"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
@@ -185,6 +168,12 @@
 
    <plugin
          id="org.kalypso.ui.observationimport"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.services.metadoc.client"
          download-size="0"
          install-size="0"
          version="1.0.0"/>

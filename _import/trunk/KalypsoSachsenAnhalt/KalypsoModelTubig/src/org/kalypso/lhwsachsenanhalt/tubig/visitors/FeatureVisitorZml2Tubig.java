@@ -66,6 +66,8 @@ public class FeatureVisitorZml2Tubig implements FeatureVisitor
         linkProperty, step, ext, dtStartForecast, metaMap, sFeatTyp );
     features.accept( speicherVisitor );
 
+    // TODO bessere Fehlermeldung? Wenn z.B. keine WQ-Tabelle da ist, kommt diese Fehlermeldung. Man
+    // weiss aber nicht woran das liegt... Nicht so viel schlucken.
     if( speicherVisitor.hasException() )
       throw new TubigException( "Fehler beim Schreiben der Zeitreihen ins Tubig-Format", speicherVisitor
           .getExceptions()[0] );
