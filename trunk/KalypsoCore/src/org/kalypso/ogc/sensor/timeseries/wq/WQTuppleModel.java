@@ -244,7 +244,8 @@ public class WQTuppleModel extends AbstractTuppleModel
       if( m_srcStatusAxis != null )
         m_model.setElement( index, status, m_srcStatusAxis );
     }
-    else if( axis.equals( m_destStatusAxis ) )
+    // TODO: besser wäre eigentlich equals, aber das klappt bei status achsen nicht
+    else if( axis == m_destStatusAxis )
     {
       // maybe just ignore??
       // TODO: Marc: dieser Fall hat noch gefehlt. Bisher gabs einfach ne exception, wenn
