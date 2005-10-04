@@ -33,6 +33,11 @@
         <arg name="zmlTableShow" value="all"/>
         
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - Abgabe#linkColumn=Abgabe#color=0x0000ff"/>
+
+        <arg name="ignoreType1" value="W"/>
+        <arg name="ignoreType2" value="Q"/>
+        <arg name="ignoreLabel1" value="Abfluss"/>
+        <arg name="ignoreLabel2" value="Wasserstand"/>
     </page>
 
 	<!-- Kontrolle W-Eingabepegel -->
@@ -112,8 +117,8 @@
         <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
         <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
-        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
-        <arg name="timeserie6" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie5" value="nameString=untere Umhüllende#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie6" value="nameString=obere Umhüllende#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
         
        	<arg name="buttonText" value="Berechnung durchführen"/>
        	<arg name="buttonLaunch" value="runCalculation"/>
@@ -169,8 +174,8 @@
         <arg name="timeserie1" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie2" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
         <arg name="timeserie3" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
-        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
-        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie4" value="nameString=untere Umhüllende#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie5" value="nameString=obere Umhüllende#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
 
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
@@ -195,8 +200,8 @@
         <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
         <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
         <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
-        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
-        <arg name="timeserie6" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie5" value="nameString=untere Umhüllende#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
+        <arg name="timeserie6" value="nameString=obere Umhüllende#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
 		
         <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
