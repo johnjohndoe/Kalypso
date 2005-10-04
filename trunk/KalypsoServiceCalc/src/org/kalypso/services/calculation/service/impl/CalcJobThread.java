@@ -107,6 +107,7 @@ final class CalcJobThread extends Thread
       QueuedCalcJobServiceWrapper.LOGGER.info( "Calling run for ID: " + jobID );
 
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig.getTempDir() );
+      tmpdir.deleteOnExit();
       m_resultPacker.addFile( tmpdir );
 
       m_job.run( tmpdir, m_inputData, m_resultPacker, m_jobBean );
