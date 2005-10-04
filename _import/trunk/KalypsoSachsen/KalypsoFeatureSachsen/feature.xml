@@ -25,6 +25,7 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.junit"/>
+      <import plugin="org.apache.ant"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.compare"/>
@@ -32,7 +33,6 @@
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ant.core"/>
       <import plugin="org.eclipse.help"/>
-      <import plugin="org.kalypso.services.calculation.local"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.externaltools"/>
@@ -74,12 +74,6 @@
 
    <plugin
          id="org.kalypso.core"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.debug"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
@@ -127,24 +121,6 @@
          version="1.0.0"/>
 
    <plugin
-         id="org.kalypso.model.spree"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.NACalcJob"
-         download-size="0"
-         install-size="0"
-         version="1.0.1"/>
-
-   <plugin
-         id="org.kalypso.optimize"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.product"
          download-size="0"
          install-size="0"
@@ -164,12 +140,6 @@
 
    <plugin
          id="org.kalypso.services.user.client"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.servies.metadoc.client"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
@@ -205,7 +175,7 @@
          version="0.0.1"/>
 
    <plugin
-         id="org.kalypso.services.calculation.local"
+         id="org.kalypso.services.metadoc.client"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
