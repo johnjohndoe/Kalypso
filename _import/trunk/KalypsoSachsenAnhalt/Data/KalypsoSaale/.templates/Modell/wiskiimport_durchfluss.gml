@@ -673,20 +673,6 @@
     </Wiski>
   </WiskiMember>
   <WiskiMember>
-    <Wiski fid="Pegel-579999">
-      <name>ÜL zur Rappbode</name>
-      <lokal>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579999.zml"/>
-      </lokal>
-      <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Durchfluss.579999"/>
-      </wiski_vergangenheit>
-      <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Durchfluss.579999"/>
-      </wiski_simulation_vergangenheit>
-    </Wiski>
-  </WiskiMember>
-  <WiskiMember>
     <Wiski fid="Pegel-579013">
       <name>Rappbode-TS, TWA</name>
       <lokal>
