@@ -273,7 +273,7 @@ public class WiskiTimeserie implements IObservation
           + "Werte dürfen nicht geschrieben werden." );
 
     // create a fake observation for filter purposes
-    final IObservation obs = new SimpleObservation();
+    final IObservation obs = new SimpleObservation( values.getAxisList() );
     obs.setValues( values );
 
     // filter values in order to comply with the wiski specification

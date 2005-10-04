@@ -9,12 +9,10 @@
       <library name="kalypsoModelTubig.jar"/>
    </runtime>
    <requires>
-      <import plugin="org.kalypso.core"/>
       <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.commons"/>
       <import plugin="org.kalypso.deegree"/>
-      <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="org.kalypso.services.calculation.local"/>
       <import plugin="org.kalypso.ui"/>
    </requires>
    <extension

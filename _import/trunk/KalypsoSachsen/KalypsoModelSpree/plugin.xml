@@ -9,6 +9,9 @@
       <library name="kalypsoModelSpree.jar"/>
    </runtime>
    <requires>
+      <import plugin="org.kalypso.commons"/>
+      <import plugin="org.kalypso.core"/>
+      <import plugin="org.kalypso.jwsdp"/>
       <import plugin="org.kalypso.services.calculation.local"/>
    </requires>
    <extension

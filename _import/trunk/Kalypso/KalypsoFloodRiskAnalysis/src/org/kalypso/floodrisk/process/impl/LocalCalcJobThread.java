@@ -121,6 +121,7 @@ public class LocalCalcJobThread extends Thread
       System.out.println( "Calling run for ID: " + jobID );
 
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + jobID + "-", ServiceConfig.getTempDir() );
+      tmpdir.deleteOnExit();
       m_resultEater.addFile( tmpdir );
 
       m_job.run( tmpdir, m_inputProvider, m_resultEater, m_jobBean );

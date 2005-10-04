@@ -70,8 +70,8 @@ public class RobotronRightsProvider implements IUserRightsProvider
    * The properties should contain following information:
    * <p>
    * <ul>
-   * <li>LDAP_URL: the url of the ldap service. Example:
-   * "LDAP_URL=ldap://193.23.163.115:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
+   * <li>LDAP_CONNECTION: the url of the ldap service. Example:
+   * "LDAP_CONNECTION=ldap://193.23.163.115:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
    * <li>LDAP_PRINCIPAL: the principal of the ldap. Example:
    * "LDAP_PRINCIPAL=cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
    * <li>LDAP_CRENDENTIALS: the password to use along the principal. Example: "LDAP_CREDENTIALS=geheim"
@@ -80,7 +80,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
    */
   public void init( Properties props ) throws UserRightsException
   {
-    m_url = props.getProperty( "LDAP_URL" );
+    m_url = props.getProperty( "LDAP_CONNECTION" );
     m_principal = props.getProperty( "LDAP_PRINCIPAL" );
     m_crendentials = props.getProperty( "LDAP_CREDENTIALS" );
   }

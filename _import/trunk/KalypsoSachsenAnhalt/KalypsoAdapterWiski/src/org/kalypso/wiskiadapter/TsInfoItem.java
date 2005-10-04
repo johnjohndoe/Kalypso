@@ -243,7 +243,7 @@ public class TsInfoItem implements IRepositoryItem
 
   int getWiskiDistValue()
   {
-    final String strWiskiValue = m_map.getProperty( "tsinfo_distvalue" );
+    final String strWiskiValue = m_map.getProperty( "tsinfo_distcount" );
     if( strWiskiValue == null )
       throw new IllegalStateException(
           "Wiski does not deliver which amount of the given time-unit to use (Property: tsinfo_distvalue)" );

@@ -13,7 +13,6 @@
    <requires>
       <import plugin="org.kalypso.core"/>
       <import plugin="org.kalypso.jwsdp"/>
-      <import plugin="org.kalypso.services.calculation.local"/>
       <import plugin="org.kalypso.ui"/>
       <import plugin="org.kalypso.dwd"/>
    </requires>
