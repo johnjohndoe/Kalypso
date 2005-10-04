@@ -61,15 +61,20 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.contribs.java.net.ClassUrlCatalog;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.ogc.gml.typehandler.DiagramTypeHandler;
+import org.kalypso.ogc.gml.typehandler.GM_ObjectTypeHandler;
+import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.services.calculation.service.CalcJobClientBean;
 import org.kalypso.services.calculation.service.CalcJobInfoBean;
 import org.kalypso.services.calculation.service.CalcJobServerBean;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.services.calculation.service.ICalculationService;
 import org.kalypso.services.common.ServiceConfig;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Exposes the {@link org.kalypso.services.calculation.service.impl.QueuedCalcJobService}suitable as web-service.
@@ -103,8 +108,37 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     try
     {
       // TODO sollten dies nicht die einzelnen calservices selber tun?
-      MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new ObservationLinkHandler() );
-      MarshallingTypeRegistrySingleton.getTypeRegistry().registerTypeHandler( new DiagramTypeHandler() );
+      final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      registry.registerTypeHandler( new ObservationLinkHandler() );
+      registry.registerTypeHandler( new DiagramTypeHandler() );
+
+      // TODO TODO TODO: refaktor this shit!
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PointPropertyType", GeometryUtilities.getPointClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPointPropertyType", GeometryUtilities
+          .getMultiPointClass() ) );
+
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "LineStringPropertyType", GeometryUtilities
+          .getLineStringClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiLineStringPropertyType", GeometryUtilities
+          .getMultiLineStringClass() ) );
+
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "PolygonPropertyType", GeometryUtilities
+          .getPolygonClass() ) );
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "MultiPolygonPropertyType", GeometryUtilities
+          .getMultiPolygonClass() ) );
+
+      registry.registerTypeHandler( new GM_ObjectTypeHandler( "GeometryPropertyType", GeometryUtilities
+          .getUndefinedGeometryClass() ) );
+
+      final String[] wvqAxis = new String[]
+      { TimeserieConstants.TYPE_NORMNULL, TimeserieConstants.TYPE_VOLUME, TimeserieConstants.TYPE_RUNOFF };
+      final String[] taAxis = new String[]
+      { TimeserieConstants.TYPE_HOURS, TimeserieConstants.TYPE_NORM, };
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", wvqAxis, "WVQ" );
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", taAxis, "TA" );
+      registry.registerTypeHandler( wvqInline );
+      registry.registerTypeHandler( taInline );
+
     }
     catch( final Exception e )
     {
@@ -124,7 +158,8 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
     {
       final URL confLocation = ServiceConfig.getConfLocation();
       final URL myConfUrl = UrlResolverSingleton.resolveUrl( confLocation, ClassUtilities
-          .getOnlyClassName( ICalculationService.class ) + "/" );
+          .getOnlyClassName( ICalculationService.class )
+          + "/" );
 
       // Konfiguration der Modelltypen
       final URL typeUrl = UrlResolverSingleton.resolveUrl( myConfUrl, "modelltypen.properties" );

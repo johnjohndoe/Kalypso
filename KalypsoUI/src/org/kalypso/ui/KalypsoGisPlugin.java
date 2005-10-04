@@ -727,6 +727,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     final ITypeRegistry registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final ITypeRegistry guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+    // TODO TODO TODO: refaktor this shit!
 
     try
     {
