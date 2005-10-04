@@ -72,8 +72,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolver;

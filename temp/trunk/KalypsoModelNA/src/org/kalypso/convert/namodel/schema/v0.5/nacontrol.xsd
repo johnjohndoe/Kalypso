@@ -400,8 +400,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>optimieren</label>
-								<tooltip>schaltet automatische Optimierung ein</tooltip>
-								<description>Schalter fuer automatische Optimierung bei der Berechnung</description>
+								<tooltip>schaltet automatische Optimierung ein (Berechnung kann einige Minuten dauern)</tooltip>
+								<description>schaltet automatische Optimierung ein (Berechnung kann einige Minuten dauern)</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>optimizing</label>
