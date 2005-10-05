@@ -29,7 +29,7 @@ public interface IProfil extends IPlainProfil
 
   public void setValueFor(IProfilDevider devider,Object property,Object value);
   
-  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final double value) throws ProfilBuildingException;
+  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value) throws ProfilBuildingException;
 
   public void setValuesFor( final List<IProfilPoint> pointList,
       final POINT_PROPERTY pointProperty, final double value ) throws ProfilDataException;

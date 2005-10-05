@@ -18,7 +18,7 @@ public abstract class AbstractBuilding implements IProfilBuilding
 {
   protected final BUILDING_TYP m_buildingTyp;
 
-  protected final Map<BUILDING_PROPERTY, Double> m_buildingValues = new LinkedHashMap<BUILDING_PROPERTY, Double>();
+  protected final Map<BUILDING_PROPERTY, Object> m_buildingValues = new LinkedHashMap<BUILDING_PROPERTY, Object>();
 
   public AbstractBuilding( final BUILDING_TYP buildingTyp,
       final Collection<BUILDING_PROPERTY> properties )
@@ -40,33 +40,31 @@ public abstract class AbstractBuilding implements IProfilBuilding
   /**
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY,
    *      TYPE)
+   *      return maybe Null
    */
-  public double getValue( BUILDING_PROPERTY buildingValue ) throws ProfilBuildingException
+  public Object getValue( BUILDING_PROPERTY buildingValue ) throws ProfilBuildingException
   {
     if( m_buildingValues.containsKey( buildingValue ) )
       return m_buildingValues.get( buildingValue );
-    throw new ProfilBuildingException( "Eigenschaft existiert nicht" );
+    throw new ProfilBuildingException( "Die Eigenschaft "+buildingValue.toString()+" wird von diesem Bauwerk nicht unterstützt." );
   }
 
   /**
-   * @return
+   * @return oldvalue maybe Null
    * @see com.bce.eind.core.profilinterface.IProfilBuilding#setValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY,
-   *      double)
+   *      Object)
    */
-  public boolean setValue( final BUILDING_PROPERTY property, final double value )
+  public Object setValue( final BUILDING_PROPERTY property, final Object value )
       throws ProfilBuildingException
   {
     if( !m_buildingValues.containsKey( property ) )
-      throw new ProfilBuildingException( "ungültige Eigenschaft für dieses Gebäude" );
+      throw new ProfilBuildingException(  "Die Eigenschaft "+property.toString()+" wird von diesem Bauwerk nicht unterstützt.");
 
-    final Double oldValue = m_buildingValues.get( property );
-    if( oldValue.compareTo( value ) != 0 )
-    {
-      m_buildingValues.put( property, value );
-      return true;
-    }
+    final Object oldValue = m_buildingValues.get( property );
 
-    return false;
+    m_buildingValues.put( property, value );
+
+    return oldValue;
   }
 
   /**

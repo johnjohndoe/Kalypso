@@ -90,10 +90,10 @@ public class ProfilAdapter implements IProfilListener
    * Does nothing.
    * 
    * @see com.bce.eind.core.profil.IProfilListener#onBuildingDataChanged(com.bce.eind.core.profil.IProfilBuilding,
-   *      com.bce.eind.core.profil.BUILDING_PROPERTY, double)
+   *      com.bce.eind.core.profil.BUILDING_PROPERTY, Object)
    */
   public void onBuildingDataChanged( final IProfilBuilding building,
-      final BUILDING_PROPERTY buildingProperty, double value )
+      final BUILDING_PROPERTY buildingProperty, Object value )
   {
   }
 

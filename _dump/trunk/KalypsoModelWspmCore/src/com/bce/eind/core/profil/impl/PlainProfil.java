@@ -438,7 +438,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
   }
 
-  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final double value ) throws ProfilBuildingException
+  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value ) throws ProfilBuildingException
   {
     ((AbstractBuilding)building).setValue(property,value);
     

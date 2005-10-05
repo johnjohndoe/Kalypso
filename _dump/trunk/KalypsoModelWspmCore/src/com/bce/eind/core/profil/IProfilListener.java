@@ -23,7 +23,7 @@ public interface IProfilListener
   
   public void onBuildingChanged();
 
-  public void onBuildingDataChanged( final IProfilBuilding building, final BUILDING_PROPERTY buildingProperty, final double value );
+  public void onBuildingDataChanged( final IProfilBuilding building, final BUILDING_PROPERTY buildingProperty, final Object value );
   
   public void onMetaDataChanged( final Object key, final Object value );
   

@@ -6,7 +6,6 @@ package com.bce.eind.core.profil.impl.buildings.building;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
@@ -59,37 +58,7 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
     return m_pointProperties;
   }
 
-  /**
-   * @see com.bce.eind.core.profilinterface.IProfilBuilding#getValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY,
-   *      TYPE)
-   */
-  public double getValue( BUILDING_PROPERTY buildingValue ) throws ProfilBuildingException
-  {
-    if( m_buildingValues.containsKey( buildingValue ) )
-      return m_buildingValues.get( buildingValue );
-    throw new ProfilBuildingException( "Eigenschaft existiert nicht" );
-  }
-
-  /**
-   * @return
-   * @see com.bce.eind.core.profilinterface.IProfilBuilding#setValue(com.bce.eind.core.profilinterface.IProfil.BUILDING_PROPERTY,
-   *      double)
-   */
-  public boolean setValue( final BUILDING_PROPERTY property, final double value )
-      throws ProfilBuildingException
-  {
-    if( !m_buildingValues.containsKey( property ) )
-      throw new ProfilBuildingException( "ungültige Eigenschaft für dieses Gebäude" );
-
-    final Double oldValue = m_buildingValues.get( property );
-    if( oldValue.compareTo( value ) != 0 )
-    {
-      m_buildingValues.put( property, value );
-      return true;
-    }
-
-    return false;
-  }
+   
 
   /**
    * @see com.bce.eind.core.profil.IProfilBuilding#hasProperty(com.bce.eind.core.profil.BUILDING_PROPERTY)

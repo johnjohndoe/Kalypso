@@ -17,6 +17,10 @@ public interface IPlainProfil
   {
     ks, kst
   };
+  public static enum WEHR_TYP
+  {
+    rundkronig,breitkronig,scharfkantig,Beiwert
+  };
   public static enum PROFIL_PROPERTY
   {
     KOMMENTAR, MEHRFELDBRUECKE, METASTRINGS, STATION,RAUHEIT_TYP, STATUS, VERZWEIGUNGSKENNUNG, WASSERSPIEGEL
@@ -182,7 +186,7 @@ public interface IPlainProfil
  
   public void setValueFor(IProfilDevider devider,Object property,Object value);
   
-  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final double value) throws ProfilBuildingException;
+  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value) throws ProfilBuildingException;
   
   
   public void setValues( final PointChange[] changes ) throws ProfilDataException;

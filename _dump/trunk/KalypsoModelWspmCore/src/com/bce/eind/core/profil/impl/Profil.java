@@ -100,7 +100,7 @@ public class Profil implements IProfil, IProfilConstants
    */
 
   public void fireBuildingDataChanged( final IProfilBuilding building,
-      final BUILDING_PROPERTY buildingProperty, final double value )
+      final BUILDING_PROPERTY buildingProperty, final Object value )
   {
     final IProfilListener[] listeners = m_listeners
         .toArray( new IProfilListener[m_listeners.size()] );
@@ -414,7 +414,7 @@ public class Profil implements IProfil, IProfilConstants
 
   }
 
-  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property, final double value ) throws ProfilBuildingException
+  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property, final Object value ) throws ProfilBuildingException
   {
     m_profil.setValueFor(building,property,value );
     fireBuildingDataChanged(  building,property,value ); 
