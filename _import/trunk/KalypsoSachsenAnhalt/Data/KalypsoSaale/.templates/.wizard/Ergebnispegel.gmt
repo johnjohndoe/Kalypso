@@ -3,7 +3,7 @@
     <extent bottom="5636221.996820227" left="5187062.106501981" right="5321983.979532613" srs="EPSG:31469" top="5783648.823936625"/>
     <layers active="ID_1">
         <layer name="Pegel" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-            <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/eingabepegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+            <ns2:style linktype="sld" style="Ergebnispegel" ns1:actuate="onRequest" ns1:href="project:/.styles/ergebnispegel.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
         </layer>
         <layer name="Gewässerflächen" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns3:actuate="onRequest" ns3:href="project:/.shape/Gewässerflächen#EPSG:31468" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
             <ns4:style linktype="sld" style="seen" ns3:actuate="onRequest" ns3:href="project:/.styles/seen.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>

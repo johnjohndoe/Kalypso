@@ -979,7 +979,7 @@
 		<arg name="rightSash" value="26"/>
 		<!-- 
         Karte -->
-		<arg name="mapTemplate" value=".templates/.wizard/Berichtspegel.gmt"/>
+		<arg name="mapTemplate" value=".templates/.wizard/Ergebnispegel.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<!--

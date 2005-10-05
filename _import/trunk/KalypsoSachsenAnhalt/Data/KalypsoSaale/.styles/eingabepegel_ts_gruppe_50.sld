@@ -11,10 +11,16 @@
         <Rule>
           <Name>Eingabepegel</Name>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+            <ogc:And>
+            <ogc:PropertyIsEqualTo>
+              <ogc:PropertyName>QDAT</ogc:PropertyName>
+              <ogc:Literal>1</ogc:Literal>
+            </ogc:PropertyIsEqualTo>
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>TS_Steuerung_Gruppe</ogc:PropertyName>
               <ogc:Literal>50</ogc:Literal>
             </ogc:PropertyIsEqualTo>
+            </ogc:And>
           </ogc:Filter>
           <MinScaleDenominator>0.0</MinScaleDenominator>
           <MaxScaleDenominator>9.0E99</MaxScaleDenominator>

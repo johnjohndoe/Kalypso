@@ -18,7 +18,7 @@
             </ogc:PropertyIsEqualTo>
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>TS_Steuerung_Gruppe</ogc:PropertyName>
-              <ogc:Literal>70</ogc:Literal>
+              <ogc:Literal>0</ogc:Literal>
             </ogc:PropertyIsEqualTo>
             </ogc:And>
           </ogc:Filter>

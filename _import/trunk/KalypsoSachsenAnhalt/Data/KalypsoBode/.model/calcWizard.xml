@@ -433,12 +433,14 @@
 		</arg>
 	</page>
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">
+	<!-- Pegel -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung - Pegel" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Pegel"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html"/>
 		<arg name="prevPage" value="Berechnung_bat3"/>
+		<arg name="nextPage" value="Berichtsablage_Speicher"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -511,7 +513,7 @@
 				<arg name="label" value="Gewässer"/>
 				<arg name="content" value="metadata:Gewässer"/>
 			</arg>
-			<arg name="axisType" value="Q"/>
+			<arg name="axisType" value="W"/>
 			<arg name="timeUnit" value="HOUR"/>
 			<arg name="timeStep" value="6"/>
 			<arg name="obs1">
@@ -681,7 +683,139 @@
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Trautenstein.zml"/>
 			</arg>
 		</arg>
-		<!-- Speicher-Exporte noch konfigurieren ( ggf. zweite Export-Seite für Speicher-Berichte) -->
+	</page>
+	<!-- Speicher -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!-- 
+		HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berichtsablage_Speicher"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Speicher.html"/>
+		<arg name="prevPage" value="Berichtsablage_Pegel"/>
+		<!--
+		Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="26"/>
+		<!-- 
+		Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Speicher_mit_ÜL.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
+		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<!-- orange (255,128,64) -->
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+		Tabelle -->
+		<!-- 
+		Exporte  -->
+		<!-- Name of the feature-property, used for display/selection purposes -->
+		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
+		<!-- für alle Speicher V-Diag, W-Diag,  D-V / W / Z / A-Tabelle-->
+		<arg name="exporter1">
+			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="name" value="Speicher"/>
+			<arg name="nameproperty" value="Name"/>
+			<arg name="width" value="800"/>
+			<arg name="height" value="600"/>
+			<arg name="imageFormat" value="png"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Ganglinie_gemessen"/>
+				<arg name="href2" value="Ganglinie_gerechnet"/>
+				<arg name="href3" value="Abgabe"/>
+				<arg name="href4" value="Zufluss_gerechnet"/>
+			</arg>
+			<arg name="templateDiagQ">
+				<arg name="label" value="Volumengrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherV.odt"/>
+			</arg>
+			<arg name="templateDiagW">
+				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherW.odt"/>
+			</arg>
+			<arg name="templateTable">
+				<arg name="label" value="Übersichtstabelle (V / W / Z / A)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicher.ott"/>
+			</arg>
+		</arg>
+		<!-- Scheitelwert-Tabellen V / W -->
+		<arg name="exporter3">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Speicherübersicht Volumen (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteSpeicherV.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Speicher"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="V"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="HWR Kalte Bode"/>
+				<arg name="href" value="./Zeitreihen/Speicher/Vorhersage/Kalte_Bode.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="TS Rappbode"/>
+				<arg name="href" value="./Zeitreihen/Speicher/Vorhersage/Rappbode.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="TS Wendefurth"/>
+				<arg name="href" value="./Zeitreihen/Speicher/Vorhersage/Wendefurth.zml"/>
+			</arg>
+		</arg>
+		<arg name="exporter4">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Speicherübersicht Wasserstand (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteSpeicherW.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Speicher"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="W"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="HWR Kalte Bode"/>
+				<arg name="href" value="./Zeitreihen/Speicher/Vorhersage/Kalte_Bode.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="TS Rappbode"/>
+				<arg name="href" value="./Zeitreihen/Speicher/Vorhersage/Rappbode.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="TS Wendefurth"/>
+				<arg name="href" value="./Zeitreihen/Speicher/Vorhersage/Wendefurth.zml"/>
+			</arg>
+		</arg>
+	</page>
 <!--		
 		<arg name="exporter2">
 		<arg name="id" value="simpleTemplateExporter"/>
@@ -695,5 +829,4 @@
 		</arg>
 	</arg>
 -->
-	</page>
 </calcwizard>
