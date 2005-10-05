@@ -313,7 +313,7 @@
          </action>
          <action
                label="%Extension.EditorActions.GisMapEditor.fullExtend.label"
-               icon="icons/full/elcl16/kde_window_fullscreen.gif"
+               icon="icons/map/maximize2.gif"
                style="push"
                tooltip="%Extension.EditorActions.GisMapEditor.fullExtend.tooltip"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
@@ -338,7 +338,7 @@
                id="org.kalypso.ui.editor.mapeditor.action.SelectFeatureAction"
                toolbarPath="karte/tools"
                class="org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate"
-               icon="icons/sample.gif"
+               icon="icons/map/select_feature.gif"
                label="%Extension.EditorActions.GisMapEditor.featureSelection.label"
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                tooltip="%Extension.EditorActions.GisMapEditor.featureSelection.tooltip">
