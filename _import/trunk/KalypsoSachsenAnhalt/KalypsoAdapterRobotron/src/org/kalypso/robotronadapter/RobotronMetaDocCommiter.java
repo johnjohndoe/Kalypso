@@ -151,7 +151,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     }
     finally
     {
-      doc.delete();
+      //doc.delete();
     }
   }
 

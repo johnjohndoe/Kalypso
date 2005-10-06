@@ -108,7 +108,7 @@
             <path path="${dist.webdav}/prognose/${pName}" />
         </pathconvert>
 
-        <exec executable="cmd.exe" dir="${project.path}/deployable-server">
+        <exec executable="cmd.exe" dir="${project.path}/deployable-server-bce">
             <arg line="/C start cvs-co.bat ${user.name} ${copath} ${pPackage}" />
         </exec>
 
