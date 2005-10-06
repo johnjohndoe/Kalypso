@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <observation linktype="zml" ns1:href="Zeitreihen/Pegel/Messung/Bühne_Hoppenstedt.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c1" name="Bühne-Hoppenstedt [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns2:href="Zeitreihen/Pegel/Messung/Ilsenburg.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c2" name="Ilsenburg [%axisunit%]" width="50"/>
+    </observation>
+ </obstableview>
+

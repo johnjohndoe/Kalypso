@@ -112,7 +112,8 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>	</page>
+		<arg name="zmlTableThresholdResizeOff" value="4"/>
+	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE UNTERHALB WENDEFURTH -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose unterhalb Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
@@ -455,7 +456,6 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Ganglinie_gemessen#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
-		
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreLabel1" value="Abfluss"/>
@@ -466,7 +466,7 @@
         Exporte  -->
 		<!-- Name of the feature-property, used for display/selection purposes -->
 		<arg name="pegelNameProperty" value="Name"/>
-        <arg name="resultProperty" value="Ganglinie_gerechnet"/>
+		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
 		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>
@@ -492,6 +492,36 @@
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (Q / W / P)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelle.ott"/>
+			</arg>
+		</arg>
+		<!-- tabellarische Übersichten über Eingangs- und Ergebnisdaten  -->
+		<arg name="exporter2">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Datenübersichten"/>
+			<arg name="templateTableEingabeW">
+				<arg name="documentName" value="EingangsdatenW"/>
+				<arg name="label" value="Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingW.ott"/>
+			</arg>
+			<arg name="templateTableErgebnisW">
+				<arg name="documentName" value="ErgebnisdatenW"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgW.ott"/>
+			</arg>
+			<arg name="templateTableEingabeQ">
+				<arg name="documentName" value="EingangsdatenQ"/>
+				<arg name="label" value="Übersicht Eingangsdaten Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingQ.ott"/>
+			</arg>
+			<arg name="templateTableErgebnisQ">
+				<arg name="documentName" value="ErgebnisdatenQ"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgQ.ott"/>
+			</arg>
+			<arg name="templateTableGebietsN">
+				<arg name="documentName" value="DatenGebietsniederschlag"/>
+				<arg name="label" value="Übersicht Niederschlag (Gebietsniederschlag)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsN.ott"/>
 			</arg>
 		</arg>
 		<!-- Scheitelwert-Tabellen W / Q -->
@@ -588,7 +618,7 @@
 				<arg name="label" value="Trautenstein"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Trautenstein.zml"/>
 			</arg>
-		</arg>		
+		</arg>
 		<arg name="exporter4">
 			<arg name="id" value="sumUpTableExporter"/>
 			<arg name="name" value="Pegelübersicht Abfluss (Scheitelwerte)"/>
@@ -816,17 +846,4 @@
 			</arg>
 		</arg>
 	</page>
-<!--		
-		<arg name="exporter2">
-		<arg name="id" value="simpleTemplateExporter"/>
-		<arg name="width" value="1024"/>
-		<arg name="height" value="768"/>
-		<arg name="imageFormat" value="png"/>
-		<arg name="templateDiag">
-			<arg name="label" value="Abflußdiagramm, Gebiet obere Spree"/>
-			<arg name="href" value="project:/.templates/calcCase/berichtDiagObereSpree.odt"/>
-			<arg name="documentName" value="obereSpree"/>
-		</arg>
-	</arg>
--->
 </calcwizard>
