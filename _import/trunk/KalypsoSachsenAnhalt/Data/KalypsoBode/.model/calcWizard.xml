@@ -776,6 +776,41 @@
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicher.ott"/>
 			</arg>
 		</arg>
+		<!-- tabellarische Übersichten über Eingangs- und Ergebnisdaten  -->
+		<arg name="exporter2">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Datenübersichten"/>
+			<arg name="templateTableSpeicherEingabeW">
+				<arg name="documentName" value="EingangsdatenSpeicherW"/>
+				<arg name="label" value="Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingW.ott"/>
+			</arg>
+			<arg name="templateTableSpeicherErgebnisW">
+				<arg name="documentName" value="ErgebnisdatenSpeicherW"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgW.ott"/>
+			</arg>
+			<arg name="templateTableSpeicherEingabeQ">
+				<arg name="documentName" value="EingangsdatenSpeicherV"/>
+				<arg name="label" value="Übersicht Eingangsdaten Volumen"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingV.ott"/>
+			</arg>
+			<arg name="templateTableSpeicherErgebnisQ">
+				<arg name="documentName" value="ErgebnisdatenSpeicherV"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Volumen"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgV.ott"/>
+			</arg>
+			<arg name="templateTableSpeicherAbgabe">
+				<arg name="documentName" value="DatenSpeicherAbgabe"/>
+				<arg name="label" value="Übersicht Speicherabgabe"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherAbgabe.ott"/>
+			</arg>
+			<arg name="templateTableSpeicherErgebnisZufluss">
+				<arg name="documentName" value="ErgebnisdatenSpeicherZufluss"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Zufluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgZufluss.ott"/>
+			</arg>
+		</arg>
 		<!-- Scheitelwert-Tabellen V / W -->
 		<arg name="exporter3">
 			<arg name="id" value="sumUpTableExporter"/>

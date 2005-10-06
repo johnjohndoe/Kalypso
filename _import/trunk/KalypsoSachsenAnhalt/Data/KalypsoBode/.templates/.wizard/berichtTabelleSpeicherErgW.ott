@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <observation linktype="zml" ns1:href="Zeitreihen/Speicher/Vorhersage/Kalte_Bode.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c1" name="HWR Kalte Bode [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns2:href="Zeitreihen/Speicher/Vorhersage/Rappbode.zml" xmlns:ns2="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c2" name="TS Rappbode [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns3:href="Zeitreihen/Speicher/Vorhersage/Wendefurth.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <column axis="Wasserstand" editable="true" id="c3" name="TS Wendefurth [%axisunit%]" width="50"/>
+    </observation>
+</obstableview>
+
