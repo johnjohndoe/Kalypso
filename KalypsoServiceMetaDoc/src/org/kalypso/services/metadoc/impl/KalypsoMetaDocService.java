@@ -29,6 +29,7 @@ import org.kalypso.services.metadoc.IMetaDocService;
 public class KalypsoMetaDocService implements IMetaDocService
 {
   private final static String PROP_COMMITER = "COMMITER";
+  private final static String PROP_COMMITER_DIR = "COMMITER.DIR";
 
   private final File m_tmpDir;
 
@@ -45,18 +46,26 @@ public class KalypsoMetaDocService implements IMetaDocService
   {
     m_logger = Logger.getLogger( KalypsoMetaDocService.class.getName() );
 
-    m_tmpDir = FileUtilities.createNewTempDir( "Documents", ServiceConfig.getTempDir() );
-    m_tmpDir.deleteOnExit();
-
     init();
+
+    // directory where documents are temporarely stored can be specified in
+    // the properties of the service with the property COMMITER.DIR
+    if( m_props.getProperty( PROP_COMMITER_DIR ) != null )
+      m_tmpDir = new File( m_props.getProperty( PROP_COMMITER_DIR ) );
+    else
+    {
+      // if not specified, we create a default temp-dir in the service temp dir
+      // which is deleted once the jvm stops
+      m_tmpDir = FileUtilities.createNewTempDir( "Documents", ServiceConfig.getTempDir() );
+      m_tmpDir.deleteOnExit();
+    }
   }
 
   /**
    * Initialize this service
    */
-  private void init() throws RemoteException
+  private final void init() throws RemoteException
   {
-
     InputStream stream = null;
     try
     {
