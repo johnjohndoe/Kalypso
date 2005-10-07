@@ -181,7 +181,7 @@ public class ObservationViewerDialog extends ResizableDialog
         // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( removeListener, "loeschen", "zeitreihe loeschen", SWT.PUSH ) );
+      result.add( new ButtonControl( removeListener, "loeschen", "Zeitreihe loeschen", SWT.PUSH ) );
     }
     if( ( m_buttonControls & BUTTON_NEW ) == BUTTON_NEW )
     {
@@ -240,7 +240,7 @@ public class ObservationViewerDialog extends ResizableDialog
         // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelImportListener, "Import Zwischenspeicher", "Aus Zwischenspeicher importieren",
+      result.add( new ButtonControl( exelImportListener, "Import aus Zwischenspeicher", "Aus Zwischenspeicher importieren",
           SWT.PUSH ) );
     }
     if( ( m_buttonControls & BUTTON_EXEL_EXPORT ) == BUTTON_EXEL_EXPORT )
@@ -273,7 +273,7 @@ public class ObservationViewerDialog extends ResizableDialog
         // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelExportListener, "Export Zwischenspeicher", "In Zwischenspeicher exportieren",
+      result.add( new ButtonControl( exelExportListener, "Export in Zwischenspeicher", "In Zwischenspeicher exportieren",
           SWT.PUSH ) );
     }
     return (ButtonControl[])result.toArray( new ButtonControl[result.size()] );
