@@ -558,10 +558,12 @@
 				<arg name="label" value="Hausneindorf"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml"/>
 			</arg>
+<!-- kein Vorhersagepegel			
 			<arg name="obs4">
 				<arg name="label" value="Wendefurth"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Wendefurth.zml"/>
 			</arg>
+-->
 			<arg name="obs5">
 				<arg name="label" value="Thale"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Thale.zml"/>
@@ -652,10 +654,12 @@
 				<arg name="label" value="Hausneindorf"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml"/>
 			</arg>
+<!-- kein vorhersagepegel
 			<arg name="obs4">
 				<arg name="label" value="Abgabe TS Wendefurth"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Wendefurth.zml"/>
 			</arg>
+-->
 			<arg name="obs5">
 				<arg name="label" value="Thale"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Thale.zml"/>
