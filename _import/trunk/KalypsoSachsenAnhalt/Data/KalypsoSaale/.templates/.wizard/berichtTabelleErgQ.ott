@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <features>Alarmstufen;Vorhersage</features>
+    <observation linktype="zml" ns1:href="Ergebnisse/Durchfluss/570910.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c1" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns3:href="Ergebnisse/Durchfluss/579330.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c3" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns4:href="Ergebnisse/Durchfluss/579085.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c4" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns5:href="Ergebnisse/Durchfluss/575700.zml" xmlns:ns5="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c5" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns6:href="Ergebnisse/Durchfluss/575110.zml" xmlns:ns6="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c6" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns8:href="Ergebnisse/Durchfluss/573090.zml" xmlns:ns8="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c8" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns9:href="Ergebnisse/Durchfluss/579000.zml" xmlns:ns9="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c9" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns10:href="Ergebnisse/Durchfluss/575660.zml" xmlns:ns10="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c10" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns11:href="Ergebnisse/Durchfluss/572890.zml" xmlns:ns11="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c11" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns12:href="Ergebnisse/Durchfluss/576520.zml" xmlns:ns12="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c12" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns13:href="Ergebnisse/Durchfluss/572115.zml" xmlns:ns13="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c13" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns14:href="Ergebnisse/Durchfluss/573100.zml" xmlns:ns14="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c14" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns15:href="Ergebnisse/Durchfluss/570250.zml" xmlns:ns15="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c15" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns19:href="Ergebnisse/Durchfluss/575240.zml" xmlns:ns19="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c19" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns20:href="Ergebnisse/Durchfluss/579999.zml" xmlns:ns20="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c20" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns21:href="Ergebnisse/Durchfluss/572010.zml" xmlns:ns21="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c21" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns22:href="Ergebnisse/Durchfluss/579205.zml" xmlns:ns22="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c22" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns23:href="Ergebnisse/Durchfluss/579045.zml" xmlns:ns23="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c23" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns24:href="Ergebnisse/Durchfluss/570270.zml" xmlns:ns24="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c24" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns25:href="Ergebnisse/Durchfluss/579011.zml" xmlns:ns25="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c25" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns26:href="Ergebnisse/Durchfluss/579620.zml" xmlns:ns26="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c26" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns27:href="Ergebnisse/Durchfluss/579305.zml" xmlns:ns27="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c27" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns28:href="Ergebnisse/Durchfluss/574210.zml" xmlns:ns28="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c28" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns29:href="Ergebnisse/Durchfluss/575400.zml" xmlns:ns29="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c29" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns30:href="Ergebnisse/Durchfluss/553061.zml" xmlns:ns30="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c30" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns31:href="Ergebnisse/Durchfluss/575402.zml" xmlns:ns31="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c31" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns32:href="Ergebnisse/Durchfluss/576470.zml" xmlns:ns32="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c32" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns33:href="Ergebnisse/Durchfluss/575406.zml" xmlns:ns33="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c33" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns35:href="Ergebnisse/Durchfluss/579012.zml" xmlns:ns35="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c35" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns36:href="Ergebnisse/Durchfluss/578410.zml" xmlns:ns36="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c36" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns37:href="Ergebnisse/Durchfluss/577570.zml" xmlns:ns37="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c37" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns38:href="Ergebnisse/Durchfluss/579306.zml" xmlns:ns38="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c38" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns39:href="Ergebnisse/Durchfluss/579712.zml" xmlns:ns39="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c39" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns41:href="Ergebnisse/Durchfluss/576610.zml" xmlns:ns41="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c41" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns42:href="Ergebnisse/Durchfluss/579015.zml" xmlns:ns42="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c42" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns43:href="Ergebnisse/Durchfluss/575500.zml" xmlns:ns43="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c43" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns44:href="Ergebnisse/Durchfluss/570210.zml" xmlns:ns44="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c44" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns45:href="Ergebnisse/Durchfluss/579070.zml" xmlns:ns45="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c45" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns46:href="Ergebnisse/Durchfluss/578430.zml" xmlns:ns46="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c46" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns47:href="Ergebnisse/Durchfluss/573360.zml" xmlns:ns47="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c47" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns48:href="Ergebnisse/Durchfluss/573110.zml" xmlns:ns48="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c48" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns49:href="Ergebnisse/Durchfluss/570500.zml" xmlns:ns49="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c49" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns51:href="Ergebnisse/Durchfluss/570000.zml" xmlns:ns51="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c51" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns52:href="Ergebnisse/Durchfluss/570330.zml" xmlns:ns52="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c52" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns53:href="Ergebnisse/Durchfluss/579001.zml" xmlns:ns53="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c53" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns55:href="Ergebnisse/Durchfluss/553050.zml" xmlns:ns55="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c55" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns56:href="Ergebnisse/Durchfluss/579405.zml" xmlns:ns56="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c56" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns57:href="Ergebnisse/Durchfluss/573010.zml" xmlns:ns57="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c57" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns58:href="Ergebnisse/Durchfluss/578420.zml" xmlns:ns58="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c58" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns59:href="Ergebnisse/Durchfluss/570930.zml" xmlns:ns59="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c59" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns60:href="Ergebnisse/Durchfluss/576900.zml" xmlns:ns60="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c60" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns61:href="Ergebnisse/Durchfluss/579610.zml" xmlns:ns61="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c61" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns62:href="Ergebnisse/Durchfluss/579006.zml" xmlns:ns62="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c62" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns65:href="Ergebnisse/Durchfluss/575410.zml" xmlns:ns65="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c65" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns66:href="Ergebnisse/Durchfluss/570810.zml" xmlns:ns66="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c66" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns67:href="Ergebnisse/Durchfluss/570340.zml" xmlns:ns67="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c67" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns68:href="Ergebnisse/Durchfluss/572920.zml" xmlns:ns68="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c68" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns69:href="Ergebnisse/Durchfluss/575710.zml" xmlns:ns69="http://www.w3.org/1999/xlink">
+        <column axis="Abfluss" editable="true" id="c69" name="%obsname% [%axisunit%]" width="50"/>
+    </observation>
+</obstableview>
+

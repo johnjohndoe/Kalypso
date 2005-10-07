@@ -1028,6 +1028,56 @@
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelle.ott"/>
 			</arg>
 		</arg>
+		<!-- tabellarische Übersichten über Eingangs- und Ergebnisdaten  -->
+		<arg name="exporter2">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Datenübersichten"/>
+			<arg name="templateTableEingabeW">
+				<arg name="documentName" value="EingangsdatenW"/>
+				<arg name="label" value="Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingW.ott"/>
+			</arg>
+			<arg name="templateTableErgebnisW">
+				<arg name="documentName" value="ErgebnisdatenW"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgW.ott"/>
+			</arg>
+			<arg name="templateTableEingabeQ">
+				<arg name="documentName" value="EingangsdatenQ"/>
+				<arg name="label" value="Übersicht Eingangsdaten Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingQ.ott"/>
+			</arg>
+			<arg name="templateTableErgebnisQ">
+				<arg name="documentName" value="ErgebnisdatenQ"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgQ.ott"/>
+			</arg>
+			<arg name="templateTableGebietsN">
+				<arg name="documentName" value="DatenGebietsniederschlag"/>
+				<arg name="label" value="Übersicht Niederschlag (Gebietsniederschlag)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsN.ott"/>
+			</arg>
+			<arg name="templateTableGebietsSchnee">
+				<arg name="documentName" value="DatenGebietsschnee"/>
+				<arg name="label" value="Übersicht Schnee (Gebietsniederschlag)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsSnow.ott"/>
+			</arg>
+		</arg>
+		<!-- Längsschnitte  -->
+		<arg name="exporter5">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Längsschnitte"/>
+			<arg name="templateDiagLSBodeQ">
+				<arg name="documentName" value="LängsschnittBodeQ"/>
+				<arg name="label" value="Bode-Längsschnitt (Abfluss)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeQ.odt"/>
+			</arg>
+			<arg name="templateDiagLSBodeW">
+				<arg name="documentName" value="LängsschnittBodeW"/>
+				<arg name="label" value="Bode-Längsschnitt (Wasserstand)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeW.odt"/>
+			</arg>
+		</arg>
 		<!-- Scheitelwert-Tabelle -->
 		<arg name="exporter3">
 			<arg name="id" value="sumUpTableExporter"/>
@@ -1158,10 +1208,6 @@
 				<arg name="label" value="Bennungen"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
 			</arg>
-			<arg name="obs28">
-				<arg name="label" value="Nikolausrieth"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/575450.zml"/>
-			</arg>
 			<arg name="obs29">
 				<arg name="label" value="Laucha"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
@@ -1182,10 +1228,6 @@
 				<arg name="label" value="Zeitz"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
 			</arg>
-			<arg name="obs34">
-				<arg name="label" value="Kleindalzig"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/576631.zml"/>
-			</arg>
 			<arg name="obs35">
 				<arg name="label" value="Böhlen"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/577570.zml"/>
@@ -1193,10 +1235,6 @@
 			<arg name="obs36">
 				<arg name="label" value="Oberthau"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
-			</arg>
-			<arg name="obs37">
-				<arg name="label" value="Elstermündung"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/576950.zml"/>
 			</arg>
 			<arg name="obs38">
 				<arg name="label" value="Halle-Trotha"/>
@@ -1225,10 +1263,6 @@
 			<arg name="obs44">
 				<arg name="label" value="Hausneindorf"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579620.zml"/>
-			</arg>
-			<arg name="obs45">
-				<arg name="label" value="Mündung"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579621.zml"/>
 			</arg>
 			<arg name="obs46">
 				<arg name="label" value="Elend"/>
@@ -1266,17 +1300,9 @@
 				<arg name="label" value="Rappbode-TS-Abgabe"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
 			</arg>
-			<arg name="obs55">
-				<arg name="label" value="Rappbode-TS, TWA"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579013.zml"/>
-			</arg>
 			<arg name="obs56">
 				<arg name="label" value="Hirtenstieg/ÜL-Abgabe"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579001.zml"/>
-			</arg>
-			<arg name="obs57">
-				<arg name="label" value="TS-Wendefurth, Bode-Anteil"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579014.zml"/>
 			</arg>
 			<arg name="obs58">
 				<arg name="label" value="TS-Wendefurth-Zulauf"/>
@@ -1294,21 +1320,9 @@
 				<arg name="label" value="Mahndorf"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
 			</arg>
-			<arg name="obs62">
-				<arg name="label" value="Mdg"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579713.zml"/>
-			</arg>
-			<arg name="obs63">
-				<arg name="label" value="an Holtemme"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579069.zml"/>
-			</arg>
 			<arg name="obs64">
 				<arg name="label" value="Hadmersleben"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
-			</arg>
-			<arg name="obs65">
-				<arg name="label" value="Hilfspunkt"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579084.zml"/>
 			</arg>
 			<arg name="obs66">
 				<arg name="label" value="Stassfurt"/>
@@ -1326,6 +1340,44 @@
 				<arg name="label" value="Löben"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/553061.zml"/>
 			</arg>
+<!-- interne Pegel
+			<arg name="obs65">
+				<arg name="label" value="Hilfspunkt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579084.zml"/>
+			</arg>
+			<arg name="obs63">
+				<arg name="label" value="an Holtemme"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579069.zml"/>
+			</arg>
+			<arg name="obs62">
+				<arg name="label" value="Mdg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579713.zml"/>
+			</arg>
+			<arg name="obs57">
+				<arg name="label" value="TS-Wendefurth, Bode-Anteil"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579014.zml"/>
+			</arg>
+			<arg name="obs55">
+				<arg name="label" value="Rappbode-TS, TWA"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579013.zml"/>
+			</arg>
+			<arg name="obs45">
+				<arg name="label" value="Mündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579621.zml"/>
+			</arg>
+			<arg name="obs37">
+				<arg name="label" value="Elstermündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576950.zml"/>
+			</arg>
+			<arg name="obs34">
+				<arg name="label" value="Kleindalzig"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576631.zml"/>
+			</arg>
+			<arg name="obs28">
+				<arg name="label" value="Nikolausrieth"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575450.zml"/>
+			</arg>
+-->			
 		</arg>
 		<arg name="exporter4">
 			<arg name="id" value="sumUpTableExporter"/>
@@ -1456,10 +1508,6 @@
 				<arg name="label" value="Bennungen"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
 			</arg>
-			<arg name="obs28">
-				<arg name="label" value="Nikolausrieth"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/575450.zml"/>
-			</arg>
 			<arg name="obs29">
 				<arg name="label" value="Laucha"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
@@ -1480,10 +1528,6 @@
 				<arg name="label" value="Zeitz"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
 			</arg>
-			<arg name="obs34">
-				<arg name="label" value="Kleindalzig"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/576631.zml"/>
-			</arg>
 			<arg name="obs35">
 				<arg name="label" value="Böhlen"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/577570.zml"/>
@@ -1491,10 +1535,6 @@
 			<arg name="obs36">
 				<arg name="label" value="Oberthau"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
-			</arg>
-			<arg name="obs37">
-				<arg name="label" value="Elstermündung"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/576950.zml"/>
 			</arg>
 			<arg name="obs38">
 				<arg name="label" value="Halle-Trotha"/>
@@ -1523,10 +1563,6 @@
 			<arg name="obs44">
 				<arg name="label" value="Hausneindorf"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579620.zml"/>
-			</arg>
-			<arg name="obs45">
-				<arg name="label" value="Mündung"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579621.zml"/>
 			</arg>
 			<arg name="obs46">
 				<arg name="label" value="Elend"/>
@@ -1564,17 +1600,9 @@
 				<arg name="label" value="Rappbode-TS-Abgabe"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
 			</arg>
-			<arg name="obs55">
-				<arg name="label" value="Rappbode-TS, TWA"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579013.zml"/>
-			</arg>
 			<arg name="obs56">
 				<arg name="label" value="Hirtenstieg/ÜL-Abgabe"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579001.zml"/>
-			</arg>
-			<arg name="obs57">
-				<arg name="label" value="TS-Wendefurth, Bode-Anteil"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579014.zml"/>
 			</arg>
 			<arg name="obs58">
 				<arg name="label" value="TS-Wendefurth-Zulauf"/>
@@ -1592,21 +1620,9 @@
 				<arg name="label" value="Mahndorf"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
 			</arg>
-			<arg name="obs62">
-				<arg name="label" value="Mdg"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579713.zml"/>
-			</arg>
-			<arg name="obs63">
-				<arg name="label" value="an Holtemme"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579069.zml"/>
-			</arg>
 			<arg name="obs64">
 				<arg name="label" value="Hadmersleben"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
-			</arg>
-			<arg name="obs65">
-				<arg name="label" value="Hilfspunkt"/>
-				<arg name="href" value="./Ergebnisse/Durchfluss/579084.zml"/>
 			</arg>
 			<arg name="obs66">
 				<arg name="label" value="Stassfurt"/>
@@ -1624,6 +1640,44 @@
 				<arg name="label" value="Löben"/>
 				<arg name="href" value="./Ergebnisse/Durchfluss/553061.zml"/>
 			</arg>
+<!-- interne Pegel
+			<arg name="obs65">
+				<arg name="label" value="Hilfspunkt"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579084.zml"/>
+			</arg>
+			<arg name="obs63">
+				<arg name="label" value="an Holtemme"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579069.zml"/>
+			</arg>
+			<arg name="obs62">
+				<arg name="label" value="Mdg"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579713.zml"/>
+			</arg>
+			<arg name="obs57">
+				<arg name="label" value="TS-Wendefurth, Bode-Anteil"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579014.zml"/>
+			</arg>
+			<arg name="obs55">
+				<arg name="label" value="Rappbode-TS, TWA"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579013.zml"/>
+			</arg>
+			<arg name="obs45">
+				<arg name="label" value="Mündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/579621.zml"/>
+			</arg>
+			<arg name="obs37">
+				<arg name="label" value="Elstermündung"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576950.zml"/>
+			</arg>
+			<arg name="obs34">
+				<arg name="label" value="Kleindalzig"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/576631.zml"/>
+			</arg>
+			<arg name="obs28">
+				<arg name="label" value="Nikolausrieth"/>
+				<arg name="href" value="./Ergebnisse/Durchfluss/575450.zml"/>
+			</arg>
+-->			
 		</arg>
 	</page>
 	<!-- Speicher-Exporte -->
@@ -1660,5 +1714,160 @@
 		<!-- Name of the feature-property, used for display/selection purposes -->
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="Inhalt_gerechnet"/>
+		<!-- für alle Speicher V-Diag, W-Diag,  D-V / W / Z / A-Tabelle-->
+		<arg name="exporter1">
+			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="name" value="Speicher"/>
+			<arg name="nameproperty" value="Name"/>
+			<arg name="width" value="800"/>
+			<arg name="height" value="600"/>
+			<arg name="imageFormat" value="png"/>
+			<arg name="tokens">
+				<arg name="title" value="Name"/>
+				<arg name="href1" value="Inhalt"/>
+				<arg name="href2" value="Inhalt_gerechnet"/>
+				<arg name="href3" value="Abgabe_gerechnet"/>
+				<arg name="href4" value="Zufluss_gerechnet"/>
+				<arg name="href5" value="Steuerung_gerechnet"/>
+				<arg name="href6" value="Überleitung_gerechnet"/>
+			</arg>
+			<arg name="templateDiagQ">
+				<arg name="label" value="Volumengrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherV.odt"/>
+			</arg>
+			<arg name="templateDiagW">
+				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherW.odt"/>
+			</arg>
+			<arg name="templateTable">
+				<arg name="label" value="Übersichtstabelle (V / W / Z / A / Steu / Überl)"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicher.ott"/>
+			</arg>
+		</arg>		<!-- tabellarische Übersichten über Eingangs- und Ergebnisdaten  -->
+		<arg name="exporter2">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Datenübersichten"/>
+			<arg name="templateTableEingabeSpeicherV">
+				<arg name="documentName" value="EingangsdatenSpeicherV"/>
+				<arg name="label" value="Übersicht Eingangsdaten Volumen"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingV.ott"/>
+			</arg>
+			<arg name="templateTableErgebnisSpeicherV">
+				<arg name="documentName" value="ErgebnisdatenSpeicherV"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Volumen"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgV.ott"/>
+			</arg>
+			<arg name="templateTableEingabeSpeicherW">
+				<arg name="documentName" value="EingangsdatenSpeicherW"/>
+				<arg name="label" value="Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingW.ott"/>
+			</arg>
+			<arg name="templateTableErgebnisSpeicherW">
+				<arg name="documentName" value="ErgebnisdatenSpeicherW"/>
+				<arg name="label" value="Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgW.ott"/>
+			</arg>
+		</arg>
+		<!-- Scheitelwert-Tabellen V / W  -->
+		<arg name="exporter3">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Speicherübersicht Volumen (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteSpeicherV.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Speicher"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="V"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="Saale-Talsperren"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/570250.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="TS Straußfurt"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/573100.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="TS Kelbra"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
+			</arg>
+			<arg name="obs4">
+				<arg name="label" value="TS Königshütte"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/579001.zml"/>
+			</arg>
+			<arg name="obs5">
+				<arg name="label" value="TS Wendefurth"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/579006.zml"/>
+			</arg>
+			<arg name="obs6">
+				<arg name="label" value="TS Rappbode"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/579012.zml"/>
+			</arg>
+			<arg name="obs7">
+				<arg name="label" value="HWR Kalte Bode"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/579330.zml"/>
+			</arg>
+		</arg>
+		<arg name="exporter4">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Speicherübersicht Wasserstand (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteSpeicherW.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Speicher"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="W"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="Saale-Talsperren"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/570250.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="TS Straußfurt"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/573100.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="TS Kelbra"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
+			</arg>
+			<arg name="obs4">
+				<arg name="label" value="TS Königshütte"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/579001.zml"/>
+			</arg>
+			<arg name="obs5">
+				<arg name="label" value="TS Wendefurth"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/579006.zml"/>
+			</arg>
+			<arg name="obs6">
+				<arg name="label" value="TS Rappbode"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/579012.zml"/>
+			</arg>
+			<arg name="obs7">
+				<arg name="label" value="HWR Kalte Bode"/>
+				<arg name="href" value="./Ergebnisse/Speicherinhalt/579330.zml"/>
+			</arg>
+		</arg>
 	</page>
 </calcwizard>

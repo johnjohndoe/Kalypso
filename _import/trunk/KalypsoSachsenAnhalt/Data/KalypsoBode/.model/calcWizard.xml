@@ -558,12 +558,10 @@
 				<arg name="label" value="Hausneindorf"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml"/>
 			</arg>
-<!-- Problem aufgrund des unterschiedlichen Nullpunktes
 			<arg name="obs4">
-				<arg name="label" value="Abgabe TS Wendefurth"/>
-				<arg name="href" value="./Zeitreihen/Speicherabgabe/Wendefurth.zml"/>
+				<arg name="label" value="Wendefurth"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Wendefurth.zml"/>
 			</arg>
--->
 			<arg name="obs5">
 				<arg name="label" value="Thale"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Thale.zml"/>
@@ -654,12 +652,10 @@
 				<arg name="label" value="Hausneindorf"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml"/>
 			</arg>
-<!-- Problem aufgrund des unterschiedlichen Nullpunktes
 			<arg name="obs4">
 				<arg name="label" value="Abgabe TS Wendefurth"/>
-				<arg name="href" value="./Zeitreihen/Speicherabgabe/Wendefurth.zml"/>
+				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Wendefurth.zml"/>
 			</arg>
--->
 			<arg name="obs5">
 				<arg name="label" value="Thale"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Thale.zml"/>
@@ -815,7 +811,7 @@
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgZufluss.ott"/>
 			</arg>
 		</arg>
-		<!-- Scheitelwert-Tabellen V / W -->
+		<!-- Scheitelwert-Tabellen V / W und Abgabe -->
 		<arg name="exporter3">
 			<arg name="id" value="sumUpTableExporter"/>
 			<arg name="name" value="Speicherübersicht Volumen (Scheitelwerte)"/>
@@ -882,6 +878,44 @@
 			<arg name="obs3">
 				<arg name="label" value="TS Wendefurth"/>
 				<arg name="href" value="./Zeitreihen/Speicher/Vorhersage/Wendefurth.zml"/>
+			</arg>
+		</arg>
+		<arg name="exporter5">
+			<arg name="id" value="sumUpTableExporter"/>
+			<arg name="name" value="Speicherübersicht Speicherabgabe (Scheitelwerte)"/>
+			<arg name="documentName" value="ScheitelwerteSpeicherAbgabe.csv"/>
+			<arg name="separator" value=";"/>
+			<!--arg name="charset" value="cp1252"/-->
+			<arg name="delta" value="0.0001"/>
+			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+			<arg name="column1">
+				<arg name="position" value="1"/>
+				<arg name="label" value="Speicher"/>
+				<arg name="content" value="arg:label"/>
+			</arg>
+			<arg name="column2">
+				<arg name="position" value="2"/>
+				<arg name="label" value="Gewässer"/>
+				<arg name="content" value="metadata:Gewässer"/>
+			</arg>
+			<arg name="axisType" value="Q"/>
+			<arg name="timeUnit" value="HOUR"/>
+			<arg name="timeStep" value="6"/>
+			<arg name="obs1">
+				<arg name="label" value="HWR Kalte Bode"/>
+				<arg name="href" value="./Zeitreihen/Speicherabgabe/Kalte_Bode.zml"/>
+			</arg>
+			<arg name="obs2">
+				<arg name="label" value="TS Rappbode"/>
+				<arg name="href" value="./Zeitreihen/Speicherabgabe/Rappbode.zml"/>
+			</arg>
+			<arg name="obs3">
+				<arg name="label" value="TS Wendefurth"/>
+				<arg name="href" value="./Zeitreihen/Speicherabgabe/Wendefurth.zml"/>
+			</arg>
+			<arg name="obs4">
+				<arg name="label" value="TS Königshütte"/>
+				<arg name="href" value="./Zeitreihen/Speicherabgabe/Königshütte.zml"/>
 			</arg>
 		</arg>
 	</page>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>%title%</title>
+	<legend title="" visible="true"/>
+
+	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="V" datatype="double" label="Volumen" unit="hm³" direction="vertical" position="left" />
+   	<axis id="Q" datatype="double" label="Abfluss" unit="m³/s" direction="vertical" position="left" />
+   	
+   	<!-- Kodierung color:
+   	red;green;blue[;alpha]
+   	
+   	jeweils in [0-255]
+   	-->
+
+	<!-- Volumen_gemessen -->
+   	<observation linktype="zml" xlink:href="%href1%">
+		<curve id="C1" name="Volumen - Beobachtung" color="0;0;255" > <!-- vorher 0,255,128 -->
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Volumen" diagram-axis="V" />
+	   	</curve>
+	</observation>
+
+	<!-- Volumen_gerechnet -->
+   	<observation linktype="zml" xlink:href="%href2%">
+		<curve id="C2" name="Volumen - Rechnung" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Volumen" diagram-axis="V" />
+	   	</curve>
+	</observation>
+
+	<!-- Abgabe_gerechnet -->
+   	<observation linktype="zml" xlink:href="%href3%">
+		<curve id="C4" name="Abgabe - Rechnung" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	
+	<!-- Zufluss_gerechnet -->
+   	<observation linktype="zml" xlink:href="%href4%">
+		<curve id="C5" name="Zufluss - Rechnung" color="255;128;64" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- Steuerung_gerechnet -->
+   	<observation linktype="zml" xlink:href="%href5%">
+		<curve id="C6" name="Steuerung - Rechnung" color="160;130;70" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- Überleitung_gerechnet -->
+   	<observation linktype="zml" xlink:href="%href6%">
+		<curve id="C7" name="Überleitung - Rechnung" color="160;255;255" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+</obsdiagview>

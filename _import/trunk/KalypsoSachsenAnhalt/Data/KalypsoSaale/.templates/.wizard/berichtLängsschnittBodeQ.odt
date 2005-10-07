@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>Bode-Längsschnitt (Abfluss)</title>
+	<legend title="" visible="true"/>
+
+	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
+	<axis id="Q" datatype="double" label="Abfluss" unit="m³" direction="vertical" position="left" />
+   	
+   	<!-- Kodierung color:
+   	red;green;blue[;alpha]
+   	
+   	jeweils in [0-255]
+   	-->
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Durchfluss/579015.zml">
+		<curve id="C1" name="%obsname% - Beobachtung" color="0;0;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579015.zml">
+		<curve id="C2" name="%obsname%  - Rechnung" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Durchfluss/579045.zml">
+		<curve id="C3" name="%obsname% - Beobachtung" color="0;0;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579045.zml">
+		<curve id="C4" name="%obsname%  - Rechnung" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Durchfluss/579070.zml">
+		<curve id="C5" name="%obsname% - Beobachtung" color="0;0;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579070.zml">
+		<curve id="C6" name="%obsname%  - Rechnung" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Durchfluss/579085.zml">
+		<curve id="C7" name="%obsname% - Beobachtung" color="0;0;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579085.zml">
+		<curve id="C8" name="%obsname%  - Rechnung" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Durchfluss/579000.zml">
+		<curve id="C9" name="%obsname% - Beobachtung" color="0;0;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579000.zml">
+		<curve id="C10" name="%obsname%  - Rechnung" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Durchfluss/579001.zml">
+		<curve id="C11" name="%obsname% - Beobachtung" color="0;0;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579001.zml">
+		<curve id="C12" name="%obsname%  - Rechnung" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+	<!-- gemessen -->
+   	<observation linktype="zml" xlink:href="Durchfluss/579006.zml">
+		<curve id="C13" name="%obsname% - Beobachtung" color="0;0;255" > 
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+	<!-- gerechnet -->
+   	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579006.zml">
+		<curve id="C14" name="%obsname%  - Rechnung" color="255;0;0" >
+			<mapping observation-axis="Datum" diagram-axis="D" />
+			<mapping observation-axis="Abfluss" diagram-axis="Q" />
+	   	</curve>
+	</observation>
+
+</obsdiagview>
