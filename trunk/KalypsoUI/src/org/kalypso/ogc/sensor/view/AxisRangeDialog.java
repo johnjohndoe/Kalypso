@@ -35,6 +35,7 @@ import org.eclipse.compare.internal.ResizableDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -59,7 +60,7 @@ public class AxisRangeDialog extends ResizableDialog
   private Text m_defaultText;
 
   private Text m_nameText;
-  
+
   private final FocusListener m_focusListener = new FocusListener()
   {
     public void focusGained( FocusEvent e )
@@ -87,8 +88,6 @@ public class AxisRangeDialog extends ResizableDialog
 
   private Object m_name = null;
 
-
-
   /**
    *  
    */
@@ -103,7 +102,7 @@ public class AxisRangeDialog extends ResizableDialog
    */
   protected Control createDialogArea( Composite parent )
   {
-    getShell().setText( "Axis" );
+    getShell().setText( "neue Zeitreihe" );
     Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 2, true ) );
     // Name
@@ -111,26 +110,42 @@ public class AxisRangeDialog extends ResizableDialog
     label6.setText( "Name" );
     m_nameText = new Text( group, 2050 );
     m_nameText.setText( "" );
+    GridData m_nameData = new GridData( GridData.END );
+    m_nameData.widthHint = 150;
+    m_nameText.setLayoutData( m_nameData );
     // MIN
     Label label = new Label( group, SWT.NONE );
     label.setText( "Minimum" );
     m_minText = new Text( group, 2050 );
     m_minText.setText( "0" );
+    GridData m_minData = new GridData( GridData.END );
+    m_minData.widthHint = 150;
+    m_minText.setLayoutData( m_minData );
     // Intervall
     Label label2 = new Label( group, SWT.NONE );
     label2.setText( "Intervall" );
     m_intText = new Text( group, 2050 );
     m_intText.setText( "1" );
+    GridData m_intData = new GridData( GridData.END );
+    m_intData.widthHint = 150;
+    m_intText.setLayoutData( m_intData );
     // ANZAHL
     Label label3 = new Label( group, SWT.NONE );
     label3.setText( "Anzahl Wertepaare" );
     m_countText = new Text( group, 2050 );
     m_countText.setText( "10" );
+    GridData m_countData = new GridData( GridData.END );
+    m_countData.widthHint = 150;
+    m_countText.setLayoutData( m_countData );
     //Default Wert
     Label label5 = new Label( group, SWT.NONE );
     label5.setText( "Default Wert" );
     m_defaultText = new Text( group, 2050 );
     m_defaultText.setText( "10" );
+    GridData m_defaultData = new GridData( GridData.END );
+    m_defaultData.widthHint = 150;
+    m_defaultText.setLayoutData( m_defaultData );
+
     m_minText.addFocusListener( m_focusListener );
     m_intText.addFocusListener( m_focusListener );
     m_countText.addFocusListener( m_focusListener );
@@ -140,6 +155,9 @@ public class AxisRangeDialog extends ResizableDialog
     Label label4 = new Label( group, SWT.NONE );
     label4.setText( "" );
     m_validText = new Text( group, SWT.READ_ONLY );
+    GridData m_validData = new GridData( GridData.END );
+    m_validData.widthHint = 150;
+    m_validText.setLayoutData( m_validData );
     m_minText.addFocusListener( m_focusListener );
     validate();
     return group;
@@ -153,19 +171,19 @@ public class AxisRangeDialog extends ResizableDialog
   public Object getInt()
   {
     return m_int;
-    
+
   }
-  
+
   public Object getDefault()
   {
     return m_default;
-    
+
   }
-  
+
   public Object getName()
   {
     return m_name;
-    
+
   }
 
   public int getCount()
@@ -178,17 +196,18 @@ public class AxisRangeDialog extends ResizableDialog
     String message = "";
     try
     {
-      message = "Name ist nicht korrekt";
+      message = "Name ist nicht korrekt!";
       m_name = m_nameText.getText();
-      message = "Min ist nicht korrekt";
+      message = "Min ist nicht korrekt!";
       m_min = SpecialPropertyMapper.cast( m_minText.getText(), TimeserieUtils.getDataClass( m_axisType ), false, true );
-      message = "Intervall ist nicht korrekt";
+      message = "Intervall ist nicht korrekt!";
       m_int = SpecialPropertyMapper.cast( m_intText.getText(), TimeserieUtils.getDataClass( m_axisType ), false, true );
-      message = "Anzahl ist nicht korrekt";
+      message = "Anzahl ist nicht korrekt!";
       m_count = ( (Integer)SpecialPropertyMapper.cast( m_countText.getText(), Integer.class, false, true ) ).intValue();
-      message = "Default Wert ist nicht korrekt";
-      m_default = SpecialPropertyMapper.cast( m_defaultText.getText(), TimeserieUtils.getDataClass( m_axisType ), false, true );
-      message = "Eingabe ist OK";
+      message = "Default Wert ist nicht korrekt!";
+      m_default = SpecialPropertyMapper.cast( m_defaultText.getText(), TimeserieUtils.getDataClass( m_axisType ),
+          false, true );
+      message = "Eingabe ist OK.";
       m_valid = true;
     }
     catch( Exception e )
