@@ -337,7 +337,7 @@
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-		<!-- orange (255,128,64) -->
+		<!-- orange, entspricht (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
@@ -377,7 +377,7 @@
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-		<!-- orange (255,128,64) -->
+		<!-- orange, entspricht (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
@@ -417,7 +417,7 @@
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="nameString=Zufluss##linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-		<!-- orange (255,128,64) -->
+		<!-- orange, entspricht (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
@@ -434,7 +434,7 @@
 		</arg>
 	</page>
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
-	<!-- Pegel -->
+	<!-- Pegel-Exporte -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung - Pegel" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID-->
@@ -718,7 +718,7 @@
 			</arg>
 		</arg>
 	</page>
-	<!-- Speicher -->
+	<!-- Speicher-Exporte -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
 		HTML-Navigation und pageID-->
@@ -740,7 +740,7 @@
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Ganglinie_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-		<!-- orange (255,128,64) -->
+		<!-- orange, entspricht (255,128,64) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>

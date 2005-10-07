@@ -124,6 +124,7 @@
 		</arg>
 	</page>
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
+	<!-- Pegel-Exporte -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID -->

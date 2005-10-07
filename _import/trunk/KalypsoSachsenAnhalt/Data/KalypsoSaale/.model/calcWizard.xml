@@ -645,7 +645,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_80"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_80.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_80.html#Steu_TS_Gruppe_20"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -672,7 +672,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_80"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_80.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_80.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -696,7 +696,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg10"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg10.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg10.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -727,7 +727,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg20"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg20.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg20.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -754,7 +754,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg30"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg30.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg30.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -781,7 +781,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg40"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg40.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg40.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -808,7 +808,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg50"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg50.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg50.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -835,7 +835,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg55"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg55.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg55.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -861,7 +861,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg60"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg60.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg60.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -888,7 +888,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg70"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg70.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg70.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -915,7 +915,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg80"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg80.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg80.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -942,7 +942,7 @@
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg_TS"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg_TS.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg_TS.html#Berichtsablage_Speicher"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -955,11 +955,12 @@
 		<arg name="maximizeMap" value="false"/>
 		<!--
 		Diagramm -->
-		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Inhalt_gerechnet#color=0xff0000"/>
-		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe"/>
-		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss#color=0xff8040"/>
+		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
+		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<arg name="timeserie5" value="nameString=Steuerung#nameColumn=Name#linkColumn=Steuerung_gerechnet#color=0xa08270"/> <!-- bräunlich, entspricht (160, 130, 70) -->
+		<arg name="timeserie6" value="nameString=Überleitung#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/> <!-- hell blau, entspricht (160, 255, 255) -->
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
@@ -968,11 +969,12 @@
         Tabelle -->
 	</page>
 	<!-- ERGEBNISDARSTELLUNG UND -ABLAGE-->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung" imageLocation="icons/calcwizard/kalypso32.gif">
+	<!-- Pegel-Exporte -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung - Pegel" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!-- 
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Pegel"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html#Berichtsablage_Pegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html#Berichtsablage_Speicher"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -1623,6 +1625,40 @@
 				<arg name="href" value="./Ergebnisse/Durchfluss/553061.zml"/>
 			</arg>
 		</arg>
-		<!-- Speicher-Exporte noch konfigurieren (ggf. zweite Export-Seite für Speicher-Berichte) -->
+	</page>
+	<!-- Speicher-Exporte -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung - Pegel" imageLocation="icons/calcwizard/kalypso32.gif">
+		<!-- 
+        HTML-Navigation und pageID-->
+		<arg name="pageID" value="Berichtsablage_Speicher"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Speicher.html#Berichtsablage_Speicher"/>
+		<!--
+        Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="26"/>
+		<!-- 
+        Karte -->
+		<arg name="mapTemplate" value=".templates/.wizard/Talsperren.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="false"/>
+		<!--
+		Diagramm -->
+		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Inhalt_gerechnet#color=0xff0000"/>
+		<arg name="timeserie3" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
+		<arg name="timeserie4" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<arg name="timeserie5" value="nameString=Steuerung#nameColumn=Name#linkColumn=Steuerung_gerechnet#color=0xa08270"/> <!-- bräunlich, entspricht (160, 130, 70) -->
+		<arg name="timeserie6" value="nameString=Überleitung#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/> <!-- hell blau, entspricht (160, 255, 255) -->
+		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType2" value="V"/>
+		<arg name="ignoreLabel1" value="Volumen"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<!-- 
+        Tabelle -->
+		<!-- 
+        Exporte  -->
+		<!-- Name of the feature-property, used for display/selection purposes -->
+		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="resultProperty" value="Inhalt_gerechnet"/>
 	</page>
 </calcwizard>
