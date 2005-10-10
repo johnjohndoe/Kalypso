@@ -53,7 +53,7 @@
     <observation linktype="zml" ns17:href="Zeitreihen/Pegel/Vorhersage/Ditfurt.zml" xmlns:ns17="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c17" name="Ditfurt [%axisunit%]" width="50"/>
     </observation>
-    <observation linktype="zml" ns18:href="Zeitreihen/Pegel/Vorhersage/Neugattersleben" xmlns:ns18="http://www.w3.org/1999/xlink">
+    <observation linktype="zml" ns18:href="Zeitreihen/Pegel/Vorhersage/Neugattersleben.zml" xmlns:ns18="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c18" name="Neugattersleben [%axisunit%]" width="50"/>
     </observation>
 </obstableview>

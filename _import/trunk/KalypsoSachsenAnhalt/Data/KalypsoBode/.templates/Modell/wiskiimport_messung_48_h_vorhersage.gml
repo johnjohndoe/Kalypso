@@ -78,6 +78,20 @@
 			</wiski_simulation_vergangenheit>
 		</Wiski>
 	</WiskiMember>
+	<!-- Pseudoimport von Daten zu Neugattersleben, damit die W/Q-Beziehung aus WISKI geholt wird -->
+	<WiskiMember>
+		<Wiski fid="Wiski_Q_18">
+			<lokal>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Messung/Neugattersleben.zml" linktype="zml"/>
+			</lokal>
+			<wiski_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Bode.Wasserstand.579090?&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;Neugattersleben&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" linktype="zml"/>
+			</wiski_vergangenheit>
+			<wiski_simulation_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Bode_Sim.Wasserstand.579090?&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;Neugattersleben&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot;/&gt;&lt;/filter&gt;" linktype="zml"/>
+			</wiski_simulation_vergangenheit>
+		</Wiski>
+	</WiskiMember>
 	<WiskiMember>
 		<Wiski fid="Wiski_NS_0">
 			<lokal>
