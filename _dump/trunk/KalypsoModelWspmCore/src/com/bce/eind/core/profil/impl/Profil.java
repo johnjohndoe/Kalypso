@@ -10,13 +10,13 @@ import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.changes.PointChange;
 
 
 /**
@@ -83,12 +83,12 @@ public class Profil implements IProfil, IProfilConstants
     return m_profil.findPoint( index, breite, delta );
   }
 
-  public void fireBuildingChanged( )
+  public void fireBuildingChanged(IProfilBuilding oldBuilding )
   {
     final IProfilListener[] listeners = m_listeners
         .toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener l : listeners )
-      l.onBuildingChanged();
+      l.onBuildingChanged(oldBuilding);
   }
 
   /**
@@ -99,22 +99,16 @@ public class Profil implements IProfil, IProfilConstants
    * m_profil.getPoint( breite, hoehe ); }
    */
 
-  public void fireBuildingDataChanged( final IProfilBuilding building,
-      final BUILDING_PROPERTY buildingProperty, final Object value )
+  public void fireBuildingDataChanged( final BUILDING_PROPERTY buildingProperty,
+      final Object value )
   {
     final IProfilListener[] listeners = m_listeners
         .toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener l : listeners )
-      l.onBuildingDataChanged( building, buildingProperty, value );
+      l.onBuildingDataChanged( buildingProperty, value );
   }
 
-  public void fireCommentChanged( )
-  {
-    final IProfilListener[] listeners = m_listeners
-        .toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener l : listeners )
-      l.onCommentChanged();
-  }
+  
 
   public void fireDeviderChanged( final IProfilPoint point, final IProfilDevider devider )
   {
@@ -291,7 +285,7 @@ public class Profil implements IProfil, IProfilConstants
     try
     {
       building = m_profil.removeBuilding();
-      fireBuildingChanged();
+      fireBuildingChanged(null);
 
       return building;
     }
@@ -361,7 +355,7 @@ public class Profil implements IProfil, IProfilConstants
   {
     m_profil.setBuilding( buildingTyp );
 
-    fireBuildingChanged();
+    fireBuildingChanged(null);
   }
 
   /**
@@ -417,7 +411,7 @@ public class Profil implements IProfil, IProfilConstants
   public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property, final Object value ) throws ProfilBuildingException
   {
     m_profil.setValueFor(building,property,value );
-    fireBuildingDataChanged(  building,property,value ); 
+    fireBuildingDataChanged(  property,value ); 
     
   }
 

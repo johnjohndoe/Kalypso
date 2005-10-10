@@ -2,6 +2,7 @@ package com.bce.eind.core.profil;
 
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.changes.PointChange;
 
 
 
@@ -21,13 +22,11 @@ public interface IProfilListener
   
   public void onPointPropertiesRemoved( final POINT_PROPERTY[] removedProperties );
   
-  public void onBuildingChanged();
+  public void onBuildingChanged(final IProfilBuilding oldBuilding);
 
-  public void onBuildingDataChanged( final IProfilBuilding building, final BUILDING_PROPERTY buildingProperty, final Object value );
+  public void onBuildingDataChanged( final BUILDING_PROPERTY buildingProperty, final Object value );
   
   public void onMetaDataChanged( final Object key, final Object value );
-  
-  public void onCommentChanged();
   
   public void onDeviderChanged( final IProfilPoint point, final IProfilDevider devider );
 }

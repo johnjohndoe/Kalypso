@@ -2,6 +2,7 @@ package com.bce.eind.core.profil;
 
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.changes.PointChange;
 
 
 /**
@@ -14,7 +15,7 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.changes.PointChange[])
    */
  
   public void onDeviderChanged( IProfilPoint point, IProfilDevider devider )
@@ -25,7 +26,7 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointValuesChanged(com.bce.eind.core.profil.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointValuesChanged(com.bce.eind.core.profil.changes.PointChange[])
    */
   public void onPointValuesChanged( PointChange[] changes )
   {
@@ -72,7 +73,7 @@ public class ProfilAdapter implements IProfilListener
    * 
    * @see com.bce.eind.core.profil.IProfilListener#onBuildingChanged()
    */
-  public void onBuildingChanged( )
+  public void onBuildingChanged(final IProfilBuilding oldBuilding )
   {
   }
 
@@ -89,22 +90,15 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onBuildingDataChanged(com.bce.eind.core.profil.IProfilBuilding,
-   *      com.bce.eind.core.profil.BUILDING_PROPERTY, Object)
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingDataChanged(com.bce.eind.core.profil.BUILDING_PROPERTY,
+   *      Object)
    */
-  public void onBuildingDataChanged( final IProfilBuilding building,
-      final BUILDING_PROPERTY buildingProperty, Object value )
+  public void onBuildingDataChanged( final BUILDING_PROPERTY buildingProperty,
+      Object value )
   {
   }
 
-  /**
-   * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onCommentChanged()
-   */
-  public void onCommentChanged( )
-  {
-  }
+  
 
 
 }

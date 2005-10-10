@@ -1,5 +1,6 @@
-package com.bce.eind.core.profil;
+package com.bce.eind.core.profil.changes;
 
+import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 
 public final class PointChange

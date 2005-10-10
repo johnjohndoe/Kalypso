@@ -13,7 +13,6 @@ import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.PointChange;
 import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilBuildingFactory;
 import com.bce.eind.core.profil.ProfilDataException;
@@ -21,6 +20,7 @@ import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.changes.PointChange;
 import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
@@ -386,7 +386,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#setValues(com.bce.eind.core.profil.PointChange[])
+   * @see com.bce.eind.core.profil.IPlainProfil#setValues(com.bce.eind.core.profil.changes.PointChange[])
    */
   public void setValues( final PointChange[] changes ) throws ProfilDataException
   {
