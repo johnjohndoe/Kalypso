@@ -245,8 +245,7 @@ public class TubigCalcJob implements ICalcJob
       // Fehler bei Abarbeitung einer Batch. Batches werden nicht weiter
       // abgearbeitet: kontrollierter Abbruch
       e.printStackTrace();
-      pwCalcLog
-          .println( "Bei der Abarbeitung einer Batch-Datei ist ein Fehler aufgetreten. Es werden keine Ergebnisse übertragen. Weitere Informationen finden sich in den Log-Dateien." );
+      pwCalcLog.println(TubigConst.FINISH_ERROR_TEXT);
     }
     catch( final TubigException e )
     {

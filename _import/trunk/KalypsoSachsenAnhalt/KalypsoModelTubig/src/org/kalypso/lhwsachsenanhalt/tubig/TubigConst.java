@@ -145,7 +145,7 @@ public class TubigConst
 
   // Finish-Text
   public static final String FINISH_ERROR_TEXT = "Bei der Berechnung trat ein Fehler auf,"
-      + System.getProperty( "line.separator" ) + "weitere Informationen dazu finden Sie in den Log-Dateien."
+      + System.getProperty( "line.separator" ) + "weitere Informationen dazu finden Sie in den Log-Dateien (im Verzeichnis 'Log-Dateien')."
       + System.getProperty( "line.separator" ) + "Es werden keine Ergebnis-Dateien übertragen.";
 
   // ist betriebssystemabhängig...(z. B. für Windows 95/98

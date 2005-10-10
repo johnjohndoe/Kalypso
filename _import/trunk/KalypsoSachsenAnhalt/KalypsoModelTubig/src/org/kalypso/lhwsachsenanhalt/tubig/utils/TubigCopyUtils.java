@@ -92,6 +92,7 @@ public class TubigCopyUtils
     while( strTok.hasMoreTokens() )
     {
       sMess = strTok.nextToken();
+      sLastWrtr = "pwLog"; // prinzipielle Initialisierung
       if( sMess.startsWith( TubigConst.STDOUT ) )
       {
         sMess = sMess.replaceAll( TubigConst.STDOUT, "" );
@@ -112,7 +113,6 @@ public class TubigCopyUtils
         sMess = sMess.replaceAll( TubigConst.STDERR, "" );
         pwErr.println( sMess );
         sLastWrtr = "pwErr";
-        throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
       }
       else
       {
@@ -126,6 +126,10 @@ public class TubigCopyUtils
           pwErr.println( sMess );
         }
       }
+    }
+    if( "pwErr".equals( sLastWrtr ) )
+    {
+      throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     return bExeEnde;
   }

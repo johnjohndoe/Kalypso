@@ -57,6 +57,20 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class FeatureVisitorZml2Tubig implements FeatureVisitor
 {
+  /**
+   * @param workspace
+   * @param featurePath
+   * @param context
+   * @param outdir
+   * @param tubigProperty
+   * @param linkProperty
+   * @param step
+   * @param ext
+   * @param dtStartForecast
+   * @param metaMap
+   * @param sFeatTyp
+   * @throws TubigException
+   */
   public static void writeTimeseries( final GMLWorkspace workspace, final String featurePath, final URL context,
       final File outdir, final String tubigProperty, final String linkProperty, final int step, final String ext,
       Date dtStartForecast, final Map metaMap, final String sFeatTyp ) throws TubigException
@@ -66,11 +80,9 @@ public class FeatureVisitorZml2Tubig implements FeatureVisitor
         linkProperty, step, ext, dtStartForecast, metaMap, sFeatTyp );
     features.accept( speicherVisitor );
 
-    // TODO bessere Fehlermeldung? Wenn z.B. keine WQ-Tabelle da ist, kommt diese Fehlermeldung. Man
-    // weiss aber nicht woran das liegt... Nicht so viel schlucken.
     if( speicherVisitor.hasException() )
-      throw new TubigException( "Fehler beim Schreiben der Zeitreihen ins Tubig-Format", speicherVisitor
-          .getExceptions()[0] );
+      throw new TubigException( "Fehler beim Schreiben der Zeitreihen ins Tubig-Format: "
+          + speicherVisitor.getExceptions()[0].getLocalizedMessage(), speicherVisitor.getExceptions()[0] );
   }
 
   private final String m_linkProperty;
