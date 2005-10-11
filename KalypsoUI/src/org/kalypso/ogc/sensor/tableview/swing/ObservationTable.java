@@ -415,4 +415,9 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   {
     m_thresholdColumnsAutoResizeModeOff = thresholdColumnsAutoResizeModeOff;
   }
+  
+  public void setAlphaSortActivated( final boolean bAlphaSort )
+  {
+    m_model.setAlphaSort( bAlphaSort );
+  }
 }

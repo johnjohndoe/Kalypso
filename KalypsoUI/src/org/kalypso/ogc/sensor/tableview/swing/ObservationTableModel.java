@@ -92,6 +92,9 @@ public class ObservationTableModel extends AbstractTableModel
   /** the shared axis is the axis which is common to all "value" columns */
   private IAxis m_sharedAxis = null;
 
+  /** alphabetical sort order is activated by default */
+  private boolean m_alphaSort = true;
+
   private final static Logger m_logger = Logger.getLogger( ObservationTableModel.class.getName() );
 
   /**
@@ -99,20 +102,27 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public void addColumn( final TableViewColumn col ) throws SensorException
   {
-    // TODO: Marc: m_columns is often synchronized, but not always (e.g. at this point)
-    // make shure it is always synchronized, but leave out any code which
-    // may cause dead locks (like fire...() )
-    // REMARK: we still get ArrayIndexOutOfBounds Exceptions for m_columns
-    
-    // columns should be in ascending order (since we always add them in that order)
-    final Object[] cols = m_columns.toArray();
+    synchronized( m_columns )
+    {
+      final Object[] cols = m_columns.toArray();
 
-    // find good position for column (alphabetically sorted)
-    int i = Arrays.binarySearch( cols, col, ColOrderComparator.INSTANCE );
-    if( i < 0 )
-      i = -i - 1;
+      int i = 0;
+      
+      if( m_alphaSort )
+      {
+        // find good position for column (alphabetically sorted)
+        i = Arrays.binarySearch( cols, col, ColOrderComparator.INSTANCE );
+        if( i < 0 )
+          i = -i - 1;
+      }
+      else
+      {
+        // add column at last position
+        i = cols.length;
+      }
 
-    addColumn( col, i );
+      addColumn( col, i );
+    }
   }
 
   /**
@@ -177,11 +187,14 @@ public class ObservationTableModel extends AbstractTableModel
 
   public void refreshColumn( final TableViewColumn column, final Object sourceObject ) throws SensorException
   {
-    if( sourceObject == this )
-      return;
-    
-    final int pos = removeColumn( column );
-    addColumn( column, pos );
+    synchronized( m_columns )
+    {
+      if( sourceObject == this )
+        return;
+
+      final int pos = removeColumn( column );
+      addColumn( column, pos );
+    }
   }
 
   /**
@@ -259,39 +272,42 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public Object getValueAt( int rowIndex, int columnIndex )
   {
-    try
+    synchronized( m_columns )
     {
-      final Object key = m_sharedModel.toArray()[rowIndex];
-
-      if( columnIndex == 0 )
-        return key;
-
       try
       {
-        final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
-        final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
-        final int ix = values.indexOf( key, col.getKeyAxis() );
-        if( ix != -1 )
-          return values.getElement( ix, col.getAxis() );
+        final Object key = m_sharedModel.toArray()[rowIndex];
 
+        if( columnIndex == 0 )
+          return key;
+
+        try
+        {
+          final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
+          final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
+          final int ix = values.indexOf( key, col.getKeyAxis() );
+          if( ix != -1 )
+            return values.getElement( ix, col.getAxis() );
+
+          return null;
+        }
+        catch( final SensorException e )
+        {
+          e.printStackTrace();
+          throw new IllegalStateException( e.getLocalizedMessage() );
+        }
+      }
+      catch( final ArrayIndexOutOfBoundsException e )
+      {
+        // TRICKY: Ich weiss nicht warum, diese Exception taucht auf wenn die
+        // Berechnung im Wizard gestartet wird. Ich denke, es liegt daran, dass
+        // im Hintergrund die Zeitreihen aktualisiert werden, der Pool schickt
+        // das Event, und die Tabelle versucht sich zu aktualisieren: dabei
+        // ist der Model nicht mehr genau in Sync mit die Daten
+        // WORKAROUND: wir ignorieren die Exception ganz leise und geben
+        // einfach null zurück.
         return null;
       }
-      catch( final SensorException e )
-      {
-        e.printStackTrace();
-        throw new IllegalStateException( e.getLocalizedMessage() );
-      }
-    }
-    catch( final ArrayIndexOutOfBoundsException e )
-    {
-      // TRICKY: Ich weiss nicht warum, diese Exception taucht auf wenn die
-      // Berechnung im Wizard gestartet wird. Ich denke, es liegt daran, dass
-      // im Hintergrund die Zeitreihen aktualisiert werden, der Pool schickt
-      // das Event, und die Tabelle versucht sich zu aktualisieren: dabei
-      // ist der Model nicht mehr genau in Sync mit die Daten
-      // WORKAROUND: wir ignorieren die Exception ganz leise und geben
-      // einfach null zurück.
-      return null;
     }
   }
 
@@ -316,42 +332,45 @@ public class ObservationTableModel extends AbstractTableModel
    */
   public void setValueAt( Object aValue, int rowIndex, int columnIndex )
   {
-    // TRICKY: if value is null, do nothing (NOTE: the DoubleCellEditor used
-    // within our ObservationTable returns null when editing has been cancelled
-    // and in our case this means: don't modify the status)
-    if( aValue == null )
-      return;
-
-    // date column is not editable!
-    if( columnIndex == 0 )
-      return;
-
-    final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
-
-    try
+    synchronized( m_columns )
     {
-      final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
-      final Object key = m_sharedModel.toArray()[rowIndex];
-      final int ix = values.indexOf( key, col.getKeyAxis() );
-      if( ix != -1 )
+      // TRICKY: if value is null, do nothing (NOTE: the DoubleCellEditor used
+      // within our ObservationTable returns null when editing has been cancelled
+      // and in our case this means: don't modify the status)
+      if( aValue == null )
+        return;
+
+      // date column is not editable!
+      if( columnIndex == 0 )
+        return;
+
+      final TableViewColumn col = (TableViewColumn)m_columns.get( columnIndex - 1 );
+
+      try
       {
-        // first set status (may be overriden)
-        final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
-        if( statusAxis != null )
-          values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
+        final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
+        final Object key = m_sharedModel.toArray()[rowIndex];
+        final int ix = values.indexOf( key, col.getKeyAxis() );
+        if( ix != -1 )
+        {
+          // first set status (may be overriden)
+          final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
+          if( statusAxis != null )
+            values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
 
-        // then set value
-        values.setElement( ix, aValue, col.getAxis() );
+          // then set value
+          values.setElement( ix, aValue, col.getAxis() );
 
-        col.setDirty( true, this );
+          col.setDirty( true, this );
+        }
+        else
+          m_logger.info( "Cannot setValue because key not found" );
       }
-      else
-        m_logger.info( "Cannot setValue because key not found" );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      throw new IllegalStateException( e.getLocalizedMessage() );
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+        throw new IllegalStateException( e.getLocalizedMessage() );
+      }
     }
   }
 
@@ -366,39 +385,51 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
+   * Set the flag for alphabetical sorting order. If true, columns are sorted according to their name in alphabetical
+   * order.
+   */
+  public void setAlphaSort( boolean alphaSort )
+  {
+    m_alphaSort = alphaSort;
+  }
+
+  /**
    * Finds the renderingrules for the given element.
    * 
    * @return rendering rules or empty array if no rules found.
    */
   public RenderingRule[] findRules( int row, int column )
   {
-    if( column == 0 )
-      return EMPTY_RENDERING_RULES;
-
-    final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
-    try
+    synchronized( m_columns )
     {
-      final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
-      final Object key = m_sharedModel.toArray()[row];
-      final int ix = values.indexOf( key, col.getKeyAxis() );
-      if( ix != -1 )
+      if( column == 0 )
+        return EMPTY_RENDERING_RULES;
+
+      final TableViewColumn col = (TableViewColumn)m_columns.get( column - 1 );
+      try
       {
-        final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
-        if( statusAxis != null )
+        final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
+        final Object key = m_sharedModel.toArray()[row];
+        final int ix = values.indexOf( key, col.getKeyAxis() );
+        if( ix != -1 )
         {
-          final Number status = (Number)values.getElement( ix, statusAxis );
+          final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
+          if( statusAxis != null )
+          {
+            final Number status = (Number)values.getElement( ix, statusAxis );
 
-          if( status != null )
-            return m_rules.findRules( status );
+            if( status != null )
+              return m_rules.findRules( status );
+          }
         }
-      }
 
-      return EMPTY_RENDERING_RULES;
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      throw new IllegalStateException( e.getLocalizedMessage() );
+        return EMPTY_RENDERING_RULES;
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+        throw new IllegalStateException( e.getLocalizedMessage() );
+      }
     }
   }
 
@@ -500,7 +531,7 @@ public class ObservationTableModel extends AbstractTableModel
 
     // dump header and fetch numberformats
     writer.write( m_sharedAxis.getName() );
-    
+
     int col = 1;
     for( final Iterator it = m_columns.iterator(); it.hasNext(); )
     {
@@ -510,10 +541,10 @@ public class ObservationTableModel extends AbstractTableModel
 
       writer.write( separator );
       writer.write( tvc.getName() );
-      
+
       col++;
     }
-    
+
     writer.newLine();
 
     // dump values
@@ -530,9 +561,9 @@ public class ObservationTableModel extends AbstractTableModel
         final Object value = getValueAt( row, col );
 
         writer.write( separator );
-        
+
         if( nf[col] != null && value != null )
-            writer.write( nf[col].format( value ) );
+          writer.write( nf[col].format( value ) );
         else
           writer.write( "" );
       }
