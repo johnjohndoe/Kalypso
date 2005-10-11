@@ -600,10 +600,12 @@
 				<arg name="label" value="Staßfurt"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Staßfurt.zml"/>
 			</arg>
+<!-- keine W/Q-Beziehung für Neugattersleben
 			<arg name="obs14">
 				<arg name="label" value="Neugattersleben"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Neugattersleben.zml"/>
 			</arg>
+-->
 			<arg name="obs15">
 				<arg name="label" value="Elend"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Elend.zml"/>
