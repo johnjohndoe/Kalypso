@@ -263,7 +263,7 @@ public class TubigBatchInterpreter
                           }
 
                           // TODO Monika Ende-Token **ende** noch
-                          // weiterverabeiten
+                          // weiterverabeiten (BODESTEU liefert aber noch keine Ausgabe)
                           bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog, pwErr, cancelable );
 
                         }
