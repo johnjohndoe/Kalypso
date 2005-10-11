@@ -91,4 +91,9 @@ public final class PSICompactFactory
 
     return m_psiCalendar;
   }
+  
+  public final static String toKalypsoRight( final String psiRight )
+  {
+    return getProperties().getProperty( "RIGHT_" + psiRight );
+  }
 }

@@ -18,6 +18,9 @@ import de.psi.go.lhwz.ECommException;
 /**
  * PSICompactCommiter
  * 
+ * TODO :PSICOMPACT_SUFFIX: wenn bei commiten noch vorhanden sollte durch eine default-value ersetzt werden (kann der
+ * Fall sein wenn z.B. kein UserService zur Verfügung steht)
+ * 
  * @author schlienger
  */
 public class PSICompactCommiter implements IMetaDocCommiter

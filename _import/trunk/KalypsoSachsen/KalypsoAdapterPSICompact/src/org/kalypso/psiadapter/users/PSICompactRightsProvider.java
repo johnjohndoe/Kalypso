@@ -56,18 +56,15 @@ public class PSICompactRightsProvider implements IUserRightsProvider
       final ArrayList rights = new ArrayList();
       final String[] userClasses = m_psicompact.getUserClasses( username.toLowerCase() );
 
-      // leere Rechte rauschmeissen
+      // handle "null", remove whitespaces, convert right for kalypso
       for( int i = 0; i < userClasses.length; i++ )
       {
-        String right = userClasses[i];
-        if( right != null )
-        {
-          right = right.trim();
-
-          if( right.length() != 0 )
-            rights.add( right.trim() );
-        }
+        if( userClasses[i] != null )
+          rights.add( PSICompactFactory.toKalypsoRight( userClasses[i].trim() ) );
       }
+      
+      // CONVENTION: always add the Vorhersage right
+      rights.add( PSICompactFactory.toKalypsoRight( "" ) );
 
       return (String[])rights.toArray( new String[rights.size()] );
     }
