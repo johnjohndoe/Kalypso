@@ -4,6 +4,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -162,6 +163,8 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
       // no authentication succeeded till now, so let's give a last chance
       // using the default authenticator
       m_user = new DefaultAuthenticator().authenticate( shell );
+      
+      MessageDialog.openWarning( shell, "Kalypso-Login", "Login fehlgeschlagen." );
     }
     finally
     {
