@@ -158,7 +158,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
           final ObstableviewType baseTemplate = TableViewUtils.loadTableTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          status = TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false );
+          status = TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), false, null );
         }
         else
           throw new IllegalArgumentException( "Kann Vorlage nicht öffnen, Typ wird nicht unterstützt." );
