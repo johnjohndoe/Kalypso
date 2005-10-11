@@ -305,25 +305,4 @@
 			</wiski_simulation_zukunft>
 		</Wiski>
 	</WiskiMember>
-<!-- kein W/Q für Neugattersleben, da Neugattersleben mehr eine Hilfsgröße in dem Modell ist
-	<WiskiMember>
-		<Wiski fid="WLM_Neugattersleben">
-			<lokal>
-				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Vorhersage/Neugattersleben.zml" linktype="zml"/>
-			</lokal>
-			<wiski_vergangenheit>
-				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-			</wiski_vergangenheit>
-			<wiski_zukunft>
-				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Bode_Prog.Wasserstand.579090" linktype="zml"/>
-			</wiski_zukunft>
-			<wiski_simulation_vergangenheit>
-				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="" linktype="zml"/>
-			</wiski_simulation_vergangenheit>
-			<wiski_simulation_zukunft>
-				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Bode_SimProg.Wasserstand.579090" linktype="zml"/>
-			</wiski_simulation_zukunft>
-		</Wiski>
-	</WiskiMember>
--->
 </WiskiCollection>
