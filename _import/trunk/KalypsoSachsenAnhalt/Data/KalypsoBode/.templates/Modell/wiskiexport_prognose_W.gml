@@ -305,6 +305,7 @@
 			</wiski_simulation_zukunft>
 		</Wiski>
 	</WiskiMember>
+<!-- kein W/Q für Neugattersleben, da Neugattersleben mehr eine Hilfsgröße in dem Modell ist
 	<WiskiMember>
 		<Wiski fid="WLM_Neugattersleben">
 			<lokal>
@@ -324,4 +325,5 @@
 			</wiski_simulation_zukunft>
 		</Wiski>
 	</WiskiMember>
+-->
 </WiskiCollection>
