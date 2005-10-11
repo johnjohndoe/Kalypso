@@ -164,7 +164,9 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
       // using the default authenticator
       m_user = new DefaultAuthenticator().authenticate( shell );
       
-      MessageDialog.openWarning( shell, "Kalypso-Login", "Login fehlgeschlagen." );
+      // if user is still null, then inform user
+      if( m_user == null )
+        MessageDialog.openWarning( shell, "Kalypso-Login", "Login fehlgeschlagen." );
     }
     finally
     {
