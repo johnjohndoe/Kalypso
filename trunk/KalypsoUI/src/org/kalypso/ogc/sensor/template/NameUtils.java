@@ -80,15 +80,18 @@ public class NameUtils
    * <dt>%axisunit%</dt>
    * <dd>Einheit der Wert-Achse: axis.getUnit()</dd>
    * </dl>
-   *  
    */
   public static String replaceTokens( final String formatString, final IObservation obs, final IAxis axis )
   {
     String result = formatString;
     result = result.replaceAll( TOKEN_OBSNAME, obs.getName() );
-    result = result.replaceAll( TOKEN_AXISNAME, axis.getName() );
-    result = result.replaceAll( TOKEN_AXISTYPE, axis.getType() );
-    result = result.replaceAll( TOKEN_AXISUNIT, axis.getUnit() );
+
+    if( axis != null )
+    {
+      result = result.replaceAll( TOKEN_AXISNAME, axis.getName() );
+      result = result.replaceAll( TOKEN_AXISTYPE, axis.getType() );
+      result = result.replaceAll( TOKEN_AXISUNIT, axis.getUnit() );
+    }
 
     // Metadaten
     int index = 0;
