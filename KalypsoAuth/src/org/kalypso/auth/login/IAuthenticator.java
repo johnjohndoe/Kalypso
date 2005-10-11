@@ -52,6 +52,7 @@ public interface IAuthenticator
   /**
    * @return a user object or null if login failed
    * @throws InterruptedException if user cancels the login process
+   * @throws IllegalStateException if authentication was not possible, give a chance to other authenticators
    */
   public IKalypsoUser authenticate( final Shell shell ) throws InterruptedException, Exception;
 }

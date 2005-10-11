@@ -76,12 +76,19 @@ public class KalypsoApplication implements IPlatformRunnable
 
       final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
       authPlugin.startLoginProcedure( display );
-      final IKalypsoUser user = authPlugin.getCurrentUser();
 
-      if( user == null )
+      try
+      {
+        final IKalypsoUser user = authPlugin.getCurrentUser();
+        if( user == null )
+          return IPlatformRunnable.EXIT_OK;
+
+        return startWorkbench( display, new KalypsoWorkbenchAdvisor( user ) );
+      }
+      catch( final IllegalStateException e )
+      {
         return IPlatformRunnable.EXIT_OK;
-
-      return startWorkbench( display, new KalypsoWorkbenchAdvisor( user ) );
+      }
     }
     catch( InterruptedException e )
     {

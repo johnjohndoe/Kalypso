@@ -90,7 +90,9 @@ public class UserServiceAuthenticator implements IAuthenticator
     final boolean askForScenario = srv.isAskForScenario();
     if( askForLogin || askForScenario )
     {
-      for( int i = 0; i < 3; i++ )
+      final int iter = askForLogin ? 3 : 1;
+      
+      for( int i = 0; i < iter; i++ )
       {
         final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell, MSG, askForLogin, username, askForLogin,
             askForScenario, scenarios );
@@ -125,6 +127,7 @@ public class UserServiceAuthenticator implements IAuthenticator
     if( rights != null && rights.length > 0 )
       return new KalypsoUser( username, rights, scenario.getId(), scenarios );
 
-    return null;
+    // throw an exception to indicate error state
+    throw new IllegalStateException( "Authentifizierung fehlgeschlagen" );
   }
 }

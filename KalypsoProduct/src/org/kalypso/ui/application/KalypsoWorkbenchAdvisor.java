@@ -67,6 +67,12 @@ import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 import org.kalypso.simulation.ui.startscreen.PrognosePerspective;
 
 /**
+ * TODO wenn Kalypso nur in Vorhersage-Modus gestartet wird, besteht doch die Möglichkeit durch Tastatur shortcuts
+ * zwischen geöffnete Perspektiven, Editoren, usw. zu wechseln. Man sollte also grunsätzlich alle vorhandene
+ * Perspektiven und Editoren schliessen wenn Kalypso nur im Vorhersage-Modus gestartet wird. Es bleibt auch zu prüfen ob
+ * durch Tastatur-Shortcuts doch nicht andere Perspektiven oder Editoren zB. geöffnet werden können. In dem Fall sollte
+ * man auch die Shortcuts deaktivieren.
+ * 
  * @author belger
  */
 public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
@@ -161,7 +167,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
         .findPerspectiveWithId( PrognosePerspective.class.getName() );
     window.addPerspectiveListener( new FullscreenPerspectiveListener( wizardPerspective, false, true ) );
-    
+
     if( !m_user.hasRight( UserRights.RIGHT_EXPERT ) && !m_user.hasRight( UserRights.RIGHT_ADMIN ) )
     {
       windowConfigurer.setShowCoolBar( false );
@@ -172,7 +178,6 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       windowConfigurer.setShowStatusLine( false );
     }
   }
-  
 
   /**
    * @see org.eclipse.ui.application.WorkbenchAdvisor#postWindowOpen(org.eclipse.ui.application.IWorkbenchWindowConfigurer)
@@ -183,24 +188,24 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
 
     // HACK: close the WizardPerspective if it is still open
     // TODO: was?
-//    final IWorkbenchWindow window = configurer.getWindow();
-//    final IPerspectiveRegistry perspectiveRegistry = window.getWorkbench().getPerspectiveRegistry();
-//    final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
-//        .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
-//    
-//    final IWorkbenchPage activePage = window.getActivePage();
-//    
-//    // DOUBLE-HACK: ther is no public API to access the perspectives in the page :-(
-//    if( ((WorkbenchPage)activePage).findPerspective( wizardPerspective ) != null )
-//    {
-//      // activate perspective, to it can be closed
-//      activePage.setPerspective( wizardPerspective );
-//      activePage.setPerspective( wizardPerspective );
-//      final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( window );
-//      closePerspAction.run();
-//    }
+    //    final IWorkbenchWindow window = configurer.getWindow();
+    //    final IPerspectiveRegistry perspectiveRegistry = window.getWorkbench().getPerspectiveRegistry();
+    //    final IPerspectiveDescriptor wizardPerspective = perspectiveRegistry
+    //        .findPerspectiveWithId( CalcWizardPerspective.class.getName() );
+    //    
+    //    final IWorkbenchPage activePage = window.getActivePage();
+    //    
+    //    // DOUBLE-HACK: ther is no public API to access the perspectives in the page :-(
+    //    if( ((WorkbenchPage)activePage).findPerspective( wizardPerspective ) != null )
+    //    {
+    //      // activate perspective, to it can be closed
+    //      activePage.setPerspective( wizardPerspective );
+    //      activePage.setPerspective( wizardPerspective );
+    //      final ClosePerspectiveAction closePerspAction = new ClosePerspectiveAction( window );
+    //      closePerspAction.run();
+    //    }
   }
-  
+
   /**
    * @see org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor#postStartup()
    */
