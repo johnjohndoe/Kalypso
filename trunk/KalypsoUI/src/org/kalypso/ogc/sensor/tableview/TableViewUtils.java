@@ -51,6 +51,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -267,7 +268,7 @@ public final class TableViewUtils
   }
 
   public static IStatus applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
-      final boolean synchron )
+      final boolean synchron, final String ignoreHref )
   {
     view.removeAllItems();
 
@@ -296,6 +297,16 @@ public final class TableViewUtils
     {
       final TypeObservation tobs = (TypeObservation)it.next();
 
+      // check, if href is ok
+      final String href = tobs.getHref();
+
+      // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
+      if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
+      {
+        Logger.getLogger( TableViewUtils.class.getName() ).warning( "Href ignored: " + href );
+        continue;
+      }
+      
       final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs, context, synchron );
       stati.add( loader.getResult() );
     }
