@@ -56,24 +56,6 @@ public class SpreeInputWorker
   }
 
   /**
-   * Erzeugt aus den InputBeans eine HashMap der Form [id |-> bean]
-   * 
-   * @param input
-   * @return map
-   */
-  public static Map hashInput( final CalcJobClientBean[] input )
-  {
-    final Map map = new HashMap( input.length );
-    for( int i = 0; i < input.length; i++ )
-    {
-      final CalcJobClientBean bean = input[i];
-      map.put( bean.getId(), bean );
-    }
-
-    return map;
-  }
-
-  /**
    * <p>
    * Converts inputfiles to nativefiles and reads control parameters
    * </p>

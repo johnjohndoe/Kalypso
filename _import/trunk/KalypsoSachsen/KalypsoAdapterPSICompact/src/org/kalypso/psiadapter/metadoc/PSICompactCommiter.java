@@ -49,7 +49,13 @@ public class PSICompactCommiter implements IMetaDocCommiter
   public void commitDocument( final Properties serviceProps, final Map metadata, final File docFile )
       throws MetaDocException
   {
-    final File xmlFile = new File( FileUtilities.nameWithoutExtension( docFile.getAbsolutePath() ) + ".xml" );
+    final String docFilePath = docFile.getAbsolutePath();
+    final String goodDocFilePath = filenameCleaner( docFilePath );
+    
+    final File goodDocFile = new File( goodDocFilePath );
+    docFile.renameTo( goodDocFile );
+    
+    final File xmlFile = new File( FileUtilities.nameWithoutExtension( goodDocFilePath ) + ".xml" );
 
     try
     {
@@ -58,19 +64,18 @@ public class PSICompactCommiter implements IMetaDocCommiter
 
       final Writer writer = new OutputStreamWriter( new FileOutputStream( xmlFile ), "UTF-8" );
       // closes writer
-      MetaDocSerializer.buildXML( serviceProps, mdProps, writer, docFile.getName() );
+      MetaDocSerializer.buildXML( serviceProps, mdProps, writer, goodDocFile.getName() );
 
       // commit the both files (important: last one is the xml file)
       final String dist = serviceProps.getProperty( PSICOMPACT_DIST ) + "/";
-      String distDocFile = dist + docFile.getName();
-      distDocFile = distDocFile.replace( '\\', '/' );
-      String distXmlFile = dist + xmlFile.getName();
-      distXmlFile = distXmlFile.replace( '\\', '/' );
+      
+      final String distDocFile = dist + goodDocFile.getName();
+      final String distXmlFile = dist + xmlFile.getName();
 
-      distributeFile( docFile, distDocFile );
+      distributeFile( goodDocFile, distDocFile );
       distributeFile( xmlFile, distXmlFile );
     }
-    catch( Exception e ) // generic for simplicity
+    catch( final Exception e ) // generic for simplicity
     {
       throw new MetaDocException( e );
     }
@@ -79,6 +84,27 @@ public class PSICompactCommiter implements IMetaDocCommiter
       docFile.delete();
       xmlFile.delete();
     }
+  }
+
+  /**
+   * Dateinamen für PSICompact bereinigen.
+   * <p>Keine Umlaute, Spaces und die richtigen Slashes</p>
+   */
+  private String filenameCleaner( final String filename )
+  {
+    String newName = filename;
+    
+    newName = newName.replace( '\\', '/' );
+    newName = newName.replace( ' ', '_' );
+    newName = newName.replaceAll( "ä", "ae" );
+    newName = newName.replaceAll( "ö", "oe" );
+    newName = newName.replaceAll( "ü", "ue" );
+    newName = newName.replaceAll( "ß", "ss" );
+    newName = newName.replaceAll( "Ä", "AE" );
+    newName = newName.replaceAll( "Ö", "OE" );
+    newName = newName.replaceAll( "Ü", "UE" );
+    
+    return newName;
   }
 
   private void distributeFile( final File file, final String distFile ) throws ECommException
