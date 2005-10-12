@@ -84,8 +84,12 @@ public class NameUtils
   public static String replaceTokens( final String formatString, final IObservation obs, final IAxis axis )
   {
     String result = formatString;
-    result = result.replaceAll( TOKEN_OBSNAME, obs.getName() );
 
+    // observation
+    if( obs != null )
+      result = result.replaceAll( TOKEN_OBSNAME, obs.getName() );
+
+    // axis
     if( axis != null )
     {
       result = result.replaceAll( TOKEN_AXISNAME, axis.getName() );
@@ -93,27 +97,31 @@ public class NameUtils
       result = result.replaceAll( TOKEN_AXISUNIT, axis.getUnit() );
     }
 
-    // Metadaten
-    int index = 0;
-    while( index < result.length() - 1 )
+    // Metadata
+    if( obs != null )
     {
-      final int start = result.indexOf( "%metadata-", index );
-      if( start == -1 )
-        break;
-
-      final int stop = result.indexOf( '%', start + 1 );
-      if( stop != -1 )
+      int index = 0;
+      while( index < result.length() - 1 )
       {
-        final String metaname = result.substring( start + "%metadata-".length(), stop );
-        final StringBuffer sb = new StringBuffer( result );
+        final int start = result.indexOf( "%metadata-", index );
+        if( start == -1 )
+          break;
 
-        final String metaval = obs.getMetadataList().getProperty( metaname, "<Metavalue '" + metaname + "' not found>" );
-        sb.replace( start, stop + 1, metaval );
+        final int stop = result.indexOf( '%', start + 1 );
+        if( stop != -1 )
+        {
+          final String metaname = result.substring( start + "%metadata-".length(), stop );
+          final StringBuffer sb = new StringBuffer( result );
 
-        result = sb.toString();
+          final String metaval = obs.getMetadataList().getProperty( metaname,
+              "<Metavalue '" + metaname + "' not found>" );
+          sb.replace( start, stop + 1, metaval );
+
+          result = sb.toString();
+        }
+
+        index = stop + 1;
       }
-
-      index = stop + 1;
     }
 
     return result;
