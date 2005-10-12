@@ -1342,39 +1342,39 @@
 			</arg>
 <!-- interne Pegel
 			<arg name="obs65">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Hilfspunkt"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Hilfspunkt"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579084.zml"/>
 			</arg>
 			<arg name="obs63">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="an Holtemme"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="an Holtemme"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579069.zml"/>
 			</arg>
 			<arg name="obs62">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Mdg"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Mdg"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579713.zml"/>
 			</arg>
 			<arg name="obs57">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="TS-Wendefurth, Bode-Anteil"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="TS-Wendefurth, Bode-Anteil"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579014.zml"/>
 			</arg>
 			<arg name="obs55">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Rappbode-TS, TWA"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Rappbode-TS, TWA"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579013.zml"/>
 			</arg>
 			<arg name="obs45">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Mündung"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Mündung"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579621.zml"/>
 			</arg>
 			<arg name="obs37">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Elstermündung"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Elstermündung"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/576950.zml"/>
 			</arg>
 			<arg name="obs34">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Kleindalzig"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Kleindalzig"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/576631.zml"/>
 			</arg>
 			<arg name="obs28">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Nikolausrieth"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Nikolausrieth"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/575450.zml"/>
 			</arg>
 -->			
@@ -1642,39 +1642,39 @@
 			</arg>
 <!-- interne Pegel
 			<arg name="obs65">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Hilfspunkt"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Hilfspunkt"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579084.zml"/>
 			</arg>
 			<arg name="obs63">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="an Holtemme"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="an Holtemme"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579069.zml"/>
 			</arg>
 			<arg name="obs62">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Mdg"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Mdg"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579713.zml"/>
 			</arg>
 			<arg name="obs57">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="TS-Wendefurth, Bode-Anteil"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="TS-Wendefurth, Bode-Anteil"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579014.zml"/>
 			</arg>
 			<arg name="obs55">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Rappbode-TS, TWA"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Rappbode-TS, TWA"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579013.zml"/>
 			</arg>
 			<arg name="obs45">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Mündung"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Mündung"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/579621.zml"/>
 			</arg>
 			<arg name="obs37">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Elstermündung"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Elstermündung"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/576950.zml"/>
 			</arg>
 			<arg name="obs34">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Kleindalzig"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Kleindalzig"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/576631.zml"/>
 			</arg>
 			<arg name="obs28">
-				<arg name="label" value="%obsname%"/> <!-- <arg name="label" value="Nikolausrieth"/> --> <!--
+				<arg name="label" value="%obsname%"/> --> <!-- <arg name="label" value="Nikolausrieth"/> --> <!--
 				<arg name="href" value="./Ergebnisse/Durchfluss/575450.zml"/>
 			</arg>
 -->			

@@ -1,4 +1,4 @@
-#Tue Oct 11 15:26:50 CEST 2005
+#Wed Oct 12 16:35:21 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -68,6 +68,7 @@ encoding//.prognose/Vorhersage-2005-10-05_10h47/Niederschlag/570000.zml=UTF-8
 encoding//.prognose/OmbroTest/Ombrometer/ID110814.zml=UTF-8
 encoding//Rechenvarianten/20041125_15_07/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/PA_GROEDI.zml=UTF-8
+encoding//.prognose/Magdeburg-Saale-Vorhersage-2005-09-28_14h25/sortiertTalsperrenvolumen.ott=UTF-8
 encoding//.templates/.wizard/modell.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SPREY.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h23/Anfangsvolumen.gtt=UTF-8
@@ -238,6 +239,7 @@ encoding//Rechenl\u00E4ufe/040427/Gesamtansicht.gmt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SAERI.zml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Gesamtansicht.gmt=UTF-8
+encoding//.prognose/Magdeburg-Saale-Vorhersage-2005-09-28_14h25/Durchfluss/570500.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/DerTest/Durchfluss/570000.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
@@ -264,5 +266,6 @@ encoding//Rechenf\u00E4lle/test/.calculation=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_GROEDI.zml=UTF-8
 encoding//Rechenvarianten/20041125_15_07/zeitreihen/Diagramm.odt=UTF-8
 encoding//.templates/Modell/.HWVOR00_import/oldBeispiel/Daten=Cp1252
+encoding//.prognose/Vorhersage-2005-10-12_16h35/.calculation=UTF-8
 encoding//.prognose/prognose11/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-10-05_10h47/Niederschlag/572890.zml=UTF-8
