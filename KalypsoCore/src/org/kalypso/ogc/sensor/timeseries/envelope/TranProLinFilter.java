@@ -110,7 +110,8 @@ public class TranProLinFilter extends AbstractObservationFilter
   {
     final ITuppleModel outerSource = super.getValues( args );
 
-    if( outerSource.getCount() == 0 )
+    final int outerSourceCount = outerSource.getCount();
+    if( outerSourceCount == 0 )
       return outerSource;
 
     final IAxis[] axes = outerSource.getAxisList();
@@ -139,7 +140,7 @@ public class TranProLinFilter extends AbstractObservationFilter
       if( dateBegin == null )
         dateBegin = (Date)outerSource.getElement( 0, dateAxis );
       if( dateEnd == null )
-        dateEnd = (Date)outerSource.getElement( outerSource.getCount() - 1, dateAxis );
+        dateEnd = (Date)outerSource.getElement( outerSourceCount - 1, dateAxis );
 
       //      // iterate first time to know the real bounds
       //      Date tranpolinBegin = null;
@@ -155,11 +156,17 @@ public class TranProLinFilter extends AbstractObservationFilter
       //          tranpolinEnd = date;
       //      }
 
-      int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateBegin, 0,
-          outerSource.getCount() );
-      int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateEnd, sourceIndexBegin,
-          outerSource.getCount() );
-      int targetMaxRows = sourceIndexEnd - sourceIndexBegin;
+      final int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateBegin, 0,
+          outerSourceCount );
+      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateEnd, sourceIndexBegin,
+          outerSourceCount );
+      
+      if( sourceIndexEnd > outerSourceCount - 1 )
+      {
+        System.out.println("bloed");
+      }
+      
+      int targetMaxRows = sourceIndexEnd - sourceIndexBegin + 1;
 
       final long distTime = dateEnd.getTime() - dateBegin.getTime();
 
@@ -184,7 +191,7 @@ public class TranProLinFilter extends AbstractObservationFilter
       final IAxis[] axesCopy = (IAxis[])axesListToCopy.toArray( new IAxis[axesListToCopy.size()] );
       final IAxis[] axesTransform = (IAxis[])axesListToTransform.toArray( new IAxis[axesListToTransform.size()] );
       final Date[] targetDates = new Date[targetMaxRows];
-      for( int row = sourceIndexBegin; row < sourceIndexEnd; row++ )
+      for( int row = sourceIndexBegin; row < sourceIndexEnd + 1; row++ )
         targetDates[row] = (Date)outerSource.getElement( row, dateAxis );
 
       final ITuppleModel innerSource;
@@ -214,12 +221,10 @@ public class TranProLinFilter extends AbstractObservationFilter
       else
         outerTarget = innerTarget;
 
-      //      final IAxis[] innerAxis = innerTarget.getAxisList();
-
       double deltaOperand = m_operandEnd - m_operandBegin;
       // iterate second time to perform transformation
       int targetRow = 0;
-      for( int sourceRow = sourceIndexBegin; sourceRow < sourceIndexEnd; sourceRow++ )
+      for( int sourceRow = sourceIndexBegin; sourceRow < sourceIndexEnd + 1; sourceRow++ )
       {
         final Date date = (Date)outerSource.getElement( sourceRow, dateAxis );
 

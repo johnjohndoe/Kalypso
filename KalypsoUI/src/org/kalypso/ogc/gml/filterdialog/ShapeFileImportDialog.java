@@ -36,7 +36,6 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -74,7 +73,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
-import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.XMLParsingException;
@@ -133,10 +131,6 @@ public class ShapeFileImportDialog extends Dialog
   private GMLWorkspace m_workspace;
 
   private boolean m_withStyleSelection;
-
-  /**
-   *  
-   */
 
   public ShapeFileImportDialog( Shell parentShell, boolean withStyleSelection )
   {
