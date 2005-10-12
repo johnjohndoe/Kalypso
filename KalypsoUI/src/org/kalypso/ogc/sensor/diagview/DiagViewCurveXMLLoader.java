@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
@@ -66,7 +67,7 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
 /**
  * Waits for the observation to be loaded and creates a diagram-curve using the xml-template information.
  * 
- * @see org.kalypso.util.pool.PoolableObjectWaiter 
+ * @see org.kalypso.util.pool.PoolableObjectWaiter
  * 
  * @author schlienger
  */
@@ -132,14 +133,21 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       }
 
       if( color == null )
-        color = ColorUtilities.random();
+      {
+        final IAxis axis = DiagViewUtils.getValueAxis( (AxisMapping[])mappings
+            .toArray( new AxisMapping[mappings.size()] ) );
+        if( axis != null )
+          color = TimeserieUtils.getColorFor( axis.getType() );
+        else
+          color = ColorUtilities.random();
+      }
 
       final String curveName = NameUtils.replaceTokens( tcurve.getName(), obs, null );
 
       // each curve gets its own provider since the curve disposes its provider, when it get disposed
       final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
           : new PooledObsProvider( key, null );
-            
+
       final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, null, (AxisMapping[])mappings
           .toArray( new AxisMapping[0] ) );
       curve.setShown( tcurve.isShown() );
