@@ -60,12 +60,10 @@ import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -160,10 +158,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   private IPath m_modelPath;
 
-  private ISelection m_selection;
-
-  private IWorkspace m_workspace;
-
   private GMLSchema m_hydrotopSchema;
 
   private Path m_hydPath;
@@ -243,7 +237,6 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    this.m_selection = selection;
   }
 
   /**
