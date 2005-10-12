@@ -48,6 +48,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,85 +63,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
  */
 public class DWDRasterHelper
 {
-  private static SimpleDateFormat m_lmDateFormat = new SimpleDateFormat( "'lm_'yyyy'_'MM'_'dd'_'hh" );
-
-  /**
-   * example filename for dwd raster format: "lm_2004_11_10_00"
-   * 
-   * @param file
-   *          rasterfile
-   * @return date from raster
-   */
-  public static Date getDateFromRaster( File file )
-  {
-    String fileName = file.getName();
-    try
-    {
-      return m_lmDateFormat.parse( fileName );
-    }
-    catch( ParseException e )
-    {
-      System.out.println( " file " + fileName + " is must be in format \"lm_yyyy_MM_dd_hh\"" );
-      return null;
-    }
-  }
-
-  public static File getNewestFileAndRemoveOthers( File srcDir )
-  {
-    final FileFilter filter = new PrefixFileFilter( "lm_" );
-    final File[] files = srcDir.listFiles( filter );
-    File result = null;
-    Date date = null;
-    // search newest...
-    for( int i = 0; i < files.length; i++ )
-    {
-      final File file = files[i];
-      if( file.isDirectory() )
-        continue;
-      Date testdate = DWDRasterHelper.getDateFromRaster( file );
-      if( testdate == null )
-        continue;
-      if( result == null )
-      {
-        result = file;
-        date = testdate;
-      }
-      else if( testdate.after( date ) )
-      {
-        result = file;
-        date = testdate;
-      }
-    }
-    if( result == null )
-      return null;
-    // got it
-    // remove others
-    for( int i = 0; i < files.length; i++ )
-    {
-      final File file = files[i];
-      if( !file.isDirectory() && ( file != result ) )
-      {
-        System.out.println( "remove " + file.getName() );
-        file.delete();
-      }
-    }
-    return result;
-  }
-
-  /**
-   * @param dwdKey
-   */
-  public static String getAxisTypeForDWDKey( int dwdKey )
-  {
-    switch( dwdKey )
-    {
-    case DWDRaster.KEY_RAIN:
-      return TimeserieConstants.TYPE_RAINFALL;
-    case DWDRaster.KEY_TEMP:
-      return TimeserieConstants.TYPE_TEMPERATURE;
-    }
-    return null;
-  }
+  private final static Logger LOG = Logger.getLogger( DWDRasterHelper.class.getName() );
 
   private final static String DATUM = "([0-9]{10})";
 
@@ -153,6 +76,112 @@ public class DWDRasterHelper
   private final static SimpleDateFormat DATEFORMAT_RASTER = new SimpleDateFormat( "yyMMddHHmm" );
 
   private final static Pattern HEADER_DYNAMIC = Pattern.compile( " " + DATUM + " +" + KEY + " +" + STUNDE );
+
+  /**
+   * Return the most recent DWD file from the given folder, or null if nothing found.
+   * 
+   * @param srcDir
+   *          folder to look at
+   * @param prefix
+   *          prefix used for filtering files from source folder
+   * @param df
+   *          dateformat used for parsing the file name and to extract date from it
+   * @param removeOthers
+   *          when true other older dwd forecasts are deleted
+   */
+  public static File getNewestFile( final File srcDir, final String prefix, final SimpleDateFormat df,
+      final boolean removeOthers )
+  {
+    final FileFilter filter = new PrefixFileFilter( prefix );
+    final File[] files = srcDir.listFiles( filter );
+
+    if( files == null )
+      return null;
+
+    File result = null;
+    Date date = null;
+
+    // search newest...
+    for( int i = 0; i < files.length; i++ )
+    {
+      final File file = files[i];
+      if( file.isDirectory() )
+        continue;
+
+      final Date testdate = getDateFromRaster( file, df );
+      if( testdate == null )
+        continue;
+
+      if( result == null )
+      {
+        result = file;
+        date = testdate;
+      }
+      else if( testdate.after( date ) )
+      {
+        result = file;
+        date = testdate;
+      }
+    }
+
+    if( result == null )
+      return null;
+
+    if( removeOthers )
+    {
+      // got it, so now remove others
+      for( int i = 0; i < files.length; i++ )
+      {
+        final File file = files[i];
+        if( !file.isDirectory() )
+        {
+          final Date d = getDateFromRaster( file, df );
+          if( d != null && d.before( date ) )
+          {
+            LOG.info( "Removing old DWD-Forecast file: " + file.getName() );
+            file.delete();
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Return the date of the dwd forecast file. The date is coded in the file name.
+   * <p>
+   * Example filename for dwd raster format: "lm_2004_11_10_00" and its format would be 'lm_'yyyy'_'MM'_'dd'_'hh
+   * <p>
+   */
+  public static Date getDateFromRaster( final File file, final SimpleDateFormat df )
+  {
+    try
+    {
+      return df.parse( file.getName() );
+    }
+    catch( final ParseException e )
+    {
+      LOG.warning( "DWD-Forecast filename \"" + file.getName() + "\" has not a valid format, should be:"
+          + df.toPattern() );
+      return null;
+    }
+  }
+
+  /**
+   * @param dwdKey
+   */
+  public static String getAxisTypeForDWDKey( int dwdKey )
+  {
+    switch( dwdKey )
+    {
+      case DWDRaster.KEY_RAIN:
+        return TimeserieConstants.TYPE_RAINFALL;
+      case DWDRaster.KEY_TEMP:
+        return TimeserieConstants.TYPE_TEMPERATURE;
+    }
+    return null;
+  }
 
   public static DWDRasterGeoLayer loadGeoRaster( final URL url, final String targetEpsg ) throws Exception
   {
@@ -207,24 +236,24 @@ public class DWDRasterHelper
     }
   }
 
-  private static double getFactorForDwdKey( int dwdKey )
+  private static double getFactorForDwdKey( final int dwdKey )
   {
     switch( dwdKey )
     {
-    case DWDRaster.KEY_HEIGHT:    // [m]
-    case DWDRaster.KEY_BEDECKUNG: // [%]
-      return 1;
-    case DWDRaster.KEY_TAU:       // [GradC]
-      return 1d / 10d;
-    case DWDRaster.KEY_TEMP:      // [GradC]
-    case DWDRaster.KEY_RAIN:      // [mm]
-    case DWDRaster.KEY_SNOW:      // [mm]
-    case DWDRaster.KEY_WINDM:     // [m/s]
-    case DWDRaster.KEY_WINDZ:     // [m/s]
-      return 1d / 100d;
-    case DWDRaster.KEY_100000_LAT: //[grad]
-    case DWDRaster.KEY_100000_LON: //[grad]
-      return 1d / 100000d;
+      case DWDRaster.KEY_HEIGHT: // [m]
+      case DWDRaster.KEY_BEDECKUNG: // [%]
+        return 1;
+      case DWDRaster.KEY_TAU: // [GradC]
+        return 1d / 10d;
+      case DWDRaster.KEY_TEMP: // [GradC]
+      case DWDRaster.KEY_RAIN: // [mm]
+      case DWDRaster.KEY_SNOW: // [mm]
+      case DWDRaster.KEY_WINDM: // [m/s]
+      case DWDRaster.KEY_WINDZ: // [m/s]
+        return 1d / 100d;
+      case DWDRaster.KEY_100000_LAT: //[grad]
+      case DWDRaster.KEY_100000_LON: //[grad]
+        return 1d / 100000d;
     }
     return 1; // unknown
   }
@@ -281,36 +310,36 @@ public class DWDRasterHelper
           continue;
         switch( lmVersion )
         {
-        case 1:
-          final String[] values;
-          values = ( line.trim() ).split( " +", 13 );
-          for( int i = 0; i < values.length; i++ )
-          {
-            double value = Double.parseDouble( values[i] );
-            raster.setValueFor( date, cellpos, value * factor );
-            cellpos++;
-          }
-          break;
-        case 2:
-          values = ( line.trim() ).split( " +" );
-          for( int i = 0; i < values.length; i++ )
-          {
-            double value = Double.parseDouble( values[i] );
-            raster.setValueFor( date, cellpos, value * factor );
-            cellpos++;
-            if( cellpos >= maxCells )
+          case 1:
+            final String[] values;
+            values = ( line.trim() ).split( " +", 13 );
+            for( int i = 0; i < values.length; i++ )
             {
-              long time = date.getTime(); // add one hour
-              date = new Date( time + 1000l * 60l * 60l );
-              cellpos = 0;
+              double value = Double.parseDouble( values[i] );
+              raster.setValueFor( date, cellpos, value * factor );
+              cellpos++;
             }
-          }
-          break;
+            break;
+          case 2:
+            values = ( line.trim() ).split( " +" );
+            for( int i = 0; i < values.length; i++ )
+            {
+              double value = Double.parseDouble( values[i] );
+              raster.setValueFor( date, cellpos, value * factor );
+              cellpos++;
+              if( cellpos >= maxCells )
+              {
+                long time = date.getTime(); // add one hour
+                date = new Date( time + 1000l * 60l * 60l );
+                cellpos = 0;
+              }
+            }
+            break;
         }
       }
       return raster;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw e;
     }
@@ -318,6 +347,5 @@ public class DWDRasterHelper
     {
       IOUtils.closeQuietly( reader );
     }
-
   }
 }
