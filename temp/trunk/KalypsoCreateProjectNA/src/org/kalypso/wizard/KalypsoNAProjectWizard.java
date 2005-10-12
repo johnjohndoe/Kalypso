@@ -463,19 +463,18 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         targetFeature.setProperty( fp );
       }
       // Bodenkorrekturparameter erstellen
-      //TODO: Anzahl durch Dialog
       List list = new ArrayList();
-      FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty( "bodenkorrekturmember", list );
+      FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty( "bodenkorrekturmember", list ); //$NON-NLS-1$
       targetFeature.setProperty( bodenkorrekturProperty );
       int soilLayerNo = Integer.parseInt(m_createPreferencePage.getSoilLayerNo());
       for( int j = 0; j < soilLayerNo; j++ )
       {
-        FeatureTypeProperty bodFtProp = modelFT.getProperty( "bodenkorrekturmember" );
+        FeatureTypeProperty bodFtProp = modelFT.getProperty( "bodenkorrekturmember" ); //$NON-NLS-1$
         FeatureType bodenKorrekturFT = ( (FeatureAssociationTypeProperty_Impl)bodFtProp ).getAssociationFeatureTypes()[0];
         Feature newFeature = m_modelWS.createFeature( bodenKorrekturFT );
         try
         {
-          m_modelWS.addFeatureAsComposition( targetFeature, "bodenkorrekturmember", j, newFeature );
+          m_modelWS.addFeatureAsComposition( targetFeature, "bodenkorrekturmember", j, newFeature ); //$NON-NLS-1$
         }
         catch( Exception e )
         {
@@ -594,17 +593,17 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         targetFeature = FeatureFactory.createFeature( fid, kmFT, true );
 
         List list = new ArrayList();
-        FeatureProperty kmParameterProperty = FeatureFactory.createFeatureProperty( "KMParameterMember", list );
+        FeatureProperty kmParameterProperty = FeatureFactory.createFeatureProperty( "KMParameterMember", list ); //$NON-NLS-1$
         targetFeature.setProperty( kmParameterProperty );
         int channelNo = Integer.parseInt(m_createPreferencePage.getKMChannelNo());
         for( int j = 0; j < channelNo; j++ )
         {
-          FeatureTypeProperty kmFtProp = kmFT.getProperty( "KMParameterMember" );
+          FeatureTypeProperty kmFtProp = kmFT.getProperty( "KMParameterMember" ); //$NON-NLS-1$
           FeatureType kmParameterFT = ( (FeatureAssociationTypeProperty_Impl)kmFtProp ).getAssociationFeatureTypes()[0];
           Feature newFeature = m_modelWS.createFeature( kmParameterFT );
           try
           {
-            m_modelWS.addFeatureAsComposition( targetFeature, "KMParameterMember", j, newFeature );
+            m_modelWS.addFeatureAsComposition( targetFeature, "KMParameterMember", j, newFeature ); //$NON-NLS-1$
           }
           catch( Exception e )
           {
