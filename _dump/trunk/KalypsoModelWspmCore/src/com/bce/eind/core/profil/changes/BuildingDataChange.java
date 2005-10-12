@@ -11,9 +11,9 @@ public class BuildingDataChange
 
   private final BUILDING_PROPERTY m_property;
 
-  private final double m_newValue;
+  private final Object m_newValue;
 
-  public BuildingDataChange( final IProfilBuilding building, final BUILDING_PROPERTY property, final double newValue )
+  public BuildingDataChange( final IProfilBuilding building, final BUILDING_PROPERTY property, final Object newValue )
   {
     m_building = building;
     m_property = property;

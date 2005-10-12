@@ -1,7 +1,7 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.changes.BuildingDataChange;
 import com.bce.eind.core.profil.changes.PointChange;
 
 
@@ -15,10 +15,28 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingChanged()
+   */
+  public void onBuildingChanged(final IProfilBuilding oldBuilding )
+  {
+  }
+
+  /**
+   * Does nothing.
+   * 
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingDataChanged(BuildingDataChange[])
+   */
+  public void onBuildingDataChanged( BuildingDataChange[] changes )
+  {
+  }
+
+  /**
+   * Does nothing.
+   * 
    * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.changes.PointChange[])
    */
  
-  public void onDeviderChanged( IProfilPoint point, IProfilDevider devider )
+  public void onDeviderChanged( IProfilPoint oldPoint, IProfilDevider devider )
   {
      
   }
@@ -26,27 +44,21 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointValuesChanged(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderRemoved( IProfilDevider[] deviders )
    */
-  public void onPointValuesChanged( PointChange[] changes )
+  public void onDeviderRemoved( IProfilDevider[] deviders )
   {
+    
+    
   }
 
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointsAdded(com.bce.eind.core.profil.IProfilPoint[])
+   * @see com.bce.eind.core.profil.IProfilListener#onMetaDataChanged(com.bce.eind.core.profil.IProfil.METADATA,
+   *      java.lang.String)
    */
-  public void onPointsAdded( IProfilPoint[] newPoints )
-  {
-  }
-
-  /**
-   * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointsRemoved(com.bce.eind.core.profil.IProfilPoint[])
-   */
-  public void onPointsRemoved( IProfilPoint[] removedPoints )
+  public void onMetaDataChanged( Object key, Object value )
   {
   }
 
@@ -71,30 +83,26 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onBuildingChanged()
+   * @see com.bce.eind.core.profil.IProfilListener#onPointsAdded(com.bce.eind.core.profil.IProfilPoint[])
    */
-  public void onBuildingChanged(final IProfilBuilding oldBuilding )
+  public void onPointsAdded( IProfilPoint[] newPoints )
   {
   }
 
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onMetaDataChanged(com.bce.eind.core.profil.IProfil.METADATA,
-   *      java.lang.String)
+   * @see com.bce.eind.core.profil.IProfilListener#onPointsRemoved(com.bce.eind.core.profil.IProfilPoint[])
    */
-  public void onMetaDataChanged( Object key, Object value )
+  public void onPointsRemoved( IProfilPoint[] removedPoints )
   {
   }
-
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onBuildingDataChanged(com.bce.eind.core.profil.BUILDING_PROPERTY,
-   *      Object)
+   * @see com.bce.eind.core.profil.IProfilListener#onPointValuesChanged(com.bce.eind.core.profil.changes.PointChange[])
    */
-  public void onBuildingDataChanged( final BUILDING_PROPERTY buildingProperty,
-      Object value )
+  public void onPointValuesChanged( PointChange[] changes )
   {
   }
 

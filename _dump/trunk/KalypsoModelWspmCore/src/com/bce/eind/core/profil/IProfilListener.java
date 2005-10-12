@@ -1,7 +1,7 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.changes.BuildingDataChange;
 import com.bce.eind.core.profil.changes.PointChange;
 
 
@@ -24,9 +24,15 @@ public interface IProfilListener
   
   public void onBuildingChanged(final IProfilBuilding oldBuilding);
 
-  public void onBuildingDataChanged( final BUILDING_PROPERTY buildingProperty, final Object value );
+  public void onBuildingDataChanged( BuildingDataChange[] changes );
   
   public void onMetaDataChanged( final Object key, final Object value );
+  /**
+   * 
+   * @param oldPoint wenn != Null wurde der Trenner verschoben
+   * @param devider
+   */
+  public void onDeviderChanged( final IProfilPoint oldPoint, final IProfilDevider devider );
   
-  public void onDeviderChanged( final IProfilPoint point, final IProfilDevider devider );
+  public void onDeviderRemoved(final IProfilDevider[] deviders);
 }
