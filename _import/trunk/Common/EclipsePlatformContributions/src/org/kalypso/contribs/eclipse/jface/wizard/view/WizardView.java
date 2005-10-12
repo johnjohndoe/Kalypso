@@ -834,7 +834,8 @@ public class WizardView extends ViewPart implements IWizardContainer3
     final String html = getHtmlForPage( page );
 
     m_ignoreNextCangeLocation = true;
-    m_browser.setUrl( html );
+    if( html.length() > 0 )
+      m_browser.setUrl( html );
     return html;
   }
 
