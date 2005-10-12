@@ -378,4 +378,21 @@ public class DiagViewUtils
 
     return StatusUtilities.createStatus( stati, "Diagrammvorlage konnte nicht vollständig aktualisiert werden" );
   }
+  
+  /**
+   * Return the first axis of the mappings list which is not a key axis.
+   * 
+   * @param mappings array of obs-diag axes mappings
+   * @return obs axis (not a key axis) or null if not found
+   */
+  public static IAxis getValueAxis( final AxisMapping[] mappings )
+  {
+    for( int i = 0; i < mappings.length; i++ )
+    {
+      if( !mappings[i].getObservationAxis().isKey() )
+        return mappings[i].getObservationAxis();
+    }
+    
+    return null;
+  }
 }
