@@ -110,6 +110,13 @@ public class SpecialPropertyMapper
         return srcObject.toString();
       }
     } );
+    m_instance.register( m_instance.new SpecialMapper( "java.lang.Long", "java.lang.String" )
+    {
+      public Object map( Object srcObject )
+      {
+        return srcObject.toString();
+      }
+    } );
 
     m_instance.register( m_instance.new SpecialMapper( "java.lang.Float", "java.lang.Long" )
     {
