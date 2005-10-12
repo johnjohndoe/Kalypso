@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin>
+<plugin
+   id="org.bce.eind.kalypso1d"
+   name="Profil Kalypso 1d"
+   version="0.0.1"
+   provider-name="bce.com"
+   class="org.bce.eind.kalypso1d.ProfilKalypso1DPlugin">
+   <runtime>
+      <library name="kalypso1d.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="com.bce.eind.core"/>
+      <import plugin="org.eclipse.core.resources"/>
+   </requires>
      <extension
            point="com.bce.eind.core.validatortype">
         <validatortype
