@@ -19,7 +19,7 @@
               <ogc:PropertyName>Ort</ogc:PropertyName>
             </Geometry>
             <Label>
-              <ogc:PropertyName>num</ogc:PropertyName>
+              <ogc:PropertyName>name</ogc:PropertyName>
             </Label>
             <Font>
               <CssParameter name="font-family"/>

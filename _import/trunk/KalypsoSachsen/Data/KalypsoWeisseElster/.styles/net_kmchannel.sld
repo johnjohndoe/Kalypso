@@ -19,7 +19,7 @@
               <ogc:PropertyName>link_downStreamNodeMember</ogc:PropertyName>
             </Geometry>
             <Label>
-              <ogc:PropertyName>inum</ogc:PropertyName>
+              <ogc:PropertyName>name</ogc:PropertyName>
             </Label>
             <Font>
               <CssParameter name="font-family"/>

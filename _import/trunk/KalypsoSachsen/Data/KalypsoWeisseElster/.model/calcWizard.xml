@@ -7,7 +7,6 @@
         <arg name="mapTemplate" value="project:.templates/calcCase/Ombrometer.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="1"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=name#linkColumn=N"/>   
         <arg name="maximizeMap" value="true"/>
     </page>
@@ -17,12 +16,12 @@
         <arg name="mapTemplate" value="project:.templates/calcCase/ezg.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="2"/>
-		<arg name="timeserie1" value="nameColumn=inum#nameString=Gebietsniederschlag Teilgebiet %featureprop%#linkColumn=niederschlagZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=Gebietsniederschlag Teilgebiet %featureprop%#linkColumn=niederschlagZR"/>
        	<arg name="maximizeMap" value="true"/>
     	<arg name="buttonText" value="Ombrometer-Messung übernehmen"/>
 		<arg name="buttonTooltip" value="Ombrometer mittels Gebietsniederschlagsmodell übernehmen"/>
 		<arg name="buttonLaunch" value="kalypso.we.gebietsniederschlagsmodell"/>
+		<arg name="mapWidgetID" value="SINGLE_SELECT"/>
     </page>
 
 	<!-- Ansicht Temperatur -->
@@ -30,7 +29,6 @@
         <arg name="mapTemplate" value="project:.templates/calcCase/ObsT.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="1"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=t#nameColumn=name#linkColumn=outObservationLink"/>   
         <arg name="maximizeMap" value="true"/>
     </page>
@@ -40,8 +38,7 @@
         <arg name="mapTemplate" value="project:.templates/calcCase/ezg.gmt"/>
         <arg name="mainSash" value="50"/>
         <arg name="rightSash" value="50"/>
-        <arg name="selectionID" value="2"/>
-		<arg name="timeserie1" value="nameColumn=inum#nameString=Gebietstemperatur Teilgebiet %featureprop%#linkColumn=temperaturZR"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=Gebietstemperatur Teilgebiet %featureprop%#linkColumn=temperaturZR"/>
        	<arg name="maximizeMap" value="true"/>
     	<arg name="buttonText" value="Temperaturmessung übernehmen"/>
 		<arg name="buttonTooltip" value="gemessene Temperatur mittels Gebietstemperaturmodell übernehmen"/>
@@ -54,7 +51,6 @@
 			<arg name="mapTemplate" value=".templates/calcCase/zufluesse.gmt"/>
 			<arg name="mainSash" value="50"/>
 			<arg name="rightSash" value="50"/>
-			<arg name="selectionID" value="4"/>
 			<arg name="selectFeatureID" value="Node6100"/>
 			
 	    	<arg name="maximizeMap" value="true"/>
@@ -93,7 +89,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_1.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -102,8 +97,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 
 		<arg name="ignoreType1" value="W"/>
@@ -122,7 +117,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_2.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -131,8 +125,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -151,7 +145,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_3.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -160,8 +153,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -181,7 +174,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_4.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -190,8 +182,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 
 		<arg name="ignoreType1" value="W"/>
@@ -210,7 +202,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_5.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -219,8 +210,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -238,7 +229,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_6.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -247,8 +237,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -265,7 +255,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_7.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -274,8 +263,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -292,7 +281,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_8.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -301,8 +289,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -319,7 +307,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_9.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -328,8 +315,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -346,7 +333,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_10.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -355,8 +341,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -373,7 +359,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_11.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -382,8 +367,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -400,7 +385,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_12.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -409,8 +393,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -427,7 +411,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_13.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -436,8 +419,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -454,7 +437,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_14.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -463,8 +445,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -481,7 +463,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_15.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -490,8 +471,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -508,7 +489,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_16.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -517,8 +497,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -536,7 +516,6 @@ die seiten unterscheidet folgendes:
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_17.gml"/> 
 		<arg name="mainSash" value="30"/>
 		<arg name="rightSash" value="40"/>
-		<arg name="selectionID" value="32"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -545,8 +524,8 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% - %axisname% - gemessen#linkColumn=pegelZR#color=0x0000ff"/>
 
 		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% - Spur mitte#linkColumn=qAblageSpurMittlerer#color=0x00ff00"/>
-		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00"/>
-		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00"/>
+		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
+		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
 		<arg name="ignoreType2" value="Q"/>
@@ -560,17 +539,18 @@ die seiten unterscheidet folgendes:
 	   imageLocation="icons/calcwizard/kalypso32.gif" >
 	   
 		<arg name="mapTemplate" value=".templates/calcCase/PegelAnsicht.gmt"/>
+		<arg name="maximizeMap" value="true"/>
 		
 		<!-- Messung -->
         <arg name="timeserie1" value="nameString=Beobachtung#linkColumn=local1#color=0x0000ff"/>
 		<!-- Berechnung -->
         <arg name="timeserie2" value="nameString=Rechnung#linkColumn=local2#color=0xff0000"/>
 		<!-- Spur M -->
-        <arg name="timeserie3" value="nameString=Vorhersage#linkColumn=local3#color=0x00ff00"/>
+        <arg name="timeserie3" value="nameString=Spur Mitte#linkColumn=local3#color=0x00ff00"/>
 		<!-- Spur U -->
-        <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=local4#color=0x00ff00"/>
+        <arg name="timeserie4" value="nameString=Spur Unten#linkColumn=local4#color=0x00ff00#lineDash=3.3"/>
 		<!-- Spur O -->
-        <arg name="timeserie5" value="nameString=Vorhersage#linkColumn=local5#color=0x00ff00"/>
+        <arg name="timeserie5" value="nameString=Spur Oben#linkColumn=local5#color=0x00ff00#lineDash=3.3"/>
 		
         <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -584,6 +564,7 @@ die seiten unterscheidet folgendes:
 		<arg name="rightSash" value="25"/>
 
 		<arg name="exporter1">
+		<arg name="name" value="Vorhersagepegel"/>
 		<arg name="id" value="featureWithTemplateExporter"/>
 		<arg name="nameproperty" value="name"/>
 		<arg name="width" value="1024"/>
@@ -609,7 +590,6 @@ die seiten unterscheidet folgendes:
 			<arg name="label" value="Tabelle"/>
 			<arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
 		</arg>
-	</arg>
-		<arg name="maximizeMap" value="true"/>
+		</arg>
       </page>
 </calcwizard>
