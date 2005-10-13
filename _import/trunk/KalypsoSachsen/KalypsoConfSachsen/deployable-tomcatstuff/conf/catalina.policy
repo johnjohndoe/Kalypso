@@ -137,7 +137,7 @@ grant {
 	// wenn Zeitreihen zurück geschrieben werden...
 
 	permission java.io.FilePermission "\\\\lfug-kv-01\\prognose$\\-", "read,write";
-	permission java.io.FilePermission "D:\\Programme\\kalypso\\Tomcat5.0\\webapps\\webdav\\-", "read,write";
+	permission java.io.FilePermission "D:\\Programme\\kalypso\\Tomcat5.0\\webapps\\webdav\\-", "read,write,delete";
 	permission java.io.FilePermission "D:\\Programme\\kalypso\\Tomcat5.0\\temp\\-", "read,write,delete,execute";
 
 	permission java.util.PropertyPermission "kalypso.*", "read";
