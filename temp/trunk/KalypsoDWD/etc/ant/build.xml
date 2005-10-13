@@ -3,6 +3,14 @@
 
     <property name="project" value="${workspace}/KalypsoDWD" />
 
+    <!-- 
+    Property you can set from the outside:
+	* web.xml: specifies which web.xml to use as deployment descriptor
+	           when not specified, the default one from the source is used
+	           (see org/kalypso/dwd/servlet/dwdfilecopy/web.xml)
+     -->
+    <property name="web.xml" value="${project}/src/org/kalypso/dwd/servlet/dwdfilecopy/web.xml"/>
+    
     <path id="compile.classpath">
         <fileset dir="${project.lib}" includes="**/*.jar" />
         <fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
@@ -34,11 +42,12 @@
     <!-- Specific Build for KalypsoDWDFileCopyServlet -->
     <target name="build-filecopyservlet-war" depends="compile">
 
-        <war 
-    		webxml="${project}/src/org/kalypso/dwd/servlet/dwdfilecopy/web.xml"
-	        destfile="${project}/build/deploy/KalypsoDWDFileCopyServlet.war">
-            <classes dir="${project}/build/class" excludes="*.xml"/>
-            <lib dir="${project}/etc/libdeploy"/>
+        <echo message="Building DWDFileCopy Servlet with deployment desc from: ${web.xml}"/>
+        
+        <war webxml="${web.xml}"
+             destfile="${project}/build/deploy/KalypsoDWDFileCopyServlet.war">
+            <classes dir="${project}/build/class" excludes="*.xml" />
+            <lib dir="${project}/etc/libdeploy" />
         </war>
     </target>
 
