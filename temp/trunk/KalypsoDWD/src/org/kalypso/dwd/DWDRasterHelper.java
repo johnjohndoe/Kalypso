@@ -40,8 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
@@ -346,6 +351,62 @@ public class DWDRasterHelper
     finally
     {
       IOUtils.closeQuietly( reader );
+    }
+  }
+
+  /**
+   * Update the file contents so that the dates reflect the date found in the filename
+   * <p>
+   * This is for instance used in the context of test scenario with PSICompact where the filename of a historical
+   * dwd-file gets the current date but the file content is left unchanged. Kalypso uses the dates found in the file so
+   * we need to update it.
+   * 
+   * @throws IOException
+   * @throws DWDException
+   */
+  public static void updateDWDFileContents( final File srcFile, final File destFile, final SimpleDateFormat df )
+      throws IOException, DWDException
+  {
+    final Date date = getDateFromRaster( srcFile, df );
+    if( date == null )
+      throw new DWDException( "Date could not be fetched from dwd-filename: " + srcFile.getName() );
+
+    final SimpleDateFormat dwdf = new SimpleDateFormat( "yyMMddHHmm" );
+    final String strDate = dwdf.format( date );
+
+    final Pattern pattern = Pattern.compile( " [0-9]{10}( .*)" );
+
+    int count = 0;
+
+    BufferedReader reader = null;
+    BufferedWriter writer = null;
+    try
+    {
+      reader = new BufferedReader( new FileReader( srcFile ) );
+      writer = new BufferedWriter( new FileWriter( destFile ) );
+      String line = reader.readLine();
+      while( line != null )
+      {
+        final Matcher matcher = pattern.matcher( line );
+        final String newLine;
+        if( matcher.matches() )
+        {
+          newLine = " " + strDate + matcher.group(1);
+          count++;
+        }
+        else
+          newLine = line;
+
+        writer.write( newLine );
+        writer.newLine();
+
+        line = reader.readLine();
+      }
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+      IOUtils.closeQuietly( writer );
     }
   }
 }
