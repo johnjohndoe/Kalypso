@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.NameUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -64,6 +65,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 public class TableView extends ObsView
 {
   private final ITableViewRules m_rules = RulesFactory.getDefaultRules();
+  private boolean m_alphaSort;
 
   /**
    * @see org.kalypso.ogc.sensor.template.ObsView#toString()
@@ -76,6 +78,18 @@ public class TableView extends ObsView
   public ITableViewRules getRules()
   {
     return m_rules;
+  }
+
+  public boolean isAlphaSort()
+  {
+    return m_alphaSort;
+  }
+  
+  public void setAlphaSort( boolean alphaSort )
+  {
+    m_alphaSort = alphaSort;
+    
+    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_VIEW_CHANGED ) );
   }
 
   /**

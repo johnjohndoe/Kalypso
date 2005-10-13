@@ -117,9 +117,7 @@ public final class TableViewUtils
   /**
    * Loads the xml template from the given stream. Closes the stream.
    * 
-   * @param ins
    * @return table view template
-   * @throws JAXBException
    */
   public static ObstableviewType loadTableTemplateXML( final InputStream ins ) throws JAXBException
   {
@@ -136,9 +134,7 @@ public final class TableViewUtils
   /**
    * Loads the xml template from the given inputsource
    * 
-   * @param ins
    * @return table view template
-   * @throws JAXBException
    */
   public static ObstableviewType loadTableTemplateXML( final InputSource ins ) throws JAXBException
   {
@@ -149,10 +145,6 @@ public final class TableViewUtils
 
   /**
    * Saves the given template (binding). Closes the stream.
-   * 
-   * @param xml
-   * @param outs
-   * @throws JAXBException
    */
   public static void saveTableTemplateXML( final ObstableviewType xml, final OutputStream outs ) throws JAXBException
   {
@@ -170,10 +162,6 @@ public final class TableViewUtils
 
   /**
    * Saves the given template (binding). Closes the writer.
-   * 
-   * @param xml
-   * @param writer
-   * @throws JAXBException
    */
   public static void saveTableTemplateXML( final ObstableviewType xml, final Writer writer ) throws JAXBException
   {
@@ -199,6 +187,8 @@ public final class TableViewUtils
     final ObstableviewType xmlTemplate = OTT_OF.createObstableview();
 
     xmlTemplate.setFeatures( StringUtils.join( template.getEnabledFeatures(), ';' ) );
+    
+    xmlTemplate.setAlphaSort( template.isAlphaSort() );
 
     // rendering rules
     final RulesType xmlRulesType = OTT_OF.createObstableviewTypeRulesType();
@@ -279,6 +269,8 @@ public final class TableViewUtils
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
     }
+    
+    view.setAlphaSort( xml.isAlphaSort() );
 
     final RulesType trules = xml.getRules();
     if( trules != null )

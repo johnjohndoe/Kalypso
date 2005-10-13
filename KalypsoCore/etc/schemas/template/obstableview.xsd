@@ -125,10 +125,23 @@
 	<xs:element name="obstableview">
 		<xs:complexType>
 			<xs:sequence>
-				<!-- semicolon separated list of featurenames in the sense of obsview -->
-				<xs:element name="features" type="xs:string" default="" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="features" type="xs:string" default="" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+						semicolon separated list of featurenames in the sense of obsview (not gml-feature!)
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				
 				<xs:element name="observation" type="myns:typeObservation" 
-					minOccurs="0" maxOccurs="unbounded"/>
+					minOccurs="0" maxOccurs="unbounded" />
+				
+				<xs:element name="alphaSort" type="xs:boolean" default="true" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+						when true the columns are sorted according to the alphabetical order
+						of their names. If false, the columns are sorted according to the order
+						into which the associated observations got loaded.
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				
 				<xs:element name="rules" minOccurs="0" maxOccurs="1">
 					<xs:complexType>
 						<xs:sequence>

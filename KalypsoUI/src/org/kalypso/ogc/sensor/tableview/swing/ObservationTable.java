@@ -284,6 +284,13 @@ public class ObservationTable extends JTable implements IObsViewEventListener
             m_currentScenarioName = "";
           }
         }
+        
+        // VIEW CHANGED
+        if( evenType == ObsViewEvent.TYPE_VIEW_CHANGED )
+        {
+          TableView view = (TableView)evt.getObject();
+          model.setAlphaSort( view.isAlphaSort() );
+        }
       }
     };
 
