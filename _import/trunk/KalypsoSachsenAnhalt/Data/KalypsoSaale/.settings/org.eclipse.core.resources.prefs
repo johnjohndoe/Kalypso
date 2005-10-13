@@ -1,4 +1,4 @@
-#Wed Oct 12 16:35:21 CEST 2005
+#Thu Oct 13 13:36:31 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -69,7 +69,6 @@ encoding//.prognose/OmbroTest/Ombrometer/ID110814.zml=UTF-8
 encoding//Rechenvarianten/20041125_15_07/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/PA_GROEDI.zml=UTF-8
 encoding//.prognose/Magdeburg-Saale-Vorhersage-2005-09-28_14h25/sortiertTalsperrenvolumen.ott=UTF-8
-encoding//.templates/.wizard/modell.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SPREY.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h23/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenvarianten/20041125_15_07/Gesamtansicht.gmt=UTF-8
@@ -244,8 +243,8 @@ encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/DerTest/Durchfluss/570000.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/PA_SAERI.zml=UTF-8

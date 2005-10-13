@@ -19422,6 +19422,9 @@
           <speicher:Zufluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570000.zml"/>
           </speicher:Zufluss_gerechnet>
+          <speicher:Abgabe>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/570250.zml"/>
+          </speicher:Abgabe>
           <speicher:Abgabe_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570250.zml"/>
           </speicher:Abgabe_gerechnet>
@@ -19489,6 +19492,9 @@
           <speicher:Zufluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573090.zml"/>
           </speicher:Zufluss_gerechnet>
+          <speicher:Abgabe>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/573100.zml"/>
+          </speicher:Abgabe>
           <speicher:Abgabe_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573100.zml"/>
           </speicher:Abgabe_gerechnet>
@@ -19556,6 +19562,9 @@
           <speicher:Zufluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575402.zml"/>
           </speicher:Zufluss_gerechnet>
+          <speicher:Abgabe>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575406.zml"/>
+          </speicher:Abgabe>
           <speicher:Abgabe_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575406.zml"/>
           </speicher:Abgabe_gerechnet>
@@ -19623,6 +19632,9 @@
           <speicher:Zufluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579306.zml"/>
           </speicher:Zufluss_gerechnet>
+          <speicher:Abgabe>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579330.zml"/>
+          </speicher:Abgabe>
           <speicher:Abgabe_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579330.zml"/>
           </speicher:Abgabe_gerechnet>
@@ -19690,6 +19702,9 @@
           <speicher:Zufluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
           </speicher:Zufluss_gerechnet>
+          <speicher:Abgabe>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579001.zml"/>
+          </speicher:Abgabe>
           <speicher:Abgabe_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579001.zml"/>
           </speicher:Abgabe_gerechnet>
@@ -19759,6 +19774,9 @@
           <speicher:Zufluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579011.zml"/>
           </speicher:Zufluss_gerechnet>
+          <speicher:Abgabe>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579012.zml"/>
+          </speicher:Abgabe>
           <speicher:Abgabe_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579012.zml"/>
           </speicher:Abgabe_gerechnet>
@@ -19828,6 +19846,9 @@
           <speicher:Zufluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
           </speicher:Zufluss_gerechnet>
+          <speicher:Abgabe>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579006.zml"/>
+          </speicher:Abgabe>
           <speicher:Abgabe_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579006.zml"/>
           </speicher:Abgabe_gerechnet>
