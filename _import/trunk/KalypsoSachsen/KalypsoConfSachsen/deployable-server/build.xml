@@ -37,6 +37,7 @@
     <property name="dist.webdav" value="${dist}/webdav" />
 
     <property file="deploy.properties" />
+    <property name="deploy.webapps" value="${tomcat.server.cataling_home}\\webapps" />
     <property name="deploy.webdav" value="${tomcat.server.cataling_home}\\webapps\\webdav" />
 
     <target name="prepare">
@@ -77,6 +78,9 @@
              target="clean"
              inheritall="false" />
         <ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml"
+             target="clean"
+             inheritall="false" />
+        <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml"
              target="clean"
              inheritall="false" />
     </target>
@@ -252,8 +256,16 @@
              inheritAll="false" />
     </target>
 
+    <target name="buildwar-DWDFileCopyServlet" depends="build-basic">
+        <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml"
+             target="build-filecopyservlet-war"
+             inheritAll="true">
+            <property name="web.xml" value="${project.path}/deployable-server/dwdfilecopy/web.xml" />
+        </ant>
+    </target>
+    
     <target name="build-services-dev"
-            depends="psicompact-fake,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService">
+            depends="psicompact-fake,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService, buildwar-DWDFileCopyServlet">
         <echo message="Building all services" />
     </target>
 
@@ -309,26 +321,36 @@
             description="Deploy (first time) all services and configuration">
         <echo message="Deploying all services to ${tomcat.server}" />
 
+        <!-- Calculation Service -->
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml"
              target="deploy"
              inheritAll="false">
             <property file="deploy.properties" />
         </ant>
+        
+        <!-- MetaDoc Service -->
         <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml"
              target="deploy"
              inheritAll="false">
             <property file="deploy.properties" />
         </ant>
+        
+        <!-- Observation Service -->
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
              target="deploy"
              inheritAll="false">
             <property file="deploy.properties" />
         </ant>
+        
+        <!-- User Service -->
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml"
              target="deploy"
              inheritAll="false">
             <property file="deploy.properties" />
         </ant>
+        
+        <!-- DWDFileCopy Daemon -->
+        <copy todir="${deploy.webapps}" overwrite="true" file="${workspace}/KalypsoDWD/build/deploy/KalypsoDWDFileCopyServlet.war" />
     </target>
 
     <target name="redeploy-UserService"
@@ -379,10 +401,13 @@
             depends="redeploy-UserService,redeploy-ObsService,redeploy-CalcService,redeploy-MetaDocService"
             description="Redeploy services and their configuration">
         <echo message="Redeploying all services" />
+        
+        <!-- DWDFileCopy Daemon -->
+        <copy todir="${deploy.webapps}" overwrite="true" file="${workspace}/KalypsoDWD/build/deploy/KalypsoDWDFileCopyServlet.war" />
     </target>
 
     <target name="build-services-lfug"
-            depends="psicompact-echte,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService">
+            depends="psicompact-echte,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService, buildwar-DWDFileCopyServlet">
         <echo message="Build for LFUG (using real PSICompact)" />
     </target>
 
@@ -403,6 +428,9 @@
         <copy tofile="${dist}/Kalypso_UserService.war"
               file="${workspace}/KalypsoServiceUser/build/deploy/jaxrpc-kalypsoservice_user.zip"
               overwrite="true" />
+        <copy tofile="${dist}/KalypsoDWDFileCopyServlet.war"
+              file="${workspace}/KalypsoDWD/build/deploy/KalypsoDWDFileCopyServlet.war"
+        	  overwrite="true" />
     </target>
 
 </project>
