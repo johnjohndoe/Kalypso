@@ -86,7 +86,7 @@ public class InterpolationFilterTest extends TestCase
 
   public void testGetValues() throws SensorException, ParseException
   {
-    final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0 );
+    final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0, true );
     filter.initFilter( null, m_obs, null );
 
     // test with same date-range
@@ -98,13 +98,13 @@ public class InterpolationFilterTest extends TestCase
     final Date from2 = sdf.parse( "2004-11-23 10:00:00" );
     final Date to2 = sdf.parse( "2004-11-25 17:00:00" );
     final ITuppleModel m2 = filter.getValues( new ObservationRequest( new DateRange( from2, to2 ) ) );
-    verifyTuppleModel( m2, from2, to2, new Double( 0 ), new Double( 0 ) );
+    verifyTuppleModel( m2, from2, to2, new Double( 0 ), new Double( 37.0 ) );
 
     // test with smaller date-range
     final Date from3 = sdf.parse( "2004-11-23 19:00:00" );
     final Date to3 = sdf.parse( "2004-11-25 11:00:00" );
     final ITuppleModel m3 = filter.getValues( new ObservationRequest( new DateRange( from3, to3 ) ) );
-    verifyTuppleModel( m3, from3, to3, new Double( 55 ), new Double( 0 ) );
+    verifyTuppleModel( m3, from3, to3, new Double( 55 ), new Double( 37.0 ) );
   }
 
   private void verifyTuppleModel( final ITuppleModel m, final Date from, final Date to, final Double firstValue,
@@ -120,11 +120,11 @@ public class InterpolationFilterTest extends TestCase
     }
     i++;
     
-    assertEquals( m.getCount(), i );
+    assertEquals( i, m.getCount() );
     
-    assertEquals( m.getElement( 0, m_dateAxis ), from );
-    assertEquals( ((Number)m.getElement( 0, m_valueAxis )).doubleValue(), firstValue.doubleValue(), 0.001 );
-    assertEquals( m.getElement( m.getCount() - 1, m_dateAxis ), to );
-    assertEquals( ((Number)m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), lastValue.doubleValue(), 0.001 );
+    assertEquals( from, m.getElement( 0, m_dateAxis ) );
+    assertEquals( firstValue.doubleValue(), ((Number)m.getElement( 0, m_valueAxis )).doubleValue(), 0.001 );
+    assertEquals( to, m.getElement( m.getCount() - 1, m_dateAxis ) );
+    assertEquals( lastValue.doubleValue(), ((Number)m.getElement( m.getCount() - 1, m_valueAxis )).doubleValue(), 0.001 );
   }
 }
