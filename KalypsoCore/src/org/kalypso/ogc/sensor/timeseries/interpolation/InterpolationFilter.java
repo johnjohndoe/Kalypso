@@ -59,9 +59,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
  * InterpolationFilter. This is a simple yet tricky interpolation filter. It steps through the time and eventually
  * interpolates the values at t, using the values at t-1 and t+1.
  * <p>
- * This filter can also deal with Kalypso Status Axes. In that case it does not perform an interpolation, but uses
- * the policy defined in KalypsoStatusUtils. When no status is available, it uses the default value for the status
- * provided in the constructor.
+ * This filter can also deal with Kalypso Status Axes. In that case it does not perform an interpolation, but uses the
+ * policy defined in KalypsoStatusUtils. When no status is available, it uses the default value for the status provided
+ * in the constructor.
  * 
  * @author schlienger
  */
@@ -77,6 +77,8 @@ public class InterpolationFilter extends AbstractObservationFilter
 
   private final Integer m_defaultStatus;
 
+  private boolean m_fillLastWithValid;
+
   /**
    * Constructor.
    * 
@@ -90,15 +92,24 @@ public class InterpolationFilter extends AbstractObservationFilter
    *          default value to use when filling absent values
    * @param defaultStatus
    *          value of the default status when base status is absent or when status-interpolation cannot be proceeded
+   * @param fillLastWithValid
+   *          when true, the last tupples of the model get the last valid tupple from the original, not the default one
    */
   public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill,
-      final double defaultValue, final int defaultStatus )
+      final double defaultValue, final int defaultStatus, final boolean fillLastWithValid )
   {
     m_calField = calendarField;
     m_amount = amount;
     m_fill = forceFill;
+    m_fillLastWithValid = fillLastWithValid;
     m_defaultStatus = new Integer( defaultStatus );
     m_defValue = new Double( defaultValue );
+  }
+
+  public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill,
+      final double defaultValue, final int defaultStatus )
+  {
+    this( calendarField, amount, forceFill, defaultValue, defaultStatus, false );
   }
 
   /**
@@ -247,30 +258,70 @@ public class InterpolationFilter extends AbstractObservationFilter
     // do we need to fill after the end of the base model?
     if( dr != null && m_fill )
     {
+      // optionally remember the last interpolated values in order
+      // to fill them till the end of the new model
+      Object[] lastValidTupple = null;
+      if( m_fillLastWithValid )
+      {
+        final int pos = intModel.getCount() - 1;
+
+        lastValidTupple = new Object[valueAxes.length + 1];
+        lastValidTupple[intModel.getPositionFor( dateAxis )] = intModel.getElement( pos, dateAxis );
+        for( int i = 0; i < valueAxes.length; i++ )
+        {
+          if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
+            lastValidTupple[intModel.getPositionFor( valueAxes[i] )] = m_defaultStatus;
+          else
+            lastValidTupple[intModel.getPositionFor( valueAxes[i] )] = intModel.getElement( pos, valueAxes[i] );
+        }
+      }
+      
       while( cal.getTime().compareTo( dr.getTo() ) <= 0 )
-        fillWithDefault( dateAxis, valueAxes, intModel, cal );
+        fillWithDefault( dateAxis, valueAxes, intModel, cal, lastValidTupple );
     }
 
     return intModel;
   }
 
   /**
-   * Fills the model with default values
+   * Fill the model with default values
    */
   private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final SimpleTuppleModel intModel,
       final Calendar cal ) throws SensorException
   {
-    final Object[] tupple = new Object[valueAxes.length + 1];
-    tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
+    fillWithDefault( dateAxis, valueAxes, intModel, cal, null );
+  }
 
-    for( int i = 0; i < valueAxes.length; i++ )
+  /**
+   * Fills the model with default values
+   * 
+   * @param masterTupple
+   *          if not null, the values from this tupple are used instead of the default one
+   */
+  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final SimpleTuppleModel intModel,
+      final Calendar cal, Object[] masterTupple ) throws SensorException
+  {
+    final Object[] tupple;
+
+    if( masterTupple == null )
     {
-      final int pos = intModel.getPositionFor( valueAxes[i] );
+      tupple = new Object[valueAxes.length + 1];
+      tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
 
-      if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
-        tupple[pos] = m_defaultStatus;
-      else
-        tupple[pos] = m_defValue;
+      for( int i = 0; i < valueAxes.length; i++ )
+      {
+        final int pos = intModel.getPositionFor( valueAxes[i] );
+
+        if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
+          tupple[pos] = m_defaultStatus;
+        else
+          tupple[pos] = m_defValue;
+      }
+    }
+    else
+    {
+      tupple = (Object[])masterTupple.clone();
+      tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
     }
 
     intModel.addTupple( tupple );
