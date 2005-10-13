@@ -11,6 +11,8 @@
 		<column id="c3" name="Pegel Neuwied [m]" editable="true" width="100" axis="Pegel2" format="%.2f"/>
 	</observation>
 	
+	<alphaSort>false</alphaSort>
+	
 	<!-- wie die Darstellung erfolgt -->
 	<rules>
 		<renderingrule mask="01">
