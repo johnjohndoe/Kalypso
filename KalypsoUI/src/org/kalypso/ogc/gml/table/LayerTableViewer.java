@@ -161,6 +161,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       // filter ths which are in my list
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)getInput();
+      if( theme == null )
+        return;
       final FeatureList featureList = theme.getFeatureList();
       final List themeFeatures = featureList == null ? new ArrayList() : (List)featureList;
       globalFeatureList.retainAll( themeFeatures );
