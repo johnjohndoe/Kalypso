@@ -77,10 +77,10 @@ public class DWDRasterHelper
   private final static String KEY = "([0-9]+)";
 
   private final static Pattern HEADER_STATIC = Pattern.compile( " " + DATUM + " +" + KEY );
+  private final static Pattern HEADER_DYNAMIC = Pattern.compile( " " + DATUM + " +" + KEY + " +" + STUNDE );
 
   private final static SimpleDateFormat DATEFORMAT_RASTER = new SimpleDateFormat( "yyMMddHHmm" );
 
-  private final static Pattern HEADER_DYNAMIC = Pattern.compile( " " + DATUM + " +" + KEY + " +" + STUNDE );
 
   /**
    * Return the most recent DWD file from the given folder, or null if nothing found.
@@ -360,9 +360,6 @@ public class DWDRasterHelper
    * This is for instance used in the context of test scenario with PSICompact where the filename of a historical
    * dwd-file gets the current date but the file content is left unchanged. Kalypso uses the dates found in the file so
    * we need to update it.
-   * 
-   * @throws IOException
-   * @throws DWDException
    */
   public static void updateDWDFileContents( final File srcFile, final File destFile, final SimpleDateFormat df )
       throws IOException, DWDException
