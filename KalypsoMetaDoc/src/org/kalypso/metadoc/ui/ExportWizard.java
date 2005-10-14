@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
@@ -79,7 +80,7 @@ public final class ExportWizard extends Wizard
   private final WorkspaceModifyOperation m_operation;
   private final IExportTarget m_target;
 
-  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell )
+  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell, final ImageDescriptor defaultImage )
       throws CoreException
   {
     m_target = target;
@@ -98,7 +99,8 @@ public final class ExportWizard extends Wizard
       section = workbenchSettings.addNewSection( settingsName );//$NON-NLS-1$
     setDialogSettings( section );
 
-    final IWizardPage[] factoryPages = factory.createWizardPages( configuration );
+    // use the target image as default image for this wizard
+    final IWizardPage[] factoryPages = factory.createWizardPages( configuration, defaultImage );
     final IWizardPage[] targetPages = target.createWizardPages( configuration );
     for( int i = 0; i < factoryPages.length; i++ )
       addPage( factoryPages[i] );

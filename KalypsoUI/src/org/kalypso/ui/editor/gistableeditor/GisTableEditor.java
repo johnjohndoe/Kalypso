@@ -58,6 +58,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -314,9 +315,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( IPublishingConfiguration configuration ) throws CoreException
+  public IWizardPage[] createWizardPages( IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
   {
     final IWizardPage page = new ExportTableOptionsPage( "optionPage", "Export Otionen",
         ImageProvider.IMAGE_UTIL_BERICHT_WIZ );

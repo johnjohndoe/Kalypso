@@ -43,6 +43,7 @@ package org.kalypso.metadoc.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.swt.graphics.Point;
@@ -62,12 +63,14 @@ public class ExportWizardNode implements IWizardNode
   private final Shell m_shell;
 
   private IWizard m_wizard = null;
+  private ImageDescriptor m_defaultImage;
 
-  public ExportWizardNode( final IExportTarget target, final IExporter exporter, final Shell shell )
+  public ExportWizardNode( final IExportTarget target, final IExporter exporter, final Shell shell, final ImageDescriptor defaultImage )
   {
     m_shell = shell;
     m_target = target;
     m_exporter = exporter;
+    m_defaultImage = defaultImage;
   }
 
   /**
@@ -99,7 +102,7 @@ public class ExportWizardNode implements IWizardNode
     {
       try
       {
-        m_wizard = new ExportWizard( m_target, m_exporter, m_shell );
+        m_wizard = new ExportWizard( m_target, m_exporter, m_shell, m_defaultImage );
       }
       catch( final CoreException e )
       {

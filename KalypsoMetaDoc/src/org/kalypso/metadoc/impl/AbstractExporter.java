@@ -101,11 +101,17 @@ public abstract class AbstractExporter implements IExporter
   {
     return m_desc;
   }
+  
+  /** Overwrite the internal description */
+  public void setDescription( final String desc )
+  {
+    m_desc = desc;
+  }
 
   /**
    * @see org.kalypso.metadoc.IExporter#getImageDescriptor()
    */
-  public final ImageDescriptor getImageDescriptor()
+  public ImageDescriptor getImageDescriptor()
   {
     return m_imageDescriptor;
   }
@@ -134,5 +140,13 @@ public abstract class AbstractExporter implements IExporter
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString()
+  {
+    return getName();
   }
 }

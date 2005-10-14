@@ -102,12 +102,14 @@ public class ExportDocumentsWizard extends Wizard
    */
   public void addPages()
   {
+    final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/metadoc_wiz.gif" );
+
     // wizard selection for each exporter
     final IWizardNode[] nodes = new IWizardNode[m_exporter.length];
     for( int i = 0; i < nodes.length; i++ )
     {
       final IExporter exporter = m_exporter[i];
-      nodes[i] = new ExportWizardNode( m_target, exporter, m_shell );
+      nodes[i] = new ExportWizardNode( m_target, exporter, m_shell, imageDescriptor );
       m_disposer.addDisposeCandidate( nodes[i] );
     }
 
@@ -148,7 +150,7 @@ public class ExportDocumentsWizard extends Wizard
     };
 
     page.setTitle( "Wählen Sie die Exportart" );
-    page.setImageDescriptor( AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/metadoc_wiz.gif" ) );
+    page.setImageDescriptor( imageDescriptor );
     
     addPage( page );
   }
