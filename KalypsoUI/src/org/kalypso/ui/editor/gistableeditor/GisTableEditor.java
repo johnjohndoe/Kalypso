@@ -187,7 +187,8 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
-    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, KalypsoCorePlugin.getDefault().getSelectionManager() );
+    m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, KalypsoCorePlugin.getDefault()
+        .getSelectionManager() );
 
     final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );
@@ -295,14 +296,16 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   {
     if( adapter == IExportableObjectFactory.class )
       return this;
-    
+
     return super.getAdapter( adapter );
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
+   *      org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( Configuration configuration ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration,
+      final Configuration metadataExtensions ) throws CoreException
   {
     final ExportableLayerTable exp = new ExportableLayerTable( m_layerTable );
 

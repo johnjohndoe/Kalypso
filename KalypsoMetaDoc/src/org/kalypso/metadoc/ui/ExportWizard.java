@@ -115,7 +115,7 @@ public final class ExportWizard extends Wizard
           
         try
         {
-          final IExportableObject[] objects = factory.createExportableObjects( configuration );
+          final IExportableObject[] objects = factory.createExportableObjects( configuration, m_target.getMetadataExtensions() );
 
           monitor.beginTask( "Export", objects.length );
 

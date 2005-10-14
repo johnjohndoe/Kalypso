@@ -173,11 +173,11 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration, org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration, final Configuration metadataExtensions ) throws CoreException
   {
-    final ExportableObservationTable exportable = new ExportableObservationTable( m_table );
+    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, metadataExtensions );
     return new IExportableObject[]
     { exportable };
   }

@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.impl.MetaDocException;
@@ -54,11 +56,11 @@ public class DefaultMetaDocCommitter implements IMetaDocCommiter
   }
 
   /**
-   * 
-   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File)
+   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
+   *      org.apache.commons.configuration.Configuration)
    */
-  public void commitDocument( final Properties serviceProps, final Map metadata, final File doc )
-      throws MetaDocException
+  public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
+      final Configuration metadataExtensions ) throws MetaDocException
   {
     final String strdir = serviceProps.getProperty( "defaultCommitter.dir" );
     final File file = new File( strdir, doc.getName() );
@@ -70,6 +72,9 @@ public class DefaultMetaDocCommitter implements IMetaDocCommiter
     //    metaProps.putAll( metadata );
     //    
     //    OutputStream out = null;
+
+    // output the metadataExtensions for debugging purposes
+    System.out.println( "DefaultCommiter, MetadataExtensions: " + ConfigurationUtils.toString( metadataExtensions ) );
 
     try
     {

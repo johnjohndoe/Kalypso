@@ -131,7 +131,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   {
     if( adapter == IExportableObjectFactory.class )
       return this;
-    
+
     return super.getAdapter( adapter );
   }
 
@@ -176,14 +176,16 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
+   *      org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration conf )
+  public IExportableObject[] createExportableObjects( final Configuration conf, final Configuration metadataExtensions )
   {
     return new IExportableObject[]
     { new ExportableChart( m_obsChart, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT,
-        ExportableChart.DEFAULT_FORMAT ), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH,
-        ExportableChart.DEFAULT_WIDTH ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ) ) };
+        ExportableChart.DEFAULT_FORMAT ),
+        conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, ExportableChart.DEFAULT_WIDTH ), conf.getInt(
+            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), metadataExtensions ) };
   }
 
   /**
@@ -191,8 +193,9 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration )
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" );
-    final IWizardPage page = new ImageExportPage(configuration, "diagprops", "Bildexport Optionen", imgDesc );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
+        "icons/util/img_props.gif" );
+    final IWizardPage page = new ImageExportPage( configuration, "diagprops", "Bildexport Optionen", imgDesc );
 
     return new IWizardPage[]
     { page };

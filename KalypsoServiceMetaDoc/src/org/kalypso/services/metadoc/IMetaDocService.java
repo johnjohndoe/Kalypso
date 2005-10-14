@@ -36,9 +36,12 @@ public interface IMetaDocService extends Remote, IKalypsoService
    * @param preferredFilename
    *          the preferred file name for the underlying file. Kalypso will try to preserve it, but no guarantee is
    *          made. It is possible that extra characters are appended to it so that its uniqueness is guaranteed.
+   * @param metadataExtensions
+   *          [optional, can be null] additional metadata information that might be used by the document commiter. It
+   *          should be a string that is loadable by a {@link org.apache.commons.configuration.PropertiesConfiguration}.
    * 
    * @throws RemoteException
    */
-  public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename )
-      throws RemoteException;
+  public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename,
+      final String metadataExtensions ) throws RemoteException;
 }

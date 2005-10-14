@@ -65,6 +65,15 @@ public interface IExportTarget extends IExecutableExtension
 
   public ImageDescriptor getImage();
 
+  /**
+   * Return the placeholder for the extensions to the metadata that can be provided by the various IExportableObjects
+   * created during the export process.
+   * 
+   * @return configuration which actually serves as placeholder for key-value pairs which will be used on the server
+   *         side by IMetadocCommiters in a specific way we cannot foresee
+   */
+  public Configuration getMetadataExtensions();
+
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException;
 
   /**
