@@ -21,5 +21,6 @@
     <observation linktype="zml" ns1:href="%href5%" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Abfluss" editable="true" id="c5" name="Zufluss - Vorhersage [%axisunit%]" width="50"/>
     </observation>
+	<alphaSort>false</alphaSort>
 </obstableview>
 

@@ -22,5 +22,6 @@
     <observation linktype="zml" ns7:href="platform:Speicherinhalt/579330.zml" xmlns:ns7="http://www.w3.org/1999/xlink">
         <column axis="Volumen" editable="true" id="c7" name="%obsname% [%axisunit%]" width="50"/>
     </observation>
+   	<alphaSort>false</alphaSort>
 </obstableview>
 
