@@ -53,6 +53,7 @@ import javax.xml.rpc.ParameterMode;
 import org.apache.axis.Constants;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
+import org.apache.commons.configuration.Configuration;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.impl.MetaDocException;
 
@@ -95,26 +96,29 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
   /** date format for the date elements of the xml file */
   private final static DateFormat DFDATE = new SimpleDateFormat( "yyyy-MM-dd" );
-  //private final static DateFormat DFDATETIME = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, java.util.Map)
    */
   public void prepareMetainf( final Properties serviceProps, final Map metadata ) throws MetaDocException
   {
-    metadata.put( TAG_AUTOR, "string;" + serviceProps.getProperty( "robotron.preset." + IMetaDocCommiter.KEY_AUTOR, "Autor" ) );
-    metadata.put( TAG_DOKUMENTTYP, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_DOKUMENTTYP, "Dokumenttyp" ) );
-    metadata.put( TAG_ERSTELLER, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_ERSTELLER, "Ersteller" ) );
+    metadata.put( TAG_AUTOR, "string;"
+        + serviceProps.getProperty( "robotron.preset." + IMetaDocCommiter.KEY_AUTOR, "Autor" ) );
+    metadata.put( TAG_DOKUMENTTYP, "string;"
+        + serviceProps.getProperty( "robotron.preset." + TAG_DOKUMENTTYP, "Dokumenttyp" ) );
+    metadata
+        .put( TAG_ERSTELLER, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_ERSTELLER, "Ersteller" ) );
     metadata.put( TAG_ERSTELLUNGSDATUM, "date;" + DFDATE.format( new Date() ) );
     metadata.put( TAG_GUELTIGKEITSDATUM, "date;" + DFDATE.format( new Date() ) );
     metadata.put( TAG_STATION, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_STATION, "123456" ) );
   }
 
   /**
-   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File)
+   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
+   *      org.apache.commons.configuration.Configuration)
    */
-  public void commitDocument( final Properties serviceProps, final Map metadata, final File doc )
-      throws MetaDocException
+  public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
+      final Configuration metadataExtensions ) throws MetaDocException
   {
     //String endpoint = "http://localhost:8080/eXForms/KalypsoConnectorWS.jws";
     final String endpoint = serviceProps.getProperty( "robotron.ws.endpoint" );
@@ -135,8 +139,9 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       final Properties mdProps = new Properties();
       mdProps.putAll( metadata );
 
-      final String[] docs = new String[] { doc.getAbsolutePath() };
-      final String metadataXml = buildXML( serviceProps, mdProps, doc.getAbsolutePath() );
+      final String[] docs = new String[]
+      { doc.getAbsolutePath() };
+      final String metadataXml = buildXML( serviceProps, mdProps, doc.getAbsolutePath(), metadataExtensions );
 
       final String ret = (String)call.invoke( new Object[]
       { docs, metadataXml } );
@@ -162,8 +167,12 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
    *          properties of the service
    * @param mdProps
    *          properties of the metadata
+   * @param metadataExtensions
+   *          might contain some addition information that can be used to fill the metadata for the document (for
+   *          instance: Pegelkennziffer or station_id in the sense of Robotron IMS)
    */
-  public static String buildXML( final Properties serviceProps, final Properties mdProps, final String fileName )
+  public static String buildXML( final Properties serviceProps, final Properties mdProps, final String fileName,
+      final Configuration metadataExtensions )
   {
     final StringBuffer bf = new StringBuffer();
 
@@ -180,6 +189,26 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
         + TAG_ERSTELLUNGSDATUM + GT );
     bf.append( LT + TAG_GUELTIGKEITSDATUM + GT + valueOfProperty( mdProps.getProperty( TAG_GUELTIGKEITSDATUM ) ) + CLT
         + TAG_GUELTIGKEITSDATUM + GT );
+
+    // tricky:
+    // 1- there should be a mapping in the service configuration that says
+    //    which metadataExtensions key maps to the station_id element.
+    //
+    // 2- using this key we check in the metadataExtensions for an array
+    //    Pegelkennziffer and we create an xml-element station_id for each
+    //    of them which has been found
+    final String keyStationId = serviceProps.getProperty( "METADATAEX_" + TAG_STATION );
+    if( metadataExtensions != null )
+    {
+      final String[] ids = metadataExtensions.getStringArray( keyStationId );
+      if( ids.length == 0 )
+        bf.append( LT + TAG_STATION + GT + "unbekannt" + CLT + TAG_STATION + GT );
+      
+      for( int i = 0; i < ids.length; i++ )
+        bf.append( LT + TAG_STATION + GT + ids[i] + CLT + TAG_STATION + GT );
+    }
+    else
+      bf.append( LT + TAG_STATION + GT + "unbekannt" + CLT + TAG_STATION + GT );
 
     bf.append( LT + TAG_FILES + GT );
     bf.append( LT + TAG_FILE + GT + fileName + CLT + TAG_FILE + GT );
