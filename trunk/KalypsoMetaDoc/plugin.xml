@@ -45,6 +45,12 @@
             description="%emptyExporter.description"
             name="%emptyExporter.name"
             id="emptyExporter"/>
+      <exporter
+            icon="icons/sample.gif"
+            class="org.kalypso.metadoc.impl.MultiExporter"
+            description="%multiExporter.description"
+            name="%multiExporter.name"
+            id="multiExporter"/>
    </extension>
 
 </plugin>

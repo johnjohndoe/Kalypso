@@ -43,6 +43,7 @@ package org.kalypso.metadoc;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
@@ -58,5 +59,8 @@ public interface IExportableObjectFactory
 {
   public IExportableObject[] createExportableObjects( final Configuration configuration, final Configuration metadataExtensions ) throws CoreException;
 
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException;
+  /**
+   * @param defaultImage This image should be used for each created wizard-page, if no own images are supplied.
+   */
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException;
 }

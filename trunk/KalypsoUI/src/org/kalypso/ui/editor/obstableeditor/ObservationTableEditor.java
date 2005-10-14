@@ -46,6 +46,7 @@ import java.io.OutputStreamWriter;
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -183,9 +184,9 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
   {
     return new IWizardPage[0];
   }

@@ -76,7 +76,12 @@ public interface IExporter extends IExportableObjectFactory, IExecutableExtensio
   public void init( final ISupplier supplier ) throws CoreException;
   
   /**
-   * Allows clients to override the name defined in the extension
+   * Allows clients to override the name defined in the extension.
    */
   public void setName( final String name );
+
+  /**
+   * Allows clients to override the description defined in the extension.
+   */
+  public void setDescription( final String desc );
 }

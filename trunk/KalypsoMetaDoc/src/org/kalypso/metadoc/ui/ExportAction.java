@@ -81,7 +81,8 @@ public class ExportAction extends Action
 
     try
     {
-      final Wizard wizard = new ExportWizard( m_target, factory, shell );
+      // TODO: define a default image for the export wizard (maybe target should yield one)
+      final Wizard wizard = new ExportWizard( m_target, factory, shell, null );
       final WizardDialog dlg = new WizardDialog( shell, wizard );
       dlg.open();
     }
