@@ -44,14 +44,15 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.jfree.chart.JFreeChart;
 import org.jfree.chart.encoders.EncoderUtil;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 
 /**
  * ExportableChart based on an existing chart
@@ -64,19 +65,23 @@ public class ExportableChart implements IExportableObject
   public final static int DEFAULT_WIDTH = 400;
   public final static int DEFAULT_HEIGHT = 300;
 
-  private final JFreeChart m_chart;
+  private final ObservationChart m_chart;
 
   private final String m_format;
 
   private final int m_width;
   private final int m_height;
+  
+  private final Configuration m_metadataExtensions;
 
-  public ExportableChart( final JFreeChart chart, final String format, final int width, final int height )
+  public ExportableChart( final ObservationChart chart, final String format, final int width, final int height,
+      final Configuration metadataExtensions )
   {
     m_chart = chart;
     m_format = format;
     m_width = width;
     m_height = height;
+    m_metadataExtensions = metadataExtensions;
   }
 
   /**
@@ -103,6 +108,9 @@ public class ExportableChart implements IExportableObject
 
     try
     {
+      // let update the metadata with the information we have
+      MetadataExtenderWithObservation.extendMetadata( m_metadataExtensions, m_chart.getTemplate().getItems() );
+      
       final BufferedImage image = m_chart.createBufferedImage( m_width, m_height, null );
       EncoderUtil.writeBufferedImage( image, m_format, outs );
     }

@@ -407,6 +407,11 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   {
     return m_model;
   }
+  
+  public TableView getTemplate()
+  {
+    return m_view;
+  }
 
   public void setPanel( final ObservationTablePanel panel )
   {

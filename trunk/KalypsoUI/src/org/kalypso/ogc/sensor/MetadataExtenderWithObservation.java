@@ -39,45 +39,52 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.metadoc.impl;
+package org.kalypso.ogc.sensor;
 
 import org.apache.commons.configuration.Configuration;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.kalypso.contribs.java.lang.ISupplier;
-import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
- * An exporter without wizard-page which procudes no documents.
+ * Extends metadata destinated for the metadoc service with information that it gets from an observation
  * 
  * @author schlienger
  */
-public class EmptyExporter extends AbstractExporter
+public class MetadataExtenderWithObservation
 {
-  /**
-   * @see org.kalypso.metadoc.IExporter#init(org.kalypso.contribs.java.lang.ISupplier)
-   */
-  public void init( final ISupplier supploer )
+  private MetadataExtenderWithObservation()
   {
-  // nothing to do
+  // not intended to be instanciated
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
-   *      org.apache.commons.configuration.Configuration)
+   * Helper that calls extendMetadata( Configuration, IObservation ) for each observation of the given items
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration,
-      final Configuration metadataExtensions ) throws CoreException
+  public static void extendMetadata( final Configuration metadata, final ObsViewItem[] items )
   {
-    return new IExportableObject[] {};
+    for( int i = 0; i < items.length; i++ )
+      extendMetadata( metadata, items[i].getObservation() );
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration)
+   * Extend the metadata that can be found in conf with information that it gets from the given observation
+   * 
+   * @param metadata
+   *          this represents the metadata that might get extended
+   * @param obs
+   *          observation used to get some extra information
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException
+  public static void extendMetadata( final Configuration metadata, final IObservation obs )
   {
-    return new IWizardPage[] {};
+    if( obs == null )
+      return;
+
+    final MetadataList md = obs.getMetadataList();
+
+    // currently we only take this property, but the thing
+    // could easily be extended with more
+    final String kennz = md.getProperty( TimeserieConstants.MD_KENNZIFFER );
+    if( kennz != null )
+      metadata.addProperty( TimeserieConstants.MD_KENNZIFFER, kennz );
   }
 }

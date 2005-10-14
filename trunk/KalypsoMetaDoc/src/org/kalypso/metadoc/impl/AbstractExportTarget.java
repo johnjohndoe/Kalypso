@@ -41,6 +41,8 @@
 
 package org.kalypso.metadoc.impl;
 
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -57,6 +59,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   private String m_name;
   private String m_desc;
   private ImageDescriptor m_imageDescriptor;
+  protected final PropertiesConfiguration m_metadataExtensions = new PropertiesConfiguration();
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -95,5 +98,13 @@ public abstract class AbstractExportTarget implements IExportTarget
   public final ImageDescriptor getImage()
   {
     return m_imageDescriptor;
+  }
+  
+  /**
+   * @see org.kalypso.metadoc.IExportTarget#getMetadataExtensions()
+   */
+  public Configuration getMetadataExtensions()
+  {
+    return m_metadataExtensions;
   }
 }

@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.configuration.Configuration;
 import org.kalypso.metadoc.impl.MetaDocException;
 
 /**
@@ -60,17 +61,24 @@ public interface IMetaDocCommiter
    * 
    * @param serviceProps
    *          Properties of the MetaDoc service. Can be used to get additional properties relevant to the commiter
+   * @param metadata
+   *          the metadata that must be prepared, meaning filled with all the required keys for which the user must give
+   *          a value. Default values can also directly be provided
    */
   public void prepareMetainf( final Properties serviceProps, final Map metadata ) throws MetaDocException;
 
   /**
    * Commits the document described by the metadata.
-   * <p>
-   * Should delete document after commit operation
    * 
    * @param serviceProps
    *          Properties of the MetaDoc service. Can be used to get additional properties relevant to the commiter
+   * @param metadata
+   *          the document metadata
+   * @param doc
+   *          the document file to commit
+   * @param metadataExtensions
+   *          some additional metadata that might be used by commiters
    */
-  public void commitDocument( final Properties serviceProps, final Map metadata, final File doc )
-      throws MetaDocException;
+  public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
+      final Configuration metadataExtensions ) throws MetaDocException;
 }

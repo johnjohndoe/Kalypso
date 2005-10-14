@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
@@ -102,7 +103,9 @@ public class KalypsoMetaDocService implements IMetaDocService
     try
     {
       final Map metadata = new HashMap();
+      
       m_props.put( IMetaDocCommiter.KEY_AUTOR, user );
+      
       m_commiter.prepareMetainf( m_props, metadata );
 
       return metadata;
@@ -116,17 +119,21 @@ public class KalypsoMetaDocService implements IMetaDocService
 
   /**
    * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(java.util.Map, javax.activation.DataHandler,
-   *      java.lang.String)
+   *      java.lang.String, java.lang.String)
    */
-  public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename )
-      throws RemoteException
+  public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename,
+      final String metadataExtensions ) throws RemoteException
   {
     try
     {
       final File docFile = File.createTempFile( "metadoc-tmp", preferredFilename, m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
 
-      m_commiter.commitDocument( m_props, metadata, docFile );
+      final PropertiesConfiguration mExConf = new PropertiesConfiguration();
+      if( metadataExtensions != null )
+        mExConf.load( metadataExtensions );
+
+      m_commiter.commitDocument( m_props, metadata, docFile, mExConf );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {

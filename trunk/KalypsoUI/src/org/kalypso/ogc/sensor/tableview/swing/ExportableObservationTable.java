@@ -44,11 +44,13 @@ import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -59,10 +61,12 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class ExportableObservationTable implements IExportableObject
 {
   private final ObservationTable m_table;
+  private final Configuration m_metadataExtensions;
 
-  public ExportableObservationTable( final ObservationTable table )
+  public ExportableObservationTable( final ObservationTable table, final Configuration metadataExtensions )
   {
     m_table = table;
+    m_metadataExtensions = metadataExtensions;
   }
 
   /**
@@ -80,10 +84,13 @@ public class ExportableObservationTable implements IExportableObject
   public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
     monitor.beginTask( "Export", 2 );
-    
+
     final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( output ) );
     try
     {
+      // let update the metadata with the information we have
+      MetadataExtenderWithObservation.extendMetadata( m_metadataExtensions, m_table.getTemplate().getItems() );
+
       // scenario name header
       if( !m_table.getCurrentScenarioName().equals( "" ) )
       {
@@ -94,21 +101,21 @@ public class ExportableObservationTable implements IExportableObject
         writer.newLine();
       }
 
-      monitor.worked(1);
-      
+      monitor.worked( 1 );
+
       // normal table dump
       final ObservationTableModel model = m_table.getObservationTableModel();
       model.dump( "\t", writer );
-      
-      monitor.worked(1);
-      
+
+      monitor.worked( 1 );
+
       return Status.OK_STATUS;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Export", e);
+
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Export", e );
     }
     finally
     {

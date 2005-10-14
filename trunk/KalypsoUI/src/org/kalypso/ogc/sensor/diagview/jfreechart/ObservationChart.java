@@ -139,6 +139,11 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
     return (ObservationPlot)getPlot();
   }
 
+  public DiagView getTemplate()
+  {
+    return m_view;
+  }
+  
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */

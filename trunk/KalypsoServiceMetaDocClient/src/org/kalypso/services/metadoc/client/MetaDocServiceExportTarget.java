@@ -45,6 +45,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -124,9 +125,14 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
       final IMetaDocService metadocService = getMetadocService();
 
+      // tricky: serialize the metadata extensions as a string
+      final StringWriter sw = new StringWriter();
+      m_metadataExtensions.save( sw );
+      sw.close();
+
       final DataHandler dh = new DataHandler( new FileDataSource( file ) );
-      metadocService
-          .commitNewDocument( (Map)conf.getProperty( CONF_METADATA ), dh, document.getPreferredDocumentName() );
+      metadocService.commitNewDocument( (Map)conf.getProperty( CONF_METADATA ), dh,
+          document.getPreferredDocumentName(), sw.toString() );
 
       monitor.worked( 1 );
 
@@ -153,8 +159,8 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin(
-        KalypsoServiceMetaDocClientPlugin.getID(), "icons/wizban/bericht_wiz.gif" );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoServiceMetaDocClientPlugin
+        .getID(), "icons/wizban/bericht_wiz.gif" );
 
     final Feature feature = prepareFeature( configuration );
     final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc,
@@ -191,7 +197,8 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     catch( final RemoteException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Serverseitige Fehler (Berichtsablage)", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
+          "Serverseitige Fehler (Berichtsablage)", e ) );
     }
 
     configuration.setProperty( CONF_METADATA, metadata );

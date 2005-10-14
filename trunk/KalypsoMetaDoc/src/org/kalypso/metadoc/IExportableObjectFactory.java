@@ -56,7 +56,7 @@ import org.kalypso.metadoc.configuration.IPublishingConfiguration;
  */
 public interface IExportableObjectFactory
 {
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException;
+  public IExportableObject[] createExportableObjects( final Configuration configuration, final Configuration metadataExtensions ) throws CoreException;
 
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException;
 }
