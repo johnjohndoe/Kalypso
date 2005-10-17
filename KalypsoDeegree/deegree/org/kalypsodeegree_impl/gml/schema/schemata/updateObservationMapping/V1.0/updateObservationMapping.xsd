@@ -32,6 +32,8 @@
                     <!-- some fields for in observation -->
                     <element name="inObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
                     <element name="in1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="in2ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
+                    <element name="in3ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
                     <!-- some fields for out observation -->
                     <element name="outObservationLink" type="obslink:TimeseriesLinkFeatureProperty"/>
                     <element name="out1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1"/>
