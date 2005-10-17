@@ -42,6 +42,7 @@
 package org.kalypso.services.user.client;
 
 import java.rmi.RemoteException;
+import java.util.logging.Logger;
 
 import javax.xml.rpc.ServiceException;
 
@@ -53,6 +54,7 @@ import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.auth.ui.KalypsoLoginDialog;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.auth.user.KalypsoUser;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.services.proxy.IUserService;
 import org.kalypso.services.proxy.ScenarioBean;
 
@@ -106,6 +108,13 @@ public class UserServiceAuthenticator implements IAuthenticator
           {
             // using authentication
             final String[] rights = srv.getRights2( username, dlg.getPassword() );
+            if( rights == null )
+              Logger.getLogger( getClass().getName() ).info(
+                  "Keine Nutzerrechte für Nutzer '" + username + "' erhalten." );
+            else
+              Logger.getLogger( getClass().getName() ).info(
+                  "Folgende Nutzerrechte wurden für Nutzer '" + username + "' erhalten: "
+                      + Arrays.toString( rights, "," ) );
             if( rights != null && rights.length > 0 )
               return new KalypsoUser( username, rights, scenario.getId(), scenarios );
           }
@@ -113,6 +122,13 @@ public class UserServiceAuthenticator implements IAuthenticator
           {
             // using single sign on
             final String[] rights = srv.getRights( username );
+            if( rights == null )
+              Logger.getLogger( getClass().getName() ).info(
+                  "Keine Nutzerrechte für Nutzer '" + username + "' erhalten." );
+            else
+              Logger.getLogger( getClass().getName() ).info(
+                  "Folgende Nutzerrechte wurden für Nutzer '" + username + "' erhalten: "
+                      + Arrays.toString( rights, "," ) );
             if( rights != null && rights.length > 0 )
               return new KalypsoUser( username, rights, scenario.getId(), scenarios );
           }
