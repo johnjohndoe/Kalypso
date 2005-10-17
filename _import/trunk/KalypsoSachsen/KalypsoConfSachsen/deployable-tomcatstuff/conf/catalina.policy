@@ -136,23 +136,18 @@ grant {
 	// read, write auf data vergeben weil ObservationService schreibrechte braucht
 	// wenn Zeitreihen zurück geschrieben werden...
 
-	permission java.io.FilePermission "\\\\lfug-kv-01\\prognose$\\-", "read,write";
-	permission java.io.FilePermission "D:\\Programme\\kalypso\\Tomcat5.0\\webapps\\webdav\\-", "read,write,delete";
-	permission java.io.FilePermission "D:\\Programme\\kalypso\\Tomcat5.0\\temp\\-", "read,write,delete,execute";
-
-	permission java.util.PropertyPermission "kalypso.*", "read";
-	permission java.util.PropertyPermission "java.io.tmpdir", "read";
-	
 	permission java.util.logging.LoggingPermission "control";
-
-	// Services (Zugriff auf das Konfigurationsverzeichnis)
-	permission java.net.SocketPermission "lfug-kv-01", "connect,resolve";
 
 	// PSICompact...
 	permission java.util.PropertyPermission "*", "read,write";
 	permission java.net.SocketPermission "localhost", "resolve";
 	permission java.net.SocketPermission "*", "connect,resolve";
-	permission java.io.FilePermission "d:\\Programme\\PSI\\lhwz\\dist\\-", "read,write,delete";
+
+	permission java.io.FilePermission "D:\\Programme\\PSI\\lhwz\\dist\\-", "read,write,delete";
+
+	permission java.io.FilePermission "D:\\Programme\\kalypso\\Tomcat5.0\\temp\\-", "read,write,delete,execute";
+	
+	permission java.io.FilePermission "D:\\Programme\\kalypso\\Tomcat5.0\\webapps\\webdav\\-", "read,write,delete";
 };
 
 // You can assign additional permissions to particular web applications by
