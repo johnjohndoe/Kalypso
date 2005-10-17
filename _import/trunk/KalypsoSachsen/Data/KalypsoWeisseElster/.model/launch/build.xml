@@ -16,7 +16,6 @@
         <echo message="" />
     </target>
 
-
     <!-- 
 		 ================================= 
           target: create			Rechenvariante erzeugen
@@ -53,12 +52,12 @@
         <!-- Definition der Quellen, der DWD-Raster (Vorhersage) -->
         <!-- Scenario TEST -->
         <property name="szenario_TestDwdUrl1"
-                  value="file:/${project.dir}/.model/dwd/lm_test1.txt" />
+                  value="http://lfug-kv-01:8080/webdav/dwd/lm_test.txt" />
         <property name="szenario_TestDwdUrl2"
-                  value="file:/${project.dir}/.model/dwd/lm_test2.txt" />
+                  value="http://lfug-kv-02:8080/webdav/dwd/lm_test.txt" />
         <!-- Scenario Echt -->
-        <property name="szenario_EchtDwdUrl1" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
-        <property name="szenario_EchtDwdUrl2" value="file:/${project.dir}/.model/dwd/lm_test.txt" />
+        <property name="szenario_EchtDwdUrl1" value="http://lfug-kv-01:8080/webdav/dwd/lm_normal.txt" />
+        <property name="szenario_EchtDwdUrl2" value="http://lfug-kv-02:8080/webdav/dwd/lm_normal.txt" />
 
         <property name="dwdRasterLocalPath" value="${calc.dir}/dwd/lm_aktuell.txt" />
         <property name="dwdRasterLocalURL" value="${calc.url}/dwd/lm_aktuell.txt" />
@@ -238,15 +237,18 @@
                                  forecastTo="${stopsim}">
             <source property="${linkInObservation}"
                     from="${startsim}"
-                    to="${startforecast}"
+                    to="${stopsim}"
                     filter="${filterQ}" />
             <!-- Vorhersage übernehmen -->
+        	<!--
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
+            -->
             <metadata name="Szenario" value="${scenarioId}" />
         </kalypso.copyObservation>
     </target>
 
     <target name="updateZuflussVorhersage" depends="setProperties">
+<!--    	
         <echo message="aktualisiere Zufluesse (Vorhersage)" />
         <kalypso.copyObservation gml="${project.url}/.model/observationConf/ZuflussVorhersageMapping.gml"
                                  featurePath="mappingMember"
@@ -259,9 +261,9 @@
                     from="${startforecast}"
                     to="${stopsim}"
                     filter="${filterQ}" />
-            <!-- Vorhersage übernehmen -->
             <metadata name="Szenario" value="${scenarioId}" />
         </kalypso.copyObservation>
+-->    	
     </target>
 
     <target name="updatePegelMessung" depends="setProperties">

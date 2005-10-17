@@ -54,6 +54,12 @@
 			<arg name="selectFeatureID" value="Node6100"/>
 			
 	    	<arg name="maximizeMap" value="true"/>
+	    	
+	    	<arg name="ignoreType1" value="W"/>
+			<arg name="ignoreType2" value="Q"/>
+			<arg name="ignoreLabel1" value="Abfluss"/>
+			<arg name="ignoreLabel2" value="Wasserstand"/>
+	    	
 
 <arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname% - Eingabe#linkColumn=zuflussZR"/>
 		</page>
