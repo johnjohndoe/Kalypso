@@ -1,4 +1,4 @@
-#Fri Oct 14 19:35:31 CEST 2005
+#Mon Oct 17 09:25:37 CEST 2005
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -214,7 +214,6 @@ encoding//Rechenl\u00E4ufe/test/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.templates/.wizard/berichtTabelleSpeicherEingV.ott=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_LIESKE.zml=UTF-8
 encoding//.prognose/prognose3/results.gml=UTF-8
-encoding//.templates/Modell/modell_20050918.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SPWITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-09-15_11h39/.calculation=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/zeitreihen/Diagramm.odt=UTF-8
@@ -237,8 +236,8 @@ encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/DerTest/Durchfluss/570000.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/PA_SAERI.zml=UTF-8

@@ -1083,12 +1083,10 @@
 				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeW.odt"/>
 			</arg>
 		</arg>
-		
 		<arg name="exporter3">
 			<arg name="id" value="multiExporter"/>
 			<arg name="name" value="Pegelübersichten (Scheitelwerte)"/>
 			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
-			
 			<!-- Scheitelwert-Tabelle -->
 			<arg name="exporter3">
 				<arg name="id" value="sumUpTableExporter"/>
@@ -1846,7 +1844,6 @@
 				</arg>
 	-->
 			</arg>
-			
 			<arg name="exporter5">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Pegelübersicht Wasserstand - Wasserstandsmeldepegel (Scheitelwerte)"/>
@@ -2276,919 +2273,919 @@
 					<!-- <arg name="label" value="Oberthau"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
 				</arg>
-				<arg name="exporter10">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Wasserstand - Untere Saale (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_UnS_W.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="W"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Camburg-Stöben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Niedertrebra"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Saaleck"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570340.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Laucha"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Naumburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Oberthau"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
-					</arg>
-					<arg name="obs7">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Halle-Trotha"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570810.zml"/>
-					</arg>
-					<arg name="obs8">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wippra"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/578410.zml"/>
-					</arg>
-					<arg name="obs9">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Großschierstedt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
-					</arg>
-					<arg name="obs10">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Bernburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570910.zml"/>
-					</arg>
-					<arg name="obs11">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Calbe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
-					</arg>
+			</arg>
+			<arg name="exporter10">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Wasserstand - Untere Saale (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_UnS_W.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
 				</arg>
-				<arg name="exporter11">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Wasserstand - Bode (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_Bode_W.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="W"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Meisdorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wegeleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Mahndorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Hadmersleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Stassfurt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
-					</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
 				</arg>
-				<arg name="exporter12">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Wasserstand - Saale und Bode (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_SB_W.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="W"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Blankenstein"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Rudolstadt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Naumburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Meisdorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wegeleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Mahndorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
-					</arg>
-					<arg name="obs7">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Hadmersleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
-					</arg>
-					<arg name="obs8">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Stassfurt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
-					</arg>
-					<arg name="obs9">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Calbe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
-					</arg>
+				<arg name="axisType" value="W"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Camburg-Stöben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
 				</arg>
-				<arg name="exporter13">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Wasserstand - Elbe (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_Elbe_W.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="W"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Löben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/553061.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Naumburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Zeitz"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Großschierstedt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
-					</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Niedertrebra"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
 				</arg>
-				<arg name="exporter14">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Abfluss - Wasserstandsmeldepegel (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_GesaWMP_Q.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="Q"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Rudolstadt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Camburg-Stöben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Niedertrebra"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Erfurt - Möbisburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/574210.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Hachelbich"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Oldisleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
-					</arg>
-					<arg name="obs7">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Nordhausen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575500.zml"/>
-					</arg>
-					<arg name="obs8">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Sundhausen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
-					</arg>
-					<arg name="obs9">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Bennungen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
-					</arg>
-					<arg name="obs10">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Laucha"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
-					</arg>
-					<arg name="obs11">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Naumburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
-					</arg>
-					<arg name="obs12">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Gera-Langenberg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576520.zml"/>
-					</arg>
-					<arg name="obs13">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Zeitz"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
-					</arg>
-					<arg name="obs14">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Oberthau"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
-					</arg>
-					<arg name="obs15">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Halle-Trotha"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570810.zml"/>
-					</arg>
-					<arg name="obs16">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wippra"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/578410.zml"/>
-					</arg>
-					<arg name="obs17">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Großschierstedt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
-					</arg>
-					<arg name="obs18">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Bernburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570910.zml"/>
-					</arg>
-					<arg name="obs19">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Meisdorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
-					</arg>
-					<arg name="obs20">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wegeleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
-					</arg>
-					<arg name="obs21">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Mahndorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
-					</arg>
-					<arg name="obs22">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Hadmersleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
-					</arg>
-					<arg name="obs23">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Stassfurt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
-					</arg>
-					<arg name="obs24">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Calbe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
-					</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Saaleck"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570340.zml"/>
 				</arg>
-				<arg name="exporter15">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Abfluss - Sachsen-Anhalt (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_SA_Q.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="Q"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Straußfurt Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="HACHELBICH"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wasserthaleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575110.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="OLDISLEBEN"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Bretleben, gesamt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573122.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Bretleben Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573126.zml"/>
-					</arg>
-					<arg name="obs7">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Bretleben UMFLUT"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573127.zml"/>
-					</arg>
-					<arg name="obs8">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Nordhausen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575500.zml"/>
-					</arg>
-					<arg name="obs9">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Sundhausen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
-					</arg>
-					<arg name="obs10">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Kelbra-Zufluss"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575402.zml"/>
-					</arg>
-					<arg name="obs11">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Kelbra-Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575406.zml"/>
-					</arg>
-					<arg name="obs12">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Stolberg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575700.zml"/>
-					</arg>
-					<arg name="obs13">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="BENNUNGEN"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
-					</arg>
-					<arg name="obs14">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Nikolausrieth"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575560.zml"/>
-					</arg>
-					<arg name="obs15">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Schoenewerda,"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573200.zml"/>
-					</arg>
-					<arg name="obs16">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Gehofen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573150.zml"/>
-					</arg>
-					<arg name="obs17">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Laucha"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
-					</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Laucha"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
 				</arg>
-				<arg name="exporter16">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Abfluss - Obere Saale (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_ObS_Q.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="Q"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Blankenstein"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Kaulsdorf-Eichicht"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/572010.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Kaulsdorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570250.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Schwarzburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/572115.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Rudolstadt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Camburg-Stöben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
-					</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Naumburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
 				</arg>
-				<arg name="exporter17">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Abfluss - Unstrut und Ilm (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_UI_Q.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="Q"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Gräfinau-Angstedt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/572890.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Niedertrebra"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Erfurt - Möbisburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/574210.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Nägelstedt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573010.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Straußfurt Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Hachelbich"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
-					</arg>
-					<arg name="obs7">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Oldisleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
-					</arg>
-					<arg name="obs8">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Nordhausen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575500.zml"/>
-					</arg>
-					<arg name="obs9">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Sundhausen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
-					</arg>
-					<arg name="obs10">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Bennungen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
-					</arg>
-					<arg name="obs11">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Berga"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/575710.zml"/>
-					</arg>
-					<arg name="obs12">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Laucha"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
-					</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Oberthau"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
 				</arg>
-				<arg name="exporter18">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Abfluss - Weiße Elster (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_Elster_Q.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="Q"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Greiz"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576470.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Gera-Langenberg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576520.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Zeitz"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Böhlen"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/577570.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Oberthau"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
-					</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Halle-Trotha"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570810.zml"/>
 				</arg>
-				<arg name="exporter19">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Abfluss - Untere Saale (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_UnS_Q.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="Q"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Camburg-Stöben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Niedertrebra"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Saaleck"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570340.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Laucha"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Naumburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Oberthau"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
-					</arg>
-					<arg name="obs7">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Halle-Trotha"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570810.zml"/>
-					</arg>
-					<arg name="obs8">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wippra"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/578410.zml"/>
-					</arg>
-					<arg name="obs9">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Großschierstedt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
-					</arg>
-					<arg name="obs10">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Bernburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570910.zml"/>
-					</arg>
-					<arg name="obs11">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Calbe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
-					</arg>
+				<arg name="obs8">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wippra"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/578410.zml"/>
 				</arg>
-				<arg name="exporter20">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Abfluss - Bode (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_Bode_Q.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="Q"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="TS-K B -Zulauf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579005.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="TS-K B - Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Rappbode-TS-Zulauf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579011.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Rappbode-TS-Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="TS-Wendefurth-Zulauf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="TS-Wendefurth-Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579016.zml"/>
-					</arg>
-					<arg name="obs7">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Meisdorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
-					</arg>
-					<arg name="obs8">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wegeleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
-					</arg>
-					<arg name="obs9">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Mahndorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
-					</arg>
-					<arg name="obs10">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Hadmersleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
-					</arg>
-					<arg name="obs11">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Stassfurt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
-					</arg>
+				<arg name="obs9">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Großschierstedt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
 				</arg>
-				<arg name="exporter21">
-					<arg name="id" value="sumUpTableExporter"/>
-					<arg name="name" value="Pegelübersicht Abfluss - Saale und Bode (Scheitelwerte)"/>
-					<arg name="documentName" value="Scheitelwerte_SB_Q.csv"/>
-					<arg name="separator" value=";"/>
-					<!--arg name="charset" value="cp1252"/-->
-					<arg name="delta" value="0.0001"/>
-					<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-					<arg name="column1">
-						<arg name="position" value="1"/>
-						<arg name="label" value="Pegel"/>
-						<arg name="content" value="arg:label"/>
-					</arg>
-					<arg name="column2">
-						<arg name="position" value="2"/>
-						<arg name="label" value="Gewässer"/>
-						<arg name="content" value="metadata:Gewässer"/>
-					</arg>
-					<arg name="axisType" value="Q"/>
-					<arg name="timeUnit" value="HOUR"/>
-					<arg name="timeStep" value="6"/>
-					<arg name="obs1">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="TS-K B -Zulauf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579005.zml"/>
-					</arg>
-					<arg name="obs2">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="TS-K B - Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
-					</arg>
-					<arg name="obs3">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Rappbode-TS-Zulauf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579011.zml"/>
-					</arg>
-					<arg name="obs4">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Rappbode-TS-Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
-					</arg>
-					<arg name="obs5">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="TS-Wendefurth-Zulauf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
-					</arg>
-					<arg name="obs6">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="TS-Wendefurth-Abgabe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579016.zml"/>
-					</arg>
-					<arg name="obs7">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Blankenstein"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
-					</arg>
-					<arg name="obs8">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Rudolstadt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
-					</arg>
-					<arg name="obs9">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Naumburg"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
-					</arg>
-					<arg name="obs10">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Meisdorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
-					</arg>
-					<arg name="obs11">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Wegeleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
-					</arg>
-					<arg name="obs12">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Mahndorf"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
-					</arg>
-					<arg name="obs13">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Hadmersleben"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
-					</arg>
-					<arg name="obs14">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Stassfurt"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
-					</arg>
-					<arg name="obs15">
-						<arg name="label" value="%obsname%"/>
-						<!-- <arg name="label" value="Calbe"/> -->
-						<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
-					</arg>
+				<arg name="obs10">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Bernburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570910.zml"/>
+				</arg>
+				<arg name="obs11">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Calbe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter11">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Wasserstand - Bode (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_Bode_W.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="W"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Meisdorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wegeleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Mahndorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Hadmersleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Stassfurt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter12">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Wasserstand - Saale und Bode (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_SB_W.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="W"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Blankenstein"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Rudolstadt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Naumburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Meisdorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wegeleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Mahndorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Hadmersleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
+				</arg>
+				<arg name="obs8">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Stassfurt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
+				</arg>
+				<arg name="obs9">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Calbe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter13">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Wasserstand - Elbe (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_Elbe_W.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="W"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Löben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/553061.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Naumburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Zeitz"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Großschierstedt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter14">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss - Wasserstandsmeldepegel (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_GesaWMP_Q.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Rudolstadt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Camburg-Stöben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Niedertrebra"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Erfurt - Möbisburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/574210.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Hachelbich"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Oldisleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Nordhausen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575500.zml"/>
+				</arg>
+				<arg name="obs8">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Sundhausen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
+				</arg>
+				<arg name="obs9">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Bennungen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
+				</arg>
+				<arg name="obs10">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Laucha"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
+				</arg>
+				<arg name="obs11">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Naumburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
+				</arg>
+				<arg name="obs12">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Gera-Langenberg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576520.zml"/>
+				</arg>
+				<arg name="obs13">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Zeitz"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
+				</arg>
+				<arg name="obs14">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Oberthau"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
+				</arg>
+				<arg name="obs15">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Halle-Trotha"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570810.zml"/>
+				</arg>
+				<arg name="obs16">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wippra"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/578410.zml"/>
+				</arg>
+				<arg name="obs17">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Großschierstedt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
+				</arg>
+				<arg name="obs18">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Bernburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570910.zml"/>
+				</arg>
+				<arg name="obs19">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Meisdorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
+				</arg>
+				<arg name="obs20">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wegeleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
+				</arg>
+				<arg name="obs21">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Mahndorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
+				</arg>
+				<arg name="obs22">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Hadmersleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
+				</arg>
+				<arg name="obs23">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Stassfurt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
+				</arg>
+				<arg name="obs24">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Calbe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter15">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss - Sachsen-Anhalt (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_SA_Q.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Straußfurt Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="HACHELBICH"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wasserthaleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575110.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="OLDISLEBEN"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Bretleben, gesamt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573122.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Bretleben Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573126.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Bretleben UMFLUT"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573127.zml"/>
+				</arg>
+				<arg name="obs8">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Nordhausen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575500.zml"/>
+				</arg>
+				<arg name="obs9">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Sundhausen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
+				</arg>
+				<arg name="obs10">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Kelbra-Zufluss"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575402.zml"/>
+				</arg>
+				<arg name="obs11">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Kelbra-Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575406.zml"/>
+				</arg>
+				<arg name="obs12">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Stolberg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575700.zml"/>
+				</arg>
+				<arg name="obs13">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="BENNUNGEN"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
+				</arg>
+				<arg name="obs14">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Nikolausrieth"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575560.zml"/>
+				</arg>
+				<arg name="obs15">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Schoenewerda,"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573200.zml"/>
+				</arg>
+				<arg name="obs16">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Gehofen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573150.zml"/>
+				</arg>
+				<arg name="obs17">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Laucha"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter16">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss - Obere Saale (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_ObS_Q.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Blankenstein"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Kaulsdorf-Eichicht"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/572010.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Kaulsdorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570250.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Schwarzburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/572115.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Rudolstadt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Camburg-Stöben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter17">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss - Unstrut und Ilm (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_UI_Q.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Gräfinau-Angstedt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/572890.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Niedertrebra"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Erfurt - Möbisburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/574210.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Nägelstedt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573010.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Straußfurt Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Hachelbich"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Oldisleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
+				</arg>
+				<arg name="obs8">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Nordhausen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575500.zml"/>
+				</arg>
+				<arg name="obs9">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Sundhausen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
+				</arg>
+				<arg name="obs10">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Bennungen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
+				</arg>
+				<arg name="obs11">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Berga"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/575710.zml"/>
+				</arg>
+				<arg name="obs12">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Laucha"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter18">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss - Weiße Elster (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_Elster_Q.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Greiz"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576470.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Gera-Langenberg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576520.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Zeitz"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Böhlen"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/577570.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Oberthau"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter19">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss - Untere Saale (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_UnS_Q.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Camburg-Stöben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570330.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Niedertrebra"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/572920.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Saaleck"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570340.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Laucha"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/573360.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Naumburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Oberthau"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Halle-Trotha"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570810.zml"/>
+				</arg>
+				<arg name="obs8">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wippra"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/578410.zml"/>
+				</arg>
+				<arg name="obs9">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Großschierstedt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/578430.zml"/>
+				</arg>
+				<arg name="obs10">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Bernburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570910.zml"/>
+				</arg>
+				<arg name="obs11">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Calbe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter20">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss - Bode (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_Bode_Q.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS-K B -Zulauf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579005.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS-K B - Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Rappbode-TS-Zulauf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579011.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Rappbode-TS-Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS-Wendefurth-Zulauf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS-Wendefurth-Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579016.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Meisdorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
+				</arg>
+				<arg name="obs8">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wegeleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
+				</arg>
+				<arg name="obs9">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Mahndorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
+				</arg>
+				<arg name="obs10">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Hadmersleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
+				</arg>
+				<arg name="obs11">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Stassfurt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter21">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss - Saale und Bode (Scheitelwerte)"/>
+				<arg name="documentName" value="Scheitelwerte_SB_Q.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS-K B -Zulauf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579005.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS-K B - Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Rappbode-TS-Zulauf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579011.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Rappbode-TS-Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS-Wendefurth-Zulauf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS-Wendefurth-Abgabe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579016.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Blankenstein"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570210.zml"/>
+				</arg>
+				<arg name="obs8">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Rudolstadt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570270.zml"/>
+				</arg>
+				<arg name="obs9">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Naumburg"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
+				</arg>
+				<arg name="obs10">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Meisdorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579610.zml"/>
+				</arg>
+				<arg name="obs11">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Wegeleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579045.zml"/>
+				</arg>
+				<arg name="obs12">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Mahndorf"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579712.zml"/>
+				</arg>
+				<arg name="obs13">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Hadmersleben"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579070.zml"/>
+				</arg>
+				<arg name="obs14">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Stassfurt"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/579085.zml"/>
+				</arg>
+				<arg name="obs15">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Calbe"/> -->
+					<arg name="href" value="./Ergebnisse/Durchfluss/570930.zml"/>
 				</arg>
 			</arg>
 		</arg>
