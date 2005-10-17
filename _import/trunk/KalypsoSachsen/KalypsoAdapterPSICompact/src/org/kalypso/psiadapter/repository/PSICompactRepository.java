@@ -2,7 +2,6 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.psiadapter.PSICompactFactory;
@@ -34,7 +33,7 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur umzuwandeln.
    */
-  private final PSICompactItem buildStructure( Map nodes, int valueType ) throws ECommException
+  private final void buildStructure( final PSICompactItem rootItem, final Map nodes, int valueType ) throws ECommException
   {
     final PSICompact psi = PSICompactFactory.getConnection();
 
@@ -42,7 +41,6 @@ public class PSICompactRepository extends AbstractRepository
 
     java.util.Arrays.sort( objInfos, new ObjectInfoLengthComparator() );
 
-    PSICompactItem parent = null;
 
     for( int k = 0; k < objInfos.length; k++ )
     {
@@ -51,6 +49,8 @@ public class PSICompactRepository extends AbstractRepository
 
       final String[] path = infoID.split( "\\." );
 
+      // the beginning of each path will be a child of the rootItem
+      PSICompactItem parent = rootItem;
       for( int i = 0; i < path.length; i++ )
       {
         if( path[i].length() == 0 )
@@ -79,14 +79,16 @@ public class PSICompactRepository extends AbstractRepository
       }
     }
 
-    // abnormal case...
-    if( parent == null )
-      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>", new PSICompact.ObjectInfo(), 0 );
+    // should never happen
+//    // abnormal case...
+//    if( parent == null )
+//      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>", new PSICompact.ObjectInfo(), 0 );
 
-    while( parent.getParent() != null )
-      parent = (PSICompactItem)parent.getParent();
+    // create the root parent
+//    while( parent.getParent() != null )
+//      parent = (PSICompactItem)parent.getParent();
 
-    return parent;
+//    return parent;
   }
 
   /**
@@ -126,20 +128,25 @@ public class PSICompactRepository extends AbstractRepository
   {
     try
     {
+      final PSICompactItem rootItem = new PSICompactItem( null, "", "", null, -1 );
       final TreeMap nodes = new TreeMap();
+      
+//      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
+//      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );
+      buildStructure( rootItem, nodes, PSICompact.TYPE_MEASUREMENT );
+      buildStructure( rootItem, nodes, PSICompact.TYPE_VALUE );
 
-      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
-      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );
-
-      if( nodeMeasurements != nodeForecasts )
-      {
-        Logger.getLogger( getClass().getName() ).info(
-            "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
-
-        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
-      }
-      else
-        m_psiRoot = nodeMeasurements;
+      // this should never happen any more?
+//      if( nodeMeasurements != nodeForecasts )
+//      {
+//        Logger.getLogger( getClass().getName() ).info(
+//            "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
+//
+//        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
+//      }
+//      else
+//        m_psiRoot = nodeMeasurements;
+      m_psiRoot = rootItem;
 
       fireRepositoryStructureChanged();
     }

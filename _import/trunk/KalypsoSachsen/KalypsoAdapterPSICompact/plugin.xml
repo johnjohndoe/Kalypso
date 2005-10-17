@@ -23,6 +23,7 @@
       <import plugin="org.kalypso.commons"/>
       <import plugin="org.kalypso.services.user"/>
       <import plugin="org.kalypso.metadoc"/>
+      <import plugin="org.kalypso.jwsdp"/>
    </requires>
    <extension
          id="org.kalypso.repository.factories"
