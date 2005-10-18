@@ -92,6 +92,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.java.lang.CatchRunnable;
@@ -266,7 +267,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
     setWizard( null );
 
     m_listeners.clear();
-    
+
     m_disposeHelper.dispose();
   }
 
@@ -797,11 +798,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
     // (this allows lazy page control creation)
     if( page.getControl() == null )
     {
-      //      final long before = System.currentTimeMillis();
       page.createControl( m_pageContainer );
-      //      final long after = System.currentTimeMillis();
-      //      // TODO: delete the next line!
-      //      System.out.println( "Dauer: " + ( after - before ) );
       // the page is responsible for ensuring the created control is accessable
       // via getControl.
       final Control control = page.getControl();
@@ -977,6 +974,28 @@ public class WizardView extends ViewPart implements IWizardContainer3
       return true;
     }
 
+    return false;
+  }
+
+  public boolean doHelp()
+  {
+    final IWizard wizard = getWizard();
+    final String helpHref;
+    if( wizard instanceof IWizard2 )
+      helpHref = ((IWizard2)wizard).getHelpHref();
+    else
+      helpHref = null;
+    
+    BusyIndicator.showWhile( null, new Runnable()
+    {
+      public void run()
+      {
+//        WorkbenchHelp.displayHelp();
+        WorkbenchHelp.displayHelpResource( helpHref );
+      }
+    } );
+
+    // the help button never changes the page, so always return false
     return false;
   }
 
@@ -1584,7 +1603,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
   public void setTitleImage( final ImageDescriptor imageDescriptor )
   {
     final Image image = imageDescriptor.createImage();
-    m_disposeHelper.addDisposeCandidate( image ); 
+    m_disposeHelper.addDisposeCandidate( image );
 
     setTitleImage( image );
   }
