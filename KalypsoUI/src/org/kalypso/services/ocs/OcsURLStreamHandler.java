@@ -81,14 +81,6 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     final String href = u.toExternalForm();
 
     m_logger.info( "Lade ZML: " + href );
-    
-    // use the default url connection if this is not a kalypso server-side one
-    if( !ZmlURL.isServerSide( href ) && !ZmlURL.isEmpty( href ) )
-      return u.openConnection();
-
-    // create a local temp file for storing the zml
-    final File file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "zml-proxy", "zml", "zml" );
-    file.deleteOnExit();
 
     // check if an empty id is provided, in that case use the request if provided
     if( ZmlURL.isEmpty( href ) )
@@ -96,8 +88,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       try
       {
         m_logger.warning( "Leere Zeitreihe angefordert..." );
-        
-        return tryWithRequest( href, file );
+
+        return tryWithRequest( href, null );
       }
       catch( final Exception e )
       {
@@ -108,12 +100,22 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
 
     InputStream ins = null;
+    File file = null;
 
     try
     {
+      // use the default url connection if this is not a kalypso server-side one
+      if( !ZmlURL.isServerSide( href ) )
+        return u.openConnection();
+
+      // else fetch the observation from the server
       final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
 
       final DataBean data = srv.readData( href );
+
+      // create a local temp file for storing the zml
+      file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "zml-proxy", "zml", "zml" );
+      file.deleteOnExit();
 
       ins = data.getDataHandler().getInputStream();
       FileUtilities.makeFileFromStream( false, file, ins );
@@ -132,7 +134,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       try
       {
         m_logger.warning( "Es wird versucht, eine Default-Zeitreihe zu erzeugen..." );
-        
+
         return tryWithRequest( href, file );
       }
       catch( final Exception se )
@@ -150,9 +152,22 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
   }
 
-  private URLConnection tryWithRequest( final String href, final File file ) throws SensorException,
-      MalformedURLException, IOException
+  /**
+   * Helper that tries to load the observation from its optional request
+   * 
+   * @param file
+   *          temp file where to store the observation locally. Can be null, in that case a temp file is created
+   */
+  private URLConnection tryWithRequest( final String href, File file ) throws SensorException, MalformedURLException,
+      IOException
   {
+    // create a local temp file for storing the zml if not provided
+    if( file == null )
+    {
+      file = TempFileUtilities.createTempFile( KalypsoGisPlugin.getDefault(), "zml-proxy", "zml", "zml" );
+      file.deleteOnExit();
+    }
+
     // we might be here because the server is down. If the href contains
     // a request, let create a default observation according to it.
     final IObservation obs = RequestFactory.createDefaultObservation( href );
