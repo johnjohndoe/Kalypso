@@ -147,6 +147,14 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       { docs, metadataXml } );
 
       System.out.println( "Got result : " + ret );
+
+/*	  // test purposes...
+      final Properties mdProps = new Properties();
+      mdProps.putAll( metadata );
+      final String metadataXml = buildXML( serviceProps, mdProps, doc.getAbsolutePath(), metadataExtensions );
+      final FileWriter writer = new FileWriter( new File(doc.getAbsolutePath() + ".xml" ) );
+      writer.write( metadataXml );
+      writer.close();*/
     }
     catch( final Exception e )
     {

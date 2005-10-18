@@ -26,12 +26,12 @@
         </init-param>
         <init-param>
             <param-name>source_prefix</param-name>
-            <param-value>lm_;lm_</param-value>
+            <param-value>lm2_;lm2_</param-value>
             <description>prefix used for filtering files from source folder (semicolon separated if more than one instance)</description>
         </init-param>
         <init-param>
             <param-name>source_format</param-name>
-            <param-value>'lm_'yyyy'_'MM'_'dd'_'HH;'lm_'yyyy'_'MM'_'dd'_'HH</param-value>
+            <param-value>'lm2_'yyyy'_'MM'_'dd'_'HH;'lm2_'yyyy'_'MM'_'dd'_'HH</param-value>
             <description>format of the filenames in order to extract date from it (semicolon separated if more than one instance)</description>
         </init-param>
         <init-param>
