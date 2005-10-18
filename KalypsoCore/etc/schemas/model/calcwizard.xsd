@@ -21,6 +21,12 @@
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="browserInitialSize" type="xs:int" use="optional" default="25"/>
+			<xs:attribute name="helpHref" type="xs:string" use="optional">
+					<xs:annotation>
+						<xs:documentation>If given, the calculation wizard will have a help-button. If the help button is invoked,
+						the eclipse-help system will open the given href. The href must be of the form: /plugin-id/dir/page.html.</xs:documentation>
+					</xs:annotation>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	
