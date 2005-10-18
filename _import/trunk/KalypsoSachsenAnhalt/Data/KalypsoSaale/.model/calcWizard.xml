@@ -50,13 +50,16 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Thür_Wald.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
+		
 		<!--
 		Diagramm -->
-		<arg name="diagShowLegend" value="false"/>
+		<arg name="diagShowLegend" value="true"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=%featureprop% - Schnee [%axisunit%]#linkColumn=Schnee#color=0x00ff00"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableShow" value="selected"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Saale / Ilm-->
@@ -74,13 +77,15 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Saale_Ilm.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
 		<!--
 		Diagramm -->
-		<arg name="diagShowLegend" value="false"/>
+		<arg name="diagShowLegend" value="true"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=%featureprop% - Schnee [%axisunit%]#linkColumn=Schnee#color=0x00ff00"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableShow" value="selected"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Weiße Elster -->
@@ -98,13 +103,15 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Weiße_Elster.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
 		<!--
 		Diagramm -->
-		<arg name="diagShowLegend" value="false"/>
+		<arg name="diagShowLegend" value="true"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=%featureprop% - Schnee [%axisunit%]#linkColumn=Schnee#color=0x00ff00"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableShow" value="selected"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Unstrut / Eichsfeld-->
@@ -122,13 +129,15 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Unstrut_Eichsfeld.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
 		<!--
 		Diagramm -->
-		<arg name="diagShowLegend" value="false"/>
+		<arg name="diagShowLegend" value="true"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=%featureprop% - Schnee [%axisunit%]#linkColumn=Schnee#color=0x00ff00"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableShow" value="selected"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Flachland Süd-->
@@ -146,13 +155,15 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Flachland_Süd.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
 		<!--
 		Diagramm -->
-		<arg name="diagShowLegend" value="false"/>
+		<arg name="diagShowLegend" value="true"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=%featureprop% - Schnee [%axisunit%]#linkColumn=Schnee#color=0x00ff00"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableShow" value="selected"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Harz -->
@@ -170,13 +181,15 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Harz.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
 		<!--
 		Diagramm -->
-		<arg name="diagShowLegend" value="false"/>
+		<arg name="diagShowLegend" value="true"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=%featureprop% - Schnee [%axisunit%]#linkColumn=Schnee#color=0x00ff00"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableShow" value="selected"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Niederschlagsgebiete Flachland Nord-->
@@ -194,13 +207,15 @@
 		<arg name="mapTemplate" value=".templates/.wizard/Niederschlagsgebiete_Flachland_Nord.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
 		<!--
 		Diagramm -->
-		<arg name="diagShowLegend" value="false"/>
+		<arg name="diagShowLegend" value="true"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Niederschlag"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=%featureprop% - Schnee [%axisunit%]#linkColumn=Schnee#color=0x00ff00"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
+		<arg name="zmlTableShow" value="selected"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - Talsperren -->
