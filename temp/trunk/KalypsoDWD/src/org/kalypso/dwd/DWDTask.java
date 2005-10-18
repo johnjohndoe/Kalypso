@@ -61,10 +61,8 @@ import org.kalypso.contribs.java.util.logging.ILogger;
  * 
  * @author doemming
  */
-
 public class DWDTask extends Task
 {
-
   /** context for target hrefs */
   private File m_targetContext;
 
@@ -100,7 +98,6 @@ public class DWDTask extends Task
   }
 
   /**
-   * 
    * @param from
    *          beginning of measure periode
    */
@@ -110,10 +107,8 @@ public class DWDTask extends Task
   }
 
   /**
-   * 
    * @param forecastFrom
    *          beginning of forecast periode (end of measure periode)
-   *  
    */
   public final void setForecastFrom( long forecastFrom )
   {
@@ -121,7 +116,6 @@ public class DWDTask extends Task
   }
 
   /**
-   * 
    * @param to
    *          end of forecast periode
    */
@@ -136,7 +130,6 @@ public class DWDTask extends Task
   }
 
   /**
-   * 
    * @see org.apache.tools.ant.Task#execute()
    */
   public void execute() throws BuildException
@@ -145,9 +138,6 @@ public class DWDTask extends Task
     {
       final ILogger logger = new ILogger()
       {
-        /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
-         */
         public void log( String message )
         {
           System.out.println( message );
@@ -210,5 +200,4 @@ public class DWDTask extends Task
       m_value = value;
     }
   }
-
 }

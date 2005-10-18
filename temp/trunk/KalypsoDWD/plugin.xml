@@ -20,15 +20,12 @@
       <import plugin="org.kalypso.core"/>
       <import plugin="org.eclipse.ant.core"/>
    </requires>
- <extension
-         id="antTasks"
-         name="antTasks"
+   <extension
          point="org.eclipse.ant.core.antTasks">
-     
-     	  <antTask
-           class="org.kalypso.dwd.DWDTask"
-            library="lib/kalypsoDWD.jar"
-           name="kalypso.dwdTask"/>
+      <antTask
+            class="org.kalypso.dwd.DWDTask"
+            library="lib/KalypsoDWD.jar"
+            name="kalypso.dwdTask"/>
    </extension>
 
 </plugin>

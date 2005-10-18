@@ -66,7 +66,6 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.ObservationType;
 
 /**
- * 
  * @see org.kalypso.dwd.DWDTask
  * 
  * @author doemming
@@ -232,7 +231,7 @@ public class DWDTaskDelegate
           IOUtils.closeQuietly( fileWriter );
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         throw e;
       }
