@@ -104,7 +104,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   static final String RIVER_PAGE = "page_type:river"; //$NON-NLS-1$
 
   static final String PROJECT_PAGE = "page_type:createNewProject"; //$NON-NLS-1$
-  
+
   static final String PREFERENCE_PAGE = "page_type:preferences"; //$NON-NLS-1$
 
   private final String m_resourceBase = WizardMessages.getString( "KalypsoNAProjectWizard.ResourcePath" ); //$NON-NLS-1$
@@ -143,7 +143,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   private KalypsoNAProjectWizardPage m_createMappingNodePage;
 
   private KalypsoNAProjectWizardPage m_createMappingRiverPage;
-  
+
   private KalypsoNAProjectPreferences m_createPreferencePage;
 
   private WizardNewProjectCreationPage m_createProjectPage;
@@ -186,7 +186,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     try
     {
       m_createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      m_createProjectPage.setDescription( WizardMessages.getString( "KalypsoNAProjectWizard.DescriptionNewProjectPage" ) ); //$NON-NLS-1$
+      m_createProjectPage
+          .setDescription( WizardMessages.getString( "KalypsoNAProjectWizard.DescriptionNewProjectPage" ) ); //$NON-NLS-1$
       m_createProjectPage.setTitle( WizardMessages.getString( "KalypsoNAProjectWizard.TitleNewProjectPage" ) ); //$NON-NLS-1$
       m_createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
       addPage( m_createProjectPage );
@@ -198,7 +199,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
     m_createPreferencePage = new KalypsoNAProjectPreferences( PREFERENCE_PAGE, m_modelSchema );
     addPage( m_createPreferencePage );
-    
+
     m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, WizardMessages
         .getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
         ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
@@ -236,8 +237,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
    * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
-  {
-  }
+  {}
 
   /**
    * This method creates the new Project and all the necessary , performs the mapping and writes the new modell.gml file .
@@ -459,7 +459,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       List list = new ArrayList();
       FeatureProperty bodenkorrekturProperty = FeatureFactory.createFeatureProperty( "bodenkorrekturmember", list ); //$NON-NLS-1$
       targetFeature.setProperty( bodenkorrekturProperty );
-      int soilLayerNo = Integer.parseInt(m_createPreferencePage.getSoilLayerNo());
+      int soilLayerNo = Integer.parseInt( m_createPreferencePage.getSoilLayerNo() );
       for( int j = 0; j < soilLayerNo; j++ )
       {
         FeatureTypeProperty bodFtProp = modelFT.getProperty( "bodenkorrekturmember" ); //$NON-NLS-1$
@@ -500,7 +500,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       Feature sourceFeature = (Feature)sourceFeatureList.get( i );
       final String fid;
       if( idColKey != null )
-        fid = "Node" + (String)sourceFeature.getProperty( idColKey ); //$NON-NLS-1$
+        fid = "Node" + ( sourceFeature.getProperty( idColKey ) ).toString(); //$NON-NLS-1$
       else
         fid = sourceFeature.getId();
       Feature targetFeature = FeatureFactory.createFeature( fid, modelFT, true );
@@ -565,7 +565,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       {
         final String fid;
         if( idColKey != null )
-          fid = "VirtualChannel" + (String)sourceFeature.getProperty( idColKey ); //$NON-NLS-1$
+          fid = "VirtualChannel" + ( sourceFeature.getProperty( idColKey ) ).toString(); //$NON-NLS-1$
         else
           fid = sourceFeature.getId();
 
@@ -578,7 +578,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
         final String fid;
         if( idColKey != null )
-          fid = "KMChannel" + (String)sourceFeature.getProperty( idColKey ); //$NON-NLS-1$
+          fid = "KMChannel" + ( sourceFeature.getProperty( idColKey ) ).toString(); //$NON-NLS-1$
         else
           fid = sourceFeature.getId();
 
@@ -588,7 +588,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         List list = new ArrayList();
         FeatureProperty kmParameterProperty = FeatureFactory.createFeatureProperty( "KMParameterMember", list ); //$NON-NLS-1$
         targetFeature.setProperty( kmParameterProperty );
-        int channelNo = Integer.parseInt(m_createPreferencePage.getKMChannelNo());
+        int channelNo = Integer.parseInt( m_createPreferencePage.getKMChannelNo() );
         for( int j = 0; j < channelNo; j++ )
         {
           FeatureTypeProperty kmFtProp = kmFT.getProperty( "KMParameterMember" ); //$NON-NLS-1$
@@ -610,7 +610,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       {
         final String fid;
         if( idColKey != null )
-          fid = "StorageChannel" + (String)sourceFeature.getProperty( idColKey ); //$NON-NLS-1$
+          fid = "StorageChannel" + ( sourceFeature.getProperty( idColKey ) ).toString(); //$NON-NLS-1$
         else
           fid = sourceFeature.getId();
 
