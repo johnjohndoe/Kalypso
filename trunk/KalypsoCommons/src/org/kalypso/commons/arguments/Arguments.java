@@ -1,6 +1,6 @@
 package org.kalypso.commons.arguments;
 
-import java.util.Properties;
+import java.util.LinkedHashMap;
 
 /**
  * Arguments is a simple extension of Properties with a nesting-capability.
@@ -9,7 +9,7 @@ import java.util.Properties;
  * 
  * @author schlienger
  */
-public class Arguments extends Properties
+public class Arguments extends LinkedHashMap
 {
   public String getProperty( final String key )
   {
