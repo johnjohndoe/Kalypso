@@ -781,7 +781,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   public void saveData( final IProgressMonitor monitor ) throws CoreException
   {
-    ( (GisTemplateFeatureTheme)getTheme() ).saveFeatures( monitor );
+    // TODO inserted this test against null because got a NullPointerException, ok?
+    final GisTemplateFeatureTheme theme = (GisTemplateFeatureTheme)getTheme();
+    if( theme != null )
+      theme.saveFeatures( monitor );
   }
 
   public String[][] exportTable( final boolean onlySelected )

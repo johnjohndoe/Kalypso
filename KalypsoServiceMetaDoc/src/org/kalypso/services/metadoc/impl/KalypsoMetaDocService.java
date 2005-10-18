@@ -2,6 +2,7 @@ package org.kalypso.services.metadoc.impl;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -131,7 +132,11 @@ public class KalypsoMetaDocService implements IMetaDocService
 
       final PropertiesConfiguration mExConf = new PropertiesConfiguration();
       if( metadataExtensions != null )
-        mExConf.load( metadataExtensions );
+      {
+        final StringReader reader = new StringReader( metadataExtensions );
+        mExConf.load( reader );
+        reader.close();
+      }
 
       m_commiter.commitDocument( m_props, metadata, docFile, mExConf );
     }

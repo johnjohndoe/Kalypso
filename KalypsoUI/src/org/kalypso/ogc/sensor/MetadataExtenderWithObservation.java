@@ -41,6 +41,8 @@
 
 package org.kalypso.ogc.sensor;
 
+import java.util.Arrays;
+
 import org.apache.commons.configuration.Configuration;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -85,6 +87,10 @@ public class MetadataExtenderWithObservation
     // could easily be extended with more
     final String kennz = md.getProperty( TimeserieConstants.MD_KENNZIFFER );
     if( kennz != null )
-      metadata.addProperty( TimeserieConstants.MD_KENNZIFFER, kennz );
+    {
+      final String[] array = metadata.getStringArray( TimeserieConstants.MD_KENNZIFFER );
+      if( array == null || array != null && !Arrays.asList( array ).contains( kennz ) )
+        metadata.addProperty( TimeserieConstants.MD_KENNZIFFER, kennz );
+    }
   }
 }
