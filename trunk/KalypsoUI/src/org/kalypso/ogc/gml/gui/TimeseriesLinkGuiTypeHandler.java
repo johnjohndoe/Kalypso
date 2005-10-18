@@ -59,7 +59,7 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.TextType;
-import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -103,7 +103,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     if( element == null )
       return "";
 
-    final String href = ( (TimeseriesLink)element ).getHref();
+    final String href = ( (TimeseriesLinkType)element ).getHref();
     return href == null ? "" : href;
   }
 

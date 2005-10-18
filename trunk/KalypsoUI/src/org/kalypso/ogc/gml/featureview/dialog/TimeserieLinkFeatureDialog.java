@@ -39,6 +39,7 @@ import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -71,7 +72,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
   public int open( final Shell shell )
   {
     ObservationViewerDialog dialog = new ObservationViewerDialog( shell );
-    final TimeseriesLink tslink = (TimeseriesLink)m_feature.getProperty( m_ftp.getName() );
+    final TimeseriesLinkType tslink = (TimeseriesLinkType)m_feature.getProperty( m_ftp.getName() );
     dialog.setContext( m_workspace.getContext() );
     dialog.setInput( tslink == null ? "" : tslink.getHref() );
 

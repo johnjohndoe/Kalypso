@@ -11,16 +11,15 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.extension.IMarshallingTypeHandler;
+import org.kalypsodeegree_impl.extension.ITypeRegistry;
+import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 
 /**
  * @author doemming
@@ -82,6 +81,7 @@ public class FeatureHelper
    * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
    * <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
    * </ul>
+   * @throws CloneNotSupportedException
    * 
    * @throws IllegalArgumentException
    *           Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
@@ -91,7 +91,7 @@ public class FeatureHelper
    *           Noch sind nicht alle Typen implementiert
    */
   public static void copyProperties( final Feature sourceFeature, final Feature targetFeature,
-      final Properties propertyMap )
+      final Properties propertyMap ) throws CloneNotSupportedException
   {
     final FeatureType sourceType = sourceFeature.getFeatureType();
     final FeatureType targetType = targetFeature.getFeatureType();
@@ -122,50 +122,42 @@ public class FeatureHelper
   }
 
   /**
+   * @throws CloneNotSupportedException
    * @throws UnsupportedOperationException
    *           If type of object is not supported for clone
    */
-  public static Object cloneData( final Object object, final String type )
+  public static Object cloneData( final Object object, final String type ) throws CloneNotSupportedException
   {
     if( object == null )
       return null;
 
+    // TODO: we still need a type handler for the simple types
+    
     // imutable types
     if( object instanceof Boolean )
       return object;
-
     if( object instanceof String )
       return object;
-
     if( object instanceof Number )
       return object;
 
-    if( object instanceof GM_Point )
-    {
-      final GM_Point point = (GM_Point)object;
-      // todo: is there a universal clone-method for GM_Geometries?
-      final GM_Position position = point.getPosition();
-      final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
-      return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
-    }
+    // if we have an IMarhsallingTypeHandler, it will do the clone for us.
+        final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+        final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)typeRegistry.getTypeHandlerForClassName( type );
+        if( typeHandler != null )
+          return typeHandler.cloneObject( object );
+    
+        // TODO: delete these lines AFTEr we have checked that it is still working
+//    if( object instanceof GM_Point )
+//    {
+//      final GM_Point point = (GM_Point)object;
+//      // todo: is there a universal clone-method for GM_Geometries?
+//      final GM_Position position = point.getPosition();
+//      final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
+//      return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
+//    }
 
-    if( object instanceof TimeseriesLinkType )
-    {
-      // TODO: eigentlich clonen!
-      return object;
-    }
-    // test if we have an marshaller and marhall it an back
-    //    ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    //    IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)typeRegistry.getTypeHandlerForClassName( type );
-    //    if( typeHandler != null )
-    //    {
-    //      Node node = null;
-    //      xxx
-    //      typeHandler.marshall( object, node, null );
-    //      Object result = typeHandler.unmarshall( node, null, null );
-    //      return result;
-    //    }
-    throw new UnsupportedOperationException( "Kann Datenobjekt vom Typ '" + type + "' nicht kopieren." );
+    throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + type + "' nicht kopieren." );
   }
 
   public static boolean isCompositionLink( Feature srcFE, String linkPropName, Feature destFE )

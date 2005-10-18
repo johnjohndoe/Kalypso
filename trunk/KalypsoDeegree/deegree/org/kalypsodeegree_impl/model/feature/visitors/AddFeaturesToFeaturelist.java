@@ -90,13 +90,21 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
       throw new IllegalArgumentException(
           "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
 
-    FeatureHelper.copyProperties( f, newFeature, m_propertyMap );
+    try
+    {
+      FeatureHelper.copyProperties( f, newFeature, m_propertyMap );
 
-    if( newFeature != existingFeature )
-      m_list.add( newFeature );
+      if( newFeature != existingFeature )
+        m_list.add( newFeature );
 
-    // den fid-hash aktuell halten
-    m_fidHash.put( newFeature.getId(), newFeature );
+      // den fid-hash aktuell halten
+      m_fidHash.put( newFeature.getId(), newFeature );
+    }
+    catch( final CloneNotSupportedException e )
+    {
+      e.printStackTrace();
+      // TODO: error handling
+    }
 
     return true;
   }

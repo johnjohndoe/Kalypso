@@ -16,7 +16,7 @@ import org.kalypsodeegree.model.feature.FeatureTypeProperty;
  */
 public final class FeatureHelperTest extends TestCase
 {
-  public final void testCopyProperties()
+  public final void testCopyProperties() throws CloneNotSupportedException
   {
     // zwei feature types erzeugen
     final String SOURCE_STRING_PROP = "sourceStringprop";
