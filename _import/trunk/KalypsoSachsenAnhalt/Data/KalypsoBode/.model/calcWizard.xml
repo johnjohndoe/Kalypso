@@ -549,10 +549,12 @@
 				<arg name="label" value="Hausneindorf"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Hausneindorf.zml"/>
 			</arg>
+<!-- keine W/Q-Tabelle für Talsperren-Abgabe 
 			<arg name="obs4">
 				<arg name="label" value="Abgabe TS Wendefurth"/>
 				<arg name="href" value="./Zeitreihen/Speicherabgabe/Wendefurth.zml"/>
 			</arg>
+-->
 			<arg name="obs5">
 				<arg name="label" value="Thale"/>
 				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Thale.zml"/>
