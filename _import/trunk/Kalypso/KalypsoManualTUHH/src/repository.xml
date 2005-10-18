@@ -18,12 +18,12 @@
     <para></para>
 
     <para>Die Funktion der Zeitreihen-Ablage besteht im Wesentlichen darin,
-    die in PSI-Compact verwalteten Wasserstands-, Niederschlags- und
+    die in Datenbanken verwalteten Wasserstands-, Niederschlags- und
     Temperaturzeitreihen aus der KALYPSO-Oberfläche anzuschauen und zu
     kontrollieren. Die dabei in der Zeitreihen-Ablage angezeigte Datenstruktur
     (Baumstruktur) entspricht Eins zu Eins der Datenstruktur auf
-    PSI-Compact-Seite. Die Zeitreihen-Ablage ermöglicht ausdrücklich kein
-    Editieren der Zeitreihen innerhalb von PSI-Compact!</para>
+    Dantenbank-Seite. Die Zeitreihen-Ablage ermöglicht ausdrücklich kein
+    Editieren der Zeitreihen innerhalb der Datenbank!</para>
 
     <para></para>
 
@@ -31,8 +31,7 @@
     Zeitreihen Repositories hinzuzufügen. Dabei kann es sich z.B. um
     Fremddaten oder historische Daten aus einer lokalen Datenquelle handeln.
     Voraussetzung ist allerdings, dass die in der Datenquelle enthaltenen
-    Zeitreihen im zml-Format vorliegen. Eine detaillierte Formatbeschreibung
-    ist in der Technischen Dokumentation nachzuschlagen.</para>
+    Zeitreihen im zml-Format vorliegen.</para>
 
     <para></para>
 
@@ -42,18 +41,16 @@
     Berechnungsknoten in einem konkreten hydrologischen Modell zu verknüpfen.
     Um diese Verknüpfung vorzunehmen, kann die Verknüpfung (Link) auf die
     Zeitreihe per rechten Mausklick in die Zwischenablage gespeichert und an
-    der passenden Stelle in der entsprechenden Modelldatei eingefügt werden.
-    Eine nähere Beschreibung zum Modellaufbau und zu den dazu notwendigen
-    Arbeitsschritten ist ebenfalls in der Technischen Dokumentation
-    enthalten.</para>
+    der passenden Stelle in der entsprechenden Modelldatei eingefügt
+    werden.</para>
 
     <para></para>
 
     <para>Eine weitere Funktionalität der Zeitreihen-Ablage besteht im
-    Datenexport. Somit können z.B. Zeitreihen aus PSI-Compact heruntergeladen
-    und in ein beliebiges Verzeichnis im Netzwerk oder lokal gespeichert
-    werden. Beim Export werden die Zeitreihen im zml-Format abgelegt. Der
-    Export von Zeitreihen ist in <xref
+    Datenexport. Somit können z.B. Zeitreihen aus einer Datenbank
+    heruntergeladen und in ein beliebiges Verzeichnis im Netzwerk oder lokal
+    gespeichert werden. Beim Export werden die Zeitreihen im zml-Format
+    abgelegt. Der Export von Zeitreihen ist in <xref
     linkend="repository_zeitreihenverwaltung" /> beschrieben.</para>
   </section>
 
@@ -75,7 +72,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository/repository_gesamt.png"
+          <imagedata align="center"
+                     fileref="img/repository/repository_gesamt.png"
                      revisionflag="added" scale="30" />
         </imageobject>
       </mediaobject>
@@ -87,7 +85,7 @@
     typspezifisch, d.h., dass Niederschlagsstationen prinzipiell andere
     Metadaten enthalten können als Wasserstandspegel. Die einzelnen Zellen
     enthalten nicht immer konkrete Werte, sondern es können auch Verknüpfungen
-    angegeben werden - wie im Falle der W-Q-Parameter.</para>
+    angegeben werden - wie evtl. im Falle der W-Q-Parameter.</para>
 
     <para></para>
 
@@ -118,7 +116,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository/repository_schaltflaechen.png"
+          <imagedata align="center"
+                     fileref="img/repository/repository_schaltflaechen.png"
                      scale="70" />
         </imageobject>
       </mediaobject>
@@ -130,26 +129,44 @@
 
     <para>Der Benutzer kann beliebig viele Zeitreihen-Ablagen in die
     Oberfläche einlesen. Nach Auswahl der Schaltfläche erscheint ein
-    Auswahlfenster, in dem zwischen lokalen und auf dem Server gespeicherten
-    Zeitreihen Repositories gewählt werden kann. Wird eine lokale Ablage
-    gewählt, muss im nächsten Fenster der Pfad, das Kennzeichen (Name der
-    Ablage) sowie die Dateiendung der Zeitreihen (Standard: *.zml) angegeben
-    werden (<xref linkend="repository_import_lokal" />).</para>
+    Auswahlfenster, in dem zwischen Datacenter, lokalen und auf dem Server
+    gespeicherten Zeitreihen Repositories gewählt werden kann. Wird eine
+    lokale Ablage gewählt, muss im nächsten Fenster der Pfad, das Kennzeichen
+    (Name der Ablage) sowie die Dateiendung der Zeitreihen (Standard: *.zml)
+    angegeben werden (<xref linkend="repository_import_lokal" />).</para>
 
     <figure id="repository_import_lokal">
       <title>Lokale Ablage hinzufügen</title>
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository/repository_import_lokal.png"
+          <imagedata align="center"
+                     fileref="img/repository/repository_import_lokal.png"
                      scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Besteht eine Verbindung zu einer Ingres-Zeitreihendatenbank, welche
+    mit Hilfe des Datacenters gesteuert wird, so kann dieses Repository wie
+    folgt hinzugefügt werden:</para>
+
+    <figure>
+      <title>Datacenter hinzufügen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/repository/repository_datacenter.png"
+                     scale="70" />
         </imageobject>
       </mediaobject>
     </figure>
 
     <para>Wird dagegen der KALYPSO-Observations-Dienst gewählt, dann steht die
     Schnittstelle zur Datenbank von PSI-Compact zur Verfügung und alle darin
-    befindlichen Zeitreihen.</para>
+    befindlichen Zeitreihen (sofern eine Zugangsberechntigung über den
+    Kalypso-Server besteht).</para>
 
     <para></para>
 
@@ -176,7 +193,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository/repository_einstellungen.png"
+          <imagedata align="center"
+                     fileref="img/repository/repository_einstellungen.png"
                      scale="70" />
         </imageobject>
       </mediaobject>
@@ -225,7 +243,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository/repository_export_zeitreihen.png"
+          <imagedata align="center"
+                     fileref="img/repository/repository_export_zeitreihen.png"
                      scale="50" />
         </imageobject>
       </mediaobject>
@@ -242,7 +261,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/repository/repository_export_zeitreihen2.png"
+          <imagedata align="center"
+                     fileref="img/repository/repository_export_zeitreihen2.png"
                      scale="50" />
         </imageobject>
       </mediaobject>

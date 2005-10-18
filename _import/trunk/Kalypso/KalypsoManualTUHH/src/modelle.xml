@@ -2,6 +2,8 @@
 <chapter>
   <title>Modelle</title>
 
+  <para>...</para>
+
   <section id="weisse_elster_modelldaten">
     <sectioninfo>
       <date><indexterm>
@@ -46,24 +48,33 @@
 
         <para>Die erste Abfrage des Assistenten bezieht sich auf den Namen
         sowie den Speicherort des neuen Projektes. Durch klicken des Buttons
-        <guimenuitem>weiter</guimenuitem> wird die Abfrage fortgeführt. Im
-        Anschluss sind nacheinander die Shape Dateien der Teilgebiete,
-        Stränge, Knoten und Hydrotope mit Hilfe des Dateibrowsers auszuwählen
-        und die Inhalte den Modellelementen zuzuordnen. Hierzu ist ein Mapping
-        vorgesehen, welches auf der Seite der Quelle die Informationen aus der
-        Shape-Datei vorhält, um diese den Elementen des Zieles (des neuen
-        Modelles) zuzuordnen. Die Zuordnung richtete sich nach den Inhalten
-        der Shape Datei, wobei auch die Datentypen berücksichtigt werden. Im
-        Allgemeinen ist eine Zuordnung nur zwischen identischen Datentypen
-        möglich. Ausnahme bildet der Textdatentyp einer Quelle, welchen man
-        jedem beliebigen Element (Datentyp) auf der Zielseite zuordnen kann.
+        <guimenuitem>weiter</guimenuitem> wird die Abfrage fortgeführt. Die
+        folgende Abfrage des Assistenten bezieht sich auf allgemeine
+        Projektvoreinstellungen. Es können die Anzahl der modellierten
+        Bodenschichten (es wird die entsprechende Anzahl von
+        Bodenkorrekturparametern für die Teilgebiete angelegt), sowie die
+        Anzahl der mit Hilfe des Hydraulikmodells (WspWin) ermittelten
+        Abflüsse (es wird die entsprechende Anzahl von Kalinin-Miljukov
+        Parametern angelegt - zur Zeit immer 5!). Im Anschluss sind
+        nacheinander die Shape Dateien der Teilgebiete, Stränge, Knoten und
+        Hydrotope mit Hilfe des Dateibrowsers auszuwählen und die Inhalte den
+        Modellelementen zuzuordnen. Hierzu ist ein Mapping vorgesehen, welches
+        auf der Seite der Quelle die Informationen aus der Shape-Datei
+        vorhält, um diese den Elementen des Zieles (des neuen Modelles)
+        zuzuordnen. Die Zuordnung richtete sich nach den Inhalten der Shape
+        Datei, wobei auch die Datentypen berücksichtigt werden. Im Allgemeinen
+        ist eine Zuordnung nur zwischen identischen Datentypen möglich.
+        Ausnahme bildet der Textdatentyp einer Quelle, welchen man jedem
+        beliebigen Element (Datentyp) auf der Zielseite zuordnen kann.
         Nachfolgende Tabellen zeigen eine Übersicht der Elemente, welche bei
         der Modellerstellung in den Shape-Dateien vorhanden sein sollten.
-        Zusätzlich die Elemente name und description optional zu besetzen. Da
-        das Mapping unabhängig der Namensgebung der Quelle (Spaltenbezeichung
-        in der Shape-Datei) ist, enthält die Tabelle neben Quelle und Ziel
-        auch eine Beschreibung der einzusetzenden Daten. Zusätzliche Elemente
-        sind wahlweise in die Shape-Dateien zu integrieren und mit Hilfe des
+        Zusätzlich ist das Element &lt;description&gt; für eine allgemeine
+        Beschreibung optional zu besetzen. Die Flächen der Geometrieobjekte
+        werden auch bei einer Zuordnung vom programm ermittelt. Da das Mapping
+        unabhängig der Namensgebung der Quelle (Spaltenbezeichung in der
+        Shape-Datei) ist, enthält die Tabelle neben Quelle und Ziel auch eine
+        Beschreibung der einzusetzenden Daten. Zusätzliche Elemente sind
+        wahlweise in die Shape-Dateien zu integrieren und mit Hilfe des
         Assistenten den jeweiligen Modellelementen zuzuordnen. Alle Elemente,
         welche nicht über das Mapping übertragen werden können später beider
         Modellvervollständigung in entsprechenden Tabellen bearbeitet werden.
@@ -275,12 +286,17 @@
         <title>Allgemeine Datenstruktur</title>
 
         <para>Die Verwaltung der Modelldaten für das Niederschlag-Abfluss
-        Modell KALYPSO-NA erfolgt in Tabellen. Neben dem <emphasis
-        role="bold">Tabellen</emphasis>-Verzeichnis ist ein Übersichtslagepan
-        im <emphasis role="bold">Karten</emphasis>-Verzeichnis enthalten. Die
-        zur Visualisierung benötigten Shape-Dateien befinden sich im <emphasis
-        role="bold">Shape</emphasis>-Verzeichnis. Der Name des Ordners für die
-        Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner
+        Modell KALYPSO-NA erfolgt hauptsächlich in Tabellen. Neben dem
+        <emphasis role="bold">Tabellen</emphasis>-Verzeichnis ist ein
+        Übersichtslagepan im <emphasis
+        role="bold">Karten</emphasis>-Verzeichnis enthalten. Die zur
+        Visualisierung benötigten Shape-Dateien können im <emphasis
+        role="bold">Shape</emphasis>-Verzeichnis abgelegt werden. Für das
+        Abholen der Zeitreihen (aus einer Datenbank/ einem lokalen Verzeichnis
+        o.ä.) in eine Rechenvariante sind im Verzeichnis <emphasis
+        role="bold">ZeitreihenControl</emphasis> Tabellen zum Zuordnen der
+        verschiedenen Zeitreihentypen vordefiniert. Der Name des Ordners für
+        die Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner
         <emphasis role="bold">Rechenvarianten</emphasis> im Projekt
         vordefiniert.</para>
 
@@ -289,12 +305,13 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/modelle/navigator_we.png" scale="50" />
+              <imagedata align="center" fileref="img/modelle/navigator.png"
+                         scale="50" />
             </imageobject>
           </mediaobject>
         </figure>
 
-        <para><emphasis>Verzeichnis Basis Tabellen</emphasis></para>
+        <para><emphasis>Verzeichnis BasisTabellen</emphasis></para>
 
         <para>Die Eingabe bzw. Änderung von Modellparametern erfolgt in
         Tabellen. Die Editierungsmöglichkeiten von Tabellen wird in <xref
@@ -344,6 +361,40 @@
           </listitem>
         </itemizedlist>
 
+        <para>Zusätzlich zu den Tabellen der Modellparameter sind folgende
+        Tabellen zur Bearbeitung der statischen Parameter im Unterverzeichnis
+        Parameter vorhanden:</para>
+
+        <para><itemizedlist>
+            <listitem>
+              <para>Nutzung</para>
+
+              <para>Bearbeitung der Parameter der Landnutzung, welche den
+              Hydrotopen zugeordnet sind.</para>
+            </listitem>
+
+            <listitem>
+              <para>Schnee</para>
+
+              <para>Bearbeitung der Parameter der Schneetypen, welche den
+              Teilgebieten zugeordnet sind.</para>
+            </listitem>
+
+            <listitem>
+              <para>BodenProfil</para>
+
+              <para>Bearbeitung der Bodenprofile welche den Hydrotopen
+              zugeordnet sind.</para>
+            </listitem>
+
+            <listitem>
+              <para>BodenArt</para>
+
+              <para>Bearbeitung der Parameter der Bodenhorizonte, welche den
+              definierten Profiltypen zugeordnet sind</para>
+            </listitem>
+          </itemizedlist></para>
+
         <para><emphasis>Verzeichnis Basis Karten</emphasis></para>
 
         <para>Zur visualisierung der Geometriedaten sind standardmäßig drei
@@ -357,41 +408,6 @@
         verwendet wird. Die Kartenansichten und die dargestellten Elemente
         können beliebig geändert werden (siehe <xref
         linkend="ansichtssteuerung" />).</para>
-
-        <para><emphasis>Verzeichnis Parameter Tabellen</emphasis></para>
-
-        <para>Zusätzlich zu den Tabellen der Modellparameter sind folgende
-        Tabellen zur Bearbeitung der statischen Parameter vorhanden:</para>
-
-        <itemizedlist>
-          <listitem>
-            <para>Nutzung</para>
-
-            <para>Bearbeitung der Parameter der Landnutzung, welche den
-            Hydrotopen zugeordnet sind.</para>
-          </listitem>
-
-          <listitem>
-            <para>Schnee</para>
-
-            <para>Bearbeitung der Parameter der Schneetypen, welche den
-            Teilgebieten zugeordnet sind.</para>
-          </listitem>
-
-          <listitem>
-            <para>BodenProfil</para>
-
-            <para>Bearbeitung der Bodenprofile welche den Hydrotopen
-            zugeordnet sind.</para>
-          </listitem>
-
-          <listitem>
-            <para>BodenArt</para>
-
-            <para>Bearbeitung der Parameter der Bodenhorizonte, welche den
-            definierten Profiltypen zugeordnet sind.</para>
-          </listitem>
-        </itemizedlist>
       </section>
 
       <section>
@@ -403,7 +419,7 @@
 
         <title>System Vernetzung - Netzeditor</title>
 
-        <para>Die Vernetzung des Modelles erfolgt auf Basis übertragenen
+        <para>Die Vernetzung des Modelles erfolgt auf Basis übertragener
         Geometrien der Shape-Dateien. Mit Hilfe der Karte Modellvernetzung
         werden die Geometrien als Punktelemente dargestellt, welche mit Hilfe
         des Netzeditors entsprechend des realen Entwässerungssystems verbunden
@@ -414,7 +430,9 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/modelle/karte_modellvernetzung.png" />
+                <imagedata align="center"
+                           fileref="img/modelle/karte_modellvernetzung.png"
+                           scale="70" />
               </imageobject>
             </mediaobject>
           </figure>Die Relationen können in der Karte mit der Kartenfunktion
@@ -456,7 +474,8 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/modelle/ansicht_edit_optionen.png" />
+              <imagedata align="center"
+                         fileref="img/modelle/ansicht_edit_optionen.png" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -491,26 +510,20 @@
         Verzeichnis der Rechenvariante abgelegt. Pegelganglinien,
         Niederschlagszeitreihen und Zuflussganglinien werden aus dem
         verknüpften Zeitreihenrepository geladen und im jeweils gleichnamigen
-        Verzeichnis gespeichert.</para>
+        Verzeichnis gespeichert (entsprechend der im Verzeichnis
+        ZeitreihenControl enthaltenen Zuordnungstabellen).</para>
 
         <figure id="pic_weisse_elster_rechenlauf">
           <title>Verzeichnis Rechenvarianten</title>
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/modelle/navigator_we_ergebnisse.png"
+              <imagedata align="center"
+                         fileref="img/modelle/navigator_rechenvariante.png"
                          scale="50" />
             </imageobject>
           </mediaobject>
         </figure>
-
-        <para>Um an einem Modellknoten bzw. Pegel Ergebnisse aus Berechnungen
-        auszugeben, muss in der <emphasis>expertTab_Knoten.gtt</emphasis> ein
-        Häkchen in der Spalte <emphasis>berechnen</emphasis> <emphasis>
-        (generate Result)</emphasis> gesetzt werden. Die Anzahl der gesetzten
-        Häkchen ist dabei beliebig. Für jeden gewählten Ausgabeknoten wird
-        nach der Berechnung eine Zeitreihe im Unterordner
-        <guimenu>Ergebnisse</guimenu> abgelegt.</para>
 
         <para>Die Steuerdaten der Berechnung können in der Eingabemaske
         <emphasis>AusgabeManagement.gft</emphasis> und
@@ -520,16 +533,21 @@
         Daneben folgen die Ausgabeoptionen für die Berechnung. Es können
         Zeitreihen für den Gesamtabfluss, die einzelnen Abflusskomponenten
         eines Teilgebietes, die Eingangszeitreihen (Niederschlag, Temperatur,
-        Verdunstung) für ein Teilgebiet und weitere Rechenergebnisse an den
-        Knoten ausgegeben werden. Nach Änderung der Steuerdaten werden die
+        Verdunstung) für ein Teilgebiet und weitere Berechnungsergebnisse an
+        den Knoten ausgegeben werden. Nach Änderung der Steuerdaten werden die
         Zeitreihen nicht automatisch aktualisiert. Dies muss vom Anwender über
         <guimenu>Rechenvariante -&gt; Zeitreihen aktualisieren</guimenu>
         vorgenommen werden.</para>
 
-        <para>Nach erfolgreich durchgeführter Berechnung werden die
-        Ergebnisdateien im Unterordner <emphasis
-        role="bold">Ergebnisse</emphasis> gespeichert. Die Speicherung der
-        Dateien erfolgt im lokalen Arbeitsverzeichnis und muss ggf. vom
+        <para>Um für ein Modellknoten bzw. Pegel, Teilgebiet oder
+        Rückhaltebeckenstrang Ergebnisse aus Berechnungen auszugeben, muss in
+        der jeweiligen Thementabelle das Attribut
+        <emphasis>berechnen</emphasis> <emphasis> (generate Result)</emphasis>
+        gesetzt werden. Die Anzahl der gesetzten Häkchen ist dabei beliebig.
+        Für jedes gewählte Modellelement wird nach der Berechnung die
+        jeweiligen (in Ausgabemenagement.gft gewählten) Zeitreihen im
+        Unterordner <guimenu>Ergebnisse</guimenu> abgelegt. Die Speicherung
+        der Dateien erfolgt im lokalen Arbeitsverzeichnis und muss ggf. vom
         Anwender auf dem Server aktualisiert werden (siehe <xref
         linkend="modellverwaltung" />).</para>
       </section>
@@ -576,7 +594,8 @@
 
                 <entry></entry>
 
-                <entry>Teilgebietsfläche</entry>
+                <entry>Teilgebietsfläche (nur zur Information, wird vom
+                Programm beim Import der Shape daten ermittelt)</entry>
 
                 <entry>long</entry>
               </row>
@@ -1019,8 +1038,8 @@
 
                 <entry></entry>
 
-                <entry>Zeitflächenfunktion, Abflusswirksame Fläche in
-                abhängigkeit der Zeit</entry>
+                <entry>Zeitflächenfunktion, Abflusswirksame Fläche (normiert)
+                in abhängigkeit der Zeit</entry>
 
                 <entry>zmlinline:ZmlInlineTAType</entry>
               </row>
@@ -1034,7 +1053,8 @@
 
                 <entry></entry>
 
-                <entry>Schneetyp - Zur Zuordnung der Schneeparameter</entry>
+                <entry>Schneetyp - Zur Zuordnung der Schneeparameter
+                (Schneetyp)</entry>
 
                 <entry>string</entry>
               </row>
@@ -1081,6 +1101,21 @@
                 Nachbargebiete.</entry>
 
                 <entry>na:grundwasserabflussAssociationType</entry>
+              </row>
+
+              <row>
+                <entry>ngwzu</entry>
+
+                <entry>TG Nummer GW-Relation</entry>
+
+                <entry>[ - ]</entry>
+
+                <entry></entry>
+
+                <entry>Teilgebietsnummer des Gebietes, in welches das
+                Grundwasser aus dem aktuellen Gebiet fliesst</entry>
+
+                <entry>na:CatchmentLinkType</entry>
               </row>
 
               <row>
@@ -1212,7 +1247,7 @@
               </row>
 
               <row>
-                <entry></entry>
+                <entry>Bodenkorrekturparameter</entry>
 
                 <entry></entry>
 
@@ -1223,34 +1258,6 @@
                 <entry></entry>
 
                 <entry></entry>
-              </row>
-
-              <row>
-                <entry>Ort</entry>
-
-                <entry>Ort</entry>
-
-                <entry>[ - ]</entry>
-
-                <entry></entry>
-
-                <entry>Geometrie des Objektes</entry>
-
-                <entry>gml:LineStringPropertyType</entry>
-              </row>
-
-              <row>
-                <entry>downStreamNodeMember</entry>
-
-                <entry>Relation UW-Knoten</entry>
-
-                <entry>[ - ]</entry>
-
-                <entry></entry>
-
-                <entry>Relation zum Unterwasserknoten des Stranges</entry>
-
-                <entry>na:NodeAssociationType</entry>
               </row>
 
               <row>
@@ -1356,21 +1363,6 @@
                 Interflow</entry>
 
                 <entry>double</entry>
-              </row>
-
-              <row>
-                <entry>ngwzu</entry>
-
-                <entry>TG Nummer GW-Relation</entry>
-
-                <entry>[ - ]</entry>
-
-                <entry></entry>
-
-                <entry>Teilgebietsnummer des Gebietes, in welches das
-                Grundwasser aus dem aktuellen Gebiet fliesst</entry>
-
-                <entry>na:CatchmentLinkType</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1620,6 +1612,34 @@
                 <entry>Bedeutung</entry>
 
                 <entry>Datentyp</entry>
+              </row>
+
+              <row>
+                <entry>downStreamNodeMember</entry>
+
+                <entry>Relation UW-Knoten</entry>
+
+                <entry>[ - ]</entry>
+
+                <entry></entry>
+
+                <entry>Relation zum Unterwasserknoten des Stranges</entry>
+
+                <entry>na:NodeAssociationType</entry>
+              </row>
+
+              <row>
+                <entry>Ort</entry>
+
+                <entry>Ort</entry>
+
+                <entry>[ - ]</entry>
+
+                <entry></entry>
+
+                <entry>Geometrie des Objektes</entry>
+
+                <entry>gml:LineStringPropertyType</entry>
               </row>
 
               <row>
@@ -1963,7 +1983,8 @@
 
                 <entry></entry>
 
-                <entry>Gesamtfläche des Hydrotopes</entry>
+                <entry>Gesamtfläche des Hydrotopes ( wird vom Programm beim
+                Import der Shape daten ermittelt)</entry>
 
                 <entry>double</entry>
               </row>
@@ -1978,7 +1999,8 @@
                 <entry></entry>
 
                 <entry>vorhandene Nutzung -Link zum Nutzungschlüssel, welcher
-                in der Nutzungsdatensammlung vorhanden sein muss</entry>
+                in der Nutzungsdatensammlung vorhanden sein muss (siehe
+                Nutzungsparameter Bezeichnung).</entry>
 
                 <entry>string</entry>
               </row>
@@ -1993,7 +2015,8 @@
                 <entry></entry>
 
                 <entry>anstehender Boden - Link zum Bodenschlüssel, welcher in
-                der Bodendatensammlung vorhanden sein muss</entry>
+                der Bodendatensammlung vorhanden sein muss (siehe
+                Bodentypparameter Profilbezeichnung)</entry>
 
                 <entry>string</entry>
               </row>
@@ -2092,7 +2115,7 @@
               </row>
 
               <row>
-                <entry morerows="">SnowCollection Parameter</entry>
+                <entry morerows="">Schneeparameter</entry>
 
                 <entry></entry>
 
@@ -2178,7 +2201,7 @@
               </row>
 
               <row>
-                <entry morerows="">Nutzung Collection Parameter</entry>
+                <entry morerows="">Nutzungsparameter</entry>
 
                 <entry></entry>
 
@@ -2200,7 +2223,8 @@
 
                 <entry></entry>
 
-                <entry>Nutzungsbezeichnung</entry>
+                <entry>Nutzungsbezeichnung (hierher wird aus den Hydrotop
+                verwiesen)</entry>
 
                 <entry>string</entry>
               </row>
@@ -2277,7 +2301,7 @@
               </row>
 
               <row>
-                <entry morerows="">Bodenart Collection Parameter</entry>
+                <entry morerows="">Bodenartparameter</entry>
 
                 <entry></entry>
 
@@ -2300,7 +2324,8 @@
                 <entry></entry>
 
                 <entry>Bodenartschlüssel auf den der Link aus der
-                Bodentyppdatei bezogen ist</entry>
+                Bodentyppdatei bezogen ist (siehe Bodentypparameter
+                Bodenartschlüssel)</entry>
 
                 <entry>string</entry>
               </row>
@@ -2378,7 +2403,7 @@
               <row>
                 <entry morerows="">typbf0</entry>
 
-                <entry>Anfangsbodenfeuchtigkeit</entry>
+                <entry>Anfangsbodenfeuchte</entry>
 
                 <entry>[-]</entry>
 
@@ -2390,6 +2415,20 @@
               </row>
 
               <row>
+                <entry morerows="">Bodtypparameter</entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
                 <entry morerows="">text6</entry>
 
                 <entry>Profilbezeichnung</entry>
@@ -2398,8 +2437,8 @@
 
                 <entry></entry>
 
-                <entry>Bodenprofilschlüssel, welcher die Zuordnung zu den
-                Hydrotopen erlaubt</entry>
+                <entry>Bodenprofilschlüssel (hierher wird aus den Hydrotopen
+                verwiesen)</entry>
 
                 <entry>string</entry>
               </row>
@@ -2419,20 +2458,6 @@
               </row>
 
               <row>
-                <entry morerows="">Bodart Parameter</entry>
-
-                <entry></entry>
-
-                <entry></entry>
-
-                <entry></entry>
-
-                <entry></entry>
-
-                <entry></entry>
-              </row>
-
-              <row>
                 <entry morerows="">BodArtLink</entry>
 
                 <entry>Bodenartschlüssel</entry>
@@ -2442,7 +2467,8 @@
                 <entry></entry>
 
                 <entry>Jedem Horizont ist eine Bodenart durch einen
-                Bodenartschlüssel zugewiesen</entry>
+                Bodenartschlüssel zugewiesen (siehe Bodenartparameter
+                Bodenartschlüssel)</entry>
 
                 <entry>par:BodenartAssociationType</entry>
               </row>

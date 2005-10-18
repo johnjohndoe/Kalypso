@@ -39,7 +39,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Programm-Start/startseite.png" scale="50" />
+            <imagedata align="center"
+                       fileref="img/Programm-Start/startseite.png" scale="35" />
           </imageobject>
         </mediaobject>
       </figure></para>
@@ -66,10 +67,10 @@
     </itemizedlist>
 
     <para>Der Wechsel in den Expertenmodus erfolgt durch Mausklick auf den
-    Button KALYPSO Modeler. Sofern sich ein einfacher Anwender eingeloggt hat,
-    besteht keine Möglichkeit der Ansichtsauswahl. Dem einfachen Anwender
-    steht ausschließlich die <guibutton>Hochwasser Vorhersage</guibutton> als
-    Wizard Perspektive zur Verfügung.</para>
+    Button <guibutton>KALYPSO Modeler</guibutton>. Sofern sich ein einfacher
+    Anwender eingeloggt hat, besteht keine Möglichkeit der Ansichtsauswahl.
+    Dem einfachen Anwender steht ausschließlich die <guibutton>Hochwasser
+    Vorhersage</guibutton> als Wizard Perspektive zur Verfügung.</para>
 
     <para>Hinweis: Die Startseite ist nur bei vorhandenem und korrekt
     gestartetem Server verfügbar. Ist kein Server vorhanden, so ist lediglich

@@ -43,10 +43,11 @@
     <itemizedlist>
       <listitem>
         <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
-        Hamburg - Tel. 040 / 42878-3761 /-4181 - www.tuhh.de/wb</para>
+        Hamburg - Tel. 040 / 42878-3761 - www.tu-harburg.de/wb</para>
 
-        <para><graphic fileref="img/allgemeines/wasserbau-logo.png"
-        scale="" /></para>
+        <para><graphic align="center"
+        fileref="img/allgemeines/wasserbau-logo.png" format="PNG"
+        scale="100" /></para>
       </listitem>
     </itemizedlist>
 
@@ -58,8 +59,8 @@
         Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
         info@bjoernsen.de</para>
 
-        <para><graphic
-        fileref="img/allgemeines/000_001_bce_sw_300.png" /></para>
+        <para><graphic align="center"
+        fileref="img/allgemeines/000_001_bce_sw_300.png" scale="100" /></para>
       </listitem>
     </itemizedlist>
 
@@ -138,8 +139,9 @@
       <title>Server-Installation</title>
 
       <para>Die Server-Installation bedarf aufgrund der spezifischen
-      Netzwerkeigenschaften einer direkten Abstimmung und Anpassung und kann
-      nicht verallgemeinert beschrieben werden.</para>
+      Systemeigenschaften einer direkten Abstimmung und Anpassung. Weitere
+      Informationen sind ggf. in der technischen Dokumentation
+      enthalten.</para>
     </section>
 
     <section id="client-installation">
@@ -149,17 +151,17 @@
           </indexterm></date>
       </sectioninfo>
 
-      <title>Client-Installation</title>
+      <title>Client-Installation (Windows)</title>
 
       <para>Die Client-Installation wird auf Basis des gelieferten
       ZIP-Archives durchgeführt. Zur Installation wird das ZIP-Archiv an den
       gewünschten Installationsort entpackt. Zum Programmstart muss der im
-      Hauptverzeichnis enthaltene Link Kalypso.lnk entsprechend des
-      Installationsortes und des gewünschten Arbeitsverzeichnisses (Workspace)
-      angepasst werden. Hierzu ist der Pfad der Zielanwedung durch den
-      aktuellen Installationspfad zu ersetzen. Außerdem wird ein
-      Arbeitsverzeichnis für die Modelldaten angelegt und der Pfad
-      entsprechend im Link angegeben.<table>
+      Hauptverzeichnis enthaltene Link (<emphasis>Kalypso.lnk</emphasis>)
+      entsprechend des Installationsortes und des gewünschten
+      Arbeitsverzeichnisses (Workspace) angepasst werden. Hierzu ist der Pfad
+      der Zielanwedung durch den aktuellen Installationspfad zu ersetzen.
+      Außerdem wird ein Arbeitsverzeichnis für die Modelldaten angelegt und
+      der Pfad entsprechend im Link angegeben.<table>
           <title>Erläuterung der Eigenschaften</title>
 
           <tgroup cols="3">
@@ -228,9 +230,9 @@
       Plugins, sowie ein eigenständiges Java Runtime Environment.</para>
 
       <para>Nachdem die Installation durchgeführt wurde kann das Programm
-      durch Doppelklick des Linkes gestartet werden. Nachdem das Programm
-      gestartet wurde, müssen einmalig Voreinstellungen getroffen werden.
-      Diese befinden sich im Menu <guimenuitem>Fenster</guimenuitem> unter
+      durch Doppelklick des Linkes gestartet werden. Nach dem Programmstart
+      müssen einmalig Voreinstellungen getroffen werden. Diese befinden sich
+      im Menu <guimenuitem>Fenster</guimenuitem> unter
       <guimenuitem>Benutzervorgaben</guimenuitem> im Themenbereich Kalypso.
       Beim Verlassen des Programmes werden die Einstellung im aktuellen
       Workspace für die nachfolgenden Arbeitssitzungen gespeichert.</para>
@@ -245,7 +247,7 @@
 
       <title>Update</title>
 
-      <para></para>
+      <para>Demnächst wird eine Update-Site verfügbar sein... .</para>
     </section>
   </section>
 
@@ -293,7 +295,7 @@
   <section id="datenmanagement">
     <sectioninfo>
       <date><indexterm>
-          <primary>Datenmanagement LHWZ</primary>
+          <primary>Datenmanagement</primary>
         </indexterm></date>
     </sectioninfo>
 
@@ -339,6 +341,10 @@
 
       <listitem>
         <para>Grafikprogramm-Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+
+      <listitem>
+        <para>ggf. technische Dokumentation</para>
       </listitem>
     </itemizedlist>
   </section>

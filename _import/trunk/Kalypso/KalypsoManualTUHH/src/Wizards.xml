@@ -55,7 +55,7 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/we_1.png" scale="30" />
+            <imagedata align="center" fileref="img/wizard/we_1.png" scale="30" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -77,7 +77,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/wizard/we_1b.png" scale="30" />
+          <imagedata align="center" fileref="img/wizard/we_1b.png" scale="30" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -102,7 +102,8 @@
           <screenshot>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/wizard/we_3.png" scale="30" />
+                <imagedata align="center" fileref="img/wizard/we_3.png"
+                           scale="30" />
               </imageobject>
             </mediaobject>
           </screenshot>
@@ -214,7 +215,8 @@
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/wizard/we_4.png" scale="30" />
+              <imagedata align="center" fileref="img/wizard/we_4.png"
+                         scale="30" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -226,7 +228,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/we_4a.png" scale="30" />
+            <imagedata align="center" fileref="img/wizard/we_4a.png"
+                       scale="30" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -272,7 +275,8 @@
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/wizard/we_7.png" scale="30" />
+              <imagedata align="center" fileref="img/wizard/we_7.png"
+                         scale="30" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -372,7 +376,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/we_schema1.png" scale="60" />
+            <imagedata align="center" fileref="img/wizard/we_schema1.png"
+                       scale="60" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -394,7 +399,8 @@
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/wizard/we_9.png" scale="30" />
+              <imagedata align="center" fileref="img/wizard/we_9.png"
+                         scale="30" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -480,7 +486,8 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/spree_1.png" scale="30" />
+            <imagedata align="center" fileref="img/wizard/spree_1.png"
+                       scale="30" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -510,7 +517,8 @@
           <screenshot>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/wizard/spree_3.png" scale="30" />
+                <imagedata align="center" fileref="img/wizard/spree_3.png"
+                           scale="30" />
               </imageobject>
             </mediaobject>
           </screenshot>
@@ -620,7 +628,8 @@
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/wizard/spree_4.png" scale="30" />
+              <imagedata align="center" fileref="img/wizard/spree_4.png"
+                         scale="30" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -699,7 +708,8 @@
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/wizard/spree_9a.png" scale="30" />
+              <imagedata align="center" fileref="img/wizard/spree_9a.png"
+                         scale="30" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -762,7 +772,8 @@
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/wizard/spree_12.png" scale="30" />
+              <imagedata align="center" fileref="img/wizard/spree_12.png"
+                         scale="30" />
             </imageobject>
           </mediaobject>
         </screenshot>

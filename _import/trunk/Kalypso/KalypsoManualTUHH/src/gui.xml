@@ -22,7 +22,8 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="img/gui/perspektive_modeler.png" scale="70" />
+        <imagedata align="center" fileref="img/gui/perspektive_modeler.png"
+                   scale="70" />
       </imageobject>
     </mediaobject>
   </figure>
@@ -115,7 +116,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/GISviewEditor.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/GISviewEditor.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -152,7 +154,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/Mehrere_Ansichten.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/Mehrere_Ansichten.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -198,7 +201,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/expert_fenster.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/expert_fenster.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -335,7 +339,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/navi_karte.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/navi_karte.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -375,7 +380,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/style_editor.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/style_editor.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -394,11 +400,18 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/gui/gis_neue_karte.png" scale="60" />
+              <imagedata align="center" fileref="img/gui/gis_neue_karte.png"
+                         scale="60" />
             </imageobject>
           </mediaobject>
         </figure>Mit Hilfe des Assistenten kann der Speicherort sowie der Name
       der neuen Karte bestimmt werden.</para>
+
+      <section>
+        <title>Layer hinzufügen</title>
+
+        <para>...</para>
+      </section>
     </section>
 
     <section id="menu_tabelle">
@@ -418,7 +431,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/navi_tabelle.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/navi_tabelle.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -447,7 +461,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/Button-Tabelle.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/Button-Tabelle.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -468,7 +483,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/ansichtsauswahl.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/ansichtsauswahl.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -478,7 +494,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/tabellen-ansicht_zml.png" scale="30" />
+            <imagedata align="center"
+                       fileref="img/gui/tabellen-ansicht_zml.png" scale="30" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -510,8 +527,8 @@
       <title>Diagramm-Ansicht (Zeitreihen)</title>
 
       <para>Durch Doppelklick auf eine Zeitreihe (*.zml) und Auswahl von
-      <guimenu>&lt;Standard Diagramm Editor&gt;</guimenu> wird die Zeitreihe
-      in der Diagramm-Ansicht dargestellt (siehe <xref
+      <guimenu>Standard Diagramm Editor</guimenu> wird die Zeitreihe in der
+      Diagramm-Ansicht dargestellt (siehe <xref
       linkend="navigation_diagramm_ansicht" />).</para>
 
       <para>Die Diagramm-Ansicht dient ausschließlich der schnellen Übersicht
@@ -594,13 +611,13 @@
     <section>
       <title>Baumansicht</title>
 
-      <para>cfdeu</para>
+      <para>...</para>
     </section>
 
     <section>
       <title>Feature Ansicht</title>
 
-      <para>de</para>
+      <para>...</para>
     </section>
   </section>
 
@@ -814,7 +831,8 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/gui/modellparameter_edit.png" scale="30" />
+              <imagedata align="center"
+                         fileref="img/gui/modellparameter_edit.png" scale="30" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -837,7 +855,8 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/gui/modellparameter_edit_gross.png"
+              <imagedata align="center"
+                         fileref="img/gui/modellparameter_edit_gross.png"
                          scale="50" />
             </imageobject>
           </mediaobject>
@@ -877,7 +896,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/expert_rechenvariante.png" scale="50" />
+            <imagedata align="center"
+                       fileref="img/gui/expert_rechenvariante.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1021,7 +1041,8 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/gui/expert_tabelle.png" scale="50" />
+                <imagedata align="center" fileref="img/gui/expert_tabelle.png"
+                           scale="50" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -1043,7 +1064,8 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/gui/expert_berichtsablage.png"
+                <imagedata align="center"
+                           fileref="img/gui/expert_berichtsablage.png"
                            scale="50" />
               </imageobject>
             </mediaobject>
@@ -1062,7 +1084,8 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="img/gui/expert_tabelle_export.png"
+                <imagedata align="center"
+                           fileref="img/gui/expert_tabelle_export.png"
                            scale="50" />
               </imageobject>
             </mediaobject>

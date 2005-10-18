@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="kalypso-manual-tuhh" default="all" basedir="..">
 
+  <!-- Main Document (ENTITIES) -->
+  <property name="doc.name" value="main_driver_ingbueros.xml"/>  
+  <!--
+  <property name="doc.name" value="main_driver_sachsen.xml"/>  
+  <property name="doc.name" value="main_driver_sachsen-anhalt.xml"/>  
+  -->
+  
   <!-- Source properties -->
   <property name="help.dir" value="src" />
   <property name="build.dir" value="build"/>
-  <property name="build.doc.dir" value="${build.dir}/doc"/>
   <property name="build.pdf.dir" value="${build.dir}/pdf"/>
   <property name="build.html.dir" value="${build.dir}/html"/>
   <property name="build.tex.dir" value="${build.dir}/tex"/>
   <property name="build.eclipse.dir" value="${build.dir}/eclipse"/>
-  <property name="doc.name" value="main_driver.xml"/>
   <property name="css.dir" value="${help.dir}/css"/>
   <property name="image.dir" value="${help.dir}/img"/>
 
   <target name="init">
     <mkdir dir="${build.dir}" />
-    <mkdir dir="${build.doc.dir}" />
     <mkdir dir="${build.pdf.dir}" />
     <mkdir dir="${build.html.dir}"/>
     <mkdir dir="${build.tex.dir}"/>
@@ -110,6 +114,7 @@
   					'xslproc.xsl
   					'xslproc.xml'
   	-->
+    <!--Die Batchdatei xsltproc.bat muss verfügbar sein (Umgebungsvariable PATH zum Pfad besetzen, z.B. c:\bin) -->
     <exec executable="xsltproc.bat" failonerror="true">
       <arg line="-o ${xslproc.out.dir}/${xslproc.out.name} ${xslproc.xsl} ${xslproc.xml}"/>
     </exec>
