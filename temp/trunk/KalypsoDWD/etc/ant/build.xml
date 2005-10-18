@@ -41,8 +41,7 @@
 
     <!-- Specific Build for creating the jar that contains the Ant-Task -->
     <target name="build-ant-task-jar" depends="deploy">
-        <copy todir="${project.lib}" file="${project.deploy}/${project-name}.jar">
-        </copy>
+        <copy tofile="${project.lib}/${project-name}Task.jar" file="${project.deploy}/${project-name}.jar"/>
     </target>
         
     <!-- Specific Build for KalypsoDWDFileCopyServlet -->
