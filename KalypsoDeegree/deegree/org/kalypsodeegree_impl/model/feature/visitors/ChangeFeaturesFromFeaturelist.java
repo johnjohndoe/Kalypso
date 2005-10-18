@@ -44,7 +44,17 @@ public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
     final Object index = f.getProperty( m_sourceID );
     final Feature targetFeature = (Feature)m_index.get( index );
     if( targetFeature != null )
-      FeatureHelper.copyProperties( f, targetFeature, m_propertyMap );
+    {
+      try
+      {
+        FeatureHelper.copyProperties( f, targetFeature, m_propertyMap );
+      }
+      catch( CloneNotSupportedException e )
+      {
+        // TODO error handling
+        e.printStackTrace();
+      }
+    }
 
     return true;
   }

@@ -125,7 +125,7 @@ public class ModifyFeatureCommand implements ICommand
           property = FeatureFactory.createFeatureProperty( propName, value );
           m_features[i].setProperty( property );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           // ignore exception and copy next features property
         }

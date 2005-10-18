@@ -165,7 +165,8 @@ public class ObservationLinkHandler implements IMarshallingTypeHandler
     TimeseriesLinkType clone = null;
     try
     {
-      clone = m_factory.createTimeseriesLinkType();
+      // create a Link and not a LinkType, if not we cannot serialize it later
+      clone = m_factory.createTimeseriesLink();
       clone.setActuate( link.getActuate() );
       clone.setArcrole( link.getArcrole() );
       clone.setHref( link.getHref() );
