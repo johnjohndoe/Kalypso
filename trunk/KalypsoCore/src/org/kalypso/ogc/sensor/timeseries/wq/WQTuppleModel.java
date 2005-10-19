@@ -97,7 +97,6 @@ public class WQTuppleModel extends AbstractTuppleModel
    *          base model delivering values of the given type
    * @param axes
    *          axes of this WQ-model, usually the same as model plus destAxis
-   * @param dateAxis
    * @param srcAxis
    *          source axis from which values are read
    * @param srcStatusAxis

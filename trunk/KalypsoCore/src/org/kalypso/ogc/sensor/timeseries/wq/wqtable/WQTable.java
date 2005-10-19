@@ -33,7 +33,6 @@ public class WQTable
    * 
    * @param validity
    *          date up from which this table is valid
-   * @param table
    */
   public WQTable( final Date validity, final double[][] table )
   {
@@ -47,7 +46,6 @@ public class WQTable
    *          date up from which this table is valid
    * @param offset
    *          offset used for W, before conversion W = W + offset
-   * @param table
    */
   public WQTable( final Date validity, final int offset, final double[][] table )
   {
@@ -72,8 +70,6 @@ public class WQTable
    *          date up from which this table is valid
    * @param offset
    *          offset used for W, before conversion W = W + offset
-   * @param W
-   * @param Q
    */
   public WQTable( final Date validity, final int offset, final double[] W, final double[] Q )
   {
@@ -98,8 +94,6 @@ public class WQTable
    *          date up from which this table is valid
    * @param offset
    *          offset used for W, before conversion W = W + offset
-   * @param W
-   * @param Q
    */
   public WQTable( final Date validity, final int offset, final Number[] W, final Number[] Q )
   {
@@ -113,7 +107,6 @@ public class WQTable
    *          date up from which this table is valid
    * @param offset
    *          offset used for W, before conversion W = W + offset
-   * @param wqpairs
    */
   public WQTable( final Date validity, final int offset, final WQPair[] wqpairs )
   {
