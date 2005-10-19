@@ -23,9 +23,9 @@ public class GetRatingTables implements IWiskiCall
 
   private final Date m_validity;
 
-  private Number[] W;
+  private Number[] m_stage;
 
-  private Number[] Q;
+  private Number[] m_flow;
 
   public GetRatingTables( final Long id, final Date validity )
   {
@@ -44,26 +44,26 @@ public class GetRatingTables implements IWiskiCall
     {
       final HashMap table = (HashMap)list.getFirst();
 
-      W = (Number[])( (List)table.get( "curve_table_stage" ) ).toArray( new Number[0] );
-      Q = (Number[])( (List)table.get( "curve_table_flow" ) ).toArray( new Number[0] );
+      m_stage = (Number[])( (List)table.get( "curve_table_stage" ) ).toArray( new Number[0] );
+      m_flow = (Number[])( (List)table.get( "curve_table_flow" ) ).toArray( new Number[0] );
 
-      if( W.length != Q.length )
+      if( m_stage.length != m_flow.length )
         throw new IllegalArgumentException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
     }
   }
 
-  public Number[] getW()
+  public Number[] getStage()
   {
-    return W;
+    return m_stage;
   }
 
-  public Number[] getQ()
+  public Number[] getFlow()
   {
-    return Q;
+    return m_flow;
   }
 
   public boolean hasTable()
   {
-    return W != null;
+    return m_stage != null;
   }
 }

@@ -5,10 +5,12 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
@@ -128,7 +130,7 @@ public class WiskiTimeserie implements IObservation
       {
         // 1. check if this is a prognose
         boolean prognosed = m_tsinfo.isForecast();
-        
+
         final IsTsWritable call = new IsTsWritable( m_tsinfo.getWiskiId() );
         final WiskiRepository rep = (WiskiRepository)m_tsinfo.getRepository();
         rep.executeWiskiCall( call );
@@ -304,8 +306,8 @@ public class WiskiTimeserie implements IObservation
     }
     catch( final NoSuchElementException e )
     {
-      throw new SensorException( "Die Zeitreihenwerte können nicht nach Wiski geschrieben werden" +
-      		". Keine Achse vom Typ " + kalypsoType + " wurde gefunden." );
+      throw new SensorException( "Die Zeitreihenwerte können nicht nach Wiski geschrieben werden"
+          + ". Keine Achse vom Typ " + kalypsoType + " wurde gefunden." );
     }
 
     final ITuppleModel filteredValues = intfil.getValues( null );
@@ -405,7 +407,8 @@ public class WiskiTimeserie implements IObservation
   /**
    * Helper for translating Wiski Rating-Tables into Kalypso Metadata
    */
-  private void fetchWQTable( final MetadataList metadata, final Date from, final Date to, String useType )
+  private void fetchWQTable( final MetadataList metadata, final Date dateFrom, final Date dateTo,
+      final String requestType )
   {
     final String sourceType = m_axes[1].getType();
     final String destType;
@@ -414,7 +417,7 @@ public class WiskiTimeserie implements IObservation
     else if( sourceType.equals( TimeserieConstants.TYPE_VOLUME ) )
       destType = TimeserieConstants.TYPE_WATERLEVEL; // force to W
     else if( sourceType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-      destType = useType; // here use the Type found in the request
+      destType = requestType; // here use the Type found in the request
     else
       return;
 
@@ -423,7 +426,7 @@ public class WiskiTimeserie implements IObservation
     WQTableSet wqTableSet = null;
 
     // 1. first try: using the normal way (our tsinfo)
-    WQTable wqt = internFetchTable( m_tsinfo, rep, from, to );
+    WQTable wqt = internFetchTable( m_tsinfo, rep, dateFrom, dateTo );
     if( wqt == null )
     {
       // 2. this failed, so next try is using sibling of other type
@@ -442,7 +445,7 @@ public class WiskiTimeserie implements IObservation
             final TsInfoItem tsi = m_tsinfo.findSibling( parameters[i] );
             if( tsi != null )
             {
-              wqt = internFetchTable( tsi, rep, from, to );
+              wqt = internFetchTable( tsi, rep, dateFrom, dateTo );
               break;
             }
           }
@@ -457,16 +460,28 @@ public class WiskiTimeserie implements IObservation
 
     if( wqt != null )
     {
+      // TRICKY: wiski always delivers WQTable with stage -> flow conversion
+      // our observation does not know at first if the fromType is a stage (W)
+      // so we build a set containing both types and remove the W to know which
+      // is the toType...
+      final Set set = new HashSet();
+      set.add( sourceType );
+      set.add( destType );
+      set.remove( TimeserieConstants.TYPE_WATERLEVEL );
+
+      final String fromType = TimeserieConstants.TYPE_WATERLEVEL;
+      final String toType = (String)set.toArray()[0];
+
       // great! we got a table, so let's use it and save it in the cache
       wqTableSet = new WQTableSet( new WQTable[]
-      { wqt }, sourceType, destType );
+      { wqt }, fromType, toType );
 
-      RatingTableCache.getInstance().check( wqTableSet, m_tsinfo.getIdentifier(), to );
+      RatingTableCache.getInstance().check( wqTableSet, m_tsinfo.getIdentifier(), dateTo );
     }
     else
     {
       // still no wqtable, try to load this WQ-Table from the cache
-      wqTableSet = RatingTableCache.getInstance().get( m_tsinfo.getIdentifier(), to );
+      wqTableSet = RatingTableCache.getInstance().get( m_tsinfo.getIdentifier(), dateTo );
     }
 
     if( wqTableSet != null )
@@ -503,7 +518,7 @@ public class WiskiTimeserie implements IObservation
 
     if( call.hasTable() )
     {
-      final WQTable wqt = new WQTable( from, call.getW(), call.getQ() );
+      final WQTable wqt = new WQTable( from, call.getStage(), call.getFlow() );
 
       return wqt;
     }
@@ -514,8 +529,8 @@ public class WiskiTimeserie implements IObservation
   /**
    * Helper for translating wiski alarm levels into kalypso metadata
    * <p>
-   * Alarmlevels are "attached" to the timeserie, meaning that the unit of the
-   * alarmlevels is the same as the unit of the timeserie
+   * Alarmlevels are "attached" to the timeserie, meaning that the unit of the alarmlevels is the same as the unit of
+   * the timeserie
    */
   private void fetchAlarmLevels( final MetadataList md ) throws NumberFormatException, RemoteException, KiWWException,
       RepositoryException

@@ -157,11 +157,13 @@ public class TsInfoItem implements IRepositoryItem
 
   String getWiskiDescription()
   {
+    final String noValue = "<kein Eintrag:";
+    
     final StringBuffer bf = new StringBuffer();
-    bf.append( m_map.getProperty( "parametertype_longname" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_name" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_longname" ) ).append( " - " );
-    bf.append( m_map.getProperty( "station_name" ) );
+    bf.append( m_map.getProperty( "parametertype_longname", noValue + "parametertype_longname>" ) ).append( " - " );
+    bf.append( m_map.getProperty( "stationparameter_name", noValue + "stationparameter_name>" ) ).append( " - " );
+    bf.append( m_map.getProperty( "stationparameter_longname", noValue + "stationparameter_longname>" ) ).append( " - " );
+    bf.append( m_map.getProperty( "station_name", noValue + "station_name>" ) );
 
     return bf.toString();
   }
