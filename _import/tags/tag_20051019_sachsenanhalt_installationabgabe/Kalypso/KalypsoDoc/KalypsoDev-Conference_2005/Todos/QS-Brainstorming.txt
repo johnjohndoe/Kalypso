@@ -1,0 +1,156 @@
+Donnerstag
+
+	Story Cards
+		Requirements Analyse
+		Grundlage für Regressionstests
+		Wiki Einsatz prüfen (SnipSnap)?
+		Beziehung zwischen Story-Card und Plugin
+		
+	Testing
+		Unittesting
+			automatisch laufen (nightly build)
+			testsuites ausführen lassen nach großen refactorings
+		
+		Code Coverage einsetzen
+		
+		Code Qualität
+			+ Dependency Analyse
+		
+		Regressionstests
+			- Test-Aufwand wird immer größer
+			- Motivationsproblem vor Releases (Angst vor Bugfindung)
+			+ Betatester mit Funktionsliste (Art Checkliste) testen lassen
+		
+		Ab und zu Pair-Programming
+		
+		Sich überlegen ob man TestDrivenDevelopment-orientiert arbeitet
+			Vorher Test schreiben (Konzentration auf Schnittstelle)
+			Iterativ zur Ergebnis kommen (volle Funktionalität in der Klasse)
+		
+		Wir haben viel GUI-Klassen
+			- Schwierig/Aufwendig mit Unit-Test
+			+ Regressionstest?
+		
+		Vertikal Testen
+			z.B. Modell mit Testendaten rechnen lassen und Ergebnisse prüfen?
+			alles was ein klares input/output verhalten hat
+	
+	Dokumentation (Dev - Benutzer)
+		Technische Dokumentation (docbook, xmlmind zum Editieren?)
+			Kollaborative Eingabe, möglichst Reibungslos
+			Am Stück lesen (nicht von Seiten zu Seiten) (z.B. docbook-html.xsl)
+			Schöne Ausdrücke erforderlich (Zwecks Lieferung an Kunden)
+			- Probleme mit Docbook2LaTex: stattdessen, aktuelle FOP-Versionen probieren?
+			
+			+ es gibt 1 technische Dokumentation für Entwickler und Kunden (auf deutsch), in docbook
+			(evtl. api-docs)
+			wird in den sourcen-editiert
+			sollte für uns immer einsehbar sein d.h. automatismus, um es auf die web-site zu stellen?
+
+		Benutzerhandbuch
+			- Problem: wir brauchen ein Manual pro Kunden
+			+ Modularisierung des Handbuchs:
+				Einleitung 
+				Übersicht
+				Tutorial
+				GIS Bearbeitung
+				Zeitreihen
+				Simulation
+				für jedes konkrete Modell ein Plugin		
+			testen, wie es am besten aufgeteilt werden kann (referenzen zwischen den teilen?, wie sind die bisherigen handbücher aufgeteilt)
+			
+	FAQ erstellen
+		dev: wie in eclipse
+		user: ins benutzerhandbuch und dieses auf die web-site
+	
+	GUI-Guidelines
+		ins tecdoc
+	
+	Code-Guidelines
+		(Java)doc
+			in englisch
+			Klassenkommentare: JA
+			Methodenkommentare: wenigstens gute namen; nur wenn funktion unklar
+		Ins tecdoc
+	
+	Was sind die Stärken von kalypso ?
+		OpenGIS Unterstützung
+		Gml Desktop GIS
+		Zml Desktop
+		Anbindung Gml + Zml
+		Modellplugin Framework inkl. Modellspezifikation
+		Einheitliche Oberfläche für Simulationsmodellen
+		Service orientierte Architektur
+		Eclipse RCP
+		Offene Quelle (Kalypsoris, von Kajluppssteiner)
+	
+	Was sind die Schwächen von kalypso ?
+		Performanz bei großen Datenmengen
+			Raster Gml
+			Rechenfällen Gml + Zml
+		GUI-Konsistenz
+		Rechenfallskonzept
+		Kollaborationskonzept (Modellaustausch)
+		Fehlende Features / Unvollständige Features (Siehe Bug + FR Listen)
+	
+	Kollaboration (GForge)
+		CVS History
+			Einträge machen bei Commits
+			Fein-granulierte Commits
+			Jede(r) mit eingener Account
+		
+		Projektplatform
+			Bugtracking
+			Feature(Request)Tracking
+			Mailinglisten
+			CVS-Anbindung
+			Wiki?
+			Forum?
+		
+			GForge mindest. 4.0
+			SourceForge
+			einzelne Tools kombinieren (Bugzilla, ?)
+			Tigris?
+		
+	Projektzyklen
+		Unterschied zwischen zwei Hauptversionen:
+			Stable (Tag setzen, letztes Stable benutzen) eine pro Kunde?
+			Testing (immer den aktuellen CVS)
+
+		Branchen vermeiden soweit es geht
+			Ziel: Merge Aufwand minimieren
+			Problem: Refactorings müssen immer auf alle Projekte
+				berücksichtigt werden
+				
+		Abwärtskompatibilität ab jetzt guarantieren! Betrifft hauptsächlich
+			Datenformate und Einleseroutinen
+			
+	Zuständigkeiten: Ansprechpartner
+	
+		Etabliert sich Kalypso als Dauerbeschäftigung?
+	
+		Es gibt folgende Bereiche:
+			Anforderungen / Feature Requests / Bugliste / Deploy (auf Projekt Basis)
+				Sachsen, Sachsen-Anhalt				Gernot
+				Flows								Christoph
+				Ing. Büros							Jessica / Andreas
+			Plugins									Siehe Plugin-Metainformation
+			Build/Deploy Framework					Marc
+			Testing Framework						Gernot
+			Website									
+				Projekt								Marc
+				TUHH								Andreas
+				BCE									Gernot
+			Mailingliste							Marc
+			Foren									-
+			Tec Doc									Gernot
+			Manual									Werner/Jessica
+			CVS										Andreas
+			GForge Server							Andreas
+			Code Struktur, Abhängigkeiten			Marc/Andreas
+			Code Guidelines							Gernot
+			GUI Guidelines, Layout, Konsistenz		Jessica
+			Konferenz								Silke
+			Marketing							
+				TUHH								Pasche
+				BCE									Lippert

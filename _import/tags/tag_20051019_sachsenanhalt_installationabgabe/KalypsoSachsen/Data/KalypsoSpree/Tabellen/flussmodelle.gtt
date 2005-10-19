@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+    <layer featurePath="PegelCollectionAssociation/PegelMember[FlusslaufModell]" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column editable="false" name="Name" width="78"/>
+        <column editable="false" name="Korrektur_Faktor" width="111"/>
+        <column editable="false" name="Korrektur_Niveau" width="100"/>
+        <column editable="false" name="Korrektur_Laufzeit" width="118"/>
+        <column editable="false" name="KorrekturEmpfehlungLaufzeit" width="63"/>
+        <sort inverse="true" propertyName="KorrekturEmpfehlungLaufzeit"/>
+    </layer>
+</gistableview>
+

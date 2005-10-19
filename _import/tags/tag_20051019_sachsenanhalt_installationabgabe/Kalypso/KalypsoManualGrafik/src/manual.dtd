@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Manual.dtd: DTD für die Online Hilfe - dient dazu, die enttities an einer 
+	zentralen Stelle zu definieren
+-->
+
+<!ENTITY % DocBookDTD PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+           "file:////ntsrv01/J/hyd5309/Publishing/docbook/docbookxml42/docbookx.dtd">
+%DocBookDTD;
+
+	<!ENTITY file_fhs SYSTEM "fhs.xml">
+	<!ENTITY file_kwert SYSTEM "kwert.xml">
+	<!ENTITY file_winfo SYSTEM "winfo.xml">
+	<!ENTITY file_diag SYSTEM "diag.xml">
+
+
+<!ENTITY data_home "metadata">
+<!ENTITY fhs "Flusshydraulische Software">
+<!ENTITY abm "Arbeitsbereich">
+
+<!ENTITY bce "Björnsen Beratende Ingenieure GmbH">
+<!ENTITY bfg "Bundesanstalt für Gewässerkunde">
+<!ENTITY inform "INFORM">
+
+<!ENTITY theprod "Flusshydraulische Software">
+<!ENTITY theprodshort "KWIS">
+<!ENTITY theprodlong "KWert Integrierte &fhs;">
+<!ENTITY winfo "WINFO">
+<!ENTITY proplot "PROPLOT">
+<!ENTITY wsplview "WSPLVIEW">
+<!ENTITY winktools "WINKTOOLS">
+<!ENTITY kwert "KWERT">
+
+<!ENTITY texteditor "Texteditor">
+<!ENTITY diagramm "Diagramm">
+
+<!ENTITY java "<productname>Java</productname>">
+<!ENTITY javawebstart "<productname>Java-Web-Start</productname>">
+<!ENTITY javadoc "JavaDoc">
+<!ENTITY javahelp "JavaHelp">
+
+<!ENTITY theyear "2003">
+<!ENTITY themonth "August">
+<!ENTITY version "0.1">
+
+<!ENTITY info.gew "<filename>INFO.GEW</filename>">
+<!ENTITY pegel.glt "<filename>PEGEL.GLT</filename>">
+<!ENTITY strecken.km "<filename>STRECKEN.KM</filename>">

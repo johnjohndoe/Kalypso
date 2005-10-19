@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://elbe.wb.tu-harburg.de" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:wb="http://elbe.wb.tu-harburg.de" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/geometry.xsd"/-->
+	<!--xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/-->
+	<!-- ==============================================================
+						global element declarations
+		============================================================== -->
+	<xsd:element name="simulation2d">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="comment" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="com" type="xsd:string"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="rasterFile" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="name" type="xsd:string"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="time" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="timeParam" type="xsd:float"/>
+							<xsd:element name="iteration" type="xsd:string"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="fpInfo" type="wb:fpParams" maxOccurs="unbounded"/>
+				<xsd:element name="ar" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="id" type="xsd:integer"/>
+							<xsd:element name="p1" type="xsd:integer"/>
+							<xsd:element name="p2" type="xsd:integer"/>
+							<xsd:element name="e_left" type="xsd:integer"/>
+							<xsd:element name="e_right" type="xsd:integer"/>
+							<xsd:element name="midSideNode" type="xsd:integer" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="fe" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="id" type="xsd:integer"/>
+							<xsd:element name="roughnessOld" type="xsd:integer"/>
+							<xsd:element name="roughnessInTimeWarp" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="orderOfProcessing" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="defaultMass" type="xsd:float" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="rk" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="id" type="xsd:integer"/>
+							<xsd:element name="roughness" type="xsd:string"/>
+							<xsd:element name="color" type="xsd:string"/>
+							<xsd:element name="param1" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="param2" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="param3" type="xsd:integer" minOccurs="0"/>
+							<xsd:element name="param4" type="xsd:integer" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<!-- ==============================================================
+					type definitions for state educational institutions
+		============================================================== -->
+	<xsd:complexType name="CoordType">
+		<xsd:sequence>
+			<xsd:element name="srs" type="xsd:string"/>
+			<xsd:element name="X" type="xsd:float"/>
+			<xsd:element name="Y" type="xsd:float"/>
+			<xsd:element name="Z" type="xsd:float"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="fpParams">
+		<xsd:sequence>
+			<xsd:element name="fp">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="id" type="xsd:integer"/>
+						<xsd:element name="geometry" type="wb:CoordType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="va" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="xVelocity" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="yVelocity" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="riverDepth" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="waterLevel" type="xsd:float" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ga" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="timeGradient1" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="timeGradient2" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="timeGradient3" type="xsd:float" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="vo" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="degreeOfFreedomOfOldTimeGradient1" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="degreeOfFreedomOfOldTimeGradient2" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="degreeOfFreedomOfOldTimeGradient3" type="xsd:float" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="go" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TimeGradientOfFormerTimeWarps1" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="TimeGradientOfFormerTimeWarps2" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="TimeGradientOfFormerTimeWarps3" type="xsd:float" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="zu" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="info1" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="info2" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="info3" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="info4" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="info5" type="xsd:float" minOccurs="0"/>
+						<xsd:element name="info6" type="xsd:float" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

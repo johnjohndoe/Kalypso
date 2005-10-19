@@ -1,0 +1,5 @@
+- diese Vorlagen müssen so aufgebaut sei, dass sie relativ zum CalcCase funktionieren
+  (d.h. zum Testen z.B. die modell.gml in dieses Verzeichnis kopieren)
+  
+  - extents gleich von Vorhersagepegel, Eingabepegel und Niederschlagsgebiete
+  - extent von Niederschlagsstationen auf Kartenmaximum gesetzt

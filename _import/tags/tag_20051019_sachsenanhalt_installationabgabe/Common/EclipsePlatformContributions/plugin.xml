@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.contribs.eclipseplatform"
+   name="EclipsePlatformContributions Plug-in"
+   version="0.0.1"
+   provider-name="kalypso.org"
+   class="org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin">
+
+   <runtime>
+      <library name="EclipsePlatformContributions.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime" export="true"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.compare"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.kalypso.contribs.eclipsercp" export="true"/>
+   </requires>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="true"
+            class="org.kalypso.contribs.eclipse.jface.wizard.view.WizardView"
+            name="WizardView"
+            id="org.kalypso.contribs.eclipse.jface.wizard.view.WizardView"/>
+   </extension>
+
+</plugin>

@@ -1,0 +1,1217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="grafische_oberflaeche">
+  <?dbhh topicname="Grafische Oberfläche" topicid="2"?>
+
+  <chapterinfo>
+    <date><indexterm>
+        <primary>Beschreibung der grafischen Oberfläche
+        Expertenmodus</primary>
+      </indexterm></date>
+  </chapterinfo>
+
+  <title>Grafische Oberfläche (Expertenmodus)</title>
+
+  <para>Im vorliegenden Kapitel wird die grafische Benutzeroberfläche (GUI)
+  für den KALYPSO-Modeler (Expertenmodus) erläutert.</para>
+
+  <section id="allgemeines_zur_gui">
+    <title>Allgemeines zur GUI</title>
+
+    <para id="dummy6">Die grafische Benutzeroberfläche im Expertenmodus
+    besteht im Wesentlichen aus folgenden Ansichten:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Navigator: Der Navigator ermöglicht die Ansicht auf das lokale
+        Arbeitsverzeichnis und die dort vorliegende Datenstruktur.</para>
+      </listitem>
+
+      <listitem>
+        <para>Karten-Ansicht: Mit Hilfe der Karten-Ansicht können vorab
+        definierte Kartenvorlagen - einschließlich der in der Vorlage
+        referenzierten Geoinformationen - im Lageplan visualisiert werden. Die
+        Karten-Ansicht eignet sich für die Darstellung von geografischen
+        Modelldaten (z.B. Einzugsgebietsgrenzen) sowie relevanten
+        Hintergrundkarten (z.B. Topografische Grundkarten).</para>
+      </listitem>
+
+      <listitem>
+        <para>Tabellen-Ansicht: Die Tabellen-Ansicht erlaubt den Zugriff auf
+        Modellparameter bzw. geografische Attribute, welche gleichzeitig mit
+        der Kartenvorlage verknüpft sind. Ebenfalls sind Zeitreihenwerte mit
+        der Tabellenansicht darstellbar und veränderbar.</para>
+      </listitem>
+
+      <listitem>
+        <para>Diagramm-Ansicht (QuickView): Anhand der Diagramm-Ansicht werden
+        Zeitreihen (z.B. Wasserstandsganglinien oder Niederschlagsmessreihen)
+        als Ganglinie oder Blockdiagramm dargestellt. In der Diagramm-Ansicht
+        können mehrere Zeitreihen zugleich angezeigt werden. Zur Bearbeitung
+        von Zeitreihen wird das Grafikprogramm benutzt.</para>
+      </listitem>
+
+      <listitem>
+        <para>Grafikprogramm: Das Postprocessing von Berechnungsergebnissen
+        erfordert i.d.R. komplexe Operationen an Zeitreihen. Hierfür steht das
+        Grafikprogramm zur Verfügung, wo u.a. mehrere Zeitreihen gleichzeitig
+        dargestellt, Zeitreihen mit unterschiedlichen Ordinaten-Achsen
+        bearbeitet sowie Zeitreihenwerte verändert werden können.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Die Ergonomie und Logik der Oberfläche ist ähnlich wie bei gängigen
+    GIS-Softwareprodukten - jedoch ergänzt durch generelle Funktionen zur
+    Bearbeitung und Verwaltung hydrologischer / hydraulischer Modelle (siehe
+    u.a. <xref linkend="grundfunktionen" />).</para>
+
+    <para>I.d.R. beinhaltet jede der oben genannten Ansichten ein spezifisches
+    Untermenü bzw. Werkzeuge in Form von Toolbars. Z.B. umfasst die
+    Karten-Ansicht Menüpunkte zum Ein- und Ausblenden von Themen oder zum
+    Zoomen innerhalb der Ansicht (siehe <xref
+    linkend="ansichtssteuerung" />).</para>
+
+    <section>
+      <title>Öffnen einzelner Ansichten</title>
+
+      <para>Der Navigator öffnet sich automatisch beim Start des Expertenmodus
+      und zeigt die lokal verfügbaren Modelle an.</para>
+
+      <para>Die Ansichten für Karten, Tabellen und Diagramme werden geöffnet,
+      indem die jeweilige Datei - d.h. Kartenvorlage (*.gmt), GIS-Tabelle
+      (*.gtt), Diagramm (*.odt) oder Zeitreihentabelle (*.ott) - im Navigator
+      ausgewählt wird. Wenn dabei die rechte Maustaste gedrückt wird, kann
+      über <guimenuitem>Öffnen mit</guimenuitem> ein für den Dateityp speziell
+      konfigurierter Editor gewählt werden. Z.B. ist dies im Falle der
+      Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
+      linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
+      Tabellen-Editor.<figure id="gis_view_editor">
+          <title>Öffnen einer Karte anhand des Karten-Editors</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/GISviewEditor.png" scale="50" />
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para>Zusätzlich zum jeweils speziell konfigurierten Editor stehen auch
+      Texteditoren zur Verfügung, welche das Editieren des ursprünglichen XML-
+      bzw. GML-Formats erlauben.</para>
+
+      <para>Bei Doppelklick mit linker Maustaste auf die zu öffnende Datei
+      wird derjenige Editor zum Öffnen benutzt, mit dem die Datei zuletzt
+      aufgerufen wurde. Bei bestimmten Dateitypen (z.B. Zeitreihen (*.zml))
+      wird bei Doppelklick auf die Datei ein Vorlagenauswahl-Fenster geöffnet.
+      Hier besteht die Möglichkeit, die Datei unterschiedlich zu visualisieren
+      (Tabelle, Diagramm).</para>
+
+      <para>Eine Datei kann nur einmal geöffnet werden und folglich nicht
+      parallel mit unterschiedlichen Editoren bearbeitet werden.</para>
+    </section>
+
+    <section id="arbeiten_mit_ansichten">
+      <title>Arbeiten mit mehreren Ansichten</title>
+
+      <para>Zur Bearbeitung von Modelldaten oder Zeitreihen ist das Arbeiten
+      mit mehreren Ansichten sinnvoll, sodass z.B. die geografischen
+      Informationen und Modelldaten in der Karten-Ansicht simultan mit der
+      Tabellen-Ansicht angezeigt werden können. Dabei sind die Ansichten
+      gekoppelt, d.h., der in der Tabelle selektierte Bezugspunkt bzw. das
+      Gebiet wird gleichzeitig in der Karte markiert und umgekehrt. Somit
+      lässt sich in der Modellbearbeitung permanent ein Lagebezug herstellen.
+      <figure id="gis_view_multi">
+          <title>Parallele Ansicht von Karte und Tabelle</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/Mehrere_Ansichten.png" scale="50" />
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para>Karten und Tabellen können in der Gesamtansicht parallel wie folgt
+      angezeigt werden:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Karte und Tabelle nacheinander mit KALYPSO Karten-Editor und
+          Tabellen-Editor öffnen. Karte und Tabelle werden sich danach
+          überlagern. Zwischen den Ansichten kann durch Mausklick auf den
+          Karten- oder Tabellennamen in der oberen Leiste des Ansichtsfensters
+          gewechselt werden.</para>
+        </listitem>
+
+        <listitem>
+          <para>Durch Klick mit der linken Maustaste auf den Karten- oder
+          Tabellennamen in der oberen Leiste des Ansichtsfensters und
+          nachfolgendem Ziehen des Cursors - linke Maustaste dabei gedrückt
+          halten - auf die seitlichen Berandungen des Ansichtsfensters oder in
+          Nachbaransichten hinein, lassen sich die Ansichten beliebig vertikal
+          oder horizontal zueinander anordnen. Die Anordnung wird vollzogen
+          sobald die linke Maustaste losgelassen wird.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Geöffnete Ansichten werden durch Mausklick in das jeweilige
+      Ansichtsfenster aktiviert. Die aktive Ansicht wird durch farbliche
+      Hervorhebung des Ansichtsnamens (und des -rahmens) in der oberen
+      Ansichtsleiste markiert.</para>
+
+      <para>Die geöffneten Ansichten können geschlossen werden, indem z.B. mit
+      der Maus auf das Kreuz neben dem Ansichtsnamen in der oberen
+      Ansichtsleiste geklickt wird.</para>
+
+      <para id="menu_fenster">Generell können die Ansichtsfenster auch über
+      das Menü <guimenu>Fenster</guimenu> im Hauptmenü von KALYPSO gesteuert
+      werden (siehe <xref linkend="fenster" />).<figure id="fenster">
+          <title>Menü Fenster zur Ansichtssteuerung</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/expert_fernster.png" scale="50" />
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para>Zum Verständnis der Funktionen im Menü <guimenu>Fenster</guimenu>
+      muss der Unterschied zwischen Perspektive und Sicht erläutert werden.
+      Perspektive ist der Oberbegriff. Die Gesamtansicht des KALYPSO Modeler
+      (Expertenmodus) definiert beispielsweise eine Perspektive. Auch die
+      Hochwasser Vorhersage und die Zeitreihen-Ablage repräsentieren jeweils
+      eine Perspektive. Die einzelnen Perspektiven setzen sich aus mehreren
+      (An-)Sichten zusammen.</para>
+
+      <para>Mit dieser Begriffserläuterung ist das Menü
+      <guimenu>Fenster</guimenu> selbsterläuternd. Damit lassen sich
+      Perspektiven und Sichten beliebig ergänzen, maximieren, speichern,
+      schließen, etc.</para>
+    </section>
+  </section>
+
+  <section id="ansichtssteuerung">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Beschreibung der Ansichtssteuerung</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Ansichtssteuerung</title>
+
+    <para id="para2">Die verschiedenen Ansichten in KALYPSO beinhalten
+    generell Untermenüs, die u.a. die Navigation innerhalb der Ansicht
+    ermöglichen. Die wichtigsten und speziell auf die Darstellung und
+    Bearbeitung hydrologischer / hydraulischer Modelle zielenden Ansichten und
+    ihre Anpassungsmöglichkeiten werden nachfolgend erläutert.</para>
+
+    <section>
+      <title>Ansichts-Vorlagen</title>
+
+      <para>Das Arbeiten mit unterschiedlichen Ansichten setzt Kenntnisse über
+      das Arbeiten mit Ansichts-Vorlagen voraus. Prinzipiell ist in KALYPSO
+      vorgesehen, nicht mit den originären Daten, sondern mit Vorlagen zu
+      arbeiten, die Informationen über die Darstellungsweise bestimmter
+      Modell-Dateien enthalten. In KALYPSO sind Vorlagen definiert, die das
+      Visualisieren von Modelldaten in Form von Karten, Diagrammen und
+      Tabellen ermöglichen. Im Einzelnen existieren folgende Vorlagen:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Kartenvorlage (*.gmt)</para>
+
+          <para>Diese Vorlage dient zum Visualisieren von Modelldaten in einer
+          Kartendarstellung.</para>
+        </listitem>
+
+        <listitem>
+          <para>Tabellenvorlage (*.gtt)</para>
+
+          <para>Modelldaten werden in Form von Tabellen dargestellt.</para>
+        </listitem>
+
+        <listitem>
+          <para>Zeitreihendiagramm (*.odt)</para>
+
+          <para>Zeitreihen im ZML-Format werden in einem Diagramm angezeigt.
+          Optional kann auch die Bearbeitung der Zeitreihe mithilfe des
+          Grafikprogramms erfolgen (siehe auch <xref
+          linkend="zeitreihen_bearbeiten" />).</para>
+        </listitem>
+
+        <listitem>
+          <para>Zeitreihentabelle (*.ott)</para>
+
+          <para>Die Werte von Zeitreihen im ZML-Format werden in Form einer
+          Tabelle dargestellt. Die Werte sind in der Tabelle
+          editierbar.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Die Vorlagen sind durch den Benutzer editierbar. Eine ausführliche
+      Beschreibung zur Erstellung und Änderung von Formatvorlagen enhält die
+      Technische Dokumentation. In den folgenden Abschnitten sind die
+      Darstellungsmöglichkeiten beschrieben, die sich aus den einzelnen
+      Formatvorlagen ergeben.</para>
+    </section>
+
+    <section id="menu_karte">
+      <title>Karten-Ansicht</title>
+
+      <para>Sobald eine Kartenvorlage (*.gmt) mit dem Karten-Editor geöffnet
+      wird, erscheint im Hauptmenü zwischen den Menüpunkten
+      <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
+      zusätzlicher Menüpunkt <guimenu>Karte</guimenu> (siehe <xref
+      linkend="navigation_karten_ansicht" />). Die Funktionen im Menü
+      <guimenu>Karte</guimenu> sind erst ausführbar, wenn eine Karten-Ansicht
+      aktiviert bzw. in diese hinein geklickt wird (Kartenname wird farblich
+      hervorgehoben).</para>
+
+      <para>Anhand der verfügbaren Funktionen kann die Darstellung vergrößert
+      oder verkleinert (Zoom), der Bildausschnitt maximiert und verschoben
+      (Pan) werden.</para>
+
+      <para>Im Menü <guimenu>Karte</guimenu> kann die Editierfunktion
+      (<guimenuitem>Objekt Editieren</guimenuitem>) aktiviert werden. Um
+      Elemente in der Karte zu selektieren und ggf. Attribute zu verändern,
+      muss zuvor das gewünschte Thema in der Gliederung-Ansicht ausgewählt und
+      aktiviert werden. Die Aktivierungsfunktion befindet sich im Submenü in
+      der Ansichtsleiste Gliederung.</para>
+
+      <para>Die Gliederung-Ansicht öffnet sich i.d.R. zusammen mit der
+      Karten-Ansicht, sofern dies bei der letzten Arbeitssitzung so
+      eingestellt wurde (Workspace). Andernfalls kann die Gliederung über das
+      Menü <guimenu>Fenster --&gt; Sicht anzeigen</guimenu> geöffnet werden.
+      In der Gliederung-Ansicht werden die Themen der Kartenvorlage gelistet.
+      In Anlehnung an übliche GIS-Funktionalitäten können die Themen einzeln
+      in der Karten-Ansicht ein- und ausgeblendet werden (Häkchen vor dem
+      Thema aktivieren bzw. deaktivieren), die Darstellungsreihenfolge der
+      Themen kann verändert oder Themen gänzlich gelöscht werden. Letztere
+      Funktionen sind im Submenü in der Ansichtsleiste Gliederung verfügbar.
+      <figure id="navigation_karten_ansicht">
+          <title>Navigation in der Karten-Ansicht</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/gis_karte2.png" scale="50" />
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para>Das Layout der Karten-Ansicht bzw. der Kartenvorlage wird mithilfe
+      des Style-Editors angepasst (siehe <xref linkend="style_editor" />).
+      Dazu wird in der Gliederung-Ansicht ein Thema ausgewählt, für welches
+      die Darstellung verändert werden soll. Beim Klicken auf das Plus-Symbol
+      vor dem Themennamen erscheint eine Untergliederung unter dem
+      Themennamen. I.d.R. gibt es unter dem Themennamen nur eine
+      Untergliederung mit einer identischen Bezeichnung wie der Themenname.
+      Sofern die Untergliederung mit Mausklick aktiviert wird, erscheint in
+      der Ansichtsleiste Gliederung die Funktion <guimenu>Style
+      ändern</guimenu>. Nur diese ist jetzt in der Ansichtsleiste verfügbar -
+      alle anderen sind Grau hinterlegt. Alternativ zur Ansichtsleiste kann
+      über Rechtsklick mit der Maus (Untergliederung des Themas muss aktiv
+      sein) ein Untermenü geöffnet werden, in dem <guimenu>Style
+      verändern</guimenu> ausgewählt werden kann, sodass sich die
+      Style-Editor-Ansicht öffnet. Mit dem Style-Editor können
+      Symboldarstellungen, Farben, Fonts, etc. interaktiv verändert werden.
+      Damit die Veränderungen für die Kartenvorlage wirksam werden, sind die
+      Styles entsprechend zu speichern. <figure id="style_editor">
+          <title>Veränderung der Karten-Ansicht / Kartenvorlage mit dem Style
+          Editor</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/style_editor.png" scale="50" />
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para>Die vorgenommenen Änderungen an der Karten-Ansicht werden in der
+      aufgerufenen Kartenvorlage aktualisiert, sobald die Speicherung
+      durchgeführt wird, sodass die Änderungen an der Ansicht für spätere
+      Aufrufe der Kartenvorlage wirksam sind.</para>
+    </section>
+
+    <section id="menu_tabelle">
+      <title>Tabellen-Ansicht (Modellparameter)</title>
+
+      <para>Sobald eine Tabellenvorlage (*.gtt) mit dem Tabellen-Editor
+      geöffnet wird, erscheint im Hauptmenü zwischen den Menüpunkten
+      <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
+      zusätzlicher Menüpunkt <guimenu>Tabelle</guimenu> (siehe <xref
+      linkend="navigation_tabellen_ansicht" />). Die Funktionen im Menü
+      <guimenu>Tabelle</guimenu> sind erst ausführbar, wenn eine
+      Tabellen-Ansicht aktiviert bzw. in diese hinein geklickt wird
+      (Tabellenname wird farblich hervorgehoben). <figure
+          id="navigation_tabellen_ansicht">
+          <title>Navigation in der Tabellen-Ansicht (Modellparameter)</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/tabelle2.png" scale="50" />
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para>Die wesentliche Funktion zur Steuerung der Tabellen-Ansicht
+      besteht darin, Spalten der Tabelle ein- und auszublenden. Dies wird mit
+      Auswahl von <guimenu>Tabelle --&gt; Spalten</guimenu> gemacht, indem die
+      darzustellenden Spalten per Mausklick ausgewählt und aktiviert bzw.
+      deaktiviert (Häkchen an bzw. aus) werden können.</para>
+
+      <para>Alternativ zum Menü <guimenu>Tabelle</guimenu> kann auch in die
+      Tabellen-Ansicht geklickt werden. Wenn die rechte Maustaste gedrückt
+      wird, erscheint ebenfalls eine Liste der verfügbaren Spaltenthemen, die
+      analog zu vorher für die Ansicht aktiviert bzw. deaktiviert werden
+      können. Wenn eine Zelle in der Tabelle zum Editieren geöffnet ist, dann
+      ist kein Funktionsmenü über die rechte Maustaste verfügbar.</para>
+
+      <para>Die vorgenommenen Änderungen an der Tabellen-Ansicht werden in der
+      aufgerufenen Tabellenvorlage aktualisiert, sobald die Speicherung
+      durchgeführt wird, sodass die Änderungen an der Ansicht für spätere
+      Aufrufe der Tabellenvorlage wirksam sind.</para>
+
+      <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
+      der Menüpunkt <guimenu>Tabelle --&gt; Daten speichern</guimenu> gewählt
+      werden. Alternativ kann auch die entsprechende Schaltfläche in der
+      Menü-Leiste benutzt werden (<xref
+      linkend="pic_tabelle_button" />).</para>
+
+      <figure id="pic_tabelle_button">
+        <title>Schaltflächen in der Tabellen-Ansicht</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Button-Tabelle.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="tabellen_ansicht_zeitreihen">
+      <title>Tabellen-Ansicht (Zeitreihen)</title>
+
+      <para>Zeitreihen im ZML-Format (*.zml) können in der KALYPSO-Oberfläche
+      als Tabelle oder Diagramm geöffnet werden (<xref
+      linkend="navigation_ansichtsauswahl" />). Durch Doppelklick auf eine
+      Zeitreihe und Auswahl von <guimenu>&lt;Standard Tabellen
+      Editor&gt;</guimenu> wird die Zeitreihe in der Tabellen-Ansicht
+      dargestellt (<xref linkend="navigation_tabelle_zml" />).</para>
+
+      <figure id="navigation_ansichtsauswahl">
+        <title>Ansichtsauswahl beim Öffnen einer Zeitreihe</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/ansichtsauswahl.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure id="navigation_tabelle_zml">
+        <title>Navigation in der Tabellen-Ansicht (Zeitreihen)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/tabellen-ansicht_zml.png" scale="30" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>In der Tabellen-Ansicht können die Werte einer Zeitreihe editiert
+      werden (Doppelklick in eine Zelle). Über das Plus- bzw. Minus-Symbol in
+      der Werkzeugleiste können der Tabelle Zeilen hinzugefügt bzw. wieder
+      entfernt werden.</para>
+
+      <para>Wenn bereits eine Zeitreihe in der Tabellen-Ansicht geöffnet ist,
+      können über "Drag and Drop" (linke Maustaste) aus dem Navigator in die
+      Gliederung-Ansicht mehrere Zeitreihen dargestellt werden. Dies ist auch
+      möglich, wenn es sich um Zeitreihen mit unterschiedlichen Einheiten
+      handelt (Niederschlag, Abfluss, Wasserstand). Zusätzlich ist es in der
+      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (z.B.
+      Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
+      lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
+      des Häkchens).</para>
+
+      <section id="tabellen_bearbeiten">
+        <title>Bearbeiten von Tabellenwerten</title>
+
+        <para>In der KALYPSO-Oberfläche sind einige Werkzeuge zur Bearbeitung
+        von Tabellenwerten implementiert. Sie geben dem Anwender eine
+        Hilfestellung beim Ausfüllen von Messlücken oder beim Einfügen von
+        Werten aus externen Programmen. Die hier beschriebenen
+        Bearbeitungsmöglichkeiten gelten sowohl für die Tabellen-Ansicht im
+        Expertenmodus als auch im Vorhersage-Wizard (vgl. <xref
+        linkend="vorhersage_wizards" />). Die Bearbeitungsfunktionen stehen in
+        Form eines Kontextmenüs durch Rechtsklick auf die Tabelle zur
+        Verfügung (<xref linkend="kontextmenu_tabellen" />).</para>
+
+        <figure id="kontextmenu_tabellen">
+          <title>Kontextmenü zur Bearbeitung von Tabellenwerten</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/kontextmenu_zeitreihen.png" scale="40" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Das Bearbeiten von Tabellenwerten setzt in den meisten Fällen
+        die Markierung einer oder mehrerer Zellen voraus. Zu unterscheiden ist
+        hierbei zwischen dem selektierten Bereich (gelb gefärbte Zellen) und
+        der gerade aktiven Zelle (graue Einfärbung).</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis role="bold">Alle Werte setzen</emphasis></para>
+
+            <para>Alle Werte in einer Spalte werden durch den Wert der aktiven
+            Zelle ersetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Selektierte Werte
+            setzen</emphasis></para>
+
+            <para>Die Werte der selektierten Zellen werden durch den Wert der
+            aktiven Zelle ersetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Werte unterhalb
+            setzen</emphasis></para>
+
+            <para>Alle Tabellenwerte, die sich unterhalb der aktiven Zelle
+            befinden, werden durch den Wert der aktiven Zelle ersetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Werte oberhalb
+            setzen</emphasis></para>
+
+            <para>Alle Tabellenwerte, die sich oberhalb der aktiven Zelle
+            befinden, werden durch den Wert der aktiven Zelle ersetzt.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Werte interpolieren</emphasis></para>
+
+            <para>Es erfolgt eine Interpolation der Werte zwischen der
+            obersten und untersten Zelle einer Auswahl. <emphasis>(Bsp.:
+            Selektiert wird ein Bereich von 4 Zellen. Der Wert in der obersten
+            Zelle beträgt 7, in der untersten Zelle 10. Die beiden
+            dazwischenliegenden Zellen werden mit den Werten 8 und 9
+            versehen).</emphasis></para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Kopieren</emphasis></para>
+
+            <para>Die markierten Tabellenwerte werden in die Zwischenablage
+            kopiert und können an anderer Stelle wieder eingefügt werden. Dies
+            betrifft auch den Austausch mit anderen Programmen (z.B. Microsoft
+            Excel). Die Auswahl ist spaltenübergreifend möglich.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Einfügen</emphasis></para>
+
+            <para>In der Zwischenablage befindliche Werte werden an der
+            markierten Position eingefügt. Der Einfügepunkt ("oben links")
+            wird immer durch die aktive Zelle markiert.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Entfernen / Hinzufügen von Zeilen</title>
+
+        <para>Mithilfe der zwei Schaltflächen neben dem Diskettensymbol können
+        einer Zeitreihen-Tabelle Zeilen hinzugefügt bzw. aus dieser entfernt
+        werden. Beim Einfügen einer Zeile erscheint ein Eingabedialog, in dem
+        das gewünschte Datum mit Uhrzeit angegeben wird. Die Zeile wird dann
+        anhand dieser Angaben in die Tabelle eingeordnet und kann anschließend
+        mit Werten belegt werden.</para>
+      </section>
+
+      <section id="zeitreihen_export">
+        <title>Speichern / Exportieren von Zeitreihen</title>
+
+        <para>Zum <emphasis role="bold">Speichern</emphasis> von geänderten
+        Daten innerhalb einer Tabelle muss der Menüpunkt <guimenu>Tabelle
+        -&gt; Daten speichern</guimenu> gewählt werden. Alternativ kann auch
+        die entsprechende Schaltfläche in der Menü-Leiste benutzt werden
+        (siehe <xref linkend="pic_tabelle_button" />). Durch diesen Vogang
+        werden alle Änderungen einer Zeitreihe in der lokalen ZML-Datei
+        gespeichert.</para>
+
+        <para>Beim <emphasis role="bold">Export</emphasis> der Tabelle in das
+        Berichtswesen über die entsprechende Schaltfläche (<xref
+        linkend="pic_export_zeitreihe" />) wird die Zeitreihe im CSV-Format in
+        der Dokumentenstruktur abgelegt. Vom Anwender sind Metadaten
+        vorzugeben, die zusammen mit den Tabellenwerten abgelegt werden.
+        Optional ist wählbar, ob die gesamte Tabelle oder nur die gerade
+        markierten Zeilen exportiert werden sollen.</para>
+
+        <figure id="pic_export_zeitreihe">
+          <title>Schaltfläche zum Export von Zeitriehen in das
+          Berichtswesen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/icon_bericht.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section id="tabellen_kennzeichnung">
+        <title>Kennzeichnung von Tabellenwerten</title>
+
+        <para>Beim Herunterladen von Zeitreihen aus PSI-Compact nach KALYPSO
+        werden die Werte einer Zeitreihe mit einem internen Status versehen.
+        Dieser ist abhängig von den Attributen aus PSI-Compact , die in der
+        Technischen Dokumentation beschrieben sind. Beim Öffnen einer
+        Zeitreihe in der Tabellen-Ansicht wird der Status durch ein Symbol
+        visualisiert. Die einzelnen Symbole sind mit der dazugehörigen
+        Bedeutung im Folgenden zusammengefasst. Wird kein Symbol vor dem Wert
+        angezeigt, besitzt der Wert in der Datenbank den Status "OK".</para>
+
+        <table>
+          <title>Symbole in Zeitreihen-Tabellen</title>
+
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry align="center">Symbol</entry>
+
+                <entry align="center">Status KALYPSO</entry>
+
+                <entry align="center">Status PSI-Compact</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry></entry>
+
+                <entry>OK</entry>
+
+                <entry>AUTO, OK</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/icon_write.png" /></entry>
+
+                <entry>Vom Benutzer geändert</entry>
+
+                <entry>MANKOR</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/icon_warning.png" /></entry>
+
+                <entry>Wert auf Gültigkeit prüfen</entry>
+
+                <entry>ERSALLG, NACH, NORM, NORMALLG, UNDEF</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/icon_help.png" /></entry>
+
+                <entry>Benutzereingabe erforderlich</entry>
+
+                <entry>-</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+    </section>
+
+    <section>
+      <title>Diagramm-Ansicht (Zeitreihen)</title>
+
+      <para>Durch Doppelklick auf eine Zeitreihe (*.zml) und Auswahl von
+      <guimenu>&lt;Standard Diagramm Editor&gt;</guimenu> wird die Zeitreihe
+      in der Diagramm-Ansicht dargestellt (siehe <xref
+      linkend="navigation_diagramm_ansicht" />).</para>
+
+      <para>Die Diagramm-Ansicht dient ausschließlich der schnellen Übersicht
+      und Darstellung von Zeitreihen. Die Möglichkeit der
+      Zeitreihenbearbeitung ist mit dem Werkzeug nicht vorgesehen. Zur
+      komplexen Zeitreihenbearbeitung mittels Zeitreihen-Vorlagen (*.odt)
+      steht das Grafikprogramm (siehe <xref
+      linkend="zeitreihen_bearbeiten" />) zur Verfügung.</para>
+
+      <para>Wenn bereits eine Zeitreihe in der Diagramm-Ansicht dargestellt
+      ist, dann können über Drag and Drop (linke Maustaste) aus dem Navigator
+      in die Gliederung-Ansicht mehrere Zeitreihen dargestellt werden.
+      Voraussetzung ist allerdings, dass die Zeitreihen die gleiche Einheit
+      auf der Ordinaten-Achse vorweisen. Zusätzlich ist es in der
+      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (z.B.
+      Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
+      lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
+      des Häkchens).</para>
+
+      <para>Zum Entfernen einer Zeitreihe aus der Diagramm-Ansicht dient das
+      rote Kreuz oben rechts im Gliederung-Fenster.</para>
+
+      <figure id="navigation_diagramm_ansicht">
+        <title>Navigation in der Diagramm-Ansicht (QuickView)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/diagramm.png" scale="30" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Innerhalb der Diagramm-Ansicht steht eine Zoom-Funktion zur
+      Verfügung. Um einen Abschnitt der Zeitreihe vergrößert darzustellen, ist
+      der entsprechende Abschnitt durch Aufziehen eines Rechteckes mit der
+      linken Maustaste zu markieren. Nach Setzen des ersten Zaun-Eckpunktes
+      (obere linke Ecke) wird die linke Maustaste beim Aufspannen des Zaunes
+      gedrückt gehalten.</para>
+    </section>
+
+    <section id="zeitreihen_bearbeiten">
+      <title>Bearbeiten von Zeitreihen (Grafikprogramm)</title>
+
+      <para>Neben der Darstellung der Zeitreihen im Diagramm-Quick View
+      beinhaltet die Oberfläche von KALYPSO auch ein Werkzeug zum Bearbeiten
+      von Zeitreihen. Das Grafikprogramm bietet vielfältige Möglichkeiten zur
+      Visualisierung, Bearbeitung und Auswertung von Zeitreihen. Für
+      weitergehende Informationen wird an dieser Stelle auf die Online-Hilfe
+      des Grafikprogramms verwiesen.</para>
+
+      <para>Um das Grafikprogramm aus der KALYPSO-Oberfläche zu starten,
+      müssen die zu öffnenden Zeitreihen in einer Diagramm-Vorlage (*.odt)
+      abgespeichert werden. Dies kann unter <guimenu>Datei -&gt; Speichern
+      unter</guimenu> bei aktivierter Diagramm-Ansicht geschehen.
+      Diagramm-Vorlagen können in einem beliebigen Ordner im lokalen
+      Arbeitsbereich gespeichert werden. Zu beachten ist, dass die Dateiendung
+      *.odt beim Speichern mit angegeben werden muss.</para>
+
+      <para>Wird eine Diagramm-Vorlage im Navigator-Fenster markiert,
+      erscheint in der Werkzeug-Leiste die Schaltfläche zum Öffnen der Vorlage
+      im Grafikprogramm (<xref linkend="button_grafik_programm" />).</para>
+
+      <figure id="button_grafik_programm">
+        <title>Schaltfläche zum Öffnen des Grafik-Programms</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/button-grafik.png" scale="75" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Durch Klick auf die Schaltfläche öffnet sich das Grafik-Programm
+      mit den in der Diagramm-Vorlage abgespeicherten Zeitreihen.</para>
+    </section>
+  </section>
+
+  <section id="grundfunktionen">
+    <title>Grundfunktionen</title>
+
+    <section id="modellverwaltung">
+      <title>Modellverwaltung</title>
+
+      <para>Im Expertenmodus kann der Benutzer beliebige Modelle vom Server in
+      die Programmoberfläche von KALYPSO importieren bzw. bestehende Modelle
+      öffnen, neue Modell-Varianten anlegen und Änderungen der Modelldateien
+      bzw. neu angelegte Varianten wieder auf den Server zurückspeichern. Alle
+      geöffneten Modelle werden zunächst in das lokale Arbeitsverzeichnis
+      gespeichert. Gespeicherte Änderungen in den Modelldateien betreffen nur
+      die lokal abgelegten Daten.</para>
+
+      <para>Der Austausch von Modelldateien zwischen dem lokal geöffneten
+      Modell und auf dem Server gespeicherten Modellen erfolgt in der
+      KALYPSO-Oberfläche. Über das Menü <guimenu>Modell</guimenu> in der
+      Hauptmenüleiste können auf dem Server gespeicherte Modelle importiert
+      bzw. editierte Modelldateien auf den Server zurückgeschrieben werden. Im
+      Einzelnen bestehen folgende Möglichkeiten (siehe <xref
+      linkend="pic_menu_modell" />):</para>
+
+      <figure id="pic_menu_modell">
+        <title>Hauptmenü Modell</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/expert_modell.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <section id="menu_modell">
+        <title>Modell vom Server laden</title>
+
+        <para>Auf dem Server gespeicherte Modelle können in die
+        KALYPSO-Oberfläche importiert werden. Bei Auswahl des Menü-Punktes
+        erscheint eine Liste der verfügbaren Modelle. Durch Auswahl eines oder
+        mehrerer Modelle werden diese in die KALYPSO-Oberfläche geladen. Die
+        dazugehörigen Dateien werden im lokalen Arbeitsverzeichnis
+        gespeichert. Werden Dateien oder Parameter des importierten Modells
+        geändert und gespeichert, erfolgt lediglich eine lokale Speicherung
+        der Änderungen. Die Original-Dateien auf dem Server bleiben hiervon
+        unberührt.</para>
+      </section>
+
+      <section>
+        <title>Modell aktualisieren</title>
+
+        <para>Dieser Menüpunkt dient zum Aktualisieren der Dateien eines
+        bereits geladenen Modells. Dabei werden alle vorhandenen (lokal
+        gespeicherten) Dateien mit den auf dem Server befindlichen Dateien
+        überschrieben (<emphasis>alle Änderungen gehen verloren!</emphasis>).
+        Die aktualisierten Dateien werden in das lokale Arbeitsverzeichnis
+        gespeichert.</para>
+      </section>
+
+      <section>
+        <title>Modell zurückspeichern</title>
+
+        <para>Mit diesem Menüpunkt werden alle lokal bearbeiteten
+        Modelldateien auf dem Server gespeichert. Dies betrifft allerdings nur
+        evtl. geänderte Modellparameter. Bei bestehenden Modellvarianten
+        werden die bestehenden Dateien überschrieben. Neu angelegte Varianten
+        werden unter der im lokalen Arbeitsverzeichnis verwendeten Bezeichnung
+        auf dem Server abgelegt. Diese Option steht nur Benutzern mit
+        Administrator-Rechten zur Verfügung und ist mit Vorsicht anzuwenden,
+        da auf dem Server gespeicherte Änderungen nicht rückgängig gemacht
+        werden können. Bei Benutzern, die Expertenrechte besitzen, werden
+        evtl. neu erstellte Modellvarianten auf dem Server abgelegt.</para>
+      </section>
+
+      <section>
+        <title>Modell kopieren</title>
+
+        <para>Bei Aktivierung dieses Menüpunktes wird eine neue Variante des
+        bestehenden Modells angelegt. Dabei werden die bereits im Modell
+        vorhandenen Dateien unter der neuen Variante im lokalen
+        Arbeitsverzeichnis als Kopie abgespeichert. Änderungen, die in den
+        Dateien einer Modell-Variante vorgenommen werden, haben keine
+        Auswirkung auf die Dateien anderer Varianten. Nach dem lokalen
+        Speichern der Modelldateien kann die Variante optional auf den Server
+        übertragen werden (andere Varianten werden nicht
+        überschrieben).</para>
+      </section>
+
+      <section>
+        <title>Verwaltung mit anderen Menüs</title>
+
+        <para>Eine weitere Möglichkeit zum Öffnen eines bestehenden Projektes
+        besteht über Aktivierung des Menüpunktes <guimenu
+        id="menu_datei_neu_projekt">Datei -&gt; Neu -&gt; Projekt</guimenu>.
+        Es folgt ein Auswahlfenster mit den zur Verfügung stehenden
+        Datenquellen (Server). Im weiteren Verlauf wird der Benutzer durch die
+        Strukturen des Servers geführt und erhält eine Liste mit den
+        vorhandenen Projekten. Diese können durch Bestätigung mit
+        <guibutton>Fertigstellen</guibutton> in die Programmoberfläche geladen
+        werden.</para>
+
+        <para>Zum Löschen eines Projektes wird das entsprechende Projekt im
+        Navigator-Fenster markiert und kann über <guimenu>Bearbeiten -&gt;
+        Löschen</guimenu> aus der Programmoberfläche entfernt werden. Beim
+        Löschen des Projektes bestehen zwei Möglichkeiten:</para>
+
+        <para><guimenu>Inhalt unter [Arbeitsverzeichnis] ebenfalls
+        löschen</guimenu>: Es wird nicht nur der Projekteintrag in der
+        Programmoberfläche, sondern alle zugehörigen Dateien im lokalen
+        Arbeitsverzeichnis endgültig gelöscht.</para>
+
+        <para><guimenu>Inhalt nicht löschen</guimenu>: Es wird lediglich der
+        Projekteintrag aus der Programmoberfläche entfernt. Die lokal
+        gespeicherten Projektdateien bleiben erhalten, so dass das Projekt
+        jederzeit wieder importiert werden kann.</para>
+      </section>
+
+      <section>
+        <title>Hochwasservorhersage durchführen</title>
+
+        <para>Über diesen Menüpunkt wird der Vorhersage-Wizard gestartet. Zur
+        Erläuterung der Vorgehensweise bei der Berechnung einer Vorhersage
+        wird auf <xref linkend="vorhersage_wizards" /> verwiesen.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Modellbearbeitung</title>
+
+      <para>Im Expertenmodus können in einem geöffneten Modell eine Vielzahl
+      von Änderungen durchgeführt werden. Dies betrifft sowohl die Änderung
+      einzelner Modellparameter oder Zeitreihen als auch die gesamte
+      Modellstruktur. Empfohlen wird, vor der Bearbeitung von Modellparametern
+      eine neue Modellvariante anzulegen. Dies bietet den Vorteil, dass beim
+      Speichern von Änderungen die Original-Dateien erhalten bleiben. Der
+      ursprüngliche Modellzustand ist somit jederzeit wieder
+      herstellbar.</para>
+
+      <para>Für die Bearbeitung der Modellparameter stehen folgende Funktionen
+      zur Verfügung:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Visualisierung von Modelldaten in Tabellen, Karten oder
+          Diagrammen</para>
+
+          <para>Abhängig von der Datenart können die einzelnen Modellparameter
+          in der Oberfläche dargestellt werden. Die Visualisierung der
+          geo-basierten Modelldaten (z.B. Einzugsgebiete, Gewässernetz,
+          Pegelstandorte) kann auf Grundlage von Shape-Dateien in Karten
+          erfolgen. Die Modelldaten selbst (z.B. Einzugsgebietsfläche, Name
+          eines Pegels) werden in Form von Tabellen dargestellt. Zur
+          grafischen Darstellung von Zeitreihen ist eine Diagramm-Ansicht in
+          der Oberfläche integriert (siehe <xref
+          linkend="grundfunktionen" />).</para>
+        </listitem>
+
+        <listitem>
+          <para>Editierung von Modellparametern in Tabellen oder
+          Eingabemasken</para>
+
+          <para>In Tabellen dargestellte Modellparameter können durch
+          händische Eingabe editiert werden. Dabei stehen dem Benutzer die
+          üblichen Funktionen wie kopieren, einfügen oder suchen/ersetzen von
+          Daten zur Verfügung. Einige Parameter werden in Eingabemasken
+          geändert.</para>
+        </listitem>
+
+        <listitem>
+          <para>Zuweisung von Zeitreihen zum Modell</para>
+
+          <para>Auf dem Server befindliche Zeitreihen können in das Modell
+          übernommen werden und bestimmten Elementen zugeordnet werden
+          (Pegelzeitreihen, Talsperrenabgaben), siehe auch <xref
+          linkend="zeitreihen_repository" />.</para>
+        </listitem>
+
+        <listitem>
+          <para>Definition von Rechenvarianten</para>
+
+          <para>Innerhalb eines Modells können unterschiedliche
+          Rechenvarianten definiert werden, die bspw. unterschiedliche
+          Simulationszeiträume oder Modellzustände beschreiben.</para>
+        </listitem>
+
+        <listitem>
+          <para>Editierung von Steuerdaten und operativen Daten einer
+          Rechenvariante</para>
+
+          <para>Für definierte Rechenvarianten sind die Steuerdaten (Zeitraum
+          der Simulation) sowie die operativen Daten jederzeit änderbar. Die
+          Rechenvarianten werden in vordefinierten Verzeichnissen abgelegt, in
+          denen die Parameter über Eingabemasken geändert werden
+          können.</para>
+        </listitem>
+      </itemizedlist>
+
+      <section id="modellbearbeitung">
+        <title>Editieren von Modellparametern (Beispiel)</title>
+
+        <para>Im nachfolgenden Abschnitt wird beispielhaft erläutert, wie
+        Modelldaten in der KALYPSO-Oberfläche visualisiert und mithilfe der
+        einzelnen Ansichten Änderungen in den Modellparametern vorgenommen
+        werden können. Dazu werden in der KALYPSO-Oberfläche eine Karten- und
+        eine Tabellenansicht der Einzugsgebiete für das Vorhersagemodell Weiße
+        Elster beispielhaft geöffnet (<xref
+        linkend="modellparameter_edit" />).</para>
+
+        <figure id="modellparameter_edit">
+          <title>Ansicht zur Änderung von Modellparametern</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/modellparameter_edit.png" scale="30" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Wird ein Teilgebiet in der Karte ausgewählt, erfolgt
+        gleichzeitig eine Markierung der entsprechenden Tabellenzeile. Genauso
+        kann dieser Vorgang umgekehrt werden: Durch Markieren einer Zeile der
+        Tabelle wird gleichzeitig das entsprechende Teilgebiet der Karte
+        hervorgehoben.</para>
+
+        <para>Zum Ändern von Modellparametern des ausgewählten Teilgebietes
+        können die Werte in der Tabelle editiert werden. Im vorliegenden Fall
+        wird der Faktor für die Gebietsniederschläge (faktn) des ausgewählten
+        Teilgebietes auf 1,5 erhöht (<xref
+        linkend="modellparameter_edit_gross" />).</para>
+
+        <figure id="modellparameter_edit_gross">
+          <title>Ändern eines Tabellenwertes</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/modellparameter_edit_gross.png"
+                         scale="50" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Durch Auswahl des Menüs <guimenu>Tabelle -&gt; Daten
+        speichern</guimenu> wird der geänderte Wert in die Modelldaten im
+        lokalen Arbeitsverzeichnis übernommen. Diese Vorgehensweise kann auf
+        alle Modelldaten angewendet werden. Beim Erstellen einer neuen
+        Rechenvariante (siehe <xref linkend="definition_rechenvarianten" />)
+        werden die geänderten Modelldaten mit in das jeweilige Verzeichnis
+        übernommen.</para>
+      </section>
+    </section>
+
+    <section id="definition_rechenvarianten">
+      <title>Definition von Rechenvarianten</title>
+
+      <para>Um Modellberechnungen aus dem Expertenmodus heraus zu starten,
+      müssen vom Benutzer Rechenvarianten definiert werden. Die Informationen
+      einer Rechenvariante werden vom Programm in einen zu definierenden
+      Ordner gepeichert. In einem Modell können mehrere Rechenvarianten
+      vorhanden sein, die entweder einzeln oder nacheinander abgearbeitet
+      werden. Ferner ist es auch möglich, aus dem Expertenmodus direkt in den
+      Vorhersagemodus zu wechseln, um mit einem geöffneten Modell
+      Hochwasser-Vorhersagen durchzuführen. Die Steuerung der Rechenläufe
+      erfolgt über das Menü <guimenu>Rechenvariante</guimenu>.</para>
+
+      <figure id="pic_menu_modell_unten">
+        <title>Hauptmenü Rechenvariante</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/expert_rechenvariante.png" scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <section id="zeitreihen_einlesen">
+        <title>Allgemeines zum Einlesen von Zeitreihen</title>
+
+        <para>Beim Anlegen einer neuen Rechenvariante bzw. beim Aktualisieren
+        der Zeitreihen einer bestehenden Rechenvariante werden alle benötigten
+        Zeitreihen für den vorgegebenen Zeitraum aus PSI-Compact ausgelesen.
+        Dabei erfolgt eine Kontrolle der einzelnen Werte jeder Zeitreihe
+        anhand des mitgelieferten Status. Enthalten die Zeitreihen nicht
+        ordnungsgemäße Werte, wird eine Warnung auf dem Bildschirm ausgegeben
+        (<xref linkend="zeitreihen_warnung" />).</para>
+
+        <figure id="zeitreihen_warnung">
+          <title>Bildschirmausgabe nach dem Einlesen von Zeitreihen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/zeitreihen_warnung.png" scale="70" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Die Bildschirmausgabe enthält Informationen über die Zeitreihen,
+        für die Warnungen oder Fehler vorliegen. Beim Klick auf
+        <emphasis>Details</emphasis> wird zusätzlich eine ausführliche
+        Auflistung der fehlerhaften Messwerte einschließlich der Ursache für
+        die Warnung angezeigt. Diese Informationen werden außerdem als
+        Ascii-Datei mit der Bezeichnung calcCase.log im Verzeichnis der
+        Rechenvariante gespeichert. Die ausgegebenen Warnungen und Hinweise
+        werden teilweise durch Symbole in den Zeitreihen-Tabellen
+        gekennzeichnet (vgl. hierzu <xref
+        linkend="tabellen_kennzeichnung" />).</para>
+      </section>
+
+      <section id="modellberechnung">
+        <title>Rechenvariante neu...</title>
+
+        <para>Bei Auswahl dieses Menüpunktes wird eine neue Rechenvariante für
+        das gerade aktive Modell definiert. Es folgt ein Auswahlfenster mit
+        der Aufforderung zur Angabe eines Ordners, in den die Rechenvariante
+        gespeichert werden soll. Es wird empfohlen vor dem Anlegen einer neuen
+        Rechenvariante einen Ordner anzulegen, in dem alle Rechenvarianten in
+        Form von Unterordnern abgelegt werden können. Nach Eingabe der
+        Steuerparameter und Bestätigung der Angaben durch
+        <guimenu>Fertigstellen</guimenu> werden die für die Berechnung
+        benötigten Modelldateien vom Programm in das angegebene Verzeichnis
+        kopiert.</para>
+      </section>
+
+      <section id="rechenvariante_laden">
+        <title>Vom Server laden...</title>
+
+        <para>Mit dieser Option können auf dem Server abgelegte
+        Rechenvarianten in das aktuelle Modell geladen werden. Es erscheint
+        eine Auswahl der auf dem Server archivierten Rechenvarianten. Nach
+        Bestätigung durch Klick auf <guimenu>Fertigstellen</guimenu> werden
+        die Varianten unter gleichem Namen in den Unterordner kopiert, der in
+        der Serverstruktur angezeigt wird. Die Zeitreihen einer Rechenvariante
+        werden bei diesem Schritt nicht aktualisiert. Dies muss bei Bedarf mit
+        dem Menüpunkt <guimenu>Zeitreihen aktualisieren</guimenu> vorgenommen
+        werden.</para>
+      </section>
+
+      <section id="rechenvariante_kopieren">
+        <title>Rechenvariante kopieren...</title>
+
+        <para>Im lokalen Modellverzeichnis können bereits angelegte
+        Rechenvarianten kopiert werden. Dabei wird der auszuwählende Ordner
+        unter einem anderen Namen im gleichen Verzeichnis abgelegt. Alle
+        Dateien der ausgewählten Rechenvariante werden in das neue Verzeichnis
+        kopiert. D.h., dass alle Modell- und Steuerparameter, Randbedingungen
+        etc. Eins zu Eins aus einer bestehenden Rechenvariante übernommen
+        werden.</para>
+      </section>
+
+      <section id="rechenvariante_berechnung">
+        <title>Berechnung durchführen</title>
+
+        <para>Nach Auswahl eines Modells bzw. einer oder mehrerer
+        Rechenvarianten im Navigator-Fenster können Modellberechnungen über
+        diesen Menüpunkt durchgeführt werden. Es erscheint ein Auswahlfenster,
+        in dem alle im Modell definierten Berechnungsvarianten aufgelistet
+        werden. Durch das Häkchen vor dem Namen kann die jeweilige
+        Rechenvariante aktiviert bzw. deaktiviert werden. Dabei können in
+        einem Rechenlauf beliebig viele Varianten berechnet werden. Der
+        aktuelle Fortschritt der Berechnung(en) wird mit Hilfe eines Balkens
+        dargestellt. Nach erfolgreich durchgeführter Berechnung werden die
+        Ergebnisse in Form von Zeitreihen in den Rechenlauf-Ordner
+        gespeichert. Die Speicherung erfolgt im lokalen Arbeitsverzeichnis.
+        Ggf. müssen die berechneten Ergebnisse vom Benutzer auf den Server
+        übertragen werden (siehe <xref
+        linkend="rechenvariante_archivieren" />).</para>
+      </section>
+
+      <section id="rechenvariante_aktualisieren">
+        <title>Zeitreihen aktualisieren</title>
+
+        <para>Nach Auswahl der entsprechenden Rechenvariante werden die im
+        lokalen Verzeichnis gespeicherten Zeitreihen durch Auswahl dieses
+        Menüpunktes neu vom Server geladen. Die bereits vorhandenen Zeitreihen
+        eines Rechenfalls werden überschrieben (Änderungen gehen verloren!).
+        Die Wahl dieser Option ist dann sinnvoll, wenn Änderungen in den
+        Zeitreihen zu verzeichnen sind. Bspw. wurde die ursprüngliche
+        Rechenvariante mit Prognose-Zeitreihen berechnet und soll erneut mit
+        gemessenen Zeitreihen berechnet werden. Auch bei manuell vorgenommenen
+        Änderungen von Zeitreihen kann es notwendig werden, diese erneut vom
+        Server einzulesen.</para>
+      </section>
+
+      <section id="rechenvariante_archivieren">
+        <title>Archivieren</title>
+
+        <para>Ausgewählte Rechenvarianten werden auf dem Server unter gleichem
+        Namen wie im lokalen Verzeichnis abgelegt. Die Speicherung der
+        Rechenvariante erfolgt innerhalb des Modellverzeichnisses auf dem
+        Server. Existiert bereits eine gleichnamige Rechenvariante, ist eine
+        Archivierung nicht möglich.</para>
+      </section>
+    </section>
+
+    <section id="modellergebnisse">
+      <title>Modellergebnisse</title>
+
+      <para>Ergebnisse aus Modellberechnungen werden in den Unterordner
+      <guimenu>Ergebnisse</guimenu> im jeweiligen Verzeichnis der
+      Rechenvariante geschrieben. Modellabhängig handelt es sich hierbei um
+      berechnete Abfluss-, Wasserstands- oder Talsperreninhalts-Zeitreihen,
+      die für die entsprechenden Pegelstationen oder Talsperren im ZML-Format
+      herausgeschrieben werden. Die ausgegebenen Zeitreihen können in der
+      Programmoberfläche auf verschiedene Weise visualisiert und
+      weiterverarbeitet werden. Nach Doppelklick auf eine Zeitreihe öffnet
+      sich ein Auswahlfenster, in dem der Benutzer verschiedene Möglichkeiten
+      angezeigt bekommt:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis>Visualisierung im Diagramm</emphasis></para>
+
+          <para>Die Zeitreihe wird grafisch in einem Diagramm dargestellt.
+          Ausrichtung und Beschriftung der Achsen erfolgen automatisch anhand
+          der in der Zeitreihe enthaltenen Informationen. In der
+          Diagramm-Ansicht besteht keine Möglichkeit zur Editierung der Daten.
+          Dies kann durch Einlesen der Zeitreihe in das mitgelieferte
+          Grafik-Programm realisiert werden, in dem eine Vielzahl von Optionen
+          zur Visualisierung und Editierung von Zeitreihen gegeben ist (vgl.
+          <xref linkend="zeitreihen_bearbeiten" />).</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>Anzeige in Tabellen</emphasis></para>
+
+          <para>Die Werte einer Zeitreihe werden in Form einer Tabelle
+          ausgegeben. Die Tabelle besteht aus einer Zeitspalte (Datum,
+          Uhrzeit) und dem dazugehörigen Wert (Wasserstand, Abfluss). Alle in
+          der Tabelle enthaltenen Werte können editiert werden. Es gelten die
+          allgemeinen Änderungsoptionen, die in <xref
+          linkend="ansichtssteuerung" /> beschrieben werden. Vorgenommene
+          Änderungen werden über <guimenu>Datei -&gt; Speichern</guimenu> in
+          das Projektverzeichnis übernommen. Über <guimenu>Datei -&gt;
+          Speichern unter...</guimenu> kann die Tabelle in einen beliebigen
+          Ordner im Projektverzeichnis gespeichert werden.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>Ablegen der Ergebnisse in das
+          Berichtswesen</emphasis></para>
+
+          <para>Dargestellte Diagramme und Tabellen können zur Dokumentation
+          der Ergebnisse über die dazugehörige Schaltfläche in das
+          Berichtswesen abgelegt werden.</para>
+
+          <figure>
+            <title>Schaltfläche zum Ablegen von Dateien in das
+            Berichtswesen</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/icon_bericht.png" scale="120" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Dabei werden nicht die Daten als solche, sondern lediglich
+          Bilddateien (Diagramme und Lagepläne) bzw. durch Komma getrennte
+          Tabellen (csv-Format) exportiert. Bei Tabellen werden nur die
+          angezeigten Spalten exportiert. Der Aufruf der Funktion erfolgt im
+          jeweiligen Menü (<guimenu
+          id="menu_tabelle_berichtsablage">Tabelle</guimenu>, <guimenu
+          id="menu_diagramm_berichtsablage">Diagramm</guimenu>) unter <guimenu
+          id="menu_berichtsablage">Berichtsablage...</guimenu> . Es folgt eine
+          Eingabemaske, in der zusätzliche Informationen zu der exportierten
+          Datei eingetragen werden können (<xref
+          linkend="pic_berichtsablage" />).</para>
+
+          <figure id="pic_berichtsablage">
+            <title>Eingabemaske zur Berichtsablage</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/expert_berichtsablage.png" scale="50" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+
+        <listitem>
+          <para><emphasis>Exportieren von Ergebnissen</emphasis></para>
+
+          <para>Ergebnisdaten in Form von Tabellen können in einem Komma
+          getrennten Format exportiert werden (Menü <guimenu>Datei -&gt;
+          Exportieren...</guimenu>).</para>
+
+          <figure>
+            <title>Exportieren von Ergebniszeitreihen</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/zeitreihen_export.png" scale="50" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Nach Auswahl von <emphasis>Dateisystem</emphasis> kann als
+          Exportziel ein beliebiges Verzeichnis gewählt werden. Die Tabelle
+          wird unter einem anzugebenden Namen mit der Endung *.csv gespeichert
+          und kann mit gängigen Tabellenkalkulationsprogrammen
+          weiterverarbeitet werden. Zum Export der Zeitreihen in den
+          KALYPSO-Zeitreihendienst siehe <xref
+          linkend="zeitreihen_export" />.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+</chapter>

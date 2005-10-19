@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://elbe.wb.tu-harburg.de/2dModel" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wb="http://elbe.wb.tu-harburg.de/2dModel" xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/geometry.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
+	<!-- ==============================================================
+						global element declarations
+		============================================================== -->
+	<xs:element name="simulation2d" type="wb:simulation2dType" substitutionGroup="gml:_FeatureCollection"/>
+	<xs:element name="featurePoint" type="wb:fpParams" substitutionGroup="gml:_Feature"/>
+	<xs:element name="femMesh" type="wb:femPolygon" substitutionGroup="gml:_Feature"/>
+	<!-- ==============================================================
+					type definitions for state educational institutions
+		============================================================== -->
+	<xs:complexType name="simulation2dType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureCollectionType">
+				<xs:choice>
+					<xs:element name="comment" type="xs:string" minOccurs="0"/>
+					<!--xs:element ref="wb:featurePoint"/>
+					<xs:element ref="wb:elem"/-->
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="fpParams">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="id" type="xs:integer"/>
+					<xs:element name="geometry" type="gml:CoordType"/>
+					<xs:element name="xVelocity" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="yVelocity" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="riverDepth" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="waterLevel" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="timeGradient1" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="timeGradient2" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="timeGradient3" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="degreeOfFreedomOfOldTimeGradient1" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="degreeOfFreedomOfOldTimeGradient2" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="degreeOfFreedomOfOldTimeGradient3" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="TimeGradientOfFormerTimeWarps1" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="TimeGradientOfFormerTimeWarps2" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="TimeGradientOfFormerTimeWarps3" type="xs:float" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="info1" type="xs:float"/>
+					<xs:element name="info2" type="xs:float"/>
+					<xs:element name="info3" type="xs:float"/>
+					<xs:element name="info4" type="xs:float"/>
+					<xs:element name="info5" type="xs:float"/>
+					<xs:element name="info6" type="xs:float"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="femPolygon">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<!--consists of three or four edges -->
+					<xs:element ref="gml:polygonProperty"/>
+					<xs:element name="roughness" type="xs:string"/>
+					<xs:element name="color" type="xs:string"/>
+					<xs:element name="param1" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="param2" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="param3" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="param4" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="roughnessOld" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="roughnessInTimeWarp" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="orderOfProcessing" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="defaultMass" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

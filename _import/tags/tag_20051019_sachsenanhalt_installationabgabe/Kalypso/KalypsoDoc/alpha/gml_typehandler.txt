@@ -1,0 +1,14 @@
+Wo gibts nen switch?
+====================
+
+ButtonFeatureControl: um nen IFeatureDialog zu erzeugen
+ButtonModifier: für das Label des Knopfes
+FeatureviewHelper: um die Default-Control für die F-View zu erzeugen
+DefaultFeatureModifierFactory: um den IFeatureModifier zu erzeugen
+
+FeatureTypeBuilder: um das Schema zu parsen?
+GMLDocument_Impl: um die Property zu parsen
+GMLFactory: marshall
+FeatureFactory: unmarshall
+
+RectifiedGridCoverageFactory: spezial dinge (hack?)

@@ -1,0 +1,288 @@
+-----------------
+TODO´s:
+-----------------
++1) CreateNA überarbeiten
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		fertig
+	Kommentar:	Vergabe der ID´s, Links teilweise gesetzt
+	Bearbeiter: huebsch
+
++2) Editor Zeitreihenanbindung überarbeiten
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	Nur relativ im Rechenfall bearbeiten. Aus Rechenfall Basismodell erzeugen.
+	Bearbeiter: doemming
+
+3) Anfangswerte/ Restart
+	Wer: 		Pasche, Schröder
+	Wann: 		04.07.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Schema erstellen und ins Control Handhabung übernehmen, schreiben lesen von gml-ascii
+	Bearbeiter:	huebsch, doemming
+	
++4) Zeitflächenfunktion integrieren in Schema
+	Wer: 		Ingenieurbüros
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	zmlinlinetype als neuer type
+	Bearbeiter: huebsch, doemming, küpferle, schlienger
+	
++5) Versionsverwaltung
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	Version kann optional im Control angegegeben werden. Default ist zunächst lfug.
+	Bearbeiter:	doemming
+
++6) naControl.xsd überarbeiten
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	
+	Bearbeiter:	huebsch, doemming
+	
++7) Schema um Knoten zu Knoten erweitern
+	Wer: 		huebsch
+	Wann: 		06.07.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	schema in namodell.xsd 0.4 fertig. Knoten zu Knoten beziehungen werden beim berechnen mit extra strängen hinzugefügt (hierdurch sind zufluss und knotnezu knoten gleichzeitig möglich))
+	Bearbeiter:	doemming, huebsch
+	
+8) CreateNA erweitern
+	Wer: 		huebsch
+	Wann: 		02.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	zusätzliche Wizard-Page, welche weitere Informationen vom Benutzer abfraget bzgl. Bodenkorrekturwerte & KMParameter vorbereiten
+	Bearbeiter: kuepferle,huebsch
+
+9)  Bei Projekterstellung beim Mapping nicht gesetze Elemente mit default Werten aus dem Schema besetzen.
+	Wer: 		huebsch
+	Wann: 		02.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Studienarbeit Gehad als Grundlage für das Schema, default aus dem Schema setzen integrieren
+	Bearbeiter: doemming
+
+10) Beim ZMLInlineDialog Range automatisch finden
+	Wer: 		huebsch
+	Wann: 		26.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Absprache mit Marc
+	Bearbeiter: 
+
+-----------------
+Feature Requests:
+-----------------
+
++1) Excel Im- und Export der Tabellen
+	Wer: 		Ingenieurbüros
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	
+	Bearbeiter: doemming
+
++2) Zeitflächenfunktion Bearbeiten und Einlesen
+	Wer: 		Ingenieurbüros
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	Import über Excel in allgemeiner Form für den ZMLInline Editor. In namodell.xsd schema integriert.
+	Bearbeiter: doemming, huebsch
+
+3) Ergebnisablage (angepasste Berichtsablage an die Ergebnisadateien), Kalibrierungsprotokoll
+	Wer: 		Ingenieurbüros
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Entsteht mit dem Diff
+	Bearbeiter: ck, ms&gb
+
++4) Berechnung wahlweise von Pegel zu Pegel oder das Gesamtmodell
+	Wer: 		Ingenieurbüros
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	nacontrol erweitert - vorhandene zuflüsse übernehmen? in control.xsd version 0.4 eingefügt.default mäßig werden zuflüsse verwendet
+	Bearbeiter: huebsch, doemming
+
+5) Tabellen in den Tabellen - Werte übernehemen ermöglichen. Z.B. Kalinin-Miljukov oder Bodenkorrekturwerte von einem Strang/ Teilgebiet in ein anderes übernehmen.
+	Wer: 		Ingenieurbüros, Claudia
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	über marshalling
+	Bearbeiter:	doemming, küpferle?
+
++6) Im nacontrol.xsd annotations einfügen
+	Wer: 		Ingenieurbüros, Brüning
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:
+	Bearbeiter:	Huebsch
+
+7) Internationalisierung
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		angenommen
+	Kommentar:	Schemata weitestgehend übersetzt, Regionalisierung der Texte,Buttons usw. in arbeit
+	Bearbeiter:	Huebsch (Schemata), Text?
+
++8) weitere Knoten zu Knoten Beziehungen einfügen
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	SubstitutionGroup als branchingmember. zuflüsse aus dateien unabhängig von den anderen knoten zu knoten beziehungen möglich
+	Bearbeiter:	Huebsch,doemming
+
++9) Koordinatensystem sollte auch beim Import wählbar sein (zur Zeit epsg31467 festgelegt).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	Sollte im Code auch einheitlich durchgezogen werden (Modellunabhängig, da sonst Probleme bei
+				Modellen in Hamburg, Europa... mit global gesetztem CRS in den Preferences).
+				Alle Shapes werden jetzt mit Koordinatensystem angegeben.
+	Bearbeiter:	huebsch
+
++10) Versiegelte Fläche im Teilgebiet wird nicht bei Import gesetzt, sollte durch Import berechnet werden (evtl. aus Hydrotopimport).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	ist raus, da er nicht zur berechnung verwendet wird. styles für hydrotope zur visualisierung der versiegelungsgrade.
+	Bearbeiter:	huebsch
+	
+11) Anfangswerte in Schema übernehmen
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	huebsch, doemming
+	
+12) Synthetische berechnungen ermöglichen
+	Wer: 		
+	Wann: 		
+	Termin:		
+	Status:		offen
+	Kommentar:	Control erweitern, pns in gebietsdatei übernehmen (wird zur zeit n gesetzt).
+	Bearbeiter:	
+
+
+----------------------------------------------------------------------------------------------------------
+-----
+Bugs:
+-----
+
+1) GrafikTool öffnen führt zu einfrieren der kalypso-ansicht bis zum beenden des grafiktools.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen (unschön)
+	Kommentar:	modaler dialog, in allgemeine todo liste übertragen
+	Bearbeiter:	
+
++2) Grafiktoool kann nicht direkt für *.odt Vorlage geöffnet werden, obwohl das symbol aktiviert ist. man muss also die *.odt immer erst speichern.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	
+	Bearbeiter:	ms
+
+3) maximale Perkolationsrate wird nicht angezeigt (Hydrotope), da sie in Wassenschaftlicher Schreibweise vorliegt (1.0E5).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	Pattern der wissenschaftlichen Schreibweise in Tabellen hinzufügen/ erlauben?
+	Bearbeiter:	
+
++4) Hydrotope werden nicht vollständig korrekt den Teilgebieten zugeordnet - wie zuweisen?
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	java topologiesuite verwendet. massage an den benutzer, falls abweichung zu groß (fehler in den hydrotopen!!!)
+	Bearbeiter:	doemming, huebsch
+
++5) Beim Modellimport aus Shapedateien werden einige Relationen unvollständig und fälschlicher weise gesetzt (href#). da die id fehlt (href ist invollständig) scheint es als seinen die Relationen vorhanden und man kann an dieser stelle keine neuen Relationen setzen. Wird das Modell nach einer Änderung gespeichert werden die unvollständigen Relationen nicht mehr gespeichert (das Modell kann jetzt normal bearbeitet werden).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	
+	Bearbeiter:	Hübsch, doemming
+
+5) Beim Zeitreihenimport ist der next Button auch auf der letzten Seite aktiv.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	in allgemeine TODO lIste übertragen
+	Bearbeiter:	doemming
+
+6) StyleEditor: Symbolizerauswahl auf den gewählten/editierten Symbolizer abstimmen; x und y werden nicht gespeichert.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:	
+
++7) Teilgebietsfläche wird als long beim import nicht richtig eingelesen.
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	Cast auf long war nicht richtig angewendet.
+	Bearbeiter:	doemming, huebsch
+
++8) Bei nicht erfolgreicher Berechnung des Fortran-Programmes werden auch nicht die log-Dateien übertragen.
+    Diese sind jedoch für die Fehlersuche notwendig, damit man nicht auf dem Server nachschauen muss (ist
+    als "normaler" Nutzer nicht möglich).
+	Wer: 		Hübsch
+	Wann: 		09.06.2005
+	Termin:		?
+	Status:		erledigt
+	Kommentar:	Es werden jetzt die Log-Dateien zurückgeschrieben.
+	Bearbeiter:	huebsch
+
++9) Es werden nicht alle im nacontrol.xsd Schema verfügbaren Ergebnisse beim zurückschreiben unterstützt.
+	Wer: 		Hübsch
+	Wann: 		04.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	alle zeitreihen verfügbar, featureview für nacontrol
+	Bearbeiter:	huebsch
+	
+10) Zeitverschiebung bei zurückgegebenen ergebnissen.	
+	Wer: 		Hübsch
+	Wann: 		16.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	es gibt eine zeitverschiebung um 1 std, da keine zeitzone beim zurückschreiben verwendet wird.
+	Bearbeiter:
+
+11) Werte in zmlinlineDialog nur bis 3 Nachkommastellen zu bearbeiten. Auch nur dies wird exportiert!
+	Wer: 		Hübsch
+	Wann: 		26.08.2005
+	Termin:		?
+	Status:		offen
+	Kommentar:	
+	Bearbeiter:
