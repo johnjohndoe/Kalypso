@@ -33,7 +33,7 @@ public class Profil implements IProfil, IProfilConstants
   {
 
     final IProfilDevider result = m_profil.addDevider( point, devider );
-    fireDeviderChanged( point, result );
+    fireDeviderChanged( point, result, null );
     return result;
 
   }
@@ -111,12 +111,12 @@ public class Profil implements IProfil, IProfilConstants
 
   
 
-  public void fireDeviderChanged( final IProfilPoint point, final IProfilDevider devider )
+  public void fireDeviderChanged( final IProfilPoint point, final IProfilDevider devider, Object property )
   {
     final IProfilListener[] listeners = m_listeners
         .toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener l : listeners )
-      l.onDeviderChanged( point, devider );
+      l.onDeviderChanged( point, devider, property );
   }
   public void fireDeviderRemoved(final IProfilDevider[] deviders )
   {
@@ -279,7 +279,7 @@ public class Profil implements IProfil, IProfilConstants
   {
     final IProfilPoint oldPkt = m_profil.moveDevider( devider, newPosition );
 
-    fireDeviderChanged( oldPkt, devider );
+    fireDeviderChanged( oldPkt, devider, null );
 
     return oldPkt;
   }
@@ -412,7 +412,7 @@ public class Profil implements IProfil, IProfilConstants
   public void setValueFor( IProfilDevider devider, Object property ,Object value)
   {
     m_profil.setValueFor(devider,property,value );
-    fireDeviderChanged( null, devider );
+    fireDeviderChanged( null, devider, null );
 
   }
 

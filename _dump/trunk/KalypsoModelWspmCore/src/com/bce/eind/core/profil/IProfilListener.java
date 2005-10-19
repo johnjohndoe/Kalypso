@@ -31,8 +31,9 @@ public interface IProfilListener
    * 
    * @param oldPoint wenn != Null wurde der Trenner verschoben
    * @param devider
+   * @param property TODO
    */
-  public void onDeviderChanged( final IProfilPoint oldPoint, final IProfilDevider devider );
+  public void onDeviderChanged( final IProfilPoint oldPoint, final IProfilDevider devider, Object property );
   
   public void onDeviderRemoved(final IProfilDevider[] deviders);
 }

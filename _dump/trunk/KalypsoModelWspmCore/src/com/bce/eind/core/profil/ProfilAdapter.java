@@ -36,7 +36,7 @@ public class ProfilAdapter implements IProfilListener
    * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.changes.PointChange[])
    */
  
-  public void onDeviderChanged( IProfilPoint oldPoint, IProfilDevider devider )
+  public void onDeviderChanged( IProfilPoint oldPoint, IProfilDevider devider, Object property )
   {
      
   }

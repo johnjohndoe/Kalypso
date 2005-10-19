@@ -74,14 +74,18 @@ public interface IProfilPoint
       m_parameters.put( PARAMETER.PRECISION, precision );
     }
 
-    public Object setParameter( Object key, Object value )
-    {
-      return m_parameters.put( key, value );
-    }
+    /*
+     * public Object setParameter( Object key, Object value ) { return m_parameters.put( key, value ); }
+     */
 
     public Object getParameter( Object key )
     {
       return m_parameters.get( key );
+    }
+
+    public void setVisible( final boolean value )
+    {
+      m_parameters.put( PARAMETER.VISIBLE, value );
     }
 
     @Override
@@ -90,7 +94,7 @@ public interface IProfilPoint
       return m_parameters.get( PARAMETER.LABEL ).toString();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private final HashMap<Object, Object> m_parameters = new HashMap();
 
   }

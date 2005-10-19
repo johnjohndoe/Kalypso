@@ -91,10 +91,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
     for( POINT_PROPERTY pd : newProperties )
       m_points.addProperty( pd );
 
-    if( pointProperty == POINT_PROPERTY.RAUHEIT )
-    {
-      pointProperty.setParameter( RAUHEIT_TYP.class, IProfilConstants.DEFAULT_RAUHEIT_TYP );
-    }
+    
     return newProperties;
   }
 
