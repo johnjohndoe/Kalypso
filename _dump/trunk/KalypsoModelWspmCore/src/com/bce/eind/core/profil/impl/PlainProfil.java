@@ -8,12 +8,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.bce.eind.core.profil.IPlainProfil;
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
+import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilBuildingFactory;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
@@ -32,7 +32,7 @@ import com.bce.eind.core.profil.util.ProfilUtil;
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
  */
-public class PlainProfil implements IPlainProfil, IProfilConstants
+public class PlainProfil implements IProfil, IProfilConstants
 {
   private IProfilBuilding m_building;
 
@@ -55,8 +55,8 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#addDevider(com.bce.eind.core.profil.IProfilPoint,
-   *      com.bce.eind.core.profil.IPlainProfil.DEVIDER_TYP)
+   * @see com.bce.eind.core.profil.IProfil#addDevider(com.bce.eind.core.profil.IProfilPoint,
+   *      com.bce.eind.core.profil.IProfil.DEVIDER_TYP)
    */
   public IProfilDevider addDevider( IProfilPoint point, DEVIDER_TYP devider )
   {
@@ -75,7 +75,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#addPointProperty(com.bce.eind.core.profil.POINT_PROPERTY)
+   * @see com.bce.eind.core.profil.IProfil#addPointProperty(com.bce.eind.core.profil.POINT_PROPERTY)
    */
   public POINT_PROPERTY[] addPointProperty( final POINT_PROPERTY pointProperty )
 
@@ -96,7 +96,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#findNearestPoint(double)
+   * @see com.bce.eind.core.profil.IProfil#findNearestPoint(double)
    */
   public IProfilPoint findNearestPoint( final double breite )
   {
@@ -121,7 +121,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#findPoint(double, double)
+   * @see com.bce.eind.core.profil.IProfil#findPoint(double, double)
    */
   public IProfilPoint findPoint( final double breite, final double delta )
   {
@@ -314,7 +314,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#removeDevider(com.bce.eind.core.profil.IProfilDevider)
+   * @see com.bce.eind.core.profil.IProfil#removeDevider(com.bce.eind.core.profil.IProfilDevider)
    */
   public IProfilDevider removeDevider( IProfilDevider devider )
   {
@@ -330,7 +330,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#removePointProperty(com.bce.eind.core.profil.POINT_PROPERTY)
+   * @see com.bce.eind.core.profil.IProfil#removePointProperty(com.bce.eind.core.profil.POINT_PROPERTY)
    */
   public POINT_PROPERTY[] removePointProperty( final POINT_PROPERTY pointProperty )
   {
@@ -350,7 +350,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#removeProperty(java.lang.Object)
+   * @see com.bce.eind.core.profil.IProfil#removeProperty(java.lang.Object)
    */
   public Object removeProperty( Object key )
   {
@@ -361,7 +361,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#setBuilding(com.bce.eind.core.profil.IPlainProfil.BUILDING_TYP)
+   * @see com.bce.eind.core.profil.IProfil#setBuilding(com.bce.eind.core.profil.IProfil.BUILDING_TYP)
    */
   public void setBuilding( final BUILDING_TYP buildingTyp ) throws ProfilDataException
   {
@@ -374,7 +374,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#setProperty(java.lang.Object, java.lang.Object)
+   * @see com.bce.eind.core.profil.IProfil#setProperty(java.lang.Object, java.lang.Object)
    */
   public void setProperty( Object key, Object value )
   {
@@ -383,7 +383,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#setValues(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfil#setValues(com.bce.eind.core.profil.changes.PointChange[])
    */
   public void setValues( final PointChange[] changes ) throws ProfilDataException
   {
@@ -398,7 +398,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#setValuesFor(java.util.List,
+   * @see com.bce.eind.core.profil.IProfil#setValuesFor(java.util.List,
    *      com.bce.eind.core.profil.POINT_PROPERTY, double)
    */
   public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
@@ -412,7 +412,7 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IPlainProfil#setValuesFor(com.bce.eind.core.profil.POINT_PROPERTY,
+   * @see com.bce.eind.core.profil.IProfil#setValuesFor(com.bce.eind.core.profil.POINT_PROPERTY,
    *      double)
    */
   public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
@@ -435,9 +435,21 @@ public class PlainProfil implements IPlainProfil, IProfilConstants
 
   }
 
-  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value ) throws ProfilBuildingException
+  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value ) throws ProfilDataException
   {
     ((AbstractBuilding)building).setValue(property,value);
+    
+  }
+
+  public void addProfilListener( IProfilListener pl )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public void removeProfilListener( IProfilListener pl )
+  {
+    // TODO Auto-generated method stub
     
   }
 

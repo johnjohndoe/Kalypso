@@ -21,12 +21,14 @@ public interface IProfilListener
   public void onPointPropertiesAdded( final POINT_PROPERTY[] addedProperties );
   
   public void onPointPropertiesRemoved( final POINT_PROPERTY[] removedProperties );
-  
+  /** Wird nur aufgerufen, wenn sich die Eigenschaft Building_typ ändert */
   public void onBuildingChanged(final IProfilBuilding oldBuilding);
-
+  /** Wird aufgerufen, wenn sich ein oder mehrere Eigenschaften Gebäudes geändert haben */
   public void onBuildingDataChanged( BuildingDataChange[] changes );
-  
-  public void onMetaDataChanged( final Object key, final Object value );
+  /** Wird aufgerufen, wenn sich ein oder mehrere Profil_Properties geändert haben
+   *  see IProfil.PROFIL_PROPERTY
+   *  */
+  public void onProfilDataChanged( final Object key, final Object value );
   /**
    * 
    * @param oldPoint wenn != Null wurde der Trenner verschoben
@@ -34,6 +36,6 @@ public interface IProfilListener
    * @param property TODO
    */
   public void onDeviderChanged( final IProfilPoint oldPoint, final IProfilDevider devider, Object property );
-  
+  /** Wird aufgerufen, wenn ein oder mehrere Trenner gelöscht wurden */
   public void onDeviderRemoved(final IProfilDevider[] deviders);
 }

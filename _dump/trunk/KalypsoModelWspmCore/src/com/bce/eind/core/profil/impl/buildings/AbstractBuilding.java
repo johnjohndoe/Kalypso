@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.bce.eind.core.profil.IProfilBuilding;
-import com.bce.eind.core.profil.ProfilBuildingException;
+import com.bce.eind.core.profil.ProfilDataException;
 
 /**
  * @author kimwerner
@@ -42,11 +42,11 @@ public abstract class AbstractBuilding implements IProfilBuilding
    *      TYPE)
    *      return maybe Null
    */
-  public Object getValue( BUILDING_PROPERTY buildingValue ) throws ProfilBuildingException
+  public Object getValue( BUILDING_PROPERTY buildingValue ) throws ProfilDataException
   {
     if( m_buildingValues.containsKey( buildingValue ) )
       return m_buildingValues.get( buildingValue );
-    throw new ProfilBuildingException( "Die Eigenschaft "+buildingValue.toString()+" wird von diesem Bauwerk nicht unterstützt." );
+    throw new ProfilDataException( "Die Eigenschaft "+buildingValue.toString()+" wird von diesem Bauwerk nicht unterstützt." );
   }
 
   /**
@@ -55,10 +55,10 @@ public abstract class AbstractBuilding implements IProfilBuilding
    *      Object)
    */
   public Object setValue( final BUILDING_PROPERTY property, final Object value )
-      throws ProfilBuildingException
+      throws ProfilDataException
   {
     if( !m_buildingValues.containsKey( property ) )
-      throw new ProfilBuildingException(  "Die Eigenschaft "+property.toString()+" wird von diesem Bauwerk nicht unterstützt.");
+      throw new ProfilDataException(  "Die Eigenschaft "+property.toString()+" wird von diesem Bauwerk nicht unterstützt.");
 
     final Object oldValue = m_buildingValues.get( property );
 

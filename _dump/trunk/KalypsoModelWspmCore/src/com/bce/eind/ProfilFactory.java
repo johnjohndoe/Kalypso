@@ -9,8 +9,8 @@ import com.bce.eind.core.profil.impl.Profil;
  */
 public class ProfilFactory
 {
-  public static IProfil createProfil( )
+  public static IProfil createProfil()
   {
     return new Profil();
-  }
+}
 }

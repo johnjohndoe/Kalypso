@@ -1,6 +1,6 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IPlainProfil.RAUHEIT_TYP;
+import com.bce.eind.core.profil.IProfil.RAUHEIT_TYP;
 
 public interface IProfilConstants
 {

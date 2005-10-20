@@ -55,10 +55,10 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onMetaDataChanged(com.bce.eind.core.profil.IProfil.METADATA,
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilDataChanged(com.bce.eind.core.profil.IProfil.METADATA,
    *      java.lang.String)
    */
-  public void onMetaDataChanged( Object key, Object value )
+  public void onProfilDataChanged( Object key, Object value )
   {
   }
 

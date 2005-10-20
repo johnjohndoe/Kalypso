@@ -10,7 +10,6 @@ import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.IProfilPoint;
-import com.bce.eind.core.profil.ProfilBuildingException;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
@@ -131,7 +130,7 @@ public class Profil implements IProfil, IProfilConstants
     final IProfilListener[] listeners = m_listeners
         .toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener l : listeners )
-      l.onMetaDataChanged( key, value );
+      l.onProfilDataChanged( key, value );
   }
 
   public void firePointPropertiesAdded( final POINT_PROPERTY[] addedProperties )
@@ -416,7 +415,7 @@ public class Profil implements IProfil, IProfilConstants
 
   }
 
-  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property, final Object value ) throws ProfilBuildingException
+  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property, final Object value ) throws ProfilDataException
   {
     m_profil.setValueFor(building,property,value );
     fireBuildingDataChanged( new BuildingDataChange[]{new BuildingDataChange(building,property,value)}); 
