@@ -67,9 +67,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 /**
  * 
  * @author huebsch
- * 
- * adapter for Timeseries in 'csv' format date format dd MM yyy hh mm value format comma seperator example: 02.06.2002
- * 16:30;0,0010
  *  
  */
 public class NativeObservationDatAdapter implements INativeObservationAdapter
@@ -80,13 +77,9 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
   //                                           01.01.1971 07:30:00 0,1
   //                                           02.01.1971 07:30:00 0
   //                                           03.01.1971 07:30:00 0
-  //  public static Pattern m_csvPattern = Pattern
-  //      .compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9\\.]+)" );
 
   public static Pattern m_datPattern = Pattern
   .compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2}).+?([0-9\\.]+)" );
-//  public static Pattern m_datPattern = Pattern
-//  .compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2})\\s+([0-9]+\\,{0,1}[0-9]*\\s*)" );
 
 
   private String m_title;
@@ -156,7 +149,6 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
               //  empty
               // fields
             }
-//            buffer.append( " 00" );
             final String correctDate = buffer.toString();
             final Date date = m_grapDateFormat.parse( correctDate );
             dateCollector.add( date );
