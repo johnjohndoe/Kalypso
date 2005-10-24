@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
@@ -45,6 +45,7 @@ import java.io.StringWriter;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Validator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -56,22 +57,26 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.template.featureview.Featuretemplate;
-import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.template.featureview.FeaturetemplateType.LayerType;
+import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gismapview.GismapviewType;
+import org.kalypso.template.gismapview.GismapviewType.LayersType;
+import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.LayerTypeUtilities;
+import org.kalypso.template.types.ObjectFactory;
 
 /**
+ * Launcher, um ein GML im Baum (GmlEditor) anzusehen.
+ * 
  * @author belger
  */
-public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
+public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
 {
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
   public String getFilename()
   {
-    return "<Standard Feature Editor>.gft";
+    return "<Standard Kartenansicht>.gmv";
   }
 
   /**
@@ -81,39 +86,56 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
-
-    return editorRegistry.getDefaultEditor( getFilename() );
+    return editorRegistry.findEditor( "org.kalypso.ui.editor.mapeditor.GisMapEditor" );
   }
 
   /**
-   * @throws CoreException
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
    */
   public IEditorInput createInput( final IFile file ) throws CoreException
   {
+    final org.kalypso.template.gismapview.ObjectFactory gisMapFactory = new org.kalypso.template.gismapview.ObjectFactory();
     try
     {
-      // ein default template erzeugen
-      final ObjectFactory factory = new ObjectFactory();
-      final LayerType layer = factory.createFeaturetemplateTypeLayerType();
+      if( "gml".equalsIgnoreCase( file.getProjectRelativePath().getFileExtension() ) )
+          throw new CoreException( StatusUtilities.createWarningStatus( "GML Dateien können nicht über die Standardkartenvorlage angezeigt werden.\nVersuchen Sie, eine leere Karte zu erzeugen und die Datei über 'Thema hinzufügen' zu laden." ) );
+      
+      final GismapviewType.LayersType.Layer layer = gisMapFactory.createGismapviewTypeLayersTypeLayer();
       LayerTypeUtilities.initLayerType( layer, file );
+      layer.setVisible( true );
+      layer.setName( file.getName() );
+      layer.setFeaturePath( "featureMember" );
 
-      final Featuretemplate featuretemplate = factory.createFeaturetemplate();
-      featuretemplate.setLayer( layer );
+      final LayersType layers = gisMapFactory.createGismapviewTypeLayersType();
+      layers.getLayer().add( layer );
+      layers.setActive( layer );
 
-      final Marshaller marshaller = factory.createMarshaller();
+      final ExtentType extent = new ObjectFactory().createExtentType();
+      extent.setRight( 0.0 );
+      extent.setLeft( 0.0 );
+      extent.setBottom( 0.0 );
+      extent.setTop( 0.0 );
+
+      final Gismapview gismapview = gisMapFactory.createGismapview();
+      gismapview.setLayers( layers );
+      gismapview.setExtent( extent );
+
+      final Validator validator = gisMapFactory.createValidator();
+      validator.validate( gismapview );
+
+      final Marshaller marshaller = gisMapFactory.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();
-      marshaller.marshal( featuretemplate, w );
+      marshaller.marshal( gismapview, w );
       w.close();
 
-      final String templateXml = w.toString();
+      final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbanannt>.gft", templateXml, file
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gmt", string, file
           .getFullPath() ) );
-
+      
       return input;
     }
     catch( final JAXBException e )
@@ -125,5 +147,4 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
-
 }

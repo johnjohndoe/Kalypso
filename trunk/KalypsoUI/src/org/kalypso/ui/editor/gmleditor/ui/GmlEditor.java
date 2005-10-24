@@ -1,12 +1,17 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
@@ -53,9 +58,39 @@ public class GmlEditor extends AbstractEditorPart implements ICommandTarget
     super.dispose();
   }
 
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input )
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
-  // not implemented
+    ByteArrayInputStream bis = null;
+    OutputStreamWriter writer = null;
+
+    try
+    {
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      writer = new OutputStreamWriter( bos );
+      m_viewer.saveInput( writer, monitor );
+      writer.close();
+
+      bis = new ByteArrayInputStream( bos.toByteArray() );
+      bos.close();
+      monitor.worked( 1000 );
+
+      final IFile file = input.getFile();
+      if( file.exists() )
+        file.setContents( bis, false, true, monitor );
+      else
+        file.create( bis, false, monitor );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( bis );
+      IOUtils.closeQuietly( writer );
+    }
   }
 
   public GmlTreeView getTreeView()

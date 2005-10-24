@@ -126,6 +126,9 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
 
   private boolean m_doSaveGml = false;
 
+  /** if true, illegal feature pathes are ignored */
+  private boolean m_ignoreIllegalFeaturePath = false;
+
   /**
    * @param doSaveGml
    *          If true, the read gml will be safed at the end of the process.
@@ -133,6 +136,11 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   public AbstractFeatureVisitorTask( final boolean doSaveGml )
   {
     m_doSaveGml = doSaveGml;
+  }
+
+  public void setIgnoreIllegalFeaturePath( boolean ignoreIllegalFeaturePath )
+  {
+    m_ignoreIllegalFeaturePath = ignoreIllegalFeaturePath;
   }
 
   public void setRunAsync( final boolean runAsync )
@@ -241,13 +249,28 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
           final String fp = m_featurePath[i];
           workspace.accept( visitor, fp, depth );
 
-          stati.add( statusFromVisitor( visitor ) );
+          final IStatus statusFromVisitor = statusFromVisitor( visitor );
+          if( !statusFromVisitor.isOK() )
+            stati.add( statusFromVisitor );
+        }
+        catch( final IllegalArgumentException e )
+        {
+          final IStatus status = StatusUtilities.statusFromThrowable( e );
+          if( m_ignoreIllegalFeaturePath )
+          {
+            logPW.println( "Feature wird ignoriert (" + status.getMessage() + ")" );
+          }
+          else
+          {
+            logPW.println( status.getMessage() );
+            stati.add( status );
+          }
         }
         catch( final Throwable t )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( t );
-          stati.add( status );
           logPW.println( status.getMessage() );
+          stati.add( status );
         }
         finally
         {

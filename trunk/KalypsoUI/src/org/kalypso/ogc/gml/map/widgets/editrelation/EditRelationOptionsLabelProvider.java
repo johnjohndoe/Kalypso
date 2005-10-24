@@ -1,5 +1,7 @@
 package org.kalypso.ogc.gml.map.widgets.editrelation;
 
+import java.net.URL;
+
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ui.ImageProvider;
@@ -89,16 +91,17 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
     final String lang = "de";
     if( element instanceof GMLWorkspace )
     {
-      return ( (GMLWorkspace)element ).getContext().toExternalForm();
+      final URL context = ( (GMLWorkspace)element ).getContext();
+      return context == null ? "<unbekannt>" : context.toExternalForm();
     }
     if( element instanceof FeatureType )
     {
-      Annotation annotation = ( (FeatureType)element ).getAnnotation( lang );
+      final Annotation annotation = ( (FeatureType)element ).getAnnotation( lang );
       return annotation.getLabel();
     }
     if( element instanceof FeatureTypeProperty )
     {
-      Annotation annotation = ( (FeatureTypeProperty)element ).getAnnotation( lang );
+      final Annotation annotation = ( (FeatureTypeProperty)element ).getAnnotation( lang );
       return annotation.getLabel();
     }
     if( element instanceof HeavyRelationType )

@@ -224,15 +224,16 @@ public class AddSymbolizerPanel
 
   protected void updateSymbolizerCombo()
   {
-    int selectionIndex = m_geometryCombo.getSelectionIndex();
-    String propName = m_geometryCombo.getItem( selectionIndex );
+    final int selectionIndex = m_geometryCombo.getSelectionIndex();
+    if( selectionIndex == -1 )
+      return;
+    final String propName = m_geometryCombo.getItem( selectionIndex );
     final String items[] = getSymbolizerTypesByFeatureProperty( propName );
     if( items != null && items.length > 0 )
     {
       m_symbolizerCombo.setItems( items );
       m_symbolizerCombo.select( 0 );
     }
-
   }
 
   public Symbolizer getSelection()

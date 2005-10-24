@@ -80,7 +80,7 @@ public class GisTemplateMapModell implements IMapModell
   private final IFeatureSelectionManager m_selectionManager;
 
   public GisTemplateMapModell( final Gismapview gisview, final URL context, final CS_CoordinateSystem crs,
-      IProject project, final IFeatureSelectionManager selectionManager )
+      final IProject project, final IFeatureSelectionManager selectionManager )
   {
     m_context = context;
     m_selectionManager = selectionManager;

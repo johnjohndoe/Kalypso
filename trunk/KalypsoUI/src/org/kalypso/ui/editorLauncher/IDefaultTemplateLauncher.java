@@ -41,6 +41,7 @@
 package org.kalypso.ui.editorLauncher;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 
@@ -59,5 +60,5 @@ public interface IDefaultTemplateLauncher
 
   public IEditorDescriptor getEditor();
 
-  public IEditorInput createInput( final IFile file );
+  public IEditorInput createInput( final IFile file ) throws CoreException;
 }

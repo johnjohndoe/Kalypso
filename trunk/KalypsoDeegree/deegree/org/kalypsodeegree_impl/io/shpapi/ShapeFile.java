@@ -154,7 +154,7 @@ public class ShapeFile
     {
       dbf = new DBaseFile( url, shp.getFileShapeType() );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       hasDBaseFile = false;
     }

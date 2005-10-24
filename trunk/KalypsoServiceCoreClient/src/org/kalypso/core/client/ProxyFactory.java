@@ -237,8 +237,13 @@ public class ProxyFactory
   private Stub getProxy( final String serverUrl, final String serviceName, final String intfName )
       throws ServiceException
   {
-    final String strEndPoint = serverUrl + "/" + serviceName + "/" + intfName;
+    String strEndPoint = serverUrl;
+    
+    if( !serverUrl.endsWith( "/" ) )
+        strEndPoint += "/";
 
+    strEndPoint += serviceName + "/" + intfName;
+    
     if( m_proxies.containsKey( strEndPoint ) )
       return (Stub)m_proxies.get( strEndPoint );
 

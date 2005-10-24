@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -227,6 +228,10 @@ public class FeatureEditor extends EditorPart
     try
     {
       progressService.busyCursorWhile( op );
+
+      setPartName( input.getName() );
+      if( input instanceof IFileEditorInput )
+        setContentDescription( ( (IFileEditorInput)input ).getFile().getFullPath().toOSString() );
     }
     catch( final InvocationTargetException e )
     {

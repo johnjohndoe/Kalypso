@@ -335,9 +335,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     fireModellEvent( modellEvent );
   }
 
-  public GM_Envelope getPanToPixelBoundingBox( double mx, double my )
+  public GM_Envelope getPanToPixelBoundingBox( final double mx, final double my )
   {
-    double ratio = m_height / m_width;
+    final double ratio = m_height / m_width;
 
     final GeoTransform transform = getProjection();
 
