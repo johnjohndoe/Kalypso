@@ -1,12 +1,15 @@
 package org.kalypso.ui.editor.gmleditor.ui;
 
 import java.io.Reader;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.Validator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -102,12 +105,14 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       handleTreeSelectionChanged( event );
     }
   };
-  
+
   public static final int DEFAULT_EXPATIONA_LEVEL = 3;
 
   private GmlTreeDropAdapter m_dropAdapter;
 
   protected final IFeatureSelectionManager m_selectionManager;
+
+  private Gistreeview m_gisTreeview;
 
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
@@ -272,7 +277,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent)modellEvent;
       final Feature parentFeature = structureEvent.getParentFeature();
-      
+
       if( !m_composite.isDisposed() )
       {
         final TreeViewer treeViewer = m_treeViewer;
@@ -281,7 +286,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
           public void run()
           {
             if( parentFeature == null )
-                treeViewer.refresh();
+              treeViewer.refresh();
             else
               treeViewer.refresh( parentFeature );
           }
@@ -391,13 +396,10 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       final InputSource is = new InputSource( r );
 
-      final Gistreeview gisTreeview = (Gistreeview)unmarshaller.unmarshal( is );
-
-      final LayerType input = gisTreeview.getInput();
+      m_gisTreeview = (Gistreeview)unmarshaller.unmarshal( is );
+      final LayerType input = m_gisTreeview.getInput();
       final String href = input.getHref();
       final String linktype = input.getLinktype();
-      input.getFeaturePath();
-
       m_key = new PoolableObjectType( linktype, href, context );
       m_pool.addPoolListener( this, m_key );
     }
@@ -405,6 +407,30 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Vorlage" ) );
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  protected void saveInput( final Writer writer, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Baumansicht speichern", 1000 );
+    try
+    {
+      final Validator validator = m_factory.createValidator();
+      validator.validate( m_gisTreeview );
+
+      final Marshaller marshaller = m_factory.createMarshaller();
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      
+      marshaller.marshal( m_gisTreeview, writer );
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Speichern der Vorlage" ) );
     }
     finally
     {

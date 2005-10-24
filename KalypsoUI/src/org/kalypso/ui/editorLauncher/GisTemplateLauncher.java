@@ -66,10 +66,12 @@ public class GisTemplateLauncher implements IEditorLauncher
     //    final Object gttDefault = "<Standard Datenansicht>";
     final IDefaultTemplateLauncher featureDefault = new FeatureTemplateLauncher();
     final IDefaultTemplateLauncher baumDefault = new GmlEditorTemplateLauncher();
+    final IDefaultTemplateLauncher mapDefault = new GisMapEditorTemplateLauncher();
 
     ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[]
     {
         featureDefault,
-        baumDefault } );
+        baumDefault,
+        mapDefault } );
   }
 }

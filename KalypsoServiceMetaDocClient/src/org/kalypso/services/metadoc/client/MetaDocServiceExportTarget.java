@@ -188,7 +188,8 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
   {
     final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
 
-    final IScenario scenario = authPlugin.getScenarioForCurrentUser();
+    final String scenarioID = configuration.getString( "currentScenarioId", "" );
+    final IScenario scenario = authPlugin.getScenario( scenarioID );
     final Map metadata;
     try
     {

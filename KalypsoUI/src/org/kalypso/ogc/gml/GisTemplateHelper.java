@@ -50,7 +50,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -105,10 +107,11 @@ public class GisTemplateHelper
     return loadGisMapView( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static final Gismapview loadGisMapView( final IFile file ) throws JAXBException, CoreException
+  public static final Gismapview loadGisMapView( final IStorage file ) throws JAXBException, CoreException
   {
     final InputSource is = new InputSource( file.getContents() );
-    is.setEncoding( file.getCharset() );
+    if( file instanceof IEncodedStorage )
+      is.setEncoding( ( (IEncodedStorage)file ).getCharset() );
 
     return loadGisMapView( is );
   }
@@ -167,10 +170,11 @@ public class GisTemplateHelper
     marshaller.marshal( modellTemplate, outStream );
   }
 
-  public static GM_Envelope getBoundingBox( Gismapview gisview )
+  public static GM_Envelope getBoundingBox( final Gismapview gisview )
   {
     final ExtentType extent = gisview.getExtent();
-    final GM_Envelope env=GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
+    final GM_Envelope env = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(),
+        extent.getTop() );
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
     {
@@ -179,7 +183,7 @@ public class GisTemplateHelper
         final CS_CoordinateSystem targetSRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
         if( orgSRSName != null && !orgSRSName.equals( targetSRS.getName() ) )
         {
-          // if srs attribute exists and it is not the target srs we have to convert it          
+          // if srs attribute exists and it is not the target srs we have to convert it
           final GeoTransformer transformer = new GeoTransformer( targetSRS );
           return transformer.transformEnvelope( env, orgSRSName );
         }
@@ -190,7 +194,7 @@ public class GisTemplateHelper
         e.printStackTrace();
       }
     }
-    return env ;
+    return env;
   }
 
   public static void fillLayerType( Layer layer, String id, String name, boolean visible, KalypsoWMSTheme wmsTheme )
@@ -212,7 +216,7 @@ public class GisTemplateHelper
    * @return gismapview new empty map with a layer list
    *  
    */
-  public static Gismapview emptyGisView( ) throws JAXBException
+  public static Gismapview emptyGisView() throws JAXBException
   {
     final GM_Envelope dummyBBox = GeometryFactory.createGM_Envelope( 0, 0, 0, 0 );
     final ObjectFactory maptemplateFactory = new ObjectFactory();

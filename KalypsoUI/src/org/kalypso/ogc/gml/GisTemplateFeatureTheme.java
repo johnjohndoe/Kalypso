@@ -76,6 +76,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 
 /**
  * <p>
@@ -302,8 +303,21 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
 
         // erst jetzt mit dem style laden anfangen!
-        for( int i = 0; i < m_styleKeys.length; i++ )
-          pool.addPoolListener( this, m_styleKeys[i] );
+        if( m_styleKeys.length > 0 )
+        {
+          for( int i = 0; i < m_styleKeys.length; i++ )
+            pool.addPoolListener( this, m_styleKeys[i] );
+        }
+        else
+        {
+          final DefaultStyleFactory defaultStyleFactory = KalypsoGisPlugin.getDefaultStyleFactory();
+          final UserStyle style = defaultStyleFactory.createUserStyle( getFeatureType(), "<generierter Standard-Stil>" );
+
+          final KalypsoUserStyle kus = new KalypsoUserStyle( style );
+          addStyle(kus);
+          
+          fireModellEvent( null );
+        }
       }
 
       // styles
@@ -397,7 +411,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
-  public void removeStyle( KalypsoUserStyle style )
+  public void removeStyle( final KalypsoUserStyle style )
   {
     if( m_theme != null )
       m_theme.removeStyle( style );

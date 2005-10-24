@@ -43,9 +43,13 @@ package org.kalypso.metadoc.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -83,13 +87,23 @@ public final class ExportWizard extends Wizard
   public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell, final ImageDescriptor defaultImage )
       throws CoreException
   {
+    this( target, factory, shell, defaultImage, new Properties() );
+  }
+
+  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell, final ImageDescriptor defaultImage, final Properties initialConfiguration ) throws CoreException
+  {
     m_target = target;
     m_shell = shell;
 
     setNeedsProgressMonitor( true );
 
     final IPublishingConfiguration configuration = new PublishingConfiguration( new BaseConfiguration() );
-
+    for( final Iterator iter = initialConfiguration.entrySet().iterator(); iter.hasNext(); )
+    {
+      final Map.Entry entry = (Map.Entry)iter.next();
+      configuration.addProperty( (String)entry.getKey(), entry.getValue());
+    }
+    
     // one settings-entry per target and factory
     final String settingsName = target.getClass().toString() + "_" + factory.getClass().toString();
 
@@ -107,6 +121,8 @@ public final class ExportWizard extends Wizard
     for( int i = 0; i < targetPages.length; i++ )
       addPage( targetPages[i] );
 
+    final Configuration metadataExtensions = m_target.getMetadataExtensions();
+
     // operation which will be called for finish
     m_operation = new WorkspaceModifyOperation()
     {
@@ -117,7 +133,7 @@ public final class ExportWizard extends Wizard
           
         try
         {
-          final IExportableObject[] objects = factory.createExportableObjects( configuration, m_target.getMetadataExtensions() );
+          final IExportableObject[] objects = factory.createExportableObjects( configuration, metadataExtensions );
 
           monitor.beginTask( "Export", objects.length );
 

@@ -42,6 +42,7 @@ package org.kalypso.metadoc.ui;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -73,15 +74,22 @@ public class ExportDocumentsWizard extends Wizard
   private final Shell m_shell;
   private final DisposeHelper m_disposer;
   private final IExportTarget m_target;
+  private final Properties m_initialConfiguration;
 
   /**
    * Calls full constructor with no extra pages
    */
   public ExportDocumentsWizard( final Shell shell, final IExporter[] exporter, final IExportTarget target )
   {
+    this( shell, exporter, target, new Properties() );
+  }
+
+  public ExportDocumentsWizard( final Shell shell, final IExporter[] exporter, final IExportTarget target, final Properties initialConfiguration )
+  {
     m_shell = shell;
     m_exporter = exporter;
     m_target = target;
+    m_initialConfiguration = initialConfiguration;
     m_disposer = new DisposeHelper();
 
     setForcePreviousAndNextButtons( true );
@@ -109,7 +117,7 @@ public class ExportDocumentsWizard extends Wizard
     for( int i = 0; i < nodes.length; i++ )
     {
       final IExporter exporter = m_exporter[i];
-      nodes[i] = new ExportWizardNode( m_target, exporter, m_shell, imageDescriptor );
+      nodes[i] = new ExportWizardNode( m_target, exporter, m_shell, imageDescriptor, m_initialConfiguration );
       m_disposer.addDisposeCandidate( nodes[i] );
     }
 

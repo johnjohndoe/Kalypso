@@ -48,6 +48,7 @@ import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.GroupMarker;
@@ -270,23 +271,31 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
       throws Exception, CoreException
   {
-    if( !( input instanceof IFileEditorInput ) )
-      throw new IllegalArgumentException( "Kann nur Dateien laden" );
-
     // prepare for exception
     setMapModell( null );
 
     monitor.beginTask( "Kartenvorlage laden", 2000 );
 
-    final Gismapview gisview = GisTemplateHelper.loadGisMapView( ( (IFileEditorInput)input ).getFile() );
+    final Gismapview gisview = GisTemplateHelper.loadGisMapView( input.getStorage() );
 
     monitor.worked( 1000 );
 
-    final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
-    final URL context = ResourceUtilities.createURL( inputFile );
+    final URL context;
+    final IProject project;
+    if( input instanceof IFileEditorInput )
+    {
+      final IFile inputFile = ( (IFileEditorInput)getEditorInput() ).getFile();
+      context = ResourceUtilities.createURL( inputFile );
+      project = inputFile.getProject();
+    }
+    else
+    {
+      context = null;
+      project = null;
+    }
 
     final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault()
-        .getCoordinatesSystem(), inputFile.getProject(), m_selectionManager );
+        .getCoordinatesSystem(), project, m_selectionManager );
     setMapModell( mapModell );
 
     GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
@@ -352,7 +361,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
   {

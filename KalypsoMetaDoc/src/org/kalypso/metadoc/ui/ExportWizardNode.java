@@ -41,6 +41,8 @@
 
 package org.kalypso.metadoc.ui;
 
+import java.util.Properties;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -64,13 +66,15 @@ public class ExportWizardNode implements IWizardNode
 
   private IWizard m_wizard = null;
   private ImageDescriptor m_defaultImage;
+  private final Properties m_initialConfiguration;
 
-  public ExportWizardNode( final IExportTarget target, final IExporter exporter, final Shell shell, final ImageDescriptor defaultImage )
+  public ExportWizardNode( final IExportTarget target, final IExporter exporter, final Shell shell, final ImageDescriptor defaultImage, final Properties initialConfiguration )
   {
     m_shell = shell;
     m_target = target;
     m_exporter = exporter;
     m_defaultImage = defaultImage;
+    m_initialConfiguration = initialConfiguration;
   }
 
   /**
@@ -102,7 +106,7 @@ public class ExportWizardNode implements IWizardNode
     {
       try
       {
-        m_wizard = new ExportWizard( m_target, m_exporter, m_shell, m_defaultImage );
+        m_wizard = new ExportWizard( m_target, m_exporter, m_shell, m_defaultImage, m_initialConfiguration );
       }
       catch( final CoreException e )
       {

@@ -32,7 +32,7 @@
             enabled="true"
             icon="icon/add_row.gif"
             class="org.kaylpso.ui.view.action.AddThemeAction"
-            tooltip="Neues Thema zu activer Karte hinzufügen"/>
+            tooltip="Thema zu Karte hinzufügen"/>
    </extension>
    <extension
          id="dataimport"

@@ -209,7 +209,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
     if( original != null )
       dialog.setOriginalFile( original );
     else
-      dialog.setOriginalName( input.getName() );
+      dialog.setOriginalName( getTitle() );
 
     dialog.create();
 
@@ -306,7 +306,7 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
         {
           public void run()
           {
-            setDocumentTitle( input.getName() );
+            setDocumentTitle( input );
           }
         } );
 
@@ -370,7 +370,8 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -382,9 +383,11 @@ public abstract class AbstractEditorPart extends EditorPart implements IResource
     return m_commandTarget;
   }
 
-  protected void setDocumentTitle( final String name )
+  protected void setDocumentTitle( final IStorageEditorInput input )
   {
-    setContentDescription( name );
-    setPartName( name );
+    setPartName( input.getName() );
+    if( input instanceof IFileEditorInput )
+      setContentDescription( ( (IFileEditorInput)input ).getFile().getFullPath().toOSString() );
   }
+
 }

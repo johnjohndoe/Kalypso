@@ -225,6 +225,12 @@ public class ResourceBundle extends java.util.ResourceBundle
       {
         throw new FileNotFoundException( filename );
       }
+      
+      // TODO: macht das sinn? 
+      // das lesen past nicht zum Format der resource-dateien
+      // so wie hier gelesen wird, muss die Dateilänge am Anfang stehen
+      // meistens sinds aber einfache properties-dateien
+      // Das ganze resultiert in einem OutOfMemoryError in der übernächsten zeile
       final DataInputStream input = new DataInputStream( new BufferedInputStream( in ) );
       values = new String[input.readInt()];
       for( int i = 0; i < values.length; i++ )

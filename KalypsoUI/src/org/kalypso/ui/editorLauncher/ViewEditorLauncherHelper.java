@@ -53,8 +53,9 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
@@ -62,12 +63,12 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * Helper-Klasse für die Template-Auswahl
@@ -149,37 +150,38 @@ public class ViewEditorLauncherHelper
       final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
       for( int i = 0; i < templates.length; i++ )
       {
-        final IFile template = (IFile)templates[i];
-
-        // wars ein Default? dann extra behandeln
-        IEditorInput input = null;
-        IEditorDescriptor editorDescription = null;
-
-        final IDefaultTemplateLauncher defaultTemplate = (IDefaultTemplateLauncher)defaultTemplateMap.get( template );
-        if( defaultTemplate != null )
+        try
         {
-          editorDescription = defaultTemplate.getEditor();
-          input = defaultTemplate.createInput( file );
-        }
-        else
-        {
-          editorDescription = editorRegistry.getDefaultEditor( template.getName() );
-          input = new FileEditorInput( template );
-        }
+          final IFile template = (IFile)templates[i];
 
-        if( input != null && editorDescription != null )
-        {
-          final IWorkbenchPage activePage = workbench.getActiveWorkbenchWindow().getActivePage();
-          try
+          // wars ein Default? dann extra behandeln
+          IEditorInput input = null;
+          IEditorDescriptor editorDescription = null;
+
+          final IDefaultTemplateLauncher defaultTemplate = (IDefaultTemplateLauncher)defaultTemplateMap.get( template );
+          if( defaultTemplate != null )
           {
+            editorDescription = defaultTemplate.getEditor();
+            input = defaultTemplate.createInput( file );
+          }
+          else
+          {
+            editorDescription = editorRegistry.getDefaultEditor( template.getName() );
+            input = new FileEditorInput( template );
+          }
+
+          if( input != null && editorDescription != null )
+          {
+            final IWorkbenchPage activePage = workbench.getActiveWorkbenchWindow().getActivePage();
             activePage.openEditor( input, editorDescription.getId(), true );
           }
-          catch( final PartInitException e1 )
-          {
-            e1.printStackTrace();
-            
-            MessageDialog.openError( activePage.getActivePart().getSite().getShell(), "Fehler für Datei öffnen", e1.getLocalizedMessage() );
-          }
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+
+          final IStatus status = StatusUtilities.statusFromThrowable( e );
+          ErrorDialog.openError( shell, "Ansichtsauswahl", "Fehler beim Öfnen der Dateiansicht", status );
         }
       }
     }

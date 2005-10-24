@@ -47,16 +47,18 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
+import org.kalypso.template.types.LayerTypeUtilities;
 import org.kalypso.template.types.ObjectFactory;
 
 /**
@@ -92,25 +94,19 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
    */
-  public IEditorInput createInput( final IFile file )
+  public IEditorInput createInput( final IFile file ) throws CoreException
   {
-    final IPath projectRelativePath = file.getProjectRelativePath();
-
-    org.kalypso.template.gistreeview.ObjectFactory gisViewFact = new org.kalypso.template.gistreeview.ObjectFactory();
-    ObjectFactory typesFac = new ObjectFactory();
+    final org.kalypso.template.gistreeview.ObjectFactory gisViewFact = new org.kalypso.template.gistreeview.ObjectFactory();
     try
     {
-      LayerType type = typesFac.createLayerType();
-      Gistreeview gistreeview = gisViewFact.createGistreeview();
-      gistreeview.setInput( type );
-      type.setFeaturePath( "" );
-      //      type.setHref( "project:/" + file.getFullPath().removeFirstSegments( 1 ).toString() );
-      type.setHref( "project:/" + projectRelativePath );
-      type.setLinktype( "gml" );
-      type.setType( "simple" );
-      type.setId( "1" );
-      Marshaller marshaller = gisViewFact.createMarshaller();
+      final ObjectFactory typesFac = new ObjectFactory();
+      final LayerType type = typesFac.createLayerType();
+      LayerTypeUtilities.initLayerType( type, file );
 
+      final Gistreeview gistreeview = gisViewFact.createGistreeview();
+      gistreeview.setInput( type );
+
+      final Marshaller marshaller = gisViewFact.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();
@@ -120,20 +116,18 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( file.getName(), string, file
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmv", string, file
           .getFullPath() ) );
 
       return input;
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
-      e.printStackTrace();
-      return null;
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
-      e.printStackTrace();
-      return null;
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 }

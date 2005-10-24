@@ -13,6 +13,7 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -67,12 +68,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class DefaultStyleFactory
 {
-
   private static DefaultStyleFactory m_factory = null;
 
   private final String DEFAULT_STYLE_DRECTORY;
-
-  //  private static FeatureTypeProperty m_GeomProperty;
 
   private HashMap m_defalultStyles = new HashMap();
 
@@ -84,7 +82,7 @@ public class DefaultStyleFactory
     LOGGER.info( "SLD-Default-Katalog initialisiert mit DIR=" + dir );
   }
 
-  public static DefaultStyleFactory getFactory( String defaultStyleDirectory ) throws IOException
+  public static DefaultStyleFactory getFactory( final String defaultStyleDirectory ) throws IOException
   {
     if( defaultStyleDirectory != null || !defaultStyleDirectory.equals( "" ) )
     {
@@ -97,9 +95,9 @@ public class DefaultStyleFactory
     throw new IOException( "The name for the default style directory is not a valid path." );
   }
 
-  private String getStyle( FeatureType featureType, String styleName ) throws StyleNotDefinedException
+  private String getStyle( final FeatureType featureType, final String styleName ) throws StyleNotDefinedException
   {
-    StyledLayerDescriptor sld = createDefaultStyle( featureType, styleName );
+    final StyledLayerDescriptor sld = createDefaultStyle( featureType, styleName );
     return ( (StyledLayerDescriptor_Impl)sld ).exportAsXML();
   }
 
@@ -140,18 +138,30 @@ public class DefaultStyleFactory
     }
   }
 
-  private StyledLayerDescriptor createDefaultStyle( FeatureType featureType, String styleName )
+  private StyledLayerDescriptor createDefaultStyle( final FeatureType featureType, final String styleName )
       throws StyleNotDefinedException
   {
-    ArrayList symbolizer = new ArrayList();
+    final UserStyle userStyle = createUserStyle( featureType, styleName );
+
+    final Style[] styles = new Style[]
+    { userStyle };
+    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
+    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
+    return SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
+  }
+
+  /** Create a default user style for a given type name. */
+  public UserStyle createUserStyle( final FeatureType featureType, final String styleName )
+      throws StyleNotDefinedException
+  {
+    final ArrayList symbolizer = new ArrayList();
     if( featureType.getName().equals( "RectifiedGridCoverage" ) )
-    {
       symbolizer.add( createRasterSymbolizer() );
-    }
-    FeatureTypeProperty[] properties = featureType.getProperties();
+
+    final FeatureTypeProperty[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
     {
-      FeatureTypeProperty property = properties[i];
+      final FeatureTypeProperty property = properties[i];
       if( GeometryUtilities.isUndefinedGeometry( property ) )
       {
         symbolizer.add( StyleFactory.createPointSymbolizer() );
@@ -164,28 +174,21 @@ public class DefaultStyleFactory
       }
     }
 
-    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, (Symbolizer[])symbolizer
+    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, (Symbolizer[])symbolizer
         .toArray( new Symbolizer[symbolizer.size()] ) );
 
-    StyledLayerDescriptor sld = null;
-
-    Style[] styles = new Style[]
-    { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "empty Abstract", featureTypeStyle ) };
-    org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
-    { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
-    sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
-
-    return sld;
-
+    final UserStyle userStyle = (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "empty Abstract",
+        featureTypeStyle );
+    return userStyle;
   }
 
   public static StyledLayerDescriptor createDefaultStyle( String styleName, Symbolizer[] symbolizer )
   {
-    FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer );
+    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer );
 
     StyledLayerDescriptor sld = null;
 
-    Style[] styles = new Style[]
+    final Style[] styles = new Style[]
     { (UserStyle_Impl)StyleFactory.createStyle( styleName, styleName, "no Abstract", featureTypeStyle ) };
     org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[]
     { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };

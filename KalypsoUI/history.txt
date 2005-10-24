@@ -6,7 +6,17 @@ NB: für die Liste der BUGS, siehe KalypsoDoc/todos/TODOs.xls
 
 ###############################################################################
 
-- neue View: FeatureView: zeigt aktuelle selektiertes Feature als 'Formular' an
+Oktober 2005
+------------
+- Bugfix: Standard Baumansicht und Standard Featureview funktioniert jetzt auch für Shape-Dateien (Doppelklick auf Datei)
+- neue Standardansicht 'Standard Kartenansicht', öffnet Shapes als einziges Thema einer in Karte mit Default-Style
+- Speichern unter für Baum
+- Bugfix: Dateinamen für 'Speichern unter' der Standardansichten mit richtiger Endung
+
+vor Oktober 2005
+----------------
+
+- neue View: FeatureView: zeigt aktuell selektiertes Feature als 'Formular' an
 - neuer Menüpunkt 'Modell / Vorhersagen verwalten'
 
 - Implementierung vom LDAP-Zugriff (KalypsoSachsenAnhalt)
