@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="zeitreihen_repository">
+  <chapterinfo>
+    <date><indexterm>
+        <primary>Zeitreihenbrowser</primary>
+      </indexterm></date>
+  </chapterinfo>
+
   <title>Zeitreihenbrowser</title>
 
   <section>
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Allgemeines</primary>
+        </indexterm></date>
+    </sectioninfo>
+
     <title>Allgemeines</title>
 
     <para>Zur Verwaltung von Zeitreihen ist in der KALYPSO-Oberfläche eine
@@ -15,8 +27,6 @@
     über das Menü <guimenu>Fenster</guimenu> hinzugefügt werden (siehe auch
     <xref linkend="arbeiten_mit_ansichten" />).</para>
 
-    <para></para>
-
     <para>Die Funktion der Zeitreihen-Ablage besteht im Wesentlichen darin,
     die in Datenbanken verwalteten Wasserstands-, Niederschlags- und
     Temperaturzeitreihen aus der KALYPSO-Oberfläche anzuschauen und zu
@@ -25,15 +35,11 @@
     Dantenbank-Seite. Die Zeitreihen-Ablage ermöglicht ausdrücklich kein
     Editieren der Zeitreihen innerhalb der Datenbank!</para>
 
-    <para></para>
-
     <para>Mit der Zeitreihen-Ablage besteht zudem die Möglichkeit, weitere
     Zeitreihen Repositories hinzuzufügen. Dabei kann es sich z.B. um
     Fremddaten oder historische Daten aus einer lokalen Datenquelle handeln.
     Voraussetzung ist allerdings, dass die in der Datenquelle enthaltenen
     Zeitreihen im zml-Format vorliegen.</para>
-
-    <para></para>
 
     <para>Darüber hinaus stellt die Zeitreihen-Ablage ein wichtiges
     Hilfsmittel beim Modellaufbau dar. Beispielsweise sind
@@ -44,8 +50,6 @@
     der passenden Stelle in der entsprechenden Modelldatei eingefügt
     werden.</para>
 
-    <para></para>
-
     <para>Eine weitere Funktionalität der Zeitreihen-Ablage besteht im
     Datenexport. Somit können z.B. Zeitreihen aus einer Datenbank
     heruntergeladen und in ein beliebiges Verzeichnis im Netzwerk oder lokal
@@ -55,6 +59,12 @@
   </section>
 
   <section id="repository_ansichten">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Ablagen-Ansicht</primary>
+        </indexterm></date>
+    </sectioninfo>
+
     <title>Ablagen-Ansicht</title>
 
     <para>Bei Anwahl der Perspektive über die entsprechende Schaltfläche
@@ -87,8 +97,6 @@
     enthalten nicht immer konkrete Werte, sondern es können auch Verknüpfungen
     angegeben werden - wie evtl. im Falle der W-Q-Parameter.</para>
 
-    <para></para>
-
     <para>Alle Fenster innerhalb der Ablagen-Ansicht können generell über das
     Menü <guimenu>Fenster</guimenu> geöffnet werden. Die einzelnen Fenster
     können vom Benutzer beliebig angeordnet und/oder verschoben werden. Es
@@ -97,6 +105,12 @@
   </section>
 
   <section id="repository_zeitreihenverwaltung">
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Zeitreihenverwaltung</primary>
+        </indexterm></date>
+    </sectioninfo>
+
     <title>Zeitreihenverwaltung</title>
 
     <para>Die Verwaltung der Zeitreihen-Ablagen erfolgt über Funktionen, die
@@ -122,9 +136,6 @@
         </imageobject>
       </mediaobject>
     </figure>
-
-    <para></para>
-
     <para><emphasis role="bold">Ablage(n) hinzufügen</emphasis></para>
 
     <para>Der Benutzer kann beliebig viele Zeitreihen-Ablagen in die
@@ -168,16 +179,12 @@
     befindlichen Zeitreihen (sofern eine Zugangsberechntigung über den
     Kalypso-Server besteht).</para>
 
-    <para></para>
-
     <para><emphasis role="bold">Ablage entfernen</emphasis></para>
 
     <para>Mit dieser Schaltfläche wird eine Zeitreihen-Ablage aus der
     aktuellen Ansicht entfernt. Die entsprechenden Verzeichnisse (lokal oder
     auf dem Server) bleiben von diesem Löschvorgang jedoch physisch
     unangetastet.</para>
-
-    <para></para>
 
     <para><emphasis role="bold">Einstellungen der Ablage
     setzen</emphasis></para>
@@ -208,22 +215,16 @@
     eingelesen, soweit dies von der jeweiligen Ablage unterstützt wird
     (PSI-Compact hat eine Begrenzung von maximal 7 Monaten).</para>
 
-    <para></para>
-
     <para><emphasis role="bold">Ablage aktualisieren</emphasis></para>
 
     <para>Die Verzeichnisstruktur, der in der Ansicht enthaltenen
     Zeitreihen-Ablagen, wird neu eingelesen.</para>
-
-    <para></para>
 
     <para><emphasis role="bold">Alle Zweige des Baums
     reduzieren</emphasis></para>
 
     <para>Die Verzeichnisstruktur wird in der Ansicht bis auf die Überschrift
     reduziert (´Zuklappen´).</para>
-
-    <para></para>
 
     <para><emphasis role="bold">Alle Zweige des Baums
     anzeigen</emphasis></para>

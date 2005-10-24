@@ -50,22 +50,6 @@
       </listitem>
 
       <listitem>
-        <para>Diagramm-Ansicht (QuickView): Anhand der Diagramm-Ansicht werden
-        Zeitreihen (z.B. Wasserstandsganglinien oder Niederschlagsmessreihen)
-        als Ganglinie oder Blockdiagramm dargestellt. In der Diagramm-Ansicht
-        können mehrere Zeitreihen zugleich angezeigt werden. Zur Bearbeitung
-        von Zeitreihen wird das Grafikprogramm benutzt.</para>
-      </listitem>
-
-      <listitem>
-        <para>Grafikprogramm: Das Postprocessing von Berechnungsergebnissen
-        erfordert i.d.R. komplexe Operationen an Zeitreihen. Hierfür steht das
-        Grafikprogramm zur Verfügung, wo u.a. mehrere Zeitreihen gleichzeitig
-        dargestellt, Zeitreihen mit unterschiedlichen Ordinaten-Achsen
-        behandelt sowie Zeitreihenwerte verändert werden können.</para>
-      </listitem>
-
-      <listitem>
         <para>Tabellen-Ansicht: Die Tabellen-Ansicht erlaubt den Zugriff auf
         Modellparameter bzw. geografische Attribute, welche gleichzeitig mit
         der Kartenvorlage verknüpft sind. Ebenfalls sind Zeitreihenwerte mit
@@ -82,6 +66,22 @@
         betrachteten Daten in Baumform bereit. Innere Abhangigkeiten sind so
         editierbar.</para>
       </listitem>
+
+      <listitem>
+        <para>Diagramm-Ansicht (QuickView): Anhand der Diagramm-Ansicht werden
+        Zeitreihen (z.B. Wasserstandsganglinien oder Niederschlagsmessreihen)
+        als Ganglinie oder Blockdiagramm dargestellt. In der Diagramm-Ansicht
+        können mehrere Zeitreihen zugleich angezeigt werden. Zur Bearbeitung
+        von Zeitreihen wird das Grafikprogramm benutzt.</para>
+      </listitem>
+
+      <listitem>
+        <para>Grafikprogramm: Das Postprocessing von Berechnungsergebnissen
+        erfordert i.d.R. komplexe Operationen an Zeitreihen. Hierfür steht das
+        Grafikprogramm zur Verfügung, wo u.a. mehrere Zeitreihen gleichzeitig
+        dargestellt, Zeitreihen mit unterschiedlichen Ordinaten-Achsen
+        behandelt sowie Zeitreihenwerte verändert werden können.</para>
+      </listitem>
     </itemizedlist>
 
     <para>Die Ergonomie und Logik der Oberfläche ist ähnlich wie bei gängigen
@@ -95,19 +95,20 @@
     Zoomen innerhalb der Ansicht (siehe <xref
     linkend="ansichtssteuerung" />).</para>
 
-    <section>
+    <section id="gui-oeffnen_ansichten">
       <title>Öffnen einzelner Ansichten</title>
 
       <para>Der Navigator öffnet sich automatisch beim Start des Expertenmodus
       und zeigt die lokal verfügbaren Modelle an.</para>
 
-      <para>Die Ansichten für Karten, Tabellen und Diagrammen werden geöffnet,
-      indem die jeweilige Datei - d.h. Kartenvorlage (*.gmt), GIS-Tabelle
-      (*.gtt), Diagramm (*.odt) oder Zeitreihentabelle (*.ott) - im Navigator
-      ausgewählt wird. Wenn dabei die rechte Maustaste gedrückt wird, kann
-      über <guimenuitem>Öffnen mit</guimenuitem> ein für den Dateityp speziell
-      konfigurierter Editor gewählt werden. Z.B. ist dies im Falle der
-      Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
+      <para>Die Ansichten für Karten, Tabellen, Diagramme, Modellbäume und
+      Modellelemente werden geöffnet, indem die jeweilige Datei - d.h.
+      Kartenvorlage (*.gmt), GIS-Tabelle (*.gtt), Diagramm (*.odt) oder
+      Zeitreihentabelle (*.ott), Baumvorlage (*.gmv) oder Elementvorlage
+      (*.gft) - im Navigator ausgewählt wird. Wenn dabei die rechte Maustaste
+      gedrückt wird, kann über <guimenuitem>Öffnen mit</guimenuitem> ein für
+      den Dateityp speziell konfigurierter Editor gewählt werden. Z.B. ist
+      dies im Falle der Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
       linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
       Tabellen-Editor.</para>
 
@@ -123,8 +124,11 @@
       </figure>
 
       <para>Zusätzlich zum jeweils speziell konfigurierten Editor stehen auch
-      Texteditoren zur Verfügung, welche das Editieren des ursprünglichen XML-
-      bzw. GML-Formats erlauben.</para>
+      Editoren zur Verfügung, welche das Editieren des ursprünglichen XML-
+      bzw. GML-Formats erlauben. Neben dem einfachen Texteditor kann eine
+      Gesamtübersicht der Inhalte einer *.gml Datei mit der KALYPSO Standard
+      Baumansicht oder dem KALYPSO Standard Feature Editor erreicht
+      werden.</para>
 
       <para>Bei Doppelklick mit linker Maustaste auf die zu öffnende Datei
       wird derjenige Editor zum Öffnen benutzt, mit dem die Datei zuletzt
@@ -270,11 +274,10 @@
         </listitem>
 
         <listitem>
-          <para>Zeitreihendiagramm (*.odt)</para>
+          <para>Feature(Element)vorlage (*.gft)</para>
 
-          <para>Zeitreihen im zml-Format werden in einem Diagramm angezeigt,
-          Optional kann auch die Bearbeitung der Zeitreihe mit Hilfe des
-          Grafikprogramms erfolgen.</para>
+          <para>Diese Vorlage dient der Ansicht einzelner Elemente. Sie stellt
+          eine Gesamtübersicht der Daten eines Elementes dar.</para>
         </listitem>
 
         <listitem>
@@ -286,10 +289,11 @@
         </listitem>
 
         <listitem>
-          <para>Featurevorlage (*.gft)</para>
+          <para>Zeitreihendiagramm (*.odt)</para>
 
-          <para>Diese Vorlage dient der Ansicht einzelner Elemente. Sie stellt
-          eine Gesamtübersicht der Daten eines Elementes dar.</para>
+          <para>Zeitreihen im zml-Format werden in einem Diagramm angezeigt,
+          Optional kann auch die Bearbeitung der Zeitreihe mit Hilfe des
+          Grafikprogramms erfolgen.</para>
         </listitem>
       </itemizedlist>
 
@@ -325,14 +329,13 @@
       <para>Die Gliederung-Ansicht öffnet sich i.d.R. zusammen mit der
       Karten-Ansicht, sofern dies bei der letzten Arbeitssitzung so
       eingestellt wurde (Workspace). Andernfalls kann die Gliederung über das
-      Menü <guimenu>Fenster --&gt; Sicht anzeigen</guimenu> geöffnet werden.
-      In der Gliederung-Ansicht werden die Themen der Kartenvorlage gelistet.
-      In Anlehnung an übliche GIS-Funktionalitäten können die Themen einzeln
-      in der Karten-Ansicht an- und ausgeblendet werden (Häckchen vor dem
-      Thema aktivieren bzw. deaktivieren), die Darstellungsreihenfolge der
-      Themen kann verändert oder Themen gänzlich gelöscht werden. Letztere
-      Funktionen sind im Submenü in der Ansichtsleiste Gliederung
-      verfügbar.</para>
+      Menü <guimenu>Fenster &gt; Sicht anzeigen</guimenu> geöffnet werden. In
+      der Gliederung-Ansicht werden die Themen der Kartenvorlage gelistet. In
+      Anlehnung an übliche GIS-Funktionalitäten können die Themen einzeln in
+      der Karten-Ansicht an- und ausgeblendet werden (Häckchen vor dem Thema
+      aktivieren bzw. deaktivieren), die Darstellungsreihenfolge der Themen
+      kann verändert oder Themen gänzlich gelöscht werden. Letztere Funktionen
+      sind im Submenü in der Ansichtsleiste Gliederung verfügbar.</para>
 
       <figure id="navigation_karten_ansicht">
         <title>Navigation in der Karten-Ansicht</title>
@@ -347,13 +350,13 @@
 
       <para>Mit Hilfe des grünen Plus-Symbols in der Werkzeugleiste der
       Gliederung kann einer Karte ein neues Thema hinzugefügt werden. Die
-      Auswahl des neuen hinzuzufügenden Themas wird durch einen Wizard
+      Auswahl des neu hinzuzufügenden Themas wird durch einen Wizard
       vereinfacht. Es besteht die Möglichkeit im Projekt vorhandene
       (importierte) ESRI Shape Dateien, Geometriedaten aus einer GML-Instanz,
       Rasterdaten oder Daten von einem Web Feature Service bzw. Web Map
       Service hinzuzufügen. Durch einen Doppelklick auf die gewünschte
-      Datenform wird der spezifische Assistent zum Datenimport
-      gestartet.</para>
+      Datenform wird der spezifische Assistent zum Datenimport gestartet
+      (siehe <xref linkend="gui-layer_hinzufuegen" />).</para>
 
       <para>Das Layout der Karten-Ansicht bzw. der Kartenvorlage wird anhand
       des Style-Editors angepasst (siehe <xref linkend="style_editor" />).
@@ -371,8 +374,8 @@
       verändern</guimenu> ausgewählt werden kann, sodass sich die
       Style-Editor-Ansicht öffnet. Mit dem Style-Editor können
       Symboldarstellungen, Farben, Fonts, etc. interaktiv verändert werden.
-      Damit die Veränderungen für die Kartenvorlage wirksam werden, sind die
-      Styles entsprechend zu speichern.</para>
+      Damit die Veränderungen für die Kartenvorlage wirksam werden, ist der
+      veränderte Style entsprechend zu speichern.</para>
 
       <figure id="style_editor">
         <title>Veränderung der Karten-Ansicht / Kartenvorlage mit dem Style
@@ -392,8 +395,10 @@
       Aufrufe der Kartenvorlage wirksam sind.</para>
 
       <para>Eine neue Karte kann im Projekt durch den Menüpunkt <guimenu>Datei
-      --&gt; Neu--&gt; Andere</guimenu> hinzugefügt werden. Hierzu ist der
-      Assistent GiSMapView unter dem Ordner Andere auszuwählen.</para>
+      &gt; Neu &gt; Andere</guimenu> hinzugefügt werden. Hierzu ist der
+      Assistent GiSMapView unter dem Ordner Andere auszuwählen. Mit Hilfe des
+      Assistenten kann der Speicherort sowie der Name der neuen Karte bestimmt
+      werden.</para>
 
       <para id="pic_neue_karte"><figure>
           <title>Neue Karte erzeugen</title>
@@ -404,13 +409,43 @@
                          scale="60" />
             </imageobject>
           </mediaobject>
-        </figure>Mit Hilfe des Assistenten kann der Speicherort sowie der Name
-      der neuen Karte bestimmt werden.</para>
+        </figure></para>
 
-      <section>
+      <section id="gui-layer_hinzufuegen">
         <title>Layer hinzufügen</title>
 
-        <para>...</para>
+        <para>In einer neuen oder auch bestehenden Karte kann ein Layer mit
+        Hilfe des plus Symbols hinzugefügt werden.</para>
+
+        <figure>
+          <title>Button Layer hinzufügen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="img/gui/Button-Layer_hinzufuegen.png"
+                         scale="80" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Der neue Layer kann hierbei aus verschiedenen
+        Informationsquellen innerhalb des Arbeitsverzeichnisses oder durch
+        Anbindung eines Web Services eingebunden werden. Hierzu ist der dem
+        entsprechende Assistent durch Doppelklick im Auswahlfenster zu
+        starten. Im dann folgenden quellspezifischen Dialog wird die
+        Datenquelle eingebunden.</para>
+
+        <figure>
+          <title>Auswahl der Datenquelle</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="img/gui/layer_import_auswahl.png" scale="80" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
     </section>
 
@@ -451,7 +486,7 @@
       Aufrufe der Tabellenvorlage wirksam sind.</para>
 
       <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
-      der Menüpunkt <guimenu>Tabelle --&gt; Daten speichern</guimenu> gewählt
+      der Menüpunkt <guimenu>Tabelle &gt; Daten speichern</guimenu> gewählt
       werden. Alternativ kann auch die entsprechende Schaltfläche in der
       Menü-Leiste benutzt werden (<xref
       linkend="pic_tabelle_button" />).</para>
@@ -469,14 +504,97 @@
     </section>
 
     <section>
+      <title>Baumansicht (in Bearbeitung)</title>
+
+      <para>Sobald eine Baumvorlage (*.gmv) mit dem Baum-Editor oder eine
+      GML-Datei mit Hilfe der Standard Baumansicht geöffnet wird , erscheint
+      im Hauptmenü zwischen den Menüpunkten <guimenu>Modell</guimenu> und
+      <guimenu>Fenster</guimenu> ein zusätzlicher Menüpunkt
+      <guimenu>Baum</guimenu> (siehe <xref
+      linkend="navigation_tabellen_ansicht" />). Die Funktionen im Menü
+      <guimenu>Baum</guimenu> sind erst ausführbar, wenn eine Baum-Ansicht
+      aktiviert bzw. in diese hinein geklickt wird (Baumname wird farblich
+      hervorgehoben).</para>
+
+      <figure>
+        <title>Navigation in der Baumansicht</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/gui-navi_baum.png"
+                       scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Die Baumansicht dient dem allgemeinen Überblick der gesamten
+      Projektverknüpfung. Sie stellt die Verbindungen, Ableitungen und
+      Verknüpfungen im Modell in einer geordneten abwärts gerichteten
+      Baumstruktur dar. Primäre Funktionen im Baum sind das Hinzufügen und
+      Löschen von Elementen (Features), welche durch Klicken der rechten
+      Maustaste im Kontextmenü verfügbar werden. Zudem wird durch die Funktion
+      <guimenuitem>Feature editieren</guimenuitem> eine direkte Bearbeitung
+      der Einzelelemente durch die Verknüpfung mit dem Feature Editor
+      möglich.</para>
+
+      <figure>
+        <title>Kontextmenu in der Baumansicht</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/gui-baum_menue.png"
+                       scale="80" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section>
+      <title>Feature (Element) Ansicht (in Bearbeitung)</title>
+
+      <para>Die Feature Ansicht ist eine flexibel gestaltete Ansicht zur
+      Betrachtung einzelner Elemente oder Elementgruppen. Das Öffnen der
+      Ansicht ist aufgrund der Flexibilität durch verschiedenste Optionen
+      möglich, welche im Folgenden aufgeführt werden sollen:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Öffnen einer GML-Datei mit Hilfe des Standard Feature
+          Editors</para>
+        </listitem>
+
+        <listitem>
+          <para>Öffnen einer *.gft Datei mit dem Feature Editor</para>
+        </listitem>
+
+        <listitem>
+          <para>Ansicht der Selektierten Elemente (Karte, Tabelle) in der
+          geöffneten Feature View Ansicht</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Öffnen der Feature View Ansicht auf selektierte
+        Elemente</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/gui/gui-featureview_karte.png" scale="60" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section>
       <title>Tabellen-Ansicht (Zeitreihen)</title>
 
       <para>Zeitreihen im zml-Format (*.zml) können in der KALYPSO-Oberfläche
       als Tabelle oder Diagramm geöffnet werden (<xref
       linkend="navigation_ansichtsauswahl" />). Durch Doppelklick auf eine
-      Zeitreihe und Auswahl von <guimenu>&lt;Standard Tabellen
-      Editor&gt;</guimenu> wird die Zeitreihe in der Tabellen-Ansicht
-      dargestellt (<xref linkend="navigation_tabelle_zml" />).</para>
+      Zeitreihe und Auswahl von <guimenu>Standard Tabellen Editor</guimenu>
+      wird die Zeitreihe in der Tabellen-Ansicht dargestellt (<xref
+      linkend="navigation_tabelle_zml" />).</para>
 
       <figure id="navigation_ansichtsauswahl">
         <title>Ansichtsauswahl beim Öffnen einer Zeitreihe</title>
@@ -516,14 +634,14 @@
       des Häkchens).</para>
 
       <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
-      der Menüpunkt <guimenu>Tabelle --&gt; Daten speichern</guimenu> gewählt
+      der Menüpunkt <guimenu>Tabelle &gt; Daten speichern</guimenu> gewählt
       werden. Alternativ kann auch die entsprechende Schaltfläche in der
       Menü-Leiste benutzt werden (siehe <xref
       linkend="pic_tabelle_button" />). Alle Änderungen in den Zeitreihen
       betreffen die lokal gespeicherte zml-Datei.</para>
     </section>
 
-    <section>
+    <section id="gui-zml_diagramm_ansicht">
       <title>Diagramm-Ansicht (Zeitreihen)</title>
 
       <para>Durch Doppelklick auf eine Zeitreihe (*.zml) und Auswahl von
@@ -570,6 +688,113 @@
       entgegengesetz (von rechter unteren Ecke nach links oben) gezoomt
       .</para>
     </section>
+  </section>
+
+  <section>
+    <sectioninfo>
+      <date><indexterm>
+          <primary>Zeitreihenbearbeitung</primary>
+        </indexterm></date>
+    </sectioninfo>
+
+    <title>Zeitreihenbearbeitung</title>
+
+    <para>In der KALYPSO-Oberfläche wird als Zeitreihenformat ausschließlich
+    das ZML-Format unterstützt. Andere Textfomate können jedoch problemlos
+    über einen Import-Wizard in das ZML-Format überführt werden.</para>
+
+    <section>
+      <title>Importieren von Zeitreihen</title>
+
+      <para>Liegt eine externe Zeitreihe im Dateisystem vor, so kann diese im
+      Navigator durch die Importfunktion, welche durch das Menü der rechten
+      Maustaste bereitgestellt wird, in das ZML-Format konvertiert werden.
+      Hierzu ist als Importquelle <guimenuitem>Zeitreihen aus externen
+      Dateien</guimenuitem> auszuwählen (siehe <xref
+      linkend="gui_zml-import" />). Die Quellzeitreihe wird mit Speicherort
+      und Format festgelegt und dann Abhängig vom Format (Datentyp &amp;
+      Datenformat) in die Zielzeitreihe (*.zml-Zeitreihe) konvertiert.</para>
+
+      <figure id="gui_zml-import">
+        <title>Zeitreihenimport</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/gui-zml_import.png"
+                       scale="70" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Zur Zeit werden hierbei folgende Ausgangsformate
+      unterstützt:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>"grap"-Format</para>
+
+          <para>Datentyp: Niederschlag - N, Abfluss - Q, Temperatur - T,
+          Verdunstung - E, Wasserstand - W, Volumen - V</para>
+
+          <para>Datenformat: Wertepaare mit Datum, Uhrzeit (sekundengenau) und
+          Wert (durch Punkt getrennt).</para>
+
+          <para>dd MM yyyy HH mm ss Wert1 dd MM yyyy HH mm ss Wert2</para>
+
+          <para>Beispiel:</para>
+
+          <para>01.01.1971 07:30:00 0.100 02.01.1971 07:30:00 0.000 03.01.1971
+          07:30:00 0.000</para>
+        </listitem>
+
+        <listitem>
+          <para>"csv"-Format</para>
+
+          <para>Datentyp: Niederschlag - N, Abfluss - Q</para>
+
+          <para>Datenformat: Wertepaare mit Datum, Uhrzeit (minutengenau) und
+          Wert (durch Komma getrennt).</para>
+
+          <para>dd MM yyyy HH mm Wert1 dd MM yyyy HH mm Wert2</para>
+
+          <para>Beispiel:</para>
+
+          <para>02.06.2002 16:30;0,0010 02.06.2002 17:30;0,0005</para>
+        </listitem>
+
+        <listitem>
+          <para>"dat"-Format</para>
+
+          <para>Datentyp: Abfluss - E</para>
+
+          <para>Datenformat: Wertepaare mit Datum, Uhrzeit (sekundengenau) und
+          Wert (durch Komma getrennt).</para>
+
+          <para>dd MM yyyy HH mm ss Wert1 dd MM yyyy HH mm ss Wert2</para>
+
+          <para>Beispiel:</para>
+
+          <para>01.01.1971 07:30:00 0,1 02.01.1971 07:30:00 0 03.01.1971
+          07:30:00 0</para>
+        </listitem>
+
+        <listitem>
+          <para>"ex2"-Format</para>
+
+          <para>Datentyp: Verdunstung - E</para>
+
+          <para>Datenformat: Wertepaare mit Datum, Stunde und Wert (durch
+          Punkt getrennt).</para>
+
+          <para>dd MM yyyy HH Wert1 dd MM yyyy HH Wert2</para>
+
+          <para>Beispiel:</para>
+
+          <para>01 01 1971 12 0.127 02 01 1971 12 0.302 03 01 1971 12
+          0.136</para>
+        </listitem>
+      </itemizedlist>
+    </section>
 
     <section id="zeitreihen_bearbeiten">
       <title>Bearbeiten von Zeitreihen (Grafikprogramm)</title>
@@ -584,7 +809,7 @@
       <para>Um das Grafikprogramm aus der KALYPSO-Oberfläche zu starten,
       können die zu öffnenden Zeitreihen dirket mit dem Grafikprogramm
       geöffnet oder in einer Diagramm-Vorlage (*.odt) abgespeichert werden.
-      Dies kann unter <guimenu>Datei -&gt; Speichern unter</guimenu> bei
+      Dies kann unter <guimenu>Datei &gt; Speichern unter</guimenu> bei
       aktivierter Diagramm-Ansicht geschehen. Diagramm-Vorlagen können in
       einem beliebigen Ordner im lokalen Arbeitsbereich gespeichert werden. Zu
       beachten ist, dass die Dateiendung *.odt beim Speichern mit angegeben
@@ -606,18 +831,6 @@
 
       <para>Durch Klick auf die Schaltfläche öffnet sich das Grafik-Programm
       mit den in der Diagramm-Vorlage abgespeicherten Zeitreihen.</para>
-    </section>
-
-    <section>
-      <title>Baumansicht</title>
-
-      <para>...</para>
-    </section>
-
-    <section>
-      <title>Feature Ansicht</title>
-
-      <para>...</para>
     </section>
   </section>
 
@@ -648,7 +861,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/expert_modell.png" scale="50" />
+            <imagedata align="center" fileref="img/gui/expert_modell.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -712,16 +926,16 @@
 
         <para>Eine weitere Möglichkeit zum Öffnen eines bestehenden Projektes
         besteht über Aktivierung des Menüpunktes <guimenu
-        id="menu_datei_neu_projekt">Datei -&gt; Neu -&gt; Projekt</guimenu>.
-        Es folgt ein Auswahlfenster mit den zur Verfügung stehenden
-        Datenquellen (Server). Im weiteren Verlauf wird der Benutzer durch die
-        Strukturen des Servers geführt und erhält eine Liste mit den vorhanden
-        Projekten. Diese können durch Bestätigung mit
+        id="menu_datei_neu_projekt">Datei &gt; Neu &gt; Projekt</guimenu>. Es
+        folgt ein Auswahlfenster mit den zur Verfügung stehenden Datenquellen
+        (Server). Im weiteren Verlauf wird der Benutzer durch die Strukturen
+        des Servers geführt und erhält eine Liste mit den vorhanden Projekten.
+        Diese können durch Bestätigung mit
         <guibutton>Fertigstellen</guibutton> in die Programmoberfläche geladen
         werden.</para>
 
         <para>Zum Löschen eines Projektes wird das entsprechende Projekt im
-        Navigator-Fenster markiert und kann über <guimenu>Bearbeiten -&gt;
+        Navigator-Fenster markiert und kann über <guimenu>Bearbeiten &gt;
         Löschen</guimenu> aus der Programmoberfläche entfernt werden. Beim
         Löschen des Projektes bestehen zwei Möglichkeiten:</para>
 
@@ -1023,8 +1237,8 @@
           der Tabelle enthaltenen Werte können editiert werden. Es gelten die
           allgemeinen Änderungsoptionen, die in <xref
           linkend="ansichtssteuerung" /> beschrieben werden. Vorgenommene
-          Änderungen werden über <guimenu>Datei -&gt; Speichern</guimenu> in
-          das Projektverzeichnis übernommen. Über <guimenu>Datei -&gt;
+          Änderungen werden über <guimenu>Datei &gt; Speichern</guimenu> in
+          das Projektverzeichnis übernommen. Über <guimenu>Datei &gt;
           Speichern unter...</guimenu> kann die Tabelle in einen beliebigen
           Ordner im Projektverzeichnis gespeichert werden.</para>
         </listitem>
@@ -1076,8 +1290,8 @@
           <para><emphasis>Exportieren von Ergebnissen</emphasis></para>
 
           <para>Ergebnisdaten in Form von Tabellen können in einem
-          Komma-getrennten Format exportiert werden (Menü
-          <guimenu>Tabelle-&gt;Exportieren...</guimenu>).</para>
+          Komma-getrennten Format exportiert werden (Menü <guimenu>Tabelle
+          &gt; Exportieren...</guimenu>).</para>
 
           <figure>
             <title>Exportieren von Tabellen</title>

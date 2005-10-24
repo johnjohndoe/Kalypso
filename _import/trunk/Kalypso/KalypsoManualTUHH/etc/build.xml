@@ -160,6 +160,6 @@
   </target>
 
 
-  <target name="all" depends="html,pdf"/>
+  <target name="all" depends="html,pdf,eclipse-help"/>
   
 </project>

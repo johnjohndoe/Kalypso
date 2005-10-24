@@ -29,6 +29,6 @@
 	<xsl:param name="generate.index" select="1"/>
 	<xsl:param name="chunk.section.depth" select="2"/>
 	<xsl:param name="chunk.first.sections" select="1"/>
-	<xsl:variable name="ignore.image.scaling">1</xsl:variable>
+    <xsl:variable name="ignore.image.scaling">1</xsl:variable>
 
 </xsl:stylesheet>
