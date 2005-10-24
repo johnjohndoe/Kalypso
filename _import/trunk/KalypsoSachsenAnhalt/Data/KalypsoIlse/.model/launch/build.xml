@@ -40,13 +40,13 @@
 			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
 			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}" />
 			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}" />
-			<property name="scenarioId" featurepath="MetadataAssociation" featureProperty="scenarioId" defaultValue=""/>
+			<property name="scenarioId" featurepath="ScenarioAssociation" featureProperty="scenarioId" defaultValue=""/>
 		</kalypso.gmlProperty>
 		
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
 		
 		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
-		<kalypso.multiequals arg1="${scenarioId}" arg2="katastrophentest">
+		<kalypso.multiequals arg1="${scenarioId}" arg2="test">
 			<!-- Links fürs Abholen der Vorhersage-Zeitreihen -->
 			<property name="wiski_vergangenheit_link" valueThen="wiski_simulation_vergangenheit" valueElse="wiski_vergangenheit"/>
 			
