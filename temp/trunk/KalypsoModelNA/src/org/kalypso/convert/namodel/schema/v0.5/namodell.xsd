@@ -639,12 +639,12 @@ siehe bodenkorrekturmember...
 					<element name="ftra" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Faktor Verdunstung</label>
+								<label>Faktor Verdunstung (Winter)</label>
 								<tooltip>Korrekturfaktor der Verdunstung Winterhalbjahr, multiplikativ</tooltip>
 								<description>Multiplikativer Korrekturfaktor der Verdunstung für das Winterhalbjahr</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Coefficient of evaporation</label>
+								<label>Coefficient of evaporation (winter)</label>
 								<tooltip>Correction coefficient of evaporation, winter half of the year, multiplicative</tooltip>
 								<description>Multiplicative Correction coefficient of evaporation for the winter half of the year</description>
 							</documentation>
