@@ -184,7 +184,7 @@ public class CalculateFloodRiskJob implements ICalcJob
       Symbolizer[] symbolizer = new Symbolizer[]
       { rasterSymbolizer };
       //create Style
-      StyledLayerDescriptor defaultRasterStyle = DefaultStyleFactory.createDefaultStyle( styleName, symbolizer );
+      final StyledLayerDescriptor defaultRasterStyle = DefaultStyleFactory.createDefaultStyle( styleName, symbolizer );
       //write Style to File
       CalcJobClientBean floodRiskStyleOutputBean = (CalcJobClientBean)( (IProcessResultEater)resultEater )
           .getOutputMap().get( FloodRiskRasterStyleID );

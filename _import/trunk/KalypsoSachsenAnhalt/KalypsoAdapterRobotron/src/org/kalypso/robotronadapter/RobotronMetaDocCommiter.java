@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.xml.rpc.ParameterMode;
 
@@ -68,6 +69,7 @@ import org.kalypso.metadoc.impl.MetaDocException;
  &lt;erstelldat&gt;2005-08-26&lt;/erstelldat&gt;
  &lt;gueltigdat&gt;2005-08-26&lt;/gueltigdat&gt;
  &lt;station_id&gt;570123&lt;/station_id&gt;
+ &lt;simulation&gt;0&lt;/simulation&gt;
  &lt;files&gt;
  &lt;file&gt;datei1.png&lt;/file&gt;
  &lt;file&gt;datei2.csv&lt;/file&gt;
@@ -91,11 +93,12 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   private final static String TAG_ERSTELLUNGSDATUM = "erstelldat";
   private final static String TAG_GUELTIGKEITSDATUM = "gueltigdat";
   private static final String TAG_STATION = "station_id";
+  private static final String TAG_SIMULATION = "simulation";
   private static final String TAG_FILES = "files";
   private static final String TAG_FILE = "file";
 
   /** date format for the date elements of the xml file */
-  private final static DateFormat DFDATE = new SimpleDateFormat( "yyyy-MM-dd" );
+  private final static DateFormat DFDATE = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, java.util.Map)
@@ -111,6 +114,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     metadata.put( TAG_ERSTELLUNGSDATUM, "date;" + DFDATE.format( new Date() ) );
     metadata.put( TAG_GUELTIGKEITSDATUM, "date;" + DFDATE.format( new Date() ) );
     metadata.put( TAG_STATION, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_STATION, "123456" ) );
+    metadata.put( TAG_SIMULATION, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_SIMULATION, "0" ) );
   }
 
   /**
@@ -141,30 +145,25 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
       final String[] docs = new String[]
       { doc.getAbsolutePath() };
-      final String metadataXml = buildXML( serviceProps, mdProps, doc.getAbsolutePath(), metadataExtensions );
+      final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), metadataExtensions );
 
+      Logger.getLogger( getClass( ).getName() ).info( "Metadata:\n" + metadataXml );
+      
       final String ret = (String)call.invoke( new Object[]
       { docs, metadataXml } );
 
-      System.out.println( "Got result : " + ret );
-
-/*	  // test purposes...
-      final Properties mdProps = new Properties();
-      mdProps.putAll( metadata );
-      final String metadataXml = buildXML( serviceProps, mdProps, doc.getAbsolutePath(), metadataExtensions );
-      final FileWriter writer = new FileWriter( new File(doc.getAbsolutePath() + ".xml" ) );
-      writer.write( metadataXml );
-      writer.close();*/
+      if( ret.length() > 0 )
+        throw new MetaDocException( "Die IMS-Dokumentenablage hat einen Fehler verursacht: " + ret );
     }
-    catch( final Exception e )
+    catch( final MetaDocException e )
+    {
+      throw e;
+    }
+    catch( final Exception e ) // generic for simplicity
     {
       e.printStackTrace();
-
+      
       throw new MetaDocException( e );
-    }
-    finally
-    {
-      //doc.delete();
     }
   }
 
@@ -210,14 +209,16 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     {
       final String[] ids = metadataExtensions.getStringArray( keyStationId );
       if( ids.length == 0 )
-        bf.append( LT + TAG_STATION + GT + "unbekannt" + CLT + TAG_STATION + GT );
+        bf.append( LT + TAG_STATION + GT + "" + CLT + TAG_STATION + GT );
       
       for( int i = 0; i < ids.length; i++ )
         bf.append( LT + TAG_STATION + GT + ids[i] + CLT + TAG_STATION + GT );
     }
     else
-      bf.append( LT + TAG_STATION + GT + "unbekannt" + CLT + TAG_STATION + GT );
+      bf.append( LT + TAG_STATION + GT + "" + CLT + TAG_STATION + GT );
 
+    bf.append( LT + TAG_SIMULATION + GT + valueOfProperty( mdProps.getProperty( TAG_SIMULATION ) ) + CLT + TAG_SIMULATION + GT );
+    
     bf.append( LT + TAG_FILES + GT );
     bf.append( LT + TAG_FILE + GT + fileName + CLT + TAG_FILE + GT );
     bf.append( CLT + TAG_FILES + GT );

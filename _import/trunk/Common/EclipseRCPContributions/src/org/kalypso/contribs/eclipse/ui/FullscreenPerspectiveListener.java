@@ -41,6 +41,8 @@
 
 package org.kalypso.contribs.eclipse.ui;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,6 +51,9 @@ import java.util.Map.Entry;
 import org.eclipse.jface.action.CoolBarManager;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchPage;
@@ -56,8 +61,13 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 
 /**
  * This Listeners provides full-screen mode for a single perspective.
- * <p>What is does is this: if the 'full-screen' perspective is shown, this listeners hides menu and toolbars of the main window.</p>
- * <p>If another perspective is shown, it recreates these items</p>
+ * <p>
+ * What is does is this: if the 'full-screen' perspective is shown, this listeners hides menu and toolbars of the main
+ * window.
+ * </p>
+ * <p>
+ * If another perspective is shown, it recreates these items
+ * </p>
  * 
  * @author belger
  */
@@ -67,8 +77,9 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
   private final boolean m_hideMenu;
   private final IPerspectiveDescriptor m_descriptor;
 
-  /** Controbution-Manager -> Items */
+  /** Contribution-Manager -> Items */
   private Map m_itemMap = new HashMap();
+  private Collection m_hiddenControls = new ArrayList( 2 );
 
   public FullscreenPerspectiveListener( final IPerspectiveDescriptor descriptor, final boolean hideMenu,
       final boolean hideToolbars )
@@ -87,10 +98,10 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
     if( m_descriptor.equals( perspective ) )
       hideBars( page );
     else
-      showBars( page );
+      showBars();
   }
 
-  private void showBars( final IWorkbenchPage page )
+  private void showBars()
   {
     for( final Iterator mapIt = m_itemMap.entrySet().iterator(); mapIt.hasNext(); )
     {
@@ -108,26 +119,39 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
 
     // should be empty
     m_itemMap.clear();
-    
-    // extra refresh for the coolbar manager, if not, we get layout problems
-    final WorkbenchWindow window = (WorkbenchWindow)page.getWorkbenchWindow();
-    final CoolBarManager coolBarManager = window.getCoolBarManager();
-    if( coolBarManager != null )
-      coolBarManager.update( true );
+
+    // show hidden controls
+    for( final Iterator hideIt = m_hiddenControls.iterator(); hideIt.hasNext(); )
+      ( (Composite)hideIt.next() ).setVisible( true );
   }
 
   private void hideBars( final IWorkbenchPage page )
   {
     final WorkbenchWindow window = (WorkbenchWindow)page.getWorkbenchWindow();
-
     if( m_hideMenu )
-      clearManager( window.getMenuManager() );
+    {
+      final MenuManager menuManager = window.getMenuManager();
+      clearManager( menuManager );
+    }
 
     if( m_hideToolbars )
     {
-      clearManager( window.getToolBarManager() );
-      clearManager( window.getCoolBarManager() );
+      final ToolBarManager toolBarManager = window.getToolBarManager();
+      if( toolBarManager != null )
+        hideControl( toolBarManager.getControl() );
+      final CoolBarManager coolBarManager = window.getCoolBarManager();
+      if( coolBarManager != null )
+        hideControl( coolBarManager.getControl() );
     }
+  }
+
+  private void hideControl( final Composite composite )
+  {
+    if( composite == null || composite.isDisposed() )
+      return;
+
+    composite.setVisible( false );
+    m_hiddenControls.add( composite );
   }
 
   private void clearManager( final IContributionManager manager )
@@ -136,6 +160,7 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
     {
       m_itemMap.put( manager, manager.getItems() );
       manager.removeAll();
+
       manager.update( true );
     }
   }

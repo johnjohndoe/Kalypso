@@ -4,6 +4,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -140,7 +141,7 @@ public class WiskiRepository extends AbstractRepository
 
     final String parts[] = kalypsoWiskiId.split( "\\." );
     if( parts.length != 3 )
-      throw new RepositoryException( "Der ID <" + id + "> ist kein gültiger Kalypso-Wiski-ID" );
+      throw new RepositoryException( "Die ID <" + id + "> ist keine gültige Kalypso-Wiski-ID" );
 
     final String supergroupName = parts[0];
     final String groupName = parts[1];
@@ -219,10 +220,10 @@ public class WiskiRepository extends AbstractRepository
 
       final List list = call.getResultList();
 
-      m_children = new HashMap( list.size() );
-      for( Iterator it = list.iterator(); it.hasNext(); )
+      m_children = new LinkedHashMap( list.size() );
+      for( final Iterator it = list.iterator(); it.hasNext(); )
       {
-        final HashMap map = (HashMap)it.next();
+        final Map map = (Map)it.next();
         final String name = (String)map.get( "supergroup_name" );
         m_children.put( name, new SuperGroupItem( this, name ) );
       }

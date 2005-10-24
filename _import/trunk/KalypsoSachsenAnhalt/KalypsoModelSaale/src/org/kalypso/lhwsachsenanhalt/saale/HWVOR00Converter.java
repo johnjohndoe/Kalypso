@@ -50,7 +50,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
@@ -77,11 +80,10 @@ import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
  */
 public class HWVOR00Converter
 {
-  private TreeMap m_obsMap;
+  /** datum -> Map(obsName -> value) */
+  private final TreeMap m_obsMap = new TreeMap();
 
-  private ArrayList m_obsNames;
-
-  private int m_obsNum = 0;
+  private final ArrayList m_obsNames = new ArrayList();
 
   public static final SimpleDateFormat HWVOR00_DATE = new SimpleDateFormat( "dd.M.yyyy H:mm" );
 
@@ -95,16 +97,12 @@ public class HWVOR00Converter
   {
     final Calendar cal = Calendar.getInstance();
     cal.setTime( currentTime );
-    cal.add( Calendar.HOUR_OF_DAY , -120 );
+    cal.add( Calendar.HOUR_OF_DAY, -120 );
     final Date startTime = cal.getTime();
     cal.add( Calendar.HOUR_OF_DAY, 120 + 144 );
     final Date stopTime = cal.getTime();
-    
-    m_request = new ObservationRequest( startTime, stopTime );
 
-    m_obsMap = new TreeMap();
-    m_obsNames = new ArrayList();
-    m_obsNum = 0;
+    m_request = new ObservationRequest( startTime, stopTime );
   }
 
   public boolean isEmpty()
@@ -115,45 +113,38 @@ public class HWVOR00Converter
   public void addObservation( final IObservation inObs, final String obsName, final String timeAxis,
       final String dataAxis )
   {
-    IAxis axTime;
-    IAxis axData;
-    ITuppleModel tplValues;
-    Number value;
-    Date date;
-
-    m_obsNames.add( m_obsNum, obsName );
-
     try
     {
       final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0 );
       filter.initFilter( null, inObs, null );
 
-      tplValues = filter.getValues( m_request );
-      axTime = ObservationUtilities.findAxisByType( tplValues.getAxisList(), timeAxis );
-      axData = ObservationUtilities.findAxisByType( tplValues.getAxisList(), dataAxis );
+      final ITuppleModel tplValues = filter.getValues( m_request );
+      final IAxis axTime = ObservationUtilities.findAxisByType( tplValues.getAxisList(), timeAxis );
+      final IAxis axData = ObservationUtilities.findAxisByType( tplValues.getAxisList(), dataAxis );
 
       for( int i = 0; i < tplValues.getCount(); i++ )
       {
-        value = (Number)tplValues.getElement( i, axData );
-        date = (Date)tplValues.getElement( i, axTime );
+        final Number value = (Number)tplValues.getElement( i, axData );
+        final Date date = (Date)tplValues.getElement( i, axTime );
 
-        if( m_obsMap.containsKey( date ) )
-        {
-          ( (ArrayList)m_obsMap.get( date ) ).add( m_obsNum, value );
-        }
-        else if( m_obsNum == 0 )
-        {
-          m_obsMap.put( date, new ArrayList() );
-          ( (ArrayList)m_obsMap.get( date ) ).add( 0, value );
-        }
+        if( !m_obsMap.containsKey( date ) )
+          m_obsMap.put( date, new HashMap() );
+
+        ( (Map)m_obsMap.get( date ) ).put( obsName, value );
       }
+    }
+    catch( final NoSuchElementException nse )
+    {
+      System.out.println( "Keine W/Q Beziehung für: " + obsName );
+//      nse.printStackTrace();
     }
     catch( final SensorException exp )
     {
       // TODO Exception handling verbessern
       //exp;
     }
-    m_obsNum++;
+    
+    m_obsNames.add( obsName );
   }
 
   public void toHWVOR00( final Writer file )
@@ -174,18 +165,19 @@ public class HWVOR00Converter
     for( final Iterator itr = m_obsMap.keySet().iterator(); itr.hasNext(); )
     {
       final Date currDate = (Date)itr.next();
-      if( ( (ArrayList)m_obsMap.get( currDate ) ).size() >= m_obsNum )
-      {
-        pWriter.print( HWVOR00_DATE.format( currDate ) );
-        final ArrayList currList = (ArrayList)m_obsMap.get( currDate );
-        for( Iterator i = currList.iterator(); i.hasNext(); )
-        {
-          pWriter.print( "\t" );
-          pWriter.print( ( (Number)i.next() ).toString() );
-        }
+      final Map valueMap = (Map)m_obsMap.get( currDate );
 
-        pWriter.println();
+      pWriter.print( HWVOR00_DATE.format( currDate ) );
+      for( final Iterator i = m_obsNames.iterator(); i.hasNext(); )
+      {
+        final String obsName = (String)i.next();
+        final Number value = (Number)valueMap.get( obsName );
+
+        pWriter.print( "\t" );
+        pWriter.print( value == null ? "0.0" : value.toString() );
       }
+
+      pWriter.println();
     }
   }
 

@@ -167,7 +167,8 @@ public class RobotronRightsProvider implements IUserRightsProvider
           return UserRights.FULL_RIGHTS;
       }
 
-      return UserRights.NO_RIGHTS;
+      // Benutzer existiert, aber darf nicht Modellieren: Vorhersage
+      return new String[] { UserRights.RIGHT_PROGNOSE };
     }
     catch( final NamingException e )
     {

@@ -52,9 +52,9 @@
 
     <target name="copy-data" depends="prepare">
         <echo message="Copy the data files to the local deploy dir" />
-        <copy todir="${dist.webdav}/data">
+        <!--copy todir="${dist.webdav}/data">
             <fileset dir="${src.path}/data" excludes="**/CVS/**" />
-        </copy>
+        </copy-->
     </target>
 
     <target name="copy-allconf" depends="prepare">

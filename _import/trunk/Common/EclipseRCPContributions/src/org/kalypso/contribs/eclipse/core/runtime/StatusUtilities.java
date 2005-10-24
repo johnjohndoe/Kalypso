@@ -202,7 +202,14 @@ public final class StatusUtilities
 
     String msg = t.getLocalizedMessage();
     if( msg == null )
-      msg = "<Keine weitere Information vorhanden>";
+    {
+      if( t.getCause() != null )
+        return statusFromThrowable( t.getCause(), message + "\n" + t.toString() );
+      
+      // beser t.toString, weil manche Exceptions dann doch nich mehr verraten
+      // z.B. ValidationException
+      msg = t.toString();//"<Keine weitere Information vorhanden>";
+    }
 
     if( message != null )
       msg = message + ". " + msg;

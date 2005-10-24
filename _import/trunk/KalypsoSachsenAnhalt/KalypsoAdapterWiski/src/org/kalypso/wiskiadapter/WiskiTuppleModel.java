@@ -96,8 +96,15 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   private Integer getKalypsoStatus( int index )
   {
     if( m_kalypsoStati[index] == null )
-      m_kalypsoStati[index] = WiskiUtils
-          .wiskiStatus2Kalypso( (String)( (HashMap)m_data.get( index ) ).get( "QUALITY" ) );
+    {
+      final String status = (String)( (HashMap)m_data.get( index ) ).get( "QUALITY" );
+      
+//      if( !status.equals("U") )
+//        System.out.println(status);
+      
+      m_kalypsoStati[index] = WiskiUtils.wiskiStatus2Kalypso( status );
+      
+    }
 
     return m_kalypsoStati[index];
   }
