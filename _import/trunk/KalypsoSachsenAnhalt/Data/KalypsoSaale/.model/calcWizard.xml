@@ -7,9 +7,7 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Ombrometer"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
-		
 		<arg name="helpHref" value="blubberdibla"/>
-		
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -51,7 +49,6 @@
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="false"/>
 		<arg name="mapWidgetID" value="SELECT"/>
-		
 		<!--
 		Diagramm -->
 		<arg name="diagShowLegend" value="true"/>
@@ -1106,7 +1103,7 @@
 			<arg name="name" value="Pegelübersichten (Scheitelwerte)"/>
 			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
 			<!-- Scheitelwert-Tabelle -->
-			<arg name="exporter3">
+			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Pegelübersicht Wasserstand (Scheitelwerte)"/>
 				<arg name="documentName" value="ScheitelwerteW.csv"/>
@@ -3296,117 +3293,122 @@
 		</arg>
 		<!-- Scheitelwert-Tabellen V / W  -->
 		<arg name="exporter3">
-			<arg name="id" value="sumUpTableExporter"/>
-			<arg name="name" value="Speicherübersicht Volumen (Scheitelwerte)"/>
-			<arg name="documentName" value="ScheitelwerteSpeicherV.csv"/>
-			<arg name="separator" value=";"/>
-			<!--arg name="charset" value="cp1252"/-->
-			<arg name="delta" value="0.0001"/>
-			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-			<arg name="column1">
-				<arg name="position" value="1"/>
-				<arg name="label" value="Speicher"/>
-				<arg name="content" value="arg:label"/>
+			<arg name="id" value="multiExporter"/>
+			<arg name="name" value="Speicherübersichten (Scheitelwerte)"/>
+			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
+			<arg name="exporter3a">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Speicherübersicht Volumen (Scheitelwerte)"/>
+				<arg name="documentName" value="ScheitelwerteSpeicherV.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Speicher"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="V"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Saale-Talsperren"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/570250.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Straußfurt"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/573100.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Kelbra"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Königshütte"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/579001.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Wendefurth"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/579006.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Rappbode"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/579012.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="HWR Kalte Bode"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/579330.zml"/>
+				</arg>
 			</arg>
-			<arg name="column2">
-				<arg name="position" value="2"/>
-				<arg name="label" value="Gewässer"/>
-				<arg name="content" value="metadata:Gewässer"/>
-			</arg>
-			<arg name="axisType" value="V"/>
-			<arg name="timeUnit" value="HOUR"/>
-			<arg name="timeStep" value="6"/>
-			<arg name="obs1">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="Saale-Talsperren"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/570250.zml"/>
-			</arg>
-			<arg name="obs2">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Straußfurt"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/573100.zml"/>
-			</arg>
-			<arg name="obs3">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Kelbra"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
-			</arg>
-			<arg name="obs4">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Königshütte"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/579001.zml"/>
-			</arg>
-			<arg name="obs5">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Wendefurth"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/579006.zml"/>
-			</arg>
-			<arg name="obs6">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Rappbode"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/579012.zml"/>
-			</arg>
-			<arg name="obs7">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="HWR Kalte Bode"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/579330.zml"/>
-			</arg>
-		</arg>
-		<arg name="exporter4">
-			<arg name="id" value="sumUpTableExporter"/>
-			<arg name="name" value="Speicherübersicht Wasserstand (Scheitelwerte)"/>
-			<arg name="documentName" value="ScheitelwerteSpeicherW.csv"/>
-			<arg name="separator" value=";"/>
-			<!--arg name="charset" value="cp1252"/-->
-			<arg name="delta" value="0.0001"/>
-			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-			<arg name="column1">
-				<arg name="position" value="1"/>
-				<arg name="label" value="Speicher"/>
-				<arg name="content" value="arg:label"/>
-			</arg>
-			<arg name="column2">
-				<arg name="position" value="2"/>
-				<arg name="label" value="Gewässer"/>
-				<arg name="content" value="metadata:Gewässer"/>
-			</arg>
-			<arg name="axisType" value="W"/>
-			<arg name="timeUnit" value="HOUR"/>
-			<arg name="timeStep" value="6"/>
-			<arg name="obs1">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="Saale-Talsperren"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/570250.zml"/>
-			</arg>
-			<arg name="obs2">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Straußfurt"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/573100.zml"/>
-			</arg>
-			<arg name="obs3">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Kelbra"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
-			</arg>
-			<arg name="obs4">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Königshütte"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/579001.zml"/>
-			</arg>
-			<arg name="obs5">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Wendefurth"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/579006.zml"/>
-			</arg>
-			<arg name="obs6">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="TS Rappbode"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/579012.zml"/>
-			</arg>
-			<arg name="obs7">
-				<arg name="label" value="%obsname%"/>
-				<!-- <arg name="label" value="HWR Kalte Bode"/> -->
-				<arg name="href" value="./Ergebnisse/Speicherinhalt/579330.zml"/>
+			<arg name="exporter4">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Speicherübersicht Wasserstand (Scheitelwerte)"/>
+				<arg name="documentName" value="ScheitelwerteSpeicherW.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Speicher"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="W"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="Saale-Talsperren"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/570250.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Straußfurt"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/573100.zml"/>
+				</arg>
+				<arg name="obs3">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Kelbra"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
+				</arg>
+				<arg name="obs4">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Königshütte"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/579001.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Wendefurth"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/579006.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="TS Rappbode"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/579012.zml"/>
+				</arg>
+				<arg name="obs7">
+					<arg name="label" value="%obsname%"/>
+					<!-- <arg name="label" value="HWR Kalte Bode"/> -->
+					<arg name="href" value="./Ergebnisse/Speicherinhalt/579330.zml"/>
+				</arg>
 			</arg>
 		</arg>
 	</page>

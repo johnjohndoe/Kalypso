@@ -27,7 +27,7 @@
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf -->
-   	    <arg name="buttonText" value="Gebietsniederschlag berechnen"/>
+		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
 		<arg name="buttonTooltip" value="Gebietsniederschlag mittels Gebietsniederschlagsmodell berechnen"/>
 		<arg name="buttonLaunch" value="niederschlagsmodell"/>
 	</page>
@@ -116,7 +116,7 @@
         Tabelle -->
 		<!-- 
         Ant-Knopf für Berechnung -->
-   	    <arg name="buttonText" value="Q-Prognose Ilse"/>
+		<arg name="buttonText" value="Q-Prognose Ilse"/>
 		<arg name="buttonTooltip" value="Abfluss-Prognose Ilse"/>
 		<arg name="buttonLaunch" value="runBatch"/>
 		<arg name="buttonProperties">
@@ -155,7 +155,7 @@
         Exporte  -->
 		<!-- Name of the feature-property, used for display/selection purposes -->
 		<arg name="pegelNameProperty" value="Name"/>
-        <arg name="resultProperty" value="Ganglinie_gerechnet"/>
+		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
 		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>
@@ -215,63 +215,68 @@
 		</arg>
 		<!-- Scheitelwert-Tabelle -->
 		<arg name="exporter3">
-			<arg name="id" value="sumUpTableExporter"/>
-			<arg name="name" value="Pegelübersicht Wasserstand (Scheitelwerte)"/>
-			<arg name="documentName" value="ScheitelwerteW.csv"/>
-			<arg name="separator" value=";"/>
-			<!--arg name="charset" value="cp1252"/-->
-			<arg name="delta" value="0.0001"/>
-			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-			<arg name="column1">
-				<arg name="position" value="1"/>
-				<arg name="label" value="Pegel"/>
-				<arg name="content" value="arg:label"/>
+			<arg name="id" value="multiExporter"/>
+			<arg name="name" value="Pegelübersichten (Scheitelwerte)"/>
+			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
+			<arg name="exporter3a">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Wasserstand (Scheitelwerte)"/>
+				<arg name="documentName" value="ScheitelwerteW.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="W"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="Bühne-Hoppenstedt"/>
+					<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Bühne_Hoppenstedt.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="Ilsenburg"/>
+					<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ilsenburg.zml"/>
+				</arg>
 			</arg>
-			<arg name="column2">
-				<arg name="position" value="2"/>
-				<arg name="label" value="Gewässer"/>
-				<arg name="content" value="metadata:Gewässer"/>
-			</arg>
-			<arg name="axisType" value="W"/>
-			<arg name="timeUnit" value="HOUR"/>
-			<arg name="timeStep" value="6"/>
-			<arg name="obs1">
-				<arg name="label" value="Bühne-Hoppenstedt"/>
-				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Bühne_Hoppenstedt.zml"/>
-			</arg>
-			<arg name="obs2">
-				<arg name="label" value="Ilsenburg"/>
-				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ilsenburg.zml"/>
-			</arg>
-		</arg>
-		<arg name="exporter4">
-			<arg name="id" value="sumUpTableExporter"/>
-			<arg name="name" value="Pegelübersicht Abfluss (Scheitelwerte)"/>
-			<arg name="documentName" value="ScheitelwerteQ.csv"/>
-			<arg name="separator" value=";"/>
-			<!--arg name="charset" value="cp1252"/-->
-			<arg name="delta" value="0.0001"/>
-			<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-			<arg name="column1">
-				<arg name="position" value="1"/>
-				<arg name="label" value="Pegel"/>
-				<arg name="content" value="arg:label"/>
-			</arg>
-			<arg name="column2">
-				<arg name="position" value="2"/>
-				<arg name="label" value="Gewässer"/>
-				<arg name="content" value="metadata:Gewässer"/>
-			</arg>
-			<arg name="axisType" value="Q"/>
-			<arg name="timeUnit" value="HOUR"/>
-			<arg name="timeStep" value="6"/>
-			<arg name="obs1">
-				<arg name="label" value="Bühne-Hoppenstedt"/>
-				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Bühne_Hoppenstedt.zml"/>
-			</arg>
-			<arg name="obs2">
-				<arg name="label" value="Ilsenburg"/>
-				<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ilsenburg.zml"/>
+			<arg name="exporter4">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Pegelübersicht Abfluss (Scheitelwerte)"/>
+				<arg name="documentName" value="ScheitelwerteQ.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="column2">
+					<arg name="position" value="2"/>
+					<arg name="label" value="Gewässer"/>
+					<arg name="content" value="metadata:Gewässer"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="Bühne-Hoppenstedt"/>
+					<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Bühne_Hoppenstedt.zml"/>
+				</arg>
+				<arg name="obs2">
+					<arg name="label" value="Ilsenburg"/>
+					<arg name="href" value="./Zeitreihen/Pegel/Vorhersage/Ilsenburg.zml"/>
+				</arg>
 			</arg>
 		</arg>
 	</page>
