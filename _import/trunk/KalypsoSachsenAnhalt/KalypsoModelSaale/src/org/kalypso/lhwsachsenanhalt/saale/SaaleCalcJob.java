@@ -327,7 +327,7 @@ public class SaaleCalcJob implements ICalcJob
       convertVor2Zml( new File( datendir, "Q_dat.vor" ), new File( resultdir, "Durchfluss" ),
           TimeserieConstants.TYPE_RUNOFF );
       convertVor2Zml( new File( datendir, "Tsdat.vor" ), new File( resultdir, "Speicherinhalt" ),
-          TimeserieConstants.TYPE_RUNOFF );
+          TimeserieConstants.TYPE_VOLUME );
 
       m_logger.info( "Ergebnisdaten wurden konvertiert." );
       m_logger.info( "" );

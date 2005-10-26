@@ -60,12 +60,14 @@
         <ant antfile="${workspace}/KalypsoModelSaale/etc/ant/build.xml" target="clean" inheritAll="false" />
     </target>
 
+<!-- Not used any more
     <target name="copy-data" depends="prepare">
         <echo message="Copy the data files to the local deploy dir" />
         <copy todir="${dist.webdav}/data">
             <fileset dir="${src.path}/data" excludes="**/CVS/**" />
         </copy>
     </target>
+-->    
 
     <target name="copy-allconf" depends="prepare">
         <echo message="Copy the configuration for the server to deploy dir" />
@@ -228,11 +230,13 @@
         <copy todir="${deploy.webdav}\\schemata" overwrite="true">
             <fileset dir="${dist.webdav}/schemata" includes="**/*" excludes="**/CVS/**" />
         </copy>
+    	<!-- TODO: do not deploy 'prognose' bceause it is already deployed with target deploy-models -->
         <copy todir="${deploy.webdav}" overwrite="true">
             <fileset file="${dist.webdav}/*.ini" includes="**/*" />
         </copy>
     </target>
 
+<!--	
     <target name="deploy-data" depends="copy-data" description="Deploy the data (Observation repositories)">
         <echo message="Deploy the data files to ${tomcat.server}" />
 
@@ -240,11 +244,12 @@
             <fileset dir="${dist.webdav}/data" includes="**/*" excludes="**/CVS/**" />
         </copy>
     </target>
+-->    
 
     <target name="deploy-models" depends="co-sachsen-anhalt-models" description="Deploy the models">
         <echo message="Deploy the models on ${tomcat.server}" />
 
-        <copy todir="${deploy.webdav}\\prognose" overwrite="true">
+        <copy todir="${deploy.webdav}\\prognose" overwrite="true" includeemptydirs="false">
             <fileset dir="${dist.webdav}/prognose" includes="**/*" excludes="**/CVS/**" />
         </copy>
     </target>
