@@ -17,6 +17,7 @@
 	    <fileset dir="${workspace}/KalypsoServiceCore/build/deploy" includes="**/*.jar" />
 
 		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar" />
+	    <fileset dir="${workspace}/EclipseRCPContributions/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
 		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar" />

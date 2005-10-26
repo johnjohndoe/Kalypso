@@ -72,7 +72,6 @@ import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -228,6 +227,19 @@ public class KalypsoObservationService implements IObservationService
         IOUtils.closeQuietly( ins );
       }
 
+      // set the timezone according to the properties
+      final String tzName = props.getProperty( "TIMEZONE_NAME" );
+      if( tzName != null )
+      {
+        m_timezone = TimeZone.getTimeZone( tzName );
+        m_logger.info( "TimeZone set on " + m_timezone );
+      }
+      else
+      {
+        m_timezone = null;
+        m_logger.info( "Reset TimeZone. Name not found: " + tzName );
+      }
+      
       for( final Iterator it = facConfs.iterator(); it.hasNext(); )
       {
         final RepositoryFactoryConfig item = (RepositoryFactoryConfig)it.next();
@@ -248,25 +260,16 @@ public class KalypsoObservationService implements IObservationService
               IObservationManipulator.class, getClass().getClassLoader() );
           m_mapRepId2Manip.put( rep.getIdentifier(), man );
         }
+        
+        // adjust properties of repository
+        if( tzName != null )
+          rep.setProperty( TimeZone.class.getName(), tzName );
       }
 
       // tricky: set the list of repositories to the ZmlFilter so that
       // it can directly fetch the observations without using the default
       // URL resolving stuff
       ZmlFilter.configureFor( m_repositories );
-
-      // set the timezone according to the properties
-      final String tzName = props.getProperty( "TIMEZONE_NAME" );
-      if( tzName != null )
-      {
-        m_timezone = TimeZone.getTimeZone( tzName );
-        m_logger.info( "TimeZone set on " + m_timezone );
-      }
-      else
-      {
-        m_timezone = null;
-        m_logger.info( "Reset TimeZone. Name not found: " + tzName );
-      }
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
@@ -403,15 +406,7 @@ public class KalypsoObservationService implements IObservationService
 
       synchronized( obs )
       {
-        // HACK: we need a way to tell the observation which timezone we are in
-        // this should be removed once the server-side IObservation stuff is refactored
-        obs.getMetadataList().setProperty( "_SERVER_SIDE_TIMEZONE_",
-            zml.getMetadataList().getProperty( TimeserieConstants.MD_TIMEZONE ) );
-
         obs.setValues( zml.getValues( null ) );
-
-        // HACK cont'd: remove it afterwards from the metadatalist in order not to pollute it
-        obs.getMetadataList().remove( "_SERVER_SIDE_TIMEZONE_" );
       }
     }
     catch( final Exception e ) // generic exception caught for simplicity
