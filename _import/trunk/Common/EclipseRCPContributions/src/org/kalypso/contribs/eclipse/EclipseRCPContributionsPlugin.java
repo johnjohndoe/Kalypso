@@ -10,7 +10,7 @@ import java.util.*;
 public class EclipseRCPContributionsPlugin extends Plugin
 {
   public static final String ID = "org.kalypso.contribs.eclipsercp";
-  
+
   //The shared instance.
   private static EclipseRCPContributionsPlugin plugin;
 
@@ -19,9 +19,13 @@ public class EclipseRCPContributionsPlugin extends Plugin
 
   public static String getID()
   {
-    return getDefault().getBundle().getSymbolicName();
+    //return getDefault().getBundle().getSymbolicName();
+
+    // TRICKY: directly return the ID because this plugin is sometimes
+    // used outside of the eclipse framework (server side for calc service...)
+    return ID;
   }
-  
+
   /**
    * The constructor.
    */

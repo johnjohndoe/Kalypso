@@ -1,7 +1,5 @@
 package org.kalypso.wiskiadapter;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,10 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.kalypso.commons.conversion.units.IValueConverter;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
-import org.kalypso.commons.conversion.units.IValueConverter;
 
 /**
  * WiskiTuppleModel
@@ -29,19 +28,18 @@ public class WiskiTuppleModel extends AbstractTuppleModel
 
   private final IValueConverter m_vc;
 
-  private final Calendar m_calendar;
+  private final TimeZone m_tzWiski;
+  private final TimeZone m_tzKalypso;
 
-  public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv, final TimeZone tz )
+  public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv, final TimeZone tzSrc, final TimeZone tzDest )
   {
     super( axes );
 
     m_vc = conv;
-
-    if( tz != null )
-      m_calendar = Calendar.getInstance( tz );
-    else
-      m_calendar = Calendar.getInstance();
-
+    
+    m_tzWiski = tzSrc;
+    m_tzKalypso = tzDest;
+    
     m_data = data;
     m_values = new Double[m_data.size()];
     m_kalypsoStati = new Integer[m_data.size()];
@@ -65,16 +63,16 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   {
     switch( getPositionFor( axis ) )
     {
-    case 0:
-      final Date d = (Date)( (HashMap)m_data.get( index ) ).get( "timestamp" );
-      m_calendar.setTime( d );
-      return m_calendar.getTime();
-    case 1:
-      return getValue( index );
-    case 2:
-      return getKalypsoStatus( index );
-    default:
-      throw new SensorException( "Position von Axis " + axis + " ist ungültig" );
+      case 0:
+        final Date dWiski = (Date)( (HashMap)m_data.get( index ) ).get( "timestamp" );
+        final Date dKalypso = DateUtilities.convert( dWiski, m_tzWiski, m_tzKalypso );
+        return dKalypso;
+      case 1:
+        return getValue( index );
+      case 2:
+        return getKalypsoStatus( index );
+      default:
+        throw new SensorException( "Position von Axis " + axis + " ist ungültig" );
     }
   }
 
@@ -98,12 +96,12 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     if( m_kalypsoStati[index] == null )
     {
       final String status = (String)( (HashMap)m_data.get( index ) ).get( "QUALITY" );
-      
-//      if( !status.equals("U") )
-//        System.out.println(status);
-      
+
+      //      if( !status.equals("U") )
+      //        System.out.println(status);
+
       m_kalypsoStati[index] = WiskiUtils.wiskiStatus2Kalypso( status );
-      
+
     }
 
     return m_kalypsoStati[index];
@@ -128,14 +126,14 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   {
     switch( getPositionFor( axis ) )
     {
-    case 0: // TODO: Darf das Datum überhaupt geändert werden?
-      ( (HashMap)m_data.get( index ) ).put( "timestamp", new Timestamp( ( (Date)element ).getTime() ) );
-    case 1:
-      setValue( index, (Double)element );
-    case 2:
-      m_kalypsoStati[index] = (Integer)element;
-    default:
-      throw new SensorException( "Position von Achse " + axis + " ist ungültig" );
+      case 0:
+        throw new SensorException( "Kann Datum nicht setzen" );
+      case 1:
+        setValue( index, (Double)element );
+      case 2:
+        m_kalypsoStati[index] = (Integer)element;
+      default:
+        throw new SensorException( "Position von Achse " + axis + " ist ungültig" );
     }
   }
 

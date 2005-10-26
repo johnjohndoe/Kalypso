@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import org.kalypso.ogc.sensor.DateRange;
@@ -26,6 +27,7 @@ public class GetTsData implements IWiskiCall
 
   private LinkedList data = null;
 
+  /** the utc offset in seconds */
   private Integer utcOffset = null;
 
   public GetTsData( final Long id, final DateRange dr )
@@ -52,6 +54,7 @@ public class GetTsData implements IWiskiCall
     {
       data = (LinkedList)serie.get( KiWWDataProviderInterface.KEY_TSDATA );
 
+      // utc offset in seconds
       utcOffset = (Integer)( (HashMap)serie.get( KiWWDataProviderInterface.KEY_TSINFO ) ).get( "utcoffset" );
     }
   }
@@ -63,13 +66,25 @@ public class GetTsData implements IWiskiCall
 
   public TimeZone getTimeZone()
   {
-    if( utcOffset != null )
-    {
-      final int offset = utcOffset.intValue();
-      final String sign = offset >= 0 ? "+" : "-";
-      return TimeZone.getTimeZone( "UTC" + sign + Math.abs( offset ) );
-    }
+    if( utcOffset == null )
+      throw new IllegalStateException( "utcOffset is null" );
 
-    return null;
+    final int secondsOffset = utcOffset.intValue();
+
+    if( secondsOffset == 0 )
+      return TimeZone.getTimeZone( "GMT" );
+
+    int rawOffset = secondsOffset * 1000;
+    String tzId = "UTC";
+
+    if( secondsOffset > 0 )
+      tzId += "+" + ( (float)secondsOffset / 60000 ); // 60000 == MINUTEINMILLISF
+    else
+      tzId += Float.toString( ( (float)secondsOffset / 60000 ) ); // 60000 == MINUTEINMILLISF
+
+    return new SimpleTimeZone( rawOffset, tzId );
+
+    //      final String sign = secondsOffset >= 0 ? "+" : "-";
+    //      return TimeZone.getTimeZone( "UTC" + sign + Math.abs( secondsOffset ) );
   }
 }
