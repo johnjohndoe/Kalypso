@@ -44,12 +44,11 @@
       <listitem>
         <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
         Hamburg - Tel. 040 / 42878-3761 - www.tu-harburg.de/wb</para>
-</listitem>
+      </listitem>
     </itemizedlist>
-        <graphic align="center"
-        fileref="img/allgemeines/wasserbau-logo.png" format="PNG"
-        scale="100" />
-      
+
+    <graphic align="center" fileref="img/allgemeines/wasserbau-logo.png"
+             format="PNG" scale="100" />
 
     <para>oder</para>
 
@@ -58,12 +57,12 @@
         <para>Björnsen Beratende Ingenieure GmbH - Maria Trost 3 - 56070
         Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
         info@bjoernsen.de</para>
- </listitem>
+      </listitem>
     </itemizedlist>
 
-        <graphic align="center"
-        fileref="img/allgemeines/000_001_bce_sw_300.png" scale="100" />
-     
+    <graphic align="center" fileref="img/allgemeines/000_001_bce_sw_300.png"
+             scale="100" />
+
     <section id="nymphe_kalypso">
       <sectioninfo>
         <date><indexterm>
@@ -219,8 +218,7 @@
 
                 <entry></entry>
 
-                <entry>Speicherfreigabe in Abhängigkeit des vorhandenen
-                Arbeitsspeichers beliebig wählbar</entry>
+                <entry>Speicherfreigabe gem. Arbeitsspeicher</entry>
               </row>
             </tbody>
           </tgroup>

@@ -5,7 +5,7 @@
 -->
 
 <!ENTITY % DocBookDTD PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-           "file:///C:/Programme/docbook/docbookxml42/docbookx.dtd">
+           "file:///J:/hyd5309/software/docbook/docbook-xml-4.2/docbookx.dtd">
 %DocBookDTD;
 
 	<!ENTITY file_fhs SYSTEM "fhs.xml">

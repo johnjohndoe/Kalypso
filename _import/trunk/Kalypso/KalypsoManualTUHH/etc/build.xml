@@ -2,12 +2,12 @@
 <project name="kalypso-manual-tuhh" default="all" basedir="..">
 
   <!-- Main Document (ENTITIES) -->
-  <property name="doc.name" value="main_driver_ingbueros.xml"/>  
   <!--
+  <property name="doc.name" value="main_driver_ingbueros.xml"/>  
   <property name="doc.name" value="main_driver_sachsen.xml"/>  
-  <property name="doc.name" value="main_driver_sachsen-anhalt.xml"/>  
   -->
-  
+  <property name="doc.name" value="Sachsen_Anhalt/main_driver_sachsen_anhalt.xml"/>  
+ 
   <!-- Source properties -->
   <property name="help.dir" value="src" />
   <property name="build.dir" value="build"/>
