@@ -4,8 +4,6 @@ set JAVA_HOME=%KALYPSO_SERVER_HOME%\j2sdk1.4.2
 set CATALINA_HOME=%KALYPSO_SERVER_HOME%\Tomcat5.0
 
 set KALYPSO_SERVER_TMP=%CATALINA_HOME%\temp
-set KALYPSO_SERVER_WEBDAV=%CATALINA_HOME%\webapps\webdav
-
 REM The trailing '/' is important!
 set KALYPSO_SERVER_CONF=http://%COMPUTERNAME%:8088/webdav/srvconf/
 
