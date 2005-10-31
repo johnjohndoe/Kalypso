@@ -16,31 +16,34 @@ import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
  */
 public abstract class AbstractProfilBuilding extends AbstractBuilding
 {
-  
+
   private final POINT_PROPERTY[] m_pointProperties;
 
   public AbstractProfilBuilding( final BUILDING_TYP buildingTyp,
       final Collection<BUILDING_PROPERTY> properties, final POINT_PROPERTY[] pointProperties )
   {
-    super (buildingTyp,properties);
+    super( buildingTyp, properties );
 
     m_pointProperties = pointProperties == null ? new POINT_PROPERTY[] {} : pointProperties;
 
   }
 
-  @SuppressWarnings("unused")
-  public  void addProfilProperties( final PlainProfil profil ) throws ProfilDataException
+  @SuppressWarnings( "unused" )
+  public void addProfilProperties( final PlainProfil profil ) throws ProfilDataException
   {
     for( final POINT_PROPERTY property : getPointProperties() )
+    {
       profil.addPointProperty( property );
+
+    }
   }
-  @SuppressWarnings("unused")
+
+  @SuppressWarnings( "unused" )
   public void removeProfilProperties( final PlainProfil profil ) throws ProfilDataException
   {
     for( final POINT_PROPERTY property : getPointProperties() )
       profil.removePointProperty( property );
   }
-  
 
   /**
    * @return Returns the buildingTyp.
@@ -57,8 +60,6 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   {
     return m_pointProperties;
   }
-
-   
 
   /**
    * @see com.bce.eind.core.profil.IProfilBuilding#hasProperty(com.bce.eind.core.profil.BUILDING_PROPERTY)

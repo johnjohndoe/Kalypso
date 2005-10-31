@@ -3,6 +3,7 @@ package com.bce.eind.core.profil.impl.buildings.building;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
@@ -17,6 +18,15 @@ public class BuildingWehr extends AbstractProfilBuilding
   {
     super( BUILDING_TYP.WEHR, Arrays.asList( BUILDING_PROPERTY.WEHRART ), new POINT_PROPERTY[]
     { POINT_PROPERTY.OBERKANTEWEHR } );
+   
+    try
+    {
+      setValue(BUILDING_PROPERTY.WEHRART,IProfil.WEHR_TYP.Beiwert);
+    }
+    catch( ProfilDataException e )
+    {
+      //do nothing
+    }
   }
 
   @Override

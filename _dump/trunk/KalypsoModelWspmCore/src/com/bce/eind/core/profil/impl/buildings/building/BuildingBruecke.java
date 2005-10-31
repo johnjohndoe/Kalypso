@@ -34,7 +34,8 @@ public class BuildingBruecke extends AbstractProfilBuilding
     for( IProfilPoint pt : points )
     {
       final double h = pt.getValueFor( POINT_PROPERTY.HOEHE );
-      profil.setValueFor( pt, POINT_PROPERTY.OBERKANTEWEHR, h );
+      profil.setValueFor( pt, POINT_PROPERTY.OBERKANTEBRUECKE, h );
+      profil.setValueFor( pt, POINT_PROPERTY.UNTERKANTEBRUECKE, h );
     }
 
   }
