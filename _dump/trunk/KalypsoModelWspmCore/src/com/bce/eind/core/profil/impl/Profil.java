@@ -361,7 +361,7 @@ public class Profil implements IProfil, IProfilConstants
   public void setBuilding( final BUILDING_TYP buildingTyp ) throws ProfilDataException
   {
     m_profil.setBuilding( buildingTyp );
-
+    
     fireBuildingChanged(null);
   }
 
