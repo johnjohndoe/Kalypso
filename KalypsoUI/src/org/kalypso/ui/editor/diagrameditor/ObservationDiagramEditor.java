@@ -105,6 +105,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     super.createPartControl( parent );
 
     m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    
     m_diagFrame = SWT_AWT.new_Frame( m_swingContainer );
 
     try
