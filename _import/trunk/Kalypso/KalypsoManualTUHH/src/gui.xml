@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="grafische_oberflaeche">
-  <?dbhh topicname="Grafische Oberfläche" topicid="2"?>
-
-  <chapterinfo>
-    <date><indexterm>
-        <primary>Beschreibung der grafischen Oberfläche
-        Expertenmodus</primary>
-      </indexterm></date>
-  </chapterinfo>
 
   <title>Grafische Oberfläche</title>
+	
+  <indexterm>
+        <primary>Beschreibung der grafischen Oberfläche
+        Expertenmodus</primary>
+      </indexterm>
 
   <para>Im vorliegenden Kapitel wird die grafische Benutzeroberfläche (GUI)
   für den KALYPSO Modeler (Expertenmodus) erläutert. Die KALYPSO Modeler
@@ -227,13 +224,11 @@
   </section>
 
   <section id="ansichtssteuerung">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>Beschreibung der Ansichtssteuerung</primary>
-        </indexterm></date>
-    </sectioninfo>
-
     <title>Ansichtssteuerung</title>
+	  
+    <indexterm>
+          <primary>Beschreibung der Ansichtssteuerung</primary>
+        </indexterm>
 
     <para id="para2">Die verschiedenen Ansichten in KALYPSO beinhalten
     generell Untermenüs, die u.a. die Navigation innerhalb der Ansicht
@@ -691,13 +686,11 @@
   </section>
 
   <section>
-    <sectioninfo>
-      <date><indexterm>
-          <primary>Zeitreihenbearbeitung</primary>
-        </indexterm></date>
-    </sectioninfo>
-
     <title>Zeitreihenbearbeitung</title>
+	  
+    <indexterm>
+          <primary>Zeitreihenbearbeitung</primary>
+        </indexterm>
 
     <para>In der KALYPSO-Oberfläche wird als Zeitreihenformat ausschließlich
     das ZML-Format unterstützt. Andere Textfomate können jedoch problemlos

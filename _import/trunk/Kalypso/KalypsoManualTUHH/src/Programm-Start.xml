@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="programm_start">
-  <?dbhh topicname="Allgemeines" topicid="2"?>
-
-  <chapterinfo>
-    <date><indexterm>
-        <primary>Beschreibung der Startseite</primary>
-      </indexterm></date>
-  </chapterinfo>
-
   <title id="view_prognose">Programm-Start</title>
+
+  <indexterm>
+        <primary>Beschreibung der Startseite</primary>
+      </indexterm>
 
   <para>Der Programm-Start von KALYPSO ist abhängig von den Zugriffsrechten
   des Benutzers. Die Benutzerrechte sind dabei klassifiziert nach den in <xref
@@ -22,13 +18,11 @@
   <xref linkend="client-installation" /> erstellten Linkes.</para>
 
   <section id="kalypso_startseite">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>KALYPSO-Konzept</primary>
-        </indexterm></date>
-    </sectioninfo>
-
     <title>Startseite</title>
+	  
+    <indexterm>
+          <primary>KALYPSO-Konzept</primary>
+        </indexterm>
 
     <para id="dummy5">Nach dem Programm-Start von KALYPSO öffnet sich die
     Startseite, die in Anlehnung an die Zugriffsrechte des Benutzers aufgebaut

@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="zeitreihen_repository">
-  <chapterinfo>
-    <date><indexterm>
-        <primary>Zeitreihenbrowser</primary>
-      </indexterm></date>
-  </chapterinfo>
-
   <title>Zeitreihenbrowser</title>
+	
+  <indexterm>
+        <primary>Zeitreihenbrowser</primary>
+      </indexterm>
 
   <section>
-    <sectioninfo>
-      <date><indexterm>
+    <indexterm>
           <primary>Allgemeines</primary>
-        </indexterm></date>
-    </sectioninfo>
+        </indexterm>
 
     <title>Allgemeines</title>
 
@@ -59,13 +55,11 @@
   </section>
 
   <section id="repository_ansichten">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>Ablagen-Ansicht</primary>
-        </indexterm></date>
-    </sectioninfo>
-
     <title>Ablagen-Ansicht</title>
+	  
+    <indexterm>
+          <primary>Ablagen-Ansicht</primary>
+        </indexterm>
 
     <para>Bei Anwahl der Perspektive über die entsprechende Schaltfläche
     öffnet sich die vordefinierte Ablagen-Ansicht (<xref
@@ -105,13 +99,11 @@
   </section>
 
   <section id="repository_zeitreihenverwaltung">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>Zeitreihenverwaltung</primary>
-        </indexterm></date>
-    </sectioninfo>
-
     <title>Zeitreihenverwaltung</title>
+	  
+    <indexterm>
+          <primary>Zeitreihenverwaltung</primary>
+        </indexterm>
 
     <para>Die Verwaltung der Zeitreihen-Ablagen erfolgt über Funktionen, die
     anhand von Schaltflächen in der oberen Leiste des Ablagen-Fensters (<xref

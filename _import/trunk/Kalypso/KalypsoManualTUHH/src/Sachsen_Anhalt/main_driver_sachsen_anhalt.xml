@@ -22,23 +22,15 @@
 	&file_gui; 
 	&file_repository;
 	<chapter>
-		<chapterinfo>
-			<date>
-				<indexterm>
-					<primary>Vorhersage-Assistenten</primary>
-				</indexterm>
-			</date>
-		</chapterinfo>
-		<!-- <title id="Assi_00">Vorhersage-Assistenten</title>-->
 		<title id="vorhersage_wizards">Vorhersage-Assistenten</title>
+		<indexterm><primary>Vorhersage-Assistenten</primary> </indexterm>
 		
-			&file_wizards_allg;    
-			&file_wizard_Ilse;
-			&file_wizard_Bode;
-			&file_wizard_Saale;
+		&file_wizards_allg;
+		&file_wizard_Ilse;
+		&file_wizard_Bode;
+		&file_wizard_Saale;
 	</chapter>
 	
 	<lot/>
-	<!--
-	<index/> -->
+	<index/>
 </book>

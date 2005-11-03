@@ -8,6 +8,8 @@
   </extension>
   <extension
         point="org.eclipse.help.contexts">
-     <contexts file="contexts.xml"/>
+     <contexts
+           file="contexts.xml"
+           plugin="org.kalypso.tuhhmanual"/>
   </extension>
 </plugin>

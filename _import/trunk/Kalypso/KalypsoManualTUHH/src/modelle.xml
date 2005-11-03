@@ -11,13 +11,11 @@
   werden in dieser Version integrierte Modelle erläutert.</para>
 
   <section id="kalypso_na">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>Niederschlag-Abfluss-Modell KALYPSO-NA</primary>
-        </indexterm></date>
-    </sectioninfo>
-
     <title>Niederschlag-Abfluss-Modell KALYPSO-NA</title>
+	  
+    <indexterm>
+          <primary>Niederschlag-Abfluss-Modell KALYPSO-NA</primary>
+        </indexterm>
 
     <para>Das am Arbeitsbereich Wasserbau der TUHH verwendete
     Niederschlag-Abfluss-Modell Kalypso-NA ist eine OpenSource Modell zur
@@ -49,13 +47,11 @@
     dem Verfahren von Kalinin-Miljukov.</para>
 
     <section>
-      <sectioninfo>
-        <date><indexterm>
-            <primary>Preprocessing</primary>
-          </indexterm></date>
-      </sectioninfo>
-
       <title>Preprocessing</title>
+		
+      <indexterm>
+            <primary>Preprocessing</primary>
+          </indexterm>
 
       <para>Für die Erstellung eines Niederschlag-Abfluss-Modells sind
       umfangreiche Vorarbeiten notwendig. Die zu erwartende Genauigkeit der
@@ -171,13 +167,11 @@
     </section>
 
     <section>
-      <sectioninfo>
-        <date><indexterm>
-            <primary>Processing</primary>
-          </indexterm></date>
-      </sectioninfo>
-
       <title>Processing</title>
+		
+      <indexterm>
+            <primary>Processing</primary>
+          </indexterm>
 
       <para>Nach der Datenaufbereitung im betrachteten Einzugsgebiet kann mit
       dem eigentlichen Modellaufbau begonnen werden. Hierbei werden folgende
@@ -234,13 +228,11 @@
       </orderedlist>
 
       <section id="kalypso_na-neues_projekt">
-        <sectioninfo>
-          <date><indexterm>
-              <primary>Projekt anlegen</primary>
-            </indexterm></date>
-        </sectioninfo>
-
         <title>Ein neues Projekt anlegen</title>
+		  
+        <indexterm>
+              <primary>Projekt anlegen</primary>
+            </indexterm>
 
         <para>Ein neues NA-Modell erfordert im Rahmen des Preprocessings die
         Aufbereitung der geometrischen Eingangsdaten (Teilgebiete, Stränge und
@@ -491,13 +483,11 @@
       </section>
 
       <section id="kalypso_na-allgemeine_projektstruktur">
-        <sectioninfo>
-          <date><indexterm>
-              <primary>Allgemeine Datenstruktur</primary>
-            </indexterm></date>
-        </sectioninfo>
-
         <title>Allgemeine Projektstruktur</title>
+		  
+        <indexterm>
+              <primary>Allgemeine Datenstruktur</primary>
+            </indexterm>
 
         <para>Die Verwaltung des Na-Modelles erfolgt in einer einheitlichen
         und abgschlossenen Projektstruktur. Unter dem eigentlichen
@@ -693,13 +683,11 @@
       </section>
 
       <section id="kalypso_na-systemvernetzung">
-        <sectioninfo>
-          <date><indexterm>
-              <primary>System Vernetzung - Netzeditor</primary>
-            </indexterm></date>
-        </sectioninfo>
-
         <title>System Vernetzung - Netzeditor</title>
+		  
+        <indexterm>
+              <primary>System Vernetzung - Netzeditor</primary>
+            </indexterm>
 
         <para>Die Vernetzung des Modelles erfolgt auf Basis übertragener
         Geometrien der Shape-Dateien. Mit Hilfe der Karte Modellvernetzung
@@ -773,13 +761,11 @@
       </section>
 
       <section>
-        <sectioninfo>
-          <date><indexterm>
-              <primary>Parameter editieren</primary>
-            </indexterm></date>
-        </sectioninfo>
-
         <title>Parameter editieren</title>
+		  
+        <indexterm>
+              <primary>Parameter editieren</primary>
+            </indexterm>
 
         <para>Die Parameter können in den Karten,Tabellen sowie in der Feature
         (Element)- und Baumansicht geändert werden. Prinzipiell können alle
@@ -923,13 +909,11 @@
       </section>
 
       <section id="weisse_elster_rechenlaeufe">
-        <sectioninfo>
-          <date><indexterm>
-              <primary>Rechenvarianten</primary>
-            </indexterm></date>
-        </sectioninfo>
-
         <title>Rechenvarianten</title>
+		  
+        <indexterm>
+              <primary>Rechenvarianten</primary>
+            </indexterm>
 
         <para>Das Verzeichnis Rechenvarianten enthält alle zur
         Modellberechnung notwendigen Dateien. Diese werden beim Anlegen einer
@@ -980,13 +964,11 @@
       </section>
 
       <section>
-        <sectioninfo>
-          <date><indexterm>
-              <primary>Berechnung starten</primary>
-            </indexterm></date>
-        </sectioninfo>
-
         <title>Eine Berechnung starten</title>
+		  
+        <indexterm>
+              <primary>Berechnung starten</primary>
+            </indexterm>
 
         <para>Nachdem alle Modellparameter gesetzt wurden kann die Rechnung
         gestartet werden. Hierzu muss zunächst ein Rechenfall markiert werden,
@@ -1005,13 +987,11 @@
     </section>
 
     <section>
-      <sectioninfo>
-        <date><indexterm>
-            <primary>Postprocessing</primary>
-          </indexterm></date>
-      </sectioninfo>
-
       <title>Postprocessing</title>
+		
+      <indexterm>
+            <primary>Postprocessing</primary>
+          </indexterm>
 
       <para>Ist die Berechnung erfolgreich durchgeführt, so können die
       Ergebnisse im Unterordner der Rechenvariante angeschaut werden. Hierzu
@@ -1022,13 +1002,11 @@
     </section>
 
     <section id="kalypso_na_modellparameter">
-      <sectioninfo>
-        <date><indexterm>
-            <primary>Liste der Modellparameter</primary>
-          </indexterm></date>
-      </sectioninfo>
-
       <title>Liste der Modellparameter</title>
+		
+      <indexterm>
+            <primary>Liste der Modellparameter</primary>
+          </indexterm>
 
       <para>Im Folgenden werden alle verwendeten Modellparameter für das
       Niederschlag-Abfluss-Modell KALYPSO-NA erläutert. Die Eingabe der
