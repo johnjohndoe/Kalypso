@@ -47,8 +47,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.help.HelpSystem;
+import org.eclipse.help.IContext;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -980,18 +983,23 @@ public class WizardView extends ViewPart implements IWizardContainer3
   public boolean doHelp()
   {
     final IWizard wizard = getWizard();
-    final String helpHref;
+    final String helpId;
     if( wizard instanceof IWizard2 )
-      helpHref = ((IWizard2)wizard).getHelpHref();
+      helpId = ((IWizard2)wizard).getHelpId();
     else
-      helpHref = null;
+      helpId = null;
     
     BusyIndicator.showWhile( null, new Runnable()
     {
       public void run()
       {
-//        WorkbenchHelp.displayHelp();
-        WorkbenchHelp.displayHelpResource( helpHref );
+        final IContext context = HelpSystem.getContext(helpId);
+        
+        // take the first topic found and directly display it
+		if (context != null && context.getRelatedTopics().length > 0 )
+		  WorkbenchHelp.displayHelpResource( context.getRelatedTopics()[0].getHref() );
+		else
+		  Logger.getLogger( WizardView.class.getName() ).warning( "Keine gültige Kontext-Id: " + helpId );
       }
     } );
 

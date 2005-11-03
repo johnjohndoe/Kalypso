@@ -62,6 +62,6 @@ public interface IWizard2 extends IWizard
   /** The initial browser size in percent of the whole area */
   public int getInitialBrowserSize();
   
-  /** The href which to show if help is invoked. */
-  public String getHelpHref();
+  /** The context-id which to show if help is invoked */
+  public String getHelpId();
 }
