@@ -88,10 +88,10 @@ public class ModelNACalcTest extends TestCase
     try
     {
       calc( "we", "test1", "1" );
-      calc( "we", "test1", "2" ); //2.9
-      calc( "we", "test1", "3" ); //1.17
-      calc( "we", "test1", "4" ); //0.017
-      calc( "we", "test1", "5" ); //2.8
+      calc( "we", "test1", "2" );
+      calc( "we", "test1", "3" );
+      calc( "we", "test1", "4" ); 
+      calc( "we", "test1", "5" );
       calc( "we", "test1", "6" );
       calc( "we", "test1", "7" );
       calc( "we", "test1", "8" );
@@ -101,7 +101,7 @@ public class ModelNACalcTest extends TestCase
       calc( "we", "test1", "12" );
       calc( "we", "test1", "13" );
       calc( "we", "test1", "14" );
-      calc( "we", "test1", "15" );// fehler in den hydrotopen flaechen
+      calc( "we", "test1", "15" );
       calc( "we", "test1", "16" );
       calc( "we", "test1", "17" );
     }
@@ -176,20 +176,22 @@ public class ModelNACalcTest extends TestCase
       ZipUtilities.zip( tmpResults, tmpDir );
       final String[] ignore = new String[]
       {
-          "inp.dat/we_nat.ntz",
-          "infolog.txt",
-          "*exe",
+          //          "inp.dat/we_nat.zft",
+          //          "inp.dat/we_nat.ntz",
+          //          "*exe",
           "*err",
-          "*gml",
+          //          "*gml",
           "*res",
           "IdMap.txt",
           "exe.log",
           //          "start/we_nat_start.txt",
           //          "inp.dat/we.hyd",
           //          "out_we.nat/950825.qgs",
-          "inp.dat/we_nat.ger",
-          //          "inp.dat/we_nat.geb",
-          "zufluss/*" };
+          //          "inp.dat/we_nat.ger",
+          "inp.dat/we_nat.geb",
+          "zufluss/*",
+          "klima.dat/*",
+          "infolog.txt" };
       ILogger logger = new ILogger()
       {
         /**
