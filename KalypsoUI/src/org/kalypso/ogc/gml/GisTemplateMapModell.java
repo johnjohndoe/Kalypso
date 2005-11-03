@@ -80,7 +80,7 @@ public class GisTemplateMapModell implements IMapModell
   private final IFeatureSelectionManager m_selectionManager;
 
   public GisTemplateMapModell( final Gismapview gisview, final URL context, final CS_CoordinateSystem crs,
-      final IProject project, final IFeatureSelectionManager selectionManager )
+     final IProject project, final IFeatureSelectionManager selectionManager )
   {
     m_context = context;
     m_selectionManager = selectionManager;
@@ -179,6 +179,8 @@ public class GisTemplateMapModell implements IMapModell
     for( int i = 0; i < themes.length; i++ )
     {
       final Layer layer = maptemplateFactory.createGismapviewTypeLayersTypeLayer();
+      if( layer == null ) // e.g. legend
+        continue;
 
       final IKalypsoTheme kalypsoTheme = themes[i];
       if( kalypsoTheme instanceof GisTemplateFeatureTheme )
@@ -186,6 +188,7 @@ public class GisTemplateMapModell implements IMapModell
         ( (GisTemplateFeatureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell
             .isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
+
       }
       else if( kalypsoTheme instanceof KalypsoWMSTheme )
       {
@@ -199,8 +202,7 @@ public class GisTemplateMapModell implements IMapModell
         ( (KalypsoPictureTheme)kalypsoTheme ).fillLayerType( layer, "ID_" + i, m_modell.isThemeEnabled( kalypsoTheme ) );
         layerList.add( layer );
       }
-
-      if( m_modell.isThemeActivated( kalypsoTheme ) )
+      if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) )
         layersType.setActive( layer );
     }
 
@@ -208,7 +210,7 @@ public class GisTemplateMapModell implements IMapModell
     {
       // is this code still used?
       GeoTransformer gt = new GeoTransformer( ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:4326" ) );
-      /*GM_Envelope env = */gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+      /* GM_Envelope env = */gt.transformEnvelope( bbox, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
       //System.out.println( env );
     }
     catch( Exception e )
