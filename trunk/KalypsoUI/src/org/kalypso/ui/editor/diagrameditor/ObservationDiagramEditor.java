@@ -52,6 +52,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.resources.SetContentHelper;
@@ -123,6 +124,8 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     {
       e.printStackTrace();
     }
+    
+    WorkbenchHelp.setHelp( m_swingContainer, "org.kalypso.tuhhmanual.gui-zml_diagramm_ansicht" );
   }
 
   /**
