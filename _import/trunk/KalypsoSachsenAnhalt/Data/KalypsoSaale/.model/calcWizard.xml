@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="17" helpHref="/org.kalypso.manual/index.html">
+<!DOCTYPE entities
+[
+	<!ENTITY hid "org.kalypso.tuhhmanual">
+]>
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="17" helpId="&hid;.SA_Assi_Saale_01">
 	<!-- KONTROLLE UND UMRECHNUNG DER ZEITREIHEN - NIEDERSCHLAG -->
 	<!-- Niederschlag an Stationen (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Ombrometer" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -7,7 +11,7 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Ombrometer"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
-		<arg name="helpHref" value="blubberdibla"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_02_Niederschlagsstationen"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -39,6 +43,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Thür_Wald"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Thür_Wald.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_03_Niederschlagsgebiete"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -65,6 +70,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Saale_Ilm"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Saale_Ilm.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_03_Niederschlagsgebiete"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -91,6 +97,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_W_Elster"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_W_Elster.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_03_Niederschlagsgebiete"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -117,6 +124,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Unstrut_Eich"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Unstrut_Eich.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_03_Niederschlagsgebiete"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -143,6 +151,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Flach_Süd"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Süd.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_03_Niederschlagsgebiete"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -169,6 +178,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Harz"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Harz.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_03_Niederschlagsgebiete"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -195,6 +205,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete_Flach_Nord"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete_Flach_Nord.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_03_Niederschlagsgebiete"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -222,6 +233,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Inhalt_TS"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_04_Volumen"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -257,6 +269,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_10"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_10.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_05_Abfluesse"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -284,6 +297,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_10"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_10.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -308,6 +322,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_20"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_20.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -335,6 +350,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_20"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_20.html"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -359,6 +375,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_30"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_30.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -386,6 +403,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_30"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_30.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -410,6 +428,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_40"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_40.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -437,6 +456,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_40"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_40.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -461,6 +481,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_50"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_50.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -489,6 +510,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_55"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_55.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -516,6 +538,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_55"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_55.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -540,6 +563,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_60"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_60.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -567,6 +591,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_60"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_60.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -591,6 +616,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_65"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_65.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -615,6 +641,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_70"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_70.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -642,6 +669,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_70"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_70.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_06_Steuerung_TS"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -666,6 +694,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_80"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_TS_Gruppe_80.html#Steu_TS_Gruppe_20"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_07_Steuerung_SW"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -693,6 +722,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_80"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Steu_TS_Gruppe_80.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_07_Steuerung_SW"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="50"/>
@@ -717,6 +747,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg10"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg10.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_08_Berechnung"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -748,6 +779,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg20"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg20.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -775,6 +807,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg30"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg30.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -802,6 +835,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg40"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg40.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -829,6 +863,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg50"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg50.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -856,6 +891,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg55"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg55.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -882,6 +918,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg60"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg60.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -909,6 +946,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg70"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg70.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -936,6 +974,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg80"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg80.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -963,6 +1002,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg_TS"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_Erg_TS.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_09_Ergebnisse_Talsperren"/>
 		<!-- 
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -995,6 +1035,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Pegel"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_10_Berichtsablage_Pegel"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -3211,6 +3252,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Speicher"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Speicher.html#Berichtsablage_Speicher"/>
+		<arg name="helpId" value="&hid;.SA_Assi_Saale_10_Berichtsablage_Pegel"/>
 		<!--
         Page-Layout -->
 		<arg name="mainSash" value="40"/>
