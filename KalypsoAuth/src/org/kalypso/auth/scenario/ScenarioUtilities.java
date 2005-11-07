@@ -75,32 +75,4 @@ public class ScenarioUtilities
   {
     return IScenario.ID_DEFAULT_SCENARIO.equals( scenarioId );
   }
-
-  /**
-   * Convenient method for replacing the tokens within a string with
-   * the values of the properties delivered by the given scenario.
-   * 
-   * @param propertyValue some string which might contain tokens
-   * 
-   * @return a new string with token replaced by values as found in the scenario, if any
-   */
-  public static String replaceTokens( final String propertyValue, final IScenario scenario )
-  {
-    String newPropertyValue = propertyValue;
-    
-    final String str = scenario.getProperty( IScenario.PROP_TOKEN_LIST, null );
-    if( str != null )
-    {
-      final String[] tokens = str.split( ";" );
-      for( int i = 0; i < tokens.length; i++ )
-      {
-        final String token = IScenario.TOKEN_BEGIN + tokens[i] + IScenario.TOKEN_END;
-        final String value = scenario.getProperty( tokens[i], "" );
-        
-        newPropertyValue = newPropertyValue.replaceAll( token, value );
-      }
-    }
-    
-    return newPropertyValue;
-  }
 }

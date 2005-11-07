@@ -43,10 +43,7 @@ package org.kalypso.metadoc.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -84,13 +81,7 @@ public final class ExportWizard extends Wizard
   private final WorkspaceModifyOperation m_operation;
   private final IExportTarget m_target;
 
-  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell, final ImageDescriptor defaultImage )
-      throws CoreException
-  {
-    this( target, factory, shell, defaultImage, new Properties() );
-  }
-
-  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell, final ImageDescriptor defaultImage, final Properties initialConfiguration ) throws CoreException
+  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell, final ImageDescriptor defaultImage ) throws CoreException
   {
     m_target = target;
     m_shell = shell;
@@ -98,11 +89,6 @@ public final class ExportWizard extends Wizard
     setNeedsProgressMonitor( true );
 
     final IPublishingConfiguration configuration = new PublishingConfiguration( new BaseConfiguration() );
-    for( final Iterator iter = initialConfiguration.entrySet().iterator(); iter.hasNext(); )
-    {
-      final Map.Entry entry = (Map.Entry)iter.next();
-      configuration.addProperty( (String)entry.getKey(), entry.getValue());
-    }
     
     // one settings-entry per target and factory
     final String settingsName = target.getClass().toString() + "_" + factory.getClass().toString();
@@ -121,6 +107,9 @@ public final class ExportWizard extends Wizard
     for( int i = 0; i < targetPages.length; i++ )
       addPage( targetPages[i] );
 
+    // metadata extensions are used to provide the target with 
+    // extra information that is computed/generated only
+    // during the creation of the export documents
     final Configuration metadataExtensions = m_target.getMetadataExtensions();
 
     // operation which will be called for finish
