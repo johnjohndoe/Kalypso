@@ -65,6 +65,7 @@ import org.kalypso.metadoc.impl.MetaDocException;
  &lt;meta&gt;
  &lt;autor&gt;Strumpf&lt;/autor&gt;
  &lt;doktyp&gt;Prognose&lt;/doktyp&gt;
+ &lt;dokument&gt;Vorhersage-20.05.2005&lt;/dokument&gt;
  &lt;ersteller&gt;HVZ&lt;/ersteller&gt;
  &lt;erstelldat&gt;2005-08-26&lt;/erstelldat&gt;
  &lt;gueltigdat&gt;2005-08-26&lt;/gueltigdat&gt;
@@ -87,13 +88,19 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   private final static String GT = ">";
 
   private static final String TAG_META = "meta";
+
   private final static String TAG_AUTOR = "autor";
-  private final static String TAG_DOKUMENTTYP = "doktyp";
+  private final static String TAG_DESCRIPTION = "description";
   private final static String TAG_ERSTELLER = "ersteller";
   private final static String TAG_ERSTELLUNGSDATUM = "erstelldat";
   private final static String TAG_GUELTIGKEITSDATUM = "gueltigdat";
+
+  private final static String TAG_DOKUMENT = "dokument";
+  private final static String TAG_DOKUMENTTYP = "doktyp";
+  private final static String TAG_GEBIET = "gebiet";
   private static final String TAG_STATION = "station_id";
   private static final String TAG_SIMULATION = "simulation";
+
   private static final String TAG_FILES = "files";
   private static final String TAG_FILE = "file";
 
@@ -107,14 +114,12 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   {
     metadata.put( TAG_AUTOR, "string;"
         + serviceProps.getProperty( "robotron.preset." + IMetaDocCommiter.KEY_AUTOR, "Autor" ) );
-    metadata.put( TAG_DOKUMENTTYP, "string;"
-        + serviceProps.getProperty( "robotron.preset." + TAG_DOKUMENTTYP, "Dokumenttyp" ) );
-    metadata
-        .put( TAG_ERSTELLER, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_ERSTELLER, "Ersteller" ) );
-    metadata.put( TAG_ERSTELLUNGSDATUM, "date;" + DFDATE.format( new Date() ) );
-    metadata.put( TAG_GUELTIGKEITSDATUM, "date;" + DFDATE.format( new Date() ) );
-    metadata.put( TAG_STATION, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_STATION, "123456" ) );
-    metadata.put( TAG_SIMULATION, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_SIMULATION, "0" ) );
+    metadata.put( TAG_DESCRIPTION, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_DESCRIPTION, "" ) );
+    metadata.put( TAG_ERSTELLER, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_ERSTELLER, "" ) );
+
+    final String strd = DFDATE.format( new Date() );
+    metadata.put( TAG_ERSTELLUNGSDATUM, "date;" + strd );
+    metadata.put( TAG_GUELTIGKEITSDATUM, "date;" + strd );
   }
 
   /**
@@ -147,8 +152,8 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       { doc.getAbsolutePath() };
       final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), metadataExtensions );
 
-      Logger.getLogger( getClass( ).getName() ).info( "Metadata:\n" + metadataXml );
-      
+      Logger.getLogger( getClass().getName() ).info( "Metadata:\n" + metadataXml );
+
       final String ret = (String)call.invoke( new Object[]
       { docs, metadataXml } );
 
@@ -162,7 +167,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     catch( final Exception e ) // generic for simplicity
     {
       e.printStackTrace();
-      
+
       throw new MetaDocException( e );
     }
   }
@@ -188,8 +193,6 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     bf.append( LT + TAG_META + GT );
 
     bf.append( LT + TAG_AUTOR + GT + valueOfProperty( mdProps.getProperty( TAG_AUTOR ) ) + CLT + TAG_AUTOR + GT );
-    bf.append( LT + TAG_DOKUMENTTYP + GT + valueOfProperty( mdProps.getProperty( TAG_DOKUMENTTYP ) ) + CLT
-        + TAG_DOKUMENTTYP + GT );
     bf.append( LT + TAG_ERSTELLER + GT + valueOfProperty( mdProps.getProperty( TAG_ERSTELLER ) ) + CLT + TAG_ERSTELLER
         + GT );
     bf.append( LT + TAG_ERSTELLUNGSDATUM + GT + valueOfProperty( mdProps.getProperty( TAG_ERSTELLUNGSDATUM ) ) + CLT
@@ -197,28 +200,45 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     bf.append( LT + TAG_GUELTIGKEITSDATUM + GT + valueOfProperty( mdProps.getProperty( TAG_GUELTIGKEITSDATUM ) ) + CLT
         + TAG_GUELTIGKEITSDATUM + GT );
 
-    // tricky:
-    // 1- there should be a mapping in the service configuration that says
-    //    which metadataExtensions key maps to the station_id element.
-    //
-    // 2- using this key we check in the metadataExtensions for an array
-    //    Pegelkennziffer and we create an xml-element station_id for each
-    //    of them which has been found
-    final String keyStationId = serviceProps.getProperty( "METADATAEX_" + TAG_STATION );
-    if( metadataExtensions != null )
-    {
-      final String[] ids = metadataExtensions.getStringArray( keyStationId );
-      if( ids.length == 0 )
-        bf.append( LT + TAG_STATION + GT + "" + CLT + TAG_STATION + GT );
-      
-      for( int i = 0; i < ids.length; i++ )
-        bf.append( LT + TAG_STATION + GT + ids[i] + CLT + TAG_STATION + GT );
-    }
-    else
-      bf.append( LT + TAG_STATION + GT + "" + CLT + TAG_STATION + GT );
+    final String dokumentTyp = serviceProps.getProperty( "robotron.preset." + TAG_DOKUMENTTYP );
+    bf.append( LT + TAG_DOKUMENTTYP + GT + dokumentTyp + CLT + TAG_DOKUMENTTYP + GT );
 
-    bf.append( LT + TAG_SIMULATION + GT + valueOfProperty( mdProps.getProperty( TAG_SIMULATION ) ) + CLT + TAG_SIMULATION + GT );
-    
+    final String keyDokument = serviceProps.getProperty( "robotron.md." + TAG_DOKUMENT );
+    String dokument = "";
+    if( metadataExtensions != null && keyDokument != null )
+      dokument = metadataExtensions.getString( keyDokument, "" );
+    bf.append( LT + TAG_DOKUMENT + GT + dokument + CLT + TAG_DOKUMENT + GT );
+
+    bf.append( LT + TAG_DESCRIPTION + GT + valueOfProperty( mdProps.getProperty( TAG_DESCRIPTION ) ) + CLT
+        + TAG_DESCRIPTION + GT );
+
+    final String keyScenario = serviceProps.getProperty( "robotron.md.scenario" );
+    String scenarioId = "";
+    if( metadataExtensions != null && keyScenario != null )
+      scenarioId = metadataExtensions.getString( keyScenario, "" );
+
+    final String simulation = serviceProps.getProperty( "robotron.md." + TAG_SIMULATION + "_" + scenarioId );
+    bf.append( LT + TAG_SIMULATION + GT + simulation + CLT + TAG_SIMULATION + GT );
+
+    final String keyGebiet = serviceProps.getProperty( "robotron.md." + TAG_GEBIET );
+    String gebiet = "";
+    if( metadataExtensions != null && keyGebiet != null )
+      gebiet = metadataExtensions.getString( keyGebiet, "" );
+    bf.append( LT + TAG_GEBIET + GT + gebiet + CLT + TAG_GEBIET + GT );
+
+    final String keyStationId = serviceProps.getProperty( "robotron.md." + TAG_STATION );
+    String[] stationId = {};
+    if( metadataExtensions != null && keyStationId != null )
+      stationId = metadataExtensions.getStringArray( keyStationId );
+
+    if( stationId == null || stationId.length == 0 )
+      bf.append( LT + TAG_STATION + GT + "" + CLT + TAG_STATION + GT );
+    else
+    {
+      for( int i = 0; i < stationId.length; i++ )
+        bf.append( LT + TAG_STATION + GT + stationId[i] + CLT + TAG_STATION + GT );
+    }
+
     bf.append( LT + TAG_FILES + GT );
     bf.append( LT + TAG_FILE + GT + fileName + CLT + TAG_FILE + GT );
     bf.append( CLT + TAG_FILES + GT );

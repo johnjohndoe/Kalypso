@@ -66,7 +66,7 @@ public class PSICompactCommiter implements IMetaDocCommiter
 
       final Writer writer = new OutputStreamWriter( new FileOutputStream( xmlFile ), "UTF-8" );
       // closes writer
-      MetaDocSerializer.buildXML( serviceProps, mdProps, writer, goodDocFile.getName() );
+      MetaDocSerializer.buildXML( serviceProps, mdProps, writer, goodDocFile.getName(), metadataExtensions );
 
       // commit the both files (important: last one is the xml file)
       final String dist = serviceProps.getProperty( PSICOMPACT_DIST ) + "/";

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.metadoc.IMetaDocCommiter;
 
@@ -44,7 +45,6 @@ public class MetaDocSerializer
 
   private final static DateFormat DFDATETIME = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
-
   /**
    * Prepares the properties with some default value
    * 
@@ -68,9 +68,10 @@ public class MetaDocSerializer
    *          properties of the service
    * @param mdProps
    *          properties of the metadata
+   * @param metadataExtensions
    */
   public static void buildXML( final Properties serviceProps, final Properties mdProps, final Writer writer,
-      final String fileName ) throws IOException
+      final String fileName, final Configuration metadataExtensions ) throws IOException
   {
     try
     {
@@ -81,8 +82,16 @@ public class MetaDocSerializer
           + "</" + TAG_IMPORTMODE + ">" );
       writer.write( "</" + TAG_HEADER + ">" );
       writer.write( "<" + TAG_RECORD + ">" );
-      writer.write( "<" + TAG_DOKUMENTTYP + ">" + valueOfProperty( mdProps.getProperty( TAG_DOKUMENTTYP ) ) + "</"
-          + TAG_DOKUMENTTYP + ">" );
+
+      // retrieve scenario id
+      final String keyScenarioId = serviceProps.getProperty( "md.scenario" );
+      String scenarioId = "";
+      if( metadataExtensions != null && keyScenarioId != null )
+        scenarioId = metadataExtensions.getString( keyScenarioId, "" );
+
+      final String dokTyp = serviceProps.getProperty( TAG_DOKUMENTTYP + "_" + scenarioId, "" );
+      writer.write( "<" + TAG_DOKUMENTTYP + ">" + dokTyp + "</" + TAG_DOKUMENTTYP + ">" );
+
       writer.write( "<" + TAG_ERSTELLER + ">" + valueOfProperty( mdProps.getProperty( TAG_ERSTELLER ) ) + "</"
           + TAG_ERSTELLER + ">" );
       writer.write( "<" + TAG_AUTOR + ">" + valueOfProperty( mdProps.getProperty( TAG_AUTOR ) ) + "</" + TAG_AUTOR
