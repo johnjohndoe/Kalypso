@@ -70,8 +70,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.KalypsoAuthPlugin;
-import org.kalypso.auth.scenario.IScenario;
-import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -184,12 +182,10 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
   /**
    * Prepare a feature for being used as data-model in our wizard page
    */
-  private static Feature prepareFeature( final IPublishingConfiguration configuration ) throws CoreException
+  private Feature prepareFeature( final IPublishingConfiguration configuration ) throws CoreException
   {
     final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
 
-    final String scenarioID = configuration.getString( "currentScenarioId", "" );
-    final IScenario scenario = authPlugin.getScenario( scenarioID );
     final Map metadata;
     try
     {
@@ -220,12 +216,16 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       final String xmltype = splits.length == 0 ? String.class.getName() : splits[0];
 
       String value = splits.length >= 2 ? splits[1] : null;
-
-      // TRICKY: maybe replace tokens with scenario specific values
-      value = ScenarioUtilities.replaceTokens( value, scenario );
-      // Important: always put value again in metadata, in case it changed
-      metadata.put( name, value );
-
+      
+      // tricky: overwrite value if it is a marker value
+      if( m_metadataExtensions.containsKey( value ) )
+      {
+        value = m_metadataExtensions.getString( value );
+        
+        // Important: always put value again in metadata when it changed
+        metadata.put( name, value );
+      }
+      
       String typename = null;
       Object realValue = null;
       try

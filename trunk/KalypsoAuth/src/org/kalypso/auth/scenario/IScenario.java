@@ -57,9 +57,6 @@ public interface IScenario
   /** denotes the end of a token */
   public final static String TOKEN_END = ":";
   
-  /** contains a semicolon separated list of tokens that are delivered by the properties of this scenario */
-  public static final String PROP_TOKEN_LIST = "TOKEN_LIST";
-  
   public final static String PROP_NAME = "NAME";
   public final static String PROP_DESCRIPTION = "DESCRIPTION";
   
