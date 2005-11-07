@@ -26,16 +26,13 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   public ProfilPoints( )
   {
     super();
-    m_dependencies.put( POINT_PROPERTY.RECHTSWERT, new POINT_PROPERTY[]
-    { POINT_PROPERTY.HOCHWERT } );
-    m_dependencies.put( POINT_PROPERTY.HOCHWERT, new POINT_PROPERTY[]
-    { POINT_PROPERTY.RECHTSWERT } );
-    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AX, new POINT_PROPERTY[]
-    { POINT_PROPERTY.BEWUCHS_AY, POINT_PROPERTY.BEWUCHS_DP } );
-    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AY, new POINT_PROPERTY[]
-    { POINT_PROPERTY.BEWUCHS_AX, POINT_PROPERTY.BEWUCHS_DP } );
-    m_dependencies.put( POINT_PROPERTY.BEWUCHS_DP, new POINT_PROPERTY[]
-    { POINT_PROPERTY.BEWUCHS_AY, POINT_PROPERTY.BEWUCHS_AY } );
+    final POINT_PROPERTY[] bewuchs = new POINT_PROPERTY[] { POINT_PROPERTY.BEWUCHS_AX, POINT_PROPERTY.BEWUCHS_AY, POINT_PROPERTY.BEWUCHS_DP };
+    final POINT_PROPERTY[] geoCoord = new POINT_PROPERTY[] { POINT_PROPERTY.HOCHWERT , POINT_PROPERTY.RECHTSWERT } ;
+    m_dependencies.put( POINT_PROPERTY.RECHTSWERT, geoCoord);
+    m_dependencies.put( POINT_PROPERTY.HOCHWERT, geoCoord);
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AX,bewuchs);
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_AY, bewuchs);
+    m_dependencies.put( POINT_PROPERTY.BEWUCHS_DP, bewuchs);
   }
 
   /*
@@ -91,7 +88,7 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
   public POINT_PROPERTY[] getDependenciesFor( final POINT_PROPERTY pointProperty )
   {
     final POINT_PROPERTY[] dep = m_dependencies.get( pointProperty );
-    return (dep == null) ? new POINT_PROPERTY[] {} : dep;
+    return (dep == null) ? new POINT_PROPERTY[] {pointProperty} : dep;
   }
 
   public final LinkedList<POINT_PROPERTY> getExistingProperties( )
@@ -163,10 +160,10 @@ public class ProfilPoints extends LinkedList<IProfilPoint>
     return true;
   }
 
-  public void setDependenciesFor( POINT_PROPERTY pointProperty, POINT_PROPERTY[] dependencies )
-  {
-    m_dependencies.put( pointProperty, dependencies );
-  }
+  //public void setDependenciesFor( POINT_PROPERTY pointProperty, POINT_PROPERTY[] dependencies )
+ // {
+  //  m_dependencies.put( pointProperty, dependencies );
+ // }
 
   public LinkedList<IProfilPoint> unmodifiable( )
   {

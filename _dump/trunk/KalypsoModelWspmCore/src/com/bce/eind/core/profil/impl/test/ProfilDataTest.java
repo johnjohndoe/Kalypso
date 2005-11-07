@@ -46,14 +46,14 @@ public class ProfilDataTest extends TestCase
     assertEquals( "punkt2:", p2, p.findPoint( 150.00015, 0.0001 ) );
 
     p.addDevider( p1, DEVIDER_TYP.DURCHSTROEMTE );
-    p.addDevider( p2, DEVIDER_TYP.FLIESSZONE );
-    p.addDevider( p3, DEVIDER_TYP.FLIESSZONE );
+    p.addDevider( p2, DEVIDER_TYP.TRENNFLAECHE );
+    p.addDevider( p3, DEVIDER_TYP.TRENNFLAECHE );
     p.addDevider( p4, DEVIDER_TYP.DURCHSTROEMTE );
 
     final IProfilPoint dpL = p.getDevider( DEVIDER_TYP.DURCHSTROEMTE )[0].getPoint();
     final IProfilPoint dpR = p.getDevider( DEVIDER_TYP.DURCHSTROEMTE )[1].getPoint();
-    final IProfilPoint tpL = p.getDevider( DEVIDER_TYP.FLIESSZONE )[0].getPoint();
-    final IProfilPoint tpR = p.getDevider( DEVIDER_TYP.FLIESSZONE )[1].getPoint();
+    final IProfilPoint tpL = p.getDevider( DEVIDER_TYP.TRENNFLAECHE )[0].getPoint();
+    final IProfilPoint tpR = p.getDevider( DEVIDER_TYP.TRENNFLAECHE )[1].getPoint();
 
     assertEquals( "Durchströmter Bereich links:", p1, dpL );
     assertEquals( "Durchströmter Bereich rechts", p4, dpR );
@@ -72,7 +72,7 @@ public class ProfilDataTest extends TestCase
 
   public void setGetMoveDevider( final IProfil p ) throws Exception
   {
-    final IProfilDevider[] deviderTF = p.getDevider( DEVIDER_TYP.FLIESSZONE );
+    final IProfilDevider[] deviderTF = p.getDevider( DEVIDER_TYP.TRENNFLAECHE );
     final IProfilDevider rightTF = deviderTF[1];
     final IProfilDevider leftTF = deviderTF[0];
     p.setValueFor(rightTF, DEVIDER_PROPERTY.BOESCHUNG, false );
@@ -84,7 +84,7 @@ public class ProfilDataTest extends TestCase
         .getValueFor( DEVIDER_PROPERTY.class ) );
 
     final IProfilPoint newPkt = p.getDevider( DEVIDER_TYP.DURCHSTROEMTE )[0].getPoint();
-    p.moveDevider( p.getDevider( DEVIDER_TYP.FLIESSZONE )[0], newPkt );
+    p.moveDevider( p.getDevider( DEVIDER_TYP.TRENNFLAECHE )[0], newPkt );
     final IProfilPoint aktPkt = p.getDevider( DEVIDER_TYP.DURCHSTROEMTE )[0].getPoint();
     assertEquals( "neu Durchstroemte links:", newPkt, aktPkt );
   }

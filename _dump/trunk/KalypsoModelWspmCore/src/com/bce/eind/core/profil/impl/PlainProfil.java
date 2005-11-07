@@ -62,7 +62,7 @@ public class PlainProfil implements IProfil, IProfilConstants
   {
     IProfilDevider pd = new ProfilDevider( devider, point );
     m_devider.add( pd );
-    // Collections.sort(m_devider);
+    
     return pd;
   }
 
@@ -83,16 +83,12 @@ public class PlainProfil implements IProfil, IProfilConstants
     if( pointProperty == null )
       return null;
     final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
-    final POINT_PROPERTY[] newProperties = new POINT_PROPERTY[depending.length + 1];
-
-    System.arraycopy( depending, 0, newProperties, 0, depending.length );
-    newProperties[depending.length] = pointProperty;
-
-    for( POINT_PROPERTY pd : newProperties )
+    
+    for( POINT_PROPERTY pd : depending )
       m_points.addProperty( pd );
 
     
-    return newProperties;
+    return depending;
   }
 
   /**
@@ -337,16 +333,12 @@ public class PlainProfil implements IProfil, IProfilConstants
     if( pointProperty == null )
       return null;
     final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
-    final POINT_PROPERTY[] removedProperties = new POINT_PROPERTY[depending.length + 1];
-
-    System.arraycopy( depending, 0, removedProperties, 0, depending.length );
-    removedProperties[depending.length] = pointProperty;
-
-    for( POINT_PROPERTY pp : removedProperties )
+    
+    for( POINT_PROPERTY pp : depending )
     {
       m_points.removeProperty( pp );
     }
-    return removedProperties;
+    return depending;
   }
 
   /**

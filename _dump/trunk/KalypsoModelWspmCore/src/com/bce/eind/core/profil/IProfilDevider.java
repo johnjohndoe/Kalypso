@@ -6,7 +6,7 @@ public interface IProfilDevider
 {
   public static enum DEVIDER_TYP
   {
-    BORDVOLL, DURCHSTROEMTE, FLIESSZONE, WEHR;
+    BORDVOLL, DURCHSTROEMTE, TRENNFLAECHE, WEHR;
   }
 
   public static enum DEVIDER_PROPERTY
