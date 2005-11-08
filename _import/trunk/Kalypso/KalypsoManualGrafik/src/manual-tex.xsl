@@ -24,7 +24,7 @@
 	<xsl:variable name="latex.hyperref.preamble">
 	</xsl:variable>
 	
-	<xsl:param name="latex.admonition.path">./icons</xsl:param>
+	<xsl:param name="admon.graphics.path">./icons</xsl:param>
 
 	<xsl:variable name="latex.use.fancyvrb">1</xsl:variable>
 	<xsl:variable name="latex.use.fancybox">1</xsl:variable>

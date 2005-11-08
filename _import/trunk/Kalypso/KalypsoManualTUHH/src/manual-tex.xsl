@@ -4,7 +4,6 @@
 
 	<xsl:import href="../latex-docbook-08pre.xsl"/>
 
-
 	<xsl:output method="text" encoding="ISO-8859-1" indent="yes"/>
 
 	<xsl:variable name="latex.babel.language">german</xsl:variable>
@@ -24,7 +23,7 @@
 	<xsl:variable name="latex.hyperref.preamble">
 	</xsl:variable>
 	
-	<xsl:param name="latex.admonition.path">./icons</xsl:param>
+	<xsl:param name="admon.graphics.path">./icons</xsl:param>
 
 	<xsl:variable name="latex.use.fancyvrb">1</xsl:variable>
 	<xsl:variable name="latex.use.fancybox">1</xsl:variable>
@@ -49,7 +48,7 @@
 	</xsl:template-->
 
 	<xsl:variable name="latex.book.preamblestart">
-		\documentclass[a4paper, twoside, 10pt]{book}
+		\documentclass[a4paper, twoside, 12pt]{book}
 		\usepackage[latin1]{inputenc}
 	</xsl:variable>
 
