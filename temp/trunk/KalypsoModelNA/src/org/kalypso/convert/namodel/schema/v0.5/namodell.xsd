@@ -8,14 +8,66 @@
                <element name="Abfluss" type="obslink:TimeseriesLinkType/>
         jetzt: <element name="Abfluss" type="obslink:TimeseriesLinkFeatureProperty/>
 	-->
-	<element name="NaModell" type="na:NaModellType"/>
+	<element name="NaModell" type="na:NaModellType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>NA-Modell Kalypso</label>
+				<tooltip>NA-Modell Kalypso</tooltip>
+				<description>NA-Modell Kalypso</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>RR-Model Kalypso</label>
+				<tooltip>RR-Model Kalypso</tooltip>
+				<description>RR-Model Kalypso</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="NaModellType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="CatchmentCollectionMember" type="na:CatchmentCollectionAssociationType"/>
-					<element name="ChannelCollectionMember" type="na:ChannelCollectionAssociationType"/>
-					<element name="NodeCollectionMember" type="na:NodeCollectionAssociationType"/>
+					<element name="CatchmentCollectionMember" type="na:CatchmentCollectionAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Teilgebieten</label>
+								<tooltip>besteht aus Teilgebieten</tooltip>
+								<description>besteht aus Teilgebieten</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>consists of subcatchments</label>
+								<tooltip>consists of subcatchments</tooltip>
+								<description>consists of subcatchments</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="ChannelCollectionMember" type="na:ChannelCollectionAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Gewässersträngen</label>
+								<tooltip>besteht aus Gewässersträngen</tooltip>
+								<description>besteht aus Gewässersträngen</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>consists of strands</label>
+								<tooltip>consists of strands</tooltip>
+								<description>consists of strands</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="NodeCollectionMember" type="na:NodeCollectionAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>besteht aus Modellknoten</label>
+								<tooltip>besteht aus Modellknoten</tooltip>
+								<description>besteht aus Modellknoten</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>consists of nodes</label>
+								<tooltip>consists of nodes</tooltip>
+								<description>consists of nodes</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -30,12 +82,38 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="NodeCollection" type="na:NodeCollectionType" substitutionGroup="gml:_Feature"/>
+	<element name="NodeCollection" type="na:NodeCollectionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Modellknotenliste</label>
+				<tooltip>Modellknotenliste</tooltip>
+				<description>Modellknotenliste</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Nodelist</label>
+				<tooltip>Nodelist</tooltip>
+				<description>Nodelist</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="NodeCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="nodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="nodeMember" type="na:NodeAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>hat</label>
+								<tooltip>hat</tooltip>
+								<description>hat</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>has</label>
+								<tooltip>has</tooltip>
+								<description>has</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -49,7 +127,20 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Node" type="na:NodeFeatureType" substitutionGroup="gml:_Feature"/>
+	<element name="Node" type="na:NodeFeatureType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Knoten</label>
+				<tooltip>Knoten</tooltip>
+				<description>Knoten</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>node</label>
+				<tooltip>node</tooltip>
+				<description>node</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="NodeFeatureType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -190,7 +281,20 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="KontZufluss" type="na:ContInflowFeatureType" substitutionGroup="na:_Branching"/>
+	<element name="KontZufluss" type="na:ContInflowFeatureType" substitutionGroup="na:_Branching">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Zugabe</label>
+				<tooltip>Zugabe</tooltip>
+				<description>Zugabe</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Inflow</label>
+				<tooltip>Inflow</tooltip>
+				<description>Inflow</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="ContInflowFeatureType">
 		<complexContent>
 			<extension base="na:AbstractBranchingType">
@@ -213,7 +317,20 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="KontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_Branching"/>
+	<element name="KontEntnahme" type="na:ContExtractionFeatureType" substitutionGroup="na:_Branching">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Entnahme</label>
+				<tooltip>Entnahme</tooltip>
+				<description>Entnahme</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Withdrawal</label>
+				<tooltip>Withdrawal</tooltip>
+				<description>Withdrawal</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="ContExtractionFeatureType">
 		<complexContent>
 			<extension base="na:AbstractBranchingType">
@@ -250,7 +367,20 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="Ueberlauf" type="na:OverfallFeatureType" substitutionGroup="na:_Branching"/>
+	<element name="Ueberlauf" type="na:OverfallFeatureType" substitutionGroup="na:_Branching">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Überlauf</label>
+				<tooltip>Überlauf</tooltip>
+				<description>Überlauf</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Overflow</label>
+				<tooltip>Overflow</tooltip>
+				<description>Overflow</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="OverfallFeatureType">
 		<complexContent>
 			<extension base="na:AbstractBranchingType">
@@ -287,7 +417,20 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="Verzweigung" type="na:BranchingFeatureType" substitutionGroup="na:_Branching"/>
+	<element name="Verzweigung" type="na:BranchingFeatureType" substitutionGroup="na:_Branching">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Verzweigung</label>
+				<tooltip>Verzweigung</tooltip>
+				<description>Verzweigung</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Branch</label>
+				<tooltip>Branch</tooltip>
+				<description>Branch</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="BranchingFeatureType">
 		<complexContent>
 			<extension base="na:AbstractBranchingType">
@@ -329,12 +472,38 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="na:CatchmentCollection"/>
+					<element ref="na:CatchmentCollection">
+							<annotation>
+			<documentation xml:lang="de">
+				<label>Teilgebietsliste</label>
+				<tooltip>Teilgebietsliste</tooltip>
+				<description>Teilgebietsliste</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Subcatchmentlist</label>
+				<tooltip>Subcatchmentlist</tooltip>
+				<description>Subcatchmentlist</description>
+			</documentation>
+		</annotation>
+	</element>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="CatchmentCollection" type="na:CatchmentCollectionType" substitutionGroup="gml:_Feature"/>
+	<element name="CatchmentCollection" type="na:CatchmentCollectionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Teilgebietsliste</label>
+				<tooltip>Teilgebietsliste</tooltip>
+				<description>Teilgebietsliste</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Subcatchmentlist</label>
+				<tooltip>Subcatchmentlist</tooltip>
+				<description>Subcatchmentlist</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="CatchmentAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -348,12 +517,38 @@
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="catchmentMember" type="na:CatchmentAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="catchmentMember" type="na:CatchmentAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>hat</label>
+								<tooltip>hat</tooltip>
+								<description>hat</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>has</label>
+								<tooltip>has</tooltip>
+								<description>has</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="Catchment" type="na:CatchmentFeatureType" substitutionGroup="gml:_Feature"/>
+	<element name="Catchment" type="na:CatchmentFeatureType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Teilgebiet</label>
+				<tooltip>Teilgebiet</tooltip>
+				<description>Teilgebiet</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Subcatchment</label>
+				<tooltip>Subcatchment</tooltip>
+				<description>Subcatchment</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="CatchmentFeatureType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -971,12 +1166,38 @@ siehe bodenkorrekturmember...
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="ChannelCollection" type="na:ChannelCollectionType" substitutionGroup="gml:_Feature"/>
+	<element name="ChannelCollection" type="na:ChannelCollectionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Gewässerstrangliste</label>
+				<tooltip>Gewässerstrangliste</tooltip>
+				<description>Gewässerstrangliste</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Strandlist</label>
+				<tooltip>Strandlist</tooltip>
+				<description>Strandlist</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="ChannelCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="channelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="channelMember" type="na:ChannelAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>hat</label>
+								<tooltip>hat</tooltip>
+								<description>hat</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>has</label>
+								<tooltip>has</tooltip>
+								<description>has</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -990,7 +1211,20 @@ siehe bodenkorrekturmember...
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="_Channel" type="na:AbstractChannelType" abstract="true" substitutionGroup="gml:_Feature"/>
+	<element name="_Channel" type="na:AbstractChannelType" abstract="true" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Strang</label>
+				<tooltip>Strang</tooltip>
+				<description>Strang</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>strand</label>
+				<tooltip>strand</tooltip>
+				<description>strand</description>
+			</documentation>
+		</annotation>
+	</element>
 	<!-- Channel super type -->
 	<complexType name="AbstractChannelType">
 		<complexContent>
@@ -1029,19 +1263,43 @@ siehe bodenkorrekturmember...
 		</complexContent>
 	</complexType>
 	<!-- Virtual Channel -->
-	<element name="VirtualChannel" type="na:VirtualChannelFeatureType" substitutionGroup="na:_Channel"/>
+	<element name="VirtualChannel" type="na:VirtualChannelFeatureType" substitutionGroup="na:_Channel">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>virtueller Strang</label>
+				<tooltip>virtueller Strang</tooltip>
+				<description>virtueller Strang</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>virtual strand</label>
+				<tooltip>virtual strand</tooltip>
+				<description>virtual strand</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="VirtualChannelFeatureType">
 		<complexContent>
-			<extension base="na:AbstractChannelType">
-				<sequence>
-					<!-- virtueller channel hat sonst keine properties -->
-					<!--<element name="kjh" type="string"/>-->
-				</sequence>
-			</extension>
+			<extension base="na:AbstractChannelType"/>
+			<!--				<sequence>
+			virtueller channel hat sonst keine properties 
+							</sequence>-->
 		</complexContent>
 	</complexType>
 	<!-- KM-Channel -->
-	<element name="KMChannel" type="na:KMChannelFeatureType" substitutionGroup="na:_Channel"/>
+	<element name="KMChannel" type="na:KMChannelFeatureType" substitutionGroup="na:_Channel">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>KM-Strang</label>
+				<tooltip>KM-Strang</tooltip>
+				<description>KM-Strang</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>KM-Strand</label>
+				<tooltip>KM-Strand</tooltip>
+				<description>KM-Strand</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="KMChannelFeatureType">
 		<complexContent>
 			<extension base="na:AbstractChannelType">
@@ -1122,7 +1380,20 @@ siehe bodenkorrekturmember...
 		</complexContent>
 	</complexType>
 	<!-- Storage Channel -->
-	<element name="StorageChannel" type="na:StorageChannelFeatureType" substitutionGroup="na:_Channel"/>
+	<element name="StorageChannel" type="na:StorageChannelFeatureType" substitutionGroup="na:_Channel">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Speicher Strang</label>
+				<tooltip>Speicher Strang</tooltip>
+				<description>Speicher Strang</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Storage-Strand</label>
+				<tooltip>Storage-Strand</tooltip>
+				<description>Storage-Strand</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="StorageChannelFeatureType">
 		<complexContent>
 			<extension base="na:AbstractChannelType">
@@ -1240,7 +1511,20 @@ siehe bodenkorrekturmember...
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="KMParameter" type="na:KMParameterType"/>
+	<element name="KMParameter" type="na:KMParameterType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>KM-Parameter</label>
+				<tooltip>KM-Parameter</tooltip>
+				<description>KM-Parameter</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>KM-Parameter</label>
+				<tooltip>KM-Parameter</tooltip>
+				<description>KM-Parameter</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="KMParameterType">
 		<complexContent>
 			<extension base="na:NonGeometricAbstractFeatureType">
@@ -1333,7 +1617,22 @@ siehe bodenkorrekturmember...
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="bodenschichtkorrektur" type="na:bodenschichtkorrekturType" substitutionGroup="gml:_Feature"/>
+	<element name="bodenschichtkorrektur" type="na:bodenschichtkorrekturType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Bodenschichtkorrektur</label>
+				<tooltip>Bodenschichtkorrektur</tooltip>
+				<description>Bodenschichtkorrektur</description>
+			</documentation>
+			<!-- TODO
+						<documentation xml:lang="en">
+							<label>not used</label>
+							<tooltip>not used</tooltip>
+							<description>not used</description>
+						</documentation>
+-->
+		</annotation>
+	</element>
 	<!--
  (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)_(evalay,*)
 -->
@@ -1341,18 +1640,6 @@ siehe bodenkorrekturmember...
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<annotation>
-						<documentation xml:lang="de">
-							<label>nicht verwendet</label>
-							<tooltip>nicht verwendet</tooltip>
-							<description>nicht verwendet</description>
-						</documentation>
-						<documentation xml:lang="en">
-							<label>not used</label>
-							<tooltip>not used</tooltip>
-							<description>not used</description>
-						</documentation>
-					</annotation>
 					<element name="cinh" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -1466,7 +1753,20 @@ siehe bodenkorrekturmember...
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="grundwasserabfluss" type="na:grundwasserabflussType" substitutionGroup="gml:_Feature"/>
+	<element name="grundwasserabfluss" type="na:grundwasserabflussType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Grundwasserrelation</label>
+				<tooltip>Grundwasserrelation</tooltip>
+				<description>Grundwasserrelation</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>groundwater relation</label>
+				<tooltip>groundwater relation</tooltip>
+				<description>groundwater relation</description>
+			</documentation>
+		</annotation>
+	</element>
 	<complexType name="grundwasserabflussType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
