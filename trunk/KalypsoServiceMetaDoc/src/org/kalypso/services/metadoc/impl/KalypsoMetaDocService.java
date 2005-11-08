@@ -127,7 +127,7 @@ public class KalypsoMetaDocService implements IMetaDocService
   {
     try
     {
-      final File docFile = File.createTempFile( "metadoc-tmp", preferredFilename, m_tmpDir );
+      final File docFile = File.createTempFile( "document", preferredFilename, m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
 
       final PropertiesConfiguration mExConf = new PropertiesConfiguration();

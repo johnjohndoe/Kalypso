@@ -91,7 +91,17 @@ import org.kalypsodeegree_impl.gml.schema.Mapper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
- * The file-target simply writes the document into a local file.
+ * This target uses the MetaDoc Service for storing the documents on the server side.
+ * <p>
+ * The MetadataExtensions should be prepared before the commitDocument method is called. <br>
+ * For instance, following keys should be set with valid values: <br>
+ * <ul>
+ * <li>currentScenarioId: it contains the current scenario id
+ * <li>calcCaseName: the name of the current calccase
+ * <li>calcCaseDescription: the description of the current calccase
+ * <li>projectName: the name of the current project
+ * </ul>
+ * These properties are used on the server side to set the XML-Metadata of the document being commited.
  * 
  * @author schlienger
  */
@@ -216,16 +226,16 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       final String xmltype = splits.length == 0 ? String.class.getName() : splits[0];
 
       String value = splits.length >= 2 ? splits[1] : null;
-      
+
       // tricky: overwrite value if it is a marker value
       if( m_metadataExtensions.containsKey( value ) )
       {
         value = m_metadataExtensions.getString( value );
-        
+
         // Important: always put value again in metadata when it changed
         metadata.put( name, value );
       }
-      
+
       String typename = null;
       Object realValue = null;
       try
