@@ -166,6 +166,10 @@
         <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml"
              target="deploy"
              inheritAll="false" />
+        
+        <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml"
+             target="build-filecopyservlet-war"
+             inheritAll="false" />
     </target>
 
     <target name="psicompact-fake" depends="build-basic,build-UserService">

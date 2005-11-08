@@ -59,7 +59,8 @@ import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.impl.MetaDocException;
 
 /**
- * Commits the metadoc whithin the robotron framework
+ * Commits the metadoc whithin the robotron/IMS framework. <br>
+ * Following is an example of a XML-metadata string devlivered along the document-file.
  * 
  * <pre>
  &lt;meta&gt;
@@ -77,6 +78,11 @@ import org.kalypso.metadoc.impl.MetaDocException;
  &lt;/files&gt;
  &lt;/meta&gt;
  * </pre>
+ * 
+ * <p>
+ * You can configure defaults values (keys begin with robotron.preset.) or specific values (keys begin with
+ * robotron.md.) in the properties of this commiter. The properties are usually defined in the associated Metadoc
+ * Service (its configuration file).
  * 
  * @author schlienger
  */
@@ -148,8 +154,14 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       final Properties mdProps = new Properties();
       mdProps.putAll( metadata );
 
+      // TODO replace current code with this DataHandler stuff
+//            final DataHandler[] docs = new DataHandler[] {
+//                new DataHandler( new FileDataSource(doc) )
+//            };
+
       final String[] docs = new String[]
       { doc.getAbsolutePath() };
+      
       final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), metadataExtensions );
 
       Logger.getLogger( getClass().getName() ).info( "Metadata:\n" + metadataXml );

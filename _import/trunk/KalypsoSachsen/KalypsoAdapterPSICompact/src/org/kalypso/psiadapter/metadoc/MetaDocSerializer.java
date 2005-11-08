@@ -53,7 +53,6 @@ public class MetaDocSerializer
    */
   public static void prepareProperties( final Properties serviceProps, final Properties props )
   {
-    props.setProperty( TAG_DOKUMENTTYP, "string;" + serviceProps.getProperty( TAG_DOKUMENTTYP, "Dokumenttyp" ) );
     props.setProperty( TAG_REGION, "string;" + serviceProps.getProperty( TAG_REGION, "Region" ) );
     props.setProperty( TAG_ERSTELLER, "string;" + serviceProps.getProperty( TAG_ERSTELLER, "Ersteller" ) );
     props.setProperty( TAG_AUTOR, "string;" + serviceProps.getProperty( IMetaDocCommiter.KEY_AUTOR, "Autor" ) );
