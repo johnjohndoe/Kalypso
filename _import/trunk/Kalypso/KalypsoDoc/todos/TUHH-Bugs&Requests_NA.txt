@@ -57,11 +57,11 @@ TODO´s:
 	Kommentar:	schema in namodell.xsd 0.4 fertig. Knoten zu Knoten beziehungen werden beim berechnen mit extra strängen hinzugefügt (hierdurch sind zufluss und knotnezu knoten gleichzeitig möglich))
 	Bearbeiter:	doemming, huebsch
 	
-8) CreateNA erweitern
++8) CreateNA erweitern
 	Wer: 		huebsch
 	Wann: 		02.08.2005
 	Termin:		?
-	Status:		offen
+	Status:		erledigt
 	Kommentar:	zusätzliche Wizard-Page, welche weitere Informationen vom Benutzer abfraget bzgl. Bodenkorrekturwerte & KMParameter vorbereiten
 	Bearbeiter: kuepferle,huebsch
 
@@ -118,12 +118,12 @@ Feature Requests:
 	Bearbeiter: huebsch, doemming
 
 5) Tabellen in den Tabellen - Werte übernehemen ermöglichen. Z.B. Kalinin-Miljukov oder Bodenkorrekturwerte von einem Strang/ Teilgebiet in ein anderes übernehmen.
-	Wer: 		Ingenieurbüros, Claudia
+	Wer: 		Ingenieurbüros, Claudia, Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		offen
+	Status:		offen, in bearbeitung
 	Kommentar:	über marshalling
-	Bearbeiter:	doemming, küpferle?
+	Bearbeiter:	doemming, huebsch
 
 +6) Im nacontrol.xsd annotations einfügen
 	Wer: 		Ingenieurbüros, Brüning
@@ -133,11 +133,11 @@ Feature Requests:
 	Kommentar:
 	Bearbeiter:	Huebsch
 
-7) Internationalisierung
++7) Internationalisierung
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		angenommen
+	Status:		erledigt - für den ersten wurf
 	Kommentar:	Schemata weitestgehend übersetzt, Regionalisierung der Texte,Buttons usw. in arbeit
 	Bearbeiter:	Huebsch (Schemata), Text?
 
@@ -189,13 +189,13 @@ Feature Requests:
 Bugs:
 -----
 
-1) GrafikTool öffnen führt zu einfrieren der kalypso-ansicht bis zum beenden des grafiktools.
++1) GrafikTool öffnen führt zu einfrieren der kalypso-ansicht bis zum beenden des grafiktools.
 	Wer: 		Hübsch
 	Wann: 		09.06.2005
 	Termin:		?
-	Status:		offen (unschön)
-	Kommentar:	modaler dialog, in allgemeine todo liste übertragen
-	Bearbeiter:	
+	Status:		abgelehnt
+	Kommentar:	modaler dialog, man will die änderung nach kalypso übertragen
+	Bearbeiter:	schlienger
 
 +2) Grafiktoool kann nicht direkt für *.odt Vorlage geöffnet werden, obwohl das symbol aktiviert ist. man muss also die *.odt immer erst speichern.
 	Wer: 		Hübsch
@@ -284,5 +284,5 @@ Bugs:
 	Wann: 		26.08.2005
 	Termin:		?
 	Status:		offen
-	Kommentar:	
-	Bearbeiter:
+	Kommentar:	mit gernod formate absprechen!
+	Bearbeiter: huebsch
