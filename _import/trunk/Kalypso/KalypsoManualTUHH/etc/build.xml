@@ -1,141 +1,135 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="kalypso-manual-tuhh" default="all" basedir="..">
 
-    <!-- Main Document (ENTITIES) -->
-    <!--
+	<!-- Main Document (ENTITIES) -->
+	<!--
   <property name="doc.name" value="main_driver_ingbueros.xml"/>  
   <property name="doc.name" value="main_driver_sachsen.xml"/>  
   -->
-    <property name="doc.name" value="Sachsen_Anhalt/main_driver_sachsen_anhalt.xml" />
+	<property name="doc.name" value="Sachsen_Anhalt/main_driver_sachsen_anhalt.xml" />
 
-    <!-- Source properties -->
-    <property name="help.dir" value="src" />
-    <property name="build.dir" value="build" />
-    <property name="build.pdf.dir" value="${build.dir}/pdf" />
-    <property name="build.html.dir" value="${build.dir}/html" />
-    <property name="build.tex.dir" value="${build.dir}/tex" />
-    <property name="build.eclipse.dir" value="${build.dir}/eclipse" />
-    <property name="build.fo.dir" value="${build.dir}/fo" />
-    <property name="css.dir" value="${help.dir}/css" />
-    <property name="image.dir" value="${help.dir}/img" />
+	<!-- Source properties -->
+	<property name="help.dir" value="src" />
+	<property name="build.dir" value="build" />
+	<property name="build.pdf.dir" value="${build.dir}/pdf" />
+	<property name="build.html.dir" value="${build.dir}/html" />
+	<property name="build.profiling.dir" value="${build.dir}/profiling" />
+	<property name="build.tex.dir" value="${build.dir}/tex" />
+	<property name="build.eclipse.dir" value="${build.dir}/eclipse" />
+	<property name="build.fo.dir" value="${build.dir}/fo" />
+	<property name="css.dir" value="${help.dir}/css" />
+	<property name="image.dir" value="${help.dir}/img" />
+	<property name="doc.profiled" value="${build.profiling.dir}/docbook-profiled.xml"/>
 
-    <target name="init">
-        <mkdir dir="${build.dir}" />
-        <mkdir dir="${build.pdf.dir}" />
-        <mkdir dir="${build.html.dir}" />
-        <mkdir dir="${build.tex.dir}" />
-        <mkdir dir="${build.eclipse.dir}" />
-        <mkdir dir="${build.fo.dir}" />
-    </target>
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.pdf.dir}" />
+		<mkdir dir="${build.html.dir}" />
+		<mkdir dir="${build.profiling.dir}" />
+		<mkdir dir="${build.tex.dir}" />
+		<mkdir dir="${build.eclipse.dir}" />
+		<mkdir dir="${build.fo.dir}" />
+	</target>
 
-    <target name="cleanup" description="cleans generated stuff except deployed stuff">
-        <delete>
-            <fileset dir="${build.dir}" includes="*/**" />
-        </delete>
-    </target>
+	<target name="cleanup" description="cleans generated stuff except deployed stuff">
+		<delete>
+			<fileset dir="${build.dir}" includes="*/**" />
+		</delete>
+	</target>
 
-    <target name="valid">
+	<target name="valid">
+		<antcall target="xmlvalid">
+			<param name="xmlvalid.xml" value="${help.dir}/${doc.name}" />
+		</antcall>
+	</target>
 
-        <antcall target="xmlvalid">
-            <param name="xmlvalid.xml" value="${help.dir}/${doc.name}" />
-        </antcall>
+	<!-- MANUAL (html und pdf) -->
+	<target name="html" depends="init,profiling" description="Erzeugt das Benutzerhandbuch - HTML-Version">
+		<antcall target="xslproc">
+			<param name="xslproc.out.dir" value="${build.html.dir}" />
+			<param name="xslproc.out.name" value="manual.html" />
+			<param name="xslproc.xsl" value="${help.dir}/manual-html.xsl" />
+			<param name="xslproc.xml" value="${doc.profiled}" />
+		</antcall>
 
-    </target>
+		<copy todir="${build.html.dir}">
+			<fileset dir="${css.dir}" includes="*.*" />
+		</copy>
 
-    <!-- MANUAL (html und pdf) -->
-    <target name="html"
-            depends="init,valid"
-            description="Erzeugt das Benutzerhandbuch - HTML-Version">
+		<mkdir dir="${build.html.dir}/img" />
+		<copy todir="${build.html.dir}/img">
+			<fileset dir="${image.dir}" includes="**/*" />
+		</copy>
+	</target>
 
-        <antcall target="xslproc">
-            <param name="xslproc.out.dir" value="${build.html.dir}" />
-            <param name="xslproc.out.name" value="manual.html" />
-            <param name="xslproc.xsl" value="${help.dir}/manual-html.xsl" />
-            <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
-        </antcall>
+	<target name="eclipse-help" depends="init,profiling" description="Erzeugt das Benutzerhandbuch - Online-Help für Eclipse">
 
-        <copy todir="${build.html.dir}">
-            <fileset dir="${css.dir}" includes="*.*" />
-        </copy>
+		<antcall target="xslproc">
+			<param name="xslproc.out.dir" value="${build.eclipse.dir}" />
+			<param name="xslproc.out.name" value="manual.html" />
+			<param name="xslproc.xsl" value="${help.dir}/manual-eclipse.xsl" />
+			<param name="xslproc.xml" value="${doc.profiled}" />
+		</antcall>
 
-        <mkdir dir="${build.html.dir}/img" />
-        <copy todir="${build.html.dir}/img">
-            <fileset dir="${image.dir}" includes="**/*" />
-        </copy>
-    </target>
+		<copy todir="${build.eclipse.dir}">
+			<fileset dir="${css.dir}" includes="*.*" />
+		</copy>
 
-    <target name="eclipse-help"
-            depends="init,valid"
-            description="Erzeugt das Benutzerhandbuch - Online-Help für Eclipse">
+		<mkdir dir="${build.eclipse.dir}/img" />
+		<copy todir="${build.eclipse.dir}/img">
+			<fileset dir="${image.dir}" includes="**/*" />
+		</copy>
 
-        <antcall target="xslproc">
-            <param name="xslproc.out.dir" value="${build.eclipse.dir}" />
-            <param name="xslproc.out.name" value="manual.html" />
-            <param name="xslproc.xsl" value="${help.dir}/manual-eclipse.xsl" />
-            <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
-        </antcall>
+		<copy todir="." file="${build.eclipse.dir}/toc.xml" />
+		<copy todir="." file="${build.eclipse.dir}/contexts.xml" />
 
-        <copy todir="${build.eclipse.dir}">
-            <fileset dir="${css.dir}" includes="*.*" />
-        </copy>
+		<zip destfile="./doc.zip" basedir="${build.eclipse.dir}" includes="**/*" excludes="*.xml" />
+	</target>
 
-        <mkdir dir="${build.eclipse.dir}/img" />
-        <copy todir="${build.eclipse.dir}/img">
-            <fileset dir="${image.dir}" includes="**/*" />
-        </copy>
+	<target name="pdf" description="Erstellt das Handbuch im PDF Format" depends="init,profiling">
+		<copy todir="${build.tex.dir}">
+			<fileset dir="${help.dir}" casesensitive="no" includes="**/*.*" excludes="**/CVS/**" />
+		</copy>
 
-        <copy todir="." file="${build.eclipse.dir}/toc.xml" />
-        <copy todir="." file="${build.eclipse.dir}/contexts.xml" />
+		<antcall target="pdfproc">
+			<param name="pdfproc.out.dir" value="${build.pdf.dir}" />
+			<param name="pdfproc.out.name" value="manual" />
+			<param name="pdfproc.xsl" value="${help.dir}/manual-tex.xsl" />
+			<param name="pdfproc.xml" value="${doc.profiled}" />
+		</antcall>
 
-        <zip destfile="./doc.zip" basedir="${build.eclipse.dir}" includes="**/*" excludes="*.xml" />
-    </target>
+	</target>
 
-    <target name="pdf" description="Erstellt das Handbuch im PDF Format" depends="init,valid">
-        <copy todir="${build.tex.dir}">
-            <fileset dir="${help.dir}" casesensitive="no" includes="**/*.*" excludes="**/CVS/**" />
-        </copy>
+	<target name="pdf-fo" depends="init,profiling" description="Erzeugt das Benutzerhandbuch - PDF-Version mit FO">
 
-        <antcall target="pdfproc">
-            <param name="pdfproc.out.dir" value="${build.pdf.dir}" />
-            <param name="pdfproc.out.name" value="manual" />
-            <param name="pdfproc.xsl" value="${help.dir}/manual-tex.xsl" />
-            <param name="pdfproc.xml" value="${help.dir}/${doc.name}" />
-        </antcall>
+		<antcall target="xslproc">
+			<param name="xslproc.out.dir" value="${build.fo.dir}" />
+			<param name="xslproc.out.name" value="manual.fo" />
+			<param name="xslproc.xsl" value="${help.dir}/manual-fo.xsl" />
+			<param name="xslproc.xml" value="${doc.profiled}" />
+		</antcall>
 
-    </target>
+		<antcall target="fop">
+			<param name="fop.fo" value="${build.fo.dir}/manual.fo" />
+			<param name="fop.pdf" value="${build.fo.dir}/manual.pdf" />
+		</antcall>
+	</target>
 
-    <target name="pdf-fo"
-            depends="init,valid"
-            description="Erzeugt das Benutzerhandbuch - PDF-Version mit FO">
-
-        <antcall target="xslproc">
-            <param name="xslproc.out.dir" value="${build.fo.dir}" />
-            <param name="xslproc.out.name" value="manual.fo" />
-            <param name="xslproc.xsl" value="${help.dir}/manual-fo.xsl" />
-            <param name="xslproc.xml" value="${help.dir}/${doc.name}" />
-        </antcall>
-
-        <antcall target="fop">
-            <param name="fop.fo" value="${build.fo.dir}/manual.fo" />
-            <param name="fop.pdf" value="${build.fo.dir}/manual.pdf" />
-        </antcall>
-    </target>
-
-    <target name="xslproc">
-        <!-- Benötigte Parameter: 
+	<target name="xslproc">
+		<!-- Benötigte Parameter: 
   					'xslproc.out.name'  Name der Ausgabedatei
   					'xslproc.out.dir'  Ausgabeverzeichnis
   					'xslproc.xsl
   					'xslproc.xml'
   	-->
-        <!--Die Batchdatei xsltproc.bat muss verfügbar sein (Umgebungsvariable PATH zum Pfad besetzen, z.B. c:\bin) -->
-        <exec executable="xsltproc.bat" failonerror="true">
-            <arg line="-o ${xslproc.out.dir}/${xslproc.out.name} ${xslproc.xsl} ${xslproc.xml}" />
-        </exec>
-    </target>
+		<!--Die Batchdatei xsltproc.bat muss verfügbar sein (Umgebungsvariable PATH zum Pfad besetzen, z.B. c:\bin) -->
+		<exec executable="xsltproc.bat" failonerror="true">
+			<arg line="-o ${xslproc.out.dir}/${xslproc.out.name} ${xslproc.xsl} ${xslproc.xml}" />
+		</exec>
+	</target>
 
-    <target name="pdfproc">
-        <!-- Benötigte Parameter: 
+	<target name="pdfproc">
+		<!-- Benötigte Parameter: 
   					'pdfproc.out.name'  Name der Ausgabedatei
   					'pdfproc.out.dir'  Ausgabeverzeichnis
   					'pdfproc.xsl		DocBook XSL
@@ -143,50 +137,57 @@
   					'tex.tmp.dir'		Temporäres Verzeichnis fürs texen
   	-->
 
-        <antcall target="xslproc">
-            <param name="xslproc.out.name" value="${pdfproc.out.name}.tex" />
-            <param name="xslproc.out.dir" value="${build.tex.dir}" />
-            <param name="xslproc.xsl" value="${pdfproc.xsl}" />
-            <param name="xslproc.xml" value="${pdfproc.xml}" />
-        </antcall>
+		<antcall target="xslproc">
+			<param name="xslproc.out.name" value="${pdfproc.out.name}.tex" />
+			<param name="xslproc.out.dir" value="${build.tex.dir}" />
+			<param name="xslproc.xsl" value="${pdfproc.xsl}" />
+			<param name="xslproc.xml" value="${pdfproc.xml}" />
+		</antcall>
 
-        <exec executable="pdflatex.exe" dir="${build.tex.dir}">
-            <arg value="${pdfproc.out.name}.tex" />
-        </exec>
+		<exec executable="pdflatex.exe" dir="${build.tex.dir}">
+			<arg value="${pdfproc.out.name}.tex" />
+		</exec>
 
-        <exec executable="makeindex.exe" dir="${build.tex.dir}">
-            <arg value="${pdfproc.out.name}" />
-        </exec>
+		<exec executable="makeindex.exe" dir="${build.tex.dir}">
+			<arg value="${pdfproc.out.name}" />
+		</exec>
 
-        <exec executable="pdflatex.exe" dir="${build.tex.dir}">
-            <arg value="${pdfproc.out.name}.tex" />
-        </exec>
+		<exec executable="pdflatex.exe" dir="${build.tex.dir}">
+			<arg value="${pdfproc.out.name}.tex" />
+		</exec>
 
-        <copy todir="${pdfproc.out.dir}" file="${build.tex.dir}/${pdfproc.out.name}.pdf">
-        </copy>
-    </target>
+		<copy todir="${pdfproc.out.dir}" file="${build.tex.dir}/${pdfproc.out.name}.pdf">
+		</copy>
+	</target>
 
 
-    <target name="xmlvalid">
-        <!-- Benötigte Parameter: 'xmlvalid.xml'  
-  	-->
-        <exec executable="xmllint.bat" failonerror="true">
-            <arg line="--valid --postvalid ${xmlvalid.xml}" />
-        </exec>
-    </target>
+	<target name="xmlvalid">
+		<!-- Benötigte Parameter: 'xmlvalid.xml'  -->
+		<exec executable="xmllint.bat" failonerror="true">
+			<arg line="--valid --postvalid ${xmlvalid.xml}" />
+		</exec>
+	</target>
 
-    <target name="fop">
-        <!-- Benötigte Parameter: 
+	<target name="fop">
+		<!-- Benötigte Parameter: 
     					'fop.fo'  Name der FO-Eingangsdatei
     					'fop.pdf' Name der PDF-Ausgangsdatei
     	-->
 
-        <exec executable="fop.bat" failonerror="true">
-            <arg line="-fo ${fop.fo} -pdf ${fop.pdf}" />
-        </exec>
-    </target>
+		<exec executable="fop.bat" failonerror="true">
+			<arg line="-fo ${fop.fo} -pdf ${fop.pdf}" />
+		</exec>
+	</target>
+	
+	<target name="profiling" depends="init,valid">
+		<antcall target="xslproc">
+			<param name="xslproc.out.dir" value="${build.profiling.dir}" />
+			<param name="xslproc.out.name" value="docbook-profiled.xml" />
+			<param name="xslproc.xsl" value="${help.dir}/manual-profile.xsl" />
+			<param name="xslproc.xml" value="${help.dir}/${doc.name}" />
+		</antcall>
+	</target>
 
-
-    <target name="all" depends="html,pdf,eclipse-help" />
+	<target name="all" depends="html,pdf,eclipse-help" />
 
 </project>

@@ -1,7 +1,6 @@
 <?xml version='1.0'?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
-
 	<xsl:import href="../latex-docbook-08pre.xsl"/>
 
 	<xsl:output method="text" encoding="ISO-8859-1" indent="yes"/>

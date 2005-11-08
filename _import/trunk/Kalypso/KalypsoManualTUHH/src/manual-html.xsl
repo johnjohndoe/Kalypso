@@ -4,8 +4,7 @@
 
 	<xsl:param name="suppress.navigation" select="0"/>
 	<xsl:param name="html.stylesheet" select="'xhstyle.css'"/>
-	<!--xsl:param name="generate.toc" select="0"/-->
-	
+
 	<xsl:param name="generate.toc">
 	appendix  toc,title
 	article/appendix  nop
@@ -14,7 +13,7 @@
 	chapter   toc,title
 	part      toc,title
 	preface   toc,title
-	qandadiv  toc
+	qandadiv  toc	
 	qandaset  toc
 	reference toc,title
 	sect1     toc

@@ -12,29 +12,21 @@
     <description>Die Nymphe Kalypso</description>
     <topic label="Die Nymphe Kalypso" href="ch01s01s01.html"/>
   </context>
-  <context id="kalypso_installation">
-    <description>KALYPSO-Installation HVZ Sachsen-Anhalt</description>
-    <topic label="KALYPSO-Installation HVZ Sachsen-Anhalt" href="ch01s02.html"/>
-  </context>
-  <context id="client-installation">
-    <description>Client-Installation (Windows)</description>
-    <topic label="Client-Installation (Windows)" href="ch01s02s02.html"/>
-  </context>
   <context id="anwendungsfaelle">
     <description>Anwendungsfälle</description>
-    <topic label="Anwendungsfälle" href="ch01s03.html"/>
+    <topic label="Anwendungsfälle" href="ch01s02.html"/>
   </context>
   <context id="benutzerrechte">
     <description>Benutzerrechte</description>
-    <topic label="Benutzerrechte" href="ch01s04.html"/>
+    <topic label="Benutzerrechte" href="ch01s03.html"/>
   </context>
   <context id="datenmanagement">
     <description>Datenmanagement</description>
-    <topic label="Datenmanagement" href="ch01s05.html"/>
+    <topic label="Datenmanagement" href="ch01s04.html"/>
   </context>
   <context id="dokumentationen">
     <description>Dokumentation</description>
-    <topic label="Dokumentation" href="ch01s06.html"/>
+    <topic label="Dokumentation" href="ch01s05.html"/>
   </context>
   <context id="programm_start">
     <description>Programm-Start</description>
