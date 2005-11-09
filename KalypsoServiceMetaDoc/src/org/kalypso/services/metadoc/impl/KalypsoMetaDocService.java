@@ -24,7 +24,14 @@ import org.kalypso.services.common.ServiceConfig;
 import org.kalypso.services.metadoc.IMetaDocService;
 
 /**
- * MetaDocService
+ * Serverside business for the metadoc framework.
+ * <p>
+ * The properties that can be defined in the configuration file are:
+ * <ul>
+ * <li>COMMITER (required) contains the full classname of the commiter to use
+ * <li>COMMITER.DIR (optional) when present, this is the directory where files are created. It is up to the
+ * implementation to delete the file once document has been commited. If not present in the configuration, a default
+ * temporary directory is created, and deleted once the jvm shuts down.
  * 
  * @author schlienger
  */
@@ -104,9 +111,9 @@ public class KalypsoMetaDocService implements IMetaDocService
     try
     {
       final Map metadata = new HashMap();
-      
+
       m_props.put( IMetaDocCommiter.KEY_AUTOR, user );
-      
+
       m_commiter.prepareMetainf( m_props, metadata );
 
       return metadata;
