@@ -49,6 +49,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.xml.rpc.ParameterMode;
 
 import org.apache.axis.Constants;
@@ -113,6 +115,8 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   /** date format for the date elements of the xml file */
   private final static DateFormat DFDATE = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
+  private final static Logger LOG = Logger.getLogger( RobotronMetaDocCommiter.class.getName() );
+
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, java.util.Map)
    */
@@ -154,20 +158,19 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       final Properties mdProps = new Properties();
       mdProps.putAll( metadata );
 
-      // TODO replace current code with this DataHandler stuff
-//            final DataHandler[] docs = new DataHandler[] {
-//                new DataHandler( new FileDataSource(doc) )
-//            };
+      final DataHandler[] docs = new DataHandler[]
+      { new DataHandler( new FileDataSource( doc ) ) };
 
-      final String[] docs = new String[]
-      { doc.getAbsolutePath() };
-      
       final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), metadataExtensions );
 
-      Logger.getLogger( getClass().getName() ).info( "Metadata:\n" + metadataXml );
+      LOG.info( "Metadata:\n" + metadataXml );
 
+      LOG.info( "Calling IMS.commitDocument()" );
+      final long dBegin = System.currentTimeMillis();
       final String ret = (String)call.invoke( new Object[]
       { docs, metadataXml } );
+
+      LOG.info( "IMS.commitDocument returned. Duration (ms)= " + ( System.currentTimeMillis() - dBegin ) );
 
       if( ret.length() > 0 )
         throw new MetaDocException( "Die IMS-Dokumentenablage hat einen Fehler verursacht: " + ret );

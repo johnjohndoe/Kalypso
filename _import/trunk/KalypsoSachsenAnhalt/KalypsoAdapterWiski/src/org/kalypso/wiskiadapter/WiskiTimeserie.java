@@ -74,6 +74,8 @@ public class WiskiTimeserie implements IObservation
 
   private final TimeZone m_tzDest;
 
+  private final static Logger LOG = Logger.getLogger( WiskiTimeserie.class.getName() );
+
   public WiskiTimeserie( final TsInfoItem tsinfo )
   {
     if( tsinfo == null )
@@ -95,7 +97,7 @@ public class WiskiTimeserie implements IObservation
     m_axes[1] = new DefaultAxis( TimeserieUtils.getName( kalypsoType ), kalypsoType, kalypsoUnit, Double.class, false );
 
     m_axes[2] = KalypsoStatusUtils.createStatusAxisFor( m_axes[1], true );
-    
+
     final String tzName = tsinfo.getRepository().getProperty( TimeZone.class.getName() );
     if( tzName != null )
       m_tzDest = TimeZone.getTimeZone( tzName );
@@ -317,7 +319,7 @@ public class WiskiTimeserie implements IObservation
       throw new SensorException( "Die Zeitreihenwerte können nicht nach Wiski geschrieben werden"
           + ". Keine Achse vom Typ " + kalypsoType + " wurde gefunden." );
     }
-   
+
     //DateFormat df = DateFormat.getInstance();
     //df.setTimeZone( m_tzDest );
 
@@ -330,7 +332,7 @@ public class WiskiTimeserie implements IObservation
       final Number value = (Number)filteredValues.getElement( ix, valueAxis );
 
       //System.out.println( "writing wiski: " + date.getTime() + " " + df.format( date ) + " " + value );
-      
+
       row.put( "timestamp", new Timestamp( date.getTime() ) );
       row.put( "tsc_value0", new Double( value.doubleValue() ) );
       row.put( "status", new Long( 0 ) );
@@ -346,10 +348,10 @@ public class WiskiTimeserie implements IObservation
       firstDate = (Date)filteredValues.getElement( 0, dateAxis );
     else
       firstDate = new Date();
-    
+
     final int utcOffset = m_tzDest.getOffset( firstDate.getTime() ) / 1000;
     value_tsinfo_map.put( "utcoffset", new Integer( utcOffset ) );
-    
+
     //System.out.println( "utcoffset: " + utcOffset );
 
     ts_values_map.put( KiWWDataProviderInterface.KEY_TSINFO, value_tsinfo_map );
@@ -446,6 +448,8 @@ public class WiskiTimeserie implements IObservation
     WQTable wqt = internFetchTable( m_tsinfo, rep, dateFrom, dateTo );
     if( wqt == null )
     {
+      LOG.info( "Trying to find WQ-Table with siblings for " + getName() );
+      
       // 2. this failed, so next try is using sibling of other type
       // which might also contain a usable rating table
 
@@ -457,19 +461,26 @@ public class WiskiTimeserie implements IObservation
         final String[] parameters = prop.split( ";" );
         for( int i = 0; i < parameters.length; i++ )
         {
+          LOG.info( "Sibling " + parameters[i] + " is being asked for WQ-Table" );
+          
           try
           {
             final TsInfoItem tsi = m_tsinfo.findSibling( parameters[i] );
             if( tsi != null )
             {
               wqt = internFetchTable( tsi, rep, dateFrom, dateTo );
-              break;
+              if( wqt != null )
+              {
+                LOG.info( "Found WQ-Table in sibling!" );
+                
+                break;
+              }
             }
           }
           catch( final RepositoryException e )
           {
             // should not occur
-            e.printStackTrace();
+            LOG.warning( e.getLocalizedMessage() );
           }
         }
       }
@@ -499,6 +510,9 @@ public class WiskiTimeserie implements IObservation
     {
       // still no wqtable, try to load this WQ-Table from the cache
       wqTableSet = RatingTableCache.getInstance().get( m_tsinfo.getIdentifier(), dateTo );
+      
+      if( wqTableSet != null )
+        LOG.info( "Found WQ-Table in cache for " + getName() );
     }
 
     if( wqTableSet != null )
@@ -511,9 +525,11 @@ public class WiskiTimeserie implements IObservation
       catch( final WQException e )
       {
         // should not occur
-        e.printStackTrace();
+        LOG.warning( e.getLocalizedMessage() );
       }
     }
+    else
+      LOG.warning( "Could not find any WQ-Table for: " + getName() );
   }
 
   /**
@@ -521,12 +537,17 @@ public class WiskiTimeserie implements IObservation
    */
   private WQTable internFetchTable( final TsInfoItem tsinfo, final WiskiRepository rep, final Date from, final Date to )
   {
-    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiId(), to );
+    final String type = KiWWDataProviderInterface.OBJECT_PARAMETER;
+
+    LOG.info( "Calling getRatingTables() with id= " + tsinfo.getWiskiParameterId() + " validity= " + to + " type= "
+        + type );
+
+    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiParameterId(), to, type );
     try
     {
       rep.executeWiskiCall( call );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
 
@@ -571,7 +592,7 @@ public class WiskiTimeserie implements IObservation
         }
         catch( final IllegalArgumentException e )
         {
-          Logger.getLogger( getClass().getName() ).warning( "Metadata-Eigenschaft nicht erkannt: " + level );
+          LOG.warning( "Metadata-Eigenschaft nicht erkannt: " + level );
         }
       }
     }

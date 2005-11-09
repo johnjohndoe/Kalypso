@@ -147,7 +147,15 @@ public class TsInfoItem implements IRepositoryItem
    */
   Long getWiskiId()
   {
-    return Long.valueOf( m_map.getProperty( "tsinfo_id", "<?>" ) );
+    return Long.valueOf( m_map.getProperty( "tsinfo_id", "-1" ) );
+  }
+  
+  /**
+   * @return the internal id of the parameter
+   */
+  Long getWiskiParameterId()
+  {
+    return Long.valueOf( m_map.getProperty( "stationparameter_id", "-1" ) );
   }
 
   String getWiskiIdAsString()

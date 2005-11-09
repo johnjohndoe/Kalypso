@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
 import de.kisters.wiski.webdataprovider.common.util.KiWWException;
 import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 
@@ -27,16 +26,26 @@ public class GetRatingTables implements IWiskiCall
 
   private Number[] m_flow;
 
-  public GetRatingTables( final Long id, final Date validity )
+  private final String m_wiskiObjectType;
+
+  /**
+   * Constructor
+   * 
+   * @param id either id of timeserie, parameter or station, depending on the value of wiskiObjectType
+   * @param validity
+   * @param wiskiObjectType one of KiWWDataProviderInterface.OBJECT_*
+   */
+  public GetRatingTables( final Long id, final Date validity, final String wiskiObjectType )
   {
     m_id = id;
     m_validity = validity;
+    m_wiskiObjectType = wiskiObjectType;
   }
 
   public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
       RemoteException
   {
-    final HashMap tables = wiski.getRatingTables( userData, KiWWDataProviderInterface.OBJECT_TIMESERIES, new Long[]
+    final HashMap tables = wiski.getRatingTables( userData, m_wiskiObjectType, new Long[]
     { m_id }, new Timestamp( m_validity.getTime() ) );
 
     final LinkedList list = (LinkedList)tables.get( m_id );
