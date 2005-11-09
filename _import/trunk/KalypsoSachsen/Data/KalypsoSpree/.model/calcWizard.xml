@@ -89,10 +89,10 @@
 
         <arg name="zmlTableShow" value="all"/>
 
-        <arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-        <arg name="ignoreLabel1" value="Wasserstand"/>
-        <arg name="ignoreLabel2" value="Abfluss"/>
+		<arg name="ignoreType1" value="W"/>
+        <!--arg name="ignoreType2" value="Q"/-->
+        <!--arg name="ignoreLabel1" value="Abfluss"/-->
+        <!--arg name="ignoreLabel2" value="Wasserstand"/-->
         
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Abfluss#color=0x0000ff"/>
     </page>
