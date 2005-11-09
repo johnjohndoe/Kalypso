@@ -60,6 +60,9 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IDEWorkbenchAdvisor;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
+import org.eclipse.ui.internal.util.StatusLineContributionItem;
+import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.auth.user.UserRights;
 import org.kalypso.contribs.eclipse.ui.FullscreenPerspectiveListener;
@@ -152,6 +155,12 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       final IMenuManager helpMenu = menuManager.findMenuUsingPath( IWorkbenchActionConstants.M_HELP );
       helpMenu.remove( "tipsAndTricks" );
     }
+
+    // always show in which scenario we are
+    final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenarioForCurrentUser();
+    final StatusLineContributionItem item = new StatusLineContributionItem( "scenario" );
+    item.setText( "Szenario: " + scenario.getName() );
+    actionConfigurer.getStatusLineManager().add( item );
   }
 
   /**
