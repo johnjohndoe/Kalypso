@@ -111,14 +111,24 @@ public class ObservationTableModel extends AbstractTableModel
       if( m_alphaSort )
       {
         // find good position for column (alphabetically sorted)
-        i = Arrays.binarySearch( cols, col, ColOrderComparator.INSTANCE );
+        i = Arrays.binarySearch( cols, col, ColOrderNameComparator.INSTANCE );
         if( i < 0 )
           i = -i - 1;
       }
       else
       {
-        // add column at last position
-        i = cols.length;
+        if( col.isDefaultPosition() )
+        {
+          // add column at last position
+          i = cols.length;
+        }
+        else
+        {
+          // find good position for column according to its position
+          i = Arrays.binarySearch( cols, col, ColOrderIndexComparator.INSTANCE );
+          if( i < 0 )
+            i = -i - 1;
+        }
       }
 
       addColumn( col, i );
@@ -491,13 +501,13 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Simple comparator used for ordering the columns in ascending order according to their names.
+   * Compares TableViewColumns according to their names
    * 
    * @author schlienger
    */
-  private static class ColOrderComparator implements Comparator
+  private static class ColOrderNameComparator implements Comparator
   {
-    public final static ColOrderComparator INSTANCE = new ColOrderComparator();
+    public final static ColOrderNameComparator INSTANCE = new ColOrderNameComparator();
 
     public int compare( final Object o1, final Object o2 )
     {
@@ -505,6 +515,24 @@ public class ObservationTableModel extends AbstractTableModel
       final TableViewColumn col2 = (TableViewColumn)o2;
 
       return col1.getName().compareTo( col2.getName() );
+    }
+  }
+
+  /**
+   * Compares TableViewColumns according to their position
+   *
+   * @author schlienger
+   */
+  private static class ColOrderIndexComparator implements Comparator
+  {
+    public final static ColOrderIndexComparator INSTANCE = new ColOrderIndexComparator();
+    
+    public int compare( final Object o1, final Object o2 )
+    {
+      final TableViewColumn col1 = (TableViewColumn)o1;
+      final TableViewColumn col2 = (TableViewColumn)o2;
+
+      return col1.getPosition() - col2.getPosition();
     }
   }
 

@@ -65,21 +65,27 @@ import org.kalypso.util.pool.PoolableObjectWaiter;
  */
 public class TableViewColumnXMLLoader extends PoolableObjectWaiter
 {
+  /** the position of the column in the template is used to order the columns in the table */
+  private final int m_columnPosition;
+
   /**
    * @param synchron
    *          Falls true, wird die Obersvation sofort geladen und im gleichen thread objectLoaded ausgeführt
+   * @param columnPosition
+   *          the position of the column in the template is used to order the columns in the table
    */
   public TableViewColumnXMLLoader( final TableView view, final TypeObservation xmlObs, final URL context,
-      final boolean synchron )
+      final boolean synchron, final int columnPosition )
   {
     super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]
-    {
-        view,
-        xmlObs }, synchron );
+    { view, xmlObs }, synchron );
+    
+    m_columnPosition = columnPosition;
   }
 
   /**
-   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
+   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object)
    */
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
@@ -88,7 +94,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
     if( keyAxes.length == 0 )
       throw new IllegalStateException( "Die Zeitreihe verfügt über keiner Schlüssel-Achse" );
-      
+
     final IAxis keyAxis = keyAxes[0];
 
     final TypeObservation xmlObs = (TypeObservation)m_data[1];
@@ -102,12 +108,13 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
 
       final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
       final String name = NameUtils.replaceTokens( colName, obs, valueAxis );
-      final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils.getDefaultFormatString( valueAxis.getType() );
+      final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils
+          .getDefaultFormatString( valueAxis.getType() );
 
       final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
           : new PooledObsProvider( key, null );
       final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol.getWidth(),
-          keyAxis, valueAxis, format );
+          keyAxis, valueAxis, format, m_columnPosition );
 
       m_view.addItem( column );
     }
