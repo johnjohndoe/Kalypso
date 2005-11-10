@@ -253,13 +253,13 @@
 		<arg name="ignoreLabel2" value="Wasserstand"/>
 		<!-- 
         Tabelle -->
-		<arg name="zmlTableShow" value="all"/>
 		<arg name="zmlTableThresholdResizeOff" value="4"/>
-		<!-- ### für später: Vorbereitung für Talsperrensortierung, Achtung: Umschalten W/V in Tabelle mit Vorlage testen, auch in anderen Wizardseiten verwenden		
+		<!--arg name="zmlTableShow" value="all"/-->
+		<!-- ### für später: Vorbereitung für Talsperrensortierung, Achtung: Umschalten W/V in Tabelle mit Vorlage testen, auch in anderen Wizardseiten verwenden -->
 		<arg name="zmlTableShow" value="template"/>
 		<arg name="zmlTableAlphaSort" value="false"/>
 		<arg name="zmlTableTemplate" value=".templates/.wizard/sortiertTalsperrenvolumen.ott"/>
--->
+
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - WASSERSTAND / ABFLUSS (Messung und manchmal auch Prognose) -->
 	<!-- abwechselnd mit STEUERUNG DER TALSPERREN -->
