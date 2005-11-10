@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
 import java.awt.Stroke;
+import java.util.List;
 
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.template.IObsProvider;
@@ -62,8 +63,8 @@ public class DiagViewCurve extends ObsViewItem
 
   private final AxisMapping[] m_mappings;
 
-  public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color, final Stroke stroke, 
-      final AxisMapping[] mappings )
+  public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color,
+      final Stroke stroke, final AxisMapping[] mappings )
   {
     super( view, obsProvider, name );
 
@@ -81,7 +82,7 @@ public class DiagViewCurve extends ObsViewItem
   {
     return m_color;
   }
-  
+
   public Stroke getStroke()
   {
     return m_stroke;
@@ -112,22 +113,22 @@ public class DiagViewCurve extends ObsViewItem
   {
     final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( getObservation() );
     final AlarmLevel[] als = new AlarmLevel[alarms.length];
-    
+
     final MetadataList mdl = getObservation().getMetadataList();
-    
+
     for( int i = 0; i < alarms.length; i++ )
     {
       final Double value = new Double( mdl.getProperty( alarms[i] ) );
 
       als[i] = new AlarmLevel( value.doubleValue(), alarms[i] );
     }
-    
+
     return als;
   }
 
   /**
    * Simple structre holding the alarm-level information
-   *
+   * 
    * @author schlienger
    */
   public static class AlarmLevel
@@ -148,5 +149,17 @@ public class DiagViewCurve extends ObsViewItem
     {
       return label;
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.ObsViewItem#shouldBeHidden(java.util.List)
+   */
+  public boolean shouldBeHidden( final List hiddenTypes )
+  {
+    for( int i = 0; i < m_mappings.length; i++ )
+      if( hiddenTypes.contains( m_mappings[i].getObservationAxis().getType() ) )
+        return true;
+
+    return false;
   }
 }

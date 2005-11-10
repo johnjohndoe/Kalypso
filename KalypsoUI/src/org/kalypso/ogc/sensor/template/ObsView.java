@@ -95,8 +95,11 @@ public abstract class ObsView implements IObsViewEventProvider
 
   private final Set m_enabledFeatures = new HashSet();
 
-  /** If set, each add of an observation of one of these types is ignored. */
+  /** If set, each add of an observation of one of these types is ignored (no items are added for this observation in this view) */
   private String[] m_ignoreTypes = new String[] {};
+
+  /** If set, the concerned items are not displayed. Note: this is not to be confused with ignoreTypes */
+  private List m_hiddenTypes = new ArrayList();
 
   /**
    * Default constructor: enables all the features
@@ -113,7 +116,11 @@ public abstract class ObsView implements IObsViewEventProvider
   }
 
   /**
-   * @param ignoreTypes if null a default empty array is used
+   * This method must be called before items are added. If items were already 
+   * present in this view, it has no impact on them.
+   * 
+   * @param ignoreTypes
+   *          if null a default empty array is used
    */
   public void setIgnoreTypes( final String[] ignoreTypes )
   {
@@ -121,8 +128,6 @@ public abstract class ObsView implements IObsViewEventProvider
       m_ignoreTypes = new String[0];
     else
       m_ignoreTypes = ignoreTypes;
-    
-    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_IGNORE_TYPE_CHANGED ) );
   }
 
   public String[] getIgnoreTypes()
@@ -269,10 +274,7 @@ public abstract class ObsView implements IObsViewEventProvider
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
     final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
-    {
-        this,
-        data,
-        tokenizedName }, synchron )
+    { this, data, tokenizedName }, synchron )
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
@@ -355,5 +357,31 @@ public abstract class ObsView implements IObsViewEventProvider
     final String[] ignoreTypes = getIgnoreTypes();
     final List ignoreTypeList = ignoreTypes == null ? new ArrayList() : Arrays.asList( ignoreTypes );
     return Collections.unmodifiableList( ignoreTypeList );
+  }
+
+  /**
+   * Hide items which are displaying an observation which axis is of the given type. This method is the pendant to
+   * setIgnoreType, but in contrario to the former, it only hides the items in the ui (it does not remove it).
+   * 
+   * @param types list of types that should be hidden
+   */
+  public void hideTypes( final List types )
+  {
+    if( types == null )
+      m_hiddenTypes = new ArrayList();
+    else
+      m_hiddenTypes = types;
+
+    final ObsViewItem[] items = getItems();
+    for( int i = 0; i < items.length; i++ )
+      items[i].setShown( !items[i].shouldBeHidden( m_hiddenTypes ) );
+  }
+  
+  /**
+   * @return the list of hidden types 
+   */
+  public List getHiddenTypes()
+  {
+    return m_hiddenTypes;
   }
 }

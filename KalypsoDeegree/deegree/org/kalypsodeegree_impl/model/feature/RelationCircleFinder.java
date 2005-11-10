@@ -32,7 +32,6 @@ package org.kalypsodeegree_impl.model.feature;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.contribs.java.util.Arrays;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -85,7 +84,7 @@ public class RelationCircleFinder
       else
       {
         final List[] lists = findCircle( linkFeature, newList );
-        result.addAll( Arrays.asList( lists ) );
+        result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
       }
     }
     return (List[])result.toArray( new List[result.size()] );
@@ -110,7 +109,7 @@ public class RelationCircleFinder
         else
         {
           Feature[] links = m_workspace.resolveLinks( feature, property.getName() );
-          result.add( Arrays.asList( links ) );
+          result.add( java.util.Arrays.asList( links ) ); // TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok
         }
       }
     }

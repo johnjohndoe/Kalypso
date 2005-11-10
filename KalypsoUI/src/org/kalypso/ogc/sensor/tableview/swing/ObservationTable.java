@@ -46,7 +46,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,7 +81,6 @@ import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
-import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -292,26 +290,6 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         {
           final TableView view = (TableView)evt.getObject();
           model.setAlphaSort( view.isAlphaSort() );
-        }
-
-        // IGNORE_TYPES CHANGED == this is solely a convenience feature
-        // for the user to switch rapidly elements off the view
-        if( evenType == ObsViewEvent.TYPE_IGNORE_TYPE_CHANGED )
-        {
-          final TableView view = (TableView)evt.getObject();
-
-          final List ignTypes = view.getIgnoreTypesAsList();
-
-          final ObsViewItem[] items = view.getItems();
-          for( int i = 0; i < items.length; i++ )
-          {
-            final TableViewColumn col = (TableViewColumn)items[i];
-
-            if( ignTypes.contains( col.getAxis().getType() ) && model.containsColumn( col ) )
-              model.removeColumn( col );
-            else if( !model.containsColumn( col ) )
-              model.addColumn( col );
-          }
         }
       }
     };

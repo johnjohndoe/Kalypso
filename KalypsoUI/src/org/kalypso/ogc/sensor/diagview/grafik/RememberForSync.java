@@ -115,7 +115,7 @@ final class RememberForSync
 
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 
-      final List axisList = Arrays.asList( axes );
+      final List axisList = Arrays.copyAsList( axes );
       axisList.remove( dateAxis );
       axisList.remove( m_numberAxis );
 

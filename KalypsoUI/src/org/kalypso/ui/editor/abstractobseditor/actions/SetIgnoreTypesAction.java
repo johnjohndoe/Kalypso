@@ -47,7 +47,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
-import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ui.ImageProvider;
@@ -82,15 +81,15 @@ public class SetIgnoreTypesAction extends FullAction
     final ListSelectionDialog dlg = new ListSelectionDialog( m_page.getSite().getShell(), types.toArray(),
         new ArrayContentProvider(), new LabelProvider(), MSG );
     dlg.setTitle( TITLE );
-    dlg.setInitialSelections( obsView.getIgnoreTypes() );
+    dlg.setInitialSelections( obsView.getHiddenTypes().toArray() );
 
     if( dlg.open() == Window.OK )
     {
       final Object[] res = dlg.getResult();
       if( res == null )
-        obsView.setIgnoreTypes( null );
+        obsView.hideTypes( null );
       else
-        obsView.setIgnoreTypes( (String[])Arrays.castArray( res, new String[res.length] ) );
+        obsView.hideTypes( java.util.Arrays.asList( res ) );
     }
   }
 }

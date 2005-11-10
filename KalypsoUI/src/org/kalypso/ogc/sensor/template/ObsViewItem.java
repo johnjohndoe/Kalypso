@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
+import java.util.List;
+
 import org.kalypso.contribs.eclipse.ui.IViewable;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -117,7 +119,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
       getView().refreshItemState( this, null );
     }
   }
-
+  
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProviderListener#obsProviderChanged()
    */
@@ -157,4 +159,11 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   {
     return m_obsProvider.getArguments();
   }
+
+  /**
+   * Return true if this item is concerned by the list of hidden axis-types
+   * 
+   * @param hiddenTypes list of axis-types that the user does not want to see
+   */
+  public abstract boolean shouldBeHidden( final List hiddenTypes );
 }
