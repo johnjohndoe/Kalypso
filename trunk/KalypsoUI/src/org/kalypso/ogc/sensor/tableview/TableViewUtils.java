@@ -285,12 +285,11 @@ public final class TableViewUtils
     final List stati = new ArrayList();
 
     final List list = xml.getObservation();
-    for( final Iterator it = list.iterator(); it.hasNext(); )
+    final TypeObservation[] tobs = (TypeObservation[])list.toArray(new TypeObservation[list.size()]);
+    for( int i = 0; i < tobs.length; i++ )
     {
-      final TypeObservation tobs = (TypeObservation)it.next();
-
       // check, if href is ok
-      final String href = tobs.getHref();
+      final String href = tobs[i].getHref();
 
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
       if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
@@ -299,7 +298,7 @@ public final class TableViewUtils
         continue;
       }
       
-      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs, context, synchron );
+      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs[i], context, synchron, i );
       stati.add( loader.getResult() );
     }
 

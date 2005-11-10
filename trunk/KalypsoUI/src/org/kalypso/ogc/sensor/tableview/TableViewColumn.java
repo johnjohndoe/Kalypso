@@ -51,6 +51,9 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
  */
 public class TableViewColumn extends ObsViewItem
 {
+  /** denotes the default column-position in the table: means table can do what it wants */
+  private final static int DEFAULT_POSITION = -1;
+  
   private boolean m_isEditable = true;
 
   private int m_width = 50;
@@ -66,8 +69,22 @@ public class TableViewColumn extends ObsViewItem
 
   private String m_format;
 
+  private final int m_position;
+
+  /**
+   * Constructor with default position
+   */
   public TableViewColumn( final TableView view, final IObsProvider provider, final String name,
       final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format )
+  {
+    this( view, provider, name, isEditable, width, keyAxis, valueAxis, format, DEFAULT_POSITION );
+  }
+  
+  /**
+   * Full Constructor
+   */
+  public TableViewColumn( final TableView view, final IObsProvider provider, final String name,
+      final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format, final int position )
   {
     super( view, provider, name );
 
@@ -79,6 +96,7 @@ public class TableViewColumn extends ObsViewItem
     m_keyAxis = keyAxis;
     m_valueAxis = valueAxis;
     m_format = format;
+    m_position = position;
   }
 
   public boolean isEditable()
@@ -154,5 +172,15 @@ public class TableViewColumn extends ObsViewItem
   public String getFormat()
   {
     return m_format;
+  }
+  
+  public int getPosition()
+  {
+    return m_position;
+  }
+  
+  public boolean isDefaultPosition()
+  {
+    return m_position == DEFAULT_POSITION;
   }
 }
