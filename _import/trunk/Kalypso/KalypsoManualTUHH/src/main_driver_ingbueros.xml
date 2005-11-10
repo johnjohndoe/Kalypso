@@ -3,7 +3,7 @@
 [
 	<!ENTITY file_bookinfo SYSTEM "bookinfo.xml">
 	<!ENTITY file_allgemeines SYSTEM "allgemeines.xml">
-	<!ENTITY file_programm_start SYSTEM "Programm-Start.xml">
+	<!ENTITY file_programm_start SYSTEM "programmstart.xml">
 	<!ENTITY file_gui SYSTEM "gui.xml">
 	<!ENTITY file_repository SYSTEM "repository.xml">
 	<!ENTITY file_modelle SYSTEM "modelle.xml">    
@@ -13,7 +13,7 @@
 
 	&file_bookinfo;	
 	
-	<toc></toc>
+	<toc/>
 
 	&file_allgemeines;
 	&file_programm_start;
@@ -21,6 +21,6 @@
 	&file_repository;
 	&file_modelle;    
 
-	<lot></lot>
-
+	<lot/>
+    <index/>
 </book>

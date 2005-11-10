@@ -12,10 +12,10 @@
 
   <section id="kalypso_na">
     <title>Niederschlag-Abfluss-Modell KALYPSO-NA</title>
-	  
+
     <indexterm>
-          <primary>Niederschlag-Abfluss-Modell KALYPSO-NA</primary>
-        </indexterm>
+      <primary>Niederschlag-Abfluss-Modell KALYPSO-NA</primary>
+    </indexterm>
 
     <para>Das am Arbeitsbereich Wasserbau der TUHH verwendete
     Niederschlag-Abfluss-Modell Kalypso-NA ist eine OpenSource Modell zur
@@ -48,16 +48,16 @@
 
     <section>
       <title>Preprocessing</title>
-		
+
       <indexterm>
-            <primary>Preprocessing</primary>
-          </indexterm>
+        <primary>Preprocessing</primary>
+      </indexterm>
 
       <para>Für die Erstellung eines Niederschlag-Abfluss-Modells sind
       umfangreiche Vorarbeiten notwendig. Die zu erwartende Genauigkeit der
       Simulationsergebnisse hängt in hohem Maße von der Qualität der
       Grundlagendaten ab. Deshalb ist eine sorgfältige Recherche in
-      verschiedensten Bereichen ein wesentlicher Grundstein für den späteren
+      verschiedenen Bereichen ein wesentlicher Grundstein für den späteren
       Erfolg. Nach dem ersten Schritt, der Datenaquisition, ist eine
       Aufbereitung der Daten notwendig. Diese beinhaltet sowohl eine Prüfung
       der Daten, als auch eine detaillierte Bearbeitung der Daten. Hierzu
@@ -67,6 +67,8 @@
       (Preprocessing) gehören die Berechnungen verschiedener Eingabedaten, die
       entweder gar nicht oder in nicht ausreichender Genauigkeit nach der
       Datenaquisition vorliegen.</para>
+
+      <para></para>
 
       <para>Datenakquisition:</para>
 
@@ -168,10 +170,10 @@
 
     <section>
       <title>Processing</title>
-		
+
       <indexterm>
-            <primary>Processing</primary>
-          </indexterm>
+        <primary>Processing</primary>
+      </indexterm>
 
       <para>Nach der Datenaufbereitung im betrachteten Einzugsgebiet kann mit
       dem eigentlichen Modellaufbau begonnen werden. Hierbei werden folgende
@@ -191,17 +193,18 @@
 
         <listitem>
           <para>Modellparameter setzen (einfache Parameter,
-          Korrekturparameter, Zeit-Flächen-Funktion,
-          WQV-Rückhaltebecken,...)</para>
+          Korrekturparameter, Zeit-Flächen-Funktion, WQV-Rückhaltebecken,usw.,
+          siehe <xref linkend="kalypso_na-parameter_editieren" />)</para>
         </listitem>
 
         <listitem>
-          <para>"Natürliche" Parameter setzen (Boden-, Nutzungs- und
+          <para>Natürliche Parameter setzen (Boden-, Nutzungs- und
           Schneedaten)</para>
         </listitem>
 
         <listitem>
-          <para>Rechenvariante erstellen</para>
+          <para>Rechenvariante erstellen (siehe <xref
+          linkend="kalypso_na-rechanvariante" />)</para>
         </listitem>
 
         <listitem>
@@ -229,16 +232,16 @@
 
       <section id="kalypso_na-neues_projekt">
         <title>Ein neues Projekt anlegen</title>
-		  
+
         <indexterm>
-              <primary>Projekt anlegen</primary>
-            </indexterm>
+          <primary>Projekt anlegen</primary>
+        </indexterm>
 
         <para>Ein neues NA-Modell erfordert im Rahmen des Preprocessings die
         Aufbereitung der geometrischen Eingangsdaten (Teilgebiete, Stränge und
         Knoten), sowie die Erstellung der hydrologischen Einheiten (Hydrotope)
-        in einem GIS. Notwendige Inhalte der GIS Grundlagendateien sind in den
-        Tabellen <xref linkend="kalypso_na-mapping_teilgebiete" /> bis <xref
+        in einem GIS. Notwendige Inhalte der GIS Grundlagendateien sind in
+        <xref linkend="kalypso_na-mapping_teilgebiete" /> bis <xref
         linkend="kalypso_na-mapping_hydrotope" /> zu finden. Im Kalypso
         Modeler (siehe <xref linkend="programm_start" />) können diese Daten
         dann in ein neues NA-Modell Projekt integriert werden.</para>
@@ -271,21 +274,23 @@
         Nachfolgende Tabellen zeigen eine Übersicht der Elemente, welche bei
         der Modellerstellung in den Shape-Dateien vorhanden sein sollten. Da
         eine Assoziation der Elemente anhand von Nummerierungen zur
-        Übersichtlichkeit beiträgt, wird diese Nummer der Elemente dem
-        Zielobjekt <literal>name</literal> zugeordnet. Zusätzlich ist das
-        Element <literal>description</literal> für eine allgemeine
-        Beschreibung bzw. einen wirklichen Namen (z.B. Pegelname) optional zu
-        besetzen. Die Flächen der Geometrieobjekte werden automatisch vom
-        Programm ermittelt und müssen somit nicht Zugeordnet werden. Da das
-        Mapping unabhängig der Namensgebung der Quelle (Spaltenbezeichung in
-        der Shape-Datei) ist, enthält die Tabelle neben Quelle und Ziel auch
-        eine Beschreibung der einzusetzenden Daten. Zusätzliche Elemente sind
-        wahlweise in die Shape-Dateien zu integrieren und mit Hilfe des
-        Assistenten den jeweiligen Modellelementen zuzuordnen. Alle Elemente,
-        welche nicht über das Mapping übertragen werden, können später bei der
-        Modellvervollständigung in entsprechenden Tabellen bearbeitet werden.
-        Es ist aufgrund der Datenredundanz sinnvoll nur die vorgeschlagenen
-        statischen Informationen in den Shape-Dateien vorzuhalten.</para>
+        Übersichtlichkeit beiträgt, wird diese Nummer der Elemente
+        entsprechend einer Namensgebung dem Zielobjekt <literal>name</literal>
+        zugeordnet. Zusätzlich ist das Element <literal>description</literal>
+        für eine allgemeine Beschreibung bzw. einen wirklichen Namen (z.B.
+        Pegelname) optional zu besetzen. Die Flächen der Geometrieobjekte
+        werden automatisch vom Programm ermittelt und müssen somit nicht
+        zugeordnet werden. Da das Mapping unabhängig der Namensgebung der
+        Quelle (Spaltenbezeichung in der Shape-Datei) ist, dient die Spalte
+        Quelle in den folgenden Tabellen lediglich als Hinweis. Die Verwendung
+        der Elemente ist in der Spalte Bedeutung erläutert. Zusätzliche
+        Elemente sind wahlweise in die Shape-Dateien zu integrieren und mit
+        Hilfe des Assistenten den jeweiligen Modellelementen zuzuordnen. Alle
+        Elemente, welche nicht über das Mapping übertragen werden, können
+        später bei der Modellvervollständigung in entsprechenden Tabellen
+        bearbeitet werden. Es ist aufgrund der Datenredundanz sinnvoll nur die
+        vorgeschlagenen statischen Informationen durch die Shape-Dateien
+        vorzuhalten.</para>
 
         <table id="kalypso_na-mapping_teilgebiete">
           <title>Mapping Shape-Datei - Modellelement (Teilgebiete)</title>
@@ -305,7 +310,7 @@
 
                 <entry>Ort</entry>
 
-                <entry>Geometrie</entry>
+                <entry>Geometrie (Polygon)</entry>
               </row>
 
               <row>
@@ -314,6 +319,14 @@
                 <entry>name</entry>
 
                 <entry>Teilgebietsnummer</entry>
+              </row>
+
+              <row>
+                <entry>Beschr</entry>
+
+                <entry>description</entry>
+
+                <entry>Beschreibung (optional)</entry>
               </row>
             </tbody>
           </tgroup>
@@ -337,7 +350,7 @@
 
                 <entry>Ort</entry>
 
-                <entry>Geometrie</entry>
+                <entry>Geometrie (Linie)</entry>
               </row>
 
               <row>
@@ -355,6 +368,14 @@
 
                 <entry>Art des Strangs (0 = virtueller Strang; 1 =
                 Kalinin-Miljukov-Strang; 2 = Rückhaltebeckenstrang)</entry>
+              </row>
+
+              <row>
+                <entry>Beschr</entry>
+
+                <entry>description</entry>
+
+                <entry>Beschreibung (optional)</entry>
               </row>
             </tbody>
           </tgroup>
@@ -378,7 +399,7 @@
 
                 <entry>Ort</entry>
 
-                <entry>Geometrie</entry>
+                <entry>Geometrie (Punkt)</entry>
               </row>
 
               <row>
@@ -386,7 +407,15 @@
 
                 <entry>name</entry>
 
-                <entry>Nummer</entry>
+                <entry>Knotennummer</entry>
+              </row>
+
+              <row>
+                <entry>Beschr</entry>
+
+                <entry>description</entry>
+
+                <entry>Beschreibung (optional)</entry>
               </row>
             </tbody>
           </tgroup>
@@ -410,7 +439,7 @@
 
                 <entry>Ort</entry>
 
-                <entry>Geometrie</entry>
+                <entry>Geometrie (Polygon)</entry>
               </row>
 
               <row>
@@ -477,6 +506,14 @@
                 <entry>Unterscheidung in besielte und unbesielte
                 Flächen</entry>
               </row>
+
+              <row>
+                <entry>Beschr</entry>
+
+                <entry>description</entry>
+
+                <entry>Beschreibung (optional)</entry>
+              </row>
             </tbody>
           </tgroup>
         </table>
@@ -484,37 +521,36 @@
 
       <section id="kalypso_na-allgemeine_projektstruktur">
         <title>Allgemeine Projektstruktur</title>
-		  
-        <indexterm>
-              <primary>Allgemeine Datenstruktur</primary>
-            </indexterm>
 
-        <para>Die Verwaltung des Na-Modelles erfolgt in einer einheitlichen
-        und abgschlossenen Projektstruktur. Unter dem eigentlichen
-        Hauptverzeichnis befinden sich die Daten des Basismodelles. Von diesem
-        ausgehend werden im späteren Verlauf der Modellberechnung
-        Rechenvarianten erstellt, welche der Kalibrierung, Simulations- und
-        Szenarienberechnung dienen. Es ist somit sichergestellt, dass bei
-        einer Modellveränderung immer auf das Hauptmodell zurückgegriffen
-        werden kann. Hierbei ist zu beachten, dass jede Rechenvariante eine
-        Kopie des Basismodelles darstellt, welches somit immer den aktuellen
-        Parametersatz beinhalten sollte.</para>
+        <indexterm>
+          <primary>Allgemeine Datenstruktur</primary>
+        </indexterm>
+
+        <para>Die Verwaltung des NA-Modelles erfolgt in einer einheitlichen
+        Projektstruktur. Unter dem eigentlichen Hauptverzeichnis befinden sich
+        die Daten des Basismodelles. Von diesem ausgehend werden im späteren
+        Verlauf der Modellberechnung Rechenvarianten erstellt, welche der
+        Kalibrierung, Simulations- und Szenarienberechnung dienen. Es ist
+        somit sichergestellt, dass bei einer Modellveränderung immer auf das
+        Hauptmodell zurückgegriffen werden kann. Hierbei ist zu beachten, dass
+        jede Rechenvariante eine Kopie des Basismodelles darstellt, welches
+        somit immer den aktuellen Parametersatz beinhalten sollte.</para>
 
         <para>Die Verwaltung der Modelldaten für das Niederschlag-Abfluss
         Modell KALYPSO-NA erfolgt hauptsächlich in Tabellen. Neben dem
         <emphasis role="bold">(Basis)Tabellen</emphasis>-Verzeichnis ist ein
-        Übersichtslagepan im <emphasis
-        role="bold">(Basis)Karten</emphasis>-Verzeichnis enthalten. Die zur
-        Visualisierung benötigten Shape-Dateien können im <emphasis
-        role="bold">Shape</emphasis>-Verzeichnis abgelegt werden. Für das
-        Abholen der Zeitreihen (aus einer Datenbank/ einem lokalen Verzeichnis
-        o.ä.) in eine Rechenvariante sind im Verzeichnis <emphasis
-        role="bold">ZeitreihenControl</emphasis> Tabellen zum Zuordnen der
+        <emphasis role="bold">(Basis)Karten</emphasis>-Verzeichnis im Projekt
+        enthalten, welches verschieden Karten zur Modellvisualisierung
+        beinhaltet. Die zur Visualisierung benötigten Shape-Dateien können im
+        <emphasis role="bold">Shape</emphasis>-Verzeichnis abgelegt werden.
+        Für das Abholen der Zeitreihen (aus einer Datenbank/ einem lokalen
+        Verzeichnis o.ä.) in eine Rechenvariante sind im Verzeichnis <emphasis
+        role="bold">ZeitreihenControl</emphasis> Tabellen zur Zuordnung der
         verschiedenen Zeitreihentypen vordefiniert. Der Name des Ordners für
         die Rechenvarianten ist frei wählbar. Standardmäßig ist ein Ordner
         <emphasis role="bold">Rechenvarianten</emphasis> im Projekt
         vordefiniert. Unter den Verzeichnissen der angelegten Rechenvarianten
-        findet sich die jeweiligen Strukturen zur Datenbearbeitung ähnlich dem
+        findet sich die jeweiligen Strukturen zur Datenbearbeitung ähnlich zum
         Hauptverzeichnis wieder.</para>
 
         <para>Es sei nochmals darauf hingewiesen, dass die Modelldaten selbst
@@ -538,11 +574,11 @@
         (Basis)Tabellen</emphasis></para>
 
         <para>Die Eingabe bzw. Änderung von Modellparametern erfolgt in
-        Tabellen. Die Editierungsmöglichkeiten von Tabellen wird in <xref
+        Tabellen. Die Editiermöglichkeiten von Tabellen werden in <xref
         linkend="menu_tabelle" /> beschrieben. Die in den Tabellen enthaltenen
         Modellparameter werden in <xref
         linkend="kalypso_na_modellparameter" /> erläutert. Folgende Tabellen
-        sind im Projekt zur bearbeitung der Modellparameter enthalten:</para>
+        sind im Projekt zur Bearbeitung der Modellparameter enthalten:</para>
 
         <itemizedlist>
           <listitem>
@@ -618,8 +654,8 @@
             </listitem>
           </itemizedlist></para>
 
-        <para><emphasis> <emphasis role="bold">Verzeichnis
-        (Basis)Karten</emphasis> </emphasis></para>
+        <para><emphasis role="bold">Verzeichnis
+        (Basis)Karten</emphasis></para>
 
         <para>Zur Visualisierung der Geometriedaten sind standardmäßig drei
         Kartenvorlagen enthalten:</para>
@@ -684,10 +720,10 @@
 
       <section id="kalypso_na-systemvernetzung">
         <title>System Vernetzung - Netzeditor</title>
-		  
+
         <indexterm>
-              <primary>System Vernetzung - Netzeditor</primary>
-            </indexterm>
+          <primary>System Vernetzung - Netzeditor</primary>
+        </indexterm>
 
         <para>Die Vernetzung des Modelles erfolgt auf Basis übertragener
         Geometrien der Shape-Dateien. Mit Hilfe der Karte Modellvernetzung
@@ -713,21 +749,23 @@
         reduzieren und so den Netzaufbau übersichtlich zu gestalten. Es können
         einzelne Relationen durch setzen eines Hakens im Kontrollkästchen an-
         bzw. ausgeschaltet werden. Hierbei ist es durch die hierarchische
-        Anordnung möglich, ganze Gruppen zu bedienen. Um eine Relation zu
-        setzen, wählt man zuerst das Anfangselement durch Mausklick aus.
-        Danach wird das Zielelement ebenfalls durch Mausklick (hierbei die
-        Maustaste etwas gedrückt halten) ausgewählt. Falls die Realation
-        zulässig ist wird diese sogleich durch einen Pfeil der entsprechenden
-        Farbe des Ausgangselementes symbolisiert (Darstellung entsprechend des
-        gewählten Styles).</para>
+        Anordnung möglich, ganze Gruppen zu bedienen. Eine Relation wird durch
+        "ziehen" einer Verbindung mit der Maus erreicht. Hierzu ist das
+        Anfangselement durch Klicken der linken Maustaste (nicht loslassen)
+        auszuwählen. Zieht man die Verbindung auf das Zielelement so wird bei
+        einer möglichen Verbindung eine dünne rote Linie sichtbar. Ist die
+        gewünschte Verbindung auf diese Weise angezeigt, so kann die Maustaste
+        losgelassen werden, um die Verbindung zu setzen. Die Realation wird
+        durch einen Pfeil der entsprechenden Farbe des Ausgangselementes
+        symbolisiert (Darstellung entsprechend des gewählten Styles).</para>
 
         <para>Der Verlauf des abzubildenenden Gewässers wird durch Relationen
         von Strängen zu Knoten und wiederum weiter von Knoten zu Strängen
-        realisiert. Die Verbindungen werden jeweils in Richtung Unterwasser
-        bzw. in Fließrichtung getätigt. An das so entstandene Gewässersystem
-        werden die Teilgebiete durch eine Relation von Teilgebiet zu Strang
+        realisiert. Die Verbindungen werden jeweils in Richtung in
+        Fließrichtung getätigt. An das so entstandene Gewässersystem werden
+        die Teilgebiete durch eine Relation vom Teilgebiet zum Strang
         angebunden (die Entwässerung des Teilgebietes erfolgt am
-        Unterwasserknoten des Stranges). Zusätzlich wird das unterirische
+        Unterwasserknoten des Stranges). Zusätzlich wird das unterirdische
         Einzugsgebiet - das Grundwassersystem - durch die Verbindung von
         Teilgebiet zu Teilgebieten abgebildet. Für weitere Spezialfälle wie
         Zuflüsse, Verzweigungen, Entnahmen, usw. sind zusätzliche Knoten zu
@@ -740,12 +778,12 @@
         Sollte eine Relation nicht möglich sein, so kann sie auch nicht
         "gezogen" werden. Als Information über die getätigte Auswahl der
         Elemente und eventuell auftretender Probleme bei der Vernetzung dient
-        eine das Informationsfenster am unteren Rand der Ansicht Edit
+        das Informationsfenster am unteren Rand der Ansicht Edit
         Optionen.</para>
 
         <para>Das Löschen einer Verbindung funktioniert bei Auswahl der Option
         <guimenuitem>Relationen entfernen</guimenuitem> im Fenster Edit
-        Optionen der in gleicher Weise.</para>
+        Optionen auf gleicher Art und Weise.</para>
 
         <figure>
           <title>Ansicht Edit Optionen</title>
@@ -760,2253 +798,2262 @@
         </figure>
       </section>
 
-      <section>
-        <title>Parameter editieren</title>
-		  
-        <indexterm>
-              <primary>Parameter editieren</primary>
-            </indexterm>
+      <section id="kalypso_na-parameter_editieren">
+          <title>Parameter editieren</title>
 
-        <para>Die Parameter können in den Karten,Tabellen sowie in der Feature
-        (Element)- und Baumansicht geändert werden. Prinzipiell können alle
-        einfachen Datentypen direkt in den entsprechenden Feldern editiert
-        werden. Bei komplizierteren Datentypen, wie z.B.
-        Zeitreihenverknüpfungen und Diagrammelementen erfolgt die Bearbeitung
-        in einem Zusatzdialog.</para>
-
-        <para><emphasis role="bold">Bearbeiten von
-        Zeitreihenverknüpfungen</emphasis></para>
-
-        <para>Die Bearbeitung von Zeitreihenverknüpfungen kommt zum einen beim
-        Verknüpfen von Originalzeitreihen aus dem Repository
-        (Datenverzeichnis, Datanbank, o.ä) mit den entsprechenden
-        Zielzeitreihen im Rechenfall und zum anderen zur Verknüpfung der
-        Zeitreihen im Modell mit den Zeitreihen im Rechenfall zum
-        tragen.</para>
-
-        <figure>
-          <title>Zeitreihenverknüpfungen</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="img/modelle/kalypso_na/zeitreihen_control-na.png"
-                         scale="100" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>Das Editieren einer Zeitreihenverknüpfung erfogt zumeist durch
-        einen Mausklick auf die ensprechende Tabellenzelle, worauf sich der
-        Zeitreihenlink-Editor (siehe <xref
-        linkend="na-zeitreihenlink_editor" />) öffnet. Der Editor bietet die
-        Möglichkeit sowohl lokale Zeitreihen, welche im Projektverzeichnis
-        gespeichert sind, als auch Zeitreihen aus einem Zeitreihen Repository
-        (in Bearbeitung) anzubinden. Ist eine Veränderung der verlinkten
-        Zeitreihe erforderlich, so kann diese durch entsprechende
-        Filteroperation erfolgen (in Bearbeitung). Wurde der Zeitreihenlink
-        erfolgreich bearbeitet, so ist der Pfad nach dem Speichern in der
-        entsprechenden Tabellenzelle ersichtlich.</para>
-
-        <figure id="na-zeitreihenlink_editor">
-          <title>Zeitreihenlink-Editor</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="img/modelle/kalypso_na/zeitreihenlink-na.png"
-                         scale="70" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para><emphasis role="bold">Bearbeiten von
-        Diagrammelementen</emphasis></para>
-
-        <para>Diagrammelemente, wie z.B. die Zeitflächenfunktion und die
-        Wasserstands-Abfluss-Volumenbeziehung eines Rückhaltebeckens, werden
-        in der Kalypso-Oberfläche ähnlich zum Zeitreihenformat aufgefasst und
-        auch mit dem Zeitreihenlink-Editor bearbeitet. Hierbei können die
-        Diagrammdaten direkt in der Oberfläche bearbeitet werden oder in
-        externen Programmen vorgehalten und durch die Zwischenablage
-        importiert werden.</para>
-
-        <figure>
-          <title>Bearbeitung von Diagrammdatentypen</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="img/modelle/kalypso_na/diagrammtypen-na.png"
-                         scale="70" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <itemizedlist>
-          <listitem>
-            <para>Diagramm löschen</para>
-
-            <para>Der Button <guibutton>löschen</guibutton> bewirkt das
-            Löschen der Werte des aktuellen Diagrammelementes</para>
-          </listitem>
-
-          <listitem>
-            <para>Diagramm neu</para>
-
-            <para>Der Button <guibutton>neu</guibutton> ermöglicht das
-            Erstellen neuer Diagrammdaten. Durch die Vorgaben einiger Daten
-            (Minimum, Intervall, Anzahl der Wertepaare und Default Wert) wird
-            zunächst ein neues Diagramm erstellt, welches dann detailliert in
-            der Tabelle weiter bearbeitet werden kann. Es ist hierbei darauf
-            zu achten, dass die Hauptdiagrammachse in der Tabelle nicht
-            bearbeitet werden kann. Sollte daher ein diskontinuierliches
-            Intervall auf der Hauptdiagrammachse vorliegen, so ist dieses
-            Diagramm durch den Import der Daten aus der Zwischenablage zu
-            erstellen.</para>
-
-            <figure>
-              <title>Erzeugung eines neuen Diagrammes</title>
-
-              <mediaobject>
-                <imageobject>
-                  <imagedata align="center"
-                             fileref="img/modelle/kalypso_na/diagramm_neu_schritte-na.png"
-                             scale="80" />
-                </imageobject>
-              </mediaobject>
-            </figure>
-          </listitem>
-
-          <listitem>
-            <para>Diagramm Import/ Export aus Zwischenspeicher</para>
-
-            <para>Es besteht neben der Diagrammerstellung in der Oberfläche
-            auch die Möglichkeit Daten aus dem Zwischenspeicher zu
-            Importieren. Diese Daten können in einem externen Programm
-            aufbereitet werden und über die Kopierfunktion in die
-            Zwischenablage gespeichet werden. Aus der Zwischenablage werden
-            die Daten dann direkt über den Button <guibutton>Import aus
-            Zwischenspeicher</guibutton> in das Diagrammelement importiert.
-            Diese Funktion kann auch in umgekehrter Weise verwendet werden, um
-            Daten aus der Kalypso-Oberfläche zur Bearbeitung in ein externes
-            Programm zu überführen (<guibutton>Export in
-            Zwischenablage</guibutton>).</para>
-
-            <figure>
-              <title>Datenimport aus Microsoft Excel</title>
-
-              <mediaobject>
-                <imageobject>
-                  <imagedata align="center"
-                             fileref="img/modelle/kalypso_na/diagramm_import_schritte-na.png"
-                             scale="80" />
-                </imageobject>
-              </mediaobject>
-            </figure>
-          </listitem>
-        </itemizedlist>
-      </section>
-
-      <section id="weisse_elster_rechenlaeufe">
-        <title>Rechenvarianten</title>
-		  
-        <indexterm>
-              <primary>Rechenvarianten</primary>
-            </indexterm>
-
-        <para>Das Verzeichnis Rechenvarianten enthält alle zur
-        Modellberechnung notwendigen Dateien. Diese werden beim Anlegen einer
-        neuen Rechenvariante automatisch vom Programm in das entsprechende
-        Verzeichnis kopiert. Es werden verknüpfte Zeitreihen und
-        Modellparameter des Basismodelles in das Verzeichnis der
-        Rechenvariante abgelegt. Pegel- und Zuflussganglinien sowie
-        Niederschlags- und Klimazeitreihen werden für den Simulationszeitraum
-        aus dem verknüpften Zeitreihenrepository geladen und im angegebenen
-        Zielverzeichnis der Rechenvariante gespeichert (entsprechend der im
-        Verzeichnis ZeitreihenControl enthaltenen Zuordnungstabellen).</para>
-
-        <figure id="pic_weisse_elster_rechenlauf">
-          <title>Verzeichnis Rechenvarianten</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="img/modelle/navigator_rechenvariante.png"
-                         scale="60" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>Die Steuerdaten der Berechnung können in der Eingabemaske
-        <emphasis>AusgabeManagement.gft</emphasis> und
-        S<emphasis>imulationsManagement.gtt</emphasis> geändert werden. Neben
-        den Zeitpunkten für den Start der Berechnung und das Ende der
-        Simulation kann auch der Berechnungszeitschritt vorgegeben werden.
-        Daneben folgen die Ausgabeoptionen für die Berechnung. Es können
-        Zeitreihen für den Gesamtabfluss, die einzelnen Abflusskomponenten
-        eines Teilgebietes, die Eingangszeitreihen (Niederschlag, Temperatur,
-        Verdunstung) für ein Teilgebiet und weitere Berechnungsergebnisse an
-        den Knoten ausgegeben werden. Nach Änderung der Steuerdaten
-        (Simulationszeitraum bzw. Zeitschritt) werden die Zeitreihen nicht
-        automatisch aktualisiert. Dies muss vom Anwender über den Menüpunkt
-        <guimenu>Rechenvariante &gt; Zeitreihen aktualisieren</guimenu>
-        vorgenommen werden.</para>
-
-        <para>Um für ein Modellknoten bzw. Pegel, Teilgebiet oder
-        Rückhaltebeckenstrang Ergebnisse aus Berechnungen auszugeben, muss in
-        der jeweiligen Thementabelle das Attribut
-        <emphasis>berechnen</emphasis> <emphasis> (generate Result)</emphasis>
-        gesetzt werden. Die Anzahl der gesetzten Häkchen ist dabei beliebig.
-        Für jedes gewählte Modellelement wird nach der Berechnung die
-        jeweiligen (in Ausgabemenagement.gft gewählten) Zeitreihen im
-        Unterordner <guimenu>Ergebnisse</guimenu> abgelegt.</para>
-      </section>
-
-      <section>
-        <title>Eine Berechnung starten</title>
-		  
-        <indexterm>
-              <primary>Berechnung starten</primary>
-            </indexterm>
-
-        <para>Nachdem alle Modellparameter gesetzt wurden kann die Rechnung
-        gestartet werden. Hierzu muss zunächst ein Rechenfall markiert werden,
-        welcher dann über das <guimenuitem>Menü &gt; Rechenvariante
-        Berechnung(en)</guimenuitem> durchführen gestartet wird. Generell ist
-        auch die Berechnung mehrerer Rechanvarianten in einem Schritt Möglich,
-        indem das Rechenvariantenverzeichnis ausgewählt wird und im
-        Auswahldialog die Rechenvarianten markiert werden, welche berechnet
-        werden sollen.</para>
-
-        <para>Die Berechnung selbst wird bei vorhandenem Server auf diesem
-        durchgeführt, so dass die Arbeit am Arbeitsplatzrechner weiter
-        durchgeführt werden kann. Ist kein Server vorhanden, so werden die
-        Berechnungen auf dem lokalen Rechner durchgeführt.</para>
-      </section>
-    </section>
-
-    <section>
-      <title>Postprocessing</title>
-		
-      <indexterm>
-            <primary>Postprocessing</primary>
+          <indexterm>
+            <primary>Parameter editieren</primary>
           </indexterm>
 
-      <para>Ist die Berechnung erfolgreich durchgeführt, so können die
-      Ergebnisse im Unterordner der Rechenvariante angeschaut werden. Hierzu
-      dient im ersten Schritt die Diagrammansicht der Zeitreihe (siehe <xref
-      linkend="gui-zml_diagramm_ansicht" />). Sollen weitere Auswertungen der
-      Zeitreihe erfolgen, so sind diese im Grafikprogramm (siehe <xref
-      linkend="zeitreihen_bearbeiten" />) durchzuführen.</para>
-    </section>
+          <para>Die Parameter können in den Karten,Tabellen sowie in der
+          Feature (Element)- und Baumansicht geändert werden. Prinzipiell
+          können alle einfachen Datentypen direkt in den entsprechenden
+          Feldern editiert werden. Bei komplizierteren Datentypen, wie z.B.
+          Zeitreihenverknüpfungen und Diagrammelementen erfolgt die
+          Bearbeitung in einem Zusatzdialog.</para>
 
-    <section id="kalypso_na_modellparameter">
-      <title>Liste der Modellparameter</title>
-		
-      <indexterm>
-            <primary>Liste der Modellparameter</primary>
+          <para>
+            <emphasis role="bold">Bearbeiten von
+            Zeitreihenverknüpfungen</emphasis>
+          </para>
+
+          <para>Die Bearbeitung von Zeitreihenverknüpfungen kommt zum einen
+          beim Verknüpfen von Originalzeitreihen aus dem Repository
+          (Datenverzeichnis, Datenbank, o.ä) mit den entsprechenden
+          Zielzeitreihen im Rechenfall und zum anderen zur Verknüpfung der
+          Zeitreihen im Modell mit den Zeitreihen im Rechenfall zum
+          tragen.</para>
+
+          <figure>
+            <title>Zeitreihenverknüpfungen</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="img/modelle/kalypso_na/zeitreihen_control-na.png"
+                           scale="100" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Das Editieren einer Zeitreihenverknüpfung erfogt zumeist durch
+          einen Mausklick auf die ensprechende Tabellenzelle, worauf sich der
+          Zeitreihenlink-Editor (siehe <xref
+          linkend="na-zeitreihenlink_editor" />) öffnet. Der Editor bietet die
+          Möglichkeit sowohl lokale Zeitreihen, welche im Projektverzeichnis
+          gespeichert sind, als auch Zeitreihen aus einem Zeitreihen
+          Repository (in Bearbeitung) anzubinden. Ist eine Veränderung der
+          verlinkten Zeitreihe erforderlich, so kann diese durch entsprechende
+          Filteroperation erfolgen (in Bearbeitung). Wurde der Zeitreihenlink
+          erfolgreich bearbeitet, so ist der Pfad nach dem Speichern in der
+          entsprechenden Tabellenzelle ersichtlich.</para>
+
+          <figure id="na-zeitreihenlink_editor">
+            <title>Zeitreihenlink-Editor</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="img/modelle/kalypso_na/zeitreihenlink-na.png"
+                           scale="70" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>
+            <emphasis role="bold">Bearbeiten von Diagrammelementen</emphasis>
+          </para>
+
+          <para>Diagrammelemente, wie z.B. die Zeitflächenfunktion und die
+          Wasserstands-Abfluss-Volumenbeziehung eines Rückhaltebeckens, werden
+          in der Kalypso-Oberfläche ähnlich zum Zeitreihenformat aufgefasst
+          und auch mit dem Zeitreihenlink-Editor bearbeitet. Hierbei können
+          die Diagrammdaten direkt in der Oberfläche bearbeitet werden oder in
+          externen Programmen vorgehalten und durch die Zwischenablage
+          importiert werden.</para>
+
+          <figure>
+            <title>Bearbeitung von Diagrammdatentypen</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="img/modelle/kalypso_na/diagrammtypen-na.png"
+                           scale="70" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <itemizedlist>
+            <listitem>
+              <para>Diagramm löschen</para>
+
+              <para>Der Button <guibutton>löschen</guibutton> bewirkt das
+              Löschen der Werte des aktuellen Diagrammelementes</para>
+            </listitem>
+
+            <listitem>
+              <para>Diagramm neu</para>
+
+              <para>Der Button <guibutton>neu</guibutton> ermöglicht das
+              Erstellen neuer Diagrammdaten. Durch die Vorgaben einiger Daten
+              (Minimum, Intervall, Anzahl der Wertepaare und Default Wert)
+              wird zunächst ein neues Diagramm erstellt, welches dann
+              detailliert in der Tabelle weiter bearbeitet werden kann. Es ist
+              hierbei darauf zu achten, dass die Hauptdiagrammachse in der
+              Tabelle nicht bearbeitet werden kann. Sollte daher ein
+              diskontinuierliches Intervall auf der Hauptdiagrammachse
+              vorliegen, so ist dieses Diagramm durch den Import der Daten aus
+              der Zwischenablage zu erstellen.</para>
+
+              <figure>
+                <title>Erzeugung eines neuen Diagrammes</title>
+
+                <mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/modelle/kalypso_na/diagramm_neu_schritte-na.png"
+                               scale="80" />
+                  </imageobject>
+                </mediaobject>
+              </figure>
+            </listitem>
+
+            <listitem>
+              <para>Diagramm Import/ Export aus Zwischenspeicher</para>
+
+              <para>Es besteht neben der Diagrammerstellung in der Oberfläche
+              auch die Möglichkeit Daten aus dem Zwischenspeicher zu
+              Importieren. Diese Daten können in einem externen Programm
+              aufbereitet werden und über die Kopierfunktion in die
+              Zwischenablage gespeichet werden. Aus der Zwischenablage werden
+              die Daten dann direkt über den Button <guibutton>Import aus
+              Zwischenspeicher</guibutton> in das Diagrammelement importiert.
+              Diese Funktion kann auch in umgekehrter Weise verwendet werden,
+              um Daten aus der Kalypso-Oberfläche zur Bearbeitung in ein
+              externes Programm zu überführen (<guibutton>Export in
+              Zwischenablage</guibutton>).</para>
+
+              <figure>
+                <title>Datenimport aus Microsoft Excel</title>
+
+                <mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/modelle/kalypso_na/diagramm_import_schritte-na.png"
+                               scale="80" />
+                  </imageobject>
+                </mediaobject>
+              </figure>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section id="kalypso_na-rechanvariante">
+          <title>Rechenvarianten</title>
+
+          <indexterm>
+            <primary>Rechenvarianten</primary>
           </indexterm>
 
-      <para>Im Folgenden werden alle verwendeten Modellparameter für das
-      Niederschlag-Abfluss-Modell KALYPSO-NA erläutert. Die Eingabe der
-      Parameter erfolgt in den Modelltabellen und Eingabemasken im KALYPSO
-      Modeler oder eingeschränkt im Vorhersage-Wizard.</para>
+          <para>Das Verzeichnis Rechenvarianten enthält alle zur
+          Modellberechnung notwendigen Dateien. Diese werden beim Anlegen
+          einer neuen Rechenvariante automatisch vom Programm in das
+          entsprechende Verzeichnis kopiert. Es werden verknüpfte Zeitreihen
+          und Modellparameter des Basismodelles in das Verzeichnis der
+          Rechenvariante abgelegt. Pegel- und Zuflussganglinien sowie
+          Niederschlags- und Klimazeitreihen werden für den
+          Simulationszeitraum aus dem verknüpften Zeitreihenrepository geladen
+          und im angegebenen Zielverzeichnis der Rechenvariante gespeichert
+          (entsprechend der im Verzeichnis ZeitreihenControl enthaltenen
+          Zuordnungstabellen).</para>
+
+          <figure id="pic_weisse_elster_rechenlauf">
+            <title>Verzeichnis Rechenvarianten</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="img/modelle/navigator_rechenvariante.png"
+                           scale="60" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Die Steuerdaten der Berechnung können in der Eingabemaske
+          <emphasis>AusgabeManagement.gft</emphasis> und
+          S<emphasis>imulationsManagement.gft</emphasis> geändert werden.
+          Neben den Zeitpunkten für den Start der Berechnung und das Ende der
+          Simulation kann auch der Berechnungszeitschritt vorgegeben werden.
+          Daneben folgen die Ausgabeoptionen für die Berechnung. Es können
+          Zeitreihen für den Gesamtabfluss, die einzelnen Abflusskomponenten
+          eines Teilgebietes, die Eingangszeitreihen (Niederschlag,
+          Temperatur, Verdunstung) für ein Teilgebiet und weitere
+          Berechnungsergebnisse an den Knoten ausgegeben werden. Nach Änderung
+          der Steuerdaten (Simulationszeitraum bzw. Zeitschritt) werden die
+          Zeitreihen nicht automatisch aktualisiert. Dies muss vom Anwender
+          über den Menüpunkt <guimenu>Rechenvariante &gt; Zeitreihen
+          aktualisieren</guimenu> vorgenommen werden.</para>
+
+          <para>Um für ein Modellknoten bzw. Pegel, Teilgebiet oder
+          Rückhaltebeckenstrang Ergebnisse aus Berechnungen auszugeben, muss
+          in der jeweiligen Thementabelle das Attribut
+          <emphasis>berechnen</emphasis> <emphasis> (generate
+          Result)</emphasis> gesetzt werden. Die Anzahl der gesetzten Häkchen
+          ist dabei beliebig. Für jedes gewählte Modellelement wird nach der
+          Berechnung die jeweiligen (in Ausgabemenagement.gft gewählten)
+          Zeitreihen im Unterordner <guimenu>Ergebnisse</guimenu>
+          abgelegt.</para>
+        </section>
+
+        <section>
+          <title>Eine Berechnung starten</title>
+
+          <indexterm>
+            <primary>Berechnung starten</primary>
+          </indexterm>
+
+          <para>Nachdem alle Modellparameter gesetzt wurden kann die
+          Berechnung gestartet werden. Hierzu muss zunächst ein Rechenfall
+          markiert werden, welcher dann über das <guimenuitem>Menü &gt;
+          Rechenvariante Berechnung(en)</guimenuitem> durchführen gestartet
+          wird. Generell ist auch die Berechnung mehrerer Rechanvarianten in
+          einem Schritt möglich, indem das Rechenvariantenverzeichnis
+          ausgewählt wird und im Auswahldialog die Rechenvarianten markiert
+          werden, welche berechnet werden sollen.</para>
+
+          <para>Die Berechnung selbst wird bei vorhandenem Server auf diesem
+          durchgeführt, so dass die Arbeit am Arbeitsplatzrechner weiter
+          durchgeführt werden kann. Ist kein Server vorhanden, so werden die
+          Berechnungen auf dem lokalen Rechner durchgeführt.</para>
+        </section>
+      </section>
 
-      <table>
-        <title>ModellparameterTeilgebiete</title>
+      <section>
+        <title>Postprocessing</title>
 
-        <tgroup cols="6">
-          <tbody>
-            <row>
-              <entry>Parameter</entry>
+        <indexterm>
+          <primary>Postprocessing</primary>
+        </indexterm>
 
-              <entry>Label</entry>
+        <para>Ist die Berechnung erfolgreich durchgeführt, so können die
+        Ergebnisse im Unterordner <filename>Ergebnisse</filename> der
+        Rechenvariante angeschaut werden. Hierzu dient im ersten Schritt die
+        Diagrammansicht der Zeitreihen (siehe <xref
+        linkend="gui-zml_diagramm_ansicht" />). Sollen weitere Auswertungen
+        der Zeitreihen erfolgen, so sind diese im Grafikprogramm (siehe <xref
+        linkend="zeitreihen_bearbeiten" />) durchzuführen.</para>
+      </section>
 
-              <entry>Einheit</entry>
+      <section id="kalypso_na_modellparameter">
+        <title>Liste der Modellparameter</title>
 
-              <entry>Beispielwert</entry>
+        <indexterm>
+          <primary>Liste der Modellparameter</primary>
+        </indexterm>
 
-              <entry>Bedeutung</entry>
+        <para>Im Folgenden werden alle verwendeten Modellparameter für das
+        Niederschlag-Abfluss-Modell KALYPSO-NA erläutert. Die Eingabe der
+        Parameter erfolgt in den Modelltabellen und Eingabemasken im KALYPSO
+        Modeler oder eingeschränkt im Vorhersage-Wizard.</para>
 
-              <entry>Datentyp</entry>
-            </row>
+        <table>
+          <title>ModellparameterTeilgebiete</title>
 
-            <row>
-              <entry>Ort</entry>
+          <tgroup cols="6">
+            <tbody>
+              <row>
+                <entry>Parameter</entry>
 
-              <entry>Ort</entry>
+                <entry>Label</entry>
 
-              <entry>[ - ]</entry>
+                <entry>Einheit</entry>
 
-              <entry></entry>
+                <entry>Beispielwert</entry>
 
-              <entry>Geometrie des Objektes</entry>
+                <entry>Bedeutung</entry>
 
-              <entry>gml:PolygonPropertyType</entry>
-            </row>
+                <entry>Datentyp</entry>
+              </row>
 
-            <row>
-              <entry>flaech</entry>
+              <row>
+                <entry>Ort</entry>
 
-              <entry>TG-Flaeche</entry>
+                <entry>Ort</entry>
 
-              <entry>[m^2]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Teilgebietsfläche (nur zur Information, wird vom Programm
-              beim Import der Shape-Daten ermittelt). Berechnungsfläche
-              erfolgt aus Hydrotopdaten.</entry>
+                <entry>Geometrie des Objektes</entry>
 
-              <entry>long</entry>
-            </row>
+                <entry>Polygon Property Type</entry>
+              </row>
 
-            <row>
-              <entry>zft</entry>
+              <row>
+                <entry>flaech</entry>
 
-              <entry>Zeitflächenfunktion</entry>
+                <entry>TG-Flaeche</entry>
 
-              <entry>[h,-]</entry>
+                <entry>[m^2]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Zeitflächenfunktion, Abflusswirksame Fläche (normiert) in
-              abhängigkeit der Zeit</entry>
+                <entry>Teilgebietsfläche (nur zur Information, wird vom
+                Programm beim Import der Shape-Daten ermittelt).
+                Berechnungsfläche erfolgt aus Hydrotopdaten.</entry>
 
-              <entry>zmlinline:ZmlInlineTAType</entry>
-            </row>
+                <entry>long</entry>
+              </row>
 
-            <row>
-              <entry>snowtype</entry>
+              <row>
+                <entry>zft</entry>
 
-              <entry>Schneetyp</entry>
+                <entry>Zeitflächenfunktion</entry>
 
-              <entry>-</entry>
+                <entry>[h,-]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Schneetyp - Zur Zuordnung der Schneeparameter</entry>
+                <entry>Zeitflächenfunktion, Abflusswirksame Fläche (normiert)
+                in abhängigkeit der Zeit</entry>
 
-              <entry>string</entry>
-            </row>
+                <entry>ZmlInline TAType</entry>
+              </row>
 
-            <row>
-              <entry>Relationen</entry>
+              <row>
+                <entry>snowtype</entry>
 
-              <entry></entry>
+                <entry>Schneetyp</entry>
 
-              <entry></entry>
+                <entry>-</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Schneetyp - Zur Zuordnung der Schneeparameter</entry>
 
-              <entry></entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry>entwaesserungsStrangMember</entry>
+              <row>
+                <entry>Relationen</entry>
 
-              <entry>Zielstrang</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Relation zum dem Strang, in welchen das Teilgebiet
-              entwässert.</entry>
+                <entry></entry>
 
-              <entry>na:ChannelAssociationType</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>izkn_vers</entry>
+              <row>
+                <entry>entwaesserungsStrangMember</entry>
 
-              <entry>Zielknoten Qvers</entry>
+                <entry>Zielstrang</entry>
 
-              <entry>[-]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Zielknoten des versiegelten Oberflächenabflusses.
-              Optional anzugeben, falls dieser nicht dem Zielstrang
-              entspricht.</entry>
+                <entry>Relation zum dem Strang, in welchen das Teilgebiet
+                entwässert.</entry>
 
-              <entry>na:NodeAssociationType</entry>
-            </row>
+                <entry>Channel Association Type</entry>
+              </row>
 
-            <row>
-              <entry>Retentionskonstanten</entry>
+              <row>
+                <entry>izkn_vers</entry>
 
-              <entry></entry>
+                <entry>Zielknoten Qvers</entry>
 
-              <entry></entry>
+                <entry>[-]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Zielknoten des versiegelten Oberflächenabflusses.
+                Optional anzugeben, falls dieser nicht dem Zielstrang
+                entspricht.</entry>
 
-              <entry></entry>
-            </row>
+                <entry>Node Association Type</entry>
+              </row>
 
-            <row>
-              <entry>retvs</entry>
+              <row>
+                <entry>Retentionskonstanten</entry>
 
-              <entry>k QObfl.vers.</entry>
+                <entry></entry>
 
-              <entry>[h]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Retentionskonstante versiegelter Abfluss</entry>
+                <entry></entry>
 
-              <entry>double</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>retob</entry>
+              <row>
+                <entry>retvs</entry>
 
-              <entry>k QObfl.nat.</entry>
+                <entry>k QObfl.vers.</entry>
 
-              <entry>[h]</entry>
+                <entry>[h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Retentionskonstante Oberflächenabfluss</entry>
+                <entry>Retentionskonstante versiegelter Abfluss</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>retint</entry>
+              <row>
+                <entry>retob</entry>
 
-              <entry>k QIntf.</entry>
+                <entry>k QObfl.nat.</entry>
 
-              <entry>[h]</entry>
+                <entry>[h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Retentionskonstante Interflow</entry>
+                <entry>Retentionskonstante Oberflächenabfluss</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>retbas</entry>
+              <row>
+                <entry>retint</entry>
 
-              <entry>k QBasis</entry>
+                <entry>k QIntf.</entry>
 
-              <entry>[h]</entry>
+                <entry>[h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Retentionskonstante Basisabfluss</entry>
+                <entry>Retentionskonstante Interflow</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>retgw</entry>
+              <row>
+                <entry>retbas</entry>
 
-              <entry>k QGw</entry>
+                <entry>k QBasis</entry>
 
-              <entry>[h]</entry>
+                <entry>[h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Retentionskonstante Grundwasserabfluss</entry>
+                <entry>Retentionskonstante Basisabfluss</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>retklu</entry>
+              <row>
+                <entry>retgw</entry>
 
-              <entry>k Q tiefenGw</entry>
+                <entry>k QGw</entry>
 
-              <entry>[h]</entry>
+                <entry>[h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Retentionskonstante Tiefengrundwasser</entry>
+                <entry>Retentionskonstante Grundwasserabfluss</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>Grundwasser</entry>
+              <row>
+                <entry>retklu</entry>
 
-              <entry></entry>
+                <entry>k Q tiefenGw</entry>
 
-              <entry></entry>
+                <entry>[h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Retentionskonstante Tiefengrundwasser</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>hgru</entry>
+              <row>
+                <entry>Grundwasser</entry>
 
-              <entry>min h GW</entry>
+                <entry></entry>
 
-              <entry>[m]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>minimale Stauhöhe GW-Speicher</entry>
+                <entry></entry>
 
-              <entry>double</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>hgro</entry>
+              <row>
+                <entry>hgru</entry>
 
-              <entry>max h GW</entry>
+                <entry>min h GW</entry>
 
-              <entry>[m]</entry>
+                <entry>[m]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>maximale Stauhöhe GW-Speicher</entry>
+                <entry>minimale Stauhöhe GW-Speicher</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>pors</entry>
+              <row>
+                <entry>hgro</entry>
 
-              <entry>Porositaet GW</entry>
+                <entry>max h GW</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[m]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Porosität des GW-Leiters</entry>
+                <entry>maximale Stauhöhe GW-Speicher</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>rtr</entry>
+              <row>
+                <entry>pors</entry>
 
-              <entry>Aufteilungsfaktor GW</entry>
+                <entry>Porositaet GW</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Aufteilungsfaktor GW-Speicher und
-              Tiefengrundwasser</entry>
+                <entry>Porosität des GW-Leiters</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>grundwasserabflussmember</entry>
+              <row>
+                <entry>rtr</entry>
 
-              <entry>Link GW Relation</entry>
+                <entry>Aufteilungsfaktor GW</entry>
 
-              <entry>-</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Teilgebietsnummer und GWAnteil für den GW-Abfluss in
-              Nachbargebiete.</entry>
+                <entry>Aufteilungsfaktor GW-Speicher und
+                Tiefengrundwasser</entry>
 
-              <entry>na:grundwasserabflussAssociationType</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>ngwzu</entry>
+              <row>
+                <entry>grundwasserabflussmember</entry>
 
-              <entry>TG Nummer GW-Relation</entry>
+                <entry>Link GW Relation</entry>
 
-              <entry>[ - ]</entry>
+                <entry>-</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Teilgebietsnummer des Gebietes, in welches das
-              Grundwasser aus dem aktuellen Gebiet fliesst</entry>
+                <entry>Teilgebietsnummer und GWAnteil für den GW-Abfluss in
+                Nachbargebiete.</entry>
 
-              <entry>na:CatchmentLinkType</entry>
-            </row>
+                <entry>grundwasserabfluss Association Type</entry>
+              </row>
 
-            <row>
-              <entry>gwwi</entry>
+              <row>
+                <entry>ngwzu</entry>
 
-              <entry>Anteil GW-Abfluss</entry>
+                <entry>TG Nummer GW-Relation</entry>
 
-              <entry>[-]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Wichtung der GW-Abflüsse in Nachbarteilgebiete (Summe =
-              1)</entry>
+                <entry>Teilgebietsnummer des Gebietes, in welches das
+                Grundwasser aus dem aktuellen Gebiet fliesst</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>Catchment Link Type</entry>
+              </row>
 
-            <row>
-              <entry>gwsent</entry>
+              <row>
+                <entry>gwwi</entry>
 
-              <entry>Entnahme GW</entry>
+                <entry>Anteil GW-Abfluss</entry>
 
-              <entry>[m^3/s]</entry>
+                <entry>[-]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Entnahme aus dem GW-Speicher</entry>
+                <entry>Wichtung der GW-Abflüsse in Nachbarteilgebiete (Summe =
+                1)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>klupor</entry>
+              <row>
+                <entry>gwsent</entry>
 
-              <entry>Zuflussrate tiefenGW</entry>
+                <entry>Entnahme GW</entry>
 
-              <entry>[%]</entry>
+                <entry>[m^3/s]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Zuflussrate Tiefengrundwasserleiter</entry>
+                <entry>Entnahme aus dem GW-Speicher</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>izkn</entry>
+              <row>
+                <entry>klupor</entry>
 
-              <entry>Relation tiefenGW</entry>
+                <entry>Zuflussrate tiefenGW</entry>
 
-              <entry>-</entry>
+                <entry>[%]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Zielknoten des Tiefengrundwassers (optional)</entry>
+                <entry>Zuflussrate Tiefengrundwasserleiter</entry>
 
-              <entry>na:NodeAssociationType</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>Korrekturfaktoren</entry>
+              <row>
+                <entry>izkn</entry>
 
-              <entry></entry>
+                <entry>Relation tiefenGW</entry>
 
-              <entry></entry>
+                <entry>-</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Zielknoten des Tiefengrundwassers (optional)</entry>
 
-              <entry></entry>
-            </row>
+                <entry>Node Association Type</entry>
+              </row>
 
-            <row>
-              <entry>faktn</entry>
+              <row>
+                <entry>Korrekturfaktoren</entry>
 
-              <entry>Faktor Niederschlag</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry>1</entry>
+                <entry></entry>
 
-              <entry>Niederschlagsfaktor (multipilkativ)</entry>
+                <entry></entry>
 
-              <entry>double</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>ftem</entry>
+              <row>
+                <entry>faktn</entry>
 
-              <entry>Temperaturverschiebung</entry>
+                <entry>Faktor Niederschlag</entry>
 
-              <entry>[°C]</entry>
+                <entry>[ - ]</entry>
 
-              <entry>0</entry>
+                <entry>1</entry>
 
-              <entry>Korrekturfaktor Temperatur (additiv)</entry>
+                <entry>Niederschlagsfaktor (multipilkativ)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>fver</entry>
+              <row>
+                <entry>ftem</entry>
 
-              <entry>Faktor Verdunstung</entry>
+                <entry>Temperaturverschiebung</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[°C]</entry>
 
-              <entry>1</entry>
+                <entry>0</entry>
 
-              <entry>Korrekturfaktor Verdunstung (multiplikativ)</entry>
+                <entry>Korrekturfaktor Temperatur (additiv)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>fint</entry>
+              <row>
+                <entry>fver</entry>
 
-              <entry>Faktor Interzeptionsspeicher</entry>
+                <entry>Faktor Verdunstung</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry>1</entry>
+                <entry>1</entry>
 
-              <entry>Faktor Interzeptionsspeicher Winterhalbjahr</entry>
+                <entry>Korrekturfaktor Verdunstung (multiplikativ)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>ftra</entry>
+              <row>
+                <entry>fint</entry>
 
-              <entry>Faktor Verdunstung (Winter)</entry>
+                <entry>Faktor Interzeptionsspeicher</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry>1</entry>
+                <entry>1</entry>
 
-              <entry>Faktor Verdunstung Winterhalbjahr</entry>
+                <entry>Faktor Interzeptionsspeicher Winterhalbjahr</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>bimax</entry>
+              <row>
+                <entry>ftra</entry>
 
-              <entry>Faktor max. Interzeption</entry>
+                <entry>Faktor Verdunstung (Winter)</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry>1</entry>
+                <entry>1</entry>
 
-              <entry>Korrekturfaktor max. Inhalt Interzeptionsspeicher</entry>
+                <entry>Faktor Verdunstung Winterhalbjahr</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>bianf</entry>
+              <row>
+                <entry>bimax</entry>
 
-              <entry>Faktor Inhalt Interzeption</entry>
+                <entry>Faktor max. Interzeption</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry>1</entry>
+                <entry>1</entry>
 
-              <entry>Korrekturfaktor Anfangsinhalt
-              Interzeptionsspeicher</entry>
+                <entry>Korrekturfaktor max. Inhalt
+                Interzeptionsspeicher</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>f_eva</entry>
+              <row>
+                <entry>bianf</entry>
 
-              <entry>Korr. Verdunstung Vegetationsabhaengig</entry>
+                <entry>Faktor Inhalt Interzeption</entry>
 
-              <entry>[-]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry>1</entry>
 
-              <entry>Vegetationsabhängige Verdunstungskorrektur</entry>
+                <entry>Korrekturfaktor Anfangsinhalt
+                Interzeptionsspeicher</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>tint</entry>
+              <row>
+                <entry>f_eva</entry>
 
-              <entry>Anstieg Interflow</entry>
+                <entry>Korr. Verdunstung Vegetationsabhaengig</entry>
 
-              <entry>[mm/h]</entry>
+                <entry>[-]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Anstiegsrate Interflow</entry>
+                <entry>Vegetationsabhängige Verdunstungskorrektur</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>rintmx</entry>
+              <row>
+                <entry>tint</entry>
 
-              <entry>max Interflow</entry>
+                <entry>Anstieg Interflow</entry>
 
-              <entry>[mm]</entry>
+                <entry>[mm/h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>maximaler Interflow</entry>
+                <entry>Anstiegsrate Interflow</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>Anfangswerte</entry>
+              <row>
+                <entry>rintmx</entry>
 
-              <entry></entry>
+                <entry>max Interflow</entry>
 
-              <entry></entry>
+                <entry>[mm]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>maximaler Interflow</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>aint</entry>
+              <row>
+                <entry>Anfangswerte</entry>
 
-              <entry>Anfangsinhalt Interzeptionsspeicher</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Anfangsinhalt Interzeptionsspeicher</entry>
+                <entry></entry>
 
-              <entry>double</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>aigw</entry>
+              <row>
+                <entry>aint</entry>
 
-              <entry>Anfangsinhalt Grundwasserspeicher</entry>
+                <entry>Anfangsinhalt Interzeptionsspeicher</entry>
 
-              <entry>[m]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Anfangsinhalt Grundwasserspeicher</entry>
+                <entry>Anfangsinhalt Interzeptionsspeicher</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>Optimierungsfaktoren</entry>
+              <row>
+                <entry>aigw</entry>
 
-              <entry></entry>
+                <entry>Anfangsinhalt Grundwasserspeicher</entry>
 
-              <entry></entry>
+                <entry>[m]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Anfangsinhalt Grundwasserspeicher</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>faktorAigw</entry>
+              <row>
+                <entry>Optimierungsfaktoren</entry>
 
-              <entry>faktorAigw</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Faktor Anfangsinhalt Grundwasserspeicher. Parameter der
-              Modelloptimierung im Vorhersagefall - anderenfalls
-              unbesetzt.</entry>
+                <entry></entry>
 
-              <entry>double</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>faktorBianf</entry>
+              <row>
+                <entry>faktorAigw</entry>
 
-              <entry>Faktor AIGW</entry>
+                <entry>faktorAigw</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Korrekturfaktor Anfangsbodenfeuchte (max: 1,0). Parameter
-              der Modelloptimierung im Vorhersagefall - anderenfalls
-              unbesetzt.</entry>
+                <entry>Faktor Anfangsinhalt Grundwasserspeicher. Parameter der
+                Modelloptimierung im Vorhersagefall - anderenfalls
+                unbesetzt.</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>faktorRetobRetint</entry>
+              <row>
+                <entry>faktorBianf</entry>
 
-              <entry>Faktor RETOB,RETINT</entry>
+                <entry>Faktor AIGW</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Faktor Retention Oberflächenabfluss und Interflow.
-              Parameter der Modelloptimierung im Vorhersagefall - anderenfalls
-              unbesetzt.</entry>
+                <entry>Korrekturfaktor Anfangsbodenfeuchte (max: 1,0).
+                Parameter der Modelloptimierung im Vorhersagefall -
+                anderenfalls unbesetzt.</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>Verknüpfungen Zeitreihen</entry>
+              <row>
+                <entry>faktorRetobRetint</entry>
 
-              <entry></entry>
+                <entry>Faktor RETOB,RETINT</entry>
 
-              <entry></entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Faktor Retention Oberflächenabfluss und Interflow.
+                Parameter der Modelloptimierung im Vorhersagefall -
+                anderenfalls unbesetzt.</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>temperaturZR</entry>
+              <row>
+                <entry>Verknüpfungen Zeitreihen</entry>
 
-              <entry>Zeitreihe T lokal</entry>
+                <entry></entry>
 
-              <entry>-</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Link zur lokalen Temperaturzeitreihe</entry>
+                <entry></entry>
 
-              <entry>obslink:TimeseriesLinkFeatureProperty</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>niederschlagZR</entry>
+              <row>
+                <entry>temperaturZR</entry>
 
-              <entry>Zeitreihe N lokal</entry>
+                <entry>Zeitreihe T lokal</entry>
 
-              <entry>-</entry>
+                <entry>-</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Link zur lokalen Niederschlagszeitreihe</entry>
+                <entry>Link zur lokalen Temperaturzeitreihe</entry>
 
-              <entry>obslink:TimeseriesLinkFeatureProperty</entry>
-            </row>
+                <entry>TimeseriesLink Feature Property</entry>
+              </row>
 
-            <row>
-              <entry>verdunstungZR</entry>
+              <row>
+                <entry>niederschlagZR</entry>
 
-              <entry>Zeitreihe V lokal</entry>
+                <entry>Zeitreihe N lokal</entry>
 
-              <entry>-</entry>
+                <entry>-</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Link zur lokalen Verdunstungszeitreihe</entry>
+                <entry>Link zur lokalen Niederschlagszeitreihe</entry>
 
-              <entry>obslink:TimeseriesLinkFeatureProperty</entry>
-            </row>
+                <entry>TimeseriesLink Feature Property</entry>
+              </row>
 
-            <row>
-              <entry>Bodenkorrekturparameter</entry>
+              <row>
+                <entry>verdunstungZR</entry>
 
-              <entry></entry>
+                <entry>Zeitreihe V lokal</entry>
 
-              <entry></entry>
+                <entry>-</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Link zur lokalen Verdunstungszeitreihe</entry>
 
-              <entry></entry>
-            </row>
+                <entry>TimeseriesLink Feature Property</entry>
+              </row>
 
-            <row>
-              <entry>bodenkorrekturmember</entry>
+              <row>
+                <entry>Bodenkorrekturparameter</entry>
 
-              <entry>Link Bodenkorrektur</entry>
+                <entry></entry>
 
-              <entry>-</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Link auf Korrekturparameter der einzelnen
-              Bodenhorizonte</entry>
+                <entry></entry>
 
-              <entry>na:bodenschichtkorrekturAssociationType</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>cinh</entry>
+              <row>
+                <entry>bodenkorrekturmember</entry>
 
-              <entry>KZ-Faktor cin</entry>
+                <entry>Link Bodenkorrektur</entry>
 
-              <entry>[ - ]</entry>
+                <entry>-</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Multiplikativer Korrekturfaktor des
-              Infiltrationsparameters in der Kurzzeitsimulation</entry>
+                <entry>Link auf Korrekturparameter der einzelnen
+                Bodenhorizonte</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>bodenschicht korrektur AssociationType</entry>
+              </row>
 
-            <row>
-              <entry>cind</entry>
+              <row>
+                <entry>cinh</entry>
 
-              <entry>LZ-Faktor cin</entry>
+                <entry>KZ-Faktor cin</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Multiplikativer Korrekturfaktor des
-              Infiltrationsparameters in der Langzeitsimulation</entry>
+                <entry>Multiplikativer Korrekturfaktor des
+                Infiltrationsparameters in der Kurzzeitsimulation</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>cex</entry>
+              <row>
+                <entry>cind</entry>
 
-              <entry>Faktor cex</entry>
+                <entry>LZ-Faktor cin</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Multiplikativer Korrekturfaktor des
-              Perkolationsparameters des Bodenhorizontes</entry>
+                <entry>Multiplikativer Korrekturfaktor des
+                Infiltrationsparameters in der Langzeitsimulation</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>bmax</entry>
+              <row>
+                <entry>cex</entry>
 
-              <entry>Faktor max. Porenvolumen</entry>
+                <entry>Faktor cex</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Multiplikativer Korrekturfaktor des maximalen
-              Porenvolumens</entry>
+                <entry>Multiplikativer Korrekturfaktor des
+                Perkolationsparameters des Bodenhorizontes</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>banf</entry>
+              <row>
+                <entry>bmax</entry>
 
-              <entry>Anfangsbodenfeuchte</entry>
+                <entry>Faktor max. Porenvolumen</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Anfangswert der Bodenfeuchte fuer des ersten
-              Berechnungszyklus</entry>
+                <entry>Multiplikativer Korrekturfaktor des maximalen
+                Porenvolumens</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>fko</entry>
+              <row>
+                <entry>banf</entry>
 
-              <entry>Faktor nFK</entry>
+                <entry>Anfangsbodenfeuchte</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Multiplikativer Korrekturfaktor der nutzbaren
-              Feldkapazitaet</entry>
+                <entry>Anfangswert der Bodenfeuchte fuer des ersten
+                Berechnungszyklus</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>retlay</entry>
+              <row>
+                <entry>fko</entry>
 
-              <entry>Faktor k QIntf.</entry>
+                <entry>Faktor nFK</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Multiplikativer Korrekturfaktor der Retentionskonstante
-              Interflow</entry>
+                <entry>Multiplikativer Korrekturfaktor der nutzbaren
+                Feldkapazitaet</entry>
 
-              <entry>double</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+                <entry>double</entry>
+              </row>
 
-      <table>
-        <title>Modellparameter Knoten</title>
+              <row>
+                <entry>retlay</entry>
 
-        <tgroup cols="6">
-          <tbody>
-            <row>
-              <entry>Parameter</entry>
+                <entry>Faktor k QIntf.</entry>
 
-              <entry>Label</entry>
+                <entry>[ - ]</entry>
 
-              <entry>Einheit</entry>
+                <entry></entry>
 
-              <entry>Beispielwert</entry>
+                <entry>Multiplikativer Korrekturfaktor der Retentionskonstante
+                Interflow</entry>
 
-              <entry>Bedeutung</entry>
+                <entry>double</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
 
-              <entry>Datentyp</entry>
-            </row>
+        <table>
+          <title>Modellparameter Knoten</title>
 
-            <row>
-              <entry>Ort</entry>
+          <tgroup cols="6">
+            <tbody>
+              <row>
+                <entry>Parameter</entry>
 
-              <entry>Ort</entry>
+                <entry>Label</entry>
 
-              <entry>[ - ]</entry>
+                <entry>Einheit</entry>
 
-              <entry></entry>
+                <entry>Beispielwert</entry>
 
-              <entry>Geometrie des Objektes</entry>
+                <entry>Bedeutung</entry>
 
-              <entry>gml:PointPropertyType</entry>
-            </row>
+                <entry>Datentyp</entry>
+              </row>
 
-            <row>
-              <entry>generateResult</entry>
+              <row>
+                <entry>Ort</entry>
 
-              <entry>berechnen</entry>
+                <entry>Ort</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis
-              für diesen Knoten erzeugt wird.</entry>
+                <entry>Geometrie des Objektes</entry>
 
-              <entry>boolean</entry>
-            </row>
+                <entry>Point Property Type</entry>
+              </row>
 
-            <row>
-              <entry>downStreamChannelMember</entry>
+              <row>
+                <entry>generateResult</entry>
 
-              <entry>Unterwasserstrang</entry>
+                <entry>berechnen</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Gewaesserstrang, welcher im weiteren Fliessverlauf
-              Unterwasser anschliesst</entry>
+                <entry>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis
+                für diesen Knoten erzeugt wird.</entry>
 
-              <entry>na:ChannelAssociationType</entry>
-            </row>
+                <entry>boolean</entry>
+              </row>
 
-            <row>
-              <entry>Verknüpfungen Zeitreihen</entry>
+              <row>
+                <entry>downStreamChannelMember</entry>
 
-              <entry></entry>
+                <entry>Unterwasserstrang</entry>
 
-              <entry></entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Gewaesserstrang, welcher im weiteren Fliessverlauf
+                Unterwasser anschliesst</entry>
 
-              <entry></entry>
-            </row>
+                <entry>Channel Association Type</entry>
+              </row>
 
-            <row>
-              <entry>pegelZR</entry>
+              <row>
+                <entry>Verknüpfungen Zeitreihen</entry>
 
-              <entry>Pegel (lok)</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Zeitreihe Pegel (lokal)</entry>
+                <entry></entry>
 
-              <entry>obslink:TimeseriesLinkFeatureProperty</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>qberechnetZR</entry>
+              <row>
+                <entry>pegelZR</entry>
 
-              <entry>Abfluss berechnet</entry>
+                <entry>Pegel (lok)</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Berechneter Pegel (optional)</entry>
+                <entry>Zeitreihe Pegel (lokal)</entry>
 
-              <entry>obslink:TimeseriesLinkFeatureProperty</entry>
-            </row>
+                <entry>TimeseriesLink Feature Property</entry>
+              </row>
 
-            <row>
-              <entry>pegelBerechnetZRAblage</entry>
+              <row>
+                <entry>qberechnetZR</entry>
 
-              <entry>ZR Ablage Berechnung</entry>
+                <entry>Abfluss berechnet</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Verknüpfung zur Ablage des Ergebnisses in der Datenbank
-              (optional)</entry>
+                <entry>Berechneter Pegel (optional)</entry>
 
-              <entry>obslink:TimeseriesLinkFeatureProperty</entry>
-            </row>
+                <entry>TimeseriesLink Feature Property</entry>
+              </row>
 
-            <row>
-              <entry>zuflussZR</entry>
+              <row>
+                <entry>pegelBerechnetZRAblage</entry>
 
-              <entry>Zufluss Berechnung</entry>
+                <entry>ZR Ablage Berechnung</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Zufluss Zeitreihe (lokal)</entry>
+                <entry>Verknüpfung zur Ablage des Ergebnisses in der Datenbank
+                (optional)</entry>
 
-              <entry>obslink:TimeseriesLinkFeatureProperty</entry>
-            </row>
+                <entry>TimeseriesLink Feature Property</entry>
+              </row>
 
-            <row>
-              <entry>Knoten zu Knoten Beziehung</entry>
+              <row>
+                <entry>zuflussZR</entry>
 
-              <entry></entry>
+                <entry>Zufluss Berechnung</entry>
 
-              <entry></entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Zufluss Zeitreihe (lokal)</entry>
 
-              <entry></entry>
-            </row>
+                <entry>TimeseriesLink Feature Property</entry>
+              </row>
 
-            <row>
-              <entry>branchingMember</entry>
+              <row>
+                <entry>Knoten zu Knoten Beziehung</entry>
 
-              <entry>Knoten zu Knoten</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Optionale Verbindung mit einem Zielknoten bzw. mit
-              außerhalb des Netzwerkes vorhandenen Elementen (kont. Zugabe und
-              Entnahme, Überlauf, Zuflusspegel, Verzweigung)</entry>
+                <entry></entry>
 
-              <entry>BranchingAssociationType</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>branchingNodeMember</entry>
+              <row>
+                <entry>branchingMember</entry>
 
-              <entry>Relationsknoten</entry>
+                <entry>Knoten zu Knoten</entry>
 
-              <entry>-</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Knoten zu welchem verzweigt wird</entry>
+                <entry>Optionale Verbindung mit einem Zielknoten bzw. mit
+                außerhalb des Netzwerkes vorhandenen Elementen (kont. Zugabe
+                und Entnahme, Überlauf, Zuflusspegel, Verzweigung)</entry>
 
-              <entry>NodeAssociationType</entry>
-            </row>
+                <entry>Branching Association Type</entry>
+              </row>
 
-            <row>
-              <entry>qzug</entry>
+              <row>
+                <entry>branchingNodeMember</entry>
 
-              <entry>Zugabemenge</entry>
+                <entry>Relationsknoten</entry>
 
-              <entry>[m^3/s]</entry>
+                <entry>-</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>kont. Zugabemenge [m^3/s], welche dem Knoten zugeschlagen
-              wird</entry>
+                <entry>Knoten zu welchem verzweigt wird</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>Node Association Type</entry>
+              </row>
 
-            <row>
-              <entry>qabg</entry>
+              <row>
+                <entry>qzug</entry>
 
-              <entry>Entnahmemenge</entry>
+                <entry>Zugabemenge</entry>
 
-              <entry>[m^3/s]</entry>
+                <entry>[m^3/s]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>kont. Entnahmemenge [m^3/s], welche dem Zielknoten
-              zugeschlagen wird</entry>
+                <entry>kont. Zugabemenge [m^3/s], welche dem Knoten
+                zugeschlagen wird</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>queb</entry>
+              <row>
+                <entry>qabg</entry>
 
-              <entry>Überlaufhöhe</entry>
+                <entry>Entnahmemenge</entry>
 
-              <entry>[m^3/s]</entry>
+                <entry>[m^3/s]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Überlaufhöhe [m^3/s], bei Überschreitung wird der darüber
-              liegende Abfluss dem Zielknoten zugeschlagen</entry>
+                <entry>kont. Entnahmemenge [m^3/s], welche dem Zielknoten
+                zugeschlagen wird</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>zproz</entry>
+              <row>
+                <entry>queb</entry>
 
-              <entry>Verzweigungsanteil</entry>
+                <entry>Überlaufhöhe</entry>
 
-              <entry>[-]</entry>
+                <entry>[m^3/s]</entry>
 
-              <entry>0-1</entry>
+                <entry></entry>
 
-              <entry>Anteil des Abflusses, der dem Verzweigungsknoten
-              zugefuehrt wird</entry>
+                <entry>Überlaufhöhe [m^3/s], bei Überschreitung wird der
+                darüber liegende Abfluss dem Zielknoten zugeschlagen</entry>
 
-              <entry>double</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+                <entry>double</entry>
+              </row>
 
-      <table>
-        <title>Modellparameter der Gerinneelemente</title>
+              <row>
+                <entry>zproz</entry>
 
-        <tgroup cols="6">
-          <tbody>
-            <row>
-              <entry>Parameter</entry>
+                <entry>Verzweigungsanteil</entry>
 
-              <entry>Label</entry>
+                <entry>[-]</entry>
 
-              <entry>Einheit</entry>
+                <entry>0-1</entry>
 
-              <entry>Beispielwert</entry>
+                <entry>Anteil des Abflusses, der dem Verzweigungsknoten
+                zugefuehrt wird</entry>
 
-              <entry>Bedeutung</entry>
+                <entry>double</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
 
-              <entry>Datentyp</entry>
-            </row>
+        <table>
+          <title>Modellparameter der Gerinneelemente</title>
 
-            <row>
-              <entry>Ort</entry>
+          <tgroup cols="6">
+            <tbody>
+              <row>
+                <entry>Parameter</entry>
 
-              <entry>Ort</entry>
+                <entry>Label</entry>
 
-              <entry>[ - ]</entry>
+                <entry>Einheit</entry>
 
-              <entry></entry>
+                <entry>Beispielwert</entry>
 
-              <entry>Geometrie des Objektes</entry>
+                <entry>Bedeutung</entry>
 
-              <entry>gml:LineStringPropertyType</entry>
-            </row>
+                <entry>Datentyp</entry>
+              </row>
 
-            <row>
-              <entry>downStreamNodeMember</entry>
+              <row>
+                <entry>Ort</entry>
 
-              <entry>Relation UW-Knoten</entry>
+                <entry>Ort</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Relation zum Unterwasserknoten des Stranges</entry>
+                <entry>Geometrie des Objektes</entry>
 
-              <entry>na:NodeAssociationType</entry>
-            </row>
+                <entry>LineString Property Type</entry>
+              </row>
 
-            <row>
-              <entry>KM Stränge</entry>
+              <row>
+                <entry>downStreamNodeMember</entry>
 
-              <entry></entry>
+                <entry>Relation UW-Knoten</entry>
 
-              <entry></entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Relation zum Unterwasserknoten des Stranges</entry>
 
-              <entry></entry>
-            </row>
+                <entry>Node Association Type</entry>
+              </row>
 
-            <row>
-              <entry>qfmax</entry>
+              <row>
+                <entry>KM Stränge</entry>
 
-              <entry>Q-Bordvoll</entry>
+                <entry></entry>
 
-              <entry>[m^3/s]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>bordvoller Abfluss eines Gerinneabschnittes</entry>
+                <entry></entry>
 
-              <entry>double</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>c</entry>
+              <row>
+                <entry>qfmax</entry>
 
-              <entry>Aufteilungsfaktor F-V</entry>
+                <entry>Q-Bordvoll</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[m^3/s]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Aufteilungsfaktor Gerinne - Vorland</entry>
+                <entry>bordvoller Abfluss eines Gerinneabschnittes</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>KMParameterMember</entry>
+              <row>
+                <entry>c</entry>
 
-              <entry>Ref. KM-Parameter</entry>
+                <entry>Aufteilungsfaktor F-V</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Link zu Datensatz mit Kalinin-Miljukov-Parametern (n und
-              k)</entry>
+                <entry>Aufteilungsfaktor Gerinne - Vorland</entry>
 
-              <entry>na:KMParameterAssociationType</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>Kalinin-Miljukov-Parameter</entry>
+              <row>
+                <entry>KMParameterMember</entry>
 
-              <entry></entry>
+                <entry>Ref. KM-Parameter</entry>
 
-              <entry></entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Link zu Datensatz mit Kalinin-Miljukov-Parametern (n
+                und k)</entry>
 
-              <entry></entry>
-            </row>
+                <entry>KMParameter Association Type</entry>
+              </row>
 
-            <row>
-              <entry>qrk</entry>
+              <row>
+                <entry>Kalinin-Miljukov-Parameter</entry>
 
-              <entry>Abfluss</entry>
+                <entry></entry>
 
-              <entry>[m^3/s]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Es sollten mindestens 5 verschiedene Abfluessfaelle
-              angegeben werden</entry>
+                <entry></entry>
 
-              <entry>double</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>rkf</entry>
+              <row>
+                <entry>qrk</entry>
 
-              <entry>K Fluss</entry>
+                <entry>Abfluss</entry>
 
-              <entry>[h]</entry>
+                <entry>[m^3/s]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>peicherkonstante K des Flusses (Kalinin-Muljukov)</entry>
+                <entry>Es sollten mindestens 5 verschiedene Abfluessfaelle
+                angegeben werden</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>rnf</entry>
+              <row>
+                <entry>rkf</entry>
 
-              <entry>n Fluss</entry>
+                <entry>K Fluss</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Anzahl n der Speicher des Flusses
-              (Kalinin-Miljukov)</entry>
+                <entry>peicherkonstante K des Flusses
+                (Kalinin-Muljukov)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>rkv</entry>
+              <row>
+                <entry>rnf</entry>
 
-              <entry>K Vorland</entry>
+                <entry>n Fluss</entry>
 
-              <entry>[h]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Speicherkonstante K des Vorlandes
-              (Kalinin-Muljukov)</entry>
+                <entry>Anzahl n der Speicher des Flusses
+                (Kalinin-Miljukov)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>rnv</entry>
+              <row>
+                <entry>rkv</entry>
 
-              <entry>n Vorland</entry>
+                <entry>K Vorland</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Anzahl n der Speicher des Vorlandes
-              (Kalinin-Miljukov)</entry>
+                <entry>Speicherkonstante K des Vorlandes
+                (Kalinin-Muljukov)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>Optimierungsfaktoren</entry>
+              <row>
+                <entry>rnv</entry>
 
-              <entry></entry>
+                <entry>n Vorland</entry>
 
-              <entry></entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Anzahl n der Speicher des Vorlandes
+                (Kalinin-Miljukov)</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>faktorRKf</entry>
+              <row>
+                <entry>Optimierungsfaktoren</entry>
 
-              <entry>Faktor k</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Korrekturfaktor Speicherkonstante. Parameter der
-              Modelloptimierung im Vorhersagefall - anderenfalls
-              unbesetzt.</entry>
+                <entry></entry>
 
-              <entry>double</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>faktorRnf</entry>
+              <row>
+                <entry>faktorRKf</entry>
 
-              <entry>Faktor n</entry>
+                <entry>Faktor k</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Korrekturfaktor Anzahl der Speicher. Parameter der
-              Modelloptimierung im Vorhersagefall - anderenfalls
-              unbesetzt.</entry>
+                <entry>Korrekturfaktor Speicherkonstante. Parameter der
+                Modelloptimierung im Vorhersagefall - anderenfalls
+                unbesetzt.</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>RHB Stränge</entry>
+              <row>
+                <entry>faktorRnf</entry>
 
-              <entry></entry>
+                <entry>Faktor n</entry>
 
-              <entry></entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Korrekturfaktor Anzahl der Speicher. Parameter der
+                Modelloptimierung im Vorhersagefall - anderenfalls
+                unbesetzt.</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>generateResult</entry>
+              <row>
+                <entry>RHB Stränge</entry>
 
-              <entry>berechnen</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis
-              für diesen Knoten erzeugt wird.</entry>
+                <entry></entry>
 
-              <entry>boolean</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry>iknotNodeMember</entry>
+              <row>
+                <entry>generateResult</entry>
 
-              <entry>Überlaufknoten</entry>
+                <entry>berechnen</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Zielknoten auf den die Hochwasserentlastungsanlage
-              abschlägt (Falls unbesetzt, wird der Überlauf zum Grundabfluss
-              addiert und dem Endknoten des Speicherstranges
-              zugeschlagen)</entry>
+                <entry>Auswahl bewirkt, dass bei einer Berechnung ein Ergebnis
+                für diesen Knoten erzeugt wird.</entry>
 
-              <entry>na:NodeAssociationType</entry>
-            </row>
+                <entry>boolean</entry>
+              </row>
 
-            <row>
-              <entry>c</entry>
+              <row>
+                <entry>iknotNodeMember</entry>
 
-              <entry>Aufteilungsfaktor</entry>
+                <entry>Überlaufknoten</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry>normal: 0.0</entry>
+                <entry></entry>
 
-              <entry>Aufteilungsfaktor zwischen den Stationsgrößen QAA und QAN
-              im Konvergenzkriterium</entry>
+                <entry>Zielknoten auf den die Hochwasserentlastungsanlage
+                abschlägt (Falls unbesetzt, wird der Überlauf zum Grundabfluss
+                addiert und dem Endknoten des Speicherstranges
+                zugeschlagen)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>Node Association Type</entry>
+              </row>
 
-            <row>
-              <entry>sv</entry>
+              <row>
+                <entry>c</entry>
 
-              <entry>Anfangsinhalt</entry>
+                <entry>Aufteilungsfaktor</entry>
 
-              <entry>[hm^3]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry>normal: 0.0</entry>
 
-              <entry>Beckeninhalt zu Beginn der Simulation</entry>
+                <entry>Aufteilungsfaktor zwischen den Stationsgrößen QAA und
+                QAN im Konvergenzkriterium</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>vmax</entry>
+              <row>
+                <entry>sv</entry>
 
-              <entry>max. Inhalt</entry>
+                <entry>Anfangsinhalt</entry>
 
-              <entry>[hm^3]</entry>
+                <entry>[hm^3]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>maximaler Beckeninhalt</entry>
+                <entry>Beckeninhalt zu Beginn der Simulation</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>vmin</entry>
+              <row>
+                <entry>vmax</entry>
 
-              <entry>min. Inhalt</entry>
+                <entry>max. Inhalt</entry>
 
-              <entry>[hm^3]</entry>
+                <entry>[hm^3]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>minimaler Beckeninhalt</entry>
+                <entry>maximaler Beckeninhalt</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>hvvsqd</entry>
+              <row>
+                <entry>vmin</entry>
 
-              <entry>WVQ-Beziehung</entry>
+                <entry>min. Inhalt</entry>
 
-              <entry>[ mNN, hm^3, m^3/s]</entry>
+                <entry>[hm^3]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Beziehung zwischen Wasserstand [mNN], Volumen/ Inhalt
-              [hm^3] und Abgabe/ Abfluss [m^3/s] aus dem Speicher (max. 24
-              Wertetripel)</entry>
+                <entry>minimaler Beckeninhalt</entry>
 
-              <entry>ZmlInlineWVQType</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+                <entry>double</entry>
+              </row>
 
-      <table>
-        <title>Parameter der Hydrotope</title>
+              <row>
+                <entry>hvvsqd</entry>
 
-        <tgroup cols="6">
-          <tbody>
-            <row>
-              <entry>Parameter</entry>
+                <entry>WVQ-Beziehung</entry>
 
-              <entry>Label</entry>
+                <entry>[ mNN, hm^3, m^3/s]</entry>
 
-              <entry>Einheit</entry>
+                <entry></entry>
 
-              <entry>Beispielwert</entry>
+                <entry>Beziehung zwischen Wasserstand [mNN], Volumen/ Inhalt
+                [hm^3] und Abgabe/ Abfluss [m^3/s] aus dem Speicher (max. 24
+                Wertetripel)</entry>
 
-              <entry>Bedeutung</entry>
+                <entry>ZmlInline WVQ Type</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
 
-              <entry>Datentyp</entry>
-            </row>
+        <table>
+          <title>Parameter der Hydrotope</title>
 
-            <row>
-              <entry>Ort</entry>
+          <tgroup cols="6">
+            <tbody>
+              <row>
+                <entry>Parameter</entry>
 
-              <entry>Ort</entry>
+                <entry>Label</entry>
 
-              <entry>[ - ]</entry>
+                <entry>Einheit</entry>
 
-              <entry></entry>
+                <entry>Beispielwert</entry>
 
-              <entry>Geometrie des Objektes</entry>
+                <entry>Bedeutung</entry>
 
-              <entry>gml:PolygonPropertyType</entry>
-            </row>
+                <entry>Datentyp</entry>
+              </row>
 
-            <row>
-              <entry>flaech</entry>
+              <row>
+                <entry>Ort</entry>
 
-              <entry>Hydrotopfläche</entry>
+                <entry>Ort</entry>
 
-              <entry>[ m^2 ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Gesamtfläche des Hydrotopes ( wird vom Programm beim
-              Import der Shape-Daten ermittelt)</entry>
+                <entry>Geometrie des Objektes</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>Polygon Property Type</entry>
+              </row>
 
-            <row>
-              <entry>nutz</entry>
+              <row>
+                <entry>flaech</entry>
 
-              <entry>Nutzungsschlüssel</entry>
+                <entry>Hydrotopfläche</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ m^2 ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>vorhandene Nutzung -Link zum Nutzungschlüssel, welcher in
-              der Nutzungsdatensammlung vorhanden sein muss (siehe
-              Nutzungsparameter Bezeichnung).</entry>
+                <entry>Gesamtfläche des Hydrotopes ( wird vom Programm beim
+                Import der Shape-Daten ermittelt)</entry>
 
-              <entry>string</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>boden</entry>
+              <row>
+                <entry>nutz</entry>
 
-              <entry>Bodenschlüssel</entry>
+                <entry>Nutzungsschlüssel</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>anstehender Boden - Link zum Bodenschlüssel, welcher in
-              der Bodendatensammlung vorhanden sein muss (siehe
-              Bodentypparameter Profilbezeichnung)</entry>
+                <entry>vorhandene Nutzung -Link zum Nutzungschlüssel, welcher
+                in der Nutzungsdatensammlung vorhanden sein muss (siehe
+                Nutzungsparameter Bezeichnung).</entry>
 
-              <entry>string</entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry>m_perkm</entry>
+              <row>
+                <entry>boden</entry>
 
-              <entry>max. Perkolationsrate</entry>
+                <entry>Bodenschlüssel</entry>
 
-              <entry>[ mm/d ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>maximale Perkolationsrate</entry>
+                <entry>anstehender Boden - Link zum Bodenschlüssel, welcher in
+                der Bodendatensammlung vorhanden sein muss (siehe
+                Bodentypparameter Profilbezeichnung)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry>m_f1gws</entry>
+              <row>
+                <entry>m_perkm</entry>
 
-              <entry>Zuflussanteil GW</entry>
+                <entry>max. Perkolationsrate</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ mm/d ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Zuflussanteil Grundwasser</entry>
+                <entry>maximale Perkolationsrate</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>m_vers</entry>
+              <row>
+                <entry>m_f1gws</entry>
 
-              <entry>Versiegelungsgrad</entry>
+                <entry>Zuflussanteil GW</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Versiegelungsgrad des Hydrotopes</entry>
+                <entry>Zuflussanteil Grundwasser</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>fak_vers</entry>
+              <row>
+                <entry>m_vers</entry>
 
-              <entry>Faktor Versiegelung</entry>
+                <entry>Versiegelungsgrad</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Korrekturfaktor Versiegelungsgrad</entry>
+                <entry>Versiegelungsgrad des Hydrotopes</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry>entwArt</entry>
+              <row>
+                <entry>fak_vers</entry>
 
-              <entry>Entwässerung</entry>
+                <entry>Faktor Versiegelung</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Untergliederung der in besielte und unbesielte Flächen
-              (wird zur Zeit noch nicht im Modell verwendet)</entry>
+                <entry>Korrekturfaktor Versiegelungsgrad</entry>
 
-              <entry>string</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+                <entry>double</entry>
+              </row>
 
-      <table>
-        <title>"natürliche" Parameter</title>
+              <row>
+                <entry>entwArt</entry>
 
-        <tgroup cols="6">
-          <tbody>
-            <row>
-              <entry>Parameter</entry>
+                <entry>Entwässerung</entry>
 
-              <entry>Label</entry>
+                <entry>[ - ]</entry>
 
-              <entry>Einheit</entry>
+                <entry></entry>
 
-              <entry>Beispielwert</entry>
+                <entry>Untergliederung der in besielte und unbesielte Flächen
+                (wird zur Zeit noch nicht im Modell verwendet)</entry>
 
-              <entry>Bedeutung</entry>
+                <entry>string</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
 
-              <entry>Datentyp</entry>
-            </row>
+        <table>
+          <title>"natürliche" Parameter</title>
 
-            <row>
-              <entry morerows="">Schneeparameter</entry>
+          <tgroup cols="6">
+            <tbody>
+              <row>
+                <entry>Parameter</entry>
 
-              <entry></entry>
+                <entry>Label</entry>
 
-              <entry></entry>
+                <entry>Einheit</entry>
 
-              <entry></entry>
+                <entry>Beispielwert</entry>
 
-              <entry></entry>
+                <entry>Bedeutung</entry>
 
-              <entry></entry>
-            </row>
+                <entry>Datentyp</entry>
+              </row>
 
-            <row>
-              <entry>texttyp</entry>
+              <row>
+                <entry morerows="">Schneeparameter</entry>
 
-              <entry>Schneetyp</entry>
+                <entry></entry>
 
-              <entry>[text]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Schneetyp, welcher einem Gebiet zugeordnet werden
-              kann</entry>
+                <entry></entry>
 
-              <entry>string</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry morerows="">xwwo</entry>
+              <row>
+                <entry>texttyp</entry>
 
-              <entry>Neuschneedichte</entry>
+                <entry>Schneetyp</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[text]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Wasseranteil im Schnee (Neuschneedichte)</entry>
+                <entry>Schneetyp, welcher einem Gebiet zugeordnet werden
+                kann</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry morerows="">xwwmax</entry>
+              <row>
+                <entry morerows="">xwwo</entry>
 
-              <entry>max. Wasseranteil</entry>
+                <entry>Neuschneedichte</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>maximaler Wasseranteil (maximale Lagerungsdichte - Beginn
-              der Schneeschmelze) [-] (= 0-1)</entry>
+                <entry>Wasseranteil im Schnee (Neuschneedichte)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">xsnotem</entry>
+              <row>
+                <entry morerows="">xwwmax</entry>
 
-              <entry>strahl. Schneeschmelzrate</entry>
+                <entry>max. Wasseranteil</entry>
 
-              <entry>[mm/h]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>strahlungsabhängige Schneeschmelzrate</entry>
+                <entry>maximaler Wasseranteil (maximale Lagerungsdichte -
+                Beginn der Schneeschmelze) [-] (= 0-1)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">xh0</entry>
+              <row>
+                <entry morerows="">xsnotem</entry>
 
-              <entry>Anfangsschneehöhe</entry>
+                <entry>strahl. Schneeschmelzrate</entry>
 
-              <entry>[mm]</entry>
+                <entry>[mm/h]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Anfangsschneehöhe</entry>
+                <entry>strahlungsabhängige Schneeschmelzrate</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">Nutzungsparameter</entry>
+              <row>
+                <entry morerows="">xh0</entry>
 
-              <entry></entry>
+                <entry>Anfangsschneehöhe</entry>
 
-              <entry></entry>
+                <entry>[mm]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Anfangsschneehöhe</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">text</entry>
+              <row>
+                <entry morerows="">Nutzungsparameter</entry>
 
-              <entry>Bezeichnung</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Nutzungsbezeichnung (hierher wird aus den Hydrotop
-              verwiesen)</entry>
+                <entry></entry>
 
-              <entry>string</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry morerows="">NutzungParameterMember</entry>
+              <row>
+                <entry morerows="">text</entry>
 
-              <entry>Nutzungsparameter</entry>
+                <entry>Bezeichnung</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Nutzungsparameter</entry>
+                <entry>Nutzungsbezeichnung (hierher wird aus den Hydrotop
+                verwiesen)</entry>
 
-              <entry>par:NutzungParameterAssociationType</entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry morerows="">dat</entry>
+              <row>
+                <entry morerows="">NutzungParameterMember</entry>
 
-              <entry>Datum</entry>
+                <entry>Nutzungsparameter</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Datum</entry>
+                <entry>Nutzungsparameter</entry>
 
-              <entry>string</entry>
-            </row>
+                <entry>Nutzung Parameter Association Type</entry>
+              </row>
 
-            <row>
-              <entry morerows="">xkc</entry>
+              <row>
+                <entry morerows="">dat</entry>
 
-              <entry>Korrekturfaktor der Verdunstung</entry>
+                <entry>Datum</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Korrekturfaktor der Verdunstung gegenüber potentieller
-              Verdunstung</entry>
+                <entry>Datum</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry morerows="">xwt</entry>
+              <row>
+                <entry morerows="">xkc</entry>
 
-              <entry>Wurzeltiefe</entry>
+                <entry>Korrekturfaktor der Verdunstung</entry>
 
-              <entry>[dm]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Wurzeltiefe</entry>
+                <entry>Korrekturfaktor der Verdunstung gegenüber potentieller
+                Verdunstung</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">xlai</entry>
+              <row>
+                <entry morerows="">xwt</entry>
 
-              <entry>Speicherinhalt Interzeptionsspeicher</entry>
+                <entry>Wurzeltiefe</entry>
 
-              <entry>[mm]</entry>
+                <entry>[dm]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Speicherinhalt Interzeptionsspeicher</entry>
+                <entry>Wurzeltiefe</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">Bodentypparameter</entry>
+              <row>
+                <entry morerows="">xlai</entry>
 
-              <entry></entry>
+                <entry>Speicherinhalt Interzeptionsspeicher</entry>
 
-              <entry></entry>
+                <entry>[mm]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Speicherinhalt Interzeptionsspeicher</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">text6</entry>
+              <row>
+                <entry morerows="">Bodentypparameter</entry>
 
-              <entry>Profilbezeichnung</entry>
+                <entry></entry>
 
-              <entry>[-]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Bodenprofilschlüssel (hierher wird aus den Hydrotopen
-              verwiesen)</entry>
+                <entry></entry>
 
-              <entry>string</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry morerows="">BodArtParameterMember</entry>
+              <row>
+                <entry morerows="">text6</entry>
 
-              <entry>Bodenhorizonte</entry>
+                <entry>Profilbezeichnung</entry>
 
-              <entry>[-]</entry>
+                <entry>[-]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Bodenhorizonte des Bodenprofils</entry>
+                <entry>Bodenprofilschlüssel (hierher wird aus den Hydrotopen
+                verwiesen)</entry>
 
-              <entry>par:BodArtParameterAssociationType</entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry morerows="">BodArtLink</entry>
+              <row>
+                <entry morerows="">BodArtParameterMember</entry>
 
-              <entry>Bodenartschlüssel</entry>
+                <entry>Bodenhorizonte</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[-]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Jedem Horizont ist eine Bodenart durch einen
-              Bodenartschlüssel zugewiesen (siehe Bodenartparameter
-              Bodenartschlüssel)</entry>
+                <entry>Bodenhorizonte des Bodenprofils</entry>
 
-              <entry>par:BodenartAssociationType</entry>
-            </row>
+                <entry>BodArt Parameter Association Type</entry>
+              </row>
 
-            <row>
-              <entry morerows="">xtief</entry>
+              <row>
+                <entry morerows="">BodArtLink</entry>
 
-              <entry>Mächtigkeit</entry>
+                <entry>Bodenartschlüssel</entry>
 
-              <entry>[dm]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Mächtigkeit des Bodenhorizontes</entry>
+                <entry>Jedem Horizont ist eine Bodenart durch einen
+                Bodenartschlüssel zugewiesen (siehe Bodenartparameter
+                Bodenartschlüssel)</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>Bodenart Association Type</entry>
+              </row>
 
-            <row>
-              <entry morerows="">xret</entry>
+              <row>
+                <entry morerows="">xtief</entry>
 
-              <entry>Flag Interflow</entry>
+                <entry>Mächtigkeit</entry>
 
-              <entry>[-]</entry>
+                <entry>[dm]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Auswahl, ob Interflow in diesem Horizont zugelassen
-              wird</entry>
+                <entry>Mächtigkeit des Bodenhorizontes</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">Bodenartparameter</entry>
+              <row>
+                <entry morerows="">xret</entry>
 
-              <entry></entry>
+                <entry>Flag Interflow</entry>
 
-              <entry></entry>
+                <entry>[-]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry>Auswahl, ob Interflow in diesem Horizont zugelassen
+                wird</entry>
 
-              <entry></entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">typchar</entry>
+              <row>
+                <entry morerows="">Bodenartparameter</entry>
 
-              <entry>Bodenartschlüssel</entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry></entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Bodenartschlüssel auf den der Link aus der Bodentyppdatei
-              bezogen ist (siehe Bodentypparameter Bodenartschlüssel)</entry>
+                <entry></entry>
 
-              <entry>string</entry>
-            </row>
+                <entry></entry>
+              </row>
 
-            <row>
-              <entry morerows="">typkap</entry>
+              <row>
+                <entry morerows="">typchar</entry>
 
-              <entry>[ - ]</entry>
+                <entry>Bodenartschlüssel</entry>
 
-              <entry>[ - ]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>[ - ]</entry>
+                <entry>Bodenartschlüssel auf den der Link aus der
+                Bodentyppdatei bezogen ist (siehe Bodentypparameter
+                Bodenartschlüssel)</entry>
 
-              <entry>string</entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry morerows="">typwp</entry>
+              <row>
+                <entry morerows="">typkap</entry>
 
-              <entry>Welkepunkt</entry>
+                <entry>[ - ]</entry>
 
-              <entry>[mm/dm]</entry>
+                <entry>[ - ]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Welkepunkt</entry>
+                <entry>[ - ]</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>string</entry>
+              </row>
 
-            <row>
-              <entry morerows="">typfk</entry>
+              <row>
+                <entry morerows="">typwp</entry>
 
-              <entry>Feldkapazität</entry>
+                <entry>Welkepunkt</entry>
 
-              <entry>[mm/dm]</entry>
+                <entry>[mm/dm]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Feldkapazität</entry>
+                <entry>Welkepunkt</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">typbfm</entry>
+              <row>
+                <entry morerows="">typfk</entry>
 
-              <entry>maximales Porenvolumen</entry>
+                <entry>Feldkapazität</entry>
 
-              <entry>[mm/dm]</entry>
+                <entry>[mm/dm]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>maximales Porenvolumen</entry>
+                <entry>Feldkapazität</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">typkf</entry>
+              <row>
+                <entry morerows="">typbfm</entry>
 
-              <entry>Hydraulic conductivity</entry>
+                <entry>maximales Porenvolumen</entry>
 
-              <entry>[mm/d]</entry>
+                <entry>[mm/dm]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Hydraulic conductivity</entry>
+                <entry>maximales Porenvolumen</entry>
 
-              <entry>double</entry>
-            </row>
+                <entry>double</entry>
+              </row>
 
-            <row>
-              <entry morerows="">typbf0</entry>
+              <row>
+                <entry morerows="">typkf</entry>
 
-              <entry>Anfangsbodenfeuchte</entry>
+                <entry>Hydraulic conductivity</entry>
 
-              <entry>[-]</entry>
+                <entry>[mm/d]</entry>
 
-              <entry></entry>
+                <entry></entry>
 
-              <entry>Anfangsbodenfeuchtigkeit</entry>
+                <entry>Hydraulic conductivity</entry>
 
-              <entry>double</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
-    </section>
+                <entry>double</entry>
+              </row>
+
+              <row>
+                <entry morerows="">typbf0</entry>
+
+                <entry>Anfangsbodenfeuchte</entry>
+
+                <entry>[-]</entry>
+
+                <entry></entry>
+
+                <entry>Anfangsbodenfeuchtigkeit</entry>
+
+                <entry>double</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
   </section>
 </chapter>
