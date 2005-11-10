@@ -97,7 +97,7 @@ public class ExportableObservationTable implements IExportableObject
         writer.write( m_table.getCurrentScenarioName() );
         int columnCount = m_table.getColumnCount() - 1;
         for( int i = 0; i < columnCount; i++ )
-          writer.write( "\t" );
+          writer.write( ";" );
         writer.newLine();
       }
 
@@ -105,7 +105,7 @@ public class ExportableObservationTable implements IExportableObject
 
       // normal table dump
       final ObservationTableModel model = m_table.getObservationTableModel();
-      model.dump( "\t", writer );
+      model.dump( ";", writer );
 
       monitor.worked( 1 );
 
