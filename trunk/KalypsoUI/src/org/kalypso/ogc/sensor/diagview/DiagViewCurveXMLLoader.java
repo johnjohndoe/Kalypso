@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
@@ -91,6 +92,8 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
     final TypeObservation xmlObs = (TypeObservation)m_data[1];
     final DiagView view = (DiagView)m_data[0];
 
+    final List ignoreTypes = view.getIgnoreTypesAsList();
+
     for( final Iterator it = xmlObs.getCurve().iterator(); it.hasNext(); )
     {
       final TypeCurve tcurve = (TypeCurve)it.next();
@@ -98,61 +101,75 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       final List tmaps = tcurve.getMapping();
       final List mappings = new ArrayList( tmaps.size() );
 
+      boolean useThisCurve = true;
+
       for( final Iterator itm = tmaps.iterator(); itm.hasNext(); )
       {
         final TypeAxisMapping tmap = (TypeAxisMapping)itm.next();
 
-        IAxis obsAxis;
         try
         {
-          obsAxis = ObservationUtilities.findAxisByName( obs.getAxisList(), tmap.getObservationAxis() );
+          final IAxis obsAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxisList(), tmap
+              .getObservationAxis() );
+
+          if( ignoreTypes.contains( obsAxis.getType() ) )
+          {
+            useThisCurve = false;
+            break;
+          }
+
+          final DiagramAxis diagAxis = view.getDiagramAxis( tmap.getDiagramAxis() );
+
+          mappings.add( new AxisMapping( obsAxis, diagAxis ) );
         }
-        catch( final NoSuchElementException nse )
+        catch( final NoSuchElementException e )
         {
-          // If name doesn't match, we try to find it by type
-          obsAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), tmap.getObservationAxis() );
+          Logger.getLogger( getClass().getName() ).warning(
+              "Kann DiagViewCurve nicht laden, Ursache: " + e.getLocalizedMessage() );
+
+          useThisCurve = false;
+          break;
         }
-
-        final DiagramAxis diagAxis = view.getDiagramAxis( tmap.getDiagramAxis() );
-
-        mappings.add( new AxisMapping( obsAxis, diagAxis ) );
       }
 
-      final String strc = tcurve.getColor();
-      Color color = null;
-      if( strc != null )
+      if( useThisCurve )
       {
-        try
+        final String strc = tcurve.getColor();
+        Color color = null;
+        if( strc != null )
         {
-          color = StringUtilities.stringToColor( strc );
+          try
+          {
+            color = StringUtilities.stringToColor( strc );
+          }
+          catch( final IllegalArgumentException e )
+          {
+            e.printStackTrace();
+          }
         }
-        catch( final IllegalArgumentException e )
+
+        if( color == null )
         {
-          e.printStackTrace();
+          final IAxis axis = DiagViewUtils.getValueAxis( (AxisMapping[])mappings.toArray( new AxisMapping[mappings
+              .size()] ) );
+          if( axis != null )
+            color = TimeserieUtils.getColorFor( axis.getType() );
+          else
+            color = ColorUtilities.random();
         }
+
+        final String curveName = NameUtils.replaceTokens( tcurve.getName(), obs, null );
+
+        // each curve gets its own provider since the curve disposes its provider, when it get disposed
+        final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
+            : new PooledObsProvider( key, null );
+
+        final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, null, (AxisMapping[])mappings
+            .toArray( new AxisMapping[0] ) );
+        curve.setShown( tcurve.isShown() );
+
+        view.addItem( curve );
       }
-
-      if( color == null )
-      {
-        final IAxis axis = DiagViewUtils.getValueAxis( (AxisMapping[])mappings
-            .toArray( new AxisMapping[mappings.size()] ) );
-        if( axis != null )
-          color = TimeserieUtils.getColorFor( axis.getType() );
-        else
-          color = ColorUtilities.random();
-      }
-
-      final String curveName = NameUtils.replaceTokens( tcurve.getName(), obs, null );
-
-      // each curve gets its own provider since the curve disposes its provider, when it get disposed
-      final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
-          : new PooledObsProvider( key, null );
-
-      final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, null, (AxisMapping[])mappings
-          .toArray( new AxisMapping[0] ) );
-      curve.setShown( tcurve.isShown() );
-
-      view.addItem( curve );
     }
   }
 }

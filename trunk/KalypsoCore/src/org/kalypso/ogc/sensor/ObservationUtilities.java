@@ -100,6 +100,29 @@ public class ObservationUtilities
   }
 
   /**
+   * Find an axis with the given name, if it could not be found, tries to find it by type. If it still could not be
+   * found, then a NoSuchElementException is thrown
+   * 
+   * @see ObservationUtilities#findAxisByName(IAxis[], String)
+   * @see ObservationUtilities#findAxisByType(IAxis[], String)
+   * 
+   * @throws NoSuchElementException
+   *           when neither name nor type matched
+   */
+  public static IAxis findAxisByNameThenByType( final IAxis[] axes, final String axisNameOrType )
+      throws NoSuchElementException
+  {
+    try
+    {
+      return findAxisByName( axes, axisNameOrType );
+    }
+    catch( final NoSuchElementException ignored )
+    {
+      return findAxisByType( axes, axisNameOrType );
+    }
+  }
+
+  /**
    * returns null when no axis found instead of throwing an exception
    * 
    * @return axis or null if not found
@@ -607,8 +630,8 @@ public class ObservationUtilities
       index = 0;
     if( index + 1 >= tuppelModel.getCount() )
       index = tuppelModel.getCount() - 2;
-    final Date d1 = (Date)tuppelModel.getElement( index, dateAxis ) ;
-    final Date d2 =  (Date)tuppelModel.getElement( index + 1, dateAxis );
+    final Date d1 = (Date)tuppelModel.getElement( index, dateAxis );
+    final Date d2 = (Date)tuppelModel.getElement( index + 1, dateAxis );
     final double v1 = ( (Double)tuppelModel.getElement( index, valueAxis ) ).doubleValue();
     final double v2 = ( (Double)tuppelModel.getElement( index + 1, valueAxis ) ).doubleValue();
     return MathUtils.interpolate( d1.getTime(), d2.getTime(), v1, v2, date.getTime() );

@@ -15,6 +15,7 @@ import javax.activation.DataHandler;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -134,7 +135,8 @@ public class KalypsoMetaDocService implements IMetaDocService
   {
     try
     {
-      final File docFile = File.createTempFile( "document", preferredFilename, m_tmpDir );
+      // fix: delete the whitespace from the preferredFilename
+      final File docFile = File.createTempFile( "document", StringUtils.deleteWhitespace( preferredFilename ), m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
 
       final PropertiesConfiguration mExConf = new PropertiesConfiguration();
