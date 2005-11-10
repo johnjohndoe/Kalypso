@@ -55,9 +55,10 @@ import java.util.Vector;
 public final class Arrays
 {
   /**
-   * Return a list containing the elements of the array.
+   * Return a list containing the elements of the array. Changes to the list do not affect the underlying array, except
+   * for changes to the objects themselves
    */
-  public static List asList( final Object[] array )
+  public static List copyAsList( final Object[] array )
   {
     final Vector v = new Vector( array.length );
     for( int i = 0; i < array.length; i++ )
@@ -71,7 +72,8 @@ public final class Arrays
    */
   public static void addAll( final Collection c, final Object[] elementsToAdd )
   {
-    c.addAll( Arrays.asList( elementsToAdd ) );
+    //  TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok, any side-effects?
+    c.addAll( java.util.Arrays.asList( elementsToAdd ) );
   }
 
   /**
@@ -570,8 +572,8 @@ public final class Arrays
       return false;
 
     // wrap them into sets and compare the sets
-    final HashSet globalSet = new HashSet( Arrays.asList( array1 ) );
-    final HashSet set = new HashSet( Arrays.asList( array2 ) );
+    final HashSet globalSet = new HashSet( java.util.Arrays.asList( array1 ) );
+    final HashSet set = new HashSet( java.util.Arrays.asList( array2 ) );
 
     return globalSet.equals( set );
   }
