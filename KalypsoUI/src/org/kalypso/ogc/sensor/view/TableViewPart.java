@@ -137,8 +137,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     if( obs != null )
     {
       m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper
-          .makeDateRange( item ) ) ),
-          NameUtils.DEFAULT_ITEM_NAME, null, new ObsView.ItemData( false, null, null ) );
+          .makeDateRange( item ) ) ), NameUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
     }
   }
 

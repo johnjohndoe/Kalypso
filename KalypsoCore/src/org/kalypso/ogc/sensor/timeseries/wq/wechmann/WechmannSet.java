@@ -124,6 +124,8 @@ public class WechmannSet
     if( i < 0 )
       i = -i - 1;
 
+    // TODO: produces ArrayIndexOutOfBoundsException, if W gets to big
+    
     return (WechmannParams)m_mapW.get( ds[i] );
   }
 

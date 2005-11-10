@@ -41,8 +41,6 @@
 package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -175,13 +173,12 @@ public class DiagView extends ObsView
    * Update the diagView with the new observation, perform best guess to know which curves will be added to it.
    * 
    * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
-   *      java.lang.String, java.lang.String[], org.kalypso.ogc.sensor.template.ObsView.ItemData)
+   *      java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
-  public void addObservation( final IObsProvider provider, final String tokenizedName, final String ignoreTypes[],
-      final ItemData data )
+  public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
   {
-    final List ignoreTypeList = ignoreTypes == null ? new ArrayList() : Arrays.asList( ignoreTypes );
-    
+    final List ignoreTypeList = getIgnoreTypesAsList();
+
     final IObservation obs = provider.getObservation();
     if( obs != null )
     {
@@ -239,7 +236,7 @@ public class DiagView extends ObsView
 
             color = ColorUtilities.derivateColor( TimeserieUtils.getColorFor( valueAxis[i].getType() ), found );
           }
-          
+
           final String name = NameUtils.replaceTokens( tokenizedName, obs, valueAxis[i] );
 
           final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, data.stroke, mappings );

@@ -275,6 +275,9 @@ public class TranProLinFilter extends AbstractObservationFilter
     }
     catch( final Exception e )
     {
+      // TODO: allways gets here, even if only one value cannot be computed
+      // better catch exceptions individually?
+      
       e.printStackTrace();
       final Logger logger = Logger.getLogger( getClass().getName() );
       logger.log( Level.WARNING, "Umhüllende konnte nicht erzeugt werden. (WQ-Parameter vollständig ?)", e );

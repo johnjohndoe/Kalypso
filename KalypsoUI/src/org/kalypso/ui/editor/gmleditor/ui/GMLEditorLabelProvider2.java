@@ -38,7 +38,6 @@ import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.CustoumFeatureTypeProperty;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
