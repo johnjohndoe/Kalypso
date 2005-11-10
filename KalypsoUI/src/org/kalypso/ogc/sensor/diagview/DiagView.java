@@ -195,8 +195,8 @@ public class DiagView extends ObsView
         if( keyAxis == valueAxis[i] )
           continue;
 
-        final String type = valueAxis[i].getType();
-        if( !ignoreTypeList.contains( type ) )
+        final String valueAxisType = valueAxis[i].getType();
+        if( !ignoreTypeList.contains( valueAxisType ) )
         {
           final AxisMapping[] mappings = new AxisMapping[2];
 
@@ -210,7 +210,7 @@ public class DiagView extends ObsView
           mappings[0] = new AxisMapping( keyAxis, daDate );
 
           // look for a value diagram axis
-          DiagramAxis daValue = getDiagramAxis( type );
+          DiagramAxis daValue = getDiagramAxis( valueAxisType );
           if( daValue == null )
           {
             daValue = DiagViewUtils.createAxisFor( valueAxis[i] );

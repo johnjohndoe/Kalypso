@@ -42,6 +42,9 @@ package org.kalypso.ogc.sensor.tableview;
 
 import java.net.URL;
 import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -79,7 +82,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   {
     super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]
     { view, xmlObs }, synchron );
-    
+
     m_columnPosition = columnPosition;
   }
 
@@ -100,23 +103,36 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
     final TypeObservation xmlObs = (TypeObservation)m_data[1];
     final TableView m_view = (TableView)m_data[0];
 
+    final List ignoreTypeList = m_view.getIgnoreTypesAsList();
+
     for( final Iterator itCols = xmlObs.getColumn().iterator(); itCols.hasNext(); )
     {
       final TypeColumn tcol = (TypeColumn)itCols.next();
 
-      final IAxis valueAxis = ObservationUtilities.findAxisByName( obs.getAxisList(), tcol.getAxis() );
+      try
+      {
+        final IAxis valueAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxisList(), tcol.getAxis() );
 
-      final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
-      final String name = NameUtils.replaceTokens( colName, obs, valueAxis );
-      final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils
-          .getDefaultFormatString( valueAxis.getType() );
+        if( !ignoreTypeList.contains( valueAxis.getType() ) )
+        {
+          final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
+          final String name = NameUtils.replaceTokens( colName, obs, valueAxis );
+          final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils
+              .getDefaultFormatString( valueAxis.getType() );
 
-      final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
-          : new PooledObsProvider( key, null );
-      final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol.getWidth(),
-          keyAxis, valueAxis, format, m_columnPosition );
+          final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
+              : new PooledObsProvider( key, null );
+          final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol
+              .getWidth(), keyAxis, valueAxis, format, m_columnPosition );
 
-      m_view.addItem( column );
+          m_view.addItem( column );
+        }
+      }
+      catch( final NoSuchElementException e )
+      {
+        Logger.getLogger( getClass().getName() ).warning(
+            "Kann TableViewColumn nicht laden, Ursache: " + e.getLocalizedMessage() );
+      }
     }
   }
 }

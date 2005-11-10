@@ -342,7 +342,7 @@ public abstract class ObsView implements IObsViewEventProvider
     m_enabledFeatures.clear();
   }
 
-  protected List getIgnoreTypesAsList()
+  public List getIgnoreTypesAsList()
   {
     final String[] ignoreTypes = getIgnoreTypes();
     final List ignoreTypeList = ignoreTypes == null ? new ArrayList() : Arrays.asList( ignoreTypes );
