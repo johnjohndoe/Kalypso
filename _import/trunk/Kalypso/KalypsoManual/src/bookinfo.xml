@@ -2,7 +2,7 @@
 <bookinfo>
   <title>KALYPSO - Anwenderhandbuch</title>
 
-  <subtitle>Installation Landeshochwasserwarnzentrale Sachsen</subtitle>
+  <subtitle>Installation Hochwasserzentrale Sachsen-Anhalt</subtitle>
 
   <author>
     <surname>Björnsen Beratende Ingenieure GmbH</surname>
@@ -13,8 +13,8 @@
   <author>
     <surname>TUHH - Arbeitsbereich Wasserbau</surname>
 
-    <address>Denickestrasse 22 1073 Hamburg</address>
+    <address>Denickestrasse 22 21073 Hamburg</address>
   </author>
 
-  <pubdate>Version 1.0 November 2004</pubdate>
+  <pubdate>Version 1.0.0 Oktober 2005</pubdate>
 </bookinfo>

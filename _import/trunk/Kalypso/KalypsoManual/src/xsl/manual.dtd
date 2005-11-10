@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Manual.dtd: DTD für die Online Hilfe - dient dazu, die enttities an einer 
+	zentralen Stelle zu definieren
+-->
+
+<!ENTITY % DocBookDTD PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+           "docbook.dtd">
+%DocBookDTD;
+
+<!ENTITY bce "Björnsen Beratende Ingenieure GmbH">
+<!ENTITY tuhh "Technische Universität Hamburg-Harburg">

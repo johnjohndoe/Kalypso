@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="einfuehrung">
-  <?dbhh topicname="Allgemeines" topicid="2"?>
-
-  <chapterinfo>
-    <date><indexterm>
-        <primary>Einführung in KALYPSO</primary>
-      </indexterm></date>
-  </chapterinfo>
-
   <title>Einführung</title>
 
   <section id="allgemeines_zu_kalypso">
     <title>Allgemeines zu KALYPSO</title>
+
+    <indexterm>
+      <primary>Einführung in KALYPSO</primary>
+    </indexterm>
 
     <para>Das Programm-System KALYPSO Enterprise ist eine Open-Source
     Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in Kooperation
@@ -19,7 +15,7 @@
     Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
     numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
     einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
-    Abstraktionsschicht dar mit folgenden Eigenschaften:</para>
+    Abstraktionsschicht mit folgenden Eigenschaften dar:</para>
 
     <itemizedlist>
       <listitem>
@@ -48,78 +44,77 @@
       </listitem>
     </itemizedlist>
 
-    <graphic fileref="img/000_001_bce_sw_300.png" />
+    <graphic align="center" fileref="img/allgemeines/000_001_bce_sw_300.png"
+             scale="100" />
 
     <para>oder</para>
+
+    <para></para>
 
     <itemizedlist>
       <listitem>
         <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
-        Hamburg - Tel. 040 / 42878-3761 - www.tuhh.de/wb</para>
+        Hamburg - Tel. 040 / 42878-3761 - www.tu-harburg.de/wb</para>
       </listitem>
     </itemizedlist>
 
-    <graphic fileref="img/wasserbau-logo.png" scale="" />
+    <graphic align="center" fileref="img/allgemeines/wasserbau-logo.png"
+             format="PNG" scale="100" />
 
     <section id="nymphe_kalypso">
-      <sectioninfo>
-        <date><indexterm>
-            <primary>KALYPSO-Konzept</primary>
-          </indexterm></date>
-      </sectioninfo>
-
       <title>Die Nymphe Kalypso</title>
 
-      <para>In Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas
-      genannt. Eine der dreitausend Töchter von Thetys trägt ebenfalls diesen
-      Namen.</para>
+      <indexterm>
+        <primary>Nymphe</primary>
+      </indexterm>
+
+      <para>Der Name KALYPSO ist aus der griechischen Mythologie entliehen. In
+      Homers Odyssee wird die Nymphe Kalypso als Tochter von Atlas genannt.
+      Eine der vielzähligen Töchter von Okeanos und Thetys trägt ebenfalls
+      diesen Namen.</para>
 
       <para>Die Nymphe Kalypso hatte ihr Herz an Odysseus verloren. Nachdem
       sein Schiff zerstört und gesunken war, wurde Odysseus an Land der Insel
-      Ogygia gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn aus
-      Liebe dort gefangen und wollte ihn zu Ihrem unsterblichen Ehemann
-      nehmen. Doch selbst nach Jahren des Umwerbens und Betörens von Kalypsos
-      Seite sehnte sich Odysseus immer noch nach seiner Frau und seinem
+      Ogygia gespült - die Insel der Nymphe Kalypso. Kalypso hielt ihn dort
+      aus Liebe gefangen und wollte ihn zu ihrem unsterblichen Ehemann nehmen.
+      Doch selbst nach Jahren des Umwerbens und Betörens von Kalypsos Seite
+      sehnte sich Odysseus immer noch nach seiner Frau Penelope und seinem
       Sohn.</para>
 
       <para>Erst durch die Einmischung von Zeus, der seinen Götterboten Hermes
       entsandte, ließ Kalypso Odysseus frei, sodass er seine Reise Richtung
       Heimat fortsetzen konnte.</para>
+
+      <para>Kalypso zählt aufgrund ihrer Herkunft zur Nymphenart der
+      Okeaniden. Sie herrschen über die Meere - mit Ausnahme des Mittelmeeres,
+      das den Nereiden gehört. Jedem Gewässer ist ein bestimmter Okeanid
+      zugeordnet (Quelle: http://de.wikipedia.org/wiki/Hauptseite).</para>
     </section>
   </section>
 
-  <section id="kalypso_installation_lhwz_sachsen">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>Installation Sachsen</primary>
-        </indexterm></date>
-    </sectioninfo>
+  <section id="kalypso_installation" vendor="sachsen-anhalt">
+    <title>KALYPSO-Installation HVZ Sachsen-Anhalt</title>
 
-    <title>KALYPSO-Installation LHWZ Sachsen</title>
+    <indexterm>
+      <primary>Installation</primary>
+    </indexterm>
 
-    <para>In der Landeshochwasserwarnzentrale Sachsen ist KALYPSO als
-    Softwarelösung für die Hochwasservorhersage installiert. Mit Hilfe des
-    Programmsystems können primär Wizard-geführte Vorhersageberechnungen
-    durchgeführt werden. Komplexe Operationen der Modellpflege werden
-    ebenfalls durch die Oberfläche unterstützt. Dazu ist der sogenannte
-    Expertenmodus vorgesehen.</para>
+    <para>In der Hochwasservorhersagezentrale (HVZ) innerhalb des
+    Landesbetriebes für Hochwasserschutz und Wasserwirtschaft (LHW)
+    Sachsen-Anhalt ist KALYPSO als Softwarelösung für die Hochwasservorhersage
+    installiert. Mit Hilfe des Programmsystems können primär Wizard-geführte
+    Vorhersageberechnungen durchgeführt werden. Komplexe Operationen der
+    Modellpflege werden ebenfalls durch KALYPSO unterstützt. Dazu ist der
+    sogenannte Expertenmodus anzuwenden.</para>
 
     <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
     Modell-Plugins realisierten modularen Funktionsumfang. Folgende
-    serverseitigen Dienste sind in der Landeshochwasserwarnzentrale Sachsen
-    auf dem physisch eigenständigen KALYPSO-Server installiert:</para>
+    serverseitigen Dienste sind als Installation auf dem physisch
+    eigenständigen KALYPSO-Server möglich:</para>
 
     <itemizedlist>
       <listitem>
         <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
-      </listitem>
-
-      <listitem>
-        <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
-      </listitem>
-
-      <listitem>
-        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
       </listitem>
 
       <listitem>
@@ -128,70 +123,337 @@
       </listitem>
 
       <listitem>
+        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
+      </listitem>
+
+      <listitem>
         <para>Ablage von Dokumentbausteinen für Hochwasserberichte
         (Dokumenten-Dienst)</para>
       </listitem>
     </itemizedlist>
 
-    <para>Im Falle der Landeshochwasserwarnzentrale Sachsen wird die
-    modellrelevante zentrale Datenverwaltung durch zwei Systeme administriert.
-    Die eigentlichen Modelldaten - d.h. Geografische Daten, physikalische
-    Parameter, Steuerparameter der numerischen Berechnung, etc. - werden
-    ausschließlich von KALYPSO verwaltet und abgelegt.</para>
+    <para>Im Falle der HVZ Sachsen-Anhalt wird die modellrelevante zentrale
+    Datenhaltung durch drei Programmsysteme administriert. Die eigentlichen
+    Modelldaten - d.h. geografische Daten, physikalische Parameter,
+    Steuerparameter der numerischen Berechnung, etc. - werden ausschließlich
+    von KALYPSO verwaltet und archiviert (zentral auf dem Server oder
+    wahlweise lokal auf dem Rechner).</para>
 
-    <para>Zeitreihen und Dokumentbausteine für Hochwasserberichte werden durch
-    KALYPSO gelesen bzw. generiert, die Verwaltung und Ablage geschieht aber
-    innerhalb von PSICompact.</para>
+    <para>Zeitreihen (gemessen oder anhand von Berechnungen vorhergesagt) und
+    Dokumentbausteine für Hochwasserberichte werden durch KALYPSO gelesen,
+    verarbeitet und generiert; deren Verwaltung und Ablage geschieht aber
+    innerhalb des Informations-Management-Systems (IMS als Dokumentablage)
+    bzw. Wiski (Zeitreihenabruf und -speicherung über Wiski Data
+    Provider).</para>
 
-    <figure id="_server_client_architektur">
-      <title>KALYPSO Client-Server-Architektur bei der LHWZ Sachsen</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="img/Bausteine.png" scale="50" />
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>Die in der Landeshochwasserwarnzentrale Sachsen installierte und
-    hier beschriebene KALYPSO-Version beinhaltet zwei Modell-Plugins.</para>
+    <para>Die in der HVZ Sachsen-Anhalt installierte und hier beschriebene
+    KALYPSO-Version beinhaltet drei sogenannte Modell-Plugins:</para>
 
     <orderedlist>
       <listitem>
-        <para><emphasis role="bold">Spree</emphasis>: Ein kombiniertes
-        Niederschlag-Abfluss-Modell und Wellenablauf-Modell der TU Dresden
-        bzw. der WASY GmbH für das Einzugsgebiet der Spree.</para>
+        <para><emphasis role="bold">Bode</emphasis>: Ein kombiniertes
+        Niederschlag-Abfluss-Modell und Wellenablaufmodell einschließlich
+        Talsperrenberechnung von Thiele + Büttner Ingenieurgemeinschaft GbR
+        für das Einzugsgebiet der Bode.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Weiße Elster</emphasis>: Ein
-        hydrologisches Gebietsmodell des Einzugsgebietes der Weißen Elster mit
-        Abbildung der gesamten landbezogenen Wasserbilanz und integriertem
-        Wellenablauf-Modul, entwickelt und aufgebaut von Björnsen Beratende
-        Ingenieure GmbH.</para>
+        <para><emphasis role="bold">Ilse</emphasis>: Ein kombiniertes
+        Niederschlag-Abfluss-Modell und Wellenablaufmodell einschließlich
+        Talsperrenberechnung von Thiele + Büttner Ingenieurgemeinschaft GbR
+        für das Einzugsgebiet der Ilse.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Saale</emphasis>: Ein kombiniertes
+        Niederschlag-Abfluss-Modell und Wellenablaufmodell einschließlich
+        Talsperrenberechnung von GFE Consult GmbH für das Einzugsgebiet der
+        Saale.</para>
       </listitem>
     </orderedlist>
 
-    <para>Beide Modelle werden durch die KALYPSO-Modeler Oberfläche (siehe
-    <xref linkend="grafische_oberflaeche" />) unterstützt. Gleichzeitig sind
-    innerhalb der Installation in der Landeshochwasserwarnzentrale Sachsen
-    zwei Vorhersage-Wizards verfügbar, die den Anwender im Falle der
-    Hochwasservorhersage gezielt durch die spezifische Vorhersageberechnung
-    der jeweiligen Modelle leiten (siehe <xref
-    linkend="vorhersage_wizards" />).</para>
+    <para>Die drei oben genannten Modelle werden durch die KALYPSO-Modeler
+    Oberfläche (siehe <xref linkend="grafische_oberflaeche" />) unterstützt.
+    Gleichzeitig sind für jedes Modell individuelle Vorhersage-Wizards
+    konfiguriert, die den Anwender im Falle einer Hochwasservorhersage gezielt
+    durch die logischen Schritte der spezifischen Vorhersageberechnung
+    anleiten (siehe <xref linkend="vorhersage_wizards" />).</para>
+
+    <para>Sollten bei den verwendeten Modellen neben dem Rechen-Dienst keine
+    weiteren serverseitigen Dienste erforderlich sein, so ist eine
+    Serverinstallation nicht zwingend notwendig. Für diesen Fall kann die
+    Client-Installation derartig angepasst werden, dass ein lokaler
+    Rechendienst unterstützt werden kann.</para>
+
+    <section>
+      <title>Server-Installation</title>
+
+      <indexterm>
+        <primary>Installation-Server</primary>
+      </indexterm>
+
+      <para>Die Server-Installation bedarf aufgrund der spezifischen
+      Systemeigenschaften einer direkten Abstimmung und Anpassung. Weitere
+      Informationen sind ggf. in der technischen Dokumentation
+      enthalten.</para>
+    </section>
+
+    <section id="client-installation">
+      <title>Client-Installation (Windows)</title>
+
+      <indexterm>
+        <primary>Installation-Client</primary>
+      </indexterm>
+
+      <para>Die Client-Installation wird auf Basis des gelieferten
+      ZIP-Archives durchgeführt. Zur Installation wird das ZIP-Archiv an den
+      gewünschten Installationsort entpackt. Zum Programmstart muss der im
+      Hauptverzeichnis enthaltene Link (<emphasis>Kalypso.lnk</emphasis>)
+      entsprechend des Installationsortes und des gewünschten
+      Arbeitsverzeichnisses (Workspace) angepasst werden. Hierzu ist der Pfad
+      der Zielanwendung durch den aktuellen Installationspfad zu ersetzen.
+      Außerdem wird ein Arbeitsverzeichnis für die Modelldaten angelegt und
+      der Pfad entsprechend im Link angegeben.<table>
+          <title>Erläuterung der Eigenschaften</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>Link</entry>
+
+                <entry>Beispiel</entry>
+
+                <entry>Bemerkung</entry>
+              </row>
+
+              <row>
+                <entry>...\eclipse.exe</entry>
+
+                <entry>D:\Programme\KalypsoClient\eclipse.exe</entry>
+
+                <entry>Lokales Installationsverzeichnis</entry>
+              </row>
+
+              <row>
+                <entry>-dev lib</entry>
+
+                <entry></entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
+                <entry>-data %Workspace%</entry>
+
+                <entry>-data D:\runtime-workspace</entry>
+
+                <entry>lokales Arbeitsverzeichnis</entry>
+              </row>
+
+              <row>
+                <entry>-consoleLog</entry>
+
+                <entry></entry>
+
+                <entry>Console (optional)</entry>
+              </row>
+
+              <row>
+                <entry>-nl de_DE</entry>
+
+                <entry>-nl en_EN</entry>
+
+                <entry>Sprache (optional)</entry>
+              </row>
+
+              <row>
+                <entry>-vmargs -Xmx250m</entry>
+
+                <entry></entry>
+
+                <entry>Speicherfreigabe gem. Arbeitsspeicher</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
+
+      <para>Die Installation enthält alle zur KALYPSO-Anwendung erforderlichen
+      Plugins, sowie ein eigenständiges Java Runtime Environment.</para>
+
+      <para>Nachdem die Installation durchgeführt wurde, kann das Programm
+      durch Doppelklick des Links gestartet werden. Nach dem Programmstart
+      müssen einmalig Voreinstellungen getroffen werden. Diese befinden sich
+      im Menü <guimenuitem>Fenster</guimenuitem> unter
+      <guimenuitem>Benutzervorgaben</guimenuitem> im Themenbereich KALYPSO.
+      Beim Verlassen des Programms werden die Einstellung im aktuellen
+      Workspace für die nachfolgenden Arbeitssitzungen gespeichert.</para>
+    </section>
+  </section>
+
+  <section id="kalypso_installation" vendor="hh_ingenieurbueros">
+    <title>KALYPSO-Installation</title>
+
+    <indexterm>
+      <primary>Installation</primary>
+    </indexterm>
+
+    <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
+    Modell-Plugins realisierten modularen Funktionsumfang. Folgende
+    serverseitigen Dienste sind als Installation auf dem physisch
+    eigenständigen KALYPSO-Server möglich:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Kontrolle von Benutzerzugriffen (Benutzer-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Durchführung von numerischen Modellberechnungen
+        (Rechen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Sollten bei den verwendeten Modellen neben dem Rechen-Dienst keine
+    serverseitigen Dienste erforderlich sein, so ist keine Serverinstallation
+    notwendig. Für diesen Fall beinhaltet die Client-Installation einen
+    lokalen Rechendienst, welcher die Modellberechnung ermöglicht.</para>
+
+    <section>
+      <title>Server-Installation</title>
+
+      <indexterm>
+        <primary>Installation-Server</primary>
+      </indexterm>
+
+      <para>Die Server-Installation bedarf aufgrund der spezifischen
+      Systemeigenschaften einer direkten Abstimmung und Anpassung. Weitere
+      Informationen sind ggf. in der technischen Dokumentation
+      enthalten.</para>
+    </section>
+
+    <section id="client-installation">
+      <title>Client-Installation (Windows)</title>
+
+      <indexterm>
+        <primary>Installation-Client</primary>
+      </indexterm>
+
+      <para>Die Client-Installation wird auf Basis des gelieferten
+      ZIP-Archives durchgeführt. Zur Installation wird das ZIP-Archiv an den
+      gewünschten Installationsort entpackt. Zum Programmstart muss der im
+      Hauptverzeichnis enthaltene Link (<emphasis>Kalypso.lnk</emphasis>)
+      entsprechend des Installationsortes und des gewünschten
+      Arbeitsverzeichnisses (Workspace) angepasst werden. Hierzu ist der Pfad
+      der Zielanwedung durch den aktuellen Installationspfad zu ersetzen.
+      Außerdem wird ein Arbeitsverzeichnis für die Modelldaten angelegt und
+      der Pfad entsprechend im Link angegeben.<table>
+          <title>Erläuterung der Eigenschaften</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>Link</entry>
+
+                <entry>Beispiel</entry>
+
+                <entry>Bemerkung</entry>
+              </row>
+
+              <row>
+                <entry>...\eclipse.exe</entry>
+
+                <entry>D:\Programme\KalypsoClient\eclipse.exe</entry>
+
+                <entry>Lokales Installationsverzeichnis</entry>
+              </row>
+
+              <row>
+                <entry>-dev lib</entry>
+
+                <entry></entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
+                <entry>-data %Workspace%</entry>
+
+                <entry>-data D:\runtime-workspace</entry>
+
+                <entry>lokales Arbeitsverzeichnis</entry>
+              </row>
+
+              <row>
+                <entry>-consoleLog</entry>
+
+                <entry></entry>
+
+                <entry>Console (optional)</entry>
+              </row>
+
+              <row>
+                <entry>-nl de_DE</entry>
+
+                <entry>-nl en_EN</entry>
+
+                <entry>Sprache (optional)</entry>
+              </row>
+
+              <row>
+                <entry>-vmargs -Xmx250m</entry>
+
+                <entry></entry>
+
+                <entry>Speicherfreigabe gem. Arbeitsspeicher</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
+
+      <para>Die Installation enthält alle zur Kalypso-Anwedung erforderlichen
+      Plugins, sowie ein eigenständiges Java Runtime Environment.</para>
+
+      <para>Nachdem die Installation durchgeführt wurde kann das Programm
+      durch Doppelklick des Linkes gestartet werden. Nach dem Programmstart
+      müssen einmalig Voreinstellungen getroffen werden. Diese befinden sich
+      im Menu <guimenuitem>Fenster</guimenuitem> unter
+      <guimenuitem>Benutzervorgaben</guimenuitem> im Themenbereich Kalypso.
+      Beim Verlassen des Programmes werden die Einstellung im aktuellen
+      Workspace für die nachfolgenden Arbeitssitzungen gespeichert.</para>
+    </section>
+
+    <section>
+      <title>Update</title>
+
+      <indexterm>
+        <primary>Update</primary>
+      </indexterm>
+
+      <para>Demnächst wird eine Update-Site verfügbar sein... .</para>
+    </section>
   </section>
 
   <section id="anwendungsfaelle">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>Anwendungsfälle</primary>
-        </indexterm></date>
-    </sectioninfo>
-
     <title>Anwendungsfälle</title>
 
-    <para>Die KALYPSO-Installation in der Landeshochwasserwarnzentrale Sachsen
-    unterscheidet grundsätzlich drei Anwendungsfälle:</para>
+    <indexterm>
+      <primary>Anwendungsfaelle</primary>
+    </indexterm>
+
+    <para>Die KALYPSO-Installation unterscheidet grundsätzlich drei
+    Anwendungsfälle:</para>
 
     <orderedlist>
       <listitem>
@@ -201,53 +463,59 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Modellpflege</emphasis>: Die Modellpflege
-        und -fortschreibung wird durch den Experten (Modellierer) geleistet.
-        Diese Arbeit umfasst u.a. die Nachrechnung historischer Ereignisse zur
-        Nachführung der Modellparameter (Nachkalibrierung), Festlegung und
-        Freischaltung der für die Vorhersage maßgeblichen Modellvariante sowie
-        Bearbeitung und Freischaltung der Visualisierungsvorlagen.</para>
+        <para><emphasis role="bold">Modellpflege</emphasis>: Der Modellaufbau,
+        die Modellpflege und -fortschreibung wird durch den Experten
+        (Modellierer) geleistet. Diese Arbeit umfasst u.a. die Nachrechnung
+        historischer Ereignisse zur Nachführung der Modellparameter
+        (Nachkalibrierung), Festlegung und Freischaltung der für die
+        Vorhersage maßgeblichen Modellvariante sowie Bearbeitung und
+        Freischaltung der Visualisierungsvorlagen.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Hochwasserbetrieb</emphasis>: Im
-        Hochwasserfall müssen durch den Anwender schnell und zuverlässig
-        Hochwasservorhersagen durchgeführt werden. Dazu gehört neben der
-        Berechnung von Wasserständen und Abflüssen an definierten
-        Gewässerstationen auch die Generierung von Bausteinen (Texte,
-        Grafiken) für die Anfertigung von Hochwasserberichten.</para>
+        <para><emphasis role="bold">Anwendungsbetrieb</emphasis>: Im täglichen
+        Betrieb müssen durch den Anwender schnell und zuverlässig
+        Modellberechnungen auf Basis vorhandener Modelle durchgeführt werden.
+        Der Anwendungsbetrieb wird ggf. durch Wizards unterstützt, die auch
+        den Nicht-Experten sicher und gezielt bspw. durch
+        Hochwasservorhersageberechnungen führen.</para>
       </listitem>
     </orderedlist>
 
-    <figure id="pic_anwendungsfaelle">
-      <title>KALYPSO Anwendungsfälle LHWZ Sachsen</title>
+    <para>Der 1. Anwendungsfall: Administration ist gesondert in der
+    Technischen Dokumentation beschrieben.</para>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="img/anwendungsfaelle.png" scale="75" />
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>Der Punkt 1 Administration ist gesondert in der Technischen
-    Dokumentation beschrieben. Die Benutzung von KALYPSO im Hinblick auf die
-    Modellpflege (<xref linkend="grafische_oberflaeche" /> und <xref
-    linkend="zeitreihen_repository" />) und den Hochwasserbetrieb (<xref
+    <para>Die Benutzung von KALYPSO im Hinblick auf die Modellpflege (siehe
+    <xref linkend="grafische_oberflaeche" /> und <xref
+    linkend="zeitreihen_repository" />) und den Anwendungsbetrieb (siehe <xref
     linkend="vorhersage_wizards" />) ist im vorliegenden Handbuch
     beschrieben.</para>
   </section>
 
-  <section id="datenmanagement">
-    <sectioninfo>
-      <date><indexterm>
-          <primary>Datenmanagement LHWZ</primary>
-        </indexterm></date>
-    </sectioninfo>
+  <section id="benutzerrechte" vendor="sachsen-anhalt">
+    <title>Benutzerrechte</title>
 
+    <indexterm>
+      <primary>Benutzerrechte</primary>
+    </indexterm>
+
+    <para>Die Benutzerrechte für KALYPSO werden im HVZ Sachsen-Anhalt zentral
+    im LDAP-Dienst verwaltet. Hier ist für die KALYPSO-Anwendung zurzeit
+    lediglich das Benutzerprofil Modellierer definiert. User mit diesem
+    Benutzerprofil haben alle Rechte innerhalb der Anwendung und können somit
+    alle unter <xref linkend="anwendungsfaelle" /> beschriebenen Aufgaben
+    ausführen.</para>
+  </section>
+
+  <section id="datenmanagement">
     <title>Datenmanagement</title>
 
-    <para>Die in <xref linkend="kalypso_installation_lhwz_sachsen" />
-    beschriebene Client-Server-Architektur basiert auf folgendem
+    <indexterm>
+      <primary>Datenmanagement</primary>
+    </indexterm>
+
+    <para>Die in <xref linkend="kalypso_installation" /> beschriebene
+    Client-Server-Architektur basiert auf folgendem
     Datenmanagement-Prinzip:</para>
 
     <para>Für die Bearbeitung mit KALYPSO können lokale oder auf dem
@@ -269,18 +537,15 @@
     gezielt den Datenaustausch zwischen Server und lokaler Ebene steuern
     kann.</para>
 
-    <para>Für den Anwender im Hochwasserbetrieb bleibt das Datenmanagement
-    verborgen, da er automatisch durch den jeweiligen Vorhersage-Wizard
-    geführt wird, die für die Prognose freigeschalteten Modelle vom Server
-    abruft und die Ergebnisse der Hochwasservorhersage-Berechnung in einer
-    vorgegebenen Struktur wieder auf dem Server ablegt.</para>
+    <para>Für den Anwender und Planer bleibt das Datenmanagement verborgen, da
+    er automatisch durch den jeweiligen Wizard geführt wird.</para>
   </section>
 
   <section id="dokumentationen">
-    <title>Dokumentationen</title>
+    <title>Dokumentation</title>
 
-    <para>Zur KALYPSO-Installation in der LHWZ Sachsen wurden Dokumentationen
-    zu verschiedenen Anwendungsbereichen erstellt, die im Folgenden
+    <para>Für das Programmsystem KALYPSO liegen Dokumentationen für
+    verschiedene Anwendungsbereiche und Benutzergruppen vor, die im Folgenden
     aufgelistet sind.</para>
 
     <itemizedlist>
@@ -293,12 +558,7 @@
       </listitem>
 
       <listitem>
-        <para>Technische Dokumentation zu KALYPSO Enterprise</para>
-      </listitem>
-
-      <listitem>
-        <para>Erläuterungsbericht zur Erstellung des Vorhersagemodells Weiße
-        Elster</para>
+        <para>ggf. Technische Dokumentation</para>
       </listitem>
     </itemizedlist>
   </section>
