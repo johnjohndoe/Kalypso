@@ -54,7 +54,7 @@ import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
@@ -182,7 +182,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart
   public void loadObservation( final URL context, final String href )
   {
     if( m_view != null )
-      m_view.loadObservation( context, href, false, NameUtils.DEFAULT_ITEM_NAME,
+      m_view.loadObservation( context, href, false, ObsViewUtils.DEFAULT_ITEM_NAME,
           new ObsView.ItemData( true, null, null ) );
   }
 }

@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
@@ -137,7 +137,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     if( obs != null )
     {
       m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper
-          .makeDateRange( item ) ) ), NameUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+          .makeDateRange( item ) ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
     }
   }
 

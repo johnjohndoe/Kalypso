@@ -61,9 +61,13 @@ public class ObsViewEvent extends EventObject
   
   public final static int TYPE_VIEW_CHANGED = 64;
   
+  /** this feature should only be used as a view-convenience for the user */
+  public final static int TYPE_IGNORE_TYPE_CHANGED = 128;
+  
   private final Object m_obj;
 
   private final int m_type;
+
 
 
   public ObsViewEvent( final Object eventObject, final int type )

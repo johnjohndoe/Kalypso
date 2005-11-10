@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -127,7 +127,7 @@ public class TableView extends ObsView
 
           if( !ignoreTypeList.contains( valueAxis.getType() ) )
           {
-            final TableViewColumn col = new TableViewColumn( this, provider.copy(), NameUtils.replaceTokens(
+            final TableViewColumn col = new TableViewColumn( this, provider.copy(), ObsViewUtils.replaceTokens(
                 tokenizedName, obs, valueAxis ), data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils
                 .getDefaultFormatString( valueAxis.getType() ) );
 
