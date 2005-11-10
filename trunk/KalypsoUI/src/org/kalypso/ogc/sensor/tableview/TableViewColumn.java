@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
+import java.util.List;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
@@ -53,7 +55,7 @@ public class TableViewColumn extends ObsViewItem
 {
   /** denotes the default column-position in the table: means table can do what it wants */
   private final static int DEFAULT_POSITION = -1;
-  
+
   private boolean m_isEditable = true;
 
   private int m_width = 50;
@@ -79,18 +81,19 @@ public class TableViewColumn extends ObsViewItem
   {
     this( view, provider, name, isEditable, width, keyAxis, valueAxis, format, DEFAULT_POSITION );
   }
-  
+
   /**
    * Full Constructor
    */
   public TableViewColumn( final TableView view, final IObsProvider provider, final String name,
-      final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format, final int position )
+      final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format,
+      final int position )
   {
     super( view, provider, name );
 
     if( format == null )
       throw new IllegalArgumentException( "Format-Spezifikation der Spalte " + name + " darf nicht null sein" );
-    
+
     m_isEditable = isEditable;
     m_width = width;
     m_keyAxis = keyAxis;
@@ -115,10 +118,10 @@ public class TableViewColumn extends ObsViewItem
   }
 
   /**
-   * Set the dirty flag. Optionally an eventSource object can be passed, it designates
-   * the origin of the event.
+   * Set the dirty flag. Optionally an eventSource object can be passed, it designates the origin of the event.
    * 
-   * @param eventSource [optional, can be null] designates the origin of the event
+   * @param eventSource
+   *          [optional, can be null] designates the origin of the event
    */
   public void setDirty( boolean dirty, final Object eventSource )
   {
@@ -167,20 +170,28 @@ public class TableViewColumn extends ObsViewItem
   }
 
   /**
-   * @return the format-specification (non-null). 
+   * @return the format-specification (non-null).
    */
   public String getFormat()
   {
     return m_format;
   }
-  
+
   public int getPosition()
   {
     return m_position;
   }
-  
+
   public boolean isDefaultPosition()
   {
     return m_position == DEFAULT_POSITION;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.ObsViewItem#shouldBeHidden(java.util.List)
+   */
+  public boolean shouldBeHidden( final List hiddenTypes )
+  {
+    return hiddenTypes.contains( m_valueAxis.getType() );
   }
 }
