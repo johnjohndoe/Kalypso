@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.contribs.java.util.Arrays;
-
 /**
  * 
  * 
@@ -87,7 +85,7 @@ public class NetElementCircleFinder
       {
         final List[] lists = findCircle( linkNetElement, copyOfListToHere);
         if(lists.length>0)
-        result.addAll( Arrays.asList( lists ) );
+        result.addAll( java.util.Arrays.asList( lists ) ); //  TODO modified from kalypso.contribs.java.util.Arrays to java.util.Arrays: check if this is ok, any side-effects?
       }
     }
     return (List[])result.toArray( new List[result.size()] );
