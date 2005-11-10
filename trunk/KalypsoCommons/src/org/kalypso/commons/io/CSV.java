@@ -91,7 +91,7 @@ public class CSV extends AbstractCSV
       for( int j = 0; j < line.length; j++ )
       {
         if( j != 0 )
-          pw.print( "," );
+          pw.print( ";" );
 
         pw.print( "\"" );
         pw.print( line[j] );
