@@ -94,7 +94,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -169,7 +169,7 @@ public class GrafikLauncher
     {
       final URL context = ResourceUtilities.createURL( zmlFile );
 
-      final IStatus status = diag.loadObservation( context, context.toExternalForm(), false, NameUtils.DEFAULT_ITEM_NAME, ObsView.DEFAULT_ITEM_DATA, true );
+      final IStatus status = diag.loadObservation( context, context.toExternalForm(), false, ObsViewUtils.DEFAULT_ITEM_NAME, ObsView.DEFAULT_ITEM_DATA, true );
 
       if( !status.isOK() )
         return status;

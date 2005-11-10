@@ -74,7 +74,7 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView.ItemData;
@@ -551,8 +551,8 @@ public class ObservationViewer extends Composite
       final PlainObsProvider pop = new PlainObsProvider( obs, null );//new ObservationRequest( m_dr ) );
 
       final ItemData itd = new ObsView.ItemData( obs.isEditable(), null, null );
-      m_diagView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, itd );
-      m_tableView.addObservation( pop, NameUtils.DEFAULT_ITEM_NAME, itd );
+      m_diagView.addObservation( pop, ObsViewUtils.DEFAULT_ITEM_NAME, itd );
+      m_tableView.addObservation( pop, ObsViewUtils.DEFAULT_ITEM_NAME, itd );
     }
   }
 

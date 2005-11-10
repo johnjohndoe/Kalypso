@@ -50,7 +50,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -116,7 +116,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
         if( !ignoreTypeList.contains( valueAxis.getType() ) )
         {
           final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
-          final String name = NameUtils.replaceTokens( colName, obs, valueAxis );
+          final String name = ObsViewUtils.replaceTokens( colName, obs, valueAxis );
           final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils
               .getDefaultFormatString( valueAxis.getType() );
 

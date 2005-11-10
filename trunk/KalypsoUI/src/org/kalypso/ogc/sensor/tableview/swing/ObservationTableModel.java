@@ -107,7 +107,7 @@ public class ObservationTableModel extends AbstractTableModel
       final Object[] cols = m_columns.toArray();
 
       int i = 0;
-      
+
       if( m_alphaSort )
       {
         // find good position for column (alphabetically sorted)
@@ -480,6 +480,14 @@ public class ObservationTableModel extends AbstractTableModel
       return pos;
     }
   }
+  
+  public boolean containsColumn( final TableViewColumn col )
+  {
+    synchronized( m_columns )
+    {
+      return m_columns.contains( col );
+    }
+  }
 
   /**
    * Returns the corresponding NumberFormat for the given column. The NumberFormat is type dependent. For instance,
@@ -520,13 +528,13 @@ public class ObservationTableModel extends AbstractTableModel
 
   /**
    * Compares TableViewColumns according to their position
-   *
+   * 
    * @author schlienger
    */
   private static class ColOrderIndexComparator implements Comparator
   {
     public final static ColOrderIndexComparator INSTANCE = new ColOrderIndexComparator();
-    
+
     public int compare( final Object o1, final Object o2 )
     {
       final TableViewColumn col1 = (TableViewColumn)o1;
@@ -598,6 +606,17 @@ public class ObservationTableModel extends AbstractTableModel
 
       writer.newLine();
       row++;
+    }
+  }
+
+  /**
+   * Called to update the displayed columns by removing the one that should be ignored. This method should only be called by ObservationTable.
+   */
+  protected void hideIgnoredTypes()
+  {
+    synchronized( m_columns )
+    {
+      
     }
   }
 }

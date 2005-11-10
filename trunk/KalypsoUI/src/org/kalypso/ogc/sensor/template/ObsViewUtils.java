@@ -43,14 +43,21 @@ package org.kalypso.ogc.sensor.template;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
+ * Utility methods for working with ObsView objects
+ * 
  * @author belger
+ * @author schlienger
  */
-public class NameUtils
+public class ObsViewUtils
 {
   public static final String TOKEN_AXISUNIT = "%axisunit%";
 
@@ -62,7 +69,7 @@ public class NameUtils
 
   public static final String DEFAULT_ITEM_NAME = "%axistype% - %obsname%";
 
-  private NameUtils()
+  private ObsViewUtils()
   {
   // utility class
   }
@@ -183,4 +190,30 @@ public class NameUtils
   //    return res;
   //  }
   //
+
+  /**
+   * Retrieve all axis-types of the observations associated to the ObsViewItems. Return a set so that there are no
+   * duplicates.
+   */
+  public static Set retrieveAxisTypes( final ObsViewItem[] items, final boolean onlyValueAxes )
+  {
+    final Set set = new TreeSet();
+
+    if( items == null )
+      return set;
+
+    for( int i = 0; i < items.length; i++ )
+    {
+      final IAxis[] axes = items[i].getObservation().getAxisList();
+      for( int j = 0; j < axes.length; j++ )
+      {
+        final String axisType = axes[j].getType();
+        if( !onlyValueAxes || onlyValueAxes && !KalypsoStatusUtils.isStatusAxis( axes[j] )
+            && !TimeserieConstants.TYPE_DATE.equals( axisType ) )
+          set.add( axisType );
+      }
+    }
+
+    return set;
+  }
 }

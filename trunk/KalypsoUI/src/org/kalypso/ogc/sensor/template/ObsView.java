@@ -112,9 +112,17 @@ public abstract class ObsView implements IObsViewEventProvider
     removeAllItems();
   }
 
+  /**
+   * @param ignoreTypes if null a default empty array is used
+   */
   public void setIgnoreTypes( final String[] ignoreTypes )
   {
-    m_ignoreTypes = ignoreTypes;
+    if( ignoreTypes == null )
+      m_ignoreTypes = new String[0];
+    else
+      m_ignoreTypes = ignoreTypes;
+    
+    fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_IGNORE_TYPE_CHANGED ) );
   }
 
   public String[] getIgnoreTypes()

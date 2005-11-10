@@ -54,7 +54,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -158,7 +158,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
             color = ColorUtilities.random();
         }
 
-        final String curveName = NameUtils.replaceTokens( tcurve.getName(), obs, null );
+        final String curveName = ObsViewUtils.replaceTokens( tcurve.getName(), obs, null );
 
         // each curve gets its own provider since the curve disposes its provider, when it get disposed
         final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )

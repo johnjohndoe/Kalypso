@@ -59,7 +59,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
-import org.kalypso.ogc.sensor.template.NameUtils;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -256,7 +256,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       final Properties properties = FeatureHelper.createReplaceTokens( feature, m_tokens );
       
-      sourceref = NameUtils.replaceTokens( sourceref, properties );
+      sourceref = ObsViewUtils.replaceTokens( sourceref, properties );
     }
 
     final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );

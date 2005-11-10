@@ -38,6 +38,7 @@ import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
+import org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction;
 
 /**
  * AbstractObsOutlinePage
@@ -52,6 +53,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   private final AbstractObservationEditor m_editor;
 
   private IAction m_removeThemeAction;
+
+  private IAction m_setIgnoreTypesAction;
 
   public ObservationEditorOutlinePage( final AbstractObservationEditor editor )
   {
@@ -79,6 +82,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     tv.addCheckStateListener( this );
 
     m_removeThemeAction = new RemoveThemeAction( this );
+    m_setIgnoreTypesAction = new SetIgnoreTypesAction( this );
   }
 
   /**
@@ -210,6 +214,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   {
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     toolBarManager.add( m_removeThemeAction );
+    toolBarManager.add( m_setIgnoreTypesAction );
     
     actionBars.updateActionBars();
   }
