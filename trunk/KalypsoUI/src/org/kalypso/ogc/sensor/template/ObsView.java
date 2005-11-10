@@ -44,6 +44,8 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -93,6 +95,9 @@ public abstract class ObsView implements IObsViewEventProvider
 
   private final Set m_enabledFeatures = new HashSet();
 
+  /** If set, each add of an observation of one of these types is ignored. */
+  private String[] m_ignoreTypes = new String[] {};
+
   /**
    * Default constructor: enables all the features
    */
@@ -105,6 +110,16 @@ public abstract class ObsView implements IObsViewEventProvider
   public void dispose()
   {
     removeAllItems();
+  }
+
+  public void setIgnoreTypes( final String[] ignoreTypes )
+  {
+    m_ignoreTypes = ignoreTypes;
+  }
+
+  public String[] getIgnoreTypes()
+  {
+    return m_ignoreTypes;
   }
 
   public abstract String toString();
@@ -196,7 +211,7 @@ public abstract class ObsView implements IObsViewEventProvider
   {
     fireObsViewChanged( new ObsViewEvent( source, item, ObsViewEvent.TYPE_ITEM_DATA_CHANGED ) );
   }
-  
+
   public final void refreshItemState( final ObsViewItem item, final Object source )
   {
     fireObsViewChanged( new ObsViewEvent( source, item, ObsViewEvent.TYPE_ITEM_STATE_CHANGED ) );
@@ -232,29 +247,31 @@ public abstract class ObsView implements IObsViewEventProvider
    * Load an observation asynchronuously.
    */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
-      final String[] ignoreTypes, final String tokenizedName, final ItemData data )
+      final String tokenizedName, final ItemData data )
   {
-    return loadObservation( context, href, ignoreExceptions, ignoreTypes, tokenizedName, data, false );
+    return loadObservation( context, href, ignoreExceptions, tokenizedName, data, false );
   }
 
   /**
    * Loads an observation, if synchro is true, the load is performed synchronuously.
    */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
-      final String[] ignoreTypes, final String tokenizedName, final ItemData data, final boolean synchron )
+      final String tokenizedName, final ItemData data, final boolean synchron )
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
     final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
-    { this, data, ignoreTypes, tokenizedName }, synchron )
+    {
+        this,
+        data,
+        tokenizedName }, synchron )
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
         final IObsProvider provider = new PooledObsProvider( key, null );
         try
         {
-          ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[3], (String[])m_data[2],
-              (ObsView.ItemData)m_data[1] );
+          ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[2], (ObsView.ItemData)m_data[1] );
         }
         finally
         {
@@ -270,8 +287,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * Implementors of this class must ensure, that there is a 1:1 relationship between provider and added item. So the
    * given provider should be disposed and for each added item a copy of the given provider should be made.
    */
-  protected abstract void addObservation( final IObsProvider provider, final String tokenizedName,
-      final String[] ignoreTypes, final ItemData data );
+  protected abstract void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data );
 
   public static Map mapItems( final ObsViewItem[] items )
   {
@@ -324,5 +340,12 @@ public abstract class ObsView implements IObsViewEventProvider
   public void clearFeatures()
   {
     m_enabledFeatures.clear();
+  }
+
+  protected List getIgnoreTypesAsList()
+  {
+    final String[] ignoreTypes = getIgnoreTypes();
+    final List ignoreTypeList = ignoreTypes == null ? new ArrayList() : Arrays.asList( ignoreTypes );
+    return Collections.unmodifiableList( ignoreTypeList );
   }
 }

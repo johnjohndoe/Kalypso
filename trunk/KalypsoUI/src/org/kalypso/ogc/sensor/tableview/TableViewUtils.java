@@ -269,7 +269,7 @@ public final class TableViewUtils
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
     }
-    
+
     view.setAlphaSort( xml.isAlphaSort() );
 
     final RulesType trules = xml.getRules();

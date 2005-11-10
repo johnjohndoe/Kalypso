@@ -1193,7 +1193,6 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       {
         AbstractData addata = null;
         int index = propertyNameCombo.getSelectionIndex();
-        int type = subType;
         if( subType != FilterDialogTreeNode.SPATIAL_CROSSES && subType != FilterDialogTreeNode.SPATIAL_OVERLAPS
             && subType != FilterDialogTreeNode.SPATIAL_TOUCHES )
         {

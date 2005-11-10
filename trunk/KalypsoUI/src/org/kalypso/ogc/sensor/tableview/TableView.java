@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.kalypso.ogc.sensor.IAxis;
@@ -84,11 +82,11 @@ public class TableView extends ObsView
   {
     return m_alphaSort;
   }
-  
+
   public void setAlphaSort( boolean alphaSort )
   {
     m_alphaSort = alphaSort;
-    
+
     fireObsViewChanged( new ObsViewEvent( this, ObsViewEvent.TYPE_VIEW_CHANGED ) );
   }
 
@@ -97,12 +95,11 @@ public class TableView extends ObsView
    * tableView.
    * 
    * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
-   *      java.lang.String, java.lang.String[], org.kalypso.ogc.sensor.template.ObsView.ItemData)
+   *      java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
-  public void addObservation( final IObsProvider provider, final String tokenizedName, final String[] ignoreTypes,
-      final ItemData data )
+  public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
   {
-    final List ignoreTypeList = ignoreTypes == null ? new ArrayList() : Arrays.asList( ignoreTypes );
+    final List ignoreTypeList = getIgnoreTypesAsList();
 
     final IObservation obs = provider.getObservation();
 

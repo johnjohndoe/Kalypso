@@ -155,8 +155,8 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     {
       final DateRange dra = ObservationViewHelper.makeDateRange( item );
 
-      m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ), NameUtils.DEFAULT_ITEM_NAME, null,
-          new ObsView.ItemData( false, null, null ) );
+      m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ),
+          NameUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
 
       // sub title of diagram contains date-range info
       m_subTitle.setText( "" );
