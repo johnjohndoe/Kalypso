@@ -125,7 +125,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
       e.printStackTrace();
     }
     
-    WorkbenchHelp.setHelp( m_swingContainer, "org.kalypso.tuhhmanual.gui-zml_diagramm_ansicht" );
+    WorkbenchHelp.setHelp( m_swingContainer, "org.kalypso.manual.gui-zml_diagramm_ansicht" );
   }
 
   /**
