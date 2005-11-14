@@ -10,6 +10,6 @@
         point="org.eclipse.help.contexts">
      <contexts
            file="contexts.xml"
-           plugin="org.kalypso.tuhhmanual"/>
+           plugin="org.kalypso.manual"/>
   </extension>
 </plugin>
