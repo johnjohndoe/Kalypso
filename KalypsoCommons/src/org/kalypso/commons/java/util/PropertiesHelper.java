@@ -74,10 +74,13 @@ public class PropertiesHelper
     return props;
   }
 
-  public static String format( final Properties source, final char separator )
+  /**
+   * @return a string representation of the content of the given map
+   */
+  public static String format( final Map source, final char separator )
   {
     final StringBuffer sb = new StringBuffer();
-    for( Iterator pIt = source.entrySet().iterator(); pIt.hasNext(); )
+    for( final Iterator pIt = source.entrySet().iterator(); pIt.hasNext(); )
     {
       final Map.Entry entry = (Entry)pIt.next();
 

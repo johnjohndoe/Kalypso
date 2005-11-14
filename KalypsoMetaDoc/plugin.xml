@@ -17,6 +17,9 @@
       <library name="lib/commons-collections/commons-collections-3.1.jar">
          <export name="*"/>
       </library>
+      <library name="lib/commons-logging.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>

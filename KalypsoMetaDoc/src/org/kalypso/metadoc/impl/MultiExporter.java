@@ -119,9 +119,9 @@ public class MultiExporter extends AbstractExporter
   /**
    * Returns all exportable-objecs of all exporters.
    * 
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(Configuration, Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration, final Configuration metadataExtensions ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
     final Collection allObjects = new ArrayList();
 
@@ -130,7 +130,7 @@ public class MultiExporter extends AbstractExporter
     for( int i = 0; i < choosenExporters.length; i++ )
     {
       final IExporter exporter = (IExporter)choosenExporters[i];
-      final IExportableObject[] objects = exporter.createExportableObjects( configuration, metadataExtensions );
+      final IExportableObject[] objects = exporter.createExportableObjects( configuration );
       allObjects.addAll( Arrays.asList( objects ) );
     }
 

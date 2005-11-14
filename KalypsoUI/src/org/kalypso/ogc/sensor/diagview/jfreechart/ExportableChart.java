@@ -71,17 +71,17 @@ public class ExportableChart implements IExportableObject
 
   private final int m_width;
   private final int m_height;
-  
-  private final Configuration m_metadataExtensions;
+
+  private final String m_identifierPrefix;
 
   public ExportableChart( final ObservationChart chart, final String format, final int width, final int height,
-      final Configuration metadataExtensions )
+      final String identifierPrefix )
   {
     m_chart = chart;
     m_format = format;
     m_width = width;
     m_height = height;
-    m_metadataExtensions = metadataExtensions;
+    m_identifierPrefix = identifierPrefix;
   }
 
   /**
@@ -100,17 +100,18 @@ public class ExportableChart implements IExportableObject
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
     monitor.beginTask( "Diagramm-Export", IProgressMonitor.UNKNOWN );
 
     try
     {
       // let update the metadata with the information we have
-      MetadataExtenderWithObservation.extendMetadata( m_metadataExtensions, m_chart.getTemplate().getItems() );
-      
+      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, m_chart.getTemplate().getItems() );
+
       final BufferedImage image = m_chart.createBufferedImage( m_width, m_height, null );
       EncoderUtil.writeBufferedImage( image, m_format, outs );
     }
@@ -124,5 +125,13 @@ public class ExportableChart implements IExportableObject
     }
 
     return Status.OK_STATUS;
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_identifierPrefix + getPreferredDocumentName();
   }
 }

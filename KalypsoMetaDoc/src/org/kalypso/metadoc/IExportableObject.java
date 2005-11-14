@@ -43,6 +43,7 @@ package org.kalypso.metadoc;
 
 import java.io.OutputStream;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
@@ -54,11 +55,17 @@ import org.eclipse.core.runtime.IStatus;
 public interface IExportableObject
 {
   /**
+   * @return a unique identifier for this exportable object. The identifier should be unique within the scope of its
+   *         exporter.
+   */
+  public String getIdentifier();
+
+  /**
    * @return a name which is suitable as filename for this document. The name should have a filename-like structure with
    *         <code>basename.extension</code>.
    */
   public String getPreferredDocumentName();
-
+  
   /**
    * Called by the metadoc framework when this object should be exported.
    * <p>
@@ -70,5 +77,5 @@ public interface IExportableObject
    * not possible
    * </ul>
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor );
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions );
 }

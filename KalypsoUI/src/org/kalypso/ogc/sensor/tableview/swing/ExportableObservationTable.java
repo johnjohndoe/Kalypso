@@ -61,12 +61,12 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class ExportableObservationTable implements IExportableObject
 {
   private final ObservationTable m_table;
-  private final Configuration m_metadataExtensions;
+  private final String m_identifierPrefix;
 
-  public ExportableObservationTable( final ObservationTable table, final Configuration metadataExtensions )
+  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix )
   {
     m_table = table;
-    m_metadataExtensions = metadataExtensions;
+    m_identifierPrefix = identifierPrefix;
   }
 
   /**
@@ -79,9 +79,10 @@ public class ExportableObservationTable implements IExportableObject
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
     monitor.beginTask( "Export", 2 );
 
@@ -89,7 +90,7 @@ public class ExportableObservationTable implements IExportableObject
     try
     {
       // let update the metadata with the information we have
-      MetadataExtenderWithObservation.extendMetadata( m_metadataExtensions, m_table.getTemplate().getItems() );
+      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, m_table.getTemplate().getItems() );
 
       // scenario name header
       if( !m_table.getCurrentScenarioName().equals( "" ) )
@@ -122,5 +123,13 @@ public class ExportableObservationTable implements IExportableObject
       IOUtils.closeQuietly( writer );
       monitor.done();
     }
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    return m_identifierPrefix + getPreferredDocumentName();
   }
 }

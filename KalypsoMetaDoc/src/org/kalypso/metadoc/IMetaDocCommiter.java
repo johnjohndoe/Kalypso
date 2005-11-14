@@ -76,9 +76,11 @@ public interface IMetaDocCommiter
    *          the document metadata
    * @param doc
    *          the document file to commit
+   * @param identifier
+   *          the identifier of the document
    * @param metadataExtensions
    *          some additional metadata that might be used by commiters
    */
   public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
-      final Configuration metadataExtensions ) throws MetaDocException;
+      final String identifier, final Configuration metadataExtensions ) throws MetaDocException;
 }
