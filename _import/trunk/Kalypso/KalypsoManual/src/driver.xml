@@ -12,7 +12,9 @@
 	<!ENTITY file_wizard_Bode SYSTEM "Vorhersage_Assistent_Bode.xml">
 	<!ENTITY file_wizard_Saale SYSTEM "Vorhersage_Assistent_Saale.xml">
 ]>
+<!--book id="book" lang="de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xinclude="http://www.w3.org/2001/XInclude" xsi:schemaLocation="http://www.w3.org/2001/XInclude xincluder.xsd"-->
 <book id="book" lang="de">
+	<!--xinclude:include href="test_xinclude.xml"/-->
  
 	&file_bookinfo;	
 	
@@ -20,12 +22,11 @@
 
 	&file_allgemeines;
 	&file_programm_start;
-
 	&file_gui; 
 	&file_repository;
 	&file_modelle;    
 	
-	<chapter vendor="Sachsen;SachsenAnhalt">
+	<chapter vendor="sachsen;sachsen-anhalt">
 		<title id="vorhersage_wizards">Vorhersage-Assistenten</title>
 		<indexterm><primary>Vorhersage-Assistenten</primary> </indexterm>
 		

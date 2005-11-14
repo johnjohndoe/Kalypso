@@ -35,9 +35,11 @@
 	<property name="doc.path" value="${build.merged.dir}/${doc.main}" />
 	<property name="doc.profiled.path" value="${build.profiling.dir}/docbook-profiled.xml" />
 
-	<property name="docbook.dtd.dir" value="${workspace}/KalypsoManual/publishing/docbookxml44" />
-	<property name="docbook.xsl.dir" value="${workspace}/KalypsoManual/publishing/docbook-xsl-1.69.1" />
-	<property name="docbook.latex.xsl.dir" value="${workspace}/KalypsoManual/publishing/db2latex-xsl-0.8pre1_patched" />
+	<property name="publishing.dir" value="${workspace}/KalypsoManual/publishing" />
+	<property name="docbook.dtd.dir" value="${publishing.dir}/docbookxml44" />
+	<property name="docbook.xsl.dir" value="${publishing.dir}/docbook-xsl-1.69.1" />
+	<property name="docbook.latex.xsl.dir" value="${publishing.dir}/db2latex-xsl-0.8pre1_patched" />
+	<property name="xincluder.xsd.dir" value="${publishing.dir}/xincluder" />
 
 	<xmlcatalog id="docbookCatalog">
 		<dtd publicId="-//OASIS//DTD DocBook XML V4.4//EN" location="${docbook.dtd.dir}/docbookx.dtd" />
@@ -46,6 +48,7 @@
 		<dtd publicId="eclipse-ex.xsl" location="${docbook.xsl.dir}/eclipse/eclipse-ex.xsl" />
 		<dtd publicId="fo-docbook.xsl" location="${docbook.xsl.dir}/fo/docbook.xsl" />
 		<dtd publicId="latex-docbook.xsl" location="${docbook.latex.xsl.dir}/xsl/docbook.xsl" />
+		<dtd publicId="http://www.w3.org/2001/XInclude" location="${xincluder.xsd.dir}/xincluder.xsd" />
 	</xmlcatalog>
 
 	<!-- TODO: remove cleanup dependency and only clean if necessary -->
@@ -61,11 +64,11 @@
 
 		<echo message="${src.other.dir}" />
 		<copy todir="${build.merged.dir}">
-			<fileset dir="${src.dir}/" includes="**/*" defaultexcludes="false" />
+			<fileset dir="${src.dir}/" includes="**/*" defaultexcludes="false" excludes="**/CVS/**"/>
 		</copy>
 		
 		<copy todir="${build.merged.dir}" overwrite="true">
-			<fileset dir="${src.other.dir}" includes="**/*" />
+			<fileset dir="${src.other.dir}" includes="**/*" excludes="**/CVS/**"/>
 		</copy>
 	</target>
 
@@ -83,9 +86,22 @@
 	</target>
 
 	<target name="profiling" description="Hilfsfunktion zum Profilen von DocBook" depends="init">
+		<!-- First we do the profiling -->
 		<xslt basedir="${build.merged.dir}" in="${doc.path}" out="${doc.profiled.path}" style="${build.merged.xsl.dir}/common-profile.xsl">
 			<xmlcatalog refid="docbookCatalog" />
 		</xslt>
+		
+		<!-- Then we resolve the xincludes -->
+<!--		WÄRE SCHÖN WENNS GINGE
+		<java classname="com.elharo.xml.xinclude.SAXXIncluder" fork="false" args="${doc.profiled.path}" logerror="true"> 
+			<classpath location="${workspace}/KalypsoManual/lib/xincluder/xincluder.jar"></classpath>
+		</java>
+-->		
+
+<!--		    -cp "../XInclude/xincluder.jar:../xerces-2_0_2/xercesImpl.jar"
+		      bookfile.xml  >  resolved.xml
+-->		
+		
 	</target>
 
 	<target name="html" depends="profiling" description="Erzeugt das Benutzerhandbuch - HTML-Version">

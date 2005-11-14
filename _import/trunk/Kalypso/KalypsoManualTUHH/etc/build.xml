@@ -19,7 +19,7 @@
 	<property name="build.fo.dir" value="${build.dir}/fo" />
 	<property name="css.dir" value="${help.dir}/css" />
 	<property name="image.dir" value="${help.dir}/img" />
-	<property name="doc.profiled" value="${build.profiling.dir}/docbook-profiled.xml"/>
+	<property name="doc.profiled" value="${build.profiling.dir}/docbook-profiled.xml" />
 
 	<target name="init">
 		<mkdir dir="${build.dir}" />
@@ -31,13 +31,13 @@
 		<mkdir dir="${build.fo.dir}" />
 	</target>
 
-	<target name="cleanup" description="cleans generated stuff except deployed stuff">
+	<target name="cleanup" description="Löscht alles unterhalb des ${build.dir}">
 		<delete>
 			<fileset dir="${build.dir}" includes="*/**" />
 		</delete>
 	</target>
 
-	<target name="valid">
+	<target name="valid" description="Validiert das ${help.dir}/${doc.name}">
 		<antcall target="xmlvalid">
 			<param name="xmlvalid.xml" value="${help.dir}/${doc.name}" />
 		</antcall>
@@ -97,7 +97,6 @@
 			<param name="pdfproc.xsl" value="${help.dir}/manual-tex.xsl" />
 			<param name="pdfproc.xml" value="${doc.profiled}" />
 		</antcall>
-
 	</target>
 
 	<target name="pdf-fo" depends="init,profiling" description="Erzeugt das Benutzerhandbuch - PDF-Version mit FO">
@@ -113,19 +112,6 @@
 			<param name="fop.fo" value="${build.fo.dir}/manual.fo" />
 			<param name="fop.pdf" value="${build.fo.dir}/manual.pdf" />
 		</antcall>
-	</target>
-
-	<target name="xslproc">
-		<!-- Benötigte Parameter: 
-  					'xslproc.out.name'  Name der Ausgabedatei
-  					'xslproc.out.dir'  Ausgabeverzeichnis
-  					'xslproc.xsl
-  					'xslproc.xml'
-  	-->
-		<!--Die Batchdatei xsltproc.bat muss verfügbar sein (Umgebungsvariable PATH zum Pfad besetzen, z.B. c:\bin) -->
-		<exec executable="xsltproc.bat" failonerror="true">
-			<arg line="-o ${xslproc.out.dir}/${xslproc.out.name} ${xslproc.xsl} ${xslproc.xml}" />
-		</exec>
 	</target>
 
 	<target name="pdfproc">
@@ -160,6 +146,20 @@
 		</copy>
 	</target>
 
+	<target name="xslproc">
+		<!-- Benötigte Parameter: 
+  					'xslproc.out.name'  Name der Ausgabedatei
+  					'xslproc.out.dir'  Ausgabeverzeichnis
+  					'xslproc.xsl
+  					'xslproc.xml'
+  	-->
+		<!--Die Batchdatei xsltproc.bat muss verfügbar sein (Umgebungsvariable PATH zum Pfad besetzen, z.B. c:\bin) -->
+		<exec executable="xsltproc.bat" failonerror="true">
+			<arg line="-o ${xslproc.out.dir}/${xslproc.out.name} ${xslproc.xsl} ${xslproc.xml}" />
+		</exec>
+	</target>
+	
+	<target name="all" depends="html,pdf,eclipse-help" />
 
 	<target name="xmlvalid">
 		<!-- Benötigte Parameter: 'xmlvalid.xml'  -->
@@ -178,8 +178,13 @@
 			<arg line="-fo ${fop.fo} -pdf ${fop.pdf}" />
 		</exec>
 	</target>
-	
+
 	<target name="profiling" depends="init,valid">
+		<!-- Benötigte Parameter: 
+  					'build.profiling.dir'  Name der Ausgabedatei
+  					'doc.name'				Name der Eingangsdatei
+  					'help.dir'				Pfad der Eingangsdateien
+	  	-->
 		<antcall target="xslproc">
 			<param name="xslproc.out.dir" value="${build.profiling.dir}" />
 			<param name="xslproc.out.name" value="docbook-profiled.xml" />
@@ -187,7 +192,4 @@
 			<param name="xslproc.xml" value="${help.dir}/${doc.name}" />
 		</antcall>
 	</target>
-
-	<target name="all" depends="html,pdf,eclipse-help" />
-
 </project>
