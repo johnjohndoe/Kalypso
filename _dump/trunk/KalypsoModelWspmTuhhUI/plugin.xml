@@ -31,9 +31,14 @@
             id="pasche.ruecksprung"
             type="Pasche"/>
         <rule
-              class="org.bce.eind.kalypso1d.rules.TFRule"
-              description="Trennflaechen"
-              id="trenner.tf"
+              class="org.bce.eind.kalypso1d.rules.TrennerRule"
+              description="Trennflächen"
+              id="pasche.trenner"
+              type="Pasche"/>
+        <rule
+              class="org.bce.eind.kalypso1d.rules.BrueckeRule"
+              description="Brücke"
+              id="pasche.bruecke"
               type="Pasche"/>
    </extension>
 </plugin>
