@@ -45,18 +45,17 @@ public class PSICompactCommiter implements IMetaDocCommiter
   }
 
   /**
-   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
-   *      org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File, java.lang.String, org.apache.commons.configuration.Configuration)
    */
   public void commitDocument( final Properties serviceProps, final Map metadata, final File docFile,
-      final Configuration metadataExtensions ) throws MetaDocException
+      final String identifier, final Configuration metadataExtensions ) throws MetaDocException
   {
     final String docFilePath = docFile.getAbsolutePath();
     final String goodDocFilePath = filenameCleaner( docFilePath );
-    
+
     final File goodDocFile = new File( goodDocFilePath );
     docFile.renameTo( goodDocFile );
-    
+
     final File xmlFile = new File( FileUtilities.nameWithoutExtension( goodDocFilePath ) + ".xml" );
 
     try
@@ -70,7 +69,7 @@ public class PSICompactCommiter implements IMetaDocCommiter
 
       // commit the both files (important: last one is the xml file)
       final String dist = serviceProps.getProperty( PSICOMPACT_DIST ) + "/";
-      
+
       final String distDocFile = dist + goodDocFile.getName();
       final String distXmlFile = dist + xmlFile.getName();
 
@@ -90,12 +89,14 @@ public class PSICompactCommiter implements IMetaDocCommiter
 
   /**
    * Dateinamen für PSICompact bereinigen.
-   * <p>Keine Umlaute, Spaces und die richtigen Slashes</p>
+   * <p>
+   * Keine Umlaute, Spaces und die richtigen Slashes
+   * </p>
    */
   private String filenameCleaner( final String filename )
   {
     String newName = filename;
-    
+
     newName = newName.replace( '\\', '/' );
     newName = newName.replace( ' ', '_' );
     newName = newName.replaceAll( "ä", "ae" );
@@ -105,7 +106,7 @@ public class PSICompactCommiter implements IMetaDocCommiter
     newName = newName.replaceAll( "Ä", "AE" );
     newName = newName.replaceAll( "Ö", "OE" );
     newName = newName.replaceAll( "Ü", "UE" );
-    
+
     return newName;
   }
 

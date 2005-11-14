@@ -173,12 +173,6 @@
          version="1.0.0"/>
 
    <plugin
-         id="org.kalypso.tuhhmanual"
-         download-size="0"
-         install-size="0"
-         version="0.0.5"/>
-
-   <plugin
          id="org.kalypso.manual.sachsenanhalt"
          download-size="0"
          install-size="0"
