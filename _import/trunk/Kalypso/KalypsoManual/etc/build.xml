@@ -52,7 +52,7 @@
 	</xmlcatalog>
 
 	<!-- TODO: remove cleanup dependency and only clean if necessary -->
-	<target name="init" depends="cleanup" description="Baut die Verzeichnisstruktur der Ausgabe und Merged die Spezialdaten mit den allgemeinen.">
+	<target name="init" depends="cleanup-build" description="Baut die Verzeichnisstruktur der Ausgabe und Merged die Spezialdaten mit den allgemeinen.">
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${build.merged.dir}" />
 		<mkdir dir="${build.profiling.dir}" />
@@ -72,9 +72,20 @@
 		</copy>
 	</target>
 
-	<target name="cleanup" description="Löscht alles unterhalb des ${build.dir}">
+	<target name="cleanup" description="Löscht alles erzeugte" depends="cleanup-build,cleanup-dist">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${build.dir}" includes="*/**" />
+			<fileset dir="${dist.dir}" includes="*/**" />
+		</delete>
+	</target>
+
+  <target name="cleanup-build" description="Löscht alles unterhalb des ${build.dir}">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${build.dir}" includes="*/**" />
+		</delete>
+	</target>
+  <target name="cleanup-dist" description="Löscht alles unterhalb des ${dist.dir}">
+		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${dist.dir}" includes="*/**" />
 		</delete>
 	</target>
