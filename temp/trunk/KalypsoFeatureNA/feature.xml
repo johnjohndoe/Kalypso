@@ -209,12 +209,6 @@
          version="0.0.1"/>
 
    <plugin
-         id="org.kalypso.psicompactadapter"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.metadoc"
          download-size="0"
          install-size="0"
@@ -228,12 +222,6 @@
 
    <plugin
          id="org.kalypso.services.metadoc"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.servies.metadoc.client"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
@@ -258,6 +246,12 @@
 
    <plugin
          id="org.kalypso.raster.import"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.services.metadoc.client"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
