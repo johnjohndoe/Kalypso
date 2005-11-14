@@ -1,1 +1,1 @@
-Benutzerhandbuch der TUHH (Abwandlung des Manuals bezüglich der Projektspezifischen daten des LHWZ Sachsen).
+Benutzerhandbuch der TUHH (Abwandlung des Manuals bezüglich des KalypsoManual).
