@@ -39,12 +39,24 @@
             class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter"
             axisType="N"/>
       <adapter
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter.n.label"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
+            axisType="N"/>
+      <adapter
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.q.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
             axisType="Q"/>
       <adapter
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter.q.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter"
+            axisType="Q"/>
+      <adapter
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter.q.label"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
+            axisType="Q"/>
+      <adapter
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.q.label"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter"
             axisType="Q"/>
       <adapter
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.t.label"
@@ -70,10 +82,6 @@
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter.e.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
             axisType="E"/>
-      <adapter
-            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.q.label"
-            class="org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter"
-            axisType="Q"/>
    </extension>
 
 </plugin>
