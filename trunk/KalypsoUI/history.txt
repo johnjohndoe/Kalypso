@@ -12,6 +12,7 @@ Oktober 2005
 - neue Standardansicht 'Standard Kartenansicht', öffnet Shapes als einziges Thema einer in Karte mit Default-Style
 - Speichern unter für Baum
 - Bugfix: Dateinamen für 'Speichern unter' der Standardansichten mit richtiger Endung
+- Observation-Achsen können aus der Ansicht im Expertenmodus ausgeblendet werden (Diag + Tabelle)
 
 vor Oktober 2005
 ----------------

@@ -350,10 +350,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
-   *      org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration conf, final Configuration metadataExtensions )
+  public IExportableObject[] createExportableObjects( final Configuration conf )
   {
     return new IExportableObject[]
     { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt(

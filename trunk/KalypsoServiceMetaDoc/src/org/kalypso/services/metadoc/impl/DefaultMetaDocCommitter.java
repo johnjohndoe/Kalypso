@@ -33,10 +33,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.io.FileUtils;
+import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.impl.MetaDocException;
 
@@ -47,55 +49,46 @@ import org.kalypso.metadoc.impl.MetaDocException;
  */
 public class DefaultMetaDocCommitter implements IMetaDocCommiter
 {
+  private final static Logger LOG = Logger.getLogger( DefaultMetaDocCommitter.class.getName() );
+
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, java.util.Map)
    */
-  public void prepareMetainf( Properties serviceProps, Map metadata )
+  public void prepareMetainf( final Properties serviceProps, final Map metadata )
   {
-  // nothing
+    LOG.info( "prepareMetainf called on DefaultMetaDocCommiter" );
   }
 
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
-   *      org.apache.commons.configuration.Configuration)
+   *      java.lang.String, org.apache.commons.configuration.Configuration)
    */
   public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
-      final Configuration metadataExtensions ) throws MetaDocException
+      final String identifier, final Configuration metadataExtensions ) throws MetaDocException
   {
     final String strdir = serviceProps.getProperty( "defaultCommitter.dir" );
     final File file = new File( strdir, doc.getName() );
 
-    // since there are currently no metadata with this committer, we
-    // do not create the metadata file.
-    //    final File metaFile = new File( strdir, doc.getName() + ".txt" );
-    //    final Properties metaProps = new Properties();
-    //    metaProps.putAll( metadata );
-    //    
-    //    OutputStream out = null;
-
-    // output the metadataExtensions for debugging purposes
-    System.out.println( "DefaultCommiter, MetadataExtensions: " + ConfigurationUtils.toString( metadataExtensions ) );
+    LOG.info( "Exporting document " + doc.getName() + " ID: " + identifier );
+    LOG.info( "Metadata: " + PropertiesHelper.format( metadata, ';' ) );
+    LOG.info( "MetadataExtensions: " + ConfigurationUtils.toString( metadataExtensions ) );
 
     try
     {
-      System.out.println( "DefaultMetaDocCommitter: copying file " + doc + " to " + file );
+      LOG.info( "Copying file " + doc + " to " + file );
       FileUtils.copyFile( doc, file );
 
-      //      out = new FileOutputStream( metaFile );
-      //      metaProps.store( out, "Metadata für " + file );
-      //      out.close();
+      LOG.info( "Document successfully exported to: " + file );
     }
     catch( final IOException e )
     {
-      e.printStackTrace();
+      LOG.throwing( getClass().getName(), "commitDocument", e );
 
       throw new MetaDocException( e );
     }
     finally
     {
       doc.delete();
-
-      //      IOUtils.closeQuietly( out );
     }
   }
 }

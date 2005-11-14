@@ -136,9 +136,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
 
   /**
    * File must exist!
-   * 
-   * @param monitor
-   * @param input
    */
   protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
   {
@@ -302,11 +299,9 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration,
-   *      org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration,
-      final Configuration metadataExtensions ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
     final ExportableLayerTable exp = new ExportableLayerTable( m_layerTable );
 
@@ -315,9 +310,11 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
+  public IWizardPage[] createWizardPages( IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+      throws CoreException
   {
     final IWizardPage page = new ExportTableOptionsPage( "optionPage", "Export Otionen",
         ImageProvider.IMAGE_UTIL_BERICHT_WIZ );

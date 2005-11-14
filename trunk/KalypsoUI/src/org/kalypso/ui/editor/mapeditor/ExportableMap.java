@@ -47,6 +47,7 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -84,19 +85,21 @@ public class ExportableMap implements IExportableObject
    */
   public String getPreferredDocumentName()
   {
-    return  "Karte." + m_format;
+    // TODO besserer Name?
+    return "Karte." + m_format;
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
     try
     {
       monitor.beginTask( "Bildexport", 1000 );
-      
+
       final IMapModell mapModell = m_panel.getMapModell();
 
       final GeoTransform transform = m_panel.getProjection();
@@ -107,8 +110,7 @@ public class ExportableMap implements IExportableObject
           bounds.height, mapModell );
       final boolean result = ImageIO.write( image, m_format, output );
       if( !result )
-        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0,
-            "Ungültiges Format: " + m_format, null );
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Ungültiges Format: " + m_format, null );
     }
     catch( final IOException e )
     {
@@ -122,5 +124,14 @@ public class ExportableMap implements IExportableObject
     }
 
     return Status.OK_STATUS;
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    // TODO bessere Id?
+    return getPreferredDocumentName();
   }
 }

@@ -45,7 +45,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -60,6 +59,8 @@ import javax.activation.FileDataSource;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationUtils;
+import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -124,7 +125,11 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
       outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
 
-      final IStatus status = document.exportObject( outputStream, new SubProgressMonitor( monitor, 1 ) );
+      final MapConfiguration mdEx = new MapConfiguration( new HashMap() );
+      // copy our properties into the metadataExtensions, will be used by the webservice
+      ConfigurationUtils.copy( getProperties(), mdEx );
+      
+      final IStatus status = document.exportObject( outputStream, new SubProgressMonitor( monitor, 1 ), mdEx );
       outputStream.close();
 
       // in the case of an error, and just in this case, break export. In other cases, continue.
@@ -132,15 +137,10 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
         return status;
 
       final IMetaDocService metadocService = getMetadocService();
-
-      // tricky: serialize the metadata extensions as a string
-      final StringWriter sw = new StringWriter();
-      m_metadataExtensions.save( sw );
-      sw.close();
-
+      
       final DataHandler dh = new DataHandler( new FileDataSource( file ) );
       metadocService.commitNewDocument( (Map)conf.getProperty( CONF_METADATA ), dh,
-          document.getPreferredDocumentName(), sw.toString() );
+          document.getPreferredDocumentName(), document.getIdentifier(), mdEx.getMap() );
 
       monitor.worked( 1 );
 
@@ -210,6 +210,8 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
     configuration.setProperty( CONF_METADATA, metadata );
 
+    final Configuration targetProps = getProperties();
+    
     // create featuretype from bean
     final Collection ftpColl = new ArrayList();
     final Collection fpColl = new ArrayList();
@@ -228,9 +230,9 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       String value = splits.length >= 2 ? splits[1] : null;
 
       // tricky: overwrite value if it is a marker value
-      if( m_metadataExtensions.containsKey( value ) )
+      if( targetProps.containsKey( value ) )
       {
-        value = m_metadataExtensions.getString( value );
+        value = targetProps.getString( value );
 
         // Important: always put value again in metadata when it changed
         metadata.put( name, value );

@@ -44,6 +44,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -77,14 +78,16 @@ public class ExportableLayerTable implements IExportableObject
    */
   public String getPreferredDocumentName()
   {
+    // TODO besserer Name zurückgeben
     return "GisTabelle.csv";
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
     final LayerTableViewer layerTable = m_layerTable;
     final boolean onlyRows = m_onlyRows;
@@ -101,7 +104,16 @@ public class ExportableLayerTable implements IExportableObject
     };
 
     layerTable.getTable().getDisplay().syncExec( runnable );
-    
+
     return Status.OK_STATUS;
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
+   */
+  public String getIdentifier()
+  {
+    // TODO bessere Id zurückgeben
+    return getPreferredDocumentName();
   }
 }

@@ -2,7 +2,6 @@ package org.kalypso.services.metadoc.impl;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -13,7 +12,9 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -128,26 +129,25 @@ public class KalypsoMetaDocService implements IMetaDocService
 
   /**
    * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(java.util.Map, javax.activation.DataHandler,
-   *      java.lang.String, java.lang.String)
+   *      java.lang.String, java.lang.String, java.util.Map)
    */
   public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename,
-      final String metadataExtensions ) throws RemoteException
+      final String documentIdentifier, final Map metadataExtensions ) throws RemoteException
   {
     try
     {
       // fix: delete the whitespace from the preferredFilename
-      final File docFile = File.createTempFile( "document", StringUtils.deleteWhitespace( preferredFilename ), m_tmpDir );
+      final File docFile = File
+          .createTempFile( "document", StringUtils.deleteWhitespace( preferredFilename ), m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
 
-      final PropertiesConfiguration mExConf = new PropertiesConfiguration();
+      final Configuration mdConf;
       if( metadataExtensions != null )
-      {
-        final StringReader reader = new StringReader( metadataExtensions );
-        mExConf.load( reader );
-        reader.close();
-      }
+        mdConf = new MapConfiguration( metadataExtensions );
+      else
+        mdConf = new BaseConfiguration();
 
-      m_commiter.commitDocument( m_props, metadata, docFile, mExConf );
+      m_commiter.commitDocument( m_props, metadata, docFile, documentIdentifier, mdConf );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {

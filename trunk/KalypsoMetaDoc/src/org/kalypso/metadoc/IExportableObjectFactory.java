@@ -57,10 +57,10 @@ import org.kalypso.metadoc.configuration.IPublishingConfiguration;
  */
 public interface IExportableObjectFactory
 {
-  public IExportableObject[] createExportableObjects( final Configuration configuration, final Configuration metadataExtensions ) throws CoreException;
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException;
 
   /**
    * @param defaultImage This image should be used for each created wizard-page, if no own images are supplied.
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException;
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage ) throws CoreException;
 }

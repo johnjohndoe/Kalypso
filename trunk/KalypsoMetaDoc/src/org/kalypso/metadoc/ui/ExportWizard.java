@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -107,11 +106,6 @@ public final class ExportWizard extends Wizard
     for( int i = 0; i < targetPages.length; i++ )
       addPage( targetPages[i] );
 
-    // metadata extensions are used to provide the target with 
-    // extra information that is computed/generated only
-    // during the creation of the export documents
-    final Configuration metadataExtensions = m_target.getMetadataExtensions();
-
     // operation which will be called for finish
     m_operation = new WorkspaceModifyOperation()
     {
@@ -122,7 +116,7 @@ public final class ExportWizard extends Wizard
           
         try
         {
-          final IExportableObject[] objects = factory.createExportableObjects( configuration, metadataExtensions );
+          final IExportableObject[] objects = factory.createExportableObjects( configuration );
 
           monitor.beginTask( "Export", objects.length );
 

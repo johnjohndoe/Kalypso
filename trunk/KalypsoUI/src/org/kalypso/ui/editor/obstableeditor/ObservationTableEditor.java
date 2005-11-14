@@ -174,19 +174,21 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration, org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration, final Configuration metadataExtensions ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
-    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, metadataExtensions );
+    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle() );
     return new IExportableObject[]
     { exportable };
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration, ImageDescriptor)
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+      throws CoreException
   {
     return new IWizardPage[0];
   }
