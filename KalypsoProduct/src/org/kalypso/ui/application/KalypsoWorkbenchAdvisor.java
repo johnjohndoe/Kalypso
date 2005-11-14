@@ -45,6 +45,7 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.IWorkbench;
@@ -127,7 +128,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     if( !m_user.hasRight( UserRights.RIGHT_ADMIN ) )
     {
       final IMenuManager menuManager = actionConfigurer.getMenuManager();
-
+      
       //      // Menüs umbauen
       //      final IMenuManager windowMenu = (IMenuManager)menuManager.find(
       // IWorkbenchActionConstants.M_WINDOW );
@@ -135,10 +136,9 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       // "showView" );
       //      menuManager.insertAfter( IWorkbenchActionConstants.M_EDIT, showViewMenu
       // );
-
       // Menüs entfernen
       menuManager.remove( IWorkbenchActionConstants.M_PROJECT );
-      //      menuManager.remove( IWorkbenchActionConstants.M_NAVIGATE );
+//      menuManager.remove( IWorkbenchActionConstants.M_NAVIGATE );
       //      menuManager.remove( IWorkbenchActionConstants.M_WINDOW );
 
       //      final IMenuManager fileMenu = (IMenuManager)menuManager.find(
@@ -159,8 +159,14 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     // always show in which scenario we are
     final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenarioForCurrentUser();
     final StatusLineContributionItem item = new StatusLineContributionItem( "scenario" );
-    item.setText( "Szenario: " + scenario.getName() );
-    actionConfigurer.getStatusLineManager().add( item );
+    if( scenario != null && item != null )
+      item.setText( "Szenario: " + scenario.getName() );
+    if( actionConfigurer != null )
+    {
+      final IStatusLineManager statusLineManager = actionConfigurer.getStatusLineManager();
+      if( statusLineManager != null )
+        statusLineManager.add( item );
+    }
   }
 
   /**
