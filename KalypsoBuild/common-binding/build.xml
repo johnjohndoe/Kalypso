@@ -38,9 +38,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
   <property name="build.compile" value="${build}/compile" />
 
   <property name="dest.file.name" value="${project-name}.jar" />
-
+    <property name="jwsdpDir" value="${workspace}/JWSDPInstallation/jwsdp" />
+    <!--
+    <property name="jwsdpDir" value="${workspace}/JWSDP_1.6_Installation/jwsdp" />
+    -->
   <path id="cpref">
-    <fileset dir="${workspace}/JWSDPInstallation/jwsdp">
+    <fileset dir="${jwsdpDir}">
       <include name="jaxb/lib/*.jar" />
       <include name="jwsdp-shared/lib/*.jar" />
     </fileset>
@@ -62,12 +65,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
     </delete>
   </target>
 
-  <target name="generate" depends="init" description="erzeugt die sourcen">
-    <echo message="Generating binding sources für ${project-name}" />
+  <target  name="generate" depends="init" description="erzeugt die sourcen">
+    <echo  message="Generating binding sources für ${project-name}" />
 
     <xjc target="${build.source}" extension="true" removeoldoutput="true">
-      <schema dir="${project}">
-        <patternset refid="binding.schemata"/>
+      <schema dir="${project}">         
+          <patternset refid="binding.schemata"/>
       </schema>
 
       <!-- Important Note: the produces element specifies the
