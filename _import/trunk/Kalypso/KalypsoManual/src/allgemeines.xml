@@ -221,7 +221,13 @@
           <title>Erläuterung der Eigenschaften</title>
 
           <tgroup cols="3">
-            <tbody>
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" colwidth="1*" />
+
+            <thead>
               <row>
                 <entry>Link</entry>
 
@@ -229,7 +235,9 @@
 
                 <entry>Bemerkung</entry>
               </row>
+            </thead>
 
+            <tbody>
               <row>
                 <entry>...\eclipse.exe</entry>
 
@@ -362,7 +370,13 @@
           <title>Erläuterung der Eigenschaften</title>
 
           <tgroup cols="3">
-            <tbody>
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <thead>
               <row>
                 <entry>Link</entry>
 
@@ -370,7 +384,9 @@
 
                 <entry>Bemerkung</entry>
               </row>
+            </thead>
 
+            <tbody>
               <row>
                 <entry>...\eclipse.exe</entry>
 
