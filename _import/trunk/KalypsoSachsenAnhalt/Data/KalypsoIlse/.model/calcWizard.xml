@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="15">
+<!DOCTYPE entities
+[
+	<!ENTITY hid "org.kalypso.manual.">
+]>
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="15" helpId="&hid;SA_Assi_allg_00_Start">
 	<!-- KONTROLLE DER ZEITREIHEN -->
 	<!-- Niederschlag an Stationen (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -7,6 +11,7 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="NS_Stationen"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Stationen.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Ilse_02_Niederschlagsstationen"/>
 		<arg name="nextPage" value="NS_Gebiete"/>
 		<!--
         Page-Layout -->
@@ -37,6 +42,7 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="NS_Gebiete"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Ilse_02_Niederschlagsgebiete"/>
 		<arg name="nextPage" value="Wasserstand"/>
 		<arg name="prevPage" value="NS_Stationen"/>
 		<!--
@@ -63,6 +69,7 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Abfluss"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Abfluss.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Ilse_03_Abfluss"/>
 		<arg name="nextPage" value="Berechnung"/>
 		<arg name="prevPage" value="NS_Gebiete"/>
 		<!--
@@ -93,6 +100,7 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Berechnung"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Ilse_04_Berechnung"/>
 		<arg name="nextPage" value="Berichtsablage"/>
 		<arg name="prevPage" value="Abfluss"/>
 		<!--
@@ -130,6 +138,7 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="Berichtsablage"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Ilse_05_Berichtsablage"/>
 		<arg name="prevPage" value="Berechnung"/>
 		<!--
         Page-Layout -->

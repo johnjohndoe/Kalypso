@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="25">
+<!DOCTYPE entities
+[
+	<!ENTITY hid "org.kalypso.manual.">
+]>
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="25" helpId="&hid;SA_Assi_allg_00_Start">
 	<!-- KONTROLLE UND UMRECHNUNG DER ZEITREIHEN - NIEDERSCHLAG -->
 	<!-- Niederschlag an Stationen (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -7,6 +11,7 @@
         HTML-Navigation und pageID -->
 		<arg name="pageID" value="NS_Stationen"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Stationen.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_02_Niederschlagsstationen"/>
 		<arg name="nextPage" value="NS_Gebiete"/>
 		<!--
         Page-Layout -->
@@ -37,6 +42,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="NS_Gebiete"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/NS_Gebiete.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_03_Niederschlagsgebiete"/>
 		<arg name="prevPage" value="NS_Stationen"/>
 		<arg name="nextPage" value="Q_uh_Wendefurth"/>
 		<!-- 
@@ -64,6 +70,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_uh_Wendefurth"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_uh_Wendefurth.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_03_Abfluss_uh_Wend"/>
 		<arg name="prevPage" value="NS_Gebiete"/>
 		<arg name="nextPage" value="Abgabe_Speicher"/>
 		<!-- 
@@ -94,6 +101,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Abgabe_Speicher"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_04_Abfluss_Speicher"/>
 		<arg name="prevPage" value="Q_uh_Wendefurth"/>
 		<arg name="nextPage" value="Berechnung_bat1"/>
 		<!-- 
@@ -120,6 +128,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat1"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat1.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_05_Berechnung_uh_Wend"/>
 		<arg name="prevPage" value="Abgabe_Speicher"/>
 		<!-- <arg name="nextPage" value="Abgabe_Speicher_gerechnet"/> -->
 		<arg name="nextPage" value="Q_oh_Speicher"/>
@@ -163,6 +172,7 @@
         HTML-Navigation und pageID
 		<arg name="pageID" value="Abgabe_Speicher_gerechnet"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher_gerechnet.html"/>
+		<arg name="helpId" value="&hid;???"/>
 		<arg name="prevPage" value="Berechnung_bat1"/>
 		<arg name="nextPage" value="Q_oh_Speicher"/>
 		
@@ -191,6 +201,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_oh_Speicher"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Q_oh_Speicher.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_06_Abfluss_oh_Speicher"/>
 		<!-- <arg name="prevPage" value="Abgabe_Speicher_gerechnet"/> -->
 		<arg name="prevPage" value="Berechnung_bat1"/>
 		<arg name="nextPage" value="Berechnung_bat2"/>
@@ -222,6 +233,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat2"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat2.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_07_Berechnung_oh_Speicher"/>
 		<arg name="prevPage" value="Q_oh_Speicher"/>
 		<arg name="nextPage" value="Inhalt_Speicher"/>
 		<!-- 
@@ -262,6 +274,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Inhalt_Speicher"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Inhalt_Speicher.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_08_Volumen_Speicher"/>
 		<arg name="prevPage" value="Berechnung_bat2"/>
 		<arg name="nextPage" value="Abgabe_Speicher_2"/>
 		<!-- 
@@ -292,6 +305,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Abgabe_Speicher_2"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Abgabe_Speicher_2.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_09_Abfluss_Speicher"/>
 		<arg name="prevPage" value="Inhalt_Speicher"/>
 		<arg name="nextPage" value="Berechnung_bat3"/>
 		<!-- 
@@ -320,6 +334,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat3"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat3.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_10a_Speicherrechnung"/>
 		<arg name="prevPage" value="Abgabe_Speicher_2"/>
 		<arg name="nextPage" value="Berichtsablage_Pegel"/>
 		<!-- 
@@ -357,6 +372,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat4"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat4.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_10b_TS_ohne_Opt"/>
 		<arg name="prevPage" value="Abgabe_Speicher_2"/>
 		<arg name="nextPage" value="Berichtsablage_Pegel"/>
 		<!--
@@ -394,6 +410,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_bat5"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berechnung_bat5.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_10c_TS_mit_Opt"/>
 		<arg name="prevPage" value="Abgabe_Speicher_2"/>
 		<arg name="nextPage" value="Berichtsablage_Pegel"/>
 		<!--
@@ -431,6 +448,7 @@
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Pegel"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Pegel.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_12_Berichtsablage_Pegel"/>
 		<arg name="prevPage" value="Berechnung_bat3"/>
 		<arg name="nextPage" value="Berichtsablage_Speicher"/>
 		<!--
@@ -720,6 +738,7 @@
 		HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage_Speicher"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/Berichtsablage_Speicher.html"/>
+		<arg name="helpId" value="&hid;SA_Assi_Bode_13_Berichtsablage_Speicher"/>
 		<arg name="prevPage" value="Berichtsablage_Pegel"/>
 		<!--
 		Page-Layout -->
