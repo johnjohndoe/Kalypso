@@ -6,7 +6,6 @@ import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 
 public class BuildingDataChange
 {
-
   private final IProfilBuilding m_building;
 
   private final BUILDING_PROPERTY m_property;
@@ -18,5 +17,20 @@ public class BuildingDataChange
     m_building = building;
     m_property = property;
     m_newValue = newValue;
+  }
+  
+  public IProfilBuilding getBuilding( )
+  {
+    return m_building;
+  }
+  
+  public Object getNewValue( )
+  {
+    return m_newValue;
+  }
+  
+  public BUILDING_PROPERTY getProperty( )
+  {
+    return m_property;
   }
 }
