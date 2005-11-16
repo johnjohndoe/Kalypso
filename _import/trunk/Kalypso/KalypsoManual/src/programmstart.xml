@@ -49,8 +49,8 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/Sachsen_Anhalt/SA_Assi_allg_01_Szenario.png"
-                       format="PNG" scale="60" />
+                       fileref="img/Programm-Start/login_sa.png" format="PNG"
+                       scale="60" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -86,7 +86,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/Sachsen_Anhalt/SA_Assi_allg_01_Login.png"
+                       fileref="img/Programm-Start/login_sa_admin.png"
                        format="PNG" scale="60" />
           </imageobject>
         </mediaobject>
@@ -175,23 +175,69 @@
     </note>
   </section>
 
-  <section id="kalypso_testbetrieb" vendor="sachsen_anhalt">
+  <section id="kalypso_testbetrieb" vendor="sachsen-anhalt">
     <title>Testbetrieb</title>
 
-    <para>SOLL EIGENTLICH INS GUI KAPITEL</para>
+    <para>Wie schon unter <xref linkend="kalypso_login" /> beschrieben, kann
+    KALYPSO auch im sogenannten <emphasis>Testbetrieb</emphasis> gestartet
+    werden. Der Testbetrieb dient dazu, die Anwendung und ihr Zusammenspiel
+    mit den anderen Systemkomponenten wie WISKI und dem IMS im Rahmen von
+    Katastrophentests zu testen.</para>
 
-    <para></para>
+    <para>Prinzipiell ist die Bedienung der Anwendung im Testbetrieb identisch
+    zur Anwendung im Normalbetrieb. Der Sinn des Testbetriebes besteht
+    letzendlich hauptäschlich darin, zu verhindern, dass aufgrund der Arbeiten
+    am System reale Hochwasserwarnungen produziert werden.</para>
 
-    <para>ALTER TEXT: ZU ÜBERARBEITEN</para>
+    <para>Der aktuelle Betriebsmodus der Anwendung (Normalbetrieb oder
+    Testbetrieb) ist zunächst nur daran zu erkennen, dass dieser in der
+    Statusleiste angezeigt wird. Konkret bewirkt der Testbetrieb, dass
+    Neuangelegte Rechenvarianten (vergleiche <xref
+    linkend="definition_calccase" />) als Varianten des Testbetriebs
+    (<quote>Simulationsvarianten</quote>) markiert werden. Abgesehen von der
+    folgenden Auflistung werden diese Rechenvarianten analog zu
+    Rechenvarianten des Normalbetriebs behandelt. Insbesondere bleibt die
+    Markierung als Testvariante erhalten, so dass auch zu einem späteren
+    Aufruf der Rechenvariante im Normalebetrieb keine Verwechslung geschehen
+    kann.</para>
 
-    <para>Im Fall des Testbetriebs werden die Zeitreihen für die Modelle aus
-    speziell dafür angelegten Zeitreihen-Containern in der Zeitreihenablage
-    geladen. Diese Testdaten können z.B. extreme Ereignisse nachbilden anhand
-    derer die gesamte Kette von der Vorhersage über die Berichtsablage bis zur
-    Alarmierung getestet werden kann. Damit während der Bearbeitung die beiden
-    Szenarien nicht verwechselt werden können, erhalten die Daten besondere
-    Kennungen wie z.B. Wasserzeichen und auffallend andere Farben. Der weitere
-    Arbeitsablauf unterscheidet sich aber nicht und wird hier anhand des
-    Normalbetriebs beschrieben.</para>
+    <para>In den folgenden Punkten unterscheiden sich die Rechenvarianten des
+    Normalbetriebs von den <quote>normalen</quote> Rechenvarianten:</para>
+
+    <formalpara>
+      <title>Abruf von Zeitreihendaten</title>
+
+      <para>Alle zeitbezogenen Daten werden aus speziell für den Testbetrieb
+      eingerichteten Simulationszeitreihen der zentralen
+      Zeitreihendatenhaltung (WISKI) bezogen. Hierzu liegt für jede
+      Verknüpfung des Modells mit Zeitreihen in WISKI eine zweite Verknüpfung
+      für den Testbetrieb vor.</para>
+    </formalpara>
+
+    <formalpara>
+      <title>Ablage Vorhersage-Zeitreihen</title>
+
+      <para>Identisch zum Abruf der Zeitreihen erfolgt die Ablage der
+      Vorhersagzeitreihen in speziell für den Testbetrieb angelegte
+      Zeitreihencontainer. Auch dies wird über eine doppelte Verknüpfung
+      (Normalbetrieb, Testbetrieb) zwischen Modelldaten und Ablage-Zeitreihen
+      erreicht.</para>
+    </formalpara>
+
+    <formalpara>
+      <title>Ablage Berichtskomponenten</title>
+
+      <para>Die Ablage der Berichtskomponenten erfolgt wie im Normalbetrieb in
+      das IMS. Berichtskomponenten aus Simulationsrechnungen erhalten einen
+      zusätzlichen Metadateneintrag <quote>Simulation</quote>. Je nach Art der
+      Berichtskomponente werden auch die Daten als Ergebnisse einer Simulation
+      gekennzeichnet. Z.B. erhalten Diagramme einer Simulation ein
+      entsprechendes Wasserzeichen oder Titel.</para>
+    </formalpara>
+
+    <para>Mehr Details zu den Auswirkungen des Tesbetriebs finden sich auch in
+    den entsprechenden Abschnitten der folgenden Kapitel. Insbesondere wird in
+    <xref linkend="???" /> noch mal auf die Unterschiede den
+    Vorhersageassistenten betreffend eingegangen.</para>
   </section>
 </chapter>
