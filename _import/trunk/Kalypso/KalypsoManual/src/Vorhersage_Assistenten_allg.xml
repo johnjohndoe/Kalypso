@@ -107,53 +107,8 @@
       <secondary>Programm-Start</secondary>
     </indexterm>
 
-    <para>TODO: LOGIN NICHT ERKLÄREN; ABER AUF PROGRAMMSTART VERWEISEN</para>
-
-    <para>Beim Start von KALYPSO trifft der Benutzer die Entscheidung, ob mit
-    neu anzulegenden Rechenvarianten normale Vorhersagerechnungen gemacht
-    werden sollen (<quote>Normalbetrieb</quote>) oder ob ein so genanntes
-    Katastrophentest-Szenario gerechnet werden soll
-    (<quote>Testbetrieb</quote>).</para>
-
-    <figure id="pic_SA_Assi_allg_01_Szenario">
-      <title>KALYPSO-Szenario-Auswahl</title>
-
-      <screenshot>
-        <mediaobject>
-          <imageobject>
-            <imagedata align="center"
-                       fileref="img/Sachsen_Anhalt/SA_Assi_allg_01_Szenario.png"
-                       format="PNG" scale="30" />
-          </imageobject>
-        </mediaobject>
-      </screenshot>
-    </figure>
-
-    <para>Im Fall des Testbetriebs werden die Zeitreihen für die Modelle aus
-    speziell dafür angelegten Zeitreihen-Containern in der Zeitreihenablage
-    geladen. Diese Testdaten können z.B. extreme Ereignisse nachbilden anhand
-    derer die gesamte Kette von der Vorhersage über die Berichtsablage bis zur
-    Alarmierung getestet werden kann. Damit während der Bearbeitung die beiden
-    Szenarien nicht verwechselt werden können, erhalten die Daten besondere
-    Kennungen wie z.B. Wasserzeichen und auffallend andere Farben. Der weitere
-    Arbeitsablauf unterscheidet sich aber nicht und wird hier anhand des
-    Normalbetriebs beschrieben.</para>
-
-    <figure id="pic_SA_Assi_allg_01_Login">
-      <title>KALYPSO-Anmeldung</title>
-
-      <screenshot>
-        <mediaobject>
-          <imageobject>
-            <imagedata align="center"
-                       fileref="img/Sachsen_Anhalt/SA_Assi_allg_01_Login.png"
-                       format="PNG" scale="30" />
-          </imageobject>
-        </mediaobject>
-      </screenshot>
-    </figure>
-
-    <para>Nach erfolgter Anmeldung startet KALYPSO.</para>
+    <para>Wie schon in <xref linkend="programm_start" /> beschrieben startet
+    KALYPSO automatisch im Vorhersagemodus.</para>
 
     <para><figure id="pic_SA_Assi_allg_02_Startseite">
         <title>KALYPSO-Startseite</title>
@@ -167,16 +122,8 @@
             </imageobject>
           </mediaobject>
         </screenshot>
-      </figure>Unabhängig von den ihm zugeordneten Rechten wird der Benutzer
-    beim Programmstart in den Vorhersagemodus geführt (<xref
-    linkend="pic_SA_Assi_allg_02_Startseite" />). Für Benutzer mit erweiterten
-    Rechten ist es jederzeit möglich, aus dem Expertenmodus in den
-    Vorhersagemodus zu wechseln (<menuchoice>
-        <guimenu>Modell</guimenu>
-
-        <guisubmenu>Vorhersage durchführen</guisubmenu>
-      </menuchoice>). Im linken Teil der Startseite, die nach dem Anmelden
-    erscheint, wird das zu bearbeitende Einzugsgebiet ausgewählt; das Bild im
+      </figure>Im linken Teil der Startseite, die nach dem Anmelden erscheint,
+    wird das zu bearbeitende Einzugsgebiet ausgewählt; das Bild im
     Hauptbereich ändert sich entsprechend. Die beiden Knöpfe im unteren Teil
     <guilabel>Vorhersage starten</guilabel> und <guilabel>Vorhersagen
     verwalten</guilabel> beziehen sich auf das gewählte Einzugsgebiet.</para>

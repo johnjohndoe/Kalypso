@@ -110,7 +110,7 @@
     <para><figure id="pic_kalypso_startseite">
         <title>KALYPSO- Startseite Allgemein</title>
 
-        <mediaobject>
+        <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center"
                        fileref="img/Programm-Start/Startseite_SA.png"
@@ -118,7 +118,7 @@
           </imageobject>
         </mediaobject>
 
-        <mediaobject>
+        <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center"
                        fileref="img/Programm-Start/startseite_ing.png"
@@ -235,9 +235,9 @@
       entsprechendes Wasserzeichen oder Titel.</para>
     </formalpara>
 
-    <para>Mehr Details zu den Auswirkungen des Tesbetriebs finden sich auch in
-    den entsprechenden Abschnitten der folgenden Kapitel. Insbesondere wird in
-    <xref linkend="???" /> noch mal auf die Unterschiede den
+    <para>Mehr Details zu den Auswirkungen des Testbetriebs finden sich auch
+    in den entsprechenden Abschnitten der folgenden Kapitel. Insbesondere wird
+    in <xref linkend="???" /> noch mal auf die Unterschiede den
     Vorhersageassistenten betreffend eingegangen.</para>
   </section>
 </chapter>
