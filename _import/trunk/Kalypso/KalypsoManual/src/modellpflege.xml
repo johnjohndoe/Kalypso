@@ -267,7 +267,7 @@
       </section>
     </section>
 
-    <section>
+    <section id="definition_calccase">
       <title>Definition von Rechenvarianten</title>
 
       <para>Um Modellberechnungen aus dem Expertenmodus heraus zu starten,
