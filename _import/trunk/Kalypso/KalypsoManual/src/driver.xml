@@ -26,8 +26,8 @@
 	&file_repository;
 	&file_modelle;    
 	
-	<chapter vendor="sachsen;sachsen-anhalt">
-		<title id="vorhersage_wizards">Vorhersage-Assistenten</title>
+	<chapter vendor="sachsen;sachsen-anhalt" id="vorhersage_wizards">
+		<title>Vorhersage-Assistenten</title>
 		<indexterm><primary>Vorhersage-Assistenten</primary> </indexterm>
 		
 		&file_wizards_allg;

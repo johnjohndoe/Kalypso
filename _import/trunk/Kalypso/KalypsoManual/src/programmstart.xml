@@ -10,15 +10,89 @@
   des Benutzers. Die Benutzerrechte sind dabei klassifiziert nach den in <xref
   linkend="anwendungsfaelle" /> beschriebenen Anwendungsfällen und Anwendern.
   Die Benutzerrechte werden bei einer vorhandenen Schnittstelle zu einer
-  zentralen Benutzerverwaltung (siehe <xref linkend="benutzerrechte" />)
-  durch diese übergeben.</para>
+  zentralen Benutzerverwaltung (siehe <xref linkend="benutzerrechte" />) durch
+  diese übergeben.</para>
 
   <para>Ist eine Benutzerverwaltung nicht vorgesehen, so erfolgt der Login
   durch ein einheitliches Passwort. Wird die Rechteverwaltung nicht benötigt,
   so erfolgt der Login automatisch.</para>
 
-  <para>Der Programm-Start von KALYPSO erfolgt durch das ausführen des in
-  <xref linkend="client-installation" /> erstellten Linkes.</para>
+  <para>Der Programm-Start von KALYPSO erfolgt durch das Ausführen des in
+  <xref linkend="client-installation" /> erstellten Linkes <inlinemediaobject>
+      <imageobject>
+        <imagedata fileref="img/Programm-Start/kalypso_icon.png" />
+      </imageobject>
+    </inlinemediaobject> .</para>
+
+  <section id="kalypso_login" vendor="sachsen-anhalt">
+    <title>Anmeldung</title>
+
+    <indexterm>
+      <primary>Anmeldung</primary>
+
+      <secondary>Login</secondary>
+    </indexterm>
+
+    <para>Beim Start von KALYPSO erfolgt zunächst die Anmeldung des Benutzers.
+    Hierzu öffnet sich ein Dialog (siehe <xref
+    linkend="pic_kalypso_login" />), in welchem Benutzername und Passwort
+    einzugeben sind. Standardmässig wird als Benutzername der Name der
+    Windows-Anmeldung vorgegeben, es kann aber auch ein beliebiger anderer
+    Name eingegeben werden. Die Anmeldung wird gegen die zentrale
+    Benutzerverwaltung (LDAP-System) verifiziert, siehe hierzu auch die
+    Technische Dokumentation.</para>
+
+    <figure id="pic_kalypso_login">
+      <title>KALYPSO Anmeldung</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/Sachsen_Anhalt/SA_Assi_allg_01_Szenario.png"
+                       format="PNG" scale="60" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <para>Je nachdem, welche Benutzerrechte für den angegebenen Benutzernamen
+    vergeben wurden, startet das Programm im Experten oder lediglich im
+    Vorhersagemodus.</para>
+
+    <para>Neben der Anmeldung kann auch der Betriebsmodus der Anmeldung
+    gewählt werden. Üblicherweise ist dies der
+    <guilabel>Normalbetrieb</guilabel>, welcher im Dialog voreinsgestellt ist.
+    Der sogenannte <guilabel>Testbetrieb</guilabel> ist für die Durchführung
+    von Katastrophentests vorgesehen. Siehe hierzu <xref
+    linkend="kalypso_testbetrieb" />.</para>
+
+    <para>Ist der angegebene Benutzername im LDAP-System nicht bekannt oder
+    steht der LDAP-Dienst bzw. der KALYPSO-Benutzerdienst nicht zur Verfügung
+    erfolgt ggfls. die Anmeldung als Administrator. In diesem Fall ist der
+    Benutzername <emphasis>Administrator</emphasis> fest vorgegeben und es
+    muss das in der HVZ festgelegte Administratorpasswort für KALYPSO
+    eingegben werden. Der Benutzer erhält in disem Fall automatisch
+    Administratorrechte innerhalb von KALYPSO. Eine Auswahl des Betriebsmodus
+    dagegen ist nicht vorgesehen. Diese Art der Anmeldung sollte nur dann
+    erfolgen, wenn z.B. das Programm zum ersten Mal gestartet wird und noch
+    konfiguriert werden muss (siehe <xref
+    linkend="kalypso_installation" />).</para>
+
+    <figure id="pic_SA_Assi_allg_01_Login">
+      <title>KALYPSO Anmeldung - Administrator</title>
+
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/Sachsen_Anhalt/SA_Assi_allg_01_Login.png"
+                       format="PNG" scale="60" />
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+  </section>
 
   <section id="kalypso_startseite">
     <title>Startseite</title>
@@ -29,7 +103,9 @@
 
     <para id="dummy5">Nach dem Programm-Start von KALYPSO öffnet sich die
     Startseite, die in Anlehnung an die Zugriffsrechte des Benutzers aufgebaut
-    wird.</para>
+    wird. Unabhängig von den ihm zugeordneten Rechten wird der Benutzer beim
+    Programmstart in den Vorhersagemodus geführt (siehe <xref
+    linkend="pic_kalypso_startseite" />).</para>
 
     <para><figure id="pic_kalypso_startseite">
         <title>KALYPSO- Startseite Allgemein</title>
@@ -51,10 +127,9 @@
         </mediaobject>
       </figure></para>
 
-    <para>Die Startseite <xref linkend="pic_kalypso_startseite" />
-    identifiziert den Benutzer z.B. als Experten, indem oberhalb des
-    Ansichtsfensters bis zu drei Buttons zur Ansichtsauswahl zur Verfügung
-    stehen:</para>
+    <para>Die Startseite identifiziert den Benutzer als Experten, indem
+    oberhalb des Ansichtsfensters bis zu drei Buttons zur Ansichtsauswahl zur
+    Verfügung stehen:</para>
 
     <itemizedlist>
       <listitem>
@@ -78,11 +153,45 @@
     Dem einfachen Anwender steht ausschließlich die <guibutton>Hochwasser
     Vorhersage</guibutton> als Wizard Perspektive zur Verfügung.</para>
 
-    <para><emphasis role="bold">Hinweis</emphasis>: Die Startseite ist nur bei
-    vorhandenem und korrekt gestartetem Server verfügbar. Ist kein Server
-    vorhanden, so ist lediglich der KALYPSO-Modeler verfügbar. Dieser kann
-    über das Menü <emphasis role="bold">Fenster -&gt; Perspektive
-    öffnen</emphasis> gestartet werden (siehe <xref
-    linkend="grafische_oberflaeche" /> ).</para>
+    <note>
+      <para>Die Startseite ist nur bei vorhandenem und korrekt gestartetem
+      Server verfügbar. Ist kein Server vorhanden, so ist lediglich der
+      KALYPSO-Modeler verfügbar. Dieser kann über das Menü <emphasis
+      role="bold">Fenster -&gt; Perspektive öffnen</emphasis> gestartet werden
+      (siehe <xref linkend="grafische_oberflaeche" /> ).</para>
+
+      <para>Eine Hochwasservorhersage kann unter Umständen selbst in diesem
+      Fall noch erfolgen. Voraussetzung ist, dass bereits einmal eine
+      Vorhersage auf dem gleichen Arbeitsplatz durchgeführt worden ist und das
+      Vorhersagemodell in den lokalen Arbeitsbereich kopiert wurde. In diesem
+      Fall kann im Expertenmodus eine Vorhersage über das Menü <menuchoice>
+          <guimenu>Modell</guimenu>
+
+          <guimenuitem>Vorhersage starten</guimenuitem>
+        </menuchoice> gestartet werden (siehe auch <xref
+      linkend="modellverwaltung" />). Falls auch der Zeitreihendienst nicht
+      zur Verfügung steht, ist in diesem Fall aber die manuelle Eingabe aller
+      Eingabedaten notwendig.</para>
+    </note>
+  </section>
+
+  <section id="kalypso_testbetrieb" vendor="sachsen_anhalt">
+    <title>Testbetrieb</title>
+
+    <para>SOLL EIGENTLICH INS GUI KAPITEL</para>
+
+    <para></para>
+
+    <para>ALTER TEXT: ZU ÜBERARBEITEN</para>
+
+    <para>Im Fall des Testbetriebs werden die Zeitreihen für die Modelle aus
+    speziell dafür angelegten Zeitreihen-Containern in der Zeitreihenablage
+    geladen. Diese Testdaten können z.B. extreme Ereignisse nachbilden anhand
+    derer die gesamte Kette von der Vorhersage über die Berichtsablage bis zur
+    Alarmierung getestet werden kann. Damit während der Bearbeitung die beiden
+    Szenarien nicht verwechselt werden können, erhalten die Daten besondere
+    Kennungen wie z.B. Wasserzeichen und auffallend andere Farben. Der weitere
+    Arbeitsablauf unterscheidet sich aber nicht und wird hier anhand des
+    Normalbetriebs beschrieben.</para>
   </section>
 </chapter>

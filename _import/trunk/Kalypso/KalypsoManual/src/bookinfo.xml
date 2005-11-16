@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ANMERKUNG: das bookinfo wird nicht direkt in etwas anzeigbares umgesetzt, sondern
+	lediglich Daten heruasgenommen und an verschiedenen Stellen angezeigt. Deshalb bringt es z.B. 
+	nichts, Bilder direkt unter bookinfo einzubauen. Diese müssen wie z.b. im subtitle geschehen in elemente
+	wandern, welche tatächlich angezeigt werden.
+-->
+
 <bookinfo>
   <title>KALYPSO - Anwenderhandbuch</title>
 
@@ -28,10 +35,12 @@
 
   <pubdate>Version 1.0.0, Oktober 2005</pubdate>
 
-  <copyright profile.vendor="-none-">
+  <!-- Bei den beidne folgenden Tags funktioniert das Profiling nicht
+  		deshalb müsste man hier eigene bookinfos pro deploy machen, wenns benötigt wird.
+  -->
+  <!--copyright>
   	<year>2004-2005</year>
   	<holder>kalypso.org</holder>
-  </copyright>
-  <legalnotice profile.vendor="-none-">Bislang keine rechtlichen Hinweise definiert</legalnotice>
-  
+  </copyright-->
+  <!--legalnotice>Bislang keine rechtlichen Hinweise definiert</legalnotice-->
 </bookinfo>

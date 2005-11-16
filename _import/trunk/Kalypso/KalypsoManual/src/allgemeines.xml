@@ -9,11 +9,11 @@
       <primary>Einführung in KALYPSO</primary>
     </indexterm>
 
-    <para>Das Programm-System KALYPSO Enterprise ist eine Open-Source
+    <para>Das Programmsystem KALYPSO Enterprise ist eine Open-Source
     Entwicklung von Björnsen Beratende Ingenieure GmbH (BCE) in Kooperation
     mit dem Arbeitsbereich Wasserbau der Technischen Universität
-    Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung von
-    numerischen Modellen - hydraulischer und hydrologischer Art - innerhalb
+    Hamburg-Harburg (TUHH). KALYPSO erlaubt die Integration und Verwaltung
+    numerischer Modelle - hydraulischer und hydrologischer Art - innerhalb
     einer einheitlichen Benutzeroberfläche. Somit stellt KALYPSO eine
     Abstraktionsschicht mit folgenden Eigenschaften dar:</para>
 
@@ -44,12 +44,11 @@
       </listitem>
     </itemizedlist>
 
-    <graphic align="center" fileref="img/allgemeines/000_001_bce_sw_300.png"
+    <graphic align="center"
+             fileref="img/allgemeines/bce_sw_auslaufend_200dpi.png"
              scale="100" />
 
     <para>oder</para>
-
-    <para></para>
 
     <itemizedlist>
       <listitem>
@@ -85,6 +84,16 @@
       entsandte, ließ Kalypso Odysseus frei, sodass er seine Reise Richtung
       Heimat fortsetzen konnte.</para>
 
+      <figure>
+        <title>KALYPSO Startbild</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/bookinfo/kalypso.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
       <para>Kalypso zählt aufgrund ihrer Herkunft zur Nymphenart der
       Okeaniden. Sie herrschen über die Meere - mit Ausnahme des Mittelmeeres,
       das den Nereiden gehört. Jedem Gewässer ist ein bestimmter Okeanid
@@ -94,6 +103,8 @@
 
   <section id="kalypso_installation" vendor="sachsen-anhalt">
     <title>KALYPSO-Installation HVZ Sachsen-Anhalt</title>
+
+    <titleabbrev>Installation</titleabbrev>
 
     <indexterm>
       <primary>Installation</primary>
@@ -109,8 +120,8 @@
 
     <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
     Modell-Plugins realisierten modularen Funktionsumfang. Folgende
-    serverseitigen Dienste sind als Installation auf dem physisch
-    eigenständigen KALYPSO-Server möglich:</para>
+    serverseitigen KALYPSO-Dienste sind auf dem physisch eigenständigen
+    Wiski-Applikations-Server installiert:</para>
 
     <itemizedlist>
       <listitem>
@@ -187,7 +198,7 @@
     weiteren serverseitigen Dienste erforderlich sein, so ist eine
     Serverinstallation nicht zwingend notwendig. Für diesen Fall kann die
     Client-Installation derartig angepasst werden, dass ein lokaler
-    Rechendienst unterstützt werden kann.</para>
+    Rechendienst unterstützt wird.</para>
 
     <section>
       <title>Server-Installation</title>
@@ -196,10 +207,11 @@
         <primary>Installation-Server</primary>
       </indexterm>
 
-      <para>Die Server-Installation bedarf aufgrund der spezifischen
-      Systemeigenschaften einer direkten Abstimmung und Anpassung. Weitere
-      Informationen sind ggf. in der technischen Dokumentation
-      enthalten.</para>
+      <para>Die Server-Installation bedarf aufgrund der konkreten
+      Systemeigenschaften einer spezifischen Abstimmung und Anpassung. Weitere
+      Informationen sind ggf. in der technischen Dokumentation enthalten bzw.
+      beim Entwickler zu erfragen (siehe <xref
+      linkend="allgemeines_zu_kalypso" />). </para>
     </section>
 
     <section id="client-installation">
@@ -209,88 +221,16 @@
         <primary>Installation-Client</primary>
       </indexterm>
 
-      <para>Die Client-Installation wird auf Basis des gelieferten
-      ZIP-Archives durchgeführt. Zur Installation wird das ZIP-Archiv an den
-      gewünschten Installationsort entpackt. Zum Programmstart muss der im
-      Hauptverzeichnis enthaltene Link (<emphasis>Kalypso.lnk</emphasis>)
-      entsprechend des Installationsortes und des gewünschten
-      Arbeitsverzeichnisses (Workspace) angepasst werden. Hierzu ist der Pfad
-      der Zielanwendung durch den aktuellen Installationspfad zu ersetzen.
-      Außerdem wird ein Arbeitsverzeichnis für die Modelldaten angelegt und
-      der Pfad entsprechend im Link angegeben.<table>
-          <title>Erläuterung der Eigenschaften</title>
+      <para>Die Installation des KALYPSO-Client erfolgte im Hochwasserzentrum
+      auf einem zentralen Dateiserver, so dass pro Arbeitsplatzrechner
+      lediglich die Verknüpfung aus dem Startmenü bzw. vom Desktop auf das
+      Programm eingerichtet werden muss. Dabei muss zusätzlich noch das lokale
+      Arbeitsverzeichnis angegeben werden. Zum Zeitpunkt der Erstellung des
+      Benutzerhabuches waren die Arbeitsplatzrechner der HVZ bereits
+      entsprechend eingerichtet.</para>
 
-          <tgroup cols="3">
-            <colspec align="left" colwidth="1*" />
-
-            <colspec align="left" colwidth="1*" />
-
-            <colspec align="left" colwidth="1*" />
-
-            <thead>
-              <row>
-                <entry>Link</entry>
-
-                <entry>Beispiel</entry>
-
-                <entry>Bemerkung</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry>...\eclipse.exe</entry>
-
-                <entry>D:\Programme\KalypsoClient\eclipse.exe</entry>
-
-                <entry>Lokales Installationsverzeichnis</entry>
-              </row>
-
-              <row>
-                <entry>-dev lib</entry>
-
-                <entry></entry>
-
-                <entry></entry>
-              </row>
-
-              <row>
-                <entry>-data %Workspace%</entry>
-
-                <entry>-data D:\runtime-workspace</entry>
-
-                <entry>lokales Arbeitsverzeichnis</entry>
-              </row>
-
-              <row>
-                <entry>-consoleLog</entry>
-
-                <entry></entry>
-
-                <entry>Console (optional)</entry>
-              </row>
-
-              <row>
-                <entry>-nl de_DE</entry>
-
-                <entry>-nl en_EN</entry>
-
-                <entry>Sprache (optional)</entry>
-              </row>
-
-              <row>
-                <entry>-vmargs -Xmx250m</entry>
-
-                <entry></entry>
-
-                <entry>Speicherfreigabe gem. Arbeitsspeicher</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table></para>
-
-      <para>Die Installation enthält alle zur KALYPSO-Anwendung erforderlichen
-      Plugins, sowie ein eigenständiges Java Runtime Environment.</para>
+      <para>Eine genaue Beschreibung des Installationsortes und der zu tätigen
+      Einstellung findet sich in der Technischen Dokumentation. </para>
 
       <para>Nachdem die Installation durchgeführt wurde, kann das Programm
       durch Doppelklick des Links gestartet werden. Nach dem Programmstart
@@ -492,8 +432,8 @@
         <para><emphasis role="bold">Anwendungsbetrieb</emphasis>: Im täglichen
         Betrieb müssen durch den Anwender schnell und zuverlässig
         Modellberechnungen auf Basis vorhandener Modelle durchgeführt werden.
-        Der Anwendungsbetrieb wird ggf. durch Wizards unterstützt, die auch
-        den Nicht-Experten sicher und gezielt bspw. durch
+        Der Anwendungsbetrieb wird ggf. durch Assistenten unterstützt, die
+        auch den Nicht-Experten sicher und gezielt bspw. durch
         Hochwasservorhersageberechnungen führen.</para>
       </listitem>
     </orderedlist>
@@ -515,11 +455,12 @@
       <primary>Benutzerrechte</primary>
     </indexterm>
 
-    <para>Die Benutzerrechte für KALYPSO werden im HVZ Sachsen-Anhalt zentral
-    im LDAP-Dienst verwaltet. Hier ist für die KALYPSO-Anwendung zurzeit
-    lediglich das Benutzerprofil Modellierer definiert. User mit diesem
-    Benutzerprofil haben alle Rechte innerhalb der Anwendung und können somit
-    alle unter <xref linkend="anwendungsfaelle" /> beschriebenen Aufgaben
+    <para>Die Benutzerrechte für KALYPSO werden in der HVZ Sachsen-Anhalt
+    zentral durch den LDAP-Dienst verwaltet. Hier ist für die
+    KALYPSO-Anwendung zurzeit lediglich das Benutzerprofil
+    <emphasis>Modellierer</emphasis> definiert. User mit diesem Benutzerprofil
+    haben alle Rechte innerhalb der Anwendung und können somit alle unter
+    <xref linkend="anwendungsfaelle" /> beschriebenen Aufgaben
     ausführen.</para>
   </section>
 
@@ -553,8 +494,9 @@
     gezielt den Datenaustausch zwischen Server und lokaler Ebene steuern
     kann.</para>
 
-    <para>Für den Anwender und Planer bleibt das Datenmanagement verborgen, da
-    er automatisch durch den jeweiligen Wizard geführt wird.</para>
+    <para>Für den Anwender und Planer (Anwendungsbetrieb) bleibt das
+    Datenmanagement weitgehend verborgen, da er automatisch durch den
+    jeweiligen Assistenten geführt wird.</para>
   </section>
 
   <section id="dokumentationen">
