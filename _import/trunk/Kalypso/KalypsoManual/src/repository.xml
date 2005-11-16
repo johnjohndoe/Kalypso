@@ -34,12 +34,11 @@
     Zeitreihen-Ablage angezeigte Datenstruktur (Baumstruktur) entspricht z.B.
     Eins zu Eins der Datenstruktur auf Datenbank-Seite.</para>
 
-    <para><emphasis role="bold">Hinweis</emphasis>: Der Zeitreihenbrowser
-    ermöglicht ausdrücklich kein Editieren der Zeitreihen innerhalb der
-    externen Datenbanksysteme (z.B. WISKI, PSICompact oder
-    INGRES-Datacenter).</para>
-
-    <para>Mit dem Zeitreihenbrowser besteht zudem die Möglichkeit, weitere
+    <para><note>
+        <para>Der Zeitreihenbrowser ermöglicht ausdrücklich kein Editieren der
+        Zeitreihen innerhalb der externen Datenbanksysteme (z.B. WISKI,
+        PSICompact oder INGRES-Datacenter).</para>
+      </note>Mit dem Zeitreihenbrowser besteht zudem die Möglichkeit, weitere
     Zeitreihen Repositories (Zeitreihen-Quellen) hinzuzufügen. Dabei kann es
     sich z.B. um Fremddaten oder historische Daten aus einer lokalen
     Datenquelle handeln. Voraussetzung ist allerdings, dass die in der
@@ -202,12 +201,14 @@
     <para>Die Eingabe erfolgt entweder in Form der Anzahl der Tage oder durch
     Angabe des gewünschten Zeitraums.</para>
 
-    <para><emphasis role="bold">Hinweis</emphasis>: Wird bei der Anzahl der
-    Tage <quote>0</quote> angegeben, werden alle Zeitreihen für den gesamten,
-    in der Ablage zur Verfügung stehenden Zeitraum eingelesen, soweit dies von
-    der jeweiligen Ablage unterstützt wird. Je nach zeitlicher Auflösung und
-    Breite des zur Verfügung stehenden Zeitintervalls kann das Laden aller
-    Zeitreihenwerte geraume Zeit in Anspruch nehmen.</para>
+    <note>
+      <para>Wird bei der Anzahl der Tage <quote>0</quote> angegeben, werden
+      alle Zeitreihen für den gesamten, in der Ablage zur Verfügung stehenden
+      Zeitraum eingelesen, soweit dies von der jeweiligen Ablage unterstützt
+      wird. Je nach zeitlicher Auflösung und Breite des zur Verfügung
+      stehenden Zeitintervalls kann das Laden aller Zeitreihenwerte geraume
+      Zeit in Anspruch nehmen.</para>
+    </note>
 
     <para><emphasis role="bold"><guilabel>Ablage
     aktualisieren</guilabel></emphasis></para>
