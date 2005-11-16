@@ -433,16 +433,14 @@ public class PlainProfil implements IProfil, IProfilConstants
     
   }
 
-  public void addProfilListener( IProfilListener pl )
+  // KIM: warum gibt es das IPlainProfil nicht mehr?
+  public void addProfilListener( final IProfilListener pl )
   {
-    // TODO Auto-generated method stub
-    
+    // diese methode soll hier nicht existieren
   }
 
   public void removeProfilListener( IProfilListener pl )
   {
-    // TODO Auto-generated method stub
-    
+    // diese methode soll hier nicht existieren
   }
-
 }
