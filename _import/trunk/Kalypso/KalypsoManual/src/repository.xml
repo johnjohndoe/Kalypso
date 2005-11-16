@@ -201,14 +201,14 @@
     <para>Die Eingabe erfolgt entweder in Form der Anzahl der Tage oder durch
     Angabe des gewünschten Zeitraums.</para>
 
-    <note>
+    <caution>
       <para>Wird bei der Anzahl der Tage <quote>0</quote> angegeben, werden
       alle Zeitreihen für den gesamten, in der Ablage zur Verfügung stehenden
       Zeitraum eingelesen, soweit dies von der jeweiligen Ablage unterstützt
       wird. Je nach zeitlicher Auflösung und Breite des zur Verfügung
       stehenden Zeitintervalls kann das Laden aller Zeitreihenwerte geraume
       Zeit in Anspruch nehmen.</para>
-    </note>
+    </caution>
 
     <para><emphasis role="bold"><guilabel>Ablage
     aktualisieren</guilabel></emphasis></para>

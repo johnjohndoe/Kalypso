@@ -4,6 +4,7 @@
 	<!ENTITY file_allgemeines SYSTEM "allgemeines.xml">
 	<!ENTITY file_programm_start SYSTEM "programmstart.xml">
 	<!ENTITY file_gui SYSTEM "gui.xml">
+	<!ENTITY file_modellpflege SYSTEM "modellpflege.xml">
 	<!ENTITY file_repository SYSTEM "repository.xml">
 	<!ENTITY file_modelle SYSTEM "modelle.xml">    
 
@@ -23,6 +24,7 @@
 	&file_allgemeines;
 	&file_programm_start;
 	&file_gui; 
+	&file_modellpflege; 
 	&file_repository;
 	&file_modelle;    
 	
