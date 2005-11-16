@@ -3,7 +3,9 @@
   <title>Grafische Oberfläche</title>
 
   <indexterm>
-    <primary>Beschreibung der grafischen Oberfläche Expertenmodus</primary>
+    <primary>Grafische Oberfläche</primary>
+
+    <secondary>Expertenmodus</secondary>
   </indexterm>
 
   <para>Im vorliegenden Kapitel wird die grafische Benutzeroberfläche (GUI)
@@ -24,7 +26,7 @@
   </figure>
 
   <section id="allgemeines_zur_gui">
-    <title>Allgemeines</title>
+    <title>Allgemeines zu Ansichten</title>
 
     <para id="dummy6">Die grafische Benutzeroberfläche im Expertenmodus
     besteht im Wesentlichen aus folgenden Ansichten:</para>
@@ -42,16 +44,14 @@
         der in der Vorlage referenzierten Geo-Informationen - im Lageplan
         visualisiert werden. Die Karten-Ansicht eignet sich für die
         Darstellung von geografischen Modelldaten (z.B. Einzugsgebietsgrenzen)
-        sowie relevanten Hintergrundkarten (z.B. Topografische
+        sowie relevanten Hintergrundkarten (z.B. topografische
         Grundkarten).</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Tabellen-Ansicht</emphasis>: Die
-        Tabellen-Ansicht erlaubt den Zugriff auf Modellparameter bzw.
-        geografische Attribute, welche gleichzeitig mit der Kartenvorlage
-        verknüpft sind. Ebenfalls sind Zeitreihenwerte mit der Tabellenansicht
-        darstellbar und veränderbar.</para>
+        <para><emphasis role="bold">Baumansicht</emphasis>: Die Baumansicht
+        stellt eine Gesamtübersicht der betrachteten Daten in Baumform bereit.
+        Innere Abhängigkeiten sind so editierbar.</para>
       </listitem>
 
       <listitem>
@@ -61,9 +61,11 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Baumansicht</emphasis>: Die Baumansicht
-        stellt eine Gesamtübersicht der betrachteten Daten in Baumform bereit.
-        Innere Abhängigkeiten sind so editierbar.</para>
+        <para><emphasis role="bold">Tabellen-Ansicht</emphasis>: Die
+        Tabellen-Ansicht erlaubt den Zugriff auf Modellparameter bzw.
+        geografische Attribute, welche gleichzeitig mit der Kartenvorlage
+        verknüpft sind. Ebenfalls sind Zeitreihenwerte mit der Tabellenansicht
+        darstellbar und veränderbar.</para>
       </listitem>
 
       <listitem>
@@ -217,7 +219,7 @@
       muss der Unterschied zwischen Perspektive und Sicht erläutert werden.
       Perspektive ist der Oberbegriff. Die Gesamtansicht des KALYPSO Modeler
       (Expertenmodus) definiert beispielsweise eine Perspektive. Auch die
-      Hochwasser Vorhersage und die Zeitreihen-Ablage repräsentieren jeweils
+      Hochwasser-Vorhersage und die Zeitreihen-Ablage repräsentieren jeweils
       eine Perspektive. Die einzelnen Perspektiven setzen sich aus mehreren
       (An)Sichten zusammen.</para>
 
@@ -229,10 +231,10 @@
   </section>
 
   <section id="ansichtssteuerung">
-    <title>Ansichtsteuerung</title>
+    <title>KALYPSO-Ansichten</title>
 
     <indexterm>
-      <primary>Beschreibung der Ansichtsteuerung</primary>
+      <primary>KALYPSO-Ansichten</primary>
     </indexterm>
 
     <para id="para2">Die verschiedenen Ansichten in KALYPSO beinhalten
@@ -406,9 +408,14 @@
       durchgeführt wird, sodass die Änderungen an der Ansicht für spätere
       Aufrufe der Kartenvorlage wirksam sind.</para>
 
-      <para>Eine neue Karte kann im Projekt durch den Menüpunkt <guimenu>Datei
-      &gt; Neu &gt; Andere</guimenu> hinzugefügt werden. Hierzu ist der
-      Assistent GisMapView unter dem Ordner Andere auszuwählen (siehe <xref
+      <para>Eine neue Karte kann im Projekt durch den Menüpunkt <menuchoice>
+          <guimenu>Datei</guimenu>
+
+          <guisubmenu>Neu</guisubmenu>
+
+          <guimenuitem>Andere</guimenuitem>
+        </menuchoice> hinzugefügt werden. Hierzu ist der Assistent GisMapView
+      unter dem Ordner Andere auszuwählen (siehe <xref
       linkend="pic_neue_karte" />). Mit Hilfe des Assistenten kann der
       Speicherort sowie der Name der neuen Karte bestimmt werden.<figure
           id="pic_neue_karte">
@@ -458,60 +465,6 @@
           </mediaobject>
         </figure>
       </section>
-    </section>
-
-    <section id="menu_tabelle">
-      <title>Tabellen-Ansicht (Modellparameter)</title>
-
-      <para>Sobald eine Tabellenvorlage (*.gtt) mit dem Tabellen-Editor
-      geöffnet wird, erscheint im Hauptmenü zwischen den Menüpunkten
-      <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
-      zusätzlicher Menüpunkt <guimenu>Tabelle</guimenu> (siehe <xref
-      linkend="navigation_tabellen_ansicht" />). Die Funktionen im Menü
-      <guimenu>Tabelle</guimenu> sind erst ausführbar, wenn eine
-      Tabellen-Ansicht aktiviert bzw. in diese hinein geklickt wird
-      (Tabellenname wird farblich hervorgehoben).</para>
-
-      <figure id="navigation_tabellen_ansicht">
-        <title>Navigation in der Tabellen-Ansicht (Modellparameter)</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata align="center" fileref="img/img_Sachsen/tabelle2.png"
-                       scale="45" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>Die wesentliche Funktion zur Steuerung der Tabellen-Ansicht
-      besteht darin, Spalten der Tabelle ein- und auszublenden. Durch Drücken
-      der rechten Maustaste in der Tabelle wird eine Auswahlliste geöffnet,
-      welche alle verfügbaren Parameter aufführt. Spalten können ein- und
-      ausgeblendet werden, indem die darzustellenden Spalten per Mausklick
-      ausgewählt und aktiviert (Häkchen an) bzw. deaktiviert werden
-      können.</para>
-
-      <para>Die vorgenommenen Änderungen an der Tabellen-Ansicht werden in der
-      aufgerufenen Tabellenvorlage aktualisiert, sobald die Speicherung
-      durchgeführt wird, sodass die Änderungen an der Ansicht für spätere
-      Aufrufe der Tabellenvorlage wirksam sind.</para>
-
-      <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
-      der Menüpunkt <guimenu>Tabelle &gt; Daten speichern</guimenu> gewählt
-      werden. Alternativ kann auch die entsprechende Schaltfläche in der
-      Menü-Leiste benutzt werden (siehe <xref
-      linkend="pic_tabelle_button" />).</para>
-
-      <figure id="pic_tabelle_button">
-        <title>Schaltflächen in der Tabellen-Ansicht</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata align="center" fileref="img/gui/Button-Tabelle.png"
-                       scale="50" />
-          </imageobject>
-        </mediaobject>
-      </figure>
     </section>
 
     <section>
@@ -591,7 +544,64 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/gui/gui-featureview_karte.png" scale="52" />
+                       fileref="img/gui/gui-featureview_karte.png" scale="55" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="menu_tabelle">
+      <title>Tabellen-Ansicht (Modellparameter)</title>
+
+      <para>Sobald eine Tabellenvorlage (*.gtt) mit dem Tabellen-Editor
+      geöffnet wird, erscheint im Hauptmenü zwischen den Menüpunkten
+      <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
+      zusätzlicher Menüpunkt <guimenu>Tabelle</guimenu> (siehe <xref
+      linkend="navigation_tabellen_ansicht" />). Die Funktionen im Menü
+      <guimenu>Tabelle</guimenu> sind erst ausführbar, wenn eine
+      Tabellen-Ansicht aktiviert bzw. in diese hinein geklickt wird
+      (Tabellenname wird farblich hervorgehoben).</para>
+
+      <figure id="navigation_tabellen_ansicht">
+        <title>Navigation in der Tabellen-Ansicht (Modellparameter)</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="img/img_Sachsen/tabelle2.png"
+                       scale="45" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Die wesentliche Funktion zur Steuerung der Tabellen-Ansicht
+      besteht darin, Spalten der Tabelle ein- und auszublenden. Durch Drücken
+      der rechten Maustaste in der Tabelle wird eine Auswahlliste geöffnet,
+      welche alle verfügbaren Parameter aufführt. Spalten können ein- und
+      ausgeblendet werden, indem die darzustellenden Spalten per Mausklick
+      ausgewählt und aktiviert (Häkchen an) bzw. deaktiviert werden
+      können.</para>
+
+      <para>Die vorgenommenen Änderungen an der Tabellen-Ansicht werden in der
+      aufgerufenen Tabellenvorlage aktualisiert, sobald die Speicherung
+      durchgeführt wird, sodass die Änderungen an der Ansicht für spätere
+      Aufrufe der Tabellenvorlage wirksam sind.</para>
+
+      <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
+      der Menüpunkt <menuchoice>
+          <guimenu>Tabelle</guimenu>
+
+          <guimenuitem>Daten speichern</guimenuitem>
+        </menuchoice> gewählt werden. Alternativ kann auch die entsprechende
+      Schaltfläche in der Menü-Leiste benutzt werden (siehe <xref
+      linkend="pic_tabelle_button" />).</para>
+
+      <figure id="pic_tabelle_button">
+        <title>Schaltflächen in der Tabellen-Ansicht</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="img/gui/Button-Tabelle.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -645,11 +655,14 @@
       des Häkchens).</para>
 
       <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
-      der Menüpunkt <guimenu>Tabelle &gt; Daten speichern</guimenu> gewählt
-      werden. Alternativ kann auch die entsprechende Schaltfläche in der
-      Menü-Leiste benutzt werden (siehe <xref
+      der Menüpunkt <menuchoice>
+          <guimenu>Tabelle</guimenu>
+
+          <guimenuitem>Daten speichern</guimenuitem>
+        </menuchoice> gewählt werden. Alternativ kann auch die entsprechende
+      Schaltfläche in der Menü-Leiste benutzt werden (siehe <xref
       linkend="pic_tabelle_button" />). Alle Änderungen in den Zeitreihen
-      betreffen ausschließlich die lokal gespeicherte zml-Datei.</para>
+      betreffen ausschließlich die lokal gespeicherte ZML-Datei.</para>
 
       <section id="tabellen_bearbeiten">
         <title>Bearbeiten von Tabellenwerten</title>
@@ -757,11 +770,14 @@
         <title>Speichern / Exportieren von Zeitreihen</title>
 
         <para>Zum <emphasis role="bold">Speichern</emphasis> von geänderten
-        Daten innerhalb einer Tabelle muss der Menüpunkt <guimenu>Tabelle
-        -&gt; Daten speichern</guimenu> gewählt werden. Alternativ kann auch
-        die entsprechende Schaltfläche in der Menü-Leiste benutzt werden
-        (siehe <xref linkend="pic_tabelle_button" />). Durch diesen Vorgang
-        werden alle Änderungen einer Zeitreihe in der lokalen zml-Datei
+        Daten innerhalb einer Tabelle muss der Menüpunkt <menuchoice>
+            <guimenu>Tabelle</guimenu>
+
+            <guimenuitem>Daten speichern</guimenuitem>
+          </menuchoice> gewählt werden. Alternativ kann auch die entsprechende
+        Schaltfläche in der Menü-Leiste benutzt werden (siehe <xref
+        linkend="pic_tabelle_button" />). Durch diesen Vorgang werden alle
+        Änderungen einer Zeitreihe in der lokalen ZML-Datei
         gespeichert.</para>
 
         <para>Beim <emphasis role="bold">Export</emphasis> der Tabelle in das
@@ -797,7 +813,7 @@
         dazugehörigen Status in einer Matrix in <xref
         linkend="zeitreihensymbole" /> dargestellt. Wird kein Symbol vor dem
         Wert angezeigt, besitzt der Wert innerhalb von KALYPSO den Status
-        "OK".</para>
+        <quote>OK</quote>.</para>
 
         <table id="zeitreihensymbole">
           <title>Symbole in Zeitreihen-Tabellen</title>
@@ -930,7 +946,7 @@
       Dateien</guimenuitem> auszuwählen (siehe <xref
       linkend="gui_zml-import" />). Die Quellzeitreihe wird mit Speicherort
       und Format festgelegt und dann abhängig vom Format (Datentyp &amp;
-      Datenformat) in die Zielzeitreihe (*.zml-Zeitreihe) konvertiert.</para>
+      Datenformat) in die Zielzeitreihe (ZML-Zeitreihe) konvertiert.</para>
 
       <figure id="gui_zml-import">
         <title id="zeitreihenimport">Zeitreihenimport</title>
@@ -1034,11 +1050,14 @@
       <para>Um das Grafikprogramm aus der KALYPSO-Oberfläche zu starten,
       können die zu öffnenden Zeitreihen direkt mit dem Grafikprogramm
       geöffnet oder in einer Diagramm-Vorlage (*.odt) abgespeichert werden.
-      Dies kann unter <guimenu>Datei &gt; Speichern unter</guimenu> bei
-      aktivierter Diagramm-Ansicht geschehen. Diagramm-Vorlagen können in
-      einem beliebigen Ordner im lokalen Arbeitsbereich gespeichert werden. Zu
-      beachten ist, dass die Dateiendung *.odt beim Speichern mit angegeben
-      werden muss.</para>
+      Dies kann unter <menuchoice>
+          <guimenu>Datei</guimenu>
+
+          <guimenuitem>Speichern unter</guimenuitem>
+        </menuchoice> bei aktivierter Diagramm-Ansicht geschehen.
+      Diagramm-Vorlagen können in einem beliebigen Ordner im lokalen
+      Arbeitsbereich gespeichert werden. Zu beachten ist, dass die Dateiendung
+      *.odt beim Speichern mit angegeben werden muss.</para>
 
       <para>Wird eine Diagramm-Vorlage im Navigator-Fenster markiert,
       erscheint in der Werkzeug-Leiste die Schaltfläche zum Öffnen der Vorlage
