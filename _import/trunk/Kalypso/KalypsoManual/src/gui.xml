@@ -49,14 +49,14 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Baumansicht</emphasis>: Die Baumansicht
+        <para><emphasis role="bold">Baum-Ansicht</emphasis>: Die Baum-Ansicht
         stellt eine Gesamtübersicht der betrachteten Daten in Baumform bereit.
         Innere Abhängigkeiten sind so editierbar.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Feature-Ansicht</emphasis>: Die Feature
-        Ansicht ermöglicht den Zugriff auf alle Daten des selektierten
+        <para><emphasis role="bold">Feature-Ansicht</emphasis>: Die
+        Feature-Ansicht ermöglicht den Zugriff auf alle Daten des selektierten
         Elementes.</para>
       </listitem>
 
@@ -105,12 +105,12 @@
       und zeigt die lokal verfügbaren Modelle an.</para>
 
       <para>Die Ansichten für Karten, Tabellen, Diagramme, Modellbäume und
-      Modellelemente werden geöffnet, indem die jeweilige Datei - d.h.
-      Kartenvorlage (*.gmt), GIS-Tabelle (*.gtt), Diagramm (*.odt) oder
-      Zeitreihentabelle (*.ott), Baumvorlage (*.gmv) oder Elementvorlage
-      (*.gft) - im Navigator ausgewählt wird. Wenn dabei die rechte Maustaste
+      Modellelemente werden geöffnet, indem die jeweilige Vorlagendatei - für
+      eine Karte (*.gmt), einen Baum (*.gmv), ein Element (*.gft), eine
+      GIS-Tabelle (*.gtt), eine Zeitreihentabelle (*.ott) oder ein Diagramm
+      (*.odt) - im Navigator ausgewählt wird. Wenn dabei die rechte Maustaste
       gedrückt wird, kann über <guimenuitem>Öffnen mit</guimenuitem> ein für
-      den Dateityp speziell konfigurierter Editor gewählt werden. Z.B. ist
+      den Vorlagentyp speziell konfigurierter Editor gewählt werden. Z.B. ist
       dies im Falle der Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
       linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
       Tabellen-Editor.</para>
@@ -130,7 +130,7 @@
       Editoren zur Verfügung, welche das Editieren des ursprünglichen XML-
       bzw. GML-Formats erlauben. Neben dem einfachen Texteditor kann eine
       Gesamtübersicht der Inhalte einer GML-Datei mit der KALYPSO Standard
-      Baumansicht oder dem KALYPSO Standard Feature Editor erreicht
+      Baum-Ansicht oder dem KALYPSO Standard Feature Editor erreicht
       werden.</para>
 
       <para>Bei Doppelklick mit der linken Maustaste auf die zu öffnende Datei
@@ -140,9 +140,11 @@
       Hier besteht die Möglichkeit, die Datei unterschiedlich zu visualisieren
       (Tabelle, Diagramm).</para>
 
-      <para><emphasis role="bold">Hinweis</emphasis>: Eine Datei kann nur
-      einmal geöffnet werden und folglich nicht parallel mit unterschiedlichen
-      Editoren bearbeitet werden.</para>
+      <note>
+        <para>Eine Vorlagendatei kann nur einmal geöffnet werden und folglich
+        nicht parallel mit unterschiedlichen Editoren bearbeitet
+        werden.</para>
+      </note>
     </section>
 
     <section id="arbeiten_mit_ansichten">
@@ -244,7 +246,7 @@
     ihre Anpassungsmöglichkeiten werden nachfolgend erläutert.</para>
 
     <section>
-      <title>Ansicht-Vorlagen</title>
+      <title>Ansichts-Vorlagen</title>
 
       <para>Das Arbeiten mit unterschiedlichen Ansichten setzt Kenntnisse über
       das Arbeiten mit Ansicht-Vorlagen voraus. Prinzipiell ist in KALYPSO
@@ -351,9 +353,8 @@
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata align="center"
-                         fileref="img/img_Sachsen/gis_karte2.png" format="PNG"
-                         scale="45" />
+              <imagedata align="center" fileref="img/gui/gis_karte2.png"
+                         format="PNG" scale="45" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -395,8 +396,7 @@
         <screenshot>
           <mediaobject>
             <imageobject>
-              <imagedata align="center"
-                         fileref="img/img_Sachsen/style_editor.png"
+              <imagedata align="center" fileref="img/gui/style_editor.png"
                          format="PNG" scale="45" />
             </imageobject>
           </mediaobject>
@@ -468,20 +468,20 @@
     </section>
 
     <section>
-      <title>Baumansicht</title>
+      <title>Baum-Ansicht</title>
 
       <para>Sobald eine Baumvorlage (*.gmv) mit dem Baum-Editor oder eine
-      GML-Datei mit Hilfe der Standard Baumansicht geöffnet wird , erscheint
+      GML-Datei mit Hilfe der Standard Baum-Ansicht geöffnet wird , erscheint
       im Hauptmenü zwischen den Menüpunkten <guimenu>Modell</guimenu> und
       <guimenu>Fenster</guimenu> ein zusätzlicher Menüpunkt
       <guimenu>Baum</guimenu> (siehe <xref
-      linkend="navigation_tabellen_ansicht" />). Die Funktionen im Menü
+      linkend="pic_navigation_baum_ansicht" />). Die Funktionen im Menü
       <guimenu>Baum</guimenu> sind erst ausführbar, wenn eine Baum-Ansicht
       aktiviert bzw. in diese hinein geklickt wird (Baumname wird farblich
       hervorgehoben).</para>
 
-      <figure>
-        <title>Navigation in der Baumansicht</title>
+      <figure id="pic_navigation_baum_ansicht">
+        <title>Navigation in der Baum-Ansicht</title>
 
         <mediaobject>
           <imageobject>
@@ -491,7 +491,7 @@
         </mediaobject>
       </figure>
 
-      <para>Die Baumansicht dient dem allgemeinen Überblick der gesamten
+      <para>Die Baum-Ansicht dient dem allgemeinen Überblick der gesamten
       Projektverknüpfung. Sie stellt die Verbindungen, Ableitungen und
       Verknüpfungen im Modell in einer geordneten abwärts gerichteten
       Baumstruktur dar. Primäre Funktionen im Baum sind das Hinzufügen und
@@ -502,7 +502,7 @@
       möglich.</para>
 
       <figure>
-        <title>Kontextmenu in der Baumansicht</title>
+        <title>Kontextmenu in der Baum-Ansicht</title>
 
         <mediaobject>
           <imageobject>
@@ -567,7 +567,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata align="center" fileref="img/img_Sachsen/tabelle2.png"
+            <imagedata align="center" fileref="img/gui/tabelle2.png"
                        scale="45" />
           </imageobject>
         </mediaobject>
@@ -682,7 +682,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/img_Sachsen/kontextmenu_zeitreihen.png"
+              <imagedata fileref="img/gui/kontextmenu_zeitreihen.png"
                          scale="40" />
             </imageobject>
           </mediaobject>
@@ -794,7 +794,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/img_Sachsen/icon_bericht.png" />
+              <imagedata fileref="img/gui/icon_bericht.png" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -839,8 +839,7 @@
               </row>
 
               <row>
-                <entry><graphic
-                fileref="img/img_Sachsen/icon_write.png" /></entry>
+                <entry><graphic fileref="img/gui/icon_write.png" /></entry>
 
                 <entry>Vom Benutzer geändert</entry>
 
@@ -848,8 +847,7 @@
               </row>
 
               <row>
-                <entry><graphic
-                fileref="img/img_Sachsen/icon_warning.png" /></entry>
+                <entry><graphic fileref="img/gui/icon_warning.png" /></entry>
 
                 <entry>Wert auf Gültigkeit prüfen</entry>
 
@@ -857,8 +855,7 @@
               </row>
 
               <row>
-                <entry><graphic
-                fileref="img/img_Sachsen/conflict.png" /></entry>
+                <entry><graphic fileref="img/gui/icon_conflict.png" /></entry>
 
                 <entry>Wert nicht ableitbar (z.B. W/Q-Fehler)</entry>
 

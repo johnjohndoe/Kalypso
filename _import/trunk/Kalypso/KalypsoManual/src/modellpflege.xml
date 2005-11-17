@@ -33,8 +33,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata align="center" fileref="img/gui/expert_modell.png"
-                       scale="50" />
+            <imagedata align="center"
+                       fileref="img/modellpflege/expert_modell.png" scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -219,7 +219,7 @@
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-                         fileref="img/img_Sachsen/modellparameter_edit.png"
+                         fileref="img/modellpflege/modellparameter_edit.png"
                          scale="35" />
             </imageobject>
           </mediaobject>
@@ -244,7 +244,7 @@
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-                         fileref="img/gui/modellparameter_edit_gross.png"
+                         fileref="img/modellpflege/modellparameter_edit_gross.png"
                          scale="50" />
             </imageobject>
           </mediaobject>
@@ -287,7 +287,8 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/gui/expert_rechenvariante.png" scale="50" />
+                       fileref="img/modellpflege/expert_rechenvariante.png"
+                       scale="50" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -435,7 +436,8 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata align="center" fileref="img/gui/expert_tabelle.png"
+                <imagedata align="center"
+                           fileref="img/modellpflege/expert_tabelle.png"
                            scale="50" />
               </imageobject>
             </mediaobject>
@@ -459,7 +461,7 @@
             <mediaobject>
               <imageobject>
                 <imagedata align="center"
-                           fileref="img/gui/expert_berichtsablage.png"
+                           fileref="img/modellpflege/expert_berichtsablage.png"
                            scale="50" />
               </imageobject>
             </mediaobject>
@@ -479,7 +481,7 @@
             <mediaobject>
               <imageobject>
                 <imagedata align="center"
-                           fileref="img/gui/expert_tabelle_export.png"
+                           fileref="img/modellpflege/expert_tabelle_export.png"
                            scale="50" />
               </imageobject>
             </mediaobject>
