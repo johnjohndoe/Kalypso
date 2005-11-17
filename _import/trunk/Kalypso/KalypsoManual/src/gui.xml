@@ -27,6 +27,12 @@
   <section id="allgemeines_zur_gui">
     <title>Allgemeines zu Ansichten</title>
 
+    <indexterm>
+      <primary>Ansichten</primary>
+
+      <secondary>Allgemeines</secondary>
+    </indexterm>
+
     <para id="dummy6">Die grafische Benutzeroberfläche im Expertenmodus
     besteht im Wesentlichen aus folgenden Ansichten:</para>
 
@@ -100,6 +106,12 @@
     <section id="gui-oeffnen_ansichten">
       <title>Öffnen einzelner Ansichten</title>
 
+      <indexterm>
+        <primary>Ansichten</primary>
+
+        <secondary>Öffnen</secondary>
+      </indexterm>
+
       <para>Der Navigator öffnet sich automatisch beim Start des Expertenmodus
       und zeigt die lokal verfügbaren Modelle an.</para>
 
@@ -148,6 +160,12 @@
 
     <section id="arbeiten_mit_ansichten">
       <title>Arbeiten mit mehreren Ansichten</title>
+
+      <indexterm>
+        <primary>Ansichten</primary>
+
+        <secondary>Arbeiten mit mehreren</secondary>
+      </indexterm>
 
       <para>Zur Bearbeitung von Modelldaten oder Zeitreihen ist das Arbeiten
       mit mehreren Ansichten sinnvoll, sodass z.B. die geografischen
@@ -247,6 +265,10 @@
     <section>
       <title>Ansichts-Vorlagen</title>
 
+      <indexterm>
+        <primary>Ansichts-Vorlagen</primary>
+      </indexterm>
+
       <para>Das Arbeiten mit unterschiedlichen Ansichten setzt Kenntnisse über
       das Arbeiten mit Ansicht-Vorlagen voraus. Prinzipiell ist in KALYPSO
       vorgesehen, nicht auf die Originaldaten zurückzugreifen und diese zu
@@ -310,6 +332,10 @@
 
     <section id="menu_karte">
       <title>Karten-Ansicht</title>
+
+      <indexterm>
+        <primary>Karten-Ansicht</primary>
+      </indexterm>
 
       <para>Sobald eine Kartenvorlage (*.gmt) mit dem Karten-Editor geöffnet
       wird, erscheint im Hauptmenü zwischen den Menüpunkten
@@ -431,6 +457,12 @@
       <section id="gui-layer_hinzufuegen">
         <title>Layer hinzufügen</title>
 
+        <indexterm>
+          <primary>Karten-Ansicht</primary>
+
+          <secondary>Layer hinzufügen</secondary>
+        </indexterm>
+
         <para>In einer neuen oder auch bestehenden Karte kann ein Layer mit
         Hilfe des Plus-Symbols hinzugefügt werden (siehe <xref
         linkend="pic_button_layer_add" />).</para>
@@ -478,6 +510,10 @@
     <section>
       <title>Baum-Ansicht</title>
 
+      <indexterm>
+        <primary>Baum-Ansicht</primary>
+      </indexterm>
+
       <para>Sobald eine Baumvorlage (*.gmv) mit dem Baum-Editor oder eine
       GML-Datei mit Hilfe der Standard Baum-Ansicht geöffnet wird , erscheint
       im Hauptmenü zwischen den Menüpunkten <guimenu>Modell</guimenu> und
@@ -524,6 +560,10 @@
     <section>
       <title>Feature (Element) Ansicht</title>
 
+      <indexterm>
+        <primary>Feature (Element) Ansicht</primary>
+      </indexterm>
+
       <para>Die Feature Ansicht ist eine flexibel gestaltete Ansicht zur
       Betrachtung einzelner Elemente oder Elementgruppen. Das Öffnen der
       Ansicht ist aufgrund der Flexibilität durch verschiedenste Optionen
@@ -560,6 +600,12 @@
 
     <section id="menu_tabelle">
       <title>Tabellen-Ansicht (Modellparameter)</title>
+
+      <indexterm>
+        <primary>Tabellen-Ansicht</primary>
+
+        <secondary>Modellparameter</secondary>
+      </indexterm>
 
       <para>Sobald eine Tabellenvorlage (*.gtt) mit dem Tabellen-Editor
       geöffnet wird, erscheint im Hauptmenü zwischen den Menüpunkten
@@ -618,6 +664,12 @@
     <section>
       <title>Tabellen-Ansicht (Zeitreihen)</title>
 
+      <indexterm>
+        <primary>Tabellen-Ansicht</primary>
+
+        <secondary>Zeitreihen</secondary>
+      </indexterm>
+
       <para>Zeitreihen im ZML-Format (*.zml) können in der KALYPSO-Oberfläche
       als Tabelle oder Diagramm geöffnet werden (siehe <xref
       linkend="navigation_ansichtsauswahl" />). Durch Doppelklick auf eine
@@ -667,6 +719,12 @@
 
       <section id="tabellen_bearbeiten">
         <title>Bearbeiten von Tabellenwerten</title>
+
+        <indexterm>
+          <primary>Zeitreihen</primary>
+
+          <secondary>Werte bearbeiten</secondary>
+        </indexterm>
 
         <para>In der Tabellen-Ansicht können die Werte einer Zeitreihe
         editiert werden (Doppelklick in eine Zelle). Daneben sind in der
@@ -761,6 +819,12 @@
       <section id="zeitreihen_export">
         <title>Speichern / Exportieren von Zeitreihen</title>
 
+        <indexterm>
+          <primary>Zeitreihen</primary>
+
+          <secondary>Speichern / Exportieren</secondary>
+        </indexterm>
+
         <para>Zum <emphasis role="bold">Speichern</emphasis> von geänderten
         Daten innerhalb einer Tabelle muss der Menüpunkt <menuchoice>
             <guimenu>Tabelle</guimenu>
@@ -796,6 +860,12 @@
       <section id="tabellen_kennzeichnung" vendor="sachsen-anhalt">
         <title>Kennzeichnung von Tabellenwerten</title>
 
+        <indexterm>
+          <primary>Zeitreihen</primary>
+
+          <secondary>Kennzeichnung von Tabellenwerten</secondary>
+        </indexterm>
+
         <para>Beim Aufruf von Zeitreihen über den KALYPSO Zeitreihendienst,
         dies ist bei der HVZ gleichbedeutend mit der Bereitstellung der
         Zeitreihendaten über den WISKI Data Provider, werden die Werte einer
@@ -830,15 +900,16 @@
 
             <tbody>
               <row>
-                <entry></entry>
+                <entry valign="middle"></entry>
 
                 <entry>OK</entry>
 
-                <entry>good,estimated,unchecked,complete</entry>
+                <entry>good, estimated, unchecked, complete</entry>
               </row>
 
               <row>
-                <entry><graphic fileref="img/gui/icon_write.png" /></entry>
+                <entry><graphic fileref="img/gui/icon_write.png"
+                valign="middle" /></entry>
 
                 <entry>Vom Benutzer geändert</entry>
 
@@ -846,15 +917,17 @@
               </row>
 
               <row>
-                <entry><graphic fileref="img/gui/icon_warning.png" /></entry>
+                <entry><graphic fileref="img/gui/icon_warning.png"
+                valign="middle" /></entry>
 
                 <entry>Wert auf Gültigkeit prüfen</entry>
 
-                <entry>suspect,missing,incomplete</entry>
+                <entry>suspect, missing, incomplete</entry>
               </row>
 
               <row>
-                <entry><graphic fileref="img/gui/icon_conflict.png" /></entry>
+                <entry><graphic fileref="img/gui/icon_conflict.png"
+                valign="middle" /></entry>
 
                 <entry>Wert nicht ableitbar (z.B. W/Q-Fehler)</entry>
 
@@ -868,6 +941,12 @@
 
     <section id="gui-zml_diagramm_ansicht">
       <title>Diagramm-Ansicht (Zeitreihen)</title>
+
+      <indexterm>
+        <primary>Diagramm-Ansicht</primary>
+
+        <secondary>Zeitreihen</secondary>
+      </indexterm>
 
       <para>Durch Doppelklick auf eine Zeitreihe (*.zml) und Auswahl von
       <guimenu>Standard Diagramm Editor</guimenu> wird die Zeitreihe in der
@@ -944,6 +1023,12 @@
 
     <section>
       <title>Importieren von Zeitreihen</title>
+
+      <indexterm>
+        <primary>Zeitreihen</primary>
+
+        <secondary>Import</secondary>
+      </indexterm>
 
       <para>Liegt eine externe Zeitreihe im Dateisystem vor, so kann diese im
       Navigator durch die Importfunktion, welche durch das Menü der rechten
@@ -1047,6 +1132,12 @@
 
     <section id="zeitreihen_bearbeiten">
       <title>Bearbeiten von Zeitreihen (Grafikprogramm)</title>
+
+      <indexterm>
+        <primary>Zeitreihen</primary>
+
+        <secondary>Bearbeitung</secondary>
+      </indexterm>
 
       <para>Neben der Darstellung der Zeitreihen in der Diagramm-Ansicht
       beinhaltet die Oberfläche von KALYPSO auch ein Werkzeug zum Bearbeiten
