@@ -10,9 +10,8 @@
 
   <para>Im vorliegenden Kapitel wird die grafische Benutzeroberfläche (GUI)
   für den KALYPSO Modeler (Expertenmodus) erläutert. Die KALYPSO Modeler
-  Perspektive kann entweder über das vorhandene Symbol in der Auswahlleiste
-  oder über das Menü <guimenuitem>Fenster</guimenuitem> geöffnet
-  werden.</para>
+  Perspektive kann über das vorhandene Symbol in der Auswahlleiste oder über
+  das Menü <guimenuitem>Fenster</guimenuitem> geöffnet werden.</para>
 
   <figure>
     <title>KALYPSO Modeler Perspektive öffnen</title>
@@ -78,8 +77,8 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Grafikprogramm</emphasis>: Das
-        Postprocessing von Berechnungsergebnissen erfordert i.d.R. komplexe
+        <para><emphasis role="bold">Grafikprogramm</emphasis>: Die
+        Nachbearbeitung von Berechnungsergebnissen erfordert i.d.R. komplexe
         Operationen an Zeitreihen. Hierfür steht das Grafikprogramm zur
         Verfügung, wo u.a. mehrere Zeitreihen gleichzeitig dargestellt,
         Zeitreihen mit unterschiedlichen Ordinaten-Achsen behandelt sowie
@@ -87,12 +86,12 @@
       </listitem>
     </itemizedlist>
 
-    <para>Die Ergonomie und Logik der Oberfläche ist ähnlich wie bei gängigen
-    GIS-Softwareprodukten - jedoch ergänzt durch generelle Funktionen zur
+    <para>Die Ergonomie und Logik der Oberfläche ähnelt denen gängiger
+    GIS-Programme, sie werden jedoch ergänzt durch generelle Funktionen zur
     Bearbeitung und Verwaltung hydrologischer / hydraulischer Modelle (siehe
     <xref linkend="grundfunktionen" />).</para>
 
-    <para>I.d.R. beinhaltet jede der oben genannten Ansichten ein spezifisches
+    <para>I.d.R. gehört zu jeder der oben genannten Ansichten ein spezifisches
     Untermenü bzw. Werkzeuge in Form von Toolbars. Z.B. umfasst die
     Karten-Ansicht Menüpunkte zum Ein- und Ausblenden von Themen oder zum
     Zoomen innerhalb der Ansicht (siehe <xref
@@ -221,7 +220,7 @@
       muss der Unterschied zwischen Perspektive und Sicht erläutert werden.
       Perspektive ist der Oberbegriff. Die Gesamtansicht des KALYPSO Modeler
       (Expertenmodus) definiert beispielsweise eine Perspektive. Auch die
-      Hochwasser-Vorhersage und die Zeitreihen-Ablage repräsentieren jeweils
+      Hochwasser-Vorhersage und der Zeitreihenbrowser repräsentieren jeweils
       eine Perspektive. Die einzelnen Perspektiven setzen sich aus mehreren
       (An)Sichten zusammen.</para>
 
@@ -259,16 +258,10 @@
 
       <itemizedlist>
         <listitem>
-          <para>Kartenvorlage <xref linkend="menu_karte" /> (*.gmt)</para>
+          <para>Kartenvorlage (*.gmt)</para>
 
           <para>Diese Vorlage dient zum Visualisieren von Modelldaten in einer
           Kartendarstellung.</para>
-        </listitem>
-
-        <listitem>
-          <para>Tabellenvorlage (*.gtt)</para>
-
-          <para>Modelldaten werden in Form von Tabellen dargestellt.</para>
         </listitem>
 
         <listitem>
@@ -283,6 +276,12 @@
 
           <para>Diese Vorlage dient der Ansicht einzelner Elemente. Sie stellt
           eine Gesamtübersicht der Daten eines Elementes dar.</para>
+        </listitem>
+
+        <listitem>
+          <para>Tabellenvorlage (*.gtt)</para>
+
+          <para>Modelldaten werden in Form von Tabellen dargestellt.</para>
         </listitem>
 
         <listitem>
@@ -380,9 +379,9 @@
       Sofern die Untergliederung mit Mausklick aktiviert wird, erscheint in
       der Ansichtsleiste Gliederung die Funktion <guimenu>Style
       ändern</guimenu>. Nur diese ist jetzt in der Ansichtsleiste verfügbar -
-      alle anderen sind Grau hinterlegt. Alternativ zur Ansichtsleiste kann
-      anhand Rechtsklick mit der Maus (Untergliederung des Themas muss aktiv
-      sein) ein Untermenü geöffnet werden, wo <guimenu>Style
+      alle anderen sind grau hinterlegt. Alternativ zur Ansichtsleiste kann
+      mit einem Rechtsklick mit der Maus (Untergliederung des Themas muss
+      aktiv sein) ein Untermenü geöffnet werden, in dem <guimenu>Style
       verändern</guimenu> ausgewählt werden kann, sodass sich die
       Style-Editor-Ansicht öffnet. Mit dem Style-Editor können
       Symboldarstellungen, Farben, Fonts, etc. interaktiv verändert werden.
@@ -405,7 +404,7 @@
 
       <para>Die vorgenommenen Änderungen an der Karten-Ansicht werden in der
       aufgerufenen Kartenvorlage aktualisiert, sobald die Speicherung
-      durchgeführt wird, sodass die Änderungen an der Ansicht für spätere
+      durchgeführt wird, sodass die Änderungen in der Ansicht für spätere
       Aufrufe der Kartenvorlage wirksam sind.</para>
 
       <para>Eine neue Karte kann im Projekt durch den Menüpunkt <menuchoice>
@@ -433,7 +432,8 @@
         <title>Layer hinzufügen</title>
 
         <para>In einer neuen oder auch bestehenden Karte kann ein Layer mit
-        Hilfe des plus Symbols hinzugefügt werden.</para>
+        Hilfe des Plus-Symbols hinzugefügt werden (siehe <xref
+        linkend="pic_button_layer_add" />).</para>
 
         <figure>
           <title>Button Layer hinzufügen</title>
@@ -450,11 +450,19 @@
         <para>Der neue Layer kann hierbei aus verschiedenen
         Informationsquellen innerhalb des Arbeitsverzeichnisses oder durch
         Anbindung eines Web Services eingebunden werden. Hierzu ist der
-        entsprechende Assistent durch Doppelklick im Auswahlfenster zu
-        starten. Im dann folgenden quellspezifischen Dialog wird die
-        Datenquelle eingebunden.</para>
+        entsprechende Assistent durch Doppelklick im Auswahlfenster zu starten
+        (siehe <xref linkend="pic_datenquelle_waehlen" />). Die Angaben, die
+        im dann folgenden Dialog zu machen sind, hängen von der Art der
+        gewählten Datenquelle ab. So muss z.B. für das Einbinden einer
+        Shape-Datei eine entsprechende Datei im aktuellen Arbeitsverzeichnis
+        ausgewählt und das Koordinatensystem, in dem die Daten abgelegt sind,
+        angegeben werden. Zur Symbolisierung kann der Benutzer einen bereits
+        definierten Style auswählen oder einen Standard-Style generieren
+        lassen. Ähnliche angaben sind für alle dateibasierten Datenquellen zu
+        machen. Bei den webbasierten Datenquellen (Web Service) sind vor der
+        Datenauswahl gültige Verbindungsdaten anzugeben.</para>
 
-        <figure>
+        <figure id="pic_datenquelle_waehlen">
           <title>Auswahl der Datenquelle</title>
 
           <mediaobject>
@@ -583,7 +591,7 @@
 
       <para>Die vorgenommenen Änderungen an der Tabellen-Ansicht werden in der
       aufgerufenen Tabellenvorlage aktualisiert, sobald die Speicherung
-      durchgeführt wird, sodass die Änderungen an der Ansicht für spätere
+      durchgeführt wird, sodass die Änderungen in der Ansicht für spätere
       Aufrufe der Tabellenvorlage wirksam sind.</para>
 
       <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
@@ -617,6 +625,14 @@
       wird die Zeitreihe in der Tabellen-Ansicht dargestellt (siehe <xref
       linkend="navigation_tabelle_zml" />).</para>
 
+      <para><note>
+          <para>Tabellen-Ansichten von Zeitreihen, die im sog.
+          <quote>Testbetrieb</quote> erstellt wurden und dementsprechend
+          markiert sind (vergl. <xref linkend="kalypso_testbetrieb" />), haben
+          eine gesonderte Überschrift und sind somit gut von Zeitreihen des
+          <quote>Normalbetriebs</quote> zu unterscheiden.</para>
+        </note></para>
+
       <figure id="navigation_ansichtsauswahl">
         <title>Ansichtsauswahl beim Öffnen einer Zeitreihe</title>
 
@@ -639,11 +655,6 @@
         </mediaobject>
       </figure>
 
-      <para>In der Tabellen-Ansicht können die Werte einer Zeitreihe editiert
-      werden (Doppelklick in eine Zelle). Über das Plus- bzw. Minus-Symbol in
-      der Werkzeugleiste können der Tabelle Zeilen hinzugefügt bzw. wieder
-      entfernt werden.</para>
-
       <para>Wenn bereits eine Zeitreihe in der Tabellen-Ansicht geöffnet ist,
       können über Drag and Drop (linke Maustaste) aus dem Navigator in die
       Gliederung-Ansicht mehrere Zeitreihen dargestellt werden. Dies ist auch
@@ -654,28 +665,20 @@
       lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
       des Häkchens).</para>
 
-      <para>Zum Speichern von geänderten Daten innerhalb einer Tabelle muss
-      der Menüpunkt <menuchoice>
-          <guimenu>Tabelle</guimenu>
-
-          <guimenuitem>Daten speichern</guimenuitem>
-        </menuchoice> gewählt werden. Alternativ kann auch die entsprechende
-      Schaltfläche in der Menü-Leiste benutzt werden (siehe <xref
-      linkend="pic_tabelle_button" />). Alle Änderungen in den Zeitreihen
-      betreffen ausschließlich die lokal gespeicherte ZML-Datei.</para>
-
       <section id="tabellen_bearbeiten">
         <title>Bearbeiten von Tabellenwerten</title>
 
-        <para>In der KALYPSO-Oberfläche sind einige Werkzeuge zur Bearbeitung
-        von Tabellenwerten implementiert. Sie geben dem Anwender eine
-        Hilfestellung beim Ausfüllen von Messlücken oder beim Einfügen von
-        Werten aus externen Programmen. Die hier beschriebenen
-        Bearbeitungsmöglichkeiten gelten sowohl für die Tabellen-Ansicht im
-        Expertenmodus als auch im Vorhersage-Wizard (vgl. <xref
-        linkend="vorhersage_wizards" />). Die Bearbeitungsfunktionen stehen in
-        Form eines Kontextmenüs durch Rechtsklick auf die Tabelle zur
-        Verfügung (<xref linkend="kontextmenu_tabellen" />).</para>
+        <para>In der Tabellen-Ansicht können die Werte einer Zeitreihe
+        editiert werden (Doppelklick in eine Zelle). Daneben sind in der
+        KALYPSO-Oberfläche Werkzeuge zur Bearbeitung von Tabellenwerten
+        implementiert. Sie geben dem Anwender eine Hilfestellung beim
+        Ausfüllen von Messlücken oder beim Einfügen von Werten aus externen
+        Programmen. Die hier beschriebenen Bearbeitungsmöglichkeiten gelten
+        sowohl für die Tabellen-Ansicht im Expertenmodus als auch im
+        Vorhersage-Assistenten (vgl. <xref linkend="vorhersage_wizards" />).
+        Die Bearbeitungsfunktionen stehen in Form eines Kontextmenüs durch
+        Rechtsklick auf die Tabelle zur Verfügung (siehe <xref
+        linkend="kontextmenu_tabellen" />).</para>
 
         <figure id="kontextmenu_tabellen">
           <title>Kontextmenü zur Bearbeitung von Tabellenwerten</title>
@@ -690,15 +693,15 @@
 
         <para>Das Bearbeiten von Tabellenwerten setzt in den meisten Fällen
         die Markierung einer oder mehrerer Zellen voraus. Zu unterscheiden ist
-        hierbei zwischen dem selektierten Bereich (gelb gefärbte Zellen) und
+        hierbei zwischen dem selektierten Bereich (blau gefärbte Zellen) und
         der gerade aktiven Zelle (graue Einfärbung).</para>
 
         <itemizedlist>
           <listitem>
             <para><emphasis role="bold">Alle Werte setzen</emphasis></para>
 
-            <para>Alle Werte in einer Spalte werden durch den Wert der aktiven
-            Zelle ersetzt.</para>
+            <para>Alle Werte in einer Spalte werden durch den Wert der
+            obersten markierten Zelle ersetzt.</para>
           </listitem>
 
           <listitem>
@@ -706,7 +709,7 @@
             setzen</emphasis></para>
 
             <para>Die Werte der selektierten Zellen werden durch den Wert der
-            aktiven Zelle ersetzt.</para>
+            obersten markierten Zelle ersetzt.</para>
           </listitem>
 
           <listitem>
@@ -729,7 +732,7 @@
             <para><emphasis role="bold">Werte interpolieren</emphasis></para>
 
             <para>Es erfolgt eine Interpolation der Werte zwischen der
-            obersten und untersten Zelle einer Auswahl. <emphasis>(Bspw.:
+            obersten und untersten Zelle einer Auswahl. <emphasis>(Bsp.:
             Selektiert wird ein Bereich von 4 Zellen. Der Wert in der obersten
             Zelle beträgt 7, in der untersten Zelle 10. Die beiden
             dazwischenliegenden Zellen werden mit den Werten 8 und 9
@@ -749,21 +752,10 @@
             <para><emphasis role="bold">Einfügen</emphasis></para>
 
             <para>In der Zwischenablage befindliche Werte werden an der
-            markierten Position eingefügt. Der Einfügepunkt ("oben links")
-            wird immer durch die aktive Zelle markiert.</para>
+            markierten Position eingefügt. Der Einfügepunkt (<quote>oben
+            links</quote>) wird immer durch die aktive Zelle markiert.</para>
           </listitem>
         </itemizedlist>
-      </section>
-
-      <section>
-        <title>Entfernen / Hinzufügen von Zeilen</title>
-
-        <para>Mit Hilfe der zwei Schaltflächen neben dem Diskettensymbol
-        können einer Zeitreihen-Tabelle Zeilen hinzugefügt bzw. aus dieser
-        entfernt werden. Beim Einfügen einer Zeile erscheint ein
-        Eingabedialog, in dem das gewünschte Datum mit Uhrzeit angegeben wird.
-        Die Zeile wird dann anhand dieser Angaben in die Tabelle eingeordnet
-        und kann anschließend mit Werten belegt werden.</para>
       </section>
 
       <section id="zeitreihen_export">
@@ -776,17 +768,18 @@
             <guimenuitem>Daten speichern</guimenuitem>
           </menuchoice> gewählt werden. Alternativ kann auch die entsprechende
         Schaltfläche in der Menü-Leiste benutzt werden (siehe <xref
-        linkend="pic_tabelle_button" />). Durch diesen Vorgang werden alle
-        Änderungen einer Zeitreihe in der lokalen ZML-Datei
-        gespeichert.</para>
+        linkend="pic_tabelle_button" />).</para>
+
+        <important>
+          <para>Alle Änderungen in den Zeitreihen betreffen ausschließlich die
+          lokal gespeicherte ZML-Datei.</para>
+        </important>
 
         <para>Beim <emphasis role="bold">Export</emphasis> der Tabelle in das
         Berichtswesen über die entsprechende Schaltfläche (siehe <xref
         linkend="pic_export_zeitreihe" />) wird die Zeitreihe im CSV-Format in
         der Dokumentenstruktur abgelegt. Vom Anwender sind Metadaten
-        vorzugeben, die zusammen mit den Tabellenwerten abgelegt werden.
-        Optional ist wählbar, ob die gesamte Tabelle oder nur die gerade
-        markierten Zeilen exportiert werden sollen.</para>
+        anzugeben, die zusammen mit den Tabellenwerten abgelegt werden.</para>
 
         <figure id="pic_export_zeitreihe">
           <title>Schaltfläche zum Export von Zeitreihen in das
@@ -800,32 +793,38 @@
         </figure>
       </section>
 
-      <section id="tabellen_kennzeichnung">
+      <section id="tabellen_kennzeichnung" vendor="sachsen-anhalt">
         <title>Kennzeichnung von Tabellenwerten</title>
 
         <para>Beim Aufruf von Zeitreihen über den KALYPSO Zeitreihendienst,
-        d.h. bei der HVZ Bereitstellung der Zeitreihendaten über den WISKI
-        Data Provider, werden die Werte einer Zeitreihe mit einem internen
-        Status versehen. Dieser ist abhängig von den Attributen aus WISKI, die
-        in der Technischen Dokumentation beschrieben sind. Beim Öffnen einer
-        Zeitreihe in KALYPSO mit der Tabellen-Ansicht wird der Status durch
-        ein Symbol visualisiert. Die einzelnen Symbole sind mit den
-        dazugehörigen Status in einer Matrix in <xref
-        linkend="zeitreihensymbole" /> dargestellt. Wird kein Symbol vor dem
-        Wert angezeigt, besitzt der Wert innerhalb von KALYPSO den Status
-        <quote>OK</quote>.</para>
+        dies ist bei der HVZ gleichbedeutend mit der Bereitstellung der
+        Zeitreihendaten über den WISKI Data Provider, werden die Werte einer
+        Zeitreihe mit einem internen Status versehen. Dieser ist abhängig von
+        den Attributen aus WISKI, die in der Technischen Dokumentation
+        beschrieben sind. Beim Öffnen einer Zeitreihe in KALYPSO mit der
+        Tabellen-Ansicht wird der Status durch ein Symbol visualisiert. Die
+        einzelnen Symbole sind mit dem dazugehörigen Status in einer Tabelle
+        in <xref linkend="zeitreihensymbole" /> dargestellt. Wird kein Symbol
+        vor dem Wert angezeigt, besitzt der Wert innerhalb von KALYPSO den
+        Status <quote>OK</quote>.</para>
 
         <table id="zeitreihensymbole">
           <title>Symbole in Zeitreihen-Tabellen</title>
 
           <tgroup cols="3">
+            <colspec align="center" colwidth="1*" />
+
+            <colspec align="left" colwidth="2*" />
+
+            <colspec align="left" colwidth="2*" />
+
             <thead>
               <row>
                 <entry align="center">Symbol</entry>
 
-                <entry>Status KALYPSO</entry>
+                <entry align="center">KALYPSO-Status</entry>
 
-                <entry>Status WISKI</entry>
+                <entry align="center">WISKI-Status</entry>
               </row>
             </thead>
 
@@ -874,6 +873,15 @@
       <guimenu>Standard Diagramm Editor</guimenu> wird die Zeitreihe in der
       Diagramm-Ansicht dargestellt (siehe <xref
       linkend="navigation_diagramm_ansicht" />).</para>
+
+      <note>
+        <para>Diagramm-Ansichten von Zeitreihen, die im sog.
+        <quote>Testbetrieb</quote> erstellt wurden und dementsprechend
+        markiert sind (vergl. <xref linkend="kalypso_testbetrieb" />), haben
+        ein Wasserzeichen. außerdem ist der Verlauf der Rahmenfarbe anders.
+        Diese Zeitreihen sind somit gut von Zeitreihen des
+        <quote>Normalbetriebs</quote> zu unterscheiden.</para>
+      </note>
 
       <para>Die Diagramm-Ansicht dient ausschließlich der schnellen Übersicht
       und Darstellung von Zeitreihen. Die Möglichkeit der
@@ -924,14 +932,15 @@
     </indexterm>
 
     <para>In der KALYPSO-Oberfläche wird als Zeitreihenformat ausschließlich
-    das ZML-Format unterstützt. Andere Textformate können jedoch problemlos
+    das ZML-Format unterstützt. Andere ausgewählte Textformate können jedoch
     über einen Import-Wizard in das ZML-Format überführt werden.</para>
 
-    <para><emphasis role="bold">Hinweis</emphasis>: Die nachfolgend
-    beschriebenen Funktionen zur Bearbeitung von Zeitreihen betreffen allein
-    die lokale Datenhaltung. Ein Speichern der editierten Zeitreihen evtl. in
-    ein externes Datenbanksystem (z.B. WISKI oder PSICompact) ist nicht
-    vorgesehen.</para>
+    <note>
+      <para>Die nachfolgend beschriebenen Funktionen zur Bearbeitung von
+      Zeitreihen betreffen allein die lokale Datenhaltung. Ein Speichern der
+      editierten Zeitreihen evtl. in ein externes Datenbanksystem (z.B. WISKI
+      oder PSICompact) ist nicht vorgesehen.</para>
+    </note>
 
     <section>
       <title>Importieren von Zeitreihen</title>
@@ -961,7 +970,7 @@
 
       <itemizedlist>
         <listitem>
-          <para>"grap"-Format</para>
+          <para>GRAP-Format</para>
 
           <para>Datentyp: Niederschlag - N, Abfluss - Q, Temperatur - T,
           Verdunstung - E, Wasserstand - W, Volumen - V</para>
@@ -978,7 +987,7 @@
         </listitem>
 
         <listitem>
-          <para>"csv"-Format</para>
+          <para>CSV-Format</para>
 
           <para>Datentyp: Niederschlag - N, Abfluss - Q</para>
 
@@ -993,7 +1002,7 @@
         </listitem>
 
         <listitem>
-          <para>"dat"-Format</para>
+          <para>DAT-Format</para>
 
           <para>Datentyp: Abfluss - E</para>
 
@@ -1009,7 +1018,7 @@
         </listitem>
 
         <listitem>
-          <para>"ex2"-Format</para>
+          <para>EX2-Format</para>
 
           <para>Datentyp: Verdunstung - E</para>
 
@@ -1025,13 +1034,15 @@
         </listitem>
       </itemizedlist>
 
-      <para><emphasis role="bold">Hinweis</emphasis>: Bei der Funktion
-      Zeitreihenimport handelt es sich in erster Linie um ein
-      Konvertierungs-Werkzeug, das die Sicht auf beliebige Zeitreihen
-      innerhalb von KALYPSO erlaubt. Für einen weiter gehenden Import bzw. die
-      tatsächliche Verknüpfung von Zeitreihen mit dem hydrologischen /
-      hydraulischen Modell bedarf es jedoch weiterer Arbeitsschritte (siehe
-      <xref linkend="zeitreihen_repository" /> ).</para>
+      <note>
+        <para>Bei der Funktion Zeitreihenimport handelt es sich in erster
+        Linie um ein Konvertierungs-Werkzeug, das die Sicht auf beliebige
+        Zeitreihen innerhalb von KALYPSO erlaubt. Für einen weiter gehenden
+        Import bzw. die tatsächliche Verknüpfung von Zeitreihen mit dem
+        hydrologischen / hydraulischen Modell bedarf es jedoch weiterer
+        Arbeitsschritte (siehe <xref linkend="zeitreihen_repository" />
+        ).</para>
+      </note>
     </section>
 
     <section id="zeitreihen_bearbeiten">
