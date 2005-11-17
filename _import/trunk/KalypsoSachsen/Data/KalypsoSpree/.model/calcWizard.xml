@@ -35,9 +35,9 @@
         <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - Abgabe#linkColumn=Abgabe#color=0x0000ff"/>
 
         <arg name="ignoreType1" value="W"/>
-        <arg name="ignoreType2" value="Q"/>
-        <arg name="ignoreLabel1" value="Abfluss"/>
-        <arg name="ignoreLabel2" value="Wasserstand"/>
+        <!--arg name="ignoreType2" value="Q"/-->
+        <!--arg name="ignoreLabel1" value="Abfluss"/-->
+        <!--arg name="ignoreLabel2" value="Wasserstand"/-->
     </page>
 
 	<!-- Kontrolle W-Eingabepegel -->

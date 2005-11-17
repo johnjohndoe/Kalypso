@@ -54,7 +54,7 @@
 			<!-- Links für die Ablage der Vorhersage-Zeitreihen -->
 			<property name="vorhersageLinkNormal" valueThen="out5ObservationLink" valueElse="out2ObservationLink"/>
 			<property name="vorhersageLinkOben" valueThen="out4ObservationLink" valueElse="out1ObservationLink"/>
-			<property name="vorhersageLinkUnten" valueThen="out1ObservationLink" valueElse="outObservationLink"/>
+			<property name="vorhersageLinkUnten" valueThen="out3ObservationLink" valueElse="outObservationLink"/>
 		</kalypso.multiequals>
     </target>
 	
@@ -139,8 +139,8 @@
     	<echo message="Ablage der Rechenergebnisse"/>
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
     	<echo message="Ablage der oberen Umhüllenden"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local2" remoteobs="${vorhersageLinkOben}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false"/>
     	<echo message="Ablage der unteren Umhüllenden"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local3" remoteobs="${vorhersageLinkUnten}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false"/>
     </target>
 </project>

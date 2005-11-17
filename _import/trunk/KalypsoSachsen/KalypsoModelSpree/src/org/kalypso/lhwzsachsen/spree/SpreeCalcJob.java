@@ -311,7 +311,7 @@ public class SpreeCalcJob implements ICalcJob
       FileUtils.copyFileToDirectory( vhsFile, nativeoutdir );
       FileUtils.copyFileToDirectory( flpFile, nativeoutdir );
       FileUtils.copyFileToDirectory( tsFile, nativeoutdir );
-      resultEater.addResult( "NATIVE_OUT_DIR", nativeindir );
+      resultEater.addResult( "NATIVE_OUT_DIR", nativeoutdir );
 
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
