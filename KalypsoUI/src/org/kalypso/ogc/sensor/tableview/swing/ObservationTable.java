@@ -51,22 +51,16 @@ import java.util.logging.Logger;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.TableCellRenderer;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.Workbench;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
-import org.kalypso.contribs.java.swing.SwingInvokeHelper;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.DateRange;
@@ -81,6 +75,7 @@ import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
+import org.kalypso.ogc.sensor.template.SwingEclipseUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -294,21 +289,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       }
     };
 
-    try
-    {
-      SwingInvokeHelper.invoke( runnable, m_waitForSwing );
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-
-      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
-      final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
-      if( shell != null )
-        MessageDialog.openError( shell, "Aktualisierungsfehler", e.toString() );
-      else
-        JOptionPane.showMessageDialog( null, e.toString(), "Aktualisierungsfehler", JOptionPane.ERROR_MESSAGE );
-    }
+    SwingEclipseUtilities.invokeAndHandleError( runnable, m_waitForSwing );
   }
 
   /**
@@ -431,5 +412,13 @@ public class ObservationTable extends JTable implements IObsViewEventListener
   public void setAlphaSortActivated( final boolean bAlphaSort )
   {
     m_model.setAlphaSort( bAlphaSort );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
+   */
+  public void onPrintObsView( final ObsViewEvent evt )
+  {
+    // TODO Auto-generated method stub
   }
 }

@@ -129,6 +129,14 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
       } );
     }
   }
+  
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
+   */
+  public void onPrintObsView( final ObsViewEvent evt )
+  {
+    // nothing to do
+  }
 
   public void setView( final ObsView view )
   {

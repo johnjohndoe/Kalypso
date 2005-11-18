@@ -41,16 +41,20 @@
 
 package org.kalypso.ui.editor.diagrameditor;
 
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
+import org.kalypso.ui.editor.diagrameditor.actions.DiagramPrintAction;
 
 /**
  * @author schlienger
  */
 public class ObservationDiagramEditorContributor extends EditorActionBarContributor
 {
+  private final DiagramPrintAction m_printAction = new DiagramPrintAction();
   private ExportAction[] m_exportActions = null;
 
   /**
@@ -60,11 +64,26 @@ public class ObservationDiagramEditorContributor extends EditorActionBarContribu
   {
     super.setActiveEditor( targetEditor );
 
+    // export actions
     if( m_exportActions == null )
-      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editor.obsdiageditor.menu/exports",
-          "diagramm" );
-    
-    for( int i = 0; i < m_exportActions.length; i++ )
-      m_exportActions[i].setActivePart( targetEditor );
+      m_exportActions = ExportActionContributor.contributeActions( targetEditor,
+          "org.kalypso.ui.editor.obsdiageditor.menu/exports", "diagramm" );
+
+    if( m_exportActions != null )
+    {
+      for( int i = 0; i < m_exportActions.length; i++ )
+        m_exportActions[i].setActivePart( targetEditor );
+    }
+  }
+  
+  /**
+   * @see org.eclipse.ui.part.EditorActionBarContributor#init(org.eclipse.ui.IActionBars)
+   */
+  public void init( final IActionBars bars )
+  {
+    super.init( bars );
+
+    // overwrite the print action for the diagram editor
+    bars.setGlobalActionHandler( ActionFactory.PRINT.getId(), m_printAction );
   }
 }

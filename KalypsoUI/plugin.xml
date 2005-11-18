@@ -620,6 +620,18 @@
                 menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
                 id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot"/>
        </objectContribution>
+       <objectContribution
+             adaptable="false"
+             objectClass="org.eclipse.core.resources.IFile"
+             id="org.kalypso.objectclass.zmlFile">
+          <action
+                enablesFor="1"
+                label="WQ-Beziehung visualisieren"
+                icon="icons/util/filter.gif"
+                class="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution"
+                menubarPath="extensions"
+                id="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution"/>
+       </objectContribution>
    </extension>
    <extension
          id="resourceFilters"
@@ -658,21 +670,6 @@
             class="org.kalypso.ui.wizard.ocs.OcsExportWizard"
             id="org.kalypso.ui.wizard.ocs.OcsExportWizard">
       </wizard>
-   </extension>
-   <extension
-         id="repository.factories"
-         name="repository.factories"
-         point="org.kalypso.repository.factories">
-         <!-- TODO: Marc: Remove 'class' Attribut because of compilation-problems under linux
-         check if still everything works -->
-      <repository
-            factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory"
-            name="%Extension.repository.factories.localDirectory">
-      </repository>
-      <repository
-            factory="org.kalypso.services.ocs.repository.ObservationServiceRepositoryFactory"
-            name="%Extension.repository.factories.timeseriesService">
-      </repository>
    </extension>
    <extension
          point="org.eclipse.ant.core.antTasks">
@@ -720,15 +717,6 @@
            library="lib/kalypsoAnt.jar"
            name="kalypso.propertyReplace"/>
    </extension>
-      <extension
-         point="org.kalypso.services.core.client.serviceproxy">
-      <serviceproxy
-            class="org.kalypso.services.proxy.Kalypso_CalculationService_Impl"
-            interfacename="ICalculationService"/>
-      <serviceproxy
-            class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
-            interfacename="IObservationService"/>
-   </extension>
    
    <extension
          point="org.eclipse.compare.contentMergeViewers">
@@ -737,5 +725,29 @@
             class="org.eclipse.compare.internal.TextMergeViewerCreator"
             id="org.eclipse.compare.TextMergeViewerCreator">
       </viewer>
+   </extension>
+   <extension
+         id="repository.factories"
+         name="repository.factories"
+         point="org.kalypso.repository.factories">
+         <!-- TODO: Marc: Remove 'class' Attribut because of compilation-problems under linux
+         check if still everything works -->
+      <repository
+            factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory"
+            name="%Extension.repository.factories.localDirectory">
+      </repository>
+      <repository
+            factory="org.kalypso.services.ocs.repository.ObservationServiceRepositoryFactory"
+            name="%Extension.repository.factories.timeseriesService">
+      </repository>
+   </extension>
+      <extension
+         point="org.kalypso.services.core.client.serviceproxy">
+      <serviceproxy
+            class="org.kalypso.services.proxy.Kalypso_CalculationService_Impl"
+            interfacename="ICalculationService"/>
+      <serviceproxy
+            class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
+            interfacename="IObservationService"/>
    </extension>
  </plugin>

@@ -40,17 +40,20 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.plot.Plot;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 
 /**
+ * Utility methods for working with IObservation and the JFreeChart
+ * 
  * @author schlienger
  */
 public final class ChartFactory
 {
   /**
-   * Creates and returns an observation chart.
+   * Create a Plot that fits the given DiagView
    */
   static Plot createObservationPlot( final DiagView template ) throws SensorException
   {
@@ -60,5 +63,21 @@ public final class ChartFactory
 
       return plot;
     }
+  }
+
+  /**
+   * Create a ChartPanel over the given ObservationChart. The created panel has no popup menu.
+   * <p>
+   * Takes care of registering the ChartPanel within the ObservationChart so that the chart can refer to it once print
+   * is called for instance.
+   */
+  public static ChartPanel createChartPanel( final ObservationChart obsChart )
+  {
+    final ChartPanel chartPanel = new ChartPanel( obsChart, false, false, false, false, false );
+    chartPanel.setMouseZoomable( true, false );
+    
+    obsChart.setPanel( chartPanel );
+
+    return chartPanel;
   }
 }

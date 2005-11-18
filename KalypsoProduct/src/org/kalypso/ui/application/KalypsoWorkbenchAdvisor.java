@@ -128,7 +128,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     if( !m_user.hasRight( UserRights.RIGHT_ADMIN ) )
     {
       final IMenuManager menuManager = actionConfigurer.getMenuManager();
-      
+
       //      // Menüs umbauen
       //      final IMenuManager windowMenu = (IMenuManager)menuManager.find(
       // IWorkbenchActionConstants.M_WINDOW );
@@ -138,7 +138,7 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
       // );
       // Menüs entfernen
       menuManager.remove( IWorkbenchActionConstants.M_PROJECT );
-//      menuManager.remove( IWorkbenchActionConstants.M_NAVIGATE );
+      //      menuManager.remove( IWorkbenchActionConstants.M_NAVIGATE );
       //      menuManager.remove( IWorkbenchActionConstants.M_WINDOW );
 
       //      final IMenuManager fileMenu = (IMenuManager)menuManager.find(
@@ -160,7 +160,12 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenarioForCurrentUser();
     final StatusLineContributionItem item = new StatusLineContributionItem( "scenario" );
     if( scenario != null && item != null )
-      item.setText( "Szenario: " + scenario.getName() );
+    {
+      String name = scenario.getName();
+      if( name == null || name.length() == 0 )
+        name = "<keiner>";
+      item.setText( "Szenario: " + name );
+    }
     if( actionConfigurer != null )
     {
       final IStatusLineManager statusLineManager = actionConfigurer.getStatusLineManager();

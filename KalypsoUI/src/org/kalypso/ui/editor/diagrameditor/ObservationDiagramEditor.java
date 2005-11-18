@@ -42,6 +42,7 @@ package org.kalypso.ui.editor.diagrameditor;
 
 import java.awt.Frame;
 import java.io.OutputStreamWriter;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
@@ -54,7 +55,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -63,6 +63,7 @@ import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.template.obsdiagview.ObsdiagviewType;
@@ -101,29 +102,25 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
 
     m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
-    
     m_diagFrame = SWT_AWT.new_Frame( m_swingContainer );
 
     try
     {
       m_obsChart = new ObservationChart( (DiagView)getView() );
-
-      // chart panel without any popup menu
-      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false, false, false, false );
-      chartPanel.setMouseZoomable( true, false );
-      m_diagFrame.add( chartPanel );
-
+      m_diagFrame.add( ChartFactory.createChartPanel( m_obsChart ) );
       m_diagFrame.setVisible( true );
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
-      e.printStackTrace();
+      Logger.getLogger( getClass().getName() ).warning( e.getLocalizedMessage() );
     }
+
+    // print action
     
     WorkbenchHelp.setHelp( m_swingContainer, "org.kalypso.manual.gui-zml_diagramm_ansicht" );
   }
