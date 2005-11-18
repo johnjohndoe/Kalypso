@@ -64,6 +64,9 @@ public class Mapper
 
   public static String mapJavaValueToXml( final Object value )
   {
+    if( value == null )
+      return "";
+    
     if( value instanceof DateWithoutTime )
       return XML_DATE_FORMAT.format( (DateWithoutTime)value );
 
