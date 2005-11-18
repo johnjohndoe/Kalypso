@@ -50,7 +50,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.jfree.chart.ChartPanel;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -58,6 +57,7 @@ import org.kalypso.ogc.sensor.diagview.AxisMapping;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
@@ -78,10 +78,10 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
 
   public WQRelationDiagramViewer( final Composite parent )
   {
-    m_diagramAxisW = new DiagramAxis( "w", "double", "W", "cm", DiagramAxis.DIRECTION_HORIZONTAL,
-        DiagramAxis.POSITION_BOTTOM, false );
-    m_diagramAxisQ = new DiagramAxis( "q", "double", "Q", "m³/s", DiagramAxis.DIRECTION_VERTICAL,
+    m_diagramAxisW = new DiagramAxis( "w", "double", "W", "cm", DiagramAxis.DIRECTION_VERTICAL,
         DiagramAxis.POSITION_LEFT, false );
+    m_diagramAxisQ = new DiagramAxis( "q", "double", "Q", "m³/s", DiagramAxis.DIRECTION_HORIZONTAL,
+        DiagramAxis.POSITION_BOTTOM, false );
 
     m_diagView.addAxis( m_diagramAxisW );
     m_diagView.addAxis( m_diagramAxisQ );
@@ -109,18 +109,12 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
       return;
     }
 
-    // chart panel without any popup menu
-    final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
-    chartPanel.setMouseZoomable( true, false );
-
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    m_control = new Composite( parent, /* SWT.BORDER | */SWT.RIGHT | SWT.EMBEDDED );
-    //m_chart.setBackgroundPaint( Color.WHITE );
+    m_control = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
 
     final Frame vFrame = SWT_AWT.new_Frame( m_control );
+    vFrame.add( ChartFactory.createChartPanel( m_chart ) );
     vFrame.setVisible( true );
-    chartPanel.setVisible( true );
-    vFrame.add( chartPanel );
     
     m_control.addDisposeListener( this );
   }

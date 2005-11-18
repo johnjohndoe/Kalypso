@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.jfree.chart.ChartPanel;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -70,12 +69,13 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView.ItemData;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
@@ -413,19 +413,16 @@ public class ObservationViewer extends Composite
     {
       m_chart = new ObservationChart( m_diagView );
     }
-    catch( final SensorException e1 )
+    catch( final SensorException e )
     {
-      e1.printStackTrace();
-      throw new IllegalStateException( e1.getLocalizedMessage() );
+      e.printStackTrace();
+      throw new IllegalStateException( e.getLocalizedMessage() );
     }
-    // chart panel without any popup menu
-    final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
-    chartPanel.setMouseZoomable( true, false );
+    
     final Composite chartComp = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( chartComp );
+    vFrame.add( ChartFactory.createChartPanel( m_chart ) );
     vFrame.setVisible( true );
-    chartPanel.setVisible( true );
-    vFrame.add( chartPanel );
   }
 
   private void createMetadataAndTableForm( final Composite parent )

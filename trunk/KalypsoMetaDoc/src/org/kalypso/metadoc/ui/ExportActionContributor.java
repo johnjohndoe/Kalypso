@@ -102,7 +102,7 @@ public class ExportActionContributor
       
       return actions;
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
       ErrorDialog.openError( targetEditor.getSite().getShell(), "Export Targets laden",

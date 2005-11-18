@@ -135,7 +135,20 @@ public abstract class ObsView implements IObsViewEventProvider
     return m_ignoreTypes;
   }
 
+  /**
+   * Return a correct string representation
+   * 
+   * @see java.lang.Object#toString()
+   */
   public abstract String toString();
+  
+  /**
+   * Print the document
+   */
+  public void print()
+  {
+    firePrintObsView( null );
+  }
 
   //  public boolean waitUntilLoaded( final int sleepTime, final int maxLoops )
   //  {
@@ -230,15 +243,23 @@ public abstract class ObsView implements IObsViewEventProvider
     fireObsViewChanged( new ObsViewEvent( source, item, ObsViewEvent.TYPE_ITEM_STATE_CHANGED ) );
   }
 
-  public void addObsViewEventListener( IObsViewEventListener l )
+  public void addObsViewEventListener( final IObsViewEventListener l )
   {
     synchronized( m_listeners )
     {
       m_listeners.add( l );
     }
   }
+  
+  public void removeObsViewListener( final IObsViewEventListener l )
+  {
+    synchronized( m_listeners )
+    {
+      m_listeners.remove( l );
+    }
+  }
 
-  protected void fireObsViewChanged( ObsViewEvent evt )
+  protected void fireObsViewChanged( final ObsViewEvent evt )
   {
     synchronized( m_listeners )
     {
@@ -247,12 +268,14 @@ public abstract class ObsView implements IObsViewEventProvider
         ( (IObsViewEventListener)listeners[i] ).onObsViewChanged( evt );
     }
   }
-
-  public void removeObsViewListener( IObsViewEventListener l )
+  
+  protected void firePrintObsView( final ObsViewEvent evt )
   {
     synchronized( m_listeners )
     {
-      m_listeners.remove( l );
+      final Object[] listeners = m_listeners.toArray();
+      for( int i = 0; i < listeners.length; i++ )
+        ( (IObsViewEventListener)listeners[i] ).onPrintObsView( evt );
     }
   }
 

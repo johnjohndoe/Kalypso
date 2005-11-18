@@ -44,21 +44,16 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
-
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.Workbench;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
 import org.kalypso.contribs.java.lang.CatchRunnable;
-import org.kalypso.contribs.java.swing.SwingInvokeHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
+import org.kalypso.ogc.sensor.template.SwingEclipseUtilities;
 
 /**
  * @author schlienger
@@ -72,6 +67,8 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   private final DiagView m_view;
 
   private final boolean m_waitForSwing;
+
+  private ChartPanel m_chartPanel = null;
 
   public ObservationChart( final DiagView template ) throws SensorException
   {
@@ -120,6 +117,8 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   {
     m_view.removeObsViewListener( this );
 
+    m_chartPanel = null;
+
     clearChart();
   }
 
@@ -142,6 +141,14 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   public DiagView getTemplate()
   {
     return m_view;
+  }
+
+  /**
+   * Set the ChartPanel, this is usefull if print should be called in the near future
+   */
+  protected void setPanel( final ChartPanel chartPanel )
+  {
+    m_chartPanel = chartPanel;
   }
 
   /**
@@ -209,20 +216,26 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
       }
     };
 
-    try
-    {
-      SwingInvokeHelper.invoke( runnable, m_waitForSwing );
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
+    SwingEclipseUtilities.invokeAndHandleError( runnable, m_waitForSwing );
+  }
 
-      final IWorkbenchWindow activeWorkbenchWindow = Workbench.getInstance().getActiveWorkbenchWindow();
-      final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
-      if( shell != null )
-        MessageDialog.openError( shell, "Aktualisierungsfehler", e.toString() );
-      else
-        JOptionPane.showMessageDialog( null, e.toString(), "Aktualisierungsfehler", JOptionPane.ERROR_MESSAGE );
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
+   */
+  public void onPrintObsView( final ObsViewEvent evt )
+  {
+    // use the ChartPanel to print
+    if( m_chartPanel != null )
+    {
+      final CatchRunnable runnable = new CatchRunnable()
+      {
+        protected void runIntern() throws Throwable
+        {
+          m_chartPanel.createChartPrintJob();
+        }
+      };
+
+      SwingEclipseUtilities.invokeAndHandleError( runnable, false );
     }
   }
 }

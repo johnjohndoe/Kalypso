@@ -61,7 +61,7 @@ public class SetIgnoreTypesAction extends FullAction
 {
   private static final String TITLE = "Unsichtbare Achsen setzen";
 
-  private final static String MSG = "Wählen Sie der Achsentyp welche nicht dargestellt werden soll";
+  private final static String MSG = "Wählen Sie die Achsentypen die nicht dargestellt werden";
 
   private ObservationEditorOutlinePage m_page;
 

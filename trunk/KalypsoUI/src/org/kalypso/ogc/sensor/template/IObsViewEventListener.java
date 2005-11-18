@@ -47,5 +47,7 @@ import java.util.EventListener;
  */
 public interface IObsViewEventListener extends EventListener
 {
-  public void onObsViewChanged( ObsViewEvent evt );
+  public void onObsViewChanged( final ObsViewEvent evt );
+  
+  public void onPrintObsView( final ObsViewEvent evt );
 }

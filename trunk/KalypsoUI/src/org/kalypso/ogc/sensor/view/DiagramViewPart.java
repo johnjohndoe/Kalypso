@@ -52,16 +52,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
@@ -97,16 +97,10 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     m_subTitle = new TextTitle( "", new Font( "Default", Font.PLAIN, 12 ) );
     m_chart.addSubtitle( m_subTitle );
 
-    // chart panel without any popup menu
-    final ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
-    chartPanel.setMouseZoomable( true, false );
-
     // SWT-AWT Brücke für die Darstellung von JFreeChart
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
-
+    vFrame.add( ChartFactory.createChartPanel( m_chart ) );
     vFrame.setVisible( true );
-    chartPanel.setVisible( true );
-    vFrame.add( chartPanel );
 
     getSite().getPage().addPartListener( this );
   }

@@ -56,7 +56,7 @@ public class DiagramPropertiesAction extends AbstractEditorActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     final DiagView diag = (DiagView)( (ObservationDiagramEditor)getEditor() ).getView();
     
