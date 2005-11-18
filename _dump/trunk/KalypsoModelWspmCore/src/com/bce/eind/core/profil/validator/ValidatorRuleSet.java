@@ -32,15 +32,6 @@ public class ValidatorRuleSet
     final List<IStatus> stati = new ArrayList<IStatus>( rules.length );
     final List<String> excludeRules = java.util.Arrays.asList( excludeIDs );
 
-    try
-    {
-      collector.reset();
-    }
-    catch( final CoreException e )
-    {
-      return e.getStatus();
-    }
-
     if( validate && rules != null )
     {
       for( final IValidatorRule r : rules )
