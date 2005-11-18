@@ -74,12 +74,12 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Diagramm-Ansicht (QuickView)</emphasis>:
-        Anhand der Diagramm-Ansicht werden Zeitreihen (z.B.
-        Wasserstandsganglinien oder Niederschlagsmessreihen) als Ganglinie
-        oder Blockdiagramm dargestellt. In der Diagramm-Ansicht können mehrere
-        Zeitreihen zugleich angezeigt werden. Zur Bearbeitung von Zeitreihen
-        wird das Grafikprogramm benutzt.</para>
+        <para><emphasis role="bold">Diagramm-Ansicht</emphasis>: Anhand der
+        Diagramm-Ansicht werden Zeitreihen (z.B. Wasserstandsganglinien oder
+        Niederschlagsmessreihen) als Ganglinie oder Blockdiagramm dargestellt.
+        In der Diagramm-Ansicht können mehrere Zeitreihen zugleich angezeigt
+        werden. Zur Bearbeitung von Zeitreihen wird das Grafikprogramm
+        benutzt.</para>
       </listitem>
 
       <listitem>
@@ -359,8 +359,8 @@
 
       <para>Die Gliederung-Ansicht öffnet sich i.d.R. zusammen mit der
       Karten-Ansicht, sofern dies bei der letzten Arbeitssitzung so
-      eingestellt wurde (Workspace). Andernfalls kann die Gliederung über das
-      Menü <menuchoice>
+      eingestellt wurde. Andernfalls kann die Gliederung über das Menü
+      <menuchoice>
           <guimenu>Fenster</guimenu>
 
           <guimenuitem>Sicht anzeigen</guimenuitem>
@@ -387,7 +387,7 @@
 
       <para>Mit Hilfe des grünen Plus-Symbols in der Werkzeugleiste der
       Gliederung kann einer Karte ein neues Thema hinzugefügt werden. Die
-      Auswahl des neu hinzuzufügenden Themas wird durch einen Wizard
+      Auswahl des neu hinzuzufügenden Themas wird durch einen Assistenten
       vereinfacht. Es besteht die Möglichkeit im Projekt vorhandene
       (importierte) ESRI Shape Dateien, Geometriedaten aus einer GML-Instanz,
       Rasterdaten oder Daten von einem Web Feature Service bzw. Web Map
@@ -467,7 +467,7 @@
         Hilfe des Plus-Symbols hinzugefügt werden (siehe <xref
         linkend="pic_button_layer_add" />).</para>
 
-        <figure>
+        <figure id="pic_button_layer_add">
           <title>Button Layer hinzufügen</title>
 
           <mediaobject>
@@ -673,7 +673,7 @@
       <para>Zeitreihen im ZML-Format (*.zml) können in der KALYPSO-Oberfläche
       als Tabelle oder Diagramm geöffnet werden (siehe <xref
       linkend="navigation_ansichtsauswahl" />). Durch Doppelklick auf eine
-      Zeitreihe und Auswahl von <guimenu>Standard Tabellen Editor</guimenu>
+      Zeitreihe und Auswahl von <guilabel>Standard Tabellen Editor</guilabel>
       wird die Zeitreihe in der Tabellen-Ansicht dargestellt (siehe <xref
       linkend="navigation_tabelle_zml" />).</para>
 
@@ -716,6 +716,20 @@
       Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
       lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
       des Häkchens).</para>
+
+      <para>Es besteht die Möglichkeit, bestimmte Achsentypen für alle
+      dargestellten Zeitreihen zu deaktivieren. Z.B. kann für alle
+      dargestellten Zeitreihen die Darstellung des Abflusses unterdrückt
+      werden. Hierzu klicken Sie auf die Schaltfläche <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="img/gui/Button_filter.png" />
+          </imageobject>
+        </inlinemediaobject> oben rechts in der Gliederung. Es öffnet sich ein
+      Fenster, welches die vorhandenen Achsentypen listet. Hier können die
+      nicht gewünschten Achsentypen ausgewählt und der Dialog geschlossen
+      werden. Die zuvor selektierten Achsentypen aller vorhandenen Zeitreihen
+      werden deaktiviert und verschwinden aus der aktuellen
+      Darstellung.</para>
 
       <section id="tabellen_bearbeiten">
         <title>Bearbeiten von Tabellenwerten</title>
@@ -839,23 +853,21 @@
           lokal gespeicherte ZML-Datei.</para>
         </important>
 
-        <para>Beim <emphasis role="bold">Export</emphasis> der Tabelle in das
-        Berichtswesen über die entsprechende Schaltfläche (siehe <xref
-        linkend="pic_export_zeitreihe" />) wird die Zeitreihe im CSV-Format in
-        der Dokumentenstruktur abgelegt. Vom Anwender sind Metadaten
-        anzugeben, die zusammen mit den Tabellenwerten abgelegt werden.</para>
+        <!--PROFILING ANFANG-->
 
-        <figure id="pic_export_zeitreihe">
-          <title>Schaltfläche zum Export von Zeitreihen in das
-          Berichtswesen</title>
-
-          <mediaobject>
+        <para vendor="sachsen-anhalt">Beim <emphasis
+        role="bold">Export</emphasis> über die Schaltfläche <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/gui/icon_bericht.png" />
             </imageobject>
-          </mediaobject>
-        </figure>
+          </inlinemediaobject> wird die Tabelle im CSV-Format in das
+        Berichtswesen (IMS) abgelegt. Vom Anwender sind Metadaten anzugeben,
+        die dem IMS übergeben werden.</para>
+
+        <!--PROFLING ENDE-->
       </section>
+
+      <!--PROFILING ANFANG-->
 
       <section id="tabellen_kennzeichnung" vendor="sachsen-anhalt">
         <title>Kennzeichnung von Tabellenwerten</title>
@@ -870,13 +882,12 @@
         dies ist bei der HVZ gleichbedeutend mit der Bereitstellung der
         Zeitreihendaten über den WISKI Data Provider, werden die Werte einer
         Zeitreihe mit einem internen Status versehen. Dieser ist abhängig von
-        den Attributen aus WISKI, die in der Technischen Dokumentation
-        beschrieben sind. Beim Öffnen einer Zeitreihe in KALYPSO mit der
-        Tabellen-Ansicht wird der Status durch ein Symbol visualisiert. Die
-        einzelnen Symbole sind mit dem dazugehörigen Status in einer Tabelle
-        in <xref linkend="zeitreihensymbole" /> dargestellt. Wird kein Symbol
-        vor dem Wert angezeigt, besitzt der Wert innerhalb von KALYPSO den
-        Status <quote>OK</quote>.</para>
+        den Attributen aus WISKI. Beim Öffnen einer Zeitreihe in KALYPSO mit
+        der Tabellen-Ansicht wird der Status durch ein Symbol visualisiert.
+        Die einzelnen Symbole sind mit dem dazugehörigen Status in einer
+        Tabelle in <xref linkend="zeitreihensymbole" /> dargestellt. Wird kein
+        Symbol vor dem Wert angezeigt, besitzt der Wert innerhalb von KALYPSO
+        den Status <quote>OK</quote>.</para>
 
         <table id="zeitreihensymbole">
           <title>Symbole in Zeitreihen-Tabellen</title>
@@ -929,13 +940,29 @@
                 <entry><graphic fileref="img/gui/icon_conflict.png"
                 valign="middle" /></entry>
 
-                <entry>Wert nicht ableitbar (z.B. W/Q-Fehler)</entry>
+                <entry>Wert nicht ableitbar (z.B.
+                W/Q-Umwandungsfehler)</entry>
 
                 <entry></entry>
               </row>
             </tbody>
           </tgroup>
         </table>
+
+        <!--PROFLING ENDE-->
+      </section>
+
+      <section>
+        <title>W/Q-Umrechnung</title>
+
+        <para>Zeitreihen der Metadaten eine W/Q-Beziehung beinhalten, werden
+        automatisch in der Ansicht mit jeweils zwei Achsen angezeigt. Besitzt
+        zum Beispiel eine Wasserstandsganglinie eine W/Q-Beziehung, so wird in
+        der Ansicht sowohl W als auch Q dargestellt. Die generierte Spalte
+        (hier Q) ist dabei gelb hinterlegt.</para>
+
+        <para>Das gleiche gilt darüber hainaus auch für andere
+        Wert-Beziehungen wie z.B. Wasserstand-Volumen (W/V).</para>
       </section>
     </section>
 
@@ -1017,8 +1044,8 @@
     <note>
       <para>Die nachfolgend beschriebenen Funktionen zur Bearbeitung von
       Zeitreihen betreffen allein die lokale Datenhaltung. Ein Speichern der
-      editierten Zeitreihen evtl. in ein externes Datenbanksystem (z.B. WISKI
-      oder PSICompact) ist nicht vorgesehen.</para>
+      editierten Zeitreihen evtl. in ein externes Datenbanksystem
+      (Zeitreihen-Repository) ist nicht vorgesehen.</para>
     </note>
 
     <section>
@@ -1063,12 +1090,14 @@
           <para>Datenformat: Wertepaare mit Datum, Uhrzeit (sekundengenau) und
           Wert (durch Punkt getrennt).</para>
 
-          <para>dd MM yyyy HH mm ss Wert1 dd MM yyyy HH mm ss Wert2</para>
+          <programlisting>dd MM yyyy HH mm ss Wert1
+dd MM yyyy HH mm ss Wert2</programlisting>
 
           <para>Beispiel:</para>
 
-          <para>01.01.1971 07:30:00 0.100 02.01.1971 07:30:00 0.000 03.01.1971
-          07:30:00 0.000</para>
+          <programlisting>01.01.1971 07:30:00 0.100
+02.01.1971 07:30:00 0.000
+03.01.1971 07:30:00 0.000</programlisting>
         </listitem>
 
         <listitem>
@@ -1079,11 +1108,13 @@
           <para>Datenformat: Wertepaare mit Datum, Uhrzeit (minutengenau) und
           Wert (durch Komma getrennt).</para>
 
-          <para>dd MM yyyy HH mm Wert1 dd MM yyyy HH mm Wert2</para>
+          <programlisting>dd MM yyyy HH mm Wert1
+dd MM yyyy HH mm Wert2</programlisting>
 
           <para>Beispiel:</para>
 
-          <para>02.06.2002 16:30;0,0010 02.06.2002 17:30;0,0005</para>
+          <programlisting>02.06.2002 16:30;0,0010
+02.06.2002 17:30;0,0005</programlisting>
         </listitem>
 
         <listitem>
@@ -1094,12 +1125,14 @@
           <para>Datenformat: Wertepaare mit Datum, Uhrzeit (sekundengenau) und
           Wert (durch Komma getrennt).</para>
 
-          <para>dd MM yyyy HH mm ss Wert1 dd MM yyyy HH mm ss Wert2</para>
+          <programlisting>dd MM yyyy HH mm ss Wert1
+dd MM yyyy HH mm ss Wert2</programlisting>
 
           <para>Beispiel:</para>
 
-          <para>01.01.1971 07:30:00 0,1 02.01.1971 07:30:00 0 03.01.1971
-          07:30:00 0</para>
+          <programlisting>01.01.1971 07:30:00 0,1
+02.01.1971 07:30:00 0
+03.01.1971 07:30:00 0</programlisting>
         </listitem>
 
         <listitem>
@@ -1110,12 +1143,14 @@
           <para>Datenformat: Wertepaare mit Datum, Stunde und Wert (durch
           Punkt getrennt).</para>
 
-          <para>dd MM yyyy HH Wert1 dd MM yyyy HH Wert2</para>
+          <programlisting>dd MM yyyy HH Wert1
+dd MM yyyy HH Wert2</programlisting>
 
           <para>Beispiel:</para>
 
-          <para>01 01 1971 12 0.127 02 01 1971 12 0.302 03 01 1971 12
-          0.136</para>
+          <programlisting>01 01 1971 12 0.127
+02 01 1971 12 0.302
+03 01 1971 12 0.136</programlisting>
         </listitem>
       </itemizedlist>
 

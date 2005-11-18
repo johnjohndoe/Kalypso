@@ -513,76 +513,86 @@
       </listitem>
 
       <listitem>
-        <para><emphasis>Versenden der Ergebnisse an das
-        Berichtswesen</emphasis></para>
+        <para><emphasis>Dokumentenablage</emphasis></para>
 
         <para>Dargestellte Diagramme und Tabellen können zur Dokumentation der
-        Ergebnisse an das Berichtswesen exportiert werden.</para>
-
-        <figure>
-          <title>Menü Tabellen</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="img/modellpflege/expert_tabelle.png"
-                         scale="50" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>Dabei werden nicht die Daten als solche, sondern lediglich
-        Bilddateien (Diagramme und Lagepläne) bzw. Komma-getrennte Tabellen
-        (CSV-Format) exportiert. Bei Tabellen werden nur die angezeigten
-        Spalten exportiert. Der Aufruf der Funktion erfolgt im jeweiligen
-        Menü-Punkt (<guimenu
-        id="menu_tabelle_berichtsablage">Tabelle</guimenu>, <guimenu
-        id="menu_diagramm_berichtsablage"> Diagramm</guimenu>) unter <guimenu
-        id="menu_berichtsablage">Berichtsablage...</guimenu> . Es folgt eine
-        Eingabemaske, in der zusätzliche Informationen zu der exportierten
-        Datei eingetragen werden können (siehe <xref
-        linkend="pic_berichtsablage" />).</para>
-
-        <figure id="pic_berichtsablage">
-          <title>Eingabemaske zur Berichtsablage</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="img/modellpflege/expert_berichtsablage.png"
-                         scale="50" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </listitem>
-
-      <listitem>
-        <para><emphasis>Exportieren von Ergebnissen</emphasis></para>
-
-        <para>Ergebnisdaten in Form von Tabellen können in einem
-        Komma-getrennten Format exportiert werden (Menü <menuchoice>
-            <guimenu>Tabelle</guimenu>
-
-            <guimenuitem>Exportieren</guimenuitem>
-          </menuchoice>).</para>
-
-        <figure>
-          <title>Exportieren von Tabellen</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="img/modellpflege/expert_tabelle_export.png"
-                         scale="50" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>Als Export-Ziel kann ein beliebiges Verzeichnis gewählt werden.
-        Die Tabelle wird unter einem anzugebenden Namen mit der Endung *.csv
-        gespeichert und kann mit gängigen Tabellen-Kalkulationsprogrammen
-        weiterverarbeitet werden.</para>
+        Ergebnisse entweder also Datei abgelegt oder an das Berichtswesen
+        exportiert werden. Siehe hierzu <xref
+        linkend="dokumentenexport" />.</para>
       </listitem>
     </itemizedlist>
+  </section>
+
+  <section id="dokumentenexport">
+    <title>Dokumentenexport</title>
+
+    <indexterm>
+      <primary>Export</primary>
+    </indexterm>
+
+    <para>TODO</para>
+
+    <para>Dargestellte Diagramme und Tabellen können zur Dokumentation der
+    Ergebnisse an das Berichtswesen exportiert werden.</para>
+
+    <figure>
+      <title>Menü Tabellen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/modellpflege/expert_tabelle.png" scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Dabei werden nicht die Daten als solche, sondern lediglich
+    Bilddateien (Diagramme und Lagepläne) bzw. Komma-getrennte Tabellen
+    (CSV-Format) exportiert. Bei Tabellen werden nur die angezeigten Spalten
+    exportiert. Der Aufruf der Funktion erfolgt im jeweiligen Menü-Punkt
+    (<guimenu id="menu_tabelle_berichtsablage">Tabelle</guimenu>, <guimenu
+    id="menu_diagramm_berichtsablage"> Diagramm</guimenu>) unter <guimenu
+    id="menu_berichtsablage">Berichtsablage...</guimenu> . Es folgt eine
+    Eingabemaske, in der zusätzliche Informationen zu der exportierten Datei
+    eingetragen werden können (siehe <xref
+    linkend="pic_berichtsablage" />).</para>
+
+    <figure id="pic_berichtsablage">
+      <title>Eingabemaske zur Berichtsablage</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/modellpflege/expert_berichtsablage.png"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>EXPORT</para>
+
+    <para>Ergebnisdaten in Form von Tabellen können in einem Komma-getrennten
+    Format exportiert werden (Menü <menuchoice>
+        <guimenu>Tabelle</guimenu>
+
+        <guimenuitem>Exportieren</guimenuitem>
+      </menuchoice>).</para>
+
+    <figure>
+      <title>Exportieren von Tabellen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/modellpflege/expert_tabelle_export.png"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Als Export-Ziel kann ein beliebiges Verzeichnis gewählt werden. Die
+    Tabelle wird unter einem anzugebenden Namen mit der Endung *.csv
+    gespeichert und kann mit gängigen Tabellen-Kalkulationsprogrammen
+    weiterverarbeitet werden</para>
   </section>
 </chapter>

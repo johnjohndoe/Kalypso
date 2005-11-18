@@ -129,8 +129,8 @@
     Druckereinstellungen enthalten. Die folgende Tabelle enthält die
     Erläuterung der einzelnen Menüpunkte.</para>
 
-    <informaltable>
-      <tgroup cols="2">
+    <informaltable align="left">
+      <tgroup align="left" cols="2">
         <tbody>
           <row>
             <entry><emphasis role="bold">Menüpunkt</emphasis></entry>
@@ -147,10 +147,15 @@
           <row>
             <entry>Nochmals laden:</entry>
 
-            <entry>Die letzte Datenreihe wird nochmals eingeladen.
-            Voraussetzung ist, dass bereits eine Datenreihe über den Menüpunkt
-            <guimenu>Daten laden</guimenu> eingeladen wurde. Bei einigen
-            Formaten, in denen die Auswahl von Blocknummern oder
+            <entry>Die letzte Datenreihe wird nochmals eingeladen. </entry>
+          </row>
+
+          <row>
+            <entry></entry>
+
+            <entry>Voraussetzung ist, dass bereits eine Datenreihe über den
+            Menüpunkt <guimenu>Daten laden</guimenu> eingeladen wurde. Bei
+            einigen Formaten, in denen die Auswahl von Blocknummern oder
             Spaltennummern notwendig ist, wird diese Auswahl erneut
             angeboten.</entry>
           </row>

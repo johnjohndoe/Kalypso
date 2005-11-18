@@ -41,12 +41,15 @@
         <para>Björnsen Beratende Ingenieure GmbH - Maria Trost 3 - 56070
         Koblenz - Tel. 0261 / 8851-0 - www.bjoernsen.de -
         info@bjoernsen.de</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/allgemeines/bce_sw_auslaufend_200dpi.png" />
+          </imageobject>
+        </mediaobject>
       </listitem>
     </itemizedlist>
-
-    <graphic align="center"
-             fileref="img/allgemeines/bce_sw_auslaufend_200dpi.png"
-             scale="100" />
 
     <para>oder</para>
 
@@ -54,11 +57,15 @@
       <listitem>
         <para>TUHH - Arbeitsbereich Wasserbau - Denickestrasse 22 - 21073
         Hamburg - Tel. 040 / 42878-3761 - www.tu-harburg.de/wb</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/allgemeines/wasserbau-logo.png" />
+          </imageobject>
+        </mediaobject>
       </listitem>
     </itemizedlist>
-
-    <graphic align="center" fileref="img/allgemeines/wasserbau-logo.png"
-             format="PNG" scale="100" />
 
     <section id="nymphe_kalypso">
       <title>Die Nymphe Kalypso</title>
@@ -97,7 +104,8 @@
       <para>Kalypso zählt aufgrund ihrer Herkunft zur Nymphenart der
       Okeaniden. Sie herrschen über die Meere - mit Ausnahme des Mittelmeeres,
       das den Nereiden gehört. Jedem Gewässer ist ein bestimmter Okeanid
-      zugeordnet (Quelle: http://de.wikipedia.org/wiki/Hauptseite).</para>
+      zugeordnet (Quelle: <ulink
+      url="http://de.wikipedia.org/wiki/Kalypso">http://de.wikipedia.org/wiki/Kalypso</ulink>).</para>
     </section>
   </section>
 
@@ -147,18 +155,20 @@
       </listitem>
     </itemizedlist>
 
-    <para>Im Falle der HVZ Sachsen-Anhalt wird die modellrelevante zentrale
-    Datenhaltung durch drei Programmsysteme administriert. Die eigentlichen
-    Modelldaten - d.h. geografische Daten, physikalische Parameter,
-    Steuerparameter der numerischen Berechnung, etc. - werden ausschließlich
-    von KALYPSO verwaltet und archiviert (zentral auf dem Server oder
-    wahlweise lokal auf dem Rechner).</para>
+    <para>Im Falle der HVZ Sachsen-Anhalt ist die modellrelevante zentrale
+    Datenhaltung über drei Programmsysteme verteilt (KALYPSO, WISKI, IMS).
+    </para>
+
+    <para>Die eigentlichen Modelldaten - d.h. geografische Daten,
+    physikalische Parameter, Steuerparameter der numerischen Berechnung, usw.
+    - werden ausschließlich von KALYPSO verwaltet und archiviert (zentral auf
+    dem Server oder wahlweise lokal auf dem Rechner).</para>
 
     <para>Zeitreihen (gemessen oder anhand von Berechnungen vorhergesagt) und
     Dokumentbausteine für Hochwasserberichte werden durch KALYPSO gelesen,
     verarbeitet und generiert; deren Verwaltung und Ablage geschieht aber
     innerhalb des Informations-Management-Systems (IMS als Dokumentablage)
-    bzw. Wiski (Zeitreihenabruf und -speicherung über Wiski Data
+    bzw. WISKI (Zeitreihenabruf und -speicherung über Wiski Data
     Provider).</para>
 
     <para>Die in der HVZ Sachsen-Anhalt installierte und hier beschriebene
@@ -209,9 +219,9 @@
 
       <para>Die Server-Installation bedarf aufgrund der konkreten
       Systemeigenschaften einer spezifischen Abstimmung und Anpassung. Weitere
-      Informationen sind ggf. in der technischen Dokumentation enthalten bzw.
+      Informationen sind ggf. in der Technischen Dokumentation enthalten bzw.
       beim Entwickler zu erfragen (siehe <xref
-      linkend="allgemeines_zu_kalypso" />). </para>
+      linkend="allgemeines_zu_kalypso" />).</para>
     </section>
 
     <section id="client-installation">
@@ -226,16 +236,16 @@
       lediglich die Verknüpfung aus dem Startmenü bzw. vom Desktop auf das
       Programm eingerichtet werden muss. Dabei muss zusätzlich noch das lokale
       Arbeitsverzeichnis angegeben werden. Zum Zeitpunkt der Erstellung des
-      Benutzerhabuches waren die Arbeitsplatzrechner der HVZ bereits
+      Benutzerhandbuches waren die Arbeitsplatzrechner der HVZ bereits
       entsprechend eingerichtet.</para>
 
       <para>Eine genaue Beschreibung des Installationsortes und der zu tätigen
-      Einstellung findet sich in der Technischen Dokumentation. </para>
+      Einstellung findet sich in der Technischen Dokumentation.</para>
 
       <para>Nachdem die Installation durchgeführt wurde, kann das Programm
-      durch Doppelklick des Links gestartet werden. Nach dem Programmstart
-      müssen einmalig Voreinstellungen getroffen werden. Diese befinden sich
-      im Menü <guimenuitem>Fenster</guimenuitem> unter
+      durch Doppelklick des Links gestartet werden. Nach dem ersten
+      Programmstart müssen einmalig Voreinstellungen getroffen werden. Diese
+      befinden sich im Menü <guimenuitem>Fenster</guimenuitem> unter
       <guimenuitem>Benutzervorgaben</guimenuitem> im Themenbereich KALYPSO.
       Beim Verlassen des Programms werden die Einstellung im aktuellen
       Workspace für die nachfolgenden Arbeitssitzungen gespeichert.</para>
@@ -270,6 +280,10 @@
 
       <listitem>
         <para>Zeitreihen lesen und schreiben (Zeitreihen-Dienst)</para>
+      </listitem>
+
+      <listitem>
+        <para>Datendienst zur Bereitstellung von DWD-Daten</para>
       </listitem>
     </itemizedlist>
 
@@ -458,9 +472,9 @@
     <para>Die Benutzerrechte für KALYPSO werden in der HVZ Sachsen-Anhalt
     zentral durch den LDAP-Dienst verwaltet. Hier ist für die
     KALYPSO-Anwendung zurzeit lediglich das Benutzerprofil
-    <emphasis>Modellierer</emphasis> definiert. User mit diesem Benutzerprofil
-    haben alle Rechte innerhalb der Anwendung und können somit alle unter
-    <xref linkend="anwendungsfaelle" /> beschriebenen Aufgaben
+    <emphasis>Modellierer</emphasis> definiert. Anwender mit diesem
+    Benutzerprofil haben alle Rechte innerhalb der Anwendung und können somit
+    alle unter <xref linkend="anwendungsfaelle" /> beschriebenen Aufgaben
     ausführen.</para>
   </section>
 

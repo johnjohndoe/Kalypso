@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- ANMERKUNG: das bookinfo wird nicht direkt in etwas anzeigbares umgesetzt, sondern
+<!-- 
+	ANMERKUNG: das bookinfo wird nicht direkt in etwas anzeigbares umgesetzt, sondern
 	lediglich Daten heruasgenommen und an verschiedenen Stellen angezeigt. Deshalb bringt es z.B. 
 	nichts, Bilder direkt unter bookinfo einzubauen. Diese müssen wie z.b. im subtitle geschehen in elemente
 	wandern, welche tatächlich angezeigt werden.
@@ -14,7 +15,7 @@
 				<imageobject>
 					<imagedata align="center"
 						fileref="img/bookinfo/kalypso.png"
-						format="PNG" scale="120"/>
+						format="PNG" scale="200"/>
 				</imageobject>
 			</mediaobject>
 			

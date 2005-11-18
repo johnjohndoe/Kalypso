@@ -72,7 +72,7 @@
     erfolgt ggfls. die Anmeldung als Administrator. In diesem Fall ist der
     Benutzername <emphasis>Administrator</emphasis> fest vorgegeben und es
     muss das in der HVZ festgelegte Administratorpasswort für KALYPSO
-    eingegben werden. Der Benutzer erhält in disem Fall automatisch
+    eingegeben werden. Der Benutzer erhält in diesem Fall automatisch
     Administratorrechte innerhalb von KALYPSO. Eine Auswahl des Betriebsmodus
     dagegen ist nicht vorgesehen. Diese Art der Anmeldung sollte nur dann
     erfolgen, wenn z.B. das Programm zum ersten Mal gestartet wird und noch
@@ -134,7 +134,7 @@
     <itemizedlist>
       <listitem>
         <para>Hochwasser Vorhersage: KALYPSO-Startseite mit Zugang zu den
-        Vorhersage-Wizards</para>
+        Vorhersage-Assistenten</para>
       </listitem>
 
       <listitem>
@@ -142,7 +142,7 @@
       </listitem>
 
       <listitem>
-        <para>KALYPSO Zeitreihenbrowser: Oberfläche zur Verwaltung von
+        <para>KALYPSO Zeitreihenbrowser: Oberfläche zur Visualisierung von
         Zeitreihen</para>
       </listitem>
     </itemizedlist>
