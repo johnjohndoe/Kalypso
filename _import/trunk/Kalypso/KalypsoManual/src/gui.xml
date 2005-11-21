@@ -455,20 +455,20 @@
         </figure></para>
 
       <section id="gui-layer_hinzufuegen">
-        <title>Layer hinzufügen</title>
+        <title>Thema hinzufügen</title>
 
         <indexterm>
           <primary>Karten-Ansicht</primary>
 
-          <secondary>Layer hinzufügen</secondary>
+          <secondary>Thema hinzufügen</secondary>
         </indexterm>
 
-        <para>In einer neuen oder auch bestehenden Karte kann ein Layer mit
+        <para>In einer neuen oder auch bestehenden Karte kann ein Thema mit
         Hilfe des Plus-Symbols hinzugefügt werden (siehe <xref
         linkend="pic_button_layer_add" />).</para>
 
         <figure id="pic_button_layer_add">
-          <title>Button Layer hinzufügen</title>
+          <title>Thema zu Karte hinzufügen</title>
 
           <mediaobject>
             <imageobject>
@@ -479,7 +479,7 @@
           </mediaobject>
         </figure>
 
-        <para>Der neue Layer kann hierbei aus verschiedenen
+        <para>Das neue Thema kann hierbei aus verschiedenen
         Informationsquellen innerhalb des Arbeitsverzeichnisses oder durch
         Anbindung eines Web Services eingebunden werden. Hierzu ist der
         entsprechende Assistent durch Doppelklick im Auswahlfenster zu starten
@@ -1195,8 +1195,8 @@ dd MM yyyy HH Wert2</programlisting>
 
       <para>Wird eine Diagramm-Vorlage im Navigator-Fenster markiert,
       erscheint in der Werkzeug-Leiste die Schaltfläche zum Öffnen der Vorlage
-      im Grafikprogramm (siehe <xref linkend="button_grafik_programm" />
-      ).</para>
+      im Grafikprogramm (siehe <xref
+      linkend="button_grafik_programm" />).</para>
 
       <figure id="button_grafik_programm">
         <title>Schaltfläche zum Öffnen des Grafikprogramms</title>

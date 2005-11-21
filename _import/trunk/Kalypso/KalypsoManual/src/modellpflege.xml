@@ -552,7 +552,7 @@
     exportiert. Der Aufruf der Funktion erfolgt im jeweiligen Menü-Punkt
     (<guimenu id="menu_tabelle_berichtsablage">Tabelle</guimenu>, <guimenu
     id="menu_diagramm_berichtsablage"> Diagramm</guimenu>) unter <guimenu
-    id="menu_berichtsablage">Berichtsablage...</guimenu> . Es folgt eine
+    id="menu_berichtsablage">Berichtsablage...</guimenu>. Es folgt eine
     Eingabemaske, in der zusätzliche Informationen zu der exportierten Datei
     eingetragen werden können (siehe <xref
     linkend="pic_berichtsablage" />).</para>

@@ -121,10 +121,10 @@
     <para>In der Hochwasservorhersagezentrale (HVZ) innerhalb des
     Landesbetriebes für Hochwasserschutz und Wasserwirtschaft (LHW)
     Sachsen-Anhalt ist KALYPSO als Softwarelösung für die Hochwasservorhersage
-    installiert. Mit Hilfe des Programmsystems können primär Wizard-geführte
-    Vorhersageberechnungen durchgeführt werden. Komplexe Operationen der
-    Modellpflege werden ebenfalls durch KALYPSO unterstützt. Dazu ist der
-    sogenannte Expertenmodus anzuwenden.</para>
+    installiert. Mit Hilfe des Programmsystems können primär
+    Assistenten-geführte Vorhersageberechnungen durchgeführt werden. Komplexe
+    Operationen der Modellpflege werden ebenfalls durch KALYPSO unterstützt.
+    Dazu ist der sogenannte Expertenmodus anzuwenden.</para>
 
     <para>KALYPSO ist eine Client-Server-Anwendung mit einem über
     Modell-Plugins realisierten modularen Funktionsumfang. Folgende
@@ -156,8 +156,8 @@
     </itemizedlist>
 
     <para>Im Falle der HVZ Sachsen-Anhalt ist die modellrelevante zentrale
-    Datenhaltung über drei Programmsysteme verteilt (KALYPSO, WISKI, IMS).
-    </para>
+    Datenhaltung über drei Programmsysteme verteilt (KALYPSO, WISKI,
+    IMS).</para>
 
     <para>Die eigentlichen Modelldaten - d.h. geografische Daten,
     physikalische Parameter, Steuerparameter der numerischen Berechnung, usw.
@@ -526,7 +526,7 @@
       </listitem>
 
       <listitem>
-        <para>Grafikprogramm-Anwenderhandbuch (auch als Online-Hilfe)</para>
+        <para>KALYPSO-Grafik Anwenderhandbuch (auch als Online-Hilfe)</para>
       </listitem>
 
       <listitem>
