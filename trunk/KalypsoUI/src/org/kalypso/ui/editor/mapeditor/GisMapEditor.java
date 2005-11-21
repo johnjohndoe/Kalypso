@@ -120,6 +120,8 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
+  private boolean m_disposed = false;
+
   public GisMapEditor()
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
@@ -271,6 +273,9 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
       throws Exception, CoreException
   {
+    if( m_disposed )
+      return;
+
     // prepare for exception
     setMapModell( null );
 
@@ -294,18 +299,25 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
       project = null;
     }
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault()
-        .getCoordinatesSystem(), project, m_selectionManager );
-    setMapModell( mapModell );
+    if( !m_disposed )
+    {
+      final GisTemplateMapModell mapModell = new GisTemplateMapModell( gisview, context, KalypsoGisPlugin.getDefault()
+          .getCoordinatesSystem(), project, m_selectionManager );
+      setMapModell( mapModell );
 
-    GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
+      GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
 
-    getMapPanel().setBoundingBox( env );
+      getMapPanel().setBoundingBox( env );
+    }
     monitor.done();
   }
 
   private void setMapModell( final GisTemplateMapModell mapModell )
   {
+    // dispose old one
+    if( m_mapModell != null )
+      m_mapModell.dispose();
+
     m_mapModell = mapModell;
 
     m_mapPanel.setMapModell( m_mapModell );
@@ -336,12 +348,11 @@ public class GisMapEditor extends AbstractEditorPart implements IMapPanelProvide
 
   public void dispose()
   {
-    if( m_mapModell != null )
-      m_mapModell.dispose();
-
-    m_mapPanel.dispose();
+    m_disposed = true;
 
     setMapModell( null );
+
+    m_mapPanel.dispose();
 
     if( m_outlinePage != null )
       m_outlinePage.dispose();

@@ -83,11 +83,12 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
       try
       {
-        String url = "URL=" + m_page.getUrl().toString();
+        final String url = "URL=" + m_page.getBaseURL().toString();
         //TODO verschlüsslung, samit in der gmt datei die info nicht gelesen
         // werden kann
-        String authentification = "USER=" + m_page.getUserName() + "PASS=" + m_page.getPassWord();
-        m_layers = m_page.getLayers();
+        //        String authentification = "USER=" + m_page.getUserName() + "PASS=" + m_page.getPassWord();
+        String authentification = "USER=" + "xxx" + "PASS=" + "xxx";
+        m_layers = m_page.getLayersNameList();
         for( int i = 0; i < m_layers.length; i++ )
         {
           String layers = "LAYERS=";
@@ -97,19 +98,16 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
           if( m_layers.length == 1 && m_page.isMultiLayer() )
             layername = "Multi Layer:" + layername;
           layers = layers + layer;
-          //          System.out.println( url + "#" + layers );
+
           AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layername, "wms", null, url
               + "#" + layers + "#" + authentification, null, null, null, "simple" );
           m_outlineviewer.postCommand( command, null );
-
         }
       }
       catch( Exception e )
       {
         e.printStackTrace();
       }
-
-    m_page.removeListners();
     return true;
   }
 
@@ -168,9 +166,18 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
       line = br.readLine();
     }
+    // FIXME
     // Christoph: das ist ne endlosschleife!
     while( line != null );
 
     m_catalog = catalog;
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#needsProgressMonitor()
+   */
+  public boolean needsProgressMonitor()
+  {
+    return true;
   }
 }

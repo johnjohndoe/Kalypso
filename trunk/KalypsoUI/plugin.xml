@@ -364,7 +364,7 @@
                menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                id="org.kalypso.ui.editor.mapeditor.action.NewRelationAction">
          </action>
-             <action
+         <action
                    disabledIcon="icons/map/geoInfo_gray.gif"
                    toolbarPath="karte/tools"
                    label="%Extension.EditorActions.GisMapEditor.coordInfo.label"
@@ -374,6 +374,17 @@
                    style="radio"
                    menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
                    id="org.kalypso.ui.editor.mapeditor.action.CoordinateInfoAction">
+         </action>
+         <action
+               disabledIcon="icons/map/geoInfo_gray.gif"
+               toolbarPath="karte/tools"
+               label="%Extension.EditorActions.GisMapEditor.wmsInfo.label"
+               icon="icons/map/wmsInfo.gif"
+               tooltip="%Extension.EditorActions.GisMapEditor.wmsInfo.tooltip"
+               class="org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate"
+               style="radio"
+               menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
+               id="org.kalypso.ui.editor.mapeditor.action.CoordinateInfoAction">
          </action>
          <action
                disabledIcon="icons/map/save_edit_disabled.gif"

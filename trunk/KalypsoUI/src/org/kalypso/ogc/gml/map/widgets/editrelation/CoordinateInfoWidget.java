@@ -142,13 +142,22 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
    */
   public void moved( Point p )
   {
-    m_movePoint = null;
-    final MapPanel mapPanel = getMapPanel();
-    final GeoTransform transform = mapPanel.getProjection();
-    final GM_Point point = GeometryFactory
-        .createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
-    if( m_p1 != null )
-      m_p2 = point;
+    m_movePoint = p;
+    try{
+    if( p != null )
+    {
+      final MapPanel mapPanel = getMapPanel();
+      final GeoTransform transform = mapPanel.getProjection();
+      final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell()
+          .getCoordinatesSystem() );
+      if( m_p1 != null )
+        m_p2 = point;
+    }
+    }
+    catch(Exception e)
+    {
+      // nothing
+    }
     updateInfoText();
   }
 
@@ -256,7 +265,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
         { vertical } );
       }
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
       // will never happen
     }

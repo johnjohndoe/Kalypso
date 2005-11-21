@@ -20,6 +20,12 @@
       <library name="lib/hb15.jar">
          <export name="*"/>
       </library>
+      <library name="lib/commons-logging.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/commons-httpclient-2.0.2.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>

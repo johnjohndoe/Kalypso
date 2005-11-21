@@ -32,7 +32,6 @@ package org.kalypso.ogc.gml.typehandler;
 import java.io.StringReader;
 import java.net.URL;
 
-import org.apache.tools.ant.util.ReaderInputStream;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypsodeegree.gml.GMLGeometry;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -48,6 +47,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 /**
  * 
@@ -91,8 +91,10 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
       xml.append( PSEUDOGMLFOOTER );
 
       final StringReader reader = new StringReader( xml.toString() );
-      final ReaderInputStream stream = new ReaderInputStream( reader );
-      final Document dom = XMLHelper.getAsDOM( stream, true );
+      
+//      final ReaderInputStream stream = new ReaderInputStream( reader );
+      final InputSource source = new InputSource(reader);
+      final Document dom = XMLHelper.getAsDOM( source, true );
       final NodeList childs = dom.getElementsByTagNameNS( XMLHelper.GMLSCHEMA_NS, "GMLHelper" );
       final Node gmlHelperNode = childs.item( 0 );
       final NodeList childNodes = gmlHelperNode.getChildNodes();

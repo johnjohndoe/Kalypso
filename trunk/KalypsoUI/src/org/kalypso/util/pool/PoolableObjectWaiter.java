@@ -27,6 +27,8 @@ public abstract class PoolableObjectWaiter implements IPoolListener
 
   private final boolean m_synchron;
 
+  private boolean m_disposed = false;
+
   /**
    * TRICKY: inherited classes may NOT use own fields, because calling this constructor via super() may immediately call
    * {@link #objectLoaded(IPoolableObjectType, Object)}
@@ -96,6 +98,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
 
   protected void dispose()
   {
+    m_disposed = true;
     m_pool.removePoolListener( this );
   }
 
@@ -107,5 +110,13 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   public IStatus getResult()
   {
     return m_result;
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
+   */
+  public boolean isDisposed()
+  {
+    return m_disposed;
   }
 }

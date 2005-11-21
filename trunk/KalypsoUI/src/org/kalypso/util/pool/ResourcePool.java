@@ -94,10 +94,8 @@ public class ResourcePool
         final Map.Entry entry = (Entry)iter.next();
         ( (KeyInfo)entry.getValue() ).dispose();
       }
-
       m_keyInfos.clear();
     }
-
     m_loaderCache.clear();
   }
 
@@ -107,6 +105,10 @@ public class ResourcePool
    */
   public void addPoolListener( final IPoolListener l, final IPoolableObjectType key )
   {
+    // never register a disposed listener to the pool !
+    if( l.isDisposed() )
+      return;
+
     synchronized( m_keyInfos )
     {
       KeyInfo info = (KeyInfo)m_keyInfos.get( key );

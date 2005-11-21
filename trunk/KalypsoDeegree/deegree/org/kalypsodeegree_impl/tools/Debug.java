@@ -274,9 +274,9 @@ public class Debug
     case 8:
     {
       blank();
-      out.println( "l7 Message: " + e.getMessage() );
-      blank();
       e.printStackTrace( out );
+      blank();
+      out.println( "l7 Message: " + e.getMessage() );
       break;
     }
     case 9:

@@ -137,13 +137,14 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
     if( m_mapModel != null )
       m_mapModel.addModellListener( this );
 
-    if( m_viewer != null && m_viewer.getContentProvider() != null )
+    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
     {
       m_viewer.getControl().getDisplay().syncExec( new Runnable()
       {
         public void run()
         {
-          m_viewer.setInput( modell );
+          if( m_viewer.getContentProvider() != null )
+            m_viewer.setInput( modell );
         }
       } );
     }
@@ -301,7 +302,8 @@ public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, 
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
    */
   public void postCommand( ICommand command, Runnable runnable )
   {

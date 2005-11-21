@@ -50,4 +50,11 @@ public interface IPoolListener
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status );
 
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue );
+
+  /**
+   * used by ResourcePool.register(IPoolListener), pool should never register a disposed IPoollistener
+   * 
+   * @return true if listener is disposed
+   */
+  public boolean isDisposed();
 }
