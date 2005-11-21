@@ -110,7 +110,7 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
     }
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    m_control = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    m_control = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
 
     final Frame vFrame = SWT_AWT.new_Frame( m_control );
     vFrame.add( ChartFactory.createChartPanel( m_chart ) );

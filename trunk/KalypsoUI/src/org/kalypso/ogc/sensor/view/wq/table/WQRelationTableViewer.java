@@ -58,6 +58,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.java.swing.table.NumberTableCellRenderer;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 
@@ -100,13 +101,16 @@ public class WQRelationTableViewer extends AbstractViewer
     } );
 
     // SWT-AWT Brücke für die Darstellung von JTable
-    final Composite embCmp = new Composite( m_composite, SWT.RIGHT | SWT.EMBEDDED );
+    final Composite embCmp = new Composite( m_composite, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
     embCmp.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     final Frame vFrame = SWT_AWT.new_Frame( embCmp );
 
     m_table = new JTable();
     vFrame.setVisible( true );
     m_table.setVisible( true );
+    m_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+    m_table.setDefaultRenderer( Number.class, new NumberTableCellRenderer( 3 ) );
+    m_table.getTableHeader().setReorderingAllowed( false );
 
     final JScrollPane pane = new JScrollPane( m_table );
     pane.setBorder( BorderFactory.createEmptyBorder() );
