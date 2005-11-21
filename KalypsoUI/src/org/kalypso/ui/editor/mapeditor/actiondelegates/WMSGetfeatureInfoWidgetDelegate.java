@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,20 +36,42 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
+package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
-import org.kalypsodeegree.xml.Marshallable;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IEditorPart;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 
-/**
- * Wrapped UserStyle to provide fireModellEvent Method
- * 
- * @author bce
- */
-public abstract class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable
+public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionDelegate
 {
-  // 
+  public WMSGetfeatureInfoWidgetDelegate()
+  {
+    super( new WMSGetFeatureInfoWidget( "WMS-Abfrage", "Informationen vom WMS abholen" ) );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
+   */
+  protected void refreshAction( IAction action )
+  {
+    super.refreshAction( action );
+    if( action == null )
+      return;
+    action.setEnabled( false );
+    IEditorPart editor = getEditor();
+    if( editor != null && editor instanceof GisMapEditor )
+    {
+      final GisMapEditor mapEditor = (GisMapEditor)editor;
+      IMapModell mapModell = mapEditor.getMapPanel().getMapModell();
+      IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+      action.setEnabled( activeTheme instanceof KalypsoWMSTheme );
+    }
+  }
+
 }

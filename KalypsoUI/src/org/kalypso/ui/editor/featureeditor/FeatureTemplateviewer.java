@@ -132,6 +132,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private final int m_marginHeight;
 
+  private boolean m_disposed=false;
+
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget, final int marginHeight,
       final int marginWidth )
   {
@@ -160,6 +162,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
    */
   public void dispose()
   {
+    m_disposed=true;
     setWorkspace( null );
 
     m_featureComposite.dispose();
@@ -419,5 +422,13 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   {
     m_featurePath = workspace.getFeaturepathForFeature( feature ).toString();
     setWorkspace( workspace );
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
+   */
+  public boolean isDisposed()
+  {
+    return m_disposed;
   }
 }

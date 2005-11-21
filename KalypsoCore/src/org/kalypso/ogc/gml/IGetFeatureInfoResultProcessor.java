@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
+/* --------------- Kalypso-Header --------------------------------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -36,20 +36,21 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+--------------------------------------------------------------------------------------------------- */
 package org.kalypso.ogc.gml;
 
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
-import org.kalypsodeegree.xml.Marshallable;
-
 /**
- * Wrapped UserStyle to provide fireModellEvent Method
- * 
- * @author bce
+ *
+ * TODO: insert type comment here
+ *
+ * @author doemming
  */
-public abstract class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable
+public interface IGetFeatureInfoResultProcessor
 {
-  // 
+
+  /**
+   * @param featureInfoString
+   */
+  void write(final  String featureInfoString );
 }

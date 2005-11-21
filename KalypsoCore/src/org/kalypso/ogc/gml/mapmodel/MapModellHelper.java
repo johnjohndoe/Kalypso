@@ -133,8 +133,15 @@ public class MapModellHelper
       p.setDestRect( x - 2, y - 2, w + x, h + y );
 
       final double scale = calcScale( model, bbox, bounds.width, bounds.height );
-      
-      model.paint( gr, p, bbox, scale, false );
+      try
+      {
+        model.paint( gr, p, bbox, scale, false );
+      }
+      catch(Exception e)
+      {
+        e.printStackTrace();
+        System.out.println(e.getMessage());
+      }
 
       final HighlightGraphics highlightGraphics = new HighlightGraphics((Graphics2D)gr); 
       model.paint( highlightGraphics, p, bbox, scale, true );

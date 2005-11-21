@@ -243,14 +243,21 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
       final Rectangle clipBounds = g.getClipBounds();
       if( clipBounds != null )
       {
-        // BUGFIX: see method comment: the synchronization problem was exactly at this point, when the getBoundingBox method was
+        // BUGFIX: see method comment: the synchronization problem was exactly at this point, when the getBoundingBox
+        // method was
         // called and immediatly afterwards the painting of the mapModell was called.
         // Problem was, that the repaint method after setting the boundingBox did not
         // cause a real repaint (maybe Swing checks if we are already repainting?)
         // remark: even calling a repaint in a SwingWorker did not help
+
+        // we are optimistic and set valid map true, so while creating new image, other methods can invalidate the map
+        // this fixes the error that sometimes a layer is not visible when are mapview opens
+        setValidMap( true );
+
         m_mapImage = MapModellHelper.createImageFromModell( getProjection(), getBoundingBox(), clipBounds, getWidth(),
             getHeight(), model );
-        setValidMap( m_mapImage != null );
+        if( m_mapImage == null )
+          setValidMap( false );
       }
     }
 

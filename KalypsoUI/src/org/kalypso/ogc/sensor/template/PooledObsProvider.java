@@ -163,4 +163,12 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   {
     return new PooledObsProvider( m_key, m_args );
   }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
+   */
+  public boolean isDisposed()
+  {
+    return m_isDisposed;
+  }
 }

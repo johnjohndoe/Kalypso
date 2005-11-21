@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -84,10 +83,10 @@ public class MapModell implements IMapModell
 
   public void dispose()
   {
-    for( Iterator iter = m_themes.iterator(); iter.hasNext(); )
-      ( (IKalypsoTheme)iter.next() ).dispose();
-
+    final IKalypsoTheme[] themes = (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
     m_themes.clear();
+    for( int i = 0; i < themes.length; i++ )
+      themes[i].dispose();
   }
 
   public void activateTheme( final IKalypsoTheme theme )
@@ -144,14 +143,15 @@ public class MapModell implements IMapModell
     return m_coordinatesSystem;
   }
 
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale,
+      final boolean selected )
   {
     // directly access themes in order to avoid synchronization problems
     final IKalypsoTheme[] themes = (IKalypsoTheme[])m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
     // paint themes in reverse order
     for( int i = themes.length; i > 0; i-- )
     {
-      final IKalypsoTheme theme = themes[ i - 1 ];
+      final IKalypsoTheme theme = themes[i - 1];
       if( isThemeEnabled( theme ) )
         theme.paint( g, p, scale, bbox, selected );
     }
@@ -246,7 +246,6 @@ public class MapModell implements IMapModell
         }
       }
     }
-    
     return result;
   }
 

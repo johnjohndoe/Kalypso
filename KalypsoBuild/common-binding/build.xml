@@ -35,7 +35,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
   <property name="build" value="${java.io.tmpdir}/${project-name}TmpDir" />
   <property name="build.source" value="${build}/src" />
-  <property name="build.compile" value="${build}/compile" />
+	<!--
+  		uncommend this if you want to see the generated source,
+  		also modify compile task not to delete sources after compiling
+      <property name="build.source" value="${project}/src-generated" />
+     -->
+       
+    <property name="build.compile" value="${build}/compile" />
 
   <property name="dest.file.name" value="${project-name}.jar" />
     <property name="jwsdpDir" value="${workspace}/JWSDPInstallation/jwsdp" />
@@ -68,11 +74,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
   <target  name="generate" depends="init" description="erzeugt die sourcen">
     <echo  message="Generating binding sources für ${project-name}" />
 
-    <xjc target="${build.source}" extension="true" removeoldoutput="true">
+    <xjc target="${build.source}"  extension="true" removeoldoutput="true">
       <schema dir="${project}">         
           <patternset refid="binding.schemata"/>
       </schema>
-
+	  <!-- use depends ??
+	  	<depends> </depends>
+	  -->
       <!-- Important Note: the produces element specifies the
 			files from which the generate-process is depending. If 
 			the files are up-to-date (compared to the schemas) then
@@ -113,6 +121,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
     <delete includeemptydirs="true">
          <fileset dir="${build.source}" includes="**/*" />
     </delete>
+
   </target>
 
   <target name="deploy" depends="compile" description="package jar">

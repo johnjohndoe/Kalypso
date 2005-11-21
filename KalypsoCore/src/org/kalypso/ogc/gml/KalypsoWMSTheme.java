@@ -42,24 +42,33 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.media.jai.PlanarImage;
 import javax.media.jai.TiledImage;
 
 import org.deegree.services.OGCWebServiceClient;
 import org.deegree.services.OGCWebServiceEvent;
-import org.deegree.services.OGCWebServiceRequest;
 import org.deegree.services.OGCWebServiceResponse;
+import org.deegree.services.wms.capabilities.Format;
+import org.deegree.services.wms.capabilities.Operation;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
+import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
+import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
+import org.deegree.services.wms.protocol.WMSGetMapRequest;
 import org.deegree.services.wms.protocol.WMSGetMapResponse;
 import org.deegree_impl.services.OGCWebServiceEvent_Impl;
 import org.deegree_impl.services.wms.RemoteWMService;
@@ -114,6 +123,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   /** temporary locked request bbox to aviod multi requests on same bbox */
   private GM_Envelope m_lockRequestEnvLocalSRS = null;
 
+  private int m_lastWidth;
+
+  private int m_lastHeight;
+
   public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
       final CS_CoordinateSystem localSRS )
   {
@@ -158,6 +171,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       c.addRequestProperty( "REQUEST", "GetCapabilities" );
 
       //create capabilites from the request
+      // TODO check that this does not wait forever, if there is no connection
       final Reader reader = new InputStreamReader( c.getInputStream() );
       m_wmsCaps = wmsCapFac.createCapabilities( reader );
       m_remoteWMS = new RemoteWMService( m_wmsCaps );
@@ -191,6 +205,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       final boolean selected )
   {
     m_requestedEnvLocalSRS = bbox;
+    m_lastWidth = (int)g.getClip().getBounds().getWidth();
+    m_lastHeight = (int)g.getClip().getBounds().getHeight();
     if( selected ) // image can not be selected
       return;
 
@@ -198,11 +214,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
       g.drawImage( m_buffer, 0, 0, null );
     else
     {
-      final int width = (int)g.getClip().getBounds().getWidth();
-      final int height = (int)g.getClip().getBounds().getHeight();
       try
       {
-        updateImage( width, height, geoTransform, m_requestedEnvLocalSRS );
+        updateImage( geoTransform, m_requestedEnvLocalSRS );
       }
       catch( Exception e )
       {
@@ -228,8 +242,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     //    }
   }
 
-  public void updateImage( final int width, final int height, final GeoTransform geoTransformToLocalSRS,
-      GM_Envelope envRequestLocalSRS ) throws Exception
+  public void updateImage( final GeoTransform geoTransformToLocalSRS, GM_Envelope envRequestLocalSRS ) throws Exception
   {
     // check if nothing to request
     if( envRequestLocalSRS == null )
@@ -242,41 +255,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     final GM_Envelope targetEnvLocalSRS = (GM_Envelope)envRequestLocalSRS.clone();
     m_lockRequestEnvLocalSRS = targetEnvLocalSRS;
 
-    final HashMap wmsParameter = new HashMap();
-    wmsParameter.put( "SERVICE", "WMS" );
-    wmsParameter.put( "VERSION", m_wmsCaps.getVersion() );
-    wmsParameter.put( "REQUEST", "getMap" );
-    wmsParameter.put( "LAYERS", m_layers );
-    // TODO check for valid styles, otherwise deegree uses "STYLES=default"
-    // I guess kalypso should provide a style name allways (check with specs)
-    // some WMS-themes use style name="" and when deegree makes "STYLES=default" out of this, this does not work
-    // I think style name="" is also not valid (can we be flexible ?)
-    // ask me ( v.doemming@tuhh.de )
-    wmsParameter.put( "FORMAT", "image/png" );
-    wmsParameter.put( "TRANSPARENT", "TRUE" );
-    wmsParameter.put( "EXCEPTIONS", "application/vnd.ogc.se_xml" );
-    wmsParameter.put( "WIDTH", "" + width );
-    wmsParameter.put( "HEIGHT", "" + height );
-    wmsParameter.put( "SRS", m_remoteSRS.getName() );
-
-    //    if( m_authentification )
-    //    {
-    //      if(m_pass == null || m_user == null )
-    //        return;
-    //      final String pw = m_user + ":" + m_pass;
-    //      final String epw = "Basic " + ( new BASE64Encoder() ).encode(
-    // pw.getBytes() );
-    //
-    //      wmsParameter.put("Proxy-Authorization", epw );
-    //    }
-
-    final GeoTransformer gt = new GeoTransformer( m_remoteSRS );
-    final GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( targetEnvLocalSRS, m_localSRS );
-    final String targetEnvRemoteSRSstring = WMSHelper.env2bboxString( targetEnvRemoteSRS );
-    wmsParameter.put( "BBOX", targetEnvRemoteSRSstring );
-
     final String id = "KalypsoWMSRequest" + getName() + Long.toString( ( new Date() ).getTime() );
-    final OGCWebServiceRequest request = WMSProtocolFactory.createGetMapRequest( id, wmsParameter );
+    final HashMap parameterMap = createGetMapRequestParameter();
+    final WMSGetMapRequest request = WMSProtocolFactory.createGetMapRequest( id, parameterMap );
+    final int width = m_lastWidth;
+    final int height = m_lastHeight;
     final OGCWebServiceClient client = new OGCWebServiceClient()
     {
       public void write( Object responseEvent )
@@ -294,6 +277,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
           final PlanarImage remoteImage = PlanarImage.wrapRenderedImage( resultImage );
           if( isObsolete( targetEnvLocalSRS ) )
             return;
+
           setImage( new TiledImage( remoteImage, true ), targetEnvLocalSRS, width, height, geoTransformToLocalSRS );
 
         }
@@ -330,6 +314,46 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
         client );
 
     m_remoteWMS.doService( ogcWSEvent );
+  }
+
+  /**
+   * @throws Exception
+   */
+  private HashMap createGetMapRequestParameter() throws Exception
+  {
+    final HashMap wmsParameter = new HashMap();
+    wmsParameter.put( "SERVICE", "WMS" );
+    wmsParameter.put( "VERSION", m_wmsCaps.getVersion() );
+    wmsParameter.put( "REQUEST", "getMap" );
+    wmsParameter.put( "LAYERS", m_layers );
+    // TODO check for valid styles, otherwise deegree uses "STYLES=default"
+    // I guess kalypso should provide a style name allways (check with specs)
+    // some WMS-themes use style name="" and when deegree makes "STYLES=default" out of this, this does not work
+    // I think style name="" is also not valid (can we be flexible ?)
+    // ask me ( v.doemming@tuhh.de )
+    wmsParameter.put( "FORMAT", "image/png" );
+    wmsParameter.put( "TRANSPARENT", "TRUE" );
+    wmsParameter.put( "EXCEPTIONS", "application/vnd.ogc.se_xml" );
+    wmsParameter.put( "WIDTH", "" + m_lastWidth );
+    wmsParameter.put( "HEIGHT", "" + m_lastHeight );
+    wmsParameter.put( "SRS", m_remoteSRS.getName() );
+
+    //    if( m_authentification )
+    //    {
+    //      if(m_pass == null || m_user == null )
+    //        return;
+    //      final String pw = m_user + ":" + m_pass;
+    //      final String epw = "Basic " + ( new BASE64Encoder() ).encode(
+    // pw.getBytes() );
+    //
+    //      wmsParameter.put("Proxy-Authorization", epw );
+    //    }
+
+    final GeoTransformer gt = new GeoTransformer( m_remoteSRS );
+    final GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( m_requestedEnvLocalSRS, m_localSRS );
+    final String targetEnvRemoteSRSstring = WMSHelper.env2bboxString( targetEnvRemoteSRS );
+    wmsParameter.put( "BBOX", targetEnvRemoteSRSstring );
+    return wmsParameter;
   }
 
   /**
@@ -386,5 +410,106 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   public String getSource()
   {
     return m_source;
+  }
+
+  /**
+   * @param pointOfInterest
+   * @param format
+   * @throws Exception
+   *  
+   */
+  public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format,
+      final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
+  {
+    // check if nothing to request
+    if( m_maxEnvLocalSRS == null )
+      return;
+
+    final String id = "KalypsoWMSGetFeatureInfoRequest" + getName() + Long.toString( ( new Date() ).getTime() );
+    final HashMap parameterMap = createGetMapRequestParameter();
+    parameterMap.put( "REQUEST", "GetFeatureInfo" );
+    parameterMap.put( "QUERY_LAYERS", m_layers );
+    if( format != null && format.length() > 0 )
+      parameterMap.put( "INFO_FORMAT", format );
+    parameterMap.put( "X", Integer.toString( pointOfInterest.x ) );
+    parameterMap.put( "Y", Integer.toString( pointOfInterest.y ) );
+
+    final Set set = parameterMap.keySet();
+    System.out.print( "?" );
+    for( Iterator iter = set.iterator(); iter.hasNext(); )
+    {
+      final String key = (String)iter.next();
+      final String value = (String)parameterMap.get( key );
+      System.out.print( key + "=" + value + "&" );
+    }
+    System.out.println();
+    final WMSFeatureInfoRequest getFeatureInfoRequest = WMSProtocolFactory.createGetFeatureInfoRequest( id,
+        parameterMap );
+    final OGCWebServiceClient client = new OGCWebServiceClient()
+    {
+      public void write( Object responseEvent )
+      {
+        if( !( responseEvent instanceof OGCWebServiceEvent ) )
+          return;
+        final OGCWebServiceResponse response = ( (OGCWebServiceEvent)responseEvent ).getResponse();
+        if( !( response instanceof WMSFeatureInfoResponse ) )
+          return;
+        try
+        {
+          final WMSFeatureInfoResponse featureInfoResponse = (WMSFeatureInfoResponse)response;
+          final StringBuffer result = new StringBuffer();
+          final String featureInfo = featureInfoResponse.getFeatureInfo();
+          if( featureInfo != null )
+            result.append( featureInfo );
+          else
+            result.append( " keine oder fehlerhafte Antwort vom Server" );
+          final Document exception = featureInfoResponse.getException();
+          result.append( "\n\nFehlerMeldung: " );
+          if( exception != null )
+            result.append( "\n" + XMLHelper.toString( exception ) );
+          else
+            result.append( "keine" );
+          getFeatureInfoResultProcessor.write( result.toString() );
+          System.out.println( featureInfo );
+        }
+        catch( Exception e )
+        {
+          final Document wmsException = ( (WMSFeatureInfoResponse)response ).getException();
+          if( wmsException != null )
+            System.out.println( "OGC_WMS_Exception:\n" + XMLHelper.toString( wmsException ) );
+        }
+      }
+    };
+
+    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, //source
+        getFeatureInfoRequest, //request
+        null, //message
+        client );
+
+    m_remoteWMS.doService( ogcWSEvent );
+  }
+
+  public boolean isSupportingGetFeatureInfoRequest()
+  {
+    final Operation operation = m_wmsCaps.getCapability().getRequest().getOperation( Operation.GETFEATUREINFO_NAME );
+    return operation != null;
+  }
+
+  /**
+   * 
+   * @return supported formats
+   */
+  public synchronized String[] getFeatureInfoRequestFormats()
+  {
+    final List result = new ArrayList();
+    final Operation operation = m_wmsCaps.getCapability().getRequest().getOperation( Operation.GETFEATUREINFO_NAME );
+    final Format[] formats = operation.getFormats();
+    for( int i = 0; i < formats.length; i++ )
+    {
+      final Format format = formats[i];
+      if( format.getName() != null )
+        result.add( format.getName() );
+    }
+    return (String[])result.toArray( new String[result.size()] );
   }
 }

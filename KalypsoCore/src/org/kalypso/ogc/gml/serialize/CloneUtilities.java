@@ -36,7 +36,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.tools.ant.util.ReaderInputStream;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -46,6 +45,7 @@ import org.kalypsodeegree_impl.extension.ITypeHandler;
 import org.kalypsodeegree_impl.extension.ITypeRegistry;
 import org.kalypsodeegree_impl.extension.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.xml.sax.InputSource;
 
 /**
  * 
@@ -79,8 +79,8 @@ public class CloneUtilities
     // unmarshall it
     final Unmarshaller unmarshaller = factory.createUnmarshaller();
     StringReader reader = new StringReader( tmpBuffer.toString() );
-    ReaderInputStream inputStream = new ReaderInputStream( reader );
-    return unmarshaller.unmarshal( inputStream );
+    final InputSource source = new InputSource(reader);
+    return unmarshaller.unmarshal( source );
   }
 
   public static Feature clone( Feature featureToClone ) throws CloneNotSupportedException

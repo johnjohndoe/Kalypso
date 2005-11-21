@@ -114,6 +114,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private Gistreeview m_gisTreeview;
 
+  private boolean m_disposed=false;
+
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
     m_composite = composite;
@@ -261,6 +263,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   public void dispose()
   {
+    m_disposed=true;
     m_composite.dispose();
     m_pool.removePoolListener( this );
 
@@ -539,6 +542,14 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       // the tree doesn't support focused features
       return null;
     }
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
+   */
+  public boolean isDisposed()
+  {
+    return m_disposed;
   }
 
 }

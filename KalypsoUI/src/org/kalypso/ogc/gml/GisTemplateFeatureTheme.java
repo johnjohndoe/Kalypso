@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -69,7 +71,6 @@ import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -110,9 +111,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final String m_featurePath;
 
-  private final PoolableObjectType[] m_styleKeys;
+  //  private final PoolableObjectType[] m_styleKeys;
 
-  private final String[] m_styleNames;
+  //  private final String[] m_styleNames;
 
   private KalypsoFeatureTheme m_theme = null;
 
@@ -120,11 +121,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final IFeatureSelectionManager m_selectionManager;
 
+  private List m_gisTemplateUserStyles = new ArrayList();
+
   public GisTemplateFeatureTheme( final LayerType layerType, final URL context,
       final IFeatureSelectionManager selectionManager )
   {
     super( "<no name>" );
-
     m_selectionManager = selectionManager;
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -143,24 +145,23 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       setName( mapLayerType.getName() );
 
       final List stylesList = mapLayerType.getStyle();
-
-      m_styleKeys = new PoolableObjectType[stylesList.size()];
-      m_styleNames = new String[stylesList.size()];
       for( int i = 0; i < stylesList.size(); i++ )
       {
         final StyleType styleType = (StyleType)stylesList.get( i );
-
-        m_styleKeys[i] = new PoolableObjectType( styleType.getLinktype(), styleType.getHref(), context );
-        m_styleNames[i] = styleType.getStyle();
+        final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( new PoolableObjectType( styleType
+            .getLinktype(), styleType.getHref(), context ), styleType.getStyle() );
+        m_gisTemplateUserStyles.add( gisTemplateUserStyle );
+      }
+      try
+      {
+        pool.addPoolListener( this, m_layerKey );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        // catch any exception
       }
     }
-    else
-    {
-      m_styleKeys = new PoolableObjectType[] {};
-      m_styleNames = new String[] {};
-    }
-
-    pool.addPoolListener( this, m_layerKey );
   }
 
   /**
@@ -170,6 +171,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     m_disposed = true;
 
+    // remove from pool
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.removePoolListener( this );
 
@@ -182,7 +184,24 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_theme.dispose();
       m_theme = null;
     }
+
+    //remove styles
+    for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
+    {
+      GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
+      removeStyle(style);
+      style.dispose();
+    }
   }
+
+//  private void removeTemplateUserStyles()
+//  {
+//    for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
+//    {
+//      final GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
+//      removeStyle( style );
+//    }
+//  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
@@ -250,17 +269,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       styledLayerType.getDepends();
 
       final List stylesList = styledLayerType.getStyle();
-      final IPoolableObjectType[] styleKeys = m_styleKeys;
-      for( int j = 0; j < styleKeys.length; j++ )
+
+      for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
       {
-        StyleType styleType = extentFac.createStyledLayerTypeStyleType();
-        IPoolableObjectType styleKey = styleKeys[j];
-        styleType.setActuate( "onRequest" );
-        styleType.setHref( styleKey.getLocation() );
-        styleType.setLinktype( styleKey.getType() );
-        styleType.setStyle( m_styleNames[j] );
-        styleType.setType( "simple" );
-        stylesList.add( styleType );
+        final GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
+        final StyleType styleType = extentFac.createStyledLayerTypeStyleType();
+        style.fillStyleType( stylesList, styleType );
       }
     }
   }
@@ -271,14 +285,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-    if( m_disposed )
+    if( m_disposed ) // if disposed, do not register any more objects at the pool
       LOGGER.info( "Theme already disposed: " + this );
 
     LOGGER.info( "Object loaded: " + key + "   -  Object: " + newValue );
-
     try
     {
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      //      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
       if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
       {
@@ -289,55 +302,28 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           m_theme.dispose();
           m_theme = null;
         }
-
-        if( newValue == null )
-          return;
-
-        final CommandableWorkspace commandableWorkspace = (CommandableWorkspace)newValue;
-        m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager );
-
-        m_theme.addModellListener( this );
-
-        m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
-
-        fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
-
-        // erst jetzt mit dem style laden anfangen!
-        if( m_styleKeys.length > 0 )
+        if( newValue != null )
         {
-          for( int i = 0; i < m_styleKeys.length; i++ )
-            pool.addPoolListener( this, m_styleKeys[i] );
-        }
-        else
-        {
-          final DefaultStyleFactory defaultStyleFactory = KalypsoGisPlugin.getDefaultStyleFactory();
-          final UserStyle style = defaultStyleFactory.createUserStyle( getFeatureType(), "<generierter Standard-Stil>" );
-
-          final KalypsoUserStyle kus = new KalypsoUserStyle( style );
-          addStyle(kus);
-          
-          fireModellEvent( null );
-        }
-      }
-
-      // styles
-      for( int i = 0; i < m_styleKeys.length; i++ )
-      {
-        final IPoolableObjectType styleKey = m_styleKeys[i];
-        if( KeyComparator.getInstance().compare( styleKey, key ) == 0 && newValue != null )
-        {
-          final StyledLayerDescriptor sld = (StyledLayerDescriptor)newValue;
-          final UserStyle style = sld.findUserStyle( m_styleNames[i] );
-          if( style != null && m_theme != null )
-            m_theme.addStyle( new KalypsoUserStyle( style ) );
-          else
+          final CommandableWorkspace commandableWorkspace = (CommandableWorkspace)newValue;
+          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager );
+          m_theme.addModellListener( this );
+          m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
+          m_loaded = true;
+          fireModellEvent( new ModellEvent( this, ModellEvent.THEME_ADDED ) );
+          for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
           {
-            // error handling?
+            GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
+            addStyle( style );
           }
-
-          fireModellEvent( null );
-
-          break;
+          if( m_gisTemplateUserStyles.isEmpty() )
+          {
+            final DefaultStyleFactory defaultStyleFactory = KalypsoGisPlugin.getDefaultStyleFactory();
+            final UserStyle style = defaultStyleFactory.createUserStyle( getFeatureType(),
+                " - generierter Standard-Stil -" );
+            // DO not use xml-tags in this names please
+            final GisTemplateUserStyle kus = new GisTemplateUserStyle( style, "default" );
+            addStyle( kus );
+          }
         }
       }
     }
@@ -346,6 +332,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       // alles abfangen, damit der Pool trotzdem weitermacht
       e.printStackTrace();
     }
+//    ModellEvent event = new ModellEvent( this,null ) ;
+//    ModellEvent event = new ModellEvent( this, ModellEvent.FULL_CHANGE ) ;
+    if(m_theme!=null)
+      m_theme.fireModellEvent(null);
+    else
+      fireModellEvent(null);
   }
 
   /**
@@ -354,27 +346,16 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     m_loaded = false;
-
-    if( m_theme == null )
-      return;
-
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
       // clear the theme
       m_theme.removeModellListener( this );
       m_theme.dispose();
       m_theme = null;
-
-      // schon mal mitteilen, dass sich das Thema geändert hat
-      fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
     }
 
-    for( int i = 0; i < m_styleKeys.length; i++ )
-    {
-      final IPoolableObjectType styleKey = m_styleKeys[i];
-      if( KeyComparator.getInstance().compare( key, styleKey ) == 0 )
-        m_theme.removeStyle( (KalypsoUserStyle)oldValue );
-    }
+    // schon mal mitteilen, dass sich das Thema geändert hat
+    fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
   }
 
   /**
@@ -400,16 +381,18 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
+   * 
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.mapmodel.KalypsoUserStyle)
    */
-  public void addStyle( KalypsoUserStyle style )
+  public void addStyle( final KalypsoUserStyle style )
   {
     if( m_theme != null )
       m_theme.addStyle( style );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
+   * 
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.mapmodel.KalypsoUserStyle)
    */
   public void removeStyle( final KalypsoUserStyle style )
   {
@@ -460,20 +443,19 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public boolean isLoaded()
   {
-    if( m_loaded )
-      return true;
-    // theme not here
-    if( m_theme == null )
-      return false;
-    // wrong number of styles ?
-    if( m_theme.getStyles().length != m_styleKeys.length )
-      return false;
-    m_loaded = true;
     return m_loaded;
   }
 
   public PoolableObjectType getLayerKey()
   {
     return m_layerKey;
+  }
+
+  /**
+   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
+   */
+  public boolean isDisposed()
+  {
+    return m_disposed;
   }
 }

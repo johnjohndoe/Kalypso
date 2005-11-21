@@ -130,6 +130,8 @@ public final class KeyInfo extends Job implements ILoaderListener
         // nur Objekt invalidieren, wenn nicht neu geladen werden kann
         // ansonsten einfach neu laden, dann werden die listener ja auch
         // informiert
+
+        // TODO allways invalidate, let Poollistener decide to ignore it or not
         if( bCannotReload )
           oldObject = object;
         else
