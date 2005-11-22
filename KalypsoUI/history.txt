@@ -13,6 +13,9 @@ Oktober 2005
 - Speichern unter für Baum
 - Bugfix: Dateinamen für 'Speichern unter' der Standardansichten mit richtiger Endung
 - Observation-Achsen können aus der Ansicht im Expertenmodus ausgeblendet werden (Diag + Tabelle)
+- WQ-Tables können direkt über Zml-Datei visualisiert werden (Kontext-Menü im Navigator)
+- Bugfix: WQ-Cache wird serverseitig benutzt wenn Wiski nicht zur Verfügung steht
+- Szenarioname wird standardmäßig in der Statusleiste angezeigt
 
 vor Oktober 2005
 ----------------

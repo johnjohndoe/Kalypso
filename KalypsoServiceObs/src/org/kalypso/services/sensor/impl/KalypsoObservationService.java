@@ -142,10 +142,8 @@ public class KalypsoObservationService implements IObservationService
 
   /**
    * Constructs the service by reading the configuration.
-   * 
-   * @throws RemoteException
    */
-  public KalypsoObservationService() throws RemoteException
+  public KalypsoObservationService()
   {
     m_repositories = new Vector();
     m_mapBeanId2Item = new Hashtable( 512 );
@@ -159,7 +157,14 @@ public class KalypsoObservationService implements IObservationService
     m_tmpDir = FileUtilities.createNewTempDir( "Observations", ServiceConfig.getTempDir() );
     m_tmpDir.deleteOnExit();
 
-    init();
+    try
+    {
+      init();
+    }
+    catch( final RemoteException ignored )
+    {
+      //e.printStackTrace();
+    }
   }
 
   protected void finalize() throws Throwable
@@ -200,6 +205,8 @@ public class KalypsoObservationService implements IObservationService
   {
     clearCache();
 
+    final Properties props = new Properties();
+
     try
     {
       final URL confLocation = ServiceConfig.getConfLocation();
@@ -209,7 +216,6 @@ public class KalypsoObservationService implements IObservationService
       final List facConfs = RepositoryConfigUtils.loadConfig( stream );
 
       // load the service properties
-      final Properties props = new Properties();
       final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "IObservationService/service.properties" );
       InputStream ins = null;
       try
@@ -239,31 +245,39 @@ public class KalypsoObservationService implements IObservationService
         m_timezone = null;
         m_logger.info( "Reset TimeZone. Name not found: " + tzName );
       }
-      
+
       for( final Iterator it = facConfs.iterator(); it.hasNext(); )
       {
         final RepositoryFactoryConfig item = (RepositoryFactoryConfig)it.next();
         final IRepositoryFactory fact = item.createFactory( getClass().getClassLoader() );
 
-        final IRepository rep = fact.createRepository();
-        m_repositories.add( rep );
-
-        m_mapRepId2Rep.put( rep.getIdentifier(), rep );
-
-        // look into properties if an IObservationManipulator should be
-        // configured for the current repository
-        final String pManip = "MANIPULATOR_" + rep.getIdentifier();
-        final String cnManip = props.getProperty( pManip );
-        if( cnManip != null )
+        try
         {
-          final IObservationManipulator man = (IObservationManipulator)ClassUtilities.newInstance( cnManip,
-              IObservationManipulator.class, getClass().getClassLoader() );
-          m_mapRepId2Manip.put( rep.getIdentifier(), man );
+          final IRepository rep = fact.createRepository();
+          m_repositories.add( rep );
+
+          m_mapRepId2Rep.put( rep.getIdentifier(), rep );
+
+          // look into properties if an IObservationManipulator should be
+          // configured for the current repository
+          final String pManip = "MANIPULATOR_" + rep.getIdentifier();
+          final String cnManip = props.getProperty( pManip );
+          if( cnManip != null )
+          {
+            final IObservationManipulator man = (IObservationManipulator)ClassUtilities.newInstance( cnManip,
+                IObservationManipulator.class, getClass().getClassLoader() );
+            m_mapRepId2Manip.put( rep.getIdentifier(), man );
+          }
+
+          // adjust properties of repository
+          if( tzName != null )
+            rep.setProperty( TimeZone.class.getName(), tzName );
         }
-        
-        // adjust properties of repository
-        if( tzName != null )
-          rep.setProperty( TimeZone.class.getName(), tzName );
+        catch( final Exception e )
+        {
+          m_logger.warning( "Could not create Repository " + fact.getRepositoryName() + " with configuration "
+              + fact.getConfiguration() + ". Reason is:\n" + e.getLocalizedMessage() );
+        }
       }
 
       // tricky: set the list of repositories to the ZmlFilter so that
@@ -285,6 +299,32 @@ public class KalypsoObservationService implements IObservationService
     final String obsId = ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
 
+    // request part specified?
+    IRequest request = null;
+    RequestType requestType = null;
+    try
+    {
+      requestType = RequestFactory.parseRequest( hereHref );
+      if( requestType != null )
+      {
+        request = ObservationRequest.createWith( requestType );
+
+        m_logger.info( "Reading data for observation: " + obean.getId() + " Request: " + request );
+      }
+      else
+        m_logger.info( "Reading data for observation: " + obean.getId() );
+    }
+    catch( final SensorException e )
+    {
+      m_logger.warning( "Invalid Href: " + href );
+      m_logger.throwing( getClass().getName(), "readData", e );
+
+      // this is a fatal error (software programming error on the client-side)
+      // so break processing now!
+      throw new RemoteException( "Invalid Href", e );
+    }
+
+    // fetch observation from repository
     IObservation obs = null;
     try
     {
@@ -294,36 +334,24 @@ public class KalypsoObservationService implements IObservationService
     }
     catch( final Exception e )
     {
-      m_logger.info( "No observation for " + obean.getId() + ". Reason: " + e.getLocalizedMessage() );
+      m_logger.info( "Could not find an observation for " + obean.getId() + ". Reason is:\n" + e.getLocalizedMessage() );
 
-      throw new RemoteException( "Daten können nicht ausgelesen werden", e );
+      // this is not a fatal error, repository might be temporarely unavailable
     }
-    
+
     if( obs == null )
     {
-      m_logger.info( "No observation for " + obean.getId() );
-
-      throw new RemoteException( "Daten können nicht ausgelesen werden: keine Zeitreihe gefunden für " + obean.getId() );
+      // obs could not be created, use the request now
+      m_logger.info( "Creating request-based observation for " + obean.getId() );
+      obs = RequestFactory.createDefaultObservation( requestType );
     }
+
+    // and eventually manipulate the observation
+    updateObservation( obs, obean.getId() );
 
     FileOutputStream fos = null;
     try
     {
-      // request part specified?
-      IRequest request = null;
-
-      final RequestType requestType = RequestFactory.parseRequest( hereHref );
-      if( requestType != null )
-      {
-        request = ObservationRequest.createWith( requestType );
-
-        m_logger.info( "Reading data for observation: " + obs.getName() + " Request: " + request );
-      }
-      else
-        m_logger.info( "Reading data for observation: " + obs.getName() );
-
-      updateObservation( obs, obean.getId() );
-
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( hereHref, obs, null );
 
@@ -332,7 +360,7 @@ public class KalypsoObservationService implements IObservationService
       // name of the temp file must be valid against OS-rules for naming files
       // so remove any special characters
       final String tempFileName = FileUtilities.validateName( "___" + obs.getName(), "-" );
-      
+
       // create temp file
       final File f = File.createTempFile( tempFileName, ".zml", m_tmpDir );
 
@@ -426,7 +454,7 @@ public class KalypsoObservationService implements IObservationService
       throw new NullPointerException( "ItemBean must not be null" );
 
     final String id = ZmlURL.removeServerSideId( obean.getId() );
-    
+
     // maybe bean already in map?
     if( m_mapBeanId2Item.containsKey( id ) )
       return (IRepositoryItem)m_mapBeanId2Item.get( id );
