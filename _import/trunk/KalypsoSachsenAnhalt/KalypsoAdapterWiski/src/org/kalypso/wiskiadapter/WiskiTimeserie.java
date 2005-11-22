@@ -593,6 +593,9 @@ public class WiskiTimeserie implements IObservation
         catch( final IllegalArgumentException e )
         {
           LOG.warning( "Metadata-Eigenschaft nicht erkannt: " + level );
+          
+          // set the property without Kalyso-Meaning, even if not recognized
+          md.setProperty( level, value );
         }
       }
     }

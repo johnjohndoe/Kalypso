@@ -30,10 +30,13 @@
 package org.kalypso.wiskiadapter;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -48,6 +51,8 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
  */
 public class WiskiObservationManipulator implements IObservationManipulator
 {
+  private final static Logger LOG = Logger.getLogger( WiskiObservationManipulator.class.getName() );
+  
   /**
    * This implementation tries to fetch the RatingTable from the file-cache and eventually updates the observation
    * metadata.
@@ -62,25 +67,42 @@ public class WiskiObservationManipulator implements IObservationManipulator
     if( obs == null || data == null || !( data instanceof String ) )
       return;
 
+    // check if this timeserie is designed to have a WQ-Relation (it must
+    // either has a W, Q, or V axis)
+    final IAxis[] axes = obs.getAxisList();
+    if( !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_WATERLEVEL ) &&
+        !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_RUNOFF ) &&
+        !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_VOLUME ) )
+      return;
+    
     // does nothing if WQ-Stuff already here
     if( obs.getMetadataList().containsKey( TimeserieConstants.MD_WQTABLE ) )
       return;
 
+    LOG.info( "Trying to manipulate observation: " + obs.getName() + " with WQ-Table from cache");
+    
     // no WQ-Information, try to load it from the file cache
     final String tsInfoName = (String)data;
 
     final WQTableSet set = RatingTableCache.getInstance().get( tsInfoName, new Date() );
     if( set == null )
+    {
+      LOG.info( "No WQ-Information found in cache, aborting." );
+      
       return;
+    }
 
     final String xml;
     try
     {
       xml = WQTableFactory.createXMLString( set );
       obs.getMetadataList().setProperty( TimeserieConstants.MD_WQTABLE, xml );
+      
+      LOG.info( "WQ-Table successfully added to metadata." );
     }
     catch( final WQException e )
     {
+      LOG.throwing( getClass().getName(), "manipulate", e );
       throw new SensorException( e );
     }
   }

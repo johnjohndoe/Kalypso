@@ -47,15 +47,15 @@ public class WiskiRepository extends AbstractRepository
    * @param conf
    *          the configuration should be build the followin way: URL # DOMAIN # LOGIN-NAME # PASSWORD # LANGUAGE
    */
-  public WiskiRepository( String name, String factory, String conf, boolean readOnly ) throws RepositoryException
+  public WiskiRepository( String name, String factory, String conf, boolean readOnly )
   {
     super( name, factory, conf, readOnly );
 
-    final WiskiConfigValidator validator = new WiskiConfigValidator( );
+    final WiskiConfigValidator validator = new WiskiConfigValidator();
     final String msg = validator.isValid( conf );
     if( msg != null )
-      throw new RepositoryException( msg );
-      
+      throw new IllegalArgumentException( msg );
+
     m_url = validator.getUrl();
     m_domain = validator.getDomain();
     m_logonName = validator.getLogonName();
@@ -68,7 +68,14 @@ public class WiskiRepository extends AbstractRepository
     m_userData.put( "password", m_password );
     m_userData.put( "language", language );
 
-    m_wiski = wiskiInit();
+    try
+    {
+      m_wiski = wiskiInit();
+    }
+    catch( final RepositoryException ignored )
+    {
+      // empty
+    }
   }
 
   /**
@@ -100,7 +107,7 @@ public class WiskiRepository extends AbstractRepository
 
       return myServerObject;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new RepositoryException( e );
     }
@@ -120,6 +127,9 @@ public class WiskiRepository extends AbstractRepository
 
   private final void wiskiLogout()
   {
+    if( m_wiski == null )
+      return;
+    
     try
     {
       LOG.info( "Logging out from WISKI-WDP" );
@@ -214,7 +224,7 @@ public class WiskiRepository extends AbstractRepository
       {
         if( e instanceof RepositoryException )
           throw (RepositoryException)e;
-        
+
         throw new RepositoryException( "Gruppenarten konnte nicht ermittelt werden", e );
       }
 
@@ -253,7 +263,7 @@ public class WiskiRepository extends AbstractRepository
       // out. So we try here to reconnect and to perform the call again.
       wiskiLogout();
 
-      wiskiInit();
+      m_wiski = wiskiInit();
 
       call.execute( m_wiski, m_userData );
     }
