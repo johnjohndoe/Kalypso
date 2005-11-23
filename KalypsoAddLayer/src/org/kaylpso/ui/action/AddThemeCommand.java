@@ -60,6 +60,12 @@ public class AddThemeCommand implements ICommand
 
   private IKalypsoTheme m_theme;
 
+  public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type,
+      final String featurePath, final String source ) throws JAXBException
+  {
+    this( model, name, type, featurePath, source, null, null, null, null );
+  }
+
   /**
    * This command adds a new layer to
    * 
@@ -81,10 +87,14 @@ public class AddThemeCommand implements ICommand
    *          a valid resouce path (of the used plugin or a valid URL )
    * @param styleType
    *          sets the type simple or complex
+   * @deprecated use constrtuctor without style information
+   * 
+   * TODO separate AddTheme from AddStyle, at the moment AddTheme is both
    *  
    */
-  public AddThemeCommand( GisTemplateMapModell model, String name, String type, String featurePath, String source,
-      String stylelinktype, String style, String styleLocation, String styleType ) throws JAXBException
+  public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type,
+      final String featurePath, final String source, final String stylelinktype, final String style,
+      final String styleLocation, final String styleType ) throws JAXBException
   {
     m_mapModell = model;
     int id = m_mapModell.getThemeSize() + 1;
@@ -96,18 +106,19 @@ public class AddThemeCommand implements ICommand
     m_layer.setLinktype( type );
     m_layer.setId( "ID_" + id );
     m_layer.setVisible( true );
-
-    List styleList = m_layer.getStyle();
-    //Style Type
-    org.kalypso.template.types.ObjectFactory otype = new org.kalypso.template.types.ObjectFactory();
-    StyleType layertype = otype.createStyledLayerTypeStyleType();
-    layertype.setLinktype( stylelinktype );
-    layertype.setStyle( style );
-    layertype.setHref( styleLocation );
-    layertype.setActuate( "onRequest" );
-    layertype.setType( styleType );
-    styleList.add( layertype );
-
+    if( stylelinktype != null && style != null && styleLocation != null && styleType != null )
+    {
+      List styleList = m_layer.getStyle();
+      //Style Type
+      org.kalypso.template.types.ObjectFactory otype = new org.kalypso.template.types.ObjectFactory();
+      StyleType layertype = otype.createStyledLayerTypeStyleType();
+      layertype.setLinktype( stylelinktype );
+      layertype.setStyle( style );
+      layertype.setHref( styleLocation );
+      layertype.setActuate( "onRequest" );
+      layertype.setType( styleType );
+      styleList.add( layertype );
+    }
   }
 
   /**

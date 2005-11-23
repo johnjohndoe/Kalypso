@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.deegree.services.wms.capabilities.Layer;
 import org.deegree.services.wms.capabilities.WMSCapabilities;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -41,10 +39,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ui.ImageProvider;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -110,8 +106,6 @@ public class ImportWmsWizardPage extends WizardPage
 
   Button m_multiLayerButton;
 
-  protected boolean m_useAthentification = false;
-
   /** current selected base url */
   private URL m_baseURL = null;
 
@@ -166,8 +160,7 @@ public class ImportWmsWizardPage extends WizardPage
         true, true ) );
 
     // 1. column
-    m_capabilitiesTree = new TreeViewer( m_layerSelection, SWT.BORDER | SWT.MULTI |  SWT.V_SCROLL
-        | SWT.H_SCROLL );
+    m_capabilitiesTree = new TreeViewer( m_layerSelection, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
     GridData data = new GridData( GridData.FILL_BOTH );
     data.grabExcessHorizontalSpace = true;
     data.grabExcessVerticalSpace = true;
@@ -189,10 +182,34 @@ public class ImportWmsWizardPage extends WizardPage
       {
         final IStructuredSelection selection = (IStructuredSelection)m_capabilitiesTree.getSelection();
         final List input = (List)m_selectedLayers.getInput();
-        input.addAll( selection.toList() );
+        List selectableLayer = new ArrayList();
+        for( Iterator iter = selection.iterator(); iter.hasNext(); )
+        {
+          final Layer layer = (Layer)iter.next();
+          selectableLayer = getSelectableLayer( selectableLayer, layer );
+        }
+        input.addAll( selectableLayer );
         m_selectedLayers.setInput( input );
         m_multiLayerButton.setEnabled( input.size() > 1 );
         setPageComplete( !input.isEmpty() );
+      }
+
+      private List getSelectableLayer( final List resultCollector, final Layer layer )
+      {
+        List resultList;
+        if( resultCollector == null )
+          resultList = new ArrayList();
+        else
+          resultList = resultCollector;
+        final Layer[] subLayers = layer.getLayer();
+        if( subLayers.length > 0 )
+        {
+          for( int i = 0; i < subLayers.length; i++ )
+            resultList = getSelectableLayer( resultList, subLayers[i] );
+        }
+        else
+          resultList.add( layer );
+        return resultList;
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
@@ -328,52 +345,9 @@ public class ImportWmsWizardPage extends WizardPage
     } );
     urlCombo.select( 0 );
 
-    // add spacer
-    final Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
-    label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 3 ) );
-
-    // usr
-    final Label labelUser = new Label( fieldGroup, SWT.NONE );
-    labelUser.setText( "Benutzername:" );
-    labelUser.setToolTipText( "Server Login Benutzername" );
-    labelUser.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
-
-    final Text textUser = new Text( fieldGroup, SWT.BORDER );
-    textUser.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
-    // pass
-    final Label labelPass = new Label( fieldGroup, SWT.NONE );
-    labelPass.setText( "Passwort:" );
-    labelPass.setToolTipText( "Server Login Passwort" );
-    labelPass.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
-
-    final Text textPass = new Text( fieldGroup, SWT.BORDER | SWT.PASSWORD );
-    textPass.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
-    final Button checkAuthentification = new Button( fieldGroup, SWT.CHECK );
-    checkAuthentification.setText( "Authentifizierung" );
-    checkAuthentification.setToolTipText( "Eingabe von Benutzername und Passwort für den Zugriff auf den Service" );
-    checkAuthentification.setSelection( false );
-    checkAuthentification.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        boolean selected = checkAuthentification.getSelection();
-        m_useAthentification = selected;
-        //        m_textUser.setVisible( true );
-        //        m_pass.setVisible( true );
-        //        m_labelUser.setVisible( true );
-        //        m_labelPass.setVisible( true );
-        //        updateLayerSelection();
-        // TODO
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-      // nothing to do
-
-      }
-    } );
+    //    // add spacer
+    //    final Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
+    //    label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 3 ) );
 
   }
 
@@ -401,23 +375,9 @@ public class ImportWmsWizardPage extends WizardPage
     if( !m_capabilites.containsKey( service ) )
     {
       final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
-      //      final URL urlGetCapabilities = new URL( service, "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities" );
       final URL urlGetCapabilities = new URL( service.toString() + "?SERVICE=WMS&REQUEST=GetCapabilities" );
-      //      final URLConnection connection = urlGetCapabilities.openConnection();
-      //checks authentification if needed adds the password and login to the
-      // stream
-      //      if( NetWorker.requiresAuthentification( connection ) )
-      //      {
-      //        final String pw = m_user.getText() + ":" + m_pass.getText();
-      //        final String epw = "Basic " + ( new BASE64Encoder() ).encode( pw.getBytes() );
-      //        connection.addRequestProperty( "Proxy-Authorization", epw );
-      //      }
-      //      NetWorker.configureProxy( connection );
-      //      connection.addRequestProperty( "SERVICE", "WMS" );
-      //      connection.addRequestProperty( "VERSION", "1.1.1" );
-      //      connection.addRequestProperty( "REQUEST", "GetCapabilities" );
-      //      final Reader reader = new InputStreamReader( connection.getInputStream() );
 
+      // TODO set timeout somewhere
       int timeOut = 10000;
       final InputStream inputStream = getFromURL( urlGetCapabilities, timeOut );
       final Reader reader = new InputStreamReader( inputStream );
@@ -572,7 +532,7 @@ public class ImportWmsWizardPage extends WizardPage
      * 
      * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+    public IStatus execute( final IProgressMonitor monitor )
     {
       IStatus result = Status.OK_STATUS;
 

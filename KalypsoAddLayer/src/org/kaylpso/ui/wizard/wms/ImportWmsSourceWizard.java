@@ -100,7 +100,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
           layers = layers + layer;
 
           AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layername, "wms", null, url
-              + "#" + layers + "#" + authentification, null, null, null, "simple" );
+              + "#" + layers + "#" + authentification);
           m_outlineviewer.postCommand( command, null );
         }
       }

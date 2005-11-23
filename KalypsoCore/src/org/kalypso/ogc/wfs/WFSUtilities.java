@@ -56,6 +56,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
+import org.xml.sax.SAXException;
 
 /**
  * 
@@ -64,60 +65,40 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class WFSUtilities
 {
 
-  public static WFSCapabilities getCapabilites( final URL baseURL )
+  public static WFSCapabilities getCapabilites( final URL baseURL ) throws IOException, SAXException, Exception
   {
-    WFSCapabilities caps = null;
-    try
-    {
-      final URL urlGetCap = new URL( baseURL + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
-      final URLConnection conGetCap = urlGetCap.openConnection();
-      //      conGetCap.addRequestProperty( "SERVICE", "WFS" );
-      //      conGetCap.addRequestProperty( "VERSION", "1.0.0" );
-      //      conGetCap.addRequestProperty( "REQUEST", "GetCapabilities" );
-      InputStream isGetCap = conGetCap.getInputStream();
-      Reader reader = new InputStreamReader( isGetCap );
-      caps = WFSCapabilitiesFactory.createCapabilities( reader );
-    }
-    catch( MalformedURLException urle )
-    {
-      urle.printStackTrace();
-      // TODO
-      // MessageDialog urlMessage = new MessageDialog(null, "Loading WFS
-      // Capabilites",null , "Fehler beim Laden des WFS Themas",
-      // MessageDialog.ERROR, 0, null);
-    }
-    catch( IOException ioe )
-    {
-      ioe.printStackTrace();
-      // TODO MessageDialog
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      // TODO MessageDialog
-    }
-    return caps;
+    final URL urlGetCap = new URL( baseURL + "?" + "SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities" );
+    final URLConnection conGetCap = urlGetCap.openConnection();
+    final InputStream isGetCap = conGetCap.getInputStream();
+    final Reader reader = new InputStreamReader( isGetCap );
+    return WFSCapabilitiesFactory.createCapabilities( reader );
   }
 
-  public static String buildGetFeatureRequestPOST( final String featureTypeToLoad, final String filter )
+  public static String buildGetFeatureRequestPOST( final String featureTypeToLoad, final String filter,
+      final String maxFeatureAsString )
   {
     final StringBuffer sb = new StringBuffer();
     final int maxFeatures = 10;
 
     sb.append( "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" );// iso-8859-1
-    sb.append( "<wfs:GetFeature outputFormat=\"GML2\"" //
-        + " xmlns:gml=\"http://www.opengis.net/gml\" "// 
-        + " xmlns:wfs=\"http://www.opengis.net/wfs\"" //
-        + " xmlns:ogc=\"http://www.opengis.net/ogc\"" //
-        + " maxFeatures=\"" + maxFeatures + "\"" //
-        + " >\n" );
+    sb.append( "<wfs:GetFeature outputFormat=\"GML2\"" );
+    sb.append( " xmlns:gml=\"http://www.opengis.net/gml\" " );
+    sb.append( " xmlns:wfs=\"http://www.opengis.net/wfs\"" );
+    sb.append( " xmlns:ogc=\"http://www.opengis.net/ogc\"" );
+    if( maxFeatureAsString != null && maxFeatureAsString.length() > 0 )
+      sb.append( " maxFeatures=\"" + maxFeatures + "\"" );
+    sb.append( " >\n" );
     sb.append( "<wfs:Query typeName=\"" + featureTypeToLoad + "\">\n" );
-    //    sb.append( "<ogc:Filter>\n" );
-    //    sb.append( "<ogc:PropertyIsEqualTo wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" );
-    //    sb.append( "<ogc:PropertyName>VERSKLASSE</ogc:PropertyName>\n" );
-    //    sb.append( "<ogc:Literal>3</ogc:Literal>\n" );
-    //    sb.append( "</ogc:PropertyIsEqualTo>\n" );
-    //    sb.append( "</ogc:Filter>\n" );
+    if( filter != null && filter.length() > 0 )
+    {
+      sb.append( filter ).append( "\n" );
+      //      sb.append( "<ogc:Filter>\n" );
+      //      sb.append( "<ogc:PropertyIsEqualTo wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" );
+      //      sb.append( "<ogc:PropertyName>VERSKLASSE</ogc:PropertyName>\n" );
+      //      sb.append( "<ogc:Literal>3</ogc:Literal>\n" );
+      //      sb.append( "</ogc:PropertyIsEqualTo>\n" );
+      //      sb.append( "</ogc:Filter>\n" );
+    }
     sb.append( "</wfs:Query>\n" );
     sb.append( "</wfs:GetFeature>" );
     return sb.toString();
@@ -135,7 +116,7 @@ public class WFSUtilities
    * @throws Exception
    */
   public static GMLWorkspace createGMLWorkspaceFromGetFeature( final URL baseURL, final String featureTypeToLoad,
-      final CS_CoordinateSystem targetCRS, final String filter ) throws Exception
+      final CS_CoordinateSystem targetCRS, final String filter, final String maxFeatureAsString ) throws Exception
   {
     BufferedInputStream inputStream = null;
     PrintStream postWriter = null;
@@ -179,7 +160,8 @@ public class WFSUtilities
         OutputStream connectionOutputStream = con.getOutputStream();
         postWriter = new PrintStream( connectionOutputStream );
 
-        final String getFeaturePost = WFSUtilities.buildGetFeatureRequestPOST( featureTypeToLoad, filter );
+        final String getFeaturePost = WFSUtilities.buildGetFeatureRequestPOST( featureTypeToLoad, filter,
+            maxFeatureAsString );
         postWriter.print( getFeaturePost );
 
         //read response from the WFS server and create a GMLWorkspace
@@ -202,7 +184,7 @@ public class WFSUtilities
               FeatureVisitor.DEPTH_INFINITE );
         workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
-        return new CommandableWorkspace( workspace );
+        return workspace;
       }
       throw new UnsupportedOperationException( "GetFeature-Request: HTTP/Get is not supportet" );
     }

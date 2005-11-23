@@ -55,7 +55,6 @@ import javax.naming.OperationNotSupportedException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
-import org.deegree.services.wms.StyleNotDefinedException;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
@@ -77,7 +76,6 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -120,7 +118,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Group m_layerGroup;
 
-  private Composite m_buttonComposite;
+//  private Composite m_buttonComposite;
 
   private Label m_labelUser;
 
@@ -615,17 +613,24 @@ public class ImportWfsWizardPage extends WizardPage
     GMLSchema featureTypeSchema = null;
     for( int i = 0; i < layer.length; i++ )
     {
-      String l = layer[i];
-      FeatureType featureType = (FeatureType)m_featureTypes.get( l );
-      if( featureType == null )
+      final String l = layer[i];
+      if( !m_featureTypes.containsKey( l ) )
       {
         try
         {
           URL url = new URL( getUrl().toString().trim()
               + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + l );
-          featureTypeSchema = GMLSchemaCatalog.getSchema( url );
-          featureType = featureTypeSchema.getFeatureType( l );
-          m_featureTypes.put( l, featureType );
+          //          featureTypeSchema = GMLSchemaCatalog.getSchema( url );
+          // HACK
+          featureTypeSchema = GMLSchemaCatalog.getSchema( "http://bsu.hamburg.de/huis" );
+          final FeatureType featureType = featureTypeSchema.getFeatureType( l );
+          if( featureType != null )
+            m_featureTypes.put( l, featureType );
+          else if( l.indexOf( ":" ) >= 0 )
+          {
+            final String hackName=l.replaceAll("^.+:","");
+            m_featureTypes.put( l, featureTypeSchema.getFeatureType( hackName ) );
+          }
         }
         catch( Exception e )
         {
@@ -633,9 +638,8 @@ public class ImportWfsWizardPage extends WizardPage
           setPageComplete( false );
         }
       }
-
+      final FeatureType featureType = (FeatureType)m_featureTypes.get( l );
       res.add( featureType );
-
     }
     return (FeatureType[])res.toArray( new FeatureType[res.size()] );
   }
@@ -674,22 +678,13 @@ public class ImportWfsWizardPage extends WizardPage
     }
     throw new OperationNotSupportedException( "Guess of feature path failed!" );
   }
-
-  public URL setDefautltStyle( String layer ) throws StyleNotDefinedException
-  {
-
-    return KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( getFeatureType( layer ), null );
-  }
-
+  
   public void removeListeners()
   {
     m_addLayer.removeSelectionListener( m_addButtonSelectionListener );
     m_removeLayer.removeSelectionListener( m_removeButtonSelectionListener );
     m_listLeftSide.removeSelectionListener( m_leftSelectionListener );
     m_listRightSide.removeSelectionListener( m_rightSelectionListener );
-    //    m_url.removeKeyListener( this );
-    //    m_user.removeKeyListener( this );
-    //    m_pass.removeKeyListener( this );
   }
 
   public Filter getFilter( String layerName )

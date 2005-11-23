@@ -1,13 +1,9 @@
 package org.kaylpso.ui.wizard.shape;
 
-import java.io.File;
-import java.net.URL;
 import java.rmi.RemoteException;
 
 import javax.xml.bind.JAXBException;
 
-import org.deegree.services.wms.StyleNotDefinedException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -15,12 +11,8 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kaylpso.ui.action.AddThemeCommand;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -88,46 +80,15 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
 
     try
     {
-      File shapeBaseFile = m_page.getShapeBaseFile();
-
-      String stylePath = null;
-      String styleName = null;
-
-      if( m_page.checkDefaultStyle() )
-      {
-        //read Shapefile
-        GMLWorkspace shapeWS = ShapeSerializer.deserialize( shapeBaseFile.toString(), m_page.getCRS() );
-
-        //get DefaultStyle
-        styleName = shapeBaseFile.getName();
-        URL styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle(
-            shapeWS.getFeatureType( shapeBaseFile.toString() ), styleName );
-        stylePath = styleHref.toString();
-      }
-      else
-      {
-        stylePath = getRelativeProjectPath( m_page.getStylePath() );
-        styleName = m_page.getStyleName();
-      }
-
       //Add Layer to mapModell
       IMapModell mapModell = m_outlineviewer.getMapModell();
       String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
       String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
       AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, themeName, "shape",
-          "featureMember", fileName, "sld", styleName, stylePath, "simple" );
+          "featureMember", fileName );
       m_outlineviewer.postCommand( command, null );
     }
 
-    catch( GmlSerializeException e )
-    {
-      e.printStackTrace();
-      // TODO
-    }
-    catch( StyleNotDefinedException e )
-    {
-      e.printStackTrace();
-    }
     catch( RemoteException e )
     {
       e.printStackTrace();
@@ -138,11 +99,6 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     }
     m_page.removeListeners();
     return true;
-  }
-
-  private String getRelativeProjectPath( IPath path )
-  {
-    return "project:/" + path.removeFirstSegments( 1 ).toString();
   }
 
   /**
