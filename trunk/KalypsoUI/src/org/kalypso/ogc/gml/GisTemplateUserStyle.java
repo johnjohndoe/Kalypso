@@ -64,7 +64,6 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  */
 public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListener, IPooledObject
 {
-  private boolean m_disposed = false;
 
   private final PoolableObjectType m_styleKey;
 
@@ -131,21 +130,11 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     }
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
-   */
-  public boolean isDisposed()
-  {
-    return m_disposed;
-  }
-
   public void dispose()
   {
-    m_disposed = true;
-
+    super.dispose();
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.removePoolListener( this );
-
     m_userStyle = createDummyStyle();
   }
 

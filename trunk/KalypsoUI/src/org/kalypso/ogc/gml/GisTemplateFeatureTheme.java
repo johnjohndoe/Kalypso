@@ -186,22 +186,23 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     }
 
     //remove styles
-    for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
+    final GisTemplateUserStyle[] templateStyles = (GisTemplateUserStyle[])m_gisTemplateUserStyles
+        .toArray( new GisTemplateUserStyle[m_gisTemplateUserStyles.size()] );
+    for( int i = 0; i < templateStyles.length; i++ )
     {
-      GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
-      removeStyle(style);
-      style.dispose();
+      GisTemplateUserStyle style = templateStyles[i];
+      removeStyle( style );
     }
   }
 
-//  private void removeTemplateUserStyles()
-//  {
-//    for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
-//    {
-//      final GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
-//      removeStyle( style );
-//    }
-//  }
+  //  private void removeTemplateUserStyles()
+  //  {
+  //    for( Iterator iter = m_gisTemplateUserStyles.iterator(); iter.hasNext(); )
+  //    {
+  //      final GisTemplateUserStyle style = (GisTemplateUserStyle)iter.next();
+  //      removeStyle( style );
+  //    }
+  //  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
@@ -332,12 +333,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       // alles abfangen, damit der Pool trotzdem weitermacht
       e.printStackTrace();
     }
-//    ModellEvent event = new ModellEvent( this,null ) ;
-//    ModellEvent event = new ModellEvent( this, ModellEvent.FULL_CHANGE ) ;
-    if(m_theme!=null)
-      m_theme.fireModellEvent(null);
+    //    ModellEvent event = new ModellEvent( this,null ) ;
+    //    ModellEvent event = new ModellEvent( this, ModellEvent.FULL_CHANGE ) ;
+    if( m_theme != null )
+      m_theme.fireModellEvent( null );
     else
-      fireModellEvent(null);
+      fireModellEvent( null );
   }
 
   /**
@@ -392,12 +393,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   /**
    * 
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.mapmodel.KalypsoUserStyle)
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
   public void removeStyle( final KalypsoUserStyle style )
   {
     if( m_theme != null )
       m_theme.removeStyle( style );
+    style.dispose();
   }
 
   /**

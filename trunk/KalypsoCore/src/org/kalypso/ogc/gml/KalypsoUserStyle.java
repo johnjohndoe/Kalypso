@@ -52,14 +52,18 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable
 {
+  private boolean m_disposed = false;
+
   protected UserStyle m_userStyle;
+
   protected final String m_styleName;
-  public KalypsoUserStyle(final UserStyle style, final String styleName)
+
+  public KalypsoUserStyle( final UserStyle style, final String styleName )
   {
-    m_userStyle=style;
-    m_styleName=styleName;
+    m_userStyle = style;
+    m_styleName = styleName;
   }
-  
+
   /**
    * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
    */
@@ -73,7 +77,6 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     m_userStyle.addFeatureTypeStyle( featureTypeStyle );
   }
 
-  
   public String getAbstract()
   {
     return m_userStyle.getAbstract();
@@ -129,5 +132,13 @@ public class KalypsoUserStyle extends ModellEventProviderAdapter implements User
     m_userStyle.setTitle( title );
   }
 
-   
+  public boolean isDisposed()
+  {
+    return m_disposed;
+  }
+
+  public void dispose()
+  {
+    m_disposed = true;
+  }
 }

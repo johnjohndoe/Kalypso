@@ -70,7 +70,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
       {
         AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, m_page.getRelativeSourcePath()
             .removeFileExtension().lastSegment(), m_page.getFileType(), null, m_page.getURL().toString() + "#"
-            + m_page.getCSName(), "sld", null, null, "simple" );
+            + m_page.getCSName() );
         m_outlineviewer.postCommand( command, null );
       }
       catch( JAXBException e )

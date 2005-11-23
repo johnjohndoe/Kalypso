@@ -1,8 +1,5 @@
 package org.kaylpso.ui.wizard.gml;
 
-import java.net.URL;
-
-import org.deegree.services.wms.StyleNotDefinedException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
@@ -12,7 +9,6 @@ import org.kalypso.ogc.gml.featureTypeDialog.FeatureTypeSelectionDialog;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizard.data.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
@@ -73,9 +69,6 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
 
   private GmlFileImportPage m_page;
 
-  public KalypsoGmlImportWizard()
-  {}
-
   public void addPages()
   {
 
@@ -96,13 +89,11 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     {
       IMapModell mapModell = m_outlineviewer.getMapModell();
       String featureName = null;
-      URL styleHref = null;
       Feature[] features = m_page.getFeatures();
       for( int i = 0; i < features.length; i++ )
       {
         Feature feature = features[i];
         FeaturePath featureId = m_page.getWorkspace().getFeaturepathForFeature( feature );
-        FeatureType realFt = null;
         String featurePath = null;
         if( FeatureHelper.isCollection( feature ) )
         {
@@ -113,11 +104,9 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
           if( associationFeatureTypes.length == 1 )
           {
             featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName;
-            FeatureType ft = associationFeatureTypes[0];
             featureName = associationFeatureTypes[0].getName();
-            styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ft, null );
             AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml",
-                featurePath, m_page.getSource(), "sld", featureName, styleHref.toString(), "simple" );
+                featurePath, m_page.getSource() );
             m_outlineviewer.postCommand( command, null );
 
           }
@@ -135,9 +124,8 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
                 featureName = ftype.getName();
                 featurePath = featureId.toString() + FeaturePath.SEGMENT_SEPARATOR + typeName
                     + FeaturePath.TYPENAME_TAG_OPEN + featureName + FeaturePath.TYPENAME_TAG_CLOSE;
-                styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( ftype, null );
                 AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml",
-                    featurePath, m_page.getSource(), "sld", featureName, styleHref.toString(), "simple" );
+                    featurePath, m_page.getSource() );
                 m_outlineviewer.postCommand( command, null );
               }
             }
@@ -147,21 +135,14 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
         }
         else
         {
-          realFt = feature.getFeatureType();
-
           featureName = feature.getFeatureType().getName();
-          styleHref = KalypsoGisPlugin.getDefaultStyleFactory().getDefaultStyle( realFt, null );
           AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, featureName, "gml", featureId
-              .toString(), m_page.getSource(), "sld", realFt.getName(), styleHref.toString(), "simple" );
+              .toString(), m_page.getSource() );
           m_outlineviewer.postCommand( command, null );
 
         }
       }
 
-    }
-    catch( StyleNotDefinedException e )
-    {
-      e.printStackTrace();
     }
     catch( Exception e )
     {

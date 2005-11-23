@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
-
-import javax.naming.OperationNotSupportedException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -74,14 +71,11 @@ import org.kaylpso.ui.action.AddThemeCommand;
  */
 public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
-  private ImportWfsWizardPage m_page;
+  private ImportWfsWizardPage m_importWFSPage;
 
   private GisMapOutlineViewer m_outlineviewer;
 
   private ArrayList m_catalog;
-
-  public ImportWfsSourceWizard()
-  {}
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
@@ -92,45 +86,47 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     if( m_outlineviewer.getMapModell() != null )
       try
       {
-        String[] layers = m_page.getSelectedFeatureNames();
+        String[] layers = m_importWFSPage.getSelectedFeatureNames();
         for( int i = 0; i < layers.length; i++ )
         {
           String layer = layers[i];
-          //Write the defaultStyle to the system-default temporary directory
-          URL style = m_page.setDefautltStyle( layer );
-          Filter filter = m_page.getFilter( layer );
-          String xml = null;
-          if( filter == null )
-            xml = "";
-          else if( filter instanceof ComplexFilter )
+          final Filter filter = m_importWFSPage.getFilter( layer );
+
+          final String xml;
+          if( filter instanceof ComplexFilter )
             xml = ( (ComplexFilter)filter ).toXML().toString();
           else if( filter instanceof FeatureFilter )
             xml = ( (FeatureFilter)filter ).toXML().toString();
           else if( filter instanceof ElseFilter )
             xml = ( (ElseFilter)filter ).toXML().toString();
+          else
+            xml = null;
           // TODO here the featurePath is set to featureMember because this is
           // the top feature of the GMLWorkspace
           // it must be implemented to only set the name of the feature
           // (relative path of feature)
-          String featurePath = m_page.guessFeaturePath( layer );
-          if( featurePath == null )
-            throw new OperationNotSupportedException(
-                "The guessing of feature path has failed. The user has to choose the feature path, not implemented yet" );
+          final String featurePath = "featureMember[" + layer + "]";
 
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layer, "wfs", featurePath,
-              "#" + WfsLoader.URL_KEY + "=" + m_page.getUrl() + "#" + WfsLoader.FEATURE_KEY + "=" + layer + "#"
-                  + WfsLoader.FILTER_KEY + "=" + xml, "sld", layer, style.toString(), "simple" );
+          final StringBuffer source = new StringBuffer();
+          source.append( "#" ).append( WfsLoader.KEY_URL ).append( "=" ).append( m_importWFSPage.getUrl() );
+          source.append( "#" ).append( WfsLoader.KEY_FEATURETYPE ).append( "=" ).append( layer );
+          if( xml != null )
+            source.append( "#" ).append( WfsLoader.KEY_FILTER ).append( "=" ).append( xml );
+          final int maxfeatures = 10;
+          if( maxfeatures != WfsLoader.MAXFEATURE_UNBOUNDED )
+            source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append(
+                Integer.toString( maxfeatures ) );
+          final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layer, "wfs", featurePath,
+              source.toString() );
           m_outlineviewer.postCommand( command, null );
-
         }
-
       }
       catch( Exception e )
       {
         e.printStackTrace();
         return false;
       }
-    m_page.removeListeners();
+    m_importWFSPage.removeListeners();
     return true;
   }
 
@@ -160,9 +156,9 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   public void addPages()
   {
-    m_page = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden",
+    m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden",
         ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    addPage( m_page );
+    addPage( m_importWFSPage );
 
   }
 
