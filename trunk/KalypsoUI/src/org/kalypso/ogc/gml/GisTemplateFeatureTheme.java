@@ -382,7 +382,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   /**
    * 
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.mapmodel.KalypsoUserStyle)
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
   public void addStyle( final KalypsoUserStyle style )
   {

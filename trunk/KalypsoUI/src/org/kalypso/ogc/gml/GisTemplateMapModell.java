@@ -314,6 +314,7 @@ public class GisTemplateMapModell implements IMapModell
   public void removeTheme( IKalypsoTheme theme )
   {
     m_modell.removeTheme( theme );
+    theme.dispose();
   }
 
   public void setCoordinateSystem( CS_CoordinateSystem crs ) throws Exception
