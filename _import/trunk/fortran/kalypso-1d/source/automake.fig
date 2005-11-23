@@ -9,4 +9,4 @@ COMPILE=@lf95 -c -winconsole -nchk -ng -co -sav  -pca -stchk  -trace   -nxref -o
 
 LINK=@lf95 @%rf -winconsole resource.rc -wisk -exe %ex
 
-TARGET=../build/exe/Kalypso-1D_Vers_1_0_14.exe
+TARGET=../build/exe/Kalypso-1D.exe
