@@ -55,7 +55,6 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
@@ -65,32 +64,35 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  */
 public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListener, IPooledObject
 {
-  private final UserStyle dummyStyle = new UserStyle_Impl( "loading", "loading", "abstract", false,
-      new FeatureTypeStyle[0] );
-
   private boolean m_disposed = false;
 
   private final PoolableObjectType m_styleKey;
 
-  private final String m_styleName;
-
-  private UserStyle m_userStyle = dummyStyle;
+  //  private UserStyle m_userStyle = dummyStyle;
 
   private boolean m_loaded = false;
 
   public GisTemplateUserStyle( final PoolableObjectType poolableStyleKey, final String styleName )
   {
+    super( createDummyStyle(), styleName );
     m_styleKey = poolableStyleKey;
-    m_styleName = styleName;
+    //    m_styleName = styleName;
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.addPoolListener( this, m_styleKey );
   }
 
+  /**
+   * @return a empty style
+   */
+  private static UserStyle createDummyStyle()
+  {
+    return new UserStyle_Impl( "loading", "loading", "abstract", false, new FeatureTypeStyle[0] );
+  }
+
   public GisTemplateUserStyle( final UserStyle style, final String name )
   {
-    m_userStyle = style;
-    m_styleName = name;
+    super( style, name );
     m_styleKey = null;
   }
 
@@ -124,7 +126,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 )
     {
       m_loaded = false;
-      m_userStyle = dummyStyle;
+      m_userStyle = createDummyStyle();
       fireModellEvent( new ModellEvent( this, ModellEvent.FULL_CHANGE ) );
     }
   }
@@ -144,7 +146,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.removePoolListener( this );
 
-    m_userStyle = dummyStyle;
+    m_userStyle = createDummyStyle();
   }
 
   /**
@@ -168,73 +170,5 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     styleType.setStyle( m_styleName );
     styleType.setType( "simple" );
     stylesList.add( styleType );
-  }
-
-  /**
-   * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
-   */
-  public String exportAsXML()
-  {
-    return ( (Marshallable)m_userStyle ).exportAsXML();
-  }
-
-  public void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
-  {
-    m_userStyle.addFeatureTypeStyle( featureTypeStyle );
-  }
-
-  public String getAbstract()
-  {
-    return m_userStyle.getAbstract();
-  }
-
-  public FeatureTypeStyle[] getFeatureTypeStyles()
-  {
-    return m_userStyle.getFeatureTypeStyles();
-  }
-
-  public String getName()
-  {
-    return m_userStyle.getName();
-  }
-
-  public String getTitle()
-  {
-    return m_userStyle.getTitle();
-  }
-
-  public boolean isDefault()
-  {
-    return m_userStyle.isDefault();
-  }
-
-  public void removeFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
-  {
-    m_userStyle.removeFeatureTypeStyle( featureTypeStyle );
-  }
-
-  public void setAbstract( String abstract_ )
-  {
-    m_userStyle.setAbstract( abstract_ );
-  }
-
-  public void setDefault( boolean default_ )
-  {
-    m_userStyle.setDefault( default_ );
-  }
-
-  public void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles )
-  {
-    m_userStyle.setFeatureTypeStyles( featureTypeStyles );
-  }
-
-  public void setName( String name )
-  {
-    m_userStyle.setName( name );
-  }
-
-  public void setTitle( String title )
-  {
-    m_userStyle.setTitle( title );
   }
 }
