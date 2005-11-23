@@ -376,7 +376,7 @@
                    id="org.kalypso.ui.editor.mapeditor.action.CoordinateInfoAction">
          </action>
          <action
-               disabledIcon="icons/map/geoInfo_gray.gif"
+               disabledIcon="icons/map/wmsInfo_gray.gif"
                toolbarPath="karte/tools"
                label="%Extension.EditorActions.GisMapEditor.wmsInfo.label"
                icon="icons/map/wmsInfo.gif"
