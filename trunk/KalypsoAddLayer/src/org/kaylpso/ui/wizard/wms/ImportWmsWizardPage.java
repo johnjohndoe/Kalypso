@@ -132,10 +132,8 @@ public class ImportWmsWizardPage extends WizardPage
     topControl.setLayout( new GridLayout( 1, false ) );
     createUrlField( topControl );
 
-    //    createLayerSelection( group );
     createLayerSelection( topControl );
 
-    //    m_layerSelection.setVisible( false );
     m_layerSelection.setVisible( true );
     setControl( topControl );
   }
@@ -172,7 +170,6 @@ public class ImportWmsWizardPage extends WizardPage
     m_capabilitiesTree.setLabelProvider( wmsCapabilitiesLabelProvider );
 
     // 2. column
-
     final Button buttonAddLayer = new Button( m_layerSelection, SWT.PUSH );
     buttonAddLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     buttonAddLayer.setToolTipText( "Hinzufügen eines Themas zu der Kartenansicht" );
@@ -460,16 +457,16 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * @return the selected layers
    */
-  public String[] getLayersNameList()
+  public Layer[] getLayersList()
   {
     final List result = new ArrayList();
     final List list = (List)m_selectedLayers.getInput();
     for( Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final Layer layer = (Layer)iter.next();
-      result.add( layer.getName() );
+      result.add( layer );
     }
-    return (String[])result.toArray( new String[result.size()] );
+    return (Layer[])result.toArray( new Layer[result.size()] );
   }
 
   /**
