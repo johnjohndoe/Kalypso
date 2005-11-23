@@ -99,16 +99,13 @@ COMMON / alph_pf / alph_aus, nr_alph
 
 !HB   Variablen zur Uebergabe des Energiestrombeiwertes und des         
 !HB   Boussineq-Beiwertes                                               
-INTEGER pn_alpha
-REAL st_alpha, alpha_EW (maxkla), alpha_IW (maxkla), gesamt_a (maxkla)
+INTEGER :: pn_alpha
+REAL :: st_alpha, alpha_EW (maxkla), alpha_IW (maxkla), gesamt_a (maxkla)
 COMMON / nr_alpha / pn_alpha, st_alpha, gesamt_a, alpha_EW, alpha_IW
                                                                         
 !HB   Uebergabe Sohlgefaelle aus SUB NORMBER                            
 REAL g_sohl
 COMMON / gef_sohl / g_sohl
-                                                                        
-
-
 
 
 INTEGER i, i_zaehl
