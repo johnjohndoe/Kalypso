@@ -72,7 +72,7 @@ public class RemoveThemeCommand implements ICommand
    */
   public void process() throws Exception
   {
-    m_mapModell.removeTheme( m_theme );
+    m_mapModell.removeTheme( m_theme );   
   }
 
   /**

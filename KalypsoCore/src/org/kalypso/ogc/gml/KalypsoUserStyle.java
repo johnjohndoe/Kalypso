@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree.xml.Marshallable;
@@ -49,7 +50,84 @@ import org.kalypsodeegree.xml.Marshallable;
  * 
  * @author bce
  */
-public abstract class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable
+public class KalypsoUserStyle extends ModellEventProviderAdapter implements UserStyle, Marshallable
 {
-  // 
+  protected UserStyle m_userStyle;
+  protected final String m_styleName;
+  public KalypsoUserStyle(final UserStyle style, final String styleName)
+  {
+    m_userStyle=style;
+    m_styleName=styleName;
+  }
+  
+  /**
+   * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
+   */
+  public String exportAsXML()
+  {
+    return ( (Marshallable)m_userStyle ).exportAsXML();
+  }
+
+  public void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
+  {
+    m_userStyle.addFeatureTypeStyle( featureTypeStyle );
+  }
+
+  
+  public String getAbstract()
+  {
+    return m_userStyle.getAbstract();
+  }
+
+  public FeatureTypeStyle[] getFeatureTypeStyles()
+  {
+    return m_userStyle.getFeatureTypeStyles();
+  }
+
+  public String getName()
+  {
+    return m_userStyle.getName();
+  }
+
+  public String getTitle()
+  {
+    return m_userStyle.getTitle();
+  }
+
+  public boolean isDefault()
+  {
+    return m_userStyle.isDefault();
+  }
+
+  public void removeFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
+  {
+    m_userStyle.removeFeatureTypeStyle( featureTypeStyle );
+  }
+
+  public void setAbstract( String abstract_ )
+  {
+    m_userStyle.setAbstract( abstract_ );
+  }
+
+  public void setDefault( boolean default_ )
+  {
+    m_userStyle.setDefault( default_ );
+  }
+
+  public void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles )
+  {
+    m_userStyle.setFeatureTypeStyles( featureTypeStyles );
+  }
+
+  public void setName( String name )
+  {
+    m_userStyle.setName( name );
+  }
+
+  public void setTitle( String title )
+  {
+    m_userStyle.setTitle( title );
+  }
+
+   
 }
