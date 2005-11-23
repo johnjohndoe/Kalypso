@@ -1,0 +1,12 @@
+QUITONERROR
+
+FILES = ./*.f90
+
+OBJDIR=../build/objs/
+
+#COMPILE=@lf95 -c -nchk -ng -co -sav  -pca -nstchk  -trace   -nxref -o1 -w -o %OD%SF%OE %fi -ZERO    <- Standard, mit dem es funktioniert!
+COMPILE=@lf95 -c -winconsole -nchk -ng -co -sav  -pca -stchk  -trace   -nxref -o1 -w -o %OD%SF%OE %fi -ZERO resource.rc -wisk
+
+LINK=@lf95 @%rf -winconsole resource.rc -wisk -exe %ex
+
+TARGET=../build/exe/Kalypso-1D_Vers_1_0_14.exe
