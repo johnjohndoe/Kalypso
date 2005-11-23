@@ -85,13 +85,21 @@ import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
 /**
- * @author Kuepferle
+ * @author Doemming Kuepferle
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme
-//implements OGCWebServiceClient
 {
+  public final static String KEY_LAYERS = "LAYERS";
+
+  public final static String KEY_URL = "URL";
+
+  public static final String KEY_STYLES = "STYLES";
+
   /** layerlist to fetch from WMS */
   private final String m_layers;
+
+  /** styleList to fetch from WMS */
+  private final String m_styles;
 
   /** remote WMS */
   private RemoteWMService m_remoteWMS;
@@ -132,8 +140,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   {
     super( themeName, linktype.toUpperCase() );
     final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
-    m_layers = sourceProps.getProperty( "LAYERS", "" );
-    final String service = sourceProps.getProperty( "URL", "" );
+    m_layers = sourceProps.getProperty( KEY_LAYERS, null );
+    m_styles = sourceProps.getProperty( KEY_STYLES, null );
+    final String service = sourceProps.getProperty( KEY_URL, null );
     m_localSRS = localSRS;
     m_source = source;
 
@@ -141,32 +150,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     try
     {
       final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
-
-      // TODO check: are the properties added twice ?? see also addRequestProperty below
       final URL url = new URL( service + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities" );
+      //      final URL url = new URL( service + "?SERVICE=WMS&REQUEST=GetCapabilities" );
       final URLConnection c = url.openConnection();
       NetWorker.configureProxy( c );
-      // checks authentification TODO test if it works (this is a fast
-      // implemention)
-      //      if( NetWorker.requiresAuthentification(c) )
-      //      
-      //      {
-      //        setAuthentification( true );
-      //        m_pass = sourceProps.getProperty("PASS", null);
-      //        m_user = sourceProps.getProperty("USER", null);
-      //        if(m_pass == null || m_user == null )
-      //          return;
-      //        final String pw = m_user + ":" + m_pass;
-      //        final String epw = "Basic " + ( new BASE64Encoder() ).encode(
-      // pw.getBytes() );
-      //
-      //        c.addRequestProperty( "Proxy-Authorization", epw );
-      //      }
       c.addRequestProperty( "SERVICE", "WMS" );
-
-      // TODO ask version in dialog before or try on error and begin with newest version
-      // TODO check with WMS-Specs if version is mandatory or not
-      //      c.addRequestProperty( "VERSION", "1.1.1");
 
       c.addRequestProperty( "REQUEST", "GetCapabilities" );
 
@@ -326,8 +314,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     wmsParameter.put( "VERSION", m_wmsCaps.getVersion() );
     wmsParameter.put( "REQUEST", "getMap" );
     wmsParameter.put( "LAYERS", m_layers );
-    // TODO check for valid styles, otherwise deegree uses "STYLES=default"
-    // I guess kalypso should provide a style name allways (check with specs)
+    if( m_styles != null )
+      wmsParameter.put( "STYLES", m_styles );
+
     // some WMS-themes use style name="" and when deegree makes "STYLES=default" out of this, this does not work
     // I think style name="" is also not valid (can we be flexible ?)
     // ask me ( v.doemming@tuhh.de )

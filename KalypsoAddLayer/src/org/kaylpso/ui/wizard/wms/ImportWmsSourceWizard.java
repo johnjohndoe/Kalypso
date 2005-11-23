@@ -7,10 +7,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
+import org.deegree.services.wms.capabilities.Layer;
+import org.deegree.services.wms.capabilities.Style;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ui.ImageProvider;
@@ -67,8 +70,6 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 {
   private ImportWmsWizardPage m_page = null;
 
-  private String[] m_layers;
-
   private GisMapOutlineViewer m_outlineviewer;
 
   private ArrayList m_catalog;
@@ -83,25 +84,60 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
       try
       {
-        final String url = "URL=" + m_page.getBaseURL().toString();
-        //TODO verschlüsslung, samit in der gmt datei die info nicht gelesen
-        // werden kann
-        //        String authentification = "USER=" + m_page.getUserName() + "PASS=" + m_page.getPassWord();
-        String authentification = "USER=" + "xxx" + "PASS=" + "xxx";
-        m_layers = m_page.getLayersNameList();
-        for( int i = 0; i < m_layers.length; i++ )
-        {
-          String layers = "LAYERS=";
-          String layer = m_layers[i];
-          String layername = layer;
-          //TODO create a list and add to tooltip for layer ??
-          if( m_layers.length == 1 && m_page.isMultiLayer() )
-            layername = "Multi Layer:" + layername;
-          layers = layers + layer;
+        final boolean isMulti = m_page.isMultiLayer();
+        final StringBuffer source = new StringBuffer( KalypsoWMSTheme.KEY_URL + "=" + m_page.getBaseURL().toString() );
+        final StringBuffer layers = new StringBuffer( KalypsoWMSTheme.KEY_LAYERS + "=" );
+        final StringBuffer styles = new StringBuffer( KalypsoWMSTheme.KEY_STYLES + "=" );
+        final Layer[] layerArray = m_page.getLayersList();
 
-          AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layername, "wms", null, url
-              + "#" + layers + "#" + authentification);
+        if( isMulti )
+        {
+          for( int i = 0; i < layerArray.length; i++ )
+          {
+            final Layer layer = layerArray[i];
+            final String layerName = layer.getName();
+            final String styleName;
+            final Style[] styles2 = layer.getStyles();
+            if( styles2.length > 0 )
+              styleName = styles2[0].getName();
+            else
+              styleName = "default";
+            layers.append( layerName );
+            styles.append( styleName );
+            if( i < layerArray.length - 1 )
+            {
+              layers.append( "," );
+              styles.append( "," );
+            }
+          }
+          final String layerName = "Multi" + source;
+          source.append( "#" ).append( layers.toString() );
+          source.append( "#" ).append( styles.toString() );
+          final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layerName, "wms", null,
+              source.toString() );
           m_outlineviewer.postCommand( command, null );
+        }
+        else
+        {
+          for( int i = 0; i < layerArray.length; i++ )
+          {
+            final Layer layer = layerArray[i];
+            final String layerName = layer.getName();
+            final String styleName;
+            final Style[] styles2 = layer.getStyles();
+            if( styles2.length > 0 )
+              styleName = styles2[0].getName();
+            else
+              styleName = "default";
+
+            final String layerTitle = layer.getTitle();
+            source.append( "#" ).append( KalypsoWMSTheme.KEY_LAYERS ).append( "=" ).append( layerName );
+            source.append( "#" ).append( KalypsoWMSTheme.KEY_STYLES ).append( "=" ).append( styleName );
+            final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell)mapModell, layerTitle, "wms",
+                null, source.toString() );
+            m_outlineviewer.postCommand( command, null );
+          }
+
         }
       }
       catch( Exception e )
@@ -172,7 +208,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
 
     m_catalog = catalog;
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.IWizard#needsProgressMonitor()
    */
