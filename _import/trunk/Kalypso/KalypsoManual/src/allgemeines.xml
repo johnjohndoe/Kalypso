@@ -164,6 +164,17 @@
     - werden ausschließlich von KALYPSO verwaltet und archiviert (zentral auf
     dem Server oder wahlweise lokal auf dem Rechner).</para>
 
+    <figure>
+      <title>Systemarchitektur HVZ Sachsen-Anhalt - Sicht KALYPSO</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/allgemeines/systemarchitektur_SA.png"
+                     scale="50" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
     <para>Zeitreihen (gemessen oder anhand von Berechnungen vorhergesagt) und
     Dokumentbausteine für Hochwasserberichte werden durch KALYPSO gelesen,
     verarbeitet und generiert; deren Verwaltung und Ablage geschieht aber

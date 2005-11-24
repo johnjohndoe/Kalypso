@@ -516,9 +516,10 @@
         <para><emphasis>Dokumentenablage</emphasis></para>
 
         <para>Dargestellte Diagramme und Tabellen können zur Dokumentation der
-        Ergebnisse entweder also Datei abgelegt oder an das Berichtswesen
-        exportiert werden. Siehe hierzu <xref
-        linkend="dokumentenexport" />.</para>
+        Ergebnisse können je nach Konfiguration von Kalypso exportiert
+        werden.</para>
+
+        <para>Siehe hierzu <xref linkend="dokumentenexport" />.</para>
       </listitem>
     </itemizedlist>
   </section>
@@ -528,71 +529,89 @@
 
     <indexterm>
       <primary>Export</primary>
+
+      <secondary>Dokument</secondary>
     </indexterm>
 
-    <para>TODO</para>
+    <para>Viele der Ansichten von KALYPSO können als Bilder oder Tabellen
+    exportiert werden. Hierzu stehen je nach Installation verschiedene
+    Exportziele zur Verfügung.</para>
 
-    <para>Dargestellte Diagramme und Tabellen können zur Dokumentation der
-    Ergebnisse an das Berichtswesen exportiert werden.</para>
+    <section id="dokumentenexport_datei">
+      <title>Export als Datei</title>
 
-    <figure>
-      <title>Menü Tabellen</title>
+      <para>In jeder KALYPSO Installation steht in den meissten Ansichten der
+      Export als Datei zur Verfügung. Hierzu finden Sie im jeweiligen Menü der
+      Ansicht den Unterpunkt <guimenuitem>Dateiexport</guimenuitem>
+      beziehungsweise den Schalter <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="img/modellpflege/docexport_file_tool.png" />
+          </imageobject>
+        </inlinemediaobject> in der Werkzeugleiste.</para>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata align="center"
-                     fileref="img/modellpflege/expert_tabelle.png" scale="50" />
-        </imageobject>
-      </mediaobject>
-    </figure>
+      <para>Je nach Art der Ansicht öffnet sich ein Assistent zum Export als
+      Datei. Im Fall eines Zeitreihendiagramms wird die Ansicht zum Beispiel
+      als Bild exportiert. In diesem Fall wird im Assistenten die Grösse und
+      Format der Bilddatei abgefragt (siehe <xref
+      linkend="pic_docexport_wizard_imageoptions" />). Auf jeden Fall ist
+      natürlich der Pfad auf die zu speichernde Datei einzugeben.</para>
 
-    <para>Dabei werden nicht die Daten als solche, sondern lediglich
-    Bilddateien (Diagramme und Lagepläne) bzw. Komma-getrennte Tabellen
-    (CSV-Format) exportiert. Bei Tabellen werden nur die angezeigten Spalten
-    exportiert. Der Aufruf der Funktion erfolgt im jeweiligen Menü-Punkt
-    (<guimenu id="menu_tabelle_berichtsablage">Tabelle</guimenu>, <guimenu
-    id="menu_diagramm_berichtsablage"> Diagramm</guimenu>) unter <guimenu
-    id="menu_berichtsablage">Berichtsablage...</guimenu>. Es folgt eine
-    Eingabemaske, in der zusätzliche Informationen zu der exportierten Datei
-    eingetragen werden können (siehe <xref
-    linkend="pic_berichtsablage" />).</para>
+      <figure id="pic_docexport_wizard_imageoptions">
+        <title>Assistent zum Exportieren von Bildern</title>
 
-    <figure id="pic_berichtsablage">
-      <title>Eingabemaske zur Berichtsablage</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/modellpflege/docexport_wizard_imageoptions.png"
+                       scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata align="center"
-                     fileref="img/modellpflege/expert_berichtsablage.png"
-                     scale="50" />
-        </imageobject>
-      </mediaobject>
-    </figure>
+      <para>Im Fall von tabellarischen Daten werden normalerweise nicht die
+      Daten als solche, sondern lediglich Bilddateien (Diagramme und
+      Lagepläne) bzw. Komma-getrennte Tabellen (CSV-Format) exportiert. Bei
+      Tabellen werden nur die angezeigten Spalten exportiert.</para>
 
-    <para>EXPORT</para>
+      <para>Dabei werden nicht die Daten als solche, sondern lediglich
+      Bilddateien (Diagramme und Lagepläne) bzw. Komma-getrennte Tabellen
+      (CSV-Format, kann z.B: mit <productname>Excel</productname>
+      weiterverarbeitet werden) exportiert. Bei Tabellen werden nur die
+      angezeigten Spalten exportiert.</para>
+    </section>
 
-    <para>Ergebnisdaten in Form von Tabellen können in einem Komma-getrennten
-    Format exportiert werden (Menü <menuchoice>
-        <guimenu>Tabelle</guimenu>
+    <!--PROFILING ANFANG-->
 
-        <guimenuitem>Exportieren</guimenuitem>
-      </menuchoice>).</para>
+    <section id="dokumentenexport_metadoc" vendor="sachsen">
+      <title>Berichtsablage</title>
 
-    <figure>
-      <title>Exportieren von Tabellen</title>
+      <para>Der Aufruf der Funktion erfolgt im jeweiligen Menü-Punkt (
+      <guimenu id="menu_tabelle_berichtsablage">Tabelle</guimenu> , <guimenu
+      id="menu_diagramm_berichtsablage">Diagramm</guimenu> ) unter <guimenu
+      id="menu_berichtsablage">Berichtsablage...</guimenu> . Es folgt eine
+      Eingabemaske, in der zusätzliche Informationen zu der exportierten Datei
+      eingetragen werden können (siehe <xref linkend="pic_berichtsablage" />
+      ).</para>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata align="center"
-                     fileref="img/modellpflege/expert_tabelle_export.png"
-                     scale="50" />
-        </imageobject>
-      </mediaobject>
-    </figure>
+      <figure id="pic_berichtsablage">
+        <title>Eingabemaske zur Berichtsablage</title>
 
-    <para>Als Export-Ziel kann ein beliebiges Verzeichnis gewählt werden. Die
-    Tabelle wird unter einem anzugebenden Namen mit der Endung *.csv
-    gespeichert und kann mit gängigen Tabellen-Kalkulationsprogrammen
-    weiterverarbeitet werden</para>
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/modellpflege/expert_berichtsablage.png"
+                       scale="50" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>EXPORT</para>
+
+      <para>Als Export-Ziel kann ein beliebiges Verzeichnis gewählt werden.
+      Die Tabelle wird unter einem anzugebenden Namen mit der Endung *.csv
+      gespeichert und kann mit gängigen Tabellen-Kalkulationsprogrammen
+      weiterverarbeitet werden</para>
+
+      <!--PROFILING ENDE-->
+    </section>
   </section>
 </chapter>

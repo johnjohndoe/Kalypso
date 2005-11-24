@@ -955,14 +955,14 @@
       <section>
         <title>W/Q-Umrechnung</title>
 
-        <para>Zeitreihen der Metadaten eine W/Q-Beziehung beinhalten, werden
-        automatisch in der Ansicht mit jeweils zwei Achsen angezeigt. Besitzt
+        <para>Zeitreihen deren Metadaten eine W/Q-Beziehung beinhalten, werden
+        automatisch in der Ansicht mit jeweils zwei Spalten angezeigt. Besitzt
         zum Beispiel eine Wasserstandsganglinie eine W/Q-Beziehung, so wird in
         der Ansicht sowohl W als auch Q dargestellt. Die generierte Spalte
         (hier Q) ist dabei gelb hinterlegt.</para>
 
-        <para>Das gleiche gilt darüber hainaus auch für andere
-        Wert-Beziehungen wie z.B. Wasserstand-Volumen (W/V).</para>
+        <para>Das gleiche gilt darüber hinaus auch für andere Wert-Beziehungen
+        wie z.B. Wasserstand-Volumen (W/V).</para>
       </section>
     </section>
 
@@ -1027,6 +1027,16 @@
       gedrückt gehalten. Um auf den Gesamtausschnitt zu zoomen, wird
       entgegengesetzt (von rechter unteren Ecke nach links oben)
       gezoomt.</para>
+
+      <formalpara>
+        <title>W/Q Umrechnung</title>
+
+        <para>Zeitreihen deren Metadaten eine W/Q-Beziehung beinhalten, werden
+        im Diagramm automatisch mit jeweils zwei Kurven angezeigt. Besitzt zum
+        Beispiel eine Wasserstandsganglinie eine W/Q-Beziehung, so wird sowohl
+        W als auch Q dargestellt. Um nur die W Ganglinie zu sehen, kann Q in
+        der Gliederungsansicht deaktiviert werden.</para>
+      </formalpara>
     </section>
   </section>
 
