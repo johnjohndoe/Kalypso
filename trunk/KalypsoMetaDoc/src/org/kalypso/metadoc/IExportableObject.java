@@ -61,11 +61,17 @@ public interface IExportableObject
   public String getIdentifier();
 
   /**
+   * @return a category describing what kind of document it is (in end-user terms). The category can be used to classify the
+   *         documents.
+   */
+  public String getCategory();
+
+  /**
    * @return a name which is suitable as filename for this document. The name should have a filename-like structure with
    *         <code>basename.extension</code>.
    */
   public String getPreferredDocumentName();
-  
+
   /**
    * Called by the metadoc framework when this object should be exported.
    * <p>
@@ -77,5 +83,6 @@ public interface IExportableObject
    * not possible
    * </ul>
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions );
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions );
 }

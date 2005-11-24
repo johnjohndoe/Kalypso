@@ -61,15 +61,15 @@ public class DefaultMetaDocCommitter implements IMetaDocCommiter
 
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
-   *      java.lang.String, org.apache.commons.configuration.Configuration)
+   *      java.lang.String, java.lang.String, org.apache.commons.configuration.Configuration)
    */
   public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
-      final String identifier, final Configuration metadataExtensions ) throws MetaDocException
+      final String identifier, final String category, final Configuration metadataExtensions ) throws MetaDocException
   {
     final String strdir = serviceProps.getProperty( "defaultCommitter.dir" );
     final File file = new File( strdir, doc.getName() );
 
-    LOG.info( "Exporting document " + doc.getName() + " ID: " + identifier );
+    LOG.info( "Exporting document " + doc.getName() + " ID: " + identifier + " CATEGORY: " + category );
     LOG.info( "Metadata: " + PropertiesHelper.format( metadata, ';' ) );
     LOG.info( "MetadataExtensions: " + ConfigurationUtils.toString( metadataExtensions ) );
 

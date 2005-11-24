@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.obstableeditor;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.metadoc.IExportTargetModes;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
 
@@ -62,7 +63,7 @@ public class ObservationTableEditorContributor extends EditorActionBarContributo
 
     if( m_exportActions == null )
       m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editor.obstableditor.menu/exports",
-          "tabelle" );
+          "tabelle", IExportTargetModes.MODE_EXPERT );
     
     for( int i = 0; i < m_exportActions.length; i++ )
       m_exportActions[i].setActivePart( targetEditor );

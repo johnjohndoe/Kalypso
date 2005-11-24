@@ -134,4 +134,13 @@ public class ExportableMap implements IExportableObject
     // TODO bessere Id?
     return getPreferredDocumentName();
   }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getCategory()
+   */
+  public String getCategory()
+  {
+    // TODO bessere category
+    return "unbekannt";
+  }
 }

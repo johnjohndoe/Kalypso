@@ -41,6 +41,10 @@ public interface IMetaDocService extends Remote, IKalypsoService
    *          used by IMetaDocCommiters by including it in the metadata. Third party software (such as an Information
    *          Management System) which stores the document can use this identifier along with other metadata to
    *          overwrite documents which are already present for the same forecast for instance
+   * @param documentCategory
+   *          specifies into which category this document should be classified. This information can be used by the
+   *          IMetaDocCommiters. Third party software (such as an Information Management System) which stores the
+   *          document can use the category as a folder-name into which the documents can be found.
    * @param metadataExtensions
    *          [optional, can be null] additional metadata information that might be used by the document commiter. It
    *          can be wrapped by a {@link org.apache.commons.configuration.MapConfiguration}to read the properties from
@@ -49,5 +53,6 @@ public interface IMetaDocService extends Remote, IKalypsoService
    * @throws RemoteException
    */
   public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename,
-      final String documentIdentifier, final Map metadataExtensions ) throws RemoteException;
+      final String documentIdentifier, final String documentCategory, final Map metadataExtensions )
+      throws RemoteException;
 }

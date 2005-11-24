@@ -34,10 +34,11 @@
    <extension
          point="org.kalypso.metadoc.exportTarget">
       <target
-            icon="icons/file_obj.gif"
             class="org.kalypso.metadoc.impl.FileExportTarget"
+            icon="icons/file_obj.gif"
             description="%fileTarget.description"
             name="%fileTarget.name"
+            modes="wizard;expert"
             id="fileTarget"/>
    </extension>
    <extension

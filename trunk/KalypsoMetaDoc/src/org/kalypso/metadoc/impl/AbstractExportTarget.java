@@ -41,6 +41,10 @@
 
 package org.kalypso.metadoc.impl;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
@@ -60,6 +64,9 @@ public abstract class AbstractExportTarget implements IExportTarget
   private String m_desc;
   private ImageDescriptor m_imageDescriptor;
 
+  /** contains the list of modes. If it is empty, all modes are supported */
+  private final Set m_modes = new HashSet();
+
   /** holder for the properties */
   private final Configuration m_properties = new BaseConfiguration();
 
@@ -72,6 +79,10 @@ public abstract class AbstractExportTarget implements IExportTarget
   {
     m_name = config.getAttribute( "name" );
     m_desc = config.getAttribute( "description" );
+
+    final String modes = config.getAttribute( "modes" );
+    if( modes != null && modes.length() > 0 )
+      m_modes.addAll( Arrays.asList( modes.split( ";" ) ) );
 
     final String iconLocation = config.getAttribute( "icon" );
     if( iconLocation != null )
@@ -101,6 +112,14 @@ public abstract class AbstractExportTarget implements IExportTarget
   public final ImageDescriptor getImage()
   {
     return m_imageDescriptor;
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportTarget#isModeSupported(java.lang.String)
+   */
+  public boolean isModeSupported( final String mode )
+  {
+    return mode == null || m_modes.isEmpty() || m_modes.contains( mode );
   }
 
   /**

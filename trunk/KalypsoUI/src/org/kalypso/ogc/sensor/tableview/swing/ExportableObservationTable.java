@@ -62,11 +62,13 @@ public class ExportableObservationTable implements IExportableObject
 {
   private final ObservationTable m_table;
   private final String m_identifierPrefix;
+  private final String m_category;
 
-  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix )
+  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category )
   {
     m_table = table;
     m_identifierPrefix = identifierPrefix;
+    m_category = category;
   }
 
   /**
@@ -131,5 +133,13 @@ public class ExportableObservationTable implements IExportableObject
   public String getIdentifier()
   {
     return m_identifierPrefix + getPreferredDocumentName();
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getCategory()
+   */
+  public String getCategory()
+  {
+    return m_category;
   }
 }

@@ -129,10 +129,11 @@ public class KalypsoMetaDocService implements IMetaDocService
 
   /**
    * @see org.kalypso.services.metadoc.IMetaDocService#commitNewDocument(java.util.Map, javax.activation.DataHandler,
-   *      java.lang.String, java.lang.String, java.util.Map)
+   *      java.lang.String, java.lang.String, java.lang.String, java.util.Map)
    */
   public void commitNewDocument( final Map metadata, final DataHandler data, final String preferredFilename,
-      final String documentIdentifier, final Map metadataExtensions ) throws RemoteException
+      final String documentIdentifier, final String documentCategory, final Map metadataExtensions )
+      throws RemoteException
   {
     try
     {
@@ -147,7 +148,7 @@ public class KalypsoMetaDocService implements IMetaDocService
       else
         mdConf = new BaseConfiguration();
 
-      m_commiter.commitDocument( m_props, metadata, docFile, documentIdentifier, mdConf );
+      m_commiter.commitDocument( m_props, metadata, docFile, documentIdentifier, documentCategory, mdConf );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
