@@ -47,15 +47,12 @@ import org.kalypso.services.user.UserRightsException;
 
 /**
  * RobotronRightsProvider
- * <p>
- * 
- * created by
  * 
  * @author schlienger (13.05.2005)
  */
 public class RobotronRightsProvider implements IUserRightsProvider
 {
-  private DirContext m_dirCtxt;
+  private final static Logger LOG = Logger.getLogger( RobotronRightsProvider.class.getName() );
 
   /** Example "ldap://193.23.163.115:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de" */
   private String m_url;
@@ -83,47 +80,26 @@ public class RobotronRightsProvider implements IUserRightsProvider
     m_url = props.getProperty( "LDAP_CONNECTION" );
     m_principal = props.getProperty( "LDAP_PRINCIPAL" );
     m_crendentials = props.getProperty( "LDAP_CREDENTIALS" );
+
+    LOG.info( "RobotronRightsProvider initialised" );
   }
 
-  private DirContext getDirContext()
+  private DirContext getDirContext() throws NamingException
   {
-    if( m_dirCtxt != null )
-      return m_dirCtxt;
-
     final Hashtable env = new Hashtable();
+
     // set the parameters for the intial context
     env.put( Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory" );
     env.put( Context.PROVIDER_URL, m_url );
     env.put( Context.SECURITY_PRINCIPAL, m_principal );
     env.put( Context.SECURITY_CREDENTIALS, m_crendentials );
 
-    try
-    {
-      m_dirCtxt = new InitialDirContext( env );
-    }
-    catch( final NamingException e )
-    {
-      e.printStackTrace();
-
-      throw new IllegalStateException( e.getLocalizedMessage() + " Explanation: " + e.getExplanation() );
-    }
-
-    return m_dirCtxt;
+    return new InitialDirContext( env );
   }
 
   public void dispose()
   {
-    if( m_dirCtxt != null )
-    {
-      try
-      {
-        m_dirCtxt.close();
-      }
-      catch( final NamingException e )
-      {
-        e.printStackTrace();
-      }
-    }
+  // empty
   }
 
   public String[] getRights( String username ) throws UserRightsException
@@ -134,27 +110,27 @@ public class RobotronRightsProvider implements IUserRightsProvider
 
   public String[] getRights( final String username, final String password ) throws UserRightsException
   {
+    DirContext dirCtxt = null;
+    
     try
     {
-      final Attributes userAtts = getDirContext().getAttributes( "cn=" + username + ",ou=benutzer", new String[]
-      {
-          "gidNumber",
-          "userPassword" } );
-
-      final Logger logger = Logger.getLogger( getClass().getName() );
+      dirCtxt = getDirContext();
+      
+      final Attributes userAtts = dirCtxt.getAttributes( "cn=" + username + ",ou=benutzer", new String[]
+      { "gidNumber", "userPassword" } );
 
       final byte[] pw1 = (byte[])userAtts.get( "userPassword" ).get();
       final byte[] pw2 = password.getBytes();
       if( !Arrays.equals( pw1, pw2 ) )
       {
-        logger.info( "Passwords do not match for user: " + username );
+        LOG.info( "Passwords do not match for user: " + username );
         return UserRights.NO_RIGHTS;
       }
 
       final String groupName = (String)userAtts.get( "gidNumber" ).get();
-      logger.info( "User " + username + " exists in group: " + groupName );
+      LOG.info( "User " + username + " found in group: " + groupName );
 
-      final Attributes rightsAtt = m_dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
+      final Attributes rightsAtt = dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
 
       final NamingEnumeration rightsEnum = rightsAtt.get( "recht" ).getAll();
       while( rightsEnum.hasMore() )
@@ -168,13 +144,27 @@ public class RobotronRightsProvider implements IUserRightsProvider
       }
 
       // Benutzer existiert, aber darf nicht Modellieren: Vorhersage
-      return new String[] { UserRights.RIGHT_PROGNOSE };
+      return new String[]
+      { UserRights.RIGHT_PROGNOSE };
     }
     catch( final NamingException e )
     {
-      e.printStackTrace();
+      LOG.throwing( getClass().getName(), "getRights", e );
+      LOG.finest( "Returning NO_RIGHTS due to previous errors" );
 
       return UserRights.NO_RIGHTS;
+    }
+    finally
+    {
+      try
+      {
+        if( dirCtxt != null )
+          dirCtxt.close();
+      }
+      catch( final NamingException ignored )
+      {
+        // empty
+      }
     }
   }
 }

@@ -1,0 +1,3969 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book>
+	<title>Technische Dokumentation</title>
+	
+	<chapter id="chapter_1_intro">
+		<title>Einführung</title>
+		
+		<!-- sachsen-anhalt -->
+		<para vendor="sachsen-anhalt">Dieses Dokument stellt die Technische
+			Dokumentation des Programmsystems KALYPSO Enterprise dar. Die Dokumentation
+			umfasst sowohl Aspekte der Entwicklung und Konfiguration der Software als auch
+			der Administration und Modellintegration. Die Technische Dokumentation
+			basiert dabei auf den folgenden vorangegangenen Dokumenten:</para>
+		<para vendor="sachsen-anhalt">
+			<itemizedlist>
+				<listitem>
+					<para>Feinkonzept - Softwarelösungen Los 2 Prognosesystem - Teile
+						1-3</para>
+				</listitem>
+				
+				<listitem>
+					<para>KALYPSO Anwenderhandbuch</para>
+				</listitem>
+			</itemizedlist> </para>
+		
+		<section id="architektur">
+			<title>Architektur</title>
+			
+			<para>KALYPSO beruht auf einer (Rich-)Client/Server Architektur.</para>
+			
+			<para>Der Client wurde basierend auf der OpenSource Eclipse Rich Client
+				Platform (Eclipse Platform, siehe http://www.eclipse.org) entwickelt
+				und ist als Sammlung von Eclipse-Plugins realisiert.</para>
+			
+			<para>Der Server besteht aus einer Anzahl von Webdiensten, die in einem
+				J2EE-Container (Tomcat) installiert sind. Darüber hinaus können
+				serverseitig noch verschiedene externe Programme installiert sein,
+				welche spezielle Datendienste bereitstellen (z.B.: Anbindung an externe
+				Zeitreihendatenbank) oder welche für die hydrologischen bzw.
+				hydraulischen Modellrechnungen benötigt werden.</para>
+			
+			<figure>
+				<title>Übersicht der Architektur</title>
+				
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="img/kap1/architekur.png"
+							format="PNG"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>KALYPSO ist also eine verteilte Applikation auf Webdienstbasis, bei der
+				sich die Funktionen optimal zwischen Client und Server aufteilen. Die
+				Funktionalität des Clients ist auch bei Serverausfall gewährleistet. Da
+				die Interaktion zwischen Server und Client anhand von
+				Standard-Webdiensten erfolgt, eignet sich der Einsatz von KALYPSO für das
+				Intranet sowie das Internet (SOAP-Nachrichten über http).</para>
+			
+			<para>Bemerkung: Zur Zeit werden eigine Dateien zwischen Client und Server
+				über Windows-Freigaben ausgetauscht. Dies begrenzt den Einsatz auf das
+				Intranet. Für eine zukungtige Version von KALYPSO ist ein Dateitransfer
+				auf WebDAV-Basis geplant, wodurch ein Einsatz über das Internet hinweg
+				ermöglicht wird.</para>
+		</section>
+		
+		<section id="modell-framework">
+			<title>Modell-Framework</title>
+			
+			<para>Das Modell-Framework stellt einen Rahmen zur Verfügung, der die
+				Integration von hydrologischen Modellen beschreibt und spezifiziert.
+				Dem Modell-Framework gehören folgende Elemente an:</para>
+			
+			<itemizedlist>
+				<listitem>
+					<para>Spezifikation der Modelldaten
+						(Modellspezifikation),</para>
+				</listitem>
+				<listitem>
+					<para>Programmierschnittstelle des Modellrechendienstes
+						(Rechenschnittstelle),</para>
+				</listitem>
+				<listitem>
+					<para>Rechenprogramm und benötigte Bibliotheken
+						(Rechenkern),</para>
+				</listitem>
+				<listitem>
+					<para>zur Modellintegration benötigte Daten
+						(Integrationsdaten).</para>
+				</listitem>
+			</itemizedlist>
+			
+			<figure>
+				<title>Einzelelemente des Modell-Frameworks</title>
+				
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="img/kap1/Modell_Plugin.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>Die Abstraktionsschicht der Modell-Plugins ermöglicht eine
+				einheitliche Spezifikation der konkreten Rechenmodelle.</para>
+			
+			<section id="modell-plugin">
+				<title>Modell-Plugin</title>
+				
+				<para>Das jeweilige Modell-Plugin implementiert die konkreten
+					Funktionen zur Konvertierung der Ein- und Ausgabeformate
+					(XML/ASCII) und die Ansteuerung des eigentlichen Rechenkerns. Die
+					Modellspezifikation kann von dem Rechendienst zur Validierung der
+					Eingabedaten genutzt werden. Die Modellspezifikation kapselt die
+					verschiedenen Rechenmodelle und führt diese auf eine einheitliche
+					Schnittstelle zurück. Diese ist so generell, dass alle möglichen
+					Aspekte der zu benutzenden Modelle abgedeckt werden.</para>
+				
+				<para>Die Rechenkerne müssen über die Standardkanäle (Std.-Eingabe/
+					Std.-Ausgabe/ Std.-Fehler) sowie über Dateien steuerbar sein.
+					Grafische Benutzerschnittstellen können serverseitig nicht
+					bedient werden. Gegebenenfalls müssen die Programme angepasst
+					werden.</para>
+				
+				<figure>
+					<title>Modell-Plugin Übersicht</title>
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata
+								fileref="img/kap1/Modell_Plugin_Uebersicht.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+		</section>
+	</chapter>
+	
+	<chapter id="chapter_2_entwicklung">
+		<title>Software-Entwicklung</title>
+		
+		<para>Die Programmoberfläche und die Serverkomponente von KALYPSO wurden
+			vollständig in der Programmiersprache Java entwickelt.</para>
+		
+		<para vendor="sachsen-anhalt">TODO: ein Wort über das TubigModell aus Entwickler
+			Sicht</para>
+		
+		<para vendor="sachsen-anahlt">TODO: ein Wort über das SaaleModell aus Entwickler
+			Sicht</para>
+		
+		<section id="ide">
+			<title>Umgebung und Werkzeuge</title>
+			
+			<para>In diesem Kapitel werden die zur Erstellung der Software verwendeten
+				Entwicklungswerkzeuge beschrieben.</para>
+			
+			<para><table>
+				<title>Entwicklungsumgebung</title>
+				
+				<tgroup cols="2">
+					<colspec align="left" colwidth="1*"/>
+					
+					<colspec align="left" colsep="1*"/>
+					
+					<thead>
+						<row>
+							<entry align="center">Umgebung/Werkzeug</entry>
+							
+							<entry align="center">Beschreibung</entry>
+						</row>
+					</thead>
+					
+					<tbody>
+						<row>
+							<entry>Java SDK 1.4.2</entry>
+							
+							<entry>Entwicklungs-Kit</entry>
+						</row>
+						
+						<row>
+							<entry>Java Web Service Dev Pack 1.4 - JAXB - JAX-RPC</entry>
+							
+							<entry>Bibliotheken für Java - XML Binding und Java basierte
+								Webdienste</entry>
+						</row>
+						
+						<row>
+							<entry>Eclipse Platform 3.0.2</entry>
+							
+							<entry>Grundlage für den KALYPSO-Client</entry>
+						</row>
+						
+						<row>
+							<entry>Docbook - Xml 4.2 - Stylesheets 1.65.1</entry>
+							
+							<entry>XML-Anwendung für die Erstellung des
+								Benutzerhandbuchs</entry>
+						</row>
+						
+						<row>
+							<entry>Eclipse 3.0.2</entry>
+							
+							<entry>Entwicklungsumgebung</entry>
+						</row>
+						
+						<row>
+							<entry>CVS</entry>
+							
+							<entry>Quellcode Verwaltung</entry>
+						</row>
+						
+						<row>
+							<entry>Ant 1.6</entry>
+							
+							<entry>Steuerung des Build-Prozesses</entry>
+						</row>
+						
+						<row>
+							<entry>Tomcat 5.0.28</entry>
+							
+							<entry>J2EE Container für die Webdienste</entry>
+						</row>
+						
+						<row>
+							<entry>Miktex und DB2Latex</entry>
+							
+							<entry>Konvertierung von DocBook nach Latex und
+								anschließend nach PDF</entry>
+						</row>
+						
+						<row>
+							<entry>Xsltproc</entry>
+							
+							<entry>XSLT-Programm für die Transformation von XML anhand
+								von Stylesheets</entry>
+						</row>
+					</tbody>
+				</tgroup>
+				</table> </para>
+			
+			<para>Als Entwicklungsumgebung wurde die frei erhältliche Eclipse-Platform
+				verwendet. Bis auf die Wahl des Sprach-Compliance-Levels auf Version 1.4
+				wurden in Eclipse keine speziellen Einstellungen gewählt.</para>
+			
+			<para>Das Erzeugen der verschiedenen Versionen des Anwenderhandbuchs (html,
+				EclipseHelp, PDF) wurde komplett per Ant-Skript automatisiert. Es ist
+				lediglich dafür zu sorgen, dass sich das zur Umwandlung Latex &gt; PDF
+				benötigte Programm pdflatex.exe (im Umfang der Miktex-Distribution
+				enthalten) im aktuellen Programmpfad befindet sowie dass alle von
+				DB2Latex benötigten Latex-Packages in der Miktex-Installation
+				eingebunden sind.</para>
+		</section>
+		
+		<section>
+			<title>Programmaufbau</title>
+			
+			<para>Der Programmaufbau wird in den beiden Teilen - Client und Server -
+				beschrieben.</para>
+			
+			<section>
+				<title>KALYPSO-Client</title>
+				
+				<para>Clientseitig baut KALYPSO auf der Eclipse Platform API auf: KALYPSO
+					besteht aus eine sog. Eclipse-Feature und eine Reihe von sog.
+					Eclipse-Plugins.</para>
+				
+				<table>
+					<title>Kalypso Feature und Plugins</title>
+					
+					<tgroup cols="3">
+						<colspec align="left" colwidth="2*"/>
+						
+						<colspec align="left" colwidth="1*"/>
+						
+						<colspec align="left" colwidth="2*"/>
+						
+						<thead>
+							<row>
+								<entry align="center">Bundle</entry>
+								
+								<entry align="center">Typ</entry>
+								
+								<entry align="center">Beschreibung</entry>
+							</row>
+						</thead>
+						
+						<tbody>
+							<row>
+								<entry>EclipsePlatformContributions</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Grundfunktionen</entry>
+							</row>
+							
+							<row>
+								<entry>EclipseRCPContributions</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Grundfunktionen</entry>
+							</row>
+							
+							<row>
+								<entry>JWSDPInstallation</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Grundfunktionen</entry>
+							</row>
+							
+							<row>
+								<entry>JavaApiContributions</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Grundfunktionen</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoAuth</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Authentifizierung</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoCommons</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Grundfunktionen</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoCore</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Grundfunktionen</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoDWD</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Verwaltung von DWD-Vorhersagen</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoDeegree</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Deegree-Projekt und Kalypso-spezifische
+									Erweiterungen</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoFeatureView</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Spezielle Kalypso GML-Feature
+									Ansicht</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoMetaDoc</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Grundbausteine für Metadaten und
+									Dokumentenablage</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoProduct</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Branding</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoRepository</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Grundbausteine für Zeitreihenablage</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoServiceCoreClient</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Allgemeiner Client eines Webdienstes</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoServiceMetaDocClient</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Client des Metadatendienstes</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoServiceUserClient</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Client des Benutzerdienstes</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoSimulationUI</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Komponenten der Benutzeroberfläche</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoUI</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Komponenten der Benutzeroberfläche</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoManualGrafik</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Benutzerhandbuch für das
+									Grafikprogramm</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoManual</entry>
+								
+								<entry>Plugin</entry>
+								
+								<entry>Benutzerhandbuch für Kalypso</entry>
+							</row>
+							
+							<row vendor="sachsen-anhalt">
+								<entry>KalypsoFeatureSachsenAnhalt</entry>
+								
+								<entry>Feature</entry>
+								
+								<entry>Client Deploy</entry>
+							</row>
+							
+							<row vendor="sachsen">
+								<entry>KalypsoFeatureSachsen</entry>
+								
+								<entry>Feature</entry>
+								
+								<entry>Client Deploy</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+			</section>
+			
+			<section id="kalypso-server">
+				<title>Kalypso-Server</title>
+				
+				<para>Der Kalypso-Server besteht aus Web Diensten, die in einem J2EE
+					Container (Apache Tomcat) laufen. Fünf Dienste stehen den Clients zur
+					Verfügung:</para>
+				
+				<itemizedlist>
+					<listitem>
+						<para>KalypsoUserService: liefert benutzerabhängige
+							Berechtigungen,</para>
+					</listitem>
+					<listitem>
+						<para>KalypsoCalcService: verwaltet den Start von
+							Modellberechnungen und liefert Ergebnisse,</para>
+					</listitem>
+					<listitem>
+						<para>KalypsoObsService: verwaltet die operativen
+							Daten,</para>
+					</listitem>
+					<listitem>
+						<para>KalypsoMetaDocService: erlaubt die Veröffentlichung
+							von Dokumenten (z.B. Grafiken oder Tabellen),</para>
+					</listitem>
+					<listitem>
+						<para>Benutzung von WEBDAV: zentrale Konfigurationsdateien
+							werden im sog. Webdav Verzeichnis abgelegt.</para>
+					</listitem>
+				</itemizedlist>
+			</section>
+			
+			<section id="modelle-sst">
+				<title>Modell- und Schnittstellenkomponenten</title>
+				
+				<para>Folgende Tabelle listet die sog. Modellplugins und die
+					Schnittstellenkomponenten auf.</para>
+				
+				<table>
+					<title>Spezielle Plugins</title>
+					
+					<tgroup cols="3">
+						<colspec align="left" colwidth="1*"/>
+						
+						<colspec align="left" colwidth="1*"/>
+						
+						<colspec align="left" colwidth="2*"/>
+						
+						<thead>
+							<row>
+								<entry align="center">Bundle</entry>
+								
+								<entry align="center">Typ</entry>
+								
+								<entry align="center">Beschreibung</entry>
+							</row>
+						</thead>
+						
+						<tbody>
+							<row vendor="sachsen-anhalt">
+								<entry>KalypsoModelSaale</entry>
+								
+								<entry>Plugin/Library</entry>
+								
+								<entry>Integration des Saalemodells in Form eines
+									Plugins für die lokale Benutzung, und in Form einer
+									Library für die Serverseitige Benutzung.</entry>
+							</row>
+							
+							<row vendor="sachsen-anhalt">
+								<entry>KalypsoModelTubig</entry>
+								
+								<entry>Plugin/Library</entry>
+								
+								<entry>Integration des Bode- und Ilsemodells in Form
+									eines Plugins für die lokale Benutzung, und in Form
+									einer Library für die Serverseitige
+									Benutzung.</entry>
+							</row>
+							
+							<row vendor="sachsen-anhalt">
+								<entry>KalypsoAdapterRobotron</entry>
+								
+								<entry>Plugin/Library</entry>
+								
+								<entry>Implementierung der
+									Schnittstellenfunktionen zum IMS-Robotron in
+									Form eines Plugins für die lokale Benutzung, und in
+									Form einer Library für die Serverseitige
+									Benutzung.</entry>
+							</row>
+							
+							<row vendor="sachsen-anhalt">
+								<entry>KalypsoAdapterWiski</entry>
+								
+								<entry>Plugin/Library</entry>
+								
+								<entry>Implementierung der
+									Schnittstellenfunktionen zum WiskiDataProvider
+									in Form eines Plugins für die lokale Benutzung, und
+									in Form einer Library für die Serverseitige
+									Benutzung.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+			</section>
+			
+			<section id="conf">
+				<title>Konfigurationsmanagement</title>
+				
+				<para>Neben allgemeinen Code Konfigurationen werden spezielle
+					Konfigurationseinheiten für die Integration von Kalypso in die
+					Umgebung der Hochwasserzentrale Sachsen-Anhalt benötigt. Folgende
+					Tabelle listet diese Module auf:</para>
+				
+				<para>
+					<table>
+						<title>Konfigurationsmanagement-Plugins</title>
+						
+						<tgroup cols="3">
+							<colspec align="left" colwidth="1*"/>
+							
+							<colspec align="left" colwidth="1*"/>
+							
+							<colspec align="left" colwidth="2*"/>
+							
+							<thead>
+								<row>
+									<entry align="center">Bundle</entry>
+									
+									<entry align="center">Typ</entry>
+									
+									<entry align="center">Beschreibung</entry>
+								</row>
+							</thead>
+							
+							<tbody>
+								<row>
+									<entry>KalypsoAnt</entry>
+									
+									<entry>Library</entry>
+									
+									<entry>Bereitstellung von Ant-Tasks für die
+										Integration als Jar in KalypsoUI</entry>
+								</row>
+								
+								<row>
+									<entry>KalypsoBuild</entry>
+									
+									<entry>Resource</entry>
+									
+									<entry>Standard Buildframework von
+										Kalypso</entry>
+								</row>
+								
+								<row vendor="sachsen-anhalt">
+									<entry>KalypsoConfSachsenAnhalt</entry>
+									
+									<entry>Resource</entry>
+									
+									<entry>Konfigurationsdateien und
+										Server-Deploy</entry>
+								</row>
+								
+								<row>
+									<entry>KalypsoLocalCalculation</entry>
+									
+									<entry>Plugin</entry>
+									
+									<entry>Optionales Plugin, wenn eingebunden
+										besteht die Möglichkeit des clientseitiges
+										Berechnen</entry>
+								</row>
+							</tbody>
+						</tgroup>
+					</table></para>
+			</section>
+		</section>
+		
+		<section id="source">
+			<title>Quellcode-Organisation</title>
+			
+			<para>Der Java-Quellcode wird mit dem Versionierungssystem CVS verwaltet.
+				Die Dokumentation des Quellcodes wurde mit Hilfe von Javadoc erstellt. Sie
+				können durch diese Dokumentation mit einem Webbrowser
+				navigieren.</para>
+			
+			<para>Der Quellcode ist in verschiedene Projekte unterteilt. Jedes Projekt
+				deckt definierte Anforderungen bzw. Funktionen ab und ist mit einer
+				Code-Lizenz ausgestattet. Projekte können von anderen Projekten
+				abhängig sein und können über sog. Libraries (Code-Bibliotheken)
+				verfügen, die jeweils ihre eigene Lizenz besitzen.</para>
+			
+			<para>Jedes Projekt enthält eine <filename>readme.txt</filename> Datei,
+				welche eine kurze Projektbeschreibung beinhaltet.</para>
+		</section>
+		
+		<section id="scm">
+			<title>Quellcode-Verwaltung und Lizenzierung</title>
+			
+			<para>Der Quellcode wird mit CVS verwaltet. Bei jedem Meilenstein wurde der
+				Projektstand mittels eines CVS Tags gekennzeichnet.</para>
+			
+			<para>Die allgemeinen Teile des Kalypso Quellcodes wurden unter der LGPL
+				(Lesser Gnu Public Licence, siehe http://www.gnu.org/)
+				freigegeben.</para>
+			
+			<para>Fremdbibliotheken wurden in jedem Projekt stets im Unterverzeichnis
+				<filename>/lib</filename> abgelegt und sind dort mit der jeweiligen
+				Lizenzierung versehen.</para>
+		</section>
+		
+		<section id="compile">
+			<title>Kompilation</title>
+			
+			<para>Unter Benutzung von Eclipse wird der Quellcode inkrementell
+				kompiliert. Für das deployen werden Ant-Skripte benutzt die der Quellcode
+				separat kompiliert.</para>
+			
+			<para>Die Ant-Skripte sind nach dem Standard aus dem KalypsoBuild-Plugin
+				aufgebaut und verfügen über die gleiche Targets. Manche Projekte
+				benötigen generierte Klassen für das sog. XML-Binding. Dies wird auch
+				durch entsprechende Targets in die Ant-Skripten berücksichtigt.</para>
+		</section>
+		
+		<section id="deployment">
+			<title>Deployment</title>
+			
+			<para vendor="sachsen-anhalt">Aus der Entwicklungsumgebung ist es möglich,
+				die unterschiedlichen Dienste zu deployen. Das
+				KalypsoConfSachsenAnhalt-Projekt deckt diese Aspekte ab und stellt
+				unterschiedliche übergeordnete Ant-Skripts zur Automatisierung des
+				Deploy zur Verfügung.</para>
+			
+			<para>Man kann:</para>
+			
+			<itemizedlist>
+				<listitem>
+					<para>die Daten- und Konfigurationsverzeichnisse auf dem Server
+						erstellen,</para>
+				</listitem>
+				<listitem>
+					<para>die Dienste entweder direkt in den Container deployen oder in
+						Dateien archivieren (in diesem Fall wird ein manueller Vorgang
+						benutzt, um die Dienste im Container zu deployen).</para>
+				</listitem>
+			</itemizedlist>
+			
+			<para vendor="sachsen-anhalt">Um dem Kalypso-Client deployen zu können wird
+				das KalypsoFeatureSachsenAnhalt benutzt. Ein Eclipse-Export als
+				Feature ist direkt möglich. Somit werden die zahlreichen Kalypso-Plugins
+				berücksichtigt. Einfaches Kopieren reicht um die Applikation zu
+				aktualisieren. Dies setzt aber vorraus, dass eine bestehende
+				Kalypso-Client Umgebung vorbereitet ist. Mehr dazu im <xref
+					linkend="chapter_3_installation"/>.</para>
+		</section>
+	</chapter>
+	
+	<chapter id="chapter_3_installation">
+		<title>Installation und Konfiguration</title>
+		
+		<para>Die Installation und Konfiguration von Kalypso wird in zwei Teilen - Client
+			und Server - beschrieben.</para>
+		
+		<section id="install-client">
+			<title>Client</title>
+			
+			<section>
+				<title>Systemvoraussetzungen</title>
+				
+				<para>Voraussetzung ist ein Ethernet-LAN.</para>
+				
+				<para>Kalypso wurde in der Programmiersprache Java und unter Verwendung
+					der Eclipse Plattform realisiert, so dass die Software prinzipiell
+					auf allen Systemen unter einer Java Runtime Umgebung (ab Version. 1.4)
+					und der Eclipse Plattform einsetzbar ist. Um allerdings die volle
+					Funktionalität nutzen zu können (Anstoß und Editierung der Diagramme
+					mit dem Grafik-Tool) ist der Einsatz der Software unter Windows
+					NT/2000/XP zwingend.</para>
+			</section>
+			
+			<section>
+				<title>Installation</title>
+				
+				<para>Die Installation der Client-Anwendung besteht aus zwei
+					Bausteinen:</para>
+				
+				<itemizedlist>
+					<listitem>
+						<para>die Rich-Client-Plattform von Eclipse
+							(Eclipse-Plattform),</para>
+					</listitem>
+					<listitem>
+						<para>die Kalypso-Plugins und die Kalypso-Features.</para>
+					</listitem>
+				</itemizedlist>
+				
+				<para>Für eine durchgängig deutsche Benutzeroberfläche muss zusätzlich
+					noch die Internationalisierung der Eclipse-Plattform (sog.
+					Language-Packs) installiert werden.</para>
+				
+				<para>Alle benötigten Dateien liegen als ZIP-Archive vor. Die
+					Installation erfordert lediglich das Entpacken der Archive. Hierzu
+					wird die Eclipse-Plattform an einen beliebigen Ort (auch eine
+					Installation in einem Netzwerkpfad ist möglich) entpackt und die
+					beiden weiteren Bausteine in die entsprechenden Unterverzeichnisse
+					kopiert.</para>
+				
+				<para>Da Kalypso aus der Basis Eclipse-Plattform und die zusätzlichen
+					Features und Plugins für Kalypso selbst und die
+					Internationalisierung, empfiehlt es sich das
+					Installationsverzeichnis zu unterteilen. Dies wird durch das sog.
+					Links- und Extensionsverzeichnis unterstützt.</para>
+				
+				<para>Vorgehensweise: Verzeichnis 'links' unter eclipse erstellen.
+					Dort für jede Erweiterung (z.B. die Language-Packs, oder Kalypso,
+					usw.) eine Link-Datei erstellen mit Namen des entsprechenden
+					Features (aber ohne ID-Teil '_X.Y.Z') und mit folgendem Aufbau:
+					
+					
+					<programlisting>path=... (mit Forwardslashes '/' getrennt)</programlisting>
+					der Pfad muss zu dem Verzeichnis führen, wo die Features und Plugins zu
+					finden sind. Allerdings ist zu beachten, dass auch in diesem
+					Verzeichnis der gleiche Aufbau wie im original Eclipse-Verzeichnis
+					zu berücksichtigen ist (features, plugins, und .eclipseextension).
+					Zusätzlich muss im Eclipse-Verzeichnis der Erweiterung eine Datei
+					namens '.eclipseextension' erstellt werden. Der Inhalt dieser Datei
+					ähnelt dem der '.eclipseproduct'.</para>
+				
+				<para>Siehe auch in die Eclipse-Onlinehilfe, unter: <guilabel>Platform
+					Plugin Dev Guide\Reference\Other reference information\How to
+					write an Eclipse installer</guilabel></para>
+				
+				<para vendor="sachsen-anhalt">Beispiel (in Magdeburg):
+					
+					
+					<programlisting>\\smdhvzwapp\KalypsoClient
+        \\smdhvzwapp\KalypsoClient\.eclipseproduct
+        \\smdhvzwapp\KalypsoClient\features
+        \\smdhvzwapp\KalypsoClient\plugins
+        \\smdhvzwapp\KalypsoClient\...
+        \\smdhvzwapp\KalypsoClient\links
+        \\smdhvzwapp\KalypsoClient\links\&lt;feature-name&gt;.link
+        \\smdhvzwapp\KalypsoClient\extensions\&lt;extension-name&gt;\eclipse
+        \\smdhvzwapp\KalypsoClient\extensions\&lt;extension-name&gt;\eclipse\.eclipseextension
+        \\smdhvzwapp\KalypsoClient\extensions\&lt;extension-name&gt;\eclipse\features
+        \\smdhvzwapp\KalypsoClient\extensions\&lt;extension-name&gt;\eclipse\plugins</programlisting>
+					Wie aus dem Beispiel ersichtlich kann die Kalypso-Client
+					Installation zentral vorgenommen werden. Dies ist der Fall in
+					Magdeburg und in Halle.</para>
+				
+				<para>Auf jedem Client-Rechner muss nur noch das Datenverzeichnis (sog.
+					Workspace) und die Kalypso-Verknüpfung kopiert werden. Die
+					Verknüpfung soll auf die .exe-Datei in der zentrale Installation
+					verweisen, allerdings über der Pfad der Freigabe. Die Freigabe selbst
+					muss angepasst werden sodass nur Lese-Berechtigungen für Jede(r)
+					erteilt werden.</para>
+				
+				<para>Die Verknüpfung hat folgender Aufbau:</para>
+				
+				
+				<programlisting>
+				\\FREIGABE\...\eclipse.exe -data WORKSPACE -vmargs -Xmx512m
+			</programlisting>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<para>FREIGABE ist mit die auf dem Server definierte
+								Freigabe zu ersetzen.</para>
+						</listitem>
+						<listitem>
+							<para>WORKSPACE ist mit dem lokaler Pfad des
+								Datenverzeichnis zu ersetzen.</para>
+						</listitem>
+					</itemizedlist> </para>
+				
+				<para>Zusätzlich zu dem Datenverzeichnis, erstellt Kalypso automatisch
+					temporäre Dateien im .eclipse-Verzeichnis im Homeverzeichnis des
+					aktuellen Benutzer. Bei Start-Probleme von Kalypso werden dort
+					Log-Dateien abgelegt. </para>
+				
+				<informaltable vendor="sachsen-anhalt">
+					<tgroup cols="4">
+						<colspec align="left" colwidth="1*"/>
+						<colspec align="left" colwidth="1*"/>
+						<colspec align="left" colwidth="2*"/>
+						<colspec align="left" colwidth="2*"/>
+						<thead>
+							<row>
+								<entry align="center">Standort</entry>
+								<entry align="center">Rechner</entry>
+								<entry align="center">Installationspfad</entry>
+								<entry align="center">Freigabe</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Magdeburg</entry>
+								<entry>SMDHVZWAPP</entry>
+								<entry>D:\Programme\KalypsoClient</entry>
+								<entry>\\smdhvzwapp\KalypsoClient</entry>
+							</row>
+							<row>
+								<entry>Halle</entry>
+								<entry>SHALHVZWAPP</entry>
+								<entry>D:\Programme\KalypsoClient</entry>
+								<entry>\\shalhvzwapp\KalypsoClient</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</informaltable>
+			</section>
+			
+			<section>
+				<title>Konfiguration</title>
+				
+				<para>Beim ersten Start von Kalypso kann es sein, dass die Konfiguration
+					noch nicht vollständig ist. Dies hängt vom Eintrag in die
+					Benutzervorgaben ab. Mehr dazu im Läufe dieses Abschnitt.</para>
+				
+				<para>Wichtig für jeden Client ist der Speicherort der zentralen
+					Konfigurationsdatei in Form einer oder mehrerer URLs. Pro Client kann
+					eine Liste von alternativen Konfigurationsdateien eingestellt
+					werden, die solange abgearbeitet wird, bis eine passende
+					Konfigurationsdatei gefunden wurde. Jede Konfigurationsdatei
+					entspricht dabei im Normalfall einem (physischen) Server.</para>
+				
+				<para>Die Konfigurationsdatei Kalypso-Client.ini liegt auf dem
+					Kalypso-Server in der WEBDAV-Webapplikation. Diese Webapplikation
+					wird standardmäßig mit Tomcat geliefert und bietet eine über http
+					basierte und standardisierte Verzeichnisablage.</para>
+				
+				<informaltable vendor="sachsen-anhalt">
+					<tgroup cols="2">
+						<colspec align="left" colwidth="1*"/>
+						<colspec align="left" colwidth="2*"/>
+						<thead>
+							<row>
+								<entry align="center">Standort</entry>
+								<entry align="center">URL</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Magdeburg</entry>
+								<entry>
+									http://smdhvzwapp:8088/webdav/Kalypso-client.ini</entry>
+							</row>
+							<row>
+								<entry>Halle</entry>
+								<entry>
+									http://shalhvzwapp:8088/webdav/Kalypso-client.ini</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</informaltable>
+				
+				<para>Nach dem ersten Start muss Kalypso konfiguriert werden, da die
+					Konfigurations-URL in den Einstellungen fehlt. Um dies zu erreichen,
+					muss das Menü "Fenster/Benutzervorgaben/Kalypso" gewählt und die
+					Konfiguration angepasst werden. Eine Umstellung zwischen beiden
+					Standorten ist jederzeit möglich, es genügt diese Einstellungen
+					anzupassen. Ein Neustart des Kalypso-Clients ist nicht
+					erforderlich.</para>
+			</section>
+		</section>
+		
+		<section id="install-server">
+			<title>Server</title>
+			
+			<para>Die vollständige Installation der Serveranwendung erfordert eine
+				Reihe manueller Schritte. Einführend werden die Systemvoraussetzungen
+				und die notwendige Verzeichnisstruktur auf dem Server behandelt.</para>
+			
+			<section>
+				<title>Systemvoraussetzungen</title>
+				
+				<para>Die Serveranwendung ist bereits auf einem handelsüblichen PC (z.B.
+					Pentium 4, 512 MB RAM, 40 GB HDD) einsatzfähig. Um jedoch die
+					System-Antwortzeit erheblich zu verbessern, empfehlen wir folgende
+					Konfiguration: Dual Pentium 4, 2 GB RAM, 130 GB HDD, eventuell mit
+					replizierter Hardware für eine erhöhte Ausfallsicherheit.</para>
+				
+				<para>Aufgrund der Programmierung der Kalypso-Dienste in der
+					Programmiersprache Java ist die Software auf allen Systemen, die eine
+					Java Runtime Umgebung (ab Version 1.4.2) akzeptieren,
+					einsetzbar.</para>
+				
+				<para>Die Modell-Plugins und deren Rechenkerne stellen spezielle
+					Anforderungen an die Laufzeitumgebung (DOS-Programm o.ä.).</para>
+			</section>
+			
+			<section>
+				<title>Dateistruktur der Installation</title>
+				
+				<para>Im Verzeichnis j2sdk1.4.2_06 wird das JDK 1.4.2
+					installiert.</para>
+				
+				<figure>
+					<title>Abbildung Dateistruktur</title>
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata
+								fileref="img/kap3/Dateistruktur_Installation.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+				
+				<para>Tomcat 5.0.28 wird im Verzeichnis Tomcat5.0 installiert.</para>
+				
+				<para>Das bin-Verzeichnis beinhaltet u.a. die Startskripts um Tomcat zu
+					starten (optional in Debugmodus). Normalerweise wird aber Tomcat als
+					Betriebssystem Dienst konfiguriert und auch gestartet.</para>
+				
+				<para>Im webapps-Verzeichnis sind die Kalypso Dienste und die mit Tomcat
+					gelieferten Applikationen balancer, ROOT und webdav.</para>
+				
+				<para>Die webdav-Applikation stellt seinen
+					Verzeichnis-<filename>basierten Inhalt</filename> über das http
+					Protokoll zur Verfügung.</para>
+				
+				<para>Das webdav-Verzeichnis wird von Kalypso für verschiedene Zwecke
+					benutzt:</para>
+				
+				<itemizedlist>
+					<listitem>
+						<para>prognose: beinhaltet die serverseitige
+							Modellablage.</para>
+					</listitem>
+					<listitem>
+						<para>schemata: beinhaltet speziellen Schematas die vom
+							Kalypso-Client benutzt werden.</para>
+					</listitem>
+					<listitem>
+						<para>srcvonf: beinhaltet die Konfigurationsdateien für die
+							Kalypso Webdienste.</para>
+					</listitem>
+					<listitem>
+						<para>vorhersageconf: beinhaltet die Konfigurationsdateien
+							für der Kalypso Vorhersagewizard.</para>
+					</listitem>
+				</itemizedlist>
+				
+				<para>Wenn Tomcat und die Kalypso-Dienste ausgeführt werden, entsteht im
+					logs-Verzeichnis die Datei Kalypso.log welche wichtige Information
+					über den Ablauf beinhaltet. Daraus lassen sich u.a. Probleme mit der
+					Software feststellen.</para>
+				
+				<para>Das temp-Verzeichnis sollte ab und zu geprüft und eventuell geleert
+					werden. Dort werden temporäre Dateien wie z.B. Dienst spezifische
+					Log-Dateien abgespeichert.</para>
+				
+				<para>Die anderen Verzeichnisse sind Tomcat-spezifisch, mehr
+					Informationen dazu können in der Tomcat-Hilfe gefunden
+					werden.</para>
+			</section>
+			
+			<section>
+				<title>Freigaben</title>
+				
+				<para>Der Systemadministrator muss folgende Dateifreigaben auf dem
+					Server konfigurieren:</para>
+				
+				<table>
+					<title>Dateifreigabe</title>
+					
+					<tgroup cols="3">
+						<colspec align="left" colwidth="1*"/>
+						<colspec align="left" colwidth="2*"/>
+						<colspec align="left" colwidth="3*"/>
+						
+						<thead>
+							<row>
+								<entry align="center">Freigabe</entry>
+								<entry align="center">Pfad (relativ zu )</entry>
+								<entry align="center">Beschreibung</entry>
+							</row>
+						</thead>
+						
+						<tbody>
+							<row>
+								<entry>Kalypso-modelle</entry>
+								<entry>
+									D:\Programme\Kalypso\webapps\webdav\prognose</entry>
+								<entry>Lese- und Schreibrechte für "Jeder".
+									Modelldaten werden auf diese Art und Weise zwischen
+									Clients und Server ausgetauscht.</entry>
+							</row>
+							
+							<row>
+								<entry>KalypsoClient</entry>
+								<entry>D:\Programme\KalypsoClient</entry>
+								<entry>Leserechte für "Jeder". Eintrittspunkt der
+									zentrale Client-Installation.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+			</section>
+			
+			<section>
+				<title>Tomcat</title>
+				
+				<para>CATALINA_HOME bezeichnet das Installationsverzeichnis von
+					Tomcat.</para>
+				
+				<formalpara>
+					<title>Installation</title>
+					<para>Tomcat (ab Version 5.0.28) installieren (Install-Programm
+						benutzen oder Dateien direkt kopieren). Abhängigkeiten: Die
+						libs (*.jar) aus dem KalypsoServiceCore Projekt in
+						CATALINA_HOME/common/lib kopieren.</para> </formalpara>
+				
+				<formalpara>
+					<title>manager.xml und admin.xml</title>
+					
+					<para>Diese Dateien (in CATALINA_HOME/conf/catalina/localhost)
+						prüfen. Der Gesamtpfad von Tomcat ist dort angeben. Pfad prüfen
+						und so anpassen, dass er mit dem tatsächlichen Pfad
+						übereinstimmt. Dies ist besonders relevant wenn Tomcat manuell
+						installiert wurde.</para> </formalpara>
+				
+				<formalpara>
+					<title>Sicherheitseinstellungen:</title>
+					
+					<para>Die Datei catalina.policy editieren und die
+						Sicherheitseinstellungen anpassen (siehe das
+						KalypsoConf-Projekt). Java Permissions richtig setzen, u.a.
+						für das definierte Temp-Verzeichnis anpassen. Achtung: Groß-
+						/Kleinschreibung (siehe Kommentar in Datei).</para>
+					</formalpara>
+				
+				<formalpara>
+					<title>Tomcat starten:</title>
+					
+					<para>Sie können Tomcat über zwei Mechanismen starten: entweder mit
+						Batch-Dateien oder als Windows-Dienst.
+						
+						<itemizedlist>
+							<listitem>
+								<para>Mit Batch-Dateien: Die Batch-Dateien
+									Kalypso_server_start.bat und
+									Kalypso_server_stop.bat müssen mit dem Pfad
+									(entspr. der Freigabe) vom Temp-Verzeichnis
+									angepasst werden.</para>
+							</listitem>
+							<listitem>
+								<para>Tomcat als Service einrichten und starten: Die
+									service.bat Datei aus dem Verzeichnis
+									CATALINA_HOME\bin ausführen. Die notwendigen
+									Parameter mittels Registry-Editor oder
+									tomcat5w.exe setzen. Um Zugriffe auf die UNC-Pfade
+									zu erhalten, muss der Dienst unter einem
+									Domainenbenutzer gestartet werden.</para>
+							</listitem>
+						</itemizedlist> </para> </formalpara>
+			</section>
+			
+			<section>
+				<title>Deployement der Dienste</title>
+				
+				<para vendor="sachsen-anhalt">Um die Kalypso Dienste deployen zu
+					können, ist das Ant-Skript im Verzeichnis
+					"deployable-server-kunde" im KalypsoConfSachsenAnhalt-Projekt
+					erforderlich.</para>
+				
+				<para><filename>Kalypso-client.ini:</filename></para>
+				
+				<para>In webapps/webdav ist die Kalypso-client.ini Datei zwingend
+					erforderlich. Sie wird normalerweise beim Deploy über der Ant-Skript
+					angelegt. Eine Überprüfung des Dateiinhaltes ist ratsam, da die URLs
+					mit den eingesetzten Services übereinstimmen müssen.</para>
+				
+				<para>Optional kann auch das KalypsoDWDFileCopyServlet aus dem
+					KalypsoDWD Projekt installiert werden. Dieser Dienst kopiert immer
+					die aktuelle DWD-Vorhersage aus dem IMS in das webdav/dwd
+					Verzeichnis. Damit stehen die DWD-Vorhersage für die
+					Kalypso-Clients zur Verfügung.</para>
+			</section>
+			
+			<section>
+				<title>Konfiguration der Kalypso-Server bzw. Dienste</title>
+				
+				<para>Der Server wird zusätzlich über folgende System-Properties
+					konfiguriert:</para>
+				
+				<itemizedlist>
+					<listitem>
+						<para>Kalypso.server.tempdir: Pfad des
+							Temp-Verzeichnis,</para>
+					</listitem>
+					<listitem>
+						<para>Kalypso.server.confdir: Pfad des
+							Konfigurationsverzeichnis</para>
+					</listitem>
+				</itemizedlist>
+				
+				<para>Alle Kalypso-Dienste benötigen die eben aufgelisteten
+					System-Properties (Pfade auf die Datenverzeichnisse). Zusätzlich
+					muss in der catalina.policy der entsprechende Services Zugriff auf
+					diese Pfade und Properties gewährt werden.</para>
+				
+				<para>Das Setzen der System-Properties geschieht zur Zeit über eine
+					spezielle Kalypso_server_start.bat.</para>
+			</section>
+		</section>
+	</chapter>
+	
+	<chapter id="chapter_4_zeitreihen">
+		<title>Zeitreihen Ablage</title>
+		
+		<section>
+			<title>Grundprinzip</title>
+			
+			<para>Der Zeitreihenablage liegt eine hierarchische Struktur zugrunde. Die
+				Java-Schnittstelle org.Kalypso.repository.IRepository ist der
+				zentrale Punkt des Ablage-Frameworks von Kalypso. Ablagen können sowohl
+				clientseitig als auch serverseitig in Kalypso eingebunden
+				werden.</para>
+			
+			<para>Die Zeitreihenablage ist eine Spezialisierung des
+				IRepository-Interface. Dabei sind die Knoten (IRepositoryItem)
+				anpassbar (IAdaptable) und können eine Zeitreihe (IObservation)
+				liefern.</para>
+			
+			<para>Der Eclipse-Erweiterungsmechanismus (Extension Point) unterstützt
+				unterschiedliche Ablagearten über
+				"org.Kalypso.repository.factories". Die Erweiterungen dieses
+				Extension Points stellen dem Benutzer die Ablagen clientseitig zur
+				Verfügung.</para>
+			
+			<para>Serverseitig wird die Ablage über die XML-Konfigurationsdatei vom
+				Kalypso Observation Dienst genutzt. Das Schema dieser Datei ist identisch
+				mit dem Schema des Erweiterungspunktes: es werden die
+				Implementierungsklassen von IRepositoryFactory eingebunden (siehe
+				schema/repfactories.exsd im KalypsoRepository Projekt).</para>
+			
+			<figure>
+				<title>Übersicht IRepositoryFactory-Konzept, Unterscheidung Client
+					und Server</title>
+				
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="img/kap4/irepositoryfactory.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>Der gleiche Code wird in Form einer Jar clientseitig und serverseitig
+				benutzt. Die Konfigurationen der Repositories weichen jedoch
+				voneinander ab, da serverseitig keine Eclipse Workbench-Umgebung zur
+				Verfügung steht. Clientseitig erfolgt die Konfiguration über
+				plugin.xml-Datei, serverseitig über die Datei rep_conf.xml.</para>
+			
+			<para>Mehr Information finden Sie in den jeweiligen Schematas und
+				Klassendokumentationen.</para>
+		</section>
+		
+		<section>
+			<title>Dateiablage</title>
+			
+			<para>Die lokale Dateiablage (FileRepository) arbeitet direkt mit
+				Verzeichnisstrukturen und den dort enthaltenen Dateien. Im Grunde ist die
+				Verwaltung aller Dateitypen möglich, da das FileRepository nicht
+				spezifisch für ZML (Zeitreihen Markup Language, dass in Kalypso speziell
+				entwickelte XML "Serialisierung von Observations") implementiert ist.
+				Auf Basis von ZmlObservationItem stehen folgende Factories zur
+				Verfügung:</para>
+			
+			<orderedlist>
+				<listitem>
+					<para>die HeadlessZmlRepositoryFactory: wird serverseitig
+						benutzt weil GUI-los (Headless).</para>
+				</listitem>
+				
+				<listitem>
+					<para>die SWTZmlRepositoryFactory: wird clientseitig benutzt und
+						erlaubt dem Benutzer die Eingabe der Parameter über einen
+						Dialog.</para>
+				</listitem>
+			</orderedlist>
+		</section>
+		
+		<section vendor="sachsen-anhalt">
+			<title>Die Ablage von WISKI</title>
+			
+			<para>Zeitreihen aus WISKI werden ebenfalls über den
+				IRepository-Mechanismus geliefert. Die hierarchische Struktur ist in
+				WISKI anhand des Gruppensystems vorgegeben. Diese Struktur wird Eins zu
+				Eins als Repository in Kalypso dem Benutzer zur Verfügung gestellt. Die
+				"kinderlosen" Knoten dieser Struktur sind Zeitreihen.</para>
+			
+			<para>Mehr Informationen finden Sie im <xref linkend="wiski"/>.</para>
+		</section>
+		
+		<section>
+			<title>Virtuelle Ablage</title>
+			
+			<para>Diese Art von Repository bietet fortgeschrittene Möglichkeiten. Eine
+				XML-Konfigurationsdatei definiert dabei den Inhalt der Ablage. Anhand
+				von Filtern und bestehenden Repositories (wie z.B. Datei-basiert oder aus
+				der Zeitreihendatenbank) werden synthetische Zeitreihen generiert. Die
+				hierarchische Struktur ist frei definierbar. Diese Art von Ablage wird
+				z.Z. nicht eingesetzt.</para>
+			
+			<para>Die Gebietsniederschlags-Ablage ist eine virtuelle Ablage, die mit
+				Filtern und Zeitreihen aus beliebiger Quelle arbeitet. Die Struktur ist
+				durch Schachtelung in &lt;level/&gt; und &lt;item/&gt; Elemente frei
+				definierbar. Mehr Informationen zum Thema Filter finden Sie weiter unten
+				in diesem Kapitel.</para>
+		</section>
+		
+		<section>
+			<title>Zeitreihendienst</title>
+			
+			<para>Wie oben beschrieben ist die Konfiguration beliebig vieler client- und
+				serverseitiger Repositories möglich.</para>
+			
+			<para>Kalypso unterstützt ein spezielles clientseitiges Repository (das
+				Zeitreihendienst-Repository), dessen Inhalt der Kalypso Observation
+				Dienst zur Verfügung stellt.</para>
+			
+			<para>Innerhalb dieses Repository sind die serverseitigen oder
+				Remote-Repositories abgelegt. Die Remote-Repositories werden in der
+				Konfigurationsdatei der Kalypso_ServiceObservation (siehe in
+				webdav/srvconf/IobservationService/repconf_server.xml) definiert.
+				Das Schema dieser XML-Datei finden Sie unter
+				etc/xmlbinding/repository/repconf.xsd im KalypsoRepository
+				Projekt.</para>
+			
+			<para>Der Kalypso Zeitreihendienst kapselt die Zugriffe über WebDienst
+				zwischen Kalypso-Client und Server. Er liefert die serverseitigen
+				Repositories (deren Anzahl ist unbegrenzt) in Form eines einzigen
+				Repository, welches in die Kalypso Oberfläche eingebunden werden
+				kann.</para>
+			
+			<para>Theoretisch können alle Repositories lokal eingebunden werden, die den
+				Extension Point
+				<filename>org.Kalypso.repository.factories</filename> erweitern.
+				Dies hängt von den in Kalypso/Eclipse eingebundenen Plugins ab.</para>
+			
+			<figure>
+				<title>Zeitreihen-Ablage zwischen Client und Server</title>
+				
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="img/kap4/obsService.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>Die serverseitigen Repositories erscheinen auf dem Client unterhalb
+				des Zeitreihendienstes, potentiell neben anderen clientseitigen
+				Repositories.</para>
+		</section>
+		
+		<section>
+			<title>Filter</title>
+			
+			<para>Um die Zeitreihen an die Anforderungen der Modelle anzupassen, wird ein
+				sog. Filter-Mechanismus in Kalypso benutzt.</para>
+			
+			<para>Die Liste der Zurverfügung stehenden Filter ergibt sich aus der
+				XML-Schema-Datei, die unter
+				<filename>etc/schemas/zml/zmlFilters.xsd</filename> im
+				KalypsoCore-Projekt zu finden ist. Das Java-Interface
+				<filename>org.Kalypso.ogc.sensor.IObservationFilter</filename>
+				bildet den Einstieg in die Filter-Welt. Das Filter-Interface erweitert
+				das IObservation Interface, gefilterte Zeitreihen können also genauso
+				wie andere Zeitreihen benutzt werden.</para>
+		</section>
+	</chapter>
+	
+	<chapter>
+		<title>Modelldaten</title>
+		
+		<para>Kalypso beruht auf drei Hauptdatengruppen:</para>
+		
+		<figure>
+			<title>Datengruppen in Kalypso</title>
+			
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/kap5/Datengruppen_Kalypso.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<section id="abschn_5_1">
+			<title>Modellstruktur</title>
+			
+			<para>Alle Daten eines Modells werden innerhalb eines sogenannten Projektes
+				im Arbeitsbereich (<guilabel>Navigator</guilabel>) der Anwendung
+				abgelegt. Die Ablage erfolgt dabei in einer, im Wesentlichen beliebigen,
+				Verzeichnisstruktur.</para>
+			
+			<para>Zur besseren Übersicht empfehlen wir die Ablage nach einem festen
+				Schema.</para>
+			
+			<para>Die folgende Tabelle beschreibt die einzelnen Dateien und die von uns
+				verwendete Verzeichnisstruktur, beginnend unterhalb des
+				Projektverzeichnisses):</para>
+			
+			<table>
+				<title>Tabelle 6: Modellstruktur</title>
+				
+				<tgroup cols="4">
+					<colspec align="left" colwidth="2*"/>
+					<colspec align="left" colwidth="2*"/>
+					<colspec align="left" colwidth="3*"/>
+					<colspec align="left" colwidth="1*"/>
+					
+					<thead>
+						<row>
+							<entry align="center">Pfad</entry>
+							<entry align="center">Datei</entry>
+							<entry align="center">Erläuterung</entry>
+							<entry align="center">Standort</entry>
+						</row>
+					</thead>
+					
+					<tbody>
+						<row>
+							<entry>/</entry>
+							<entry>.project</entry>
+							<entry>Haupt-Projektdatei</entry>
+							<entry>fest</entry>
+						</row>
+						
+						<row>
+							<entry>/</entry>
+							<entry>.metadata</entry>
+							<entry>Modell-spezifische Parameter</entry>
+							<entry>fest</entry>
+						</row>
+						
+						<row>
+							<entry>/</entry>
+							<entry>modell.gml</entry>
+							<entry>Grunddaten des Modells</entry>
+							<entry>frei</entry>
+						</row>
+						
+						<row>
+							<entry>/.modell/</entry>
+							<entry>calcCaseConfig.xml</entry>
+							<entry>Konfiguration Rechenvariante</entry>
+							<entry>fest</entry>
+						</row>
+						
+						<row>
+							<entry>/.model/</entry>
+							<entry>calcWizard.xml</entry>
+							<entry>Konfiguration Vorhersage-Wizard</entry>
+							<entry>fest</entry>
+						</row>
+						
+						<row>
+							<entry>/.model/</entry>
+							<entry>Modelspec.xml</entry>
+							<entry>Eingangsdaten für Rechen-Plugin</entry>
+							<entry>fest</entry>
+						</row>
+						
+						<row>
+							<entry>/.model/schema/</entry>
+							<entry>*.xsd</entry>
+							<entry>XML Schemata für GML-Daten</entry>
+							<entry>fest</entry>
+						</row>
+						
+						<row>
+							<entry>/.prognose/</entry>
+							<entry>*.*</entry>
+							<entry>Ablage der Vorhersage-Varianten</entry>
+							<entry>fest</entry>
+						</row>
+						
+						<row>
+							<entry>/.settings/</entry>
+							<entry>*.prefs</entry>
+							<entry>Interne Konfigurationsdatei</entry>
+							<entry>fest</entry>
+						</row>
+						
+						<row>
+							<entry>/.styles/</entry>
+							<entry>*.sld</entry>
+							<entry>Style-Definitionsdateien für
+								GIS-Darstellung</entry>
+							<entry>frei</entry>
+						</row>
+						
+						<row>
+							<entry>/.templates/</entry>
+							<entry>*.odt, *.ott, *.gmt, *.gtt</entry>
+							<entry>Vorlagendateien für Rechenvarianten und
+								Vorhersage-Wizard</entry>
+							<entry>frei</entry>
+						</row>
+						
+						<row>
+							<entry>/Grunddaten/</entry>
+							<entry>*.shp, *.*</entry>
+							<entry>Weitere feste Grunddaten wie z.B. Shape-Dateien,
+								Rasterdaten etc.</entry>
+							<entry>frei</entry>
+						</row>
+						
+						<row>
+							<entry>/Karten/</entry>
+							<entry>*.gmt</entry>
+							<entry>Kartenvorlagen für Modelldaten</entry>
+							<entry>frei</entry>
+						</row>
+						
+						<row>
+							<entry>/Tabellen/</entry>
+							<entry>*.gtt</entry>
+							<entry>Tabellenvorlagen für Modelldaten</entry>
+							<entry>frei</entry>
+						</row>
+						
+						<row>
+							<entry>/Rechenvarianten/</entry>
+							<entry>*.*</entry>
+							<entry>Ablageverzeichnis für Rechenvarianten</entry>
+							<entry>frei</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			
+			<para>Mit Punkt <emphasis>.</emphasis> beginnende Verzeichnisse blendet
+				der Expertenmodus von Kalypso normalerweise aus. Der Menüpunkt
+				<guimenu>Filter</guimenu> blendet den Navigator ein.</para>
+		</section>
+		
+		<section id="abschn_5_2">
+			<title>GIS-Daten</title>
+			
+			<para>Die Modellierung von Modellen in Kalypso Enterprise basiert auf den
+				Standards des OpenGIS-Konsortiums (OGC, http://www.opengis.org) und
+				des World-Wide-Web-Konsortiums (W3C, http://www.w3c.org).</para>
+			
+			<para>Die Formatierung der Modelldaten ist in der vom OGC spezifizierten
+				Geography Markup Language (GML) realisiert. GML ist eine XML-Codierung
+				zum Transport und Speichern von geographischen Informationen.</para>
+			
+			<para>Die GML-Spezifikationen werden vom OGC veröffentlicht und sind über die
+				Internet-Seite des OGC in englischer Sprache verfügbar (PDF).</para>
+			
+			<para>Die in Kalypso Enterprise unterstützte Version ist GML2.</para>
+		</section>
+		
+		<section>
+			<title>Zeitreihen</title>
+			
+			<para>Das Zeitreihenformat (ZML) ähnelt dem OGC-Observation-Schema (siehe
+				http://www.opengeospatial.org/docs/03-022r3.pdf für mehr
+				Information), ist aber einfacher aufgebaut. Zum Zeitpunkt der
+				Realisierung gab es noch keine Implementierung dieses Standards.</para>
+			
+			<para>Das ZML-Schema befindet sich im KalypsoCore-Projekt unter:
+				etc/schemas/zml/observation.xsd.</para>
+			
+			<para>ZML ist besonders für große Datenmengen geeignet. Die Implementierung
+				unterstützt drei Arten von Datenintegration:</para>
+			
+			<itemizedlist>
+				<listitem>
+					<para>inline</para>
+				</listitem>
+				<listitem>
+					<para>linked</para>
+				</listitem>
+				<listitem>
+					<para>block-inline</para>
+				</listitem>
+			</itemizedlist>
+			
+			<para>Die Unterschiede zwischen diesen Variationen werden in den nächsten
+				Abschnitten näher erläutert.</para>
+			
+			<section>
+				<title>ZML-inline</title>
+				
+				<para>Dieses Format orientiert sich am stärksten am OGC-Schema. Die Daten
+					werden direkt in das `valueArray’-Element `axis’-Elements
+					geschrieben.</para>
+				
+				<figure>
+					<title>Beispiel</title>
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="img/kap5/ZML_inline.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+			
+			<section>
+				<title>ZML-linked</title>
+				
+				<para>Dieses Format dient der Flexibilität. Wenn Zeitreihen als
+					ASCII-Datei schon vorhanden sind, bietet das ZML-Schema die
+					Möglichkeit, diese Daten aus der ZML-Datei zu verlinken. Eine
+					Umformatierung der Ausgangsdateien ist nicht erforderlich.</para>
+				
+				<figure>
+					<title>Beispiel</title>
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="img/kap5/ZML_linked.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+			
+			<section>
+				<title>ZML-block-inline</title>
+				
+				<para>Als Alternative zum ZML-linked Format bietet sich das
+					ZML-block-inline Format an. Die Daten werden ’en bloc’ direkt in die
+					ZML-Datei gespeichert.</para>
+				
+				<figure>
+					<title>Beispiel</title>
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="img/kap5/ZML_block_inline.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+		</section>
+	</chapter>
+	
+	<chapter>
+		<title>Ansichtsvorlagen</title>
+		
+		<para>Kalypso Enterprise ermöglicht eine Reihe verschiedener Ansichten auf die
+			Daten eines Modells. Die Einstellungen einer Ansicht (welche Daten,
+			Darstellung, usw.) werden in Dateien bestimmter Formate, so genannter
+			Ansichtsvorlagen, gespeichert.</para>
+		
+		<para>Alle Ansichtvorlagen sind Dateien im XML Format, die jeweils durch ein
+			XML-Schema spezifiziert sind. Die Schematas aller Ansichtsvorlagen befinden
+			sich in den Programmquellen im Pfad /KalypsoCore/etc/schemas/template. Im
+			gleichen Verzeichnis befindet sich für jede Vorlagenart eine
+			Beispieldatei.</para>
+		
+		<para>Die Ansichtvorlagen entsprechen den verschiedenen möglichen Ansichten in
+			Kalypso-Enterprise. Folgende Ansichten und somit Ansichtsvorlagen werden
+			unterstützt:</para>
+		
+		<table>
+			<title>Ansichtstypen und ihre Vorlagen</title>
+			
+			<tgroup cols="3">
+				<colspec align="left" colwidth="3*"/>
+				
+				<colspec align="left" colwidth="1*"/>
+				
+				<colspec align="left" colwidth="3*"/>
+				
+				<thead>
+					<row>
+						<entry align="center">Ansicht</entry>
+						
+						<entry align="center">Dateiendung der Vorlage</entry>
+						
+						<entry align="center">XML Schemadatei</entry>
+					</row>
+				</thead>
+				
+				<tbody>
+					<row>
+						<entry>GIS-Kartenansicht</entry>
+						
+						<entry>*.gmt</entry>
+						
+						<entry>gismapview.xsd</entry>
+					</row>
+					
+					<row>
+						<entry>GIS-Tabellenansicht</entry>
+						
+						<entry>*.gtt</entry>
+						
+						<entry>gistableview.xsd</entry>
+					</row>
+					
+					<row>
+						<entry>GIS-Formularansicht</entry>
+						
+						<entry>*.gft</entry>
+						
+						<entry>featureview.xsd</entry>
+					</row>
+					
+					<row>
+						<entry>GIS-Strukturansicht (Baum)</entry>
+						
+						<entry>*.gmv</entry>
+						
+						<entry>-</entry>
+					</row>
+					
+					<row>
+						<entry>Diagrammansicht Zeitreihen</entry>
+						
+						<entry>*.odt</entry>
+						
+						<entry>obsdiagview.xsd</entry>
+					</row>
+					
+					<row>
+						<entry>Tabellarische Zeitreihenansicht</entry>
+						
+						<entry>*.ott</entry>
+						
+						<entry>obstableview.xsd</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+		
+		<para>Allen Vorlagen ist gemein, dass in ihnen lediglich die Art der Darstellung
+			gespeichert ist. Die eigentlichen Daten liegen in separaten Datendateien
+			(z.B. .shp, .gml, .zml) und werden aus den Vorlagen über URL-Verknüpfungen
+			referenziert. Bei der Referenzierung der Datendateien sind sowohl relative
+			als auch absolute URL-Angaben möglich. Relative Pfad-Angaben beziehen sich
+			stets auf den Ort der Vorlagendatei.</para>
+		
+		<para>Neben den üblichen URL-Protokollen wie z.B. file: und http: wurden für die
+			Modellverwaltung eigenen Protokolle definiert. Folgende Protokolle werden
+			unterstützt:</para>
+		
+		<informaltable>
+			<tgroup cols="3">
+				<colspec align="left" colwidth="1*"/>
+				<colspec align="left" colwidth="2*"/>
+				<colspec align="left" colwidth="2*"/>
+				
+				<thead>
+					<row>
+						<entry align="center">Protokoll</entry>
+						<entry align="center">Beschreibung</entry>
+						<entry align="center">Kommentar</entry>
+					</row>
+				</thead>
+				
+				<tbody>
+					<row>
+						<entry>http</entry>
+						<entry>Übliches http Protokoll</entry>
+						<entry></entry>
+					</row>
+					
+					<row>
+						<entry>file</entry>
+						<entry>Datei lokal oder im Netzwerk</entry>
+						<entry></entry>
+					</row>
+					
+					<row>
+						<entry>project</entry>
+						<entry>Pfad relativ zum aktuellen (Kalypso-)Projekt</entry>
+						<entry></entry>
+					</row>
+					
+					<row>
+						<entry>calcCase</entry>
+						<entry>Pfad relativ zur aktuellen Rechenvariante (nur bei
+							Vorlagen innerhalb einer Rechenvariante zu
+							verwenden)</entry>
+						<entry>Deprecated: es sind vorzugsweise relative Pfade zu
+							verwenden.</entry>
+					</row>
+					
+					<row>
+						<entry>platform:/resource/</entry>
+						<entry>Beliebiger Pfad innerhalb Arbeitsbereich</entry>
+						<entry>Allgemeiner Mechanismus der Eclipse-Platform. Siehe
+							Eclipse-Dokumentation.</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</informaltable>
+		
+		<section>
+			<title>GIS-Kartenansicht</title>
+			
+			<para>Die GIS-Kartenansicht stellt GIS-Daten themenbasiert in einer Karte
+				dar. Entsprechend besteht die Vorlage aus einer Themenliste (layern), die
+				wiederum eine Liste von Darstellungsvorschriften (styles) enthalten
+				kann.</para>
+			
+			<para>Die Referenzierung der eigentlichen Daten erfolgt über das
+				<emphasis>href</emphasis> Attribut jedes <emphasis>layer</emphasis>
+				-Elements. Das <emphasis>linktpye</emphasis> Attribut des Themas legt
+				fest, in welchem Format die Datendatei geladen wird. Zur Zeit können die
+				Formate GML (gml) und ESRI Shape (shape) geladen werden.</para>
+			
+			<para>Eine Besonderheit des Formates <emphasis>shape</emphasis> ist, dass
+				in der Verknüpfung (<emphasis>href</emphasis>) des Themas zusätzlich
+				das Geokoordinatensystem der Shape-Datei angegeben werden kann, z.B.:
+				<filename>href="project:/Grunddaten/Shapes/gewässer#EPSG:31469"</filename>
+				</para>
+			
+			<para>Das Attribut <emphasis>featurePath</emphasis> des Themas
+				beschreibt, welche Daten innerhalb der geladenen Datei angezeigt werden.
+				Dabei bezeichnet der Feature-Pfad einen eindeutigen Pfad innerhalb der
+				Datenstruktur der jeweils geladenen Datei. Um in der Karte dargestellt
+				werden zu können, muss der Feature-Pfad auf eine Liste von GIS-Elementen
+				(Feature Collection) verweisen.</para>
+			
+			<para>Im Falle einer Shape-Datei ist der Feature-Pfad stets eindeutig und muss
+				auf die einzige vorhandene Liste von Elementen verweisen. Diese heißt
+				stets <emphasis>featureCollection</emphasis>.</para>
+		</section>
+		
+		<section>
+			<title>GIS-Tabellenansicht</title>
+			
+			<para>Im Gegensatz zur Kartenansicht wird in der Tabellenansicht nur
+					<emphasis role="bold">eine</emphasis> Liste von GIS-Elementen
+				tabellarisch dargestellt. Die Regeln zur Referenzierung dieser Liste
+				sind die gleichen wie in der Kartenansicht. Es ist somit nur ein
+				<emphasis>layer</emphasis>-Element zulässig.</para>
+			
+			<para>Innerhalb des einzigen Themas wird bei der Tabelle angegeben, welche
+				Tabellenspalten angezeigt und nach welchem Attribut die GIS Elemente
+				sortiert werden sollen.</para>
+		</section>
+		
+		<section>
+			<title>GIS-Formularansicht</title>
+			
+			<para>Die GIS-Formularansicht ist eine hochflexible Datenansicht eines GIS
+				Elements (Feature) in Form einer formularartigen Dialogmaske.</para>
+			
+			<para>Grundlegend werden dabei die Attribute des angezeigten Elements in Form
+				von Beschriftungen (Name des Attributs) und Texteingaben (Wert des
+				Attributs) dargestellt.</para>
+			
+			<para>Das anzuzeigende GIS-Element wird wie bei Karten- und Tabellenansicht
+				über ein <emphasis>layer</emphasis> Element des XML angegeben. Auch hier
+				gelten die gleichen Regeln wie im Fall der Karten- und Tabellenvorlagen. Im
+				Gegensatz zu Karten- und Tabellenansicht kann hier aber ein beliebiges GIS
+				Element und nicht nur Listen von Elementen (Feature-Collections)
+				angegeben werden.</para>
+			
+			<para>In den folgenden <emphasis>view</emphasis> Elementen der Vorlage kann
+				genau spezifiziert werden, wie die Darstellung der Attribute des Elements
+				erfolgen soll. Dabei bezieht sich ein <emphasis>view</emphasis> Element
+				stets auf den Datentyp (Feature-Type) des GIS-Elements. Fehlt für einen
+				Feature-Type die View-Definition, wird automatisch eine
+				Standardeinstellung generiert. Die Standardeinstellung stellt
+				typischerweise alle Attribute des Elements in einer vertikal
+				angeordneten Liste dar.</para>
+		</section>
+		
+		<section>
+			<title>GIS-Strukturansicht</title>
+			
+			<para>Die GIS-Strukturansicht stellt die Daten einer GIS-Datei in einer
+				Baumansicht dar.</para>
+			
+			<para>Im Gegensatz zu den anderen Ansichtsvorlagen beruht das Datenformat
+				dieser Vorlage nicht auf einem XML-Schema, sondern ist wie folgt
+				aufgebaut:</para>
+			
+			<orderedlist>
+				<listitem>
+					<para>Zeile: Datenart (zur Zeit gml oder shape)</para>
+				</listitem>
+				
+				<listitem>
+					<para>Zeile: (Datei-)pfad zur Datendatei</para>
+				</listitem>
+			</orderedlist>
+			
+			<figure>
+				<title>Beispiel</title>
+				
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="img/kap6/GIS_Strukturansicht.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>Die GIS-Vorlagenansicht bietet neben dem Löschen und Anlegen von
+				GIS-Elementen auch die Möglichkeit, ein GIS-Element zu bearbeiten. In
+				diesem Fall öffnet sich eine automatisch generierte GIS-Formularansicht
+				auf dem Element.</para>
+			
+			<para>Die GIS-Strukturansicht befindet sich zur Zeit noch in Bearbeitung und
+				ist somit für den täglichen Gebrauch eventuell noch nicht anwendbar. Sie
+				kann aber gerade beim Modellaufbau eine starke Hilfe bei der Dateneingabe
+				darstellen.</para>
+		</section>
+		
+		<section>
+			<title>Tabellarische Zeitreihenansicht</title>
+			
+			<para>Vorlagen dieser Art stellen eine oder mehrere Zeitreihen in einem
+				tabellarischen Editor dar. Dabei können pro Zeitreihe eine oder mehrere
+				Spalten dargestellt werden, je nachdem wie viele Werte-Achsen die
+				Zeitreihendatei enthält.</para>
+			
+			<para>Die erste Spalte der Darstellung ist immer die Datumsachse. Die
+				Sortierung erfolgt stets chronologisch, es kann also sein, dass es
+				`Löcher’ in den Daten einer Spalte gibt, wenn es für ein Datum keine Werte in
+				der grundliegenden Zeitreihe gibt.</para>
+			
+			<para>In der Vorlage werden Zeitreihenthemen gelistet. Jedes Thema
+				entspricht dabei einer Zeitreihe. Innerhalb jeden Themas werden die
+				Spalten angegeben, die angezeigt werden sollen. Eine Spalte wird jeweils
+				zu einer Werteachse der Zeitreihe assoziiert.</para>
+			
+			<para>Wie in den GIS-Vorlagen referenziert ein Thema
+				(<emphasis>observation</emphasis>-Element) eine Datendatei über das
+				<emphasis>href</emphasis>-Attribut. Es können die gleichen
+				URL-Protokolle wie dort verwendet werden. Als
+				<emphasis>linktype</emphasis> ist zur Zeit ausschließlich
+				<emphasis>zml</emphasis> zugelassen.</para>
+			
+			<para>Neben der Themenliste können auch sogenannte RenderingRules
+				(Darstellungsregeln) eingetragen sein. Diese Darstellungsregeln
+				definieren die Darstellung von Zusatzinformation wie z.B. "Wert muss
+				geprüft werden" oder "Wert vom Benutzer geändert" in Form von Farbe, Bild,
+				Tooltips und/oder Zeichen.</para>
+		</section>
+		
+		<section>
+			<title>Diagrammansicht Zeitreihen</title>
+			
+			<para>In der Diagrammansicht werden Zeitreihendaten als Kurven oder als
+				Blockdiagramm (Niederschlag) dargestellt.</para>
+			
+			<para>Der Aufbau der Vorlagendatei ähnelt stark dem Format der
+				Tabellenvorlage. Statt Spalten (<emphasis>columns</emphasis>)
+				beinhaltet ein Thema Kurven (<emphasis>curves</emphasis>) mit Ihren
+				Darstellungsparametern (Farbe etc.).</para>
+			
+			<para>Zusätzlich muss im Fall des Diagramms angegeben werden, welche
+				Diagrammachsen dargestellt werden sollen. Dies erfolgt über die `axis’
+				Elemente. Für jede Kurve kann nun einzeln angegeben werden, auf welchen
+				Achsen ihre Daten dargestellt werden sollen.</para>
+		</section>
+	</chapter>
+	
+	<chapter>
+		<title id="chapter_7_modellintegration">Modellintegration</title>
+		
+		<para>Das Programmsystem Kalypso ist in der Lage, eine Vielzahl
+			verschiedenartiger Modelle unter einer einheitlichen Benutzeroberfläche zu
+			integrieren. Die Integration eines neuen Modelltyps (eines neuen
+			Rechenkerns) erfolgt dabei auf zwei Ebenen.</para>
+		
+		<para>Serverseitig wird das Modell (bzw. der Rechenkern) über eine feststehende
+			Java-Schnittstelle implementiert, denn hier erfolgt die für den jeweiligen
+			Rechenkern spezifische Programmierung wie z.B.: Anstoßen des nativen
+			Programms (.exe), Lesen und Schreiben der speziellen Formate.</para>
+		
+		<para>Clientseitig werden alle Modelle gleichermaßen behandelt, sie
+			unterscheiden sich lediglich in ihrer Datenspezifikation. Aus diesem Grund
+			ist es nötig, die Modelldaten formal mit Hilfe von GML-Schemata zu
+			spezifizieren.</para>
+		
+		<para>Über diese beiden Grundbausteine (Modell-Plugin und Datenspezifikation)
+			hinaus gibt es noch eine Reihe von Konfigurationsdateien, welche bestimmte
+			Programmabläufe wie zum Beispiel <guilabel>Anlegen einer
+			Rechenvariante</guilabel> und den Vorhersage-Wizard steuern.</para>
+		
+		<para>Im Weiteren wird die Konfiguration dieser Modellintegration in der von uns
+			empfohlenen Reihenfolge im Detail beschrieben.</para>
+		
+		<section>
+			<title>Modellspezifikation und Grunddaten</title>
+			
+			<formalpara>
+				<title>MODELL-PROJEKT</title>
+				
+				<para>Bevor mit der Spezifikation begonnen werden kann, muss im
+					Kalypso-Arbeitsbereich (<guilabel>Navigator</guilabel>) ein
+					neues, leeres Projekt über <guimenuitem>Datei-Neu</guimenuitem>
+					angelegt werden. Das neue Projekt enthält lediglich die Datei
+					<filename>.project</filename>, welche jetzt um die Zeile
+					&lt;nature&gt;org.Kalypso.ui.ModelNature&lt;/nature&gt; Im
+					Unterpunkt
+					&lt;natures&gt; ergänzt werden muss, um es als
+					Kalypso-Modell-Projekt zu kennzeichnen. Neue Dateien und
+					Verzeichnisse können im Projekt ebenfalls über den Menüpunkt
+					<guimenuitem>Datei-Neu</guimenuitem> erstellt werden.</para>
+				</formalpara>
+			
+			<formalpara>
+				<title>SPEZIFIKATION</title>
+				
+				<para>Die Spezifikation der Modell-(Grund-)Daten erfolgt in Form von XML
+					Schemata (*.xsd). Die Spezifikation muss konform zum OGC GML2
+					Standard erfolgen (siehe auch <xref linkend="abschn_5_2"/>). Die
+					Ablage der .xsd Dateien ist frei wählbar, wir empfehlen die Ablage
+					unter /.model/schemata/. Ebenfalls frei wählbar ist, ob die
+					Modellspezifikation in einer einzelnen Datei abgelegt ist oder auf
+					mehrere Dateien verteilt wird. Verweise (Importe) der Schemata
+					untereinander sollten immer mit relativen Pfaden erfolgen.</para>
+				</formalpara>
+			
+			<formalpara>
+				<title>MODELL-DATEN</title>
+				
+				<para>Nach der Spezifikation der Modell-Daten können bereits die
+					Modelldaten in Form einer .gml Datei erstellt werden. Diese muss
+					natürlich gegen die .xsd Schematas validieren. Die Modelldaten
+					können dabei so angelegt werden, dass alle Daten in einer einzelnen
+					.gml Datei abgelegt oder alternativ über mehrere Dateien verteilt
+					werden. Je nach Größe des Modells kann es sinnvoll sein, die
+					Modelldaten aus bestehenden Modelldaten automatisch generieren zu
+					lassen. Hierzu wird natürlich eine spezielle Programmierung
+					benötigt.</para> </formalpara>
+			
+			<formalpara>
+				<title>VORLAGEN</title>
+				
+				<para>Liegen die Modelldaten bereits teilweise vor, können jetzt schon
+					Karten- und Tabellenvorlagen, die auf die Modellgrunddaten
+					zugreifen, erstellt werden. Es empfiehlt sich, die Vorlagen
+					möglichst frühzeitig anzulegen, um eventuelle Fehler in den Daten
+					bzw. der Datenmodellierung rechtzeitig zu erkennen. Darüber hinaus
+					können die Vorlagen natürlich auch zur Eingabe der Modellgrunddaten
+					verwendet werden. Neben den (GIS-basierten) Modelldaten können
+					weitere im Projekt abgelegte GIS-Daten visualisiert werden (z.B.
+					ESRI Shapes). Die Ablage der Modelldaten ist zwar im Wesentlichen frei
+					wählbar, sollte aber dennoch nach einem festen Schema erfolgen (siehe
+						<xref linkend="abschn_5_1"/>).</para> </formalpara>
+		</section>
+		
+		<section>
+			<title>Spezifikation der Rechenvarianten</title>
+			
+			<para>Nach dem Erstellen der Grunddaten besteht der nächste Schritt darin, die
+				Konfiguration der Rechenvarianten zu definieren. Eine Rechenvariante
+				besteht dabei stets aus einem Unterverzeichnis des Projektes, welches
+				durch Vorhandensein der Datei `.calculation’ als solches gekennzeichnet
+				ist. Die Datei `.calculation’ enthält dabei die für die Berechnung
+				benötigten Steuerdaten, insbesondere den Zeitraum der Modellrechnung,
+				welcher für den Import von Zeitreihen aus dem Zeitreihen-Dienst benötigt
+				wird.</para>
+			
+			<formalpara>
+				<title>.CALCULATION</title>
+				
+				<para>Die Datei `.calculation’ ist eine Datei im GML Format, welche beim
+					Erzeugen einer Rechenvariante automatisch angezeigt wird. Zu diesem
+					Zweck muss als Vorlage eine Datei `.calculation.template’ im
+					Verzeichnis /.model/ des Projektes angelegt sein. Die Vorlage wird
+					beim Erstellen einer Rechenvariante automatisch in das neue
+					Verzeichnis übernommen und mittels der Standard-Feature-Ansicht
+					visualisiert. Dabei können durch Vergabe von Platzhaltern bestimmte
+					Felder automatisch vorbelegt werden. Folgende Platzhalter sind
+					definiert:
+					
+					<itemizedlist>
+						<listitem>
+							<para>:startsim: Vorgeschlagener Startpunkt der
+								Simulation</para>
+						</listitem>
+						<listitem>
+							<para>:startforecast: Vorgeschlagener Startpunkt der
+								Vorhersage (Ist-Zeitpunkt)</para>
+						</listitem>
+						<listitem>
+							<para>:endsim: Vorgeschlagener Endpunkt der
+								Simulation</para>
+						</listitem>
+						<listitem>
+							<para>:user: Anmeldename des Benutzers</para>
+						</listitem>
+					</itemizedlist> Soll die Anzeige der .calculation (=zweite Seite des
+					Wizards zur Erzeugung einer Rechenvariante - Menü
+					„Rechenvariante-Neu“) eine spezielle Formatierung erhalten, kann
+					auch eine Vorlagendatei im .gft Format unter dem Namen
+					.calculation.view im /.model/ Verzeichnis abgelegt werden. Diese
+					wird dann zur Visualisierung herangezogen.</para> </formalpara>
+			
+			<formalpara>
+				<title>CALCCASECONFIG.XML</title>
+				
+				<para>Die Datei calcCaseConfig.xml, die im Verzeichnis /.model/ des
+					Projektes gespeichert sein muss, beschreibt Aktionen, welche beim
+					Erstellen bzw. Aktualisieren einer Rechenvariante durchgeführt
+					werden. Jeder dieser Blöcke besteht dabei aus einer Reihe von
+					sogenannten Transformationen, welche die einzelnen Aktionen (z.B.
+					Kopieren von Dateien, Import von Zeitreihen vom Zeitreihen-Dienst)
+					definieren. Die genaue Struktur der Datei calcCaseConfig.xml ergibt
+					sich aus ihrer Schema-Definition calcCaseconfig.xsd. Eine Liste der
+					zur Zeit implementierten Transformationen und ihrer Argumente
+					befindet sich im Anhang. Falls andere Transformationen benötigt
+					werden, können diese durch Implementation des Java-Interfaces
+					org.Kalypso.util.transformation.ITransformation programmiert
+					werden. Es empfiehlt sich, beim Erstellen der Rechenvariante alle zur
+					Berechnung benötigten Daten in das Verzeichnis der Rechenvariante zu
+					kopieren. Im gleichen Schritt können auch die Vorlagen zum Editieren
+					der Daten kopiert bzw. erzeugt werden.</para> </formalpara>
+		</section>
+		
+		<section>
+			<title>Modell-Plugin</title>
+			
+			<para>Mit den letzten beiden Punkten ist die clientseitige Konfiguration fast
+				abgeschlossen. Zum Anstoßen einer (serverseitigen) Berechnung wird im
+				Projektverzeichnis aber noch die Information benötigt, welche Dateien
+				zum Rechenkern übertragen werden. Diese Angabe muss in der Datei
+				`modelspec.xml’ im Verzeichnis /.model/ abgelegt werden.</para>
+			
+			<para>Format und Beschreibung dieser Datei kann ihrem Schema (modelspec.xsd,
+				in den Programmquellen unter
+				<filename>/KalypsoCore/etc/schemas/model/</filename>) entnommen
+				werden. Im Wesentlichen enthält diese Datei die Liste der Dateien, die zum
+				Start einer Rechnung zum Server übertragen werden, jeweils mit einer
+				eindeutigen Kennung (ID).</para>
+			
+			<formalpara>
+				<title>PLUGIN</title>
+				
+				<para>Das serverseitige Modell-Plugin wird realisiert, indem das
+					Java-Interface
+					<filename>org.Kalypso.services.calculation.job.ICalcJob</filename>
+					implementiert wird (siehe auch JavaDoc des Interface). Im Falle einer
+					Berechnung wird die Methode <guilabel>run</guilabel> der
+					jeweiligen Implementation eines Modelltyps aufgerufen. Dieser
+					Methode wird unter anderem eine Liste der (jetzt serverseitig
+					gespeicherten) Eingangsdateien übergeben. Nach Beenden der
+					<guilabel>run</guilabel>-Methode werden über
+					<guilabel>getResults</guilabel> die Ergebnisse der Berechnung
+					abgerufen. Ist das Berechnungs-Interface implementiert, muss
+					dieses noch in der Konfigurationsdatei des Berechnungs-Dienstes
+					angemeldet werden und steht dann für Berechnungen des gewünschten
+					Modelltyps zur Verfügung.</para> </formalpara>
+		</section>
+		
+		<section>
+			<title>Wizard-Konfiguration</title>
+			
+			<para>Die bislang geschilderte Methode beschreibt ausschließlich die
+				Datenmodellierung und Integration im Expertenmodus.</para>
+			
+			<para>Um die Funktionen des Vorhersage-Wizards zur vereinfachten
+				Benutzerführung nutzen zu können, muss im Projektverzeichnis /.model/
+				die Datei calcWizard.xml angelegt werden. Die Datei besteht dabei aus
+				einer Liste der zu verwendenden Wizard-Seiten sowie deren
+				Parametrisierung.</para>
+			
+			<para>Eine Auflistung der bisher zur Verfügung stehenden Seiten-Typen findet
+				sich im Anhang. Werden spezielle, nicht vorhandene Wizard-Seiten
+				benötigt, können weitere durch Implementierung des Java-Interfaces
+				org.Kalypso.ui.calcwizard.modelpages.modelWizardPage zum Programm
+				hinzugefügt werden.</para>
+			
+			<para>Die beiden ersten Seiten des Wizards <guilabel>Vorhersage
+				erzeugen</guilabel> und <guilabel>Steuerparameter</guilabel> sind
+				dabei in jedem Vorhersage-Wizard vorhanden und sind nicht
+				konfigurierbar.</para>
+		</section>
+		
+		<section>
+			<title>Zusammenfassung/Checkliste</title>
+			
+			<para>Zusammengefasst müssen die folgenden Schritte durchgeführt
+				werden:</para>
+			
+			<itemizedlist>
+				<listitem>
+					<para>Projekt anlegen und .project editieren</para>
+				</listitem>
+				<listitem>
+					<para>Modellschemata und Modelldaten erzeugen</para>
+				</listitem>
+				<listitem>
+					<para>Karten-/Tabellen-Vorlagen für Grunddaten erstellen</para>
+				</listitem>
+				<listitem>
+					<para>Dateien .calculation.template und .calculation.view
+						erzeugen</para>
+				</listitem>
+				<listitem>
+					<para>Datei calcCaseConfig.xml erzeugen</para>
+				</listitem>
+				<listitem>
+					<para>Karten-/Tabellen-/Zeitreihen-Vorlagen für
+						Rechenvarianten erstellen</para>
+				</listitem>
+				<listitem>
+					<para>Datei modelspec.xml erzeugen</para>
+				</listitem>
+				<listitem>
+					<para>Implementation des Modell-Plugin Interfaces
+						IcalcJob</para>
+				</listitem>
+				<listitem>
+					<para>Konfiguration des Rechendienst-Servers</para>
+				</listitem>
+				<listitem>
+					<para>Datei calcWizard.xml erzeugen</para>
+				</listitem>
+				<listitem>
+					<para>Vorlagen für Wizard-Seiten erstellen</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</chapter>
+	
+	<chapter id="modell-spree" vendor="sachsen">
+		<title>Modellintegration Spree</title>
+		
+		<para>Das Hochwasservorhersagemodell der Spree beruht auf dem Programm HW_Spree,
+			welches von der Firma WASY GmbH entwickelt wurde.</para>
+		
+		<para>Zur Integration des Spree-Modells in Kalypso-Enterprise wurde das
+			bestehende Programm durch die Firma WASY so angepasst, dass ein
+			oberflächenloser Betrieb des Rechenkerns möglich ist.</para>
+		
+		<para>Dieser Rechenkern ist Server-seitig als Modell-Plugin in Kalypso
+			integriert. Zur Client-seitigen Integration wurde eine GML-basierte
+			Modellspezifikation erstellt.</para>
+		
+		<para>Die zur Integration des Modells nötige Programmierung ist innerhalb der
+			Programmquellen vollständig im Projekt KalypsoModellSpree
+			zusammengefasst. Neben der Implementation des Rechendienstes finden sich
+			dort alle für die Berechnung benötigten weiteren Resourcen (ausführbares
+			Programm hw_spree.exe, unveränderbare Parameterdateien sowie
+			Testdatensätze) wieder.</para>
+		
+		<para>Alle Daten zur Client-seitigen Modellierung, also Modellspezifikation,
+			Modelldaten usw., befinden sich im Datenprojekt KalypsoSpree der
+			Programmquellen. Das gleiche Projekt dient als Modellprojekt unter dem Namen
+			`Spree’ als Vorhersagemodell der eigentlichen Installation.</para>
+		
+		<section>
+			<title>Modellspezifikation und Grunddaten</title>
+			
+			<para>Die Verzeichnisstruktur des Modellprojektes KalypsoSpree ist gemäß
+					<xref linkend="abschn_5_1"/> aufgebaut. Über die
+				Standard-Struktur hinaus wurde das Verzeichnis .Rechenvarianten_test
+				angelegt, welches Testdatensätze als fertige Rechenvarianten
+				enthält.</para>
+			
+			<para>Die Modellspezifikation befindet sich, wie empfohlen, in der Datei
+				<filename>/KalypsoSpree/.model/schema/modell.xsd</filename> und
+				definiert die Struktur der vom Kalypso Client bearbeitbaren Modelldaten
+				sowie die vom Modell verwendbaren Zeitreihen.</para>
+			
+			<figure>
+				<title>Überblick Modellspezifikation Spree</title>
+				
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="img/kap8/Modellspezifikation.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>Um einen Überblick über die Struktur der Modelldaten zu erhalten wurde
+				die Vorlage <filename>.modell.gmv</filename> im Hauptverzeichnis des
+				Projektes angelegt. Nach dem Öffnen der Vorlage erscheint eine (Baum-)
+				Strukturansicht des Modells, welche unter anderem auch das Bearbeiten der
+				einzelnen Modellelemente erlaubt.</para>
+			
+			<para>Wie aus der Baumansicht hervorgeht, besteht das Spree-Modell aus drei
+				Listen (Collections), welche unterhalb des Wurzelelements (root)
+				angeordnet sind:</para>
+			<itemizedlist>
+				<listitem>
+					<para>Die Liste der Pegel (PegelCollectionAssociation) enthält
+						alle Pegel und deren Parameter. Innerhalb der Pegel wird in
+						Einzugsgebiete und Flusslaufmodelle unterschieden.</para>
+				</listitem>
+				<listitem>
+					<para>Die Liste der Talsperren (TalsperreCollectionAssociation)
+						enthält die im Modell abgebildeten Speicherbauwerke und deren
+						Parameter.</para>
+				</listitem>
+				<listitem>
+					<para>Die Liste der Vorgabe-Elemente
+						(VorgabeCollectionAssociation) enthält die Abflusszu- und
+						-abgaben (`Flutungen’) des Modells.</para>
+				</listitem>
+			</itemizedlist>
+			
+			<para>Im Folgenden werden die einzelnen Modellparameter und Spalten der
+				Modelltabellen erläutert. Die Eingabe der Parameter erfolgt entweder
+				über die entsprechenden Ansichten im Kalypso-Modeler (Expertenmodus)
+				oder im Vorhersage-Wizard.</para>
+			
+			<table>
+				<title>Parameter der N-A-Modelle</title>
+				
+				<tgroup cols="3">
+					<colspec align="left" colwidth="3*"/>
+					<colspec align="left" colwidth="1*"/>
+					<colspec align="left" colwidth="4*"/>
+					
+					<thead>
+						<row>
+							<entry align="center">Parameter</entry>
+							<entry align="center">Einheit</entry>
+							<entry align="center">Bedeutung</entry>
+						</row>
+					</thead>
+					
+					<tbody>
+						<row>
+							<entry>Name</entry>
+							<entry>-</entry>
+							<entry>Name des Pegels</entry>
+						</row>
+						
+						<row>
+							<entry>Ort</entry>
+							<entry>-</entry>
+							<entry>Lage des Pegels</entry>
+						</row>
+						
+						<row>
+							<entry>BodenfeuchteMin</entry>
+							<entry>[-]</entry>
+							<entry>Bodenfeuchte (Minimalwert)</entry>
+						</row>
+						<row>
+							<entry>Bodenfeuchte</entry>
+							<entry>[-]</entry>
+							<entry>Anfangsbodenfeuchte</entry>
+						</row>
+						<row>
+							<entry>BodenfeuchteMax</entry>
+							<entry>[-]</entry>
+							<entry>Bodenfeuchte (Maximalwert)</entry>
+						</row>
+						<row>
+							<entry>Ausdehnung</entry>
+							<entry>m²</entry>
+							<entry>Fläche des Einzugsgebiets (nicht benutzt)</entry>
+						</row>
+						<row>
+							<entry>Niederschlag_gemessen</entry>
+							<entry>-</entry>
+							<entry>Verknüpfung auf gemessene Niederschlagszeitreihe
+								auf dem Server</entry>
+						</row>
+						<row>
+							<entry>Niederschlag_prognose</entry>
+							<entry>-</entry>
+							<entry>Verknüpfung auf Niederschlagszeitreihe
+								(Prognose) auf dem Server</entry>
+						</row>
+						<row>
+							<entry>Niederschlag_rechnung</entry>
+							<entry>-</entry>
+							<entry>Verknüpfung auf Niederschlagszeitreihe im
+								Modell</entry>
+						</row>
+						<row>
+							<entry>Wasserstand_gemessenEingang</entry>
+							<entry>-</entry>
+							<entry>Verknüpfung auf Wasserstandsganglinie auf dem
+								Server</entry>
+						</row>
+						<row>
+							<entry>Wasserstand_gemessen</entry>
+							<entry>-</entry>
+							<entry>Verknüpfung auf gemessene
+								Wasserstandsganglinie</entry>
+						</row>
+						<row>
+							<entry>Wasserstand_gerechnet</entry>
+							<entry>-</entry>
+							<entry>Verknüpfung auf berechnete
+								Wasserstandsganglinie</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			
+			<table>
+				<title>Parameter der Flusslaufmodelle</title>
+				<tgroup cols="3">
+					<colspec align="left" colwidth="3*"/>
+					<colspec align="left" colwidth="1*"/>
+					<colspec align="left" colwidth="4*"/>
+					<thead>
+						<row>
+							<entry align="center">Parameter</entry>
+							<entry align="center">Einheit</entry>
+							<entry align="center">Bedeutung</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>Name</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Name des Pegels</entry>
+						</row>
+						
+						<row>
+							<entry>Ort</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Lage des Pegels</entry>
+						</row>
+						
+						<row>
+							<entry>Korrektur_Faktor</entry>
+							
+							<entry>[-]</entry>
+							
+							<entry>Korrekturfaktor zur Erhöhung des Abflusses
+								(multiplikativ)</entry>
+						</row>
+						
+						<row>
+							<entry>Korrektur_Niveau</entry>
+							
+							<entry>[-]</entry>
+							
+							<entry>Korrekturfakor zur Erhöhung des Abflusses
+								(additiv)</entry>
+						</row>
+						
+						<row>
+							<entry>Korrektur_Laufzeit</entry>
+							
+							<entry>[h]</entry>
+							
+							<entry>Korrekturfaktor zur Änderung der Laufzeit
+								(additiv)</entry>
+						</row>
+						
+						<row>
+							<entry>KorrekturEmpfehlungLaufzeit</entry>
+							
+							<entry>[h]</entry>
+							
+							<entry>Vorgabe für Korrektur_Laufzeit</entry>
+						</row>
+						
+						<row>
+							<entry>Wasserstand_gemessenEingang</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf Wasserstandsganglinie auf dem
+								Server</entry>
+						</row>
+						
+						<row>
+							<entry>Wasserstand_gemessen</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf gemessene
+								Wasserstandsganglinie</entry>
+						</row>
+						
+						<row>
+							<entry>Wasserstand_gerechnet</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf berechnete
+								Wasserstandsganglinie</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			
+			<table>
+				<title>Parameter der Talsperren</title>
+				
+				<tgroup cols="3">
+					<colspec align="left" colwidth="3*"/>
+					
+					<colspec align="left" colwidth="1*"/>
+					
+					<colspec align="left" colwidth="4*"/>
+					
+					<thead>
+						<row>
+							<entry align="center">Parameter</entry>
+							
+							<entry align="center">Einheit</entry>
+							
+							<entry align="center">Bedeutung</entry>
+						</row>
+					</thead>
+					
+					<tbody>
+						<row>
+							<entry>Name</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Name des Pegels</entry>
+						</row>
+						
+						<row>
+							<entry>Ort</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Lage des Pegels</entry>
+						</row>
+						
+						<row>
+							<entry>Anfangsstauvolumen</entry>
+							
+							<entry>[hm3]</entry>
+							
+							<entry>Stauinhalt der Talsperren zu Beginn der
+								Simulation</entry>
+						</row>
+						
+						<row>
+							<entry>Abgabe_Eingang</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf Abgabezeitreihe auf dem
+								Server</entry>
+						</row>
+						
+						<row>
+							<entry>Abgabe</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf Abgabezeitreihe im Modell</entry>
+						</row>
+						
+						<row>
+							<entry>Abgabe_plausibilisiert</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf durch den Rechenkern
+								plausibilisierte Abgabezeitreihe</entry>
+						</row>
+						
+						<row>
+							<entry>Stauinhalt</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf berechnete Zeitreihe der
+								TS-Volumina</entry>
+						</row>
+						
+						<row>
+							<entry>Zufluss_berechnet</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf berechnete
+								Zuflusszeitreihe</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			
+			<table>
+				<title>Parameter der Vorgabepegel</title>
+				
+				<tgroup cols="3">
+					<colspec align="left" colwidth="3*"/>
+					
+					<colspec align="left" colwidth="1*"/>
+					
+					<colspec align="left" colwidth="4*"/>
+					
+					<thead>
+						<row>
+							<entry align="center">Parameter</entry>
+							
+							<entry align="center">Einheit</entry>
+							
+							<entry align="center">Bedeutung</entry>
+						</row>
+					</thead>
+					
+					<tbody>
+						<row>
+							<entry>Name</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Name des Pegels</entry>
+						</row>
+						
+						<row>
+							<entry>Ort</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Lage des Pegels</entry>
+						</row>
+						
+						<row>
+							<entry>Abfluss_eingang</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf Vorgabezeitreihe auf dem
+								Server</entry>
+						</row>
+						
+						<row>
+							<entry>Abfluss</entry>
+							
+							<entry>-</entry>
+							
+							<entry>Verknüpfung auf Vorgabezeitreihe im
+								Modell</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</section>
+		
+		<section>
+			<title>Konfiguration der Rechenvarianten</title>
+			
+			<para>Zur Konfiguration einer Rechenvariante wurde die Datei
+				<filename>/KalypsoSpree/.model/calcCaseConfig.xml</filename> wie
+				in <xref linkend="chapter_7_modellintegration"/> gefordert
+				definiert. Das prinzipielle Vorgehen im Fall der Spree wird im nächsten
+				Abschnitt erklärt. Zuvor zeigt die folgende Tabelle die Verzeichnis- und
+				Dateistruktur einer Rechenvariante:</para>
+			
+			<section>
+				<title>Aufbau einer Rechenvariante</title>
+				
+				<informaltable>
+					<tgroup cols="3">
+						<colspec align="left" colwidth="1*"/>
+						
+						<colspec align="left" colwidth="3*"/>
+						
+						<colspec align="left" colwidth="2*"/>
+						
+						<thead>
+							<row>
+								<entry align="center">Pfadrelative zur
+									Rechenvariante</entry>
+								
+								<entry align="center">Beschreibung</entry>
+								
+								<entry align="center">Herkunft</entry>
+							</row>
+						</thead>
+						
+						<tbody>
+							<row>
+								<entry>Steuerparameter.gft</entry>
+								
+								<entry>Ansichtvorlage für die
+									Steuerparameter</entry>
+								
+								<entry>Kopie aus /KalypsoSpree/.templates</entry>
+							</row>
+							
+							<row>
+								<entry>Gesamtansicht.gmt</entry>
+								
+								<entry>Karte des Gesamtgebiets mit allen
+									Modellelementen</entry>
+								
+								<entry>Kopie aus /KalypsoSpree/.templates</entry>
+							</row>
+							
+							<row>
+								<entry>Bodenfeuchten.gtt</entry>
+								
+								<entry>Tabelle der Einzugsgebiete (N-A Modell) zur
+									Editierung der Anfangsbodenfeuchten</entry>
+								
+								<entry>Kopie aus /KalypsoSpree/.templates</entry>
+							</row>
+							
+							<row>
+								<entry>Anfangsvolumen.gtt</entry>
+								
+								<entry>Tabelle der Talsperren zur Editierung der
+									Anfangsvolumina</entry>
+								
+								<entry>Kopie aus /KalypsoSpree/.templates</entry>
+							</row>
+							
+							<row>
+								<entry>Flusslaufparameter.gtt</entry>
+								
+								<entry>Tabelle der Flusslauf-modelle zur Editierung
+									ihrer Parameter</entry>
+								
+								<entry>Kopie aus /KalypsoSpree/.templates</entry>
+							</row>
+							
+							<row>
+								<entry>calcCase.log</entry>
+								
+								<entry>Log-Datei zur Erstellung der Rechenvariante,
+									insbesondere Meldungen zur Gültigkeit der
+									Zeitreihenwerte</entry>
+								
+								<entry></entry>
+							</row>
+							
+							<row>
+								<entry>.calculation</entry>
+								
+								<entry>Steuerparameter der Berechnung</entry>
+								
+								<entry>Kopie der Datei
+									/KalypsoSpree/.model/.calculation.template
+									unter Ersetzung/Bearbeitung der
+									Parameter.</entry>
+							</row>
+							
+							<row>
+								<entry>calcCase.gml</entry>
+								
+								<entry>GML der Modelldaten der
+									Rechenvariante</entry>
+								
+								<entry>Kopie der Grunddaten des Modells
+									(/KalypsoSpree/modell.gml)</entry>
+							</row>
+							
+							<row>
+								<entry>Zeitreihen/*.zml</entry>
+								
+								<entry>Eingangszeitreihen der Berechnung</entry>
+								
+								<entry>Kalypso Zeitreihendienst</entry>
+							</row>
+							
+							<row>
+								<entry>Ergebnisse/*</entry>
+								
+								<entry>Ergebnisse einer Berechnung</entry>
+								
+								<entry>Kalypso Berechnungsdienst</entry>
+							</row>
+							
+							<row>
+								<entry>Ergebnisse/calcCase.zml</entry>
+								
+								<entry>Eventuell durch die Berechnung geänderte
+									Modelldaten (optimierte
+									Anfangsbodenfeuchten)</entry>
+								
+								<entry></entry>
+							</row>
+							
+							<row>
+								<entry>Ergebnisse/spree.log</entry>
+								
+								<entry>Log-Datei der Berechnung</entry>
+								
+								<entry></entry>
+							</row>
+							
+							<row>
+								<entry>Ergebnisse/.native</entry>
+								
+								<entry>Modelldaten im Format des Rechenkerns (.dbf) zu
+									Prüfzwecken hier abgelegt</entry>
+								
+								<entry></entry>
+							</row>
+							
+							<row>
+								<entry>Ergebnisse/Zeitreihen</entry>
+								
+								<entry>Eigentliche Berechnungsergebnisse in Form von
+									Zeitreihen</entry>
+								
+								<entry></entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</informaltable>
+				
+				<para>Die Benennung der Zeitreihendateien ist jeweils an die Benennung
+					der Zeitreihendaten des ursprünglichen Modells angelegt.</para>
+			</section>
+			
+			<section>
+				<title>calcCaseConfig.xml</title>
+				
+				<para>Die Modellstruktur wird durch Abarbeiten der in der Datei
+					<filename>/KalypsoSpree/.model/calcCaseConfig.xml</filename>
+					definierten Transformationen beim Anlegen einer Rechenvariante
+					erstellt.</para>
+				
+				<para>Die in der Datei calcCaseConfig.xml definierten Transformationen
+					sind wie in <xref linkend="chapter_7_modellintegration"/>
+					beschrieben, in drei Gruppen (Erstellung der Rechenvariante,
+					Aktualisierung der Rechenvariante und Aktualisierung der
+					Rechenvariante nach einer Berechnung) aufgeteilt und wurden bei der
+					Spree-Modellierung wie folgt verwendet:</para>
+				
+				<para><emphasis role="bold">Erstellen einer
+					Rechenvariante:</emphasis></para>
+				
+				<para>Es werden alle (Grund-)Daten der Rechenvariante erstellt
+					(kopiert), d.h. alle Daten außer den Zeitreihendaten. Die Datei der
+					Steuerparameter .calculation (siehe Unten) wird mit Standardwerten
+					besetzt. Die eigentlichen Modelldaten befinden sich in der Datei
+					calcCase.gml und stellen eine reine Kopie der Grunddaten
+					(/KalypsoSpree/modell.gml) dar.</para>
+				
+				<para><emphasis role="bold">Aktualisieren einer Rechenvariante:
+					</emphasis></para>
+				
+				<para>Es werden alle Zeitreihendaten der Rechenvariante wie folgt
+					zusammengestellt:</para>
+				
+				<informaltable>
+					<tgroup cols="3">
+						<colspec align="left" colwidth="1*"/>
+						
+						<colspec align="left" colwidth="1*"/>
+						
+						<colspec align="left" colwidth="2*"/>
+						
+						<thead>
+							<row>
+								<entry align="center">Datenart</entry>
+								
+								<entry align="center">Dateibezeichnung</entry>
+								
+								<entry align="center">Herkunft</entry>
+							</row>
+						</thead>
+						
+						<tbody>
+							<row>
+								<entry>Gebietsniederschläge</entry>
+								
+								<entry>PA_*</entry>
+								
+								<entry>Kalypso Server dateibasiert</entry>
+							</row>
+							
+							<row>
+								<entry>Wasserstände</entry>
+								
+								<entry>W_*</entry>
+								
+								<entry>PSICompact</entry>
+							</row>
+							
+							<row>
+								<entry>Abfluss (Flutung)</entry>
+								
+								<entry>QV_*</entry>
+								
+								<entry>Kalypso Server dateibasiert</entry>
+							</row>
+							
+							<row>
+								<entry>Abfluss (Zugabe)</entry>
+								
+								<entry>QP_*</entry>
+								
+								<entry>Kalypso Server dateibasiert</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</informaltable>
+				
+				<para>Zur Zeit sind lediglich die Wasserstände über PSICompact abrufbar.
+					Die anderen Datenarten, Niederschläge und vorgegebenen Abflüsse
+					sind im Modell mit auf Kalypso Serverseite abgelegten Dateien
+					(Kalypso Datei-Repository im Pfad ) verknüpft, welche die
+					historischen Daten des Hochwasserereignisses vom April 2004
+					enthalten. Wird ein anderer Zeitraum gewählt
+					(Hochwasservorhersage) werden die benötigten Zeitreihen mit
+					Nullwerten befüllt.</para>
+				
+				<para><emphasis role="bold">Aktualisieren einer Rechenvariante, nach
+					der Berechnung:</emphasis></para>
+				
+				<para>Die Modelldaten der Rechenvariante (calcCase.gml) werden durch
+					die von der Berechnung geänderten Modelldaten (Optimierte
+					Bodenfeuchten, Ergebnisse/calcCase.gml) ersetzt.</para>
+			</section>
+			
+			<section>
+				<title>calculation.xml</title>
+				
+				<para>Die Steuerdatei .calculation wird durch das Schema
+					<filename>/KalypsoSpree/.model/schema/control.xsd</filename>
+					spezifiziert und enthält neben dem Simulationszeitraum (Start der
+					Simulation, Start der Vorhersage, Ende der Simulation) noch ein paar
+					Metadaten, um eine Rechenvariante ausführlich beschreiben zu
+					können. Diese sind:</para>
+				
+				<itemizedlist>
+					<listitem>
+						<para>der Ersteller der Rechenvariante (Default-Wert ist der
+							Login-Name)</para>
+					</listitem>
+					<listitem>
+						<para>das Erstellungsdatum der Rechenvariante (Default-Wert:
+							Systemzeit bei Anlegen der Rechenvariante)</para>
+					</listitem>
+					<listitem>
+						<para>eine Kurzbeschreibung der Rechenvariante</para>
+					</listitem>
+					<listitem>
+						<para>eine Langbeschreibung der Rechenvariante</para>
+					</listitem>
+				</itemizedlist>
+				
+				<para>Um eine ansprechende Darstellung der Steuerparameter und
+					Metadaten im Dialog `Rechenvariante-Neu’ sowie im
+					Vorhersage-Wizard zu erhalten, wurde eine Ansichtvorlage für die
+					Steuerdatei unter /KalypsoSpree/.model/.calculation.view
+					abgelegt, sie hat den gleichen Aufbau wie die Vorlagendatei
+					Steuerparamter.gft im Verzeichnis der Rechenvariante.</para>
+				
+				<para><emphasis role="bold">TIPP:</emphasis></para>
+				
+				<para>Zum Erstellen der Kopiervorlagen für die Ansichten der
+					Rechenvariante (z.B. Steuerparameter.gft oder Bodenfeuchten.gtt)
+					wurde im Verzeichnis /KalypsoSpree/.templates/calcCase/ die Daten
+					einer konkreten Rechenvariante abgelegt. Dadurch konnten die
+					Vorlagen mit relativem Pfad auf diese Daten komfortabel erstellt
+					werden und können ohne Anpassung in jede neue Rechenvariante kopiert
+					werden.</para>
+			</section>
+		</section>
+		
+		<section>
+			<title>Modell-Plugin</title>
+			
+			<para>Zur Berechnung einer Rechenvariante wurde Client-seitig die Datei
+				/KalypsoSpree/.model/modelspec.xml angelegt, welche die Dateien
+				beschreibt, die zur Berechnung an den Kalypso Rechendienst übertragen
+				werden. Im Fall des Spree-Modells werden alle Dateien der Rechenvariante
+				bis auf die Vorlagen übertragen.</para>
+			
+			<para>Zur Berechnung wird der Kalypso Berechnungsdienst mit der Typ-ID des
+				Spree-Modells (hier `spree’) angestoßen. Der Dienst aktiviert anhand der
+				ID die entsprechende Implementation des Interface
+				org.Kalypso.services.calculation.job.ICalcJob, im Falle des
+				Spree-Modells die Klasse org.Kalypso.lhwzsachsen.spree.SpreeCalcJob
+				im Projekt KalypsoSpreePlugin der Programmquellen. Wie oben bereits
+				beschrieben sind alle Spree-spezifischen Programmierungen und für das
+				Anstoßen des Rechenkerns benötigten Daten in diesem Projekt
+				zusammengefasst.</para>
+			
+			<para>Die Implementation des Spree-Berechnungsdienstes geht für jede
+				Berechnung wie folgt vor:</para>
+			
+			<itemizedlist>
+				<listitem>
+					<para>Es wird ein temporäres Verzeichnis `native’ angelegt.</para>
+				</listitem>
+				<listitem>
+					<para>Es werden das ausführbare Programm nebst
+						Programmbibliotheken sowie alle gleichbleibenden
+						Parameterdaten in das temporäre Verzeichnis kopiert. Diese
+						Daten finden sich gesammelt im Paket
+						/KalypsoSpreePlugin/src/org/Kalypso/lhwzsachsen/spree/resources/exe.</para>
+				</listitem>
+				<listitem>
+					<para>Die vom Client übergebenen Daten der Rechenvariante werden in
+						die Formate des Rechenkerns konvertiert und im temporären
+						Verzeichnis abgelegt.</para>
+				</listitem>
+				<listitem>
+					<para>Die ausführbare Datei (spree.exe) wird gestartet.</para>
+				</listitem>
+				<listitem>
+					<para>Die Ergebnisdaten der Berechnung, welche sich jetzt ebenfalls
+						im temporären Verzeichnis befinden, werden in die vom Client
+						benötigten Formate übertragen und können jetzt vom Client
+						abgerufen werden.</para>
+				</listitem>
+			</itemizedlist>
+			
+			<para>Neben den konvertierten Daten (Zeitreihendaten, veränderte
+				Modelldaten siehe Auflistung oben) werden auch die nativen, vom
+				Rechenkern verarbeiteten Daten zurück zum Client übertragen, was eine
+				eventuelle Fehlersuche erleichtert. Insbesondere können diese direkt
+				von der ursprünglichen Version des Rechenprogramms (mit Oberfläche)
+				verarbeitet und kontrolliert werden.</para>
+		</section>
+		
+		<section>
+			<title>Konfiguration des Wizards</title>
+			
+			<para>Die Konfiguration des Vorhersage-Wizard des Spree-Modells befindet
+				sich wie gefordert in der Datei
+				/KalypsoSpree/.model/calcWizard.xml.</para>
+			
+			<para>Der Ablauf des Vorhersage-Wizards ist im Benutzerhandbuch zum
+				Spree-Modell beschrieben und im der Konfigurationsdatei
+				kommentiert.</para>
+			
+			<para>Die Konfigurationsdatei calcWizard.xml verweist ihrerseits auf eine
+				Reihe von Ansichtsvorlagen zur Darstellung der Modelldaten innerhalb des
+				Wizards. Diese sind sämtlich im Verzeichnis
+				/KalypsoSpree/.templates/calcCase abgelegt.</para>
+		</section>
+	</chapter>
+	
+	<chapter id="modell-we" vendor="sachsen">
+		<title>Modellintegration Kalypso-NA (Weiße Elster)</title>
+		
+		<para>Das Niederschlag-Abfluss-Modell-Plugin integriert den Rechenkern
+			Kalypso-NA in die Benutzeroberfläche Kalypso-Enterprise zum Zweck der
+			Abflussvorhersage, Nachrechnung historischer Ereignisse und zur Simulation
+			von Modellvarianten.</para>
+		
+		<section>
+			<title>Modellintegration Client</title>
+			
+			<section>
+				<title>Modellprojekt Weiße Elster:</title>
+				
+				<para>Beschreibung der Dateien und Verzeichnisse (im folgenden
+					bezeichnet ein führendes "/" in Pfadangaben das
+					Projektverzeichnis.).</para>
+				
+				<para><filename>/modell.gml:</filename></para>
+				
+				<para><emphasis role="bold">Inhalt:</emphasis></para>
+				
+				<para>Modelldatensatz bestehend aus den Modellelementen: Teilgebiete,
+					Gewässerstränge und Gewässerknoten. Die entsprechenden
+					Modellparameter sind den Elementen zugeordnet, u.a. auch Geometrien
+					für die grafische Visualisierung und Verknüpfungen auf Zeitreihen.
+					Diese Datei beinhaltet die initialen Modelldaten, die für die
+					Erzeugung eines Rechenfalles oder für eine Vorhersagerechnung
+					übernommen werden. Die einzelnen Modellparameter sind im
+					zugehörigen GML-Schema /.model/schema/namodell.xsd
+					dokumentiert.</para>
+				
+				<para><emphasis role="bold">Ansichten:</emphasis></para>
+				
+				<para><filename>/Modell_Karten/Karte.gmt</filename> Kartenansicht
+					des Gesamtmodells</para>
+				
+				<para><filename>/Modell_Tabellen/Tabelle_Knoten.gtt</filename>
+					Tabellenansicht der Modellknoten</para>
+				
+				<para><filename>/</filename>
+					<filename>Modell_Tabellen/Tabelle_KMGewaesser.gtt</filename>
+					Tabellenansicht der Gewässerstränge</para>
+				
+				<para>
+					<filename>/Modell_Tabellen/Tabelle_Teilgebiete.gtt</filename>
+					Tabellenansicht der Teilgebiete</para>
+				
+				<para><filename>/ombometer.gml</filename><filename>:</filename>
+					</para>
+				
+				<para><emphasis role="bold">Inhalt:</emphasis></para>
+				
+				<para>Datenmodell der Niederschlagsmessungen: Standpunkte der
+					Ombrometer und deren Verknüpfungen mit dem
+					Zeitreihenrepository.</para>
+				
+				<para>Ansichten:</para>
+				
+				<para><filename>/Modell_Karten/Ombrometer.gmt</filename>:
+					Kartenansicht des Gesamtmodells</para>
+				
+				<para>Verzeichnisse:</para>
+				
+				<para><filename>/.model/...</filename> Konfigurationen der Modells
+					und der Rechenvarianten</para>
+				
+				<para><filename>/.prognose/... </filename> Verzeichnis für die
+					Vorhersagerechnungen</para>
+				
+				<para><filename>/.styles/... </filename>
+					Visualisierungsvorschriften für Kartenansichten</para>
+				
+				<para><filename>/.templates/... </filename> Vorlagen zur Generierung
+					von Rechenvarianten</para>
+				
+				<para><filename>/Rechenvarianten/...</filename> Verzeichnis für die
+					Berechnungen im Expertenmodus</para>
+			</section>
+			
+			<section>
+				<title>Konfiguration der Rechenvariante</title>
+				
+				<para><filename>/.model/calcCaseConfig.xml</filename></para>
+				
+				<para>Inhalt: Konfiguration der Transformationen zur Erstellung einer
+					Rechenvariante, hier:</para>
+				
+				<para>Erstellungstransformationen:</para>
+				
+				<orderedlist>
+					<listitem>
+						<para>Kopieren des initialen Modelldatensatzes
+							<filename>/modell.gml nach
+							Rechenvariante/calcCase.gml</filename>.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Kopieren von Steuerdateien und Ansichtsdateien aus dem
+							Vorlagenverzeichnis
+							<filename>/.templates/calcCase/</filename> zur
+							Rechenvariante.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Anlegen des Verzeichnis
+							<filename>Ergebnisse/</filename> Hier werden die
+							Ergebnisse der Simulationsrechnung gespeichert.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Kopieren von Vorlagendateien aus dem Ordner
+							<filename>./templates/calcCase</filename> in das
+							Rechenverzeichnis.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Kopieren der Konfiguration zur Optimierung
+							<filename>./templates/calcCase/sce.xml</filename> in
+							das Rechenverzeichnis.</para>
+					</listitem>
+				</orderedlist>
+				
+				<para>Updatetransformationen:</para>
+				
+				<orderedlist>
+					<listitem>
+						<para>Zeitreihen der gemessenen Niederschläge zur Kontrolle
+							der Eingangsdaten -&gt; <filename>Verzeichnis
+							Ombrometer/</filename></para>
+					</listitem>
+					
+					<listitem>
+						<para>Zeitreihen der Pegelmessungen zum visuellen Vergleich
+							und zur Parameteroptimierung -&gt; V<filename>erzeichnis
+							Pegel/</filename></para>
+					</listitem>
+					
+					<listitem>
+						<para>Zeitreihen der Zuflussganglinien -&gt;
+							<filename>Verzeichnis Zufluss/</filename></para>
+					</listitem>
+					
+					<listitem>
+						<para>Zeitreihen der Gebietsniederschläge -&gt;
+							<filename>Verzeichnis Niederschlag/</filename></para>
+					</listitem>
+				</orderedlist>
+				
+				<para><filename>/.model/modelspec.xml</filename></para>
+				
+				<para>Inhalt: Konfiguration der Dateien und Verzeichnisse, die bei einer
+					Berechnung im Expertenmodus zum Rechendienst übertragen
+					werden.</para>
+				
+				<figure>
+					<title>Darstellung</title>
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata
+								fileref="img/kap9/Konfiguration_Rechenvariante.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+				
+				<para><filename>/.model/modelspec[1-17].xml</filename></para>
+				
+				<para>Für die Berechnung im Vorhersageemodus existiert für jeden
+					Vorhersagepegel [1-17] eine Konfiguration der Dateien und
+					Verzeichnisse, die zum Rechendienst übertragen werden.Diese
+					unterscheiden sich vom Expertenmodus durch unterschiedliche
+					Steuerdateien (ID=Control).</para>
+				
+				<para><filename>/.model/calcWizard.xml</filename></para>
+				
+				<para>Inhalt: Konfiguration der einzelnen Wizardseiten für die
+					Benutzerführung des Vorhersagemodus.</para>
+			</section>
+			
+			<section>
+				<title>Aufbau Rechenvariante</title>
+				
+				<para>Zur Rechenvariante gehören folgende Daten- und
+					Vorlagendateien:</para>
+				
+				<para>Vorlagendateien zu den Modelldaten
+					<filename>(calcCase.gml)</filename>:</para>
+				
+				<orderedlist>
+					<listitem>
+						<para><filename>expertKarte.gmt: </filename>
+							Karteneditor</para>
+					</listitem>
+					
+					<listitem>
+						<para><filename>expertTabelleKnoten.gtt: </filename>
+							Tabelleneditor Knoten</para>
+					</listitem>
+					
+					<listitem>
+						<para><filename>expertTabelleGewaesser.gtt:</filename>
+							Tabelleneditor Gewässerstränge</para>
+					</listitem>
+					
+					<listitem>
+						<para><filename>expertTabelleTeilgebiete.gtt: </filename>
+							Tabelleneditor Teilgebiete</para>
+					</listitem>
+				</orderedlist>
+				
+				<para>Vorlagendateien zum Steuerungsdatensatz
+					<filename>(expertControl.gml)</filename></para>
+				
+				<orderedlist>
+					<listitem>
+						<para><filename>ExpertControl.gft: </filename> Editor der
+							Steuerparameter (Korrekturwerte NA-Modell)</para>
+					</listitem>
+				</orderedlist>
+				
+				<para>Weitere Dateien:</para>
+				
+				<orderedlist>
+					<listitem>
+						<para><filename>.calculation</filename>:
+							Berechnungszeitraum und Metadaten der
+							Variantenerstellung.</para>
+					</listitem>
+					
+					<listitem>
+						<para><filename>.</filename><filename>sce.xml</filename>
+							: Steuerdatei zur Parameteroptimierung. (wird vom Benutzer
+							nicht verändert)</para>
+					</listitem>
+				</orderedlist>
+				
+				<para>Steuerdateien Vorhersagemodus:</para>
+				
+				<para>Je Vorhersagepegel (1-17) existiert eine Steuerungsdatei
+					(.nacontrol_[1-17].gml), welche vom Vorhersage-Wizard verwendet
+					wird.</para>
+			</section>
+		</section>
+		
+		<section>
+			<title>Modellintegration Server</title>
+			
+			<para>Die Programmierung zur Modellintegration findet sich im
+				Quellcodeprojekt KalypsoNA.</para>
+			
+			<para>Dort befindet sich ebenfalls der Rechenkern (fortran-win32-exe) des
+				NA-Modells "Kalypso.exe". Er wird zur Berechnung ins Arbeitsverzeichnis
+				kopiert.</para>
+			
+			<para>Die Programmierung beinhaltet</para>
+			
+			<itemizedlist>
+				<listitem>
+					<para>Konvertierung der Modelldaten in die nativen Formate des
+						Rechenkerns</para>
+				</listitem>
+				<listitem>
+					<para>Anstoßen des Rechenkerns</para>
+				</listitem>
+				<listitem>
+					<para>Kontrolle des Simulationsablauf</para>
+				</listitem>
+				<listitem>
+					<para>Konvertierung der nativen Simulations-Ergebnisdaten in das
+						Kalypso-Zeitreihenformat</para>
+				</listitem>
+			</itemizedlist>
+			
+			<para>Die Integration zur Optimierung ist im Quellcodeprojekt
+				KalypsoOptimizePlugin enthalten und wird von KalypsoNA benutzt. Dort
+				befindet sich die Implementierung des Optimierungsalgorithmus als
+				fortran-win32-exe "sce.exe_". Zur Durchführung der Optimierung wird sie
+				ebenfalls ins Arbeitsverzeichnis kopiert.</para>
+			
+			<section>
+				<title>Ablaufschema bei Modellrechnung ohne
+					Parameter-Optimierung</title>
+				
+				<para>Zunächst werden die Daten (nach modelspec.xml) zum Rechendienst
+					übertragen. Dort werden folgende Schritte durchgeführt:</para>
+				
+				<orderedlist>
+					<listitem>
+						<para>Der Berechnungszeitraum wird aus der Datei
+							<filename>.calculation</filename> übernommen.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Die Modelldaten werden aus der Datei
+							<filename>calCase.gml</filename> eingeladen.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Auf die Modelldaten werden die Korrekturwerte aus den
+							Steuerdateien angewendet. Es unterscheidet sich der
+							Expertenmodus vom Vorhersagemodus wie folgt:</para>
+						
+						<itemizedlist>
+							<listitem>
+								<para>Im Expertenmodus werden die Korrekturen auf das
+									gesamte Modellgebiet angewendet.</para>
+							</listitem>
+							<listitem>
+								<para>Für den Vorhersagemodus ist in den einzelnen
+									Steuerdateien jeweils eingestellt, welche
+									Elemente (Teilgebiete und Gewässerabschnitte)
+									den zu berechneten Vorhersagepegel speisen. Es
+									sind genau diejenigen Elemente eingestellt, die
+									zwischen aktuellem Vorhersagepegel und den
+									Vorhersagepegeln im Oberwasser liegen. Im
+									Vorhersagemodus werden die Korrekturen nur auf das
+									so definierte Teilmodell angewendet.</para>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					
+					<listitem>
+						<para>Die Berechnung wird durchgeführt</para>
+					</listitem>
+					
+					<listitem>
+						<para>Resultate und native Dateien des Rechenkerns werden zum
+							Client übertragen.</para>
+					</listitem>
+				</orderedlist>
+			</section>
+			
+			<section>
+				<title>Ablaufschema bei Modellrechnung mit
+					Parameter-Optimierung</title>
+				
+				<para>Im Vorhersagemodus hat der Anwender die Möglichkeit im
+					Worhersage-Wizard für einen Berechnung eine Parameter-Optimierung
+					zu benutzen. Der Rechendienst erkennt dies durch einen Eintrag in den
+					Steuerdateien .control_*.gml.</para>
+				
+				<para>Ist die Optimierung gewünscht, werden im Unterschied zur
+					Modellrechnung ohne Parameter-Optimierung keine
+					Korrekturparameter auf die Modelldaten angewendet, sondern im
+					Gegenteil optimierte Korrekturparameter durch den
+					Shuffeld-Complex-Evolution-Algorithmus (SCE) ermittelt.</para>
+				
+				<para>Die Parameter zur Optimierung werden bezogen aus</para>
+				
+				<orderedlist>
+					<listitem>
+						<para>der Datei <filename>.sce.xml</filename> :
+							Parametergrenzen, Konfiguration der
+							Bewertungsfunktionen und Steuerparameter zum
+							Iterationsverhalten (Anzahl der Komplexe,
+							Abbruchkriterien usw.)</para>
+					</listitem>
+					
+					<listitem>
+						<para>der Steuerdatei <filename>.nacontrol*.gml</filename>
+							. Referenz auf Pegelganglinie (als Zielwert) und Referenz
+							auf Berechnungsganglinie (als Optimierungswert).</para>
+					</listitem>
+				</orderedlist>
+				
+				<para>Nach erfolgter Optimierung der Korrekturwerte wird das optimierte
+					Simulationsergebnis sowie die Steuerdatei mit den ermittelten
+					Korrekturwerten zum Client übertragen.</para>
+				
+				<para>Die Optimierung ist nur im Vorhersagemodus möglich.</para>
+			</section>
+		</section>
+	</chapter>
+	
+	<chapter>
+		<title>Server Extras</title>
+		
+		<section>
+			<title>Integration der DWD-Vorhersage</title>
+			
+			<para>Für die Prognoserechnung wird eine Niederschlagsvorhersage benötigt.
+				Die hier verwendete Vorhersage des DWD wird in einer Datei
+				(DWD-lm2-Format) geliefert. Es handelt sich um eine Datei mit mehreren
+				Rastern, die eine Vorhersage über 48 Stunden beinhaltet.</para>
+			
+			<para>Folgende Raster werden zur Zeit geliefert:</para>
+			
+			<orderedlist>
+				<listitem>
+					<para>Liste von Rechtswerten der Rasterzellen</para>
+				</listitem>
+				
+				<listitem>
+					<para>Liste von Hochwerten der Rasterzellen</para>
+				</listitem>
+				
+				<listitem>
+					<para>Liste von Höhenwerten der Rasterzellen</para>
+				</listitem>
+				
+				<listitem>
+					<para>Flüssiger Niederschlag stündlich (1 Liste je Stunde, &gt; 48
+						Listen)</para>
+				</listitem>
+				
+				<listitem>
+					<para>Wasseräquivalent fester Niederschlag stündlich (1 Liste je
+						Stunde, &gt; 48 Listen)</para>
+				</listitem>
+			</orderedlist>
+			
+			<para>Die Implementierung zur Integration der Vorhersage ist im
+				Quellcodeprojekt KalypsoDWD enthalten.</para>
+			
+			<section>
+				<title>Allgemeiner Ablauf</title>
+				
+				<para>Der Ablauf allgemein:</para>
+				
+				<orderedlist>
+					<listitem>
+						<para>Die Vorhersagedateien werden seitens der HVZ in einem
+							Verzeichnis abgelegt.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Die aktuellste Vorhersage wird durch der Serverdienst
+							KalypsoDWDFileCopyServlet erkannt und im webdav/dwd
+							Verzeichnis abgelegt.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Von dort aus können die Kalypso-Clients darauf zugreifen
+							und bei Bedarf Gebietsniederschlagszeitreihen
+							umrechnen.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Die umgerechneten Gebietsniederschläge werden direkt im
+							Vorhersagewizard angezeigt. Veraltete Vorhersagen werden
+							stets überschrieben.</para>
+					</listitem>
+				</orderedlist>
+			</section>
+			
+			<section>
+				<title>Konfiguration</title>
+				
+				<para>Der Dienst wird über die für Servlet standard vorhandene
+					<filename>web.xml</filename>-Datei konfiguriert. Folgender
+					Listing beinhaltet ein Beispiel mit entsprechende
+					Beschreibungen.</para>
+				
+				<figure>
+					<title>Darstellung</title>
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="img/kap10/Konfiguration.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+				
+				<para>Die Konfiguration umfasst folgende Informationen:</para>
+				
+				<orderedlist>
+					<listitem>
+						<para>Anzahl an Verzeichnisse die für aktuelle DWD-Vorhersagen
+							geprüft werden müssen (instances). Die Eingaben für allen
+							anderen Parameter sind davon abhängig: sobald der Anzahl
+							größer als 1 ist, müsse semikolon getrennte Angaben für die
+							anderen Parameter gemacht werden.</para>
+					</listitem>
+					
+					<listitem>
+						<para>Dauer der Zeitperiode zwischen zwei Prüfzyklen
+							(period).</para>
+					</listitem>
+					
+					<listitem>
+						<para>Verzeichnis, in das die aktuelle DWD-Vorhersage abgeholt
+							werden muss (source).</para>
+					</listitem>
+					
+					<listitem>
+						<para>Dateiprefix der zu suchende DWD-Vorhersage
+							(source_prefix)</para>
+					</listitem>
+					
+					<listitem>
+						<para>Dateinamensformat der zu suchende DWD-Vorhersage, damit
+							das Datum daraus gefiltert werden kann. Das Datum wird
+							ausgewertet um die aktuelle Vorhersage anhand dieses Datum
+							zu erschliessen. (source_format).</para>
+					</listitem>
+					
+					<listitem>
+						<para>Ob die eingelesene DWD-Vorhersage nachdem die
+							Bearbeitung fertig ist gelöscht aus dem Quellverzeichnis
+							(source) werden muss (source_delete).</para>
+					</listitem>
+					
+					<listitem>
+						<para>Zieldateiname inkl. Pfad der zu erstellende
+							DWD-Vorhersage. Nach jedem Zyklus wird diese Datei mit der
+							aktuelle Vorhersage ersetzt (dest).</para>
+					</listitem>
+					
+					<listitem>
+						<para>Gibt an ob die Zieldatei überarbeitet werden muss, damit
+							die Daten konsistent bleiben. Im Normalfall ist dies nicht
+							erforderlich, da die Daten übereinstimmen. Aber im
+							Katastrophentestszenario z.B. werden DWD-Vorhersage der
+							Vergangeheit als aktuelle Vorhersagen geliefert, dabei
+							stimmt das Datum aus der Dateiname nicht mit dem Inhalt der
+							Vorhersage überein: in der Datei sind noch die alte Daten zu
+							sehen. Wenn dieser Parameter aktiviert wird (true), wird
+							also die Datei überarbeitet und die darin enthaltene Daten
+							mit dem aktuellen Datum überschrieben
+							(dest_update).</para>
+					</listitem>
+				</orderedlist>
+				
+				<para>Es ist darauf zu achten, dass der Dienst Schreib- und Leserechte für
+					die verwendeten Verzeichnisse und Dateien benötigt.</para>
+			</section>
+		</section>
+	</chapter>
+	
+	<chapter id="wiski" vendor="sachsen-anhalt">
+		<title>Schnittstelle zu Wiski/WebDataProvider</title>
+		
+		<para>Die Schnittstelle zwischen Kalypso und Wiski/WebDataProvider (WDP) wird im
+			Projekt KalypsoAdapterWiski implementiert. Damit werden Zeitreihen werden
+			aus Wiski abgeholt und prognose Zeitreihen in Wiski zurück
+			geschrieben.</para>
+		
+		<section>
+			<title>Überblick</title>
+			
+			<para>Folgende Tabelle fasst die Anwendung der WDP Schnittstelle aus Kalypso
+				Sicht zusammen. Die Aufrufe erfolgen über Java-RMI (Remote Method
+				Invocation).</para>
+			
+			<table>
+				<title>Benutzte Methoden der WDP-Schnittstelle</title>
+				
+				<tgroup cols="2">
+					<colspec align="left" colwidth="1*"/>
+					
+					<colspec align="left" colwidth="2*"/>
+					
+					<thead>
+						<row>
+							<entry align="center">WISKI</entry>
+							
+							<entry align="center">Kalypso - Beschreibung</entry>
+						</row>
+					</thead>
+					
+					<tbody>
+						<row>
+							<entry>getSuperGroupList</entry>
+							
+							<entry>Liste der WISKI Gruppenarten ermitteln. Dient zum
+								Aufbau der IRepository Struktur in Kalypso.</entry>
+						</row>
+						
+						<row>
+							<entry>getGroupList</entry>
+							
+							<entry>Liste der WISKI Gruppen ermitteln. Dient zum Aufbau
+								der IRepository Struktur in Kalypso.</entry>
+						</row>
+						
+						<row>
+							<entry>getTsInfoList</entry>
+							
+							<entry>Liste der Zeitreihen ermitteln.</entry>
+						</row>
+						
+						<row>
+							<entry>getAlarmLevelList</entry>
+							
+							<entry>Alarmstufen abfragen.</entry>
+						</row>
+						
+						<row>
+							<entry>getRatingTables</entry>
+							
+							<entry>W/Q und W/V Beziehungen abfragen.</entry>
+						</row>
+						
+						<row>
+							<entry>getStationDetailList</entry>
+							
+							<entry>Metadaten abfragen.</entry>
+						</row>
+						
+						<row>
+							<entry>getTsData</entry>
+							
+							<entry>Zeitreihendaten abholen.</entry>
+						</row>
+						
+						<row>
+							<entry>IsTsWritable</entry>
+							
+							<entry>Prüfen ob Daten einer Zeitreihe zurückgeschrieben
+								werden können.</entry>
+						</row>
+						
+						<row>
+							<entry>setTsData</entry>
+							
+							<entry>Zeitreihendaten zurückschreiben.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</section>
+		
+		<section>
+			<title>Quellcode</title>
+			
+			<para>Die Implementierung in Kalypso basiert auf dem IRepository-Framework
+				(siehe Java-Interface org.Kalypso.repository.IRepository). Die
+				Schnittstelle wird nur serverseitig benutzt.</para>
+			
+			<para>Die Firma Kisters hat die Funktionen der WDP über eine Java-Bilbiothek
+				zur Verfügung gestellt. Aus dem Namensraum
+				<filename>"de.kisters.wiski.webdataprovider"</filename> sind alle
+				WDP Klassen zu erreichen.</para>
+		</section>
+		
+		<section>
+			<title>Konfiguration</title>
+			
+			<para>Die Implementierung der Kalypso-WDP Schnittstelle ist über eine
+				Konfigurationsdatei anpassbar (Siehe in
+				org/Kalypso/wiskiadapter/resources/config.ini). Dort werden die
+				mögliche Parameter gelistet und beschrieben. Siehe auch die nächste
+				Abbildung:</para>
+			
+			<figure>
+				<title>Konfiguration1</title>
+				
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="img/kap11/Konfiguration_1.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<figure>
+				<title>Konfiguration2</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="img/kap11/Konfiguration_2.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+		</section>
+		
+		<section>
+			<title>Besonderheiten</title>
+			
+			<para>Aus der Implementierung der Schnittstelle für die HVZ sind folgende
+				Besonderheiten entstanden.</para>
+			
+			<section>
+				<title>WDP-Login</title>
+				
+				<para>Die WDP-Schnittstelle von Kisters wurde speziell für‘s Web
+					entwickelt wo eine Interaktion zwischen Benutzer/Browser
+					Applikation und Wiski ein Login/Logout Mechanimus mit automatisches
+					Logout nach einen bestimmten Zeit vorsieht. Die Anwendung dieser
+					Schnittstelle in Kalypso steift aber eine andere Art von Interaktion
+					zwischen beide Systemen dar Login/Logout, aber ohne Timeout. Die
+					WDP-SST wird nämlich direkt vom Kalypso Observation Dienst benutzt,
+					ohne unterschied zwischen den tatsächlichen angemeldeten Benutzer.
+					Das heisst, der Kalypso Observation Dienst meldet sich beim Start an
+					dem WDP an und meldet sich nur in bestimmten Fällen ab:</para>
+				
+				<itemizedlist>
+					<listitem>
+						<para>beim Stoppen der Dienst</para>
+					</listitem>
+					<listitem>
+						<para>beim Stoppen der Server</para>
+					</listitem>
+				</itemizedlist>
+				
+				<para>und wann dies tatsächlich passiert ist nicht vorhersehbar Das
+					bedeutet das ein automatisches Logout, durch den WDP vorangetrieben,
+					nicht ausgeschlossen werden kann.</para>
+				
+				<para>Der Kalypso Observation Dienst wurde gegen einen solchen Art von
+					Logout dementsprechend vorbereitet, indem er automatisch versucht,
+					sich wieder einzuloggen. Dadurch ist die Verbindung zwischen Kalypso
+					und WDP stets ohne Ausfall garantiert, vorrausgesetzt die Systemen
+					stehen zur Verfügung.</para>
+				
+				<para>Dies wurde im Code durch das Anfrage orientierte Verwaltung der
+					WDP-Aufrufe berücksichtigt (Siehe lWiskiCall und WiskiRepository.
+					executeWiskiCall).</para>
+			</section>
+			
+			<section>
+				<title>Caching Mechanismus von W/Q-artigen Beziehungen</title>
+				
+				<para>Die aktuellen aus WISKI gelesenen W/Q oder W/V Beziehungen werden
+					als Datei gespeichert. Sollte WISKI nicht mehr zur Verfügung stehen,
+					wird die abgespeicherte Datei benutzt. Dies dient zu
+					Datenverfügbarkeit im Falle eines Ausfall.</para>
+				
+				<para>Dazu wurde speziell die WiskiObservationManipulator Klasse
+					erstellt. Es wird vom KalypsoObservationDienst benutzt, über
+					Reflektion instanziert, und in die Konfigurationsdatei vom
+					Observation Dienst konfiguriert.
+					Konfigurationsausschnitt:</para>
+				
+				<figure>
+					<title>Caching-Mechanismus von WQ-Beziehungen</title>
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata
+								fileref="img/kap11/Caching_Mechanismus.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+			
+			<section>
+				<title>Zeitzonen-Problematik</title>
+				
+				<para>Damit die Zeitreihen einheitlich zwischen Wiski und Kalypso
+					angezeigt werden, wurde die Einstellung der Zeitzone (auch eine
+					Eigenschaft der Konfiguration vom Observation Dienst) auf GMT1
+					gesetzt. Wiski arbeitet immer in Winterzeit.</para>
+			</section>
+		</section>
+		
+		<section>
+			<title>Laufzeit</title>
+			
+			<para>Zur Laufzeit wird die Java-Bibliothek kiwwebdp-externalclient.jar
+				benötigt und ist Lib-Verzeichnis des Projekt KalypsoAdapterWiski
+				abgelegft. Da RMI standardmäßig mit dem JDK geliefert wird werden hierzu
+				keine spezielle Abhängigkeiten benötigt.</para>
+			
+			<para>Da Tomcat im Sicherheitsmodus gestartet wird, sind entsprechende
+				Einträge für die WDP-Codebase notwendig. Die Datei catalina.policy
+				beinhaltet einen speziellen Bereich für WDP (siehe catalina.policy im
+				`conf’-Verzeichnis von Tomcat).</para>
+		</section>
+		
+		<section>
+			<title>Zeitreihen</title>
+			
+			<para>WISKI liefert definierte Statuswerte zu den Werten einer Zeitreihe.
+				Diese müssen auf die innerhalb von Kalypso benutzten Stati abgebildet
+				werden. Die Umwandlung der Status-Information erfolgt beim Abruf der
+				Daten aus WISKI in folgender Weise:</para>
+			
+			<informaltable id="tbl_11_06_zeitreihen">
+				<tgroup cols="2">
+					<colspec align="left" colwidth="1*"/>
+					
+					<colspec align="left" colwidth="1*"/>
+					
+					<thead>
+						<row>
+							<entry align="center">WISKI</entry>
+							
+							<entry align="center">Kalypso</entry>
+						</row>
+					</thead>
+					
+					<tbody>
+						<row>
+							<entry>GOOD</entry>
+							
+							<entry>OK</entry>
+						</row>
+						
+						<row>
+							<entry>ESTIMATED</entry>
+							
+							<entry>Wert auf Gültigkeit prüfen</entry>
+						</row>
+						
+						<row>
+							<entry>SUSPECT</entry>
+							
+							<entry>Wert auf Gültigkeit prüfen</entry>
+						</row>
+						
+						<row>
+							<entry>UNCHECKED</entry>
+							
+							<entry>OK</entry>
+						</row>
+						
+						<row>
+							<entry>MISSING</entry>
+							
+							<entry>Wert auf Gültigkeit prüfen</entry>
+						</row>
+						
+						<row>
+							<entry>COMPLETE</entry>
+							
+							<entry>OK</entry>
+						</row>
+						
+						<row>
+							<entry>INCOMPLETE</entry>
+							
+							<entry>Wert auf Gültigkeit prüfen</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</informaltable>
+			
+			<para>Wenn Prognose-Zeitreihen von Kalypso nach WISKI zurückgeschrieben
+				werden bekommen sie automatisch den Status GOOD.</para>
+		</section>
+	</chapter>
+	
+	<chapter id="ldap" vendor="sachsen-anhalt">
+		<title>Benutzerdienst: LDAP, Szenario, usw.</title>
+		
+		<para>Kalypso unterstützt folgende Benutzerklassen:</para>
+		
+		<itemizedlist>
+			<listitem>
+				<para>"Vorhersage",</para>
+			</listitem>
+			<listitem>
+				<para>"Experte" und</para>
+			</listitem>
+			<listitem>
+				<para>"Administration".</para>
+			</listitem>
+		</itemizedlist>
+		
+		<para>In der HVZ wird der Recht "Modellierer" an Benutzer vergeben die Kalypso
+			Experten bzw. Administratoren sind. Weitere feingranulierte Benutzerrechte
+			werden nicht benötigt. Die Client-Anwendung passt die Oberfläche automatisch
+			an die Benutzerklassen eines Benutzers an.</para>
+		
+		<para>Der SDK bietet standardmäßig Klassen und Methoden um auf einem
+			Verzeichnisdienst zugreifen zu können. Es werden also keine besondere
+			Java-Bibliotheken benötigt.</para>
+		
+		<para>Die Konfiguration der LDAP-Zugriffe und der allgemeine Benutzer und
+			Szenario Einstellungen werden in der Konfigurationsdatei der Kalypso User
+			Dienst.</para>
+	</chapter>
+	
+	<chapter id="robotron-ims" vendor="sachsen-anhalt">
+		<title>Schnittstelle zu IMS: Dokumentenablage</title>
+		
+		<para>Die Schnittstelle basiert auf einen Webdienst Methodenaufruf. Dazu wird
+			Apache-Axis benutzt, in contrario zu den Kalypo sonst übliche
+			JAX-RCP-Aufrufe.</para>
+		
+		<para>Dokumente werden durch eine XML-Metadata-Datei ergänzt und über das
+			Ablageverzeichnis an das IMS weitergereicht. Der Aufbau dieser XML-Datei ist
+			recht einfach:</para>
+		
+		<figure>
+			<title>Dokumentenablage</title>
+			
+			<mediaobject>
+				<imageobject>
+					<imagedata
+						fileref="img/kap13/Schnittstelle_Dokumentenablage.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<para>Mehr Details dazu finden Sie in der Konfigurationsdatei des
+			Dienstes.</para>
+	</chapter>
+	
+	<chapter id="grafik">
+		<title>Grafik-Programm</title>
+		
+		<para>Das Grafikprogramm ist ein Windows-Executable. Es erkennt viele
+			unterschiedliche Datenformate, Kalypso-intern, verwendet aber nur das
+			Zml-InlineBlock-Format.</para>
+		
+		<para>Kalypso arbeitet mit odt-Vorlagen und Grafik mit tpl-Vorlagen. Die Klasse
+			<filename>org.Kalypso.ogc.sensor.diagview.grafik.GrafikLauncher</filename>
+			kapselt die Zusammenarbeit beider Programme.</para>
+		
+		<para>Beim Öffnen einer odt-Vorlage im Grafik-Tool wird zuerst eine Konvertierung
+			von odt nach tpl vorgenommen. Dabei wird eine tpl-Datei neben der odt-Vorlage
+			erzeugt und zum Start des Grafikprogramms benutzt.</para>
+		
+		<para>Weiterführende Information zu der Zusammenarbeit und den
+			Synchronisationsmöglichkeiten beider Programme finden Sie im
+			Benutzerhandbuch.</para>
+		
+		<figure>
+			<title>Zusammenfassung der Ablauf odt &gt; tpl</title>
+			
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="img/kap14/odt2tpl.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</chapter>
+	
+	<chapter>
+		<title>URL-Erweiterung</title>
+		
+		<para>Kalypso nutzt URLs, um Resourcen (Dokumente oder Dateien) zu
+			referenzieren.</para>
+		
+		<para>Die Standardprotokolle sind:</para>
+		
+		<itemizedlist>
+			<listitem>
+				<para>file: absolute oder relative Pfadangabe im lokale
+					Filesystem</para>
+			</listitem>
+			<listitem>
+				<para>http: HTTP-Adresse</para>
+			</listitem>
+		</itemizedlist>
+		
+		<para>Zusätzlich definiert Kalypso die folgenden Protokolle:</para>
+		
+		<itemizedlist>
+			<listitem>
+				<para>project: der Pfad ist relativ zum Eclipse-Projekt</para>
+			</listitem>
+			<listitem>
+				<para>workspace: der Pfad ist relativ zum Eclipse-Workspace</para>
+			</listitem>
+			<listitem>
+				<para>Kalypso-ocs: der Pfad ist relativ zum
+					Kalypso-Zeitreihendienst</para>
+			</listitem>
+			<listitem>
+				<para>calccase: der Pfad ist relativ zu einer Rechenvariante</para>
+			</listitem>
+		</itemizedlist>
+		
+		<para>Bei <emphasis>project</emphasis>, <emphasis>calccase</emphasis> und
+			<emphasis>workspace</emphasis> ist der Pfad immer relativ, und zwar zum
+			jeweiligen angegebenen Element: also Project, Workspace, oder
+			Rechenvairante.</para>
+		
+		<para>Bei <emphasis>file</emphasis> kann der Pfad relativ sein. In diesem Fall ist
+			der Pfad (wie in RFC 2396) relativ zu einem Kontext, was von einer Basis-URL
+			definiert wird. In Kalypso ist diese Basis-URL des öfteren identisch mit der URL
+			des besitzenden Dokumentes. Beispiel: ein ZML-Dokument hat einen Link auf
+			externe Werte, welcher über eine relative URL definiert ist. Die Basis-URL ist
+			in diesem Fall die URL des ZML-Dokuments.</para>
+	</chapter>
+</book>

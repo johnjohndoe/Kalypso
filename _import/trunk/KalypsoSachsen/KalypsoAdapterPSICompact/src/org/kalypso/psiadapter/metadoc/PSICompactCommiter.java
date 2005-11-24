@@ -45,10 +45,11 @@ public class PSICompactCommiter implements IMetaDocCommiter
   }
 
   /**
-   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File, java.lang.String, org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
+   *      java.lang.String, java.lang.String, org.apache.commons.configuration.Configuration)
    */
   public void commitDocument( final Properties serviceProps, final Map metadata, final File docFile,
-      final String identifier, final Configuration metadataExtensions ) throws MetaDocException
+      final String identifier, final String category, final Configuration metadataExtensions ) throws MetaDocException
   {
     final String docFilePath = docFile.getAbsolutePath();
     final String goodDocFilePath = filenameCleaner( docFilePath );

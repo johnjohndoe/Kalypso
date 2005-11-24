@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="kalypso-manual-common" default="valid" basedir="..">
+<project name="kalypso-tecdoc-common" default="valid" basedir="..">
 	<!--
-		Dieses Skript liefert allgemeine Funktionen zum generieren der Kalypso Handbücher
+		Dieses Skript liefert allgemeine Funktionen zum generieren der Kalypso Technische Dokumentation
 		und ist dazu gedacht, von den speziellen build-skripten aufgerufen zu werden.
 		
 		Die von den einzelnen Funktionen benötigten properties sind jeweils dort aufgelistet.
 	-->
 
-	<!-- manual.project muss von aussen gesetzt werden. 
+	<!-- tecdoc.project muss von aussen gesetzt werden. 
 		falls nicht, wird dieses Plugin selbst genommen
 	-->
-	<property name="manual.project" value="${workspace}/KalypsoManual" description="Default Wert ist dieses Projekt selbst. Dann wird nichts gemerged." />
+	<property name="tecdoc.project" value="${workspace}/KalypsoTecdoc" description="Default Wert ist dieses Projekt selbst. Dann wird nichts gemerged." />
 
-	<property name="src.other.dir" value="${manual.project}/src" description="This dir will be merged into the common src." />
-	<property name="deploy.plugin.dir" value="${manual.project}" description="This is the dir to where the eclipse-manual will be deployed." />
+	<property name="src.other.dir" value="${tecdoc.project}/src" description="This dir will be merged into the common src." />
+	<property name="deploy.plugin.dir" value="${tecdoc.project}" description="This is the dir to where the eclipse-tecdoc will be deployed." />
 
 	<property name="src.dir" value="src" />
-	<property name="build.dir" value="${manual.project}/build" />
+	<property name="build.dir" value="${tecdoc.project}/build" />
 	<property name="build.merged.dir" value="${build.dir}/merged" />
 	<property name="build.merged.xsl.dir" value="${build.merged.dir}/xsl" />
 	<property name="build.profiling.dir" value="${build.dir}/profiled" />
 
-	<property name="dist.dir" value="${manual.project}/dist" />
+	<property name="dist.dir" value="${tecdoc.project}/dist" />
 	<property name="dist.pdf.dir" value="${dist.dir}/pdf" />
 	<property name="dist.html.dir" value="${dist.dir}/html" />
 	<property name="dist.eclipse.dir" value="${dist.dir}/eclipse" />
@@ -31,7 +31,7 @@
 	<property name="image.name" value="img" />
 	<property name="image.dir" value="${build.merged.dir}/${image.name}" />
 
-	<property name="doc.main" value="driver.xml" />
+	<property name="doc.main" value="tecdoc.xml" />
 	<property name="doc.path" value="${build.merged.dir}/${doc.main}" />
 	<property name="doc.profiled.path" value="${build.profiling.dir}/docbook-profiled.xml" />
 
@@ -64,7 +64,7 @@
 
 		<echo message="${src.other.dir}" />
 		<copy todir="${build.merged.dir}">
-			<fileset dir="${src.dir}/" includes="**/*" defaultexcludes="false" excludes="**/CVS/**"/>
+			<fileset dir="${src.dir}/" includes="**/*" defaultexcludes="false" excludes="**/CVS/**,**/meta/**"/>
 		</copy>
 		
 		<copy todir="${build.merged.dir}" overwrite="true">
@@ -151,9 +151,9 @@
 		</copy>
 
 		<!-- Deploy the stuff back to the given Plugin -->
-		<copy todir="${manual.project}" file="${dist.eclipse.dir}/toc.xml" />
-		<copy todir="${manual.project}" file="${dist.eclipse.dir}/contexts.xml" />
-		<zip destfile="${manual.project}/doc.zip" basedir="${dist.eclipse.dir}" includes="**/*" excludes="*.xml" />
+		<copy todir="${tecdoc.project}" file="${dist.eclipse.dir}/toc.xml" />
+		<copy todir="${tecdoc.project}" file="${dist.eclipse.dir}/contexts.xml" />
+		<zip destfile="${tecdoc.project}/doc.zip" basedir="${dist.eclipse.dir}" includes="**/*" excludes="*.xml" />
 	</target>
 
 	<target name="pdf" description="Erstellt das Handbuch im PDF Format" depends="profiling">
@@ -167,7 +167,7 @@
 
 		<antcall target="pdfproc">
 			<param name="pdfproc.out.dir" value="${dist.pdf.dir}" />
-			<param name="pdfproc.out.name" value="manual" />
+			<param name="pdfproc.out.name" value="tecdoc" />
 			<param name="pdfproc.xsl" value="${build.merged.xsl.dir}/common-tex.xsl" />
 			<param name="pdfproc.xml" value="${doc.profiled.path}" />
 			<param name="tex.dir" value="${tex.tmp.dir}" />
@@ -178,15 +178,15 @@
 
 	<target name="pdf-fo" depends="init,profiling" description="Erzeugt das Benutzerhandbuch - PDF-Version mit FO">
 
-		<xslt basedir="${build.merged.dir}" in="${doc.profiled.path}" out="${dist.fo.dir}/manual.fo" style="${build.merged.xsl.dir}/common-fo.xsl">
+		<xslt basedir="${build.merged.dir}" in="${doc.profiled.path}" out="${dist.fo.dir}/tecdoc.fo" style="${build.merged.xsl.dir}/common-fo.xsl">
 			<outputproperty name="encoding" value="ISO-8859-1" />
 			<outputproperty name="indent" value="yes" />
 			<xmlcatalog refid="docbookCatalog" />
 		</xslt>
 
 		<antcall target="fop">
-			<param name="fop.fo" value="${dist.fo.dir}/manual.fo" />
-			<param name="fop.pdf" value="${dist.fo.dir}/manual.pdf" />
+			<param name="fop.fo" value="${dist.fo.dir}/tecdoc.fo" />
+			<param name="fop.pdf" value="${dist.fo.dir}/tecdoc.pdf" />
 		</antcall>
 	</target>
 

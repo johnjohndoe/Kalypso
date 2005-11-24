@@ -71,6 +71,7 @@ import org.kalypso.metadoc.impl.MetaDocException;
  &lt;dokument&gt;Vorhersage-20.05.2005&lt;/dokument&gt;
  &lt;description&gt;blablabla Beschreibung&lt;/description&gt;
  &lt;schluessel&gt;eindeutige Schlüssel-foobarscript&lt;/schluessel&gt;
+ &lt;klasse&gt;Scheitelwerttabelle&lt;/klasse&gt;
  &lt;ersteller&gt;HVZ&lt;/ersteller&gt;
  &lt;erstelldat&gt;2005-08-26&lt;/erstelldat&gt;
  &lt;gueltigdat&gt;2005-08-26&lt;/gueltigdat&gt;
@@ -111,6 +112,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   private static final String TAG_STATION = "station_id";
   private static final String TAG_SIMULATION = "simulation";
   private static final String TAG_SCHLUESSEL = "schluessel";
+  private static final String TAG_KLASSE = "klasse";
 
   private static final String TAG_FILES = "files";
   private static final String TAG_FILE = "file";
@@ -137,10 +139,10 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#commitDocument(java.util.Properties, java.util.Map, java.io.File,
-   *      java.lang.String, org.apache.commons.configuration.Configuration)
+   *      java.lang.String, java.lang.String, org.apache.commons.configuration.Configuration)
    */
   public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
-      final String identifier, final Configuration metadataExtensions ) throws MetaDocException
+      final String identifier, final String category, final Configuration metadataExtensions ) throws MetaDocException
   {
     //String endpoint = "http://localhost:8080/eXForms/KalypsoConnectorWS.jws";
     final String endpoint = serviceProps.getProperty( "robotron.ws.endpoint" );
@@ -164,7 +166,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       final DataHandler[] docs = new DataHandler[]
       { new DataHandler( new FileDataSource( doc ) ) };
 
-      final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), identifier, metadataExtensions );
+      final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), identifier, category, metadataExtensions );
 
       LOG.info( "Metadata:\n" + metadataXml );
 
@@ -200,12 +202,13 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
    * @param identifier
    *          identifier of the document. Documents with same identifiers within the same forecast
    *          (&lt;documen&gt;-Element) are overwriten in the IMS/Robotron.
+   * @param category
    * @param metadataExtensions
    *          might contain some addition information that can be used to fill the metadata for the document (for
    *          instance: Pegelkennziffer or station_id in the sense of Robotron IMS)
    */
   public static String buildXML( final Properties serviceProps, final Properties mdProps, final String fileName,
-      final String identifier, final Configuration metadataExtensions )
+      final String identifier, final String category, final Configuration metadataExtensions )
   {
     final StringBuffer bf = new StringBuffer();
 
@@ -231,7 +234,9 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     bf.append( LT + TAG_DOKUMENT + GT + dokument + CLT + TAG_DOKUMENT + GT );
 
     bf.append( LT + TAG_SCHLUESSEL + GT + identifier + CLT + TAG_SCHLUESSEL + GT );
-    
+
+    bf.append( LT + TAG_KLASSE + GT + category + CLT + TAG_KLASSE + GT );
+
     bf.append( LT + TAG_DESCRIPTION + GT + valueOfProperty( mdProps.getProperty( TAG_DESCRIPTION ) ) + CLT
         + TAG_DESCRIPTION + GT );
 
