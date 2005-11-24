@@ -44,6 +44,7 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.metadoc.IExportTargetModes;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
 
@@ -65,7 +66,7 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
 
     if( m_exportActions == null )
       m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.tableeditor.menu/tabelle",
-          "edit" );
+          "edit", IExportTargetModes.MODE_EXPERT );
     
     for( int i = 0; i < m_exportActions.length; i++ )
       m_exportActions[i].setActivePart( targetEditor );

@@ -185,7 +185,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     { new ExportableChart( m_obsChart, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT,
         ExportableChart.DEFAULT_FORMAT ),
         conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, ExportableChart.DEFAULT_WIDTH ), conf.getInt(
-            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle() ) };
+            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), "Diagramm" ) };
   }
 
   /**

@@ -62,6 +62,8 @@ public interface IExportTarget extends IExecutableExtension
   public String getName();
 
   public String getDescription();
+  
+  public boolean isModeSupported( final String mode );
 
   public ImageDescriptor getImage();
 

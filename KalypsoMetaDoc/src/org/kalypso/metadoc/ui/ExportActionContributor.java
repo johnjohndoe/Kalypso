@@ -41,6 +41,9 @@
 
 package org.kalypso.metadoc.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -64,23 +67,28 @@ public class ExportActionContributor
 {
   /**
    * Fills the export actions into the given target-editor
+   * 
+   * @param mode
+   *          the mode (in the sense of the org.kalypso.metadoc.exportTarget) which denotes which kind of perspective
+   *          should be supported by the extension. Optional, can be null, which means take all targets.
    */
-  public static ExportAction[] contributeActions( final IEditorPart targetEditor, final String menuPath, final String toolbarGroup )
+  public static ExportAction[] contributeActions( final IEditorPart targetEditor, final String menuPath,
+      final String toolbarGroup, final String mode )
   {
     try
     {
       final IActionBars actionBars = targetEditor.getEditorSite().getActionBars();
-      final ExportAction[] actions = createActions( targetEditor );
+      final ExportAction[] actions = createActions( targetEditor, mode );
       final IMenuManager menuManager = actionBars.getMenuManager();
-      
+
       final IContributionItem menuItem = menuManager.findUsingPath( menuPath );
-      
+
       final IToolBarManager toolBarManager = actionBars.getToolBarManager();
 
       for( int i = 0; i < actions.length; i++ )
       {
         final IAction action = actions[i];
-        
+
         if( menuItem != null )
         {
           if( menuItem instanceof GroupMarker )
@@ -95,11 +103,11 @@ public class ExportActionContributor
             mm.add( action );
           }
         }
-        
+
         if( toolBarManager != null )
           toolBarManager.appendToGroup( toolbarGroup, action );
       }
-      
+
       return actions;
     }
     catch( final CoreException e )
@@ -107,23 +115,26 @@ public class ExportActionContributor
       e.printStackTrace();
       ErrorDialog.openError( targetEditor.getSite().getShell(), "Export Targets laden",
           "Fehler beim Laden der Export Targets", e.getStatus() );
-      
+
       return null;
     }
   }
-  
-  private static ExportAction[] createActions( final IWorkbenchPart part ) throws CoreException
+
+  private static ExportAction[] createActions( final IWorkbenchPart part, final String mode ) throws CoreException
   {
     final IExportTarget[] targets = KalypsoMetaDocPlugin.getDefault().getTargets();
-    final ExportAction[] actions = new ExportAction[targets.length];
+    final List actions = new ArrayList( targets.length );
 
     for( int i = 0; i < targets.length; i++ )
     {
       final IExportTarget target = targets[i];
-      actions[i] = new ExportAction( target, part );
+      
+      // tricky: only add targets that support our mode
+      if( target.isModeSupported( mode ) )
+        actions.add( new ExportAction( target, part ) );
     }
 
-    return actions;
+    return (ExportAction[])actions.toArray( new ExportAction[actions.size()] );
   }
 
 }

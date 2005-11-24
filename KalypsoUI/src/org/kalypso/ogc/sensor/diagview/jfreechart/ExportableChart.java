@@ -73,15 +73,17 @@ public class ExportableChart implements IExportableObject
   private final int m_height;
 
   private final String m_identifierPrefix;
+  private final String m_category;
 
   public ExportableChart( final ObservationChart chart, final String format, final int width, final int height,
-      final String identifierPrefix )
+      final String identifierPrefix, final String category )
   {
     m_chart = chart;
     m_format = format;
     m_width = width;
     m_height = height;
     m_identifierPrefix = identifierPrefix;
+    m_category = category;
   }
 
   /**
@@ -133,5 +135,13 @@ public class ExportableChart implements IExportableObject
   public String getIdentifier()
   {
     return m_identifierPrefix + getPreferredDocumentName();
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getCategory()
+   */
+  public String getCategory()
+  {
+    return m_category;
   }
 }

@@ -86,12 +86,12 @@ public class KalypsoMetaDocPlugin extends AbstractUIPlugin
   {
     return getDefault().getBundle().getSymbolicName();
   }
-  
+
   public IExportTarget[] getTargets() throws CoreException
   {
     if( m_targets == null )
       m_targets = MetadocExtensions.retrieveTargets();
-    
+
     return m_targets;
   }
 }

@@ -160,12 +160,8 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenarioForCurrentUser();
     final StatusLineContributionItem item = new StatusLineContributionItem( "scenario" );
     if( scenario != null && item != null )
-    {
-      String name = scenario.getName();
-      if( name == null || name.length() == 0 )
-        name = "<keiner>";
-      item.setText( "Szenario: " + name );
-    }
+      item.setText( "Szenario: " + scenario.getName() );
+    
     if( actionConfigurer != null )
     {
       final IStatusLineManager statusLineManager = actionConfigurer.getStatusLineManager();

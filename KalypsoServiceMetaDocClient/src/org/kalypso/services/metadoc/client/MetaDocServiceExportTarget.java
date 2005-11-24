@@ -140,7 +140,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       
       final DataHandler dh = new DataHandler( new FileDataSource( file ) );
       metadocService.commitNewDocument( (Map)conf.getProperty( CONF_METADATA ), dh,
-          document.getPreferredDocumentName(), document.getIdentifier(), mdEx.getMap() );
+          document.getPreferredDocumentName(), document.getIdentifier(), document.getCategory(), mdEx.getMap() );
 
       monitor.worked( 1 );
 

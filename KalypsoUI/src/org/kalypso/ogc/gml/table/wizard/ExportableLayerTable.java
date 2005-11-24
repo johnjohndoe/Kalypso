@@ -116,4 +116,13 @@ public class ExportableLayerTable implements IExportableObject
     // TODO bessere Id zurückgeben
     return getPreferredDocumentName();
   }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getCategory()
+   */
+  public String getCategory()
+  {
+    // TODO bessere Category zurückgeben
+    return "unbekannt";
+  }
 }

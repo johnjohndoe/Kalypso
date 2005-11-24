@@ -45,6 +45,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.metadoc.IExportTargetModes;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
 import org.kalypso.ui.editor.diagrameditor.actions.DiagramPrintAction;
@@ -67,7 +68,7 @@ public class ObservationDiagramEditorContributor extends EditorActionBarContribu
     // export actions
     if( m_exportActions == null )
       m_exportActions = ExportActionContributor.contributeActions( targetEditor,
-          "org.kalypso.ui.editor.obsdiageditor.menu/exports", "diagramm" );
+          "org.kalypso.ui.editor.obsdiageditor.menu/exports", "diagramm", IExportTargetModes.MODE_EXPERT );
 
     if( m_exportActions != null )
     {

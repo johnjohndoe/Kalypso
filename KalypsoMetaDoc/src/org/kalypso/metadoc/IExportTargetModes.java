@@ -39,66 +39,16 @@
 
  --------------------------------------------------------------------------*/
 
-package org.kalypso.auth.scenario;
-
-import java.util.Properties;
+package org.kalypso.metadoc;
 
 /**
- * A default implementation of IScenario. Simply holds the scenario text and description. This class is immutable.
+ * This interface lists all possible modes that can be defined for the modes-attribute when
+ * creating an extension of org.kalypso.metadoc.exportTarget.
  * 
  * @author schlienger
  */
-public class Scenario implements IScenario
+public interface IExportTargetModes
 {
-  public final static IScenario DEFAULT_SCENARIO = new Scenario( ID_DEFAULT_SCENARIO, new Properties() );
-  
-  private final String m_id;
-
-  private final Properties m_props;
-
-  public Scenario(final String id, final Properties props )
-  {
-    m_id = id;
-    m_props = props;
-  }
-
-  /**
-   * @see org.kalypso.auth.scenario.IScenario#getName()
-   */
-  public String getName()
-  {
-    return getProperty( IScenario.PROP_NAME, "-unbekannt-" );
-  }
-
-  /**
-   * @see org.kalypso.auth.scenario.IScenario#getDescription()
-   */
-  public String getDescription()
-  {
-    return getProperty( IScenario.PROP_DESCRIPTION, "" );
-  }
-  
-  /**
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    return getName();
-  }
-
-  /**
-   * @see org.kalypso.auth.scenario.IScenario#getId()
-   */
-  public String getId()
-  {
-    return m_id;
-  }
-
-  /**
-   * @see org.kalypso.auth.scenario.IScenario#getProperty(java.lang.String, java.lang.String)
-   */
-  public String getProperty( final String name, final String defaultValue )
-  {
-    return m_props.getProperty( name, defaultValue );
-  }
+  public static String MODE_WIZARD = "wizard";
+  public static String MODE_EXPERT = "expert";
 }
