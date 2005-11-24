@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Nov 2005    2:40 pm
+!     Last change:  WP   24 Nov 2005    5:59 pm
 !--------------------------------------------------------------------------
 ! This code, drucktab.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -355,10 +355,10 @@ DO j = 1, nknot
 
   end if
 
-  write (jw_lambdai,9000) i, j, x1(j), h1(j), lambda_teilflaeche(j), v   !rhynn (j), ln_ks(j)
+  write (jw_lambdai,9000) stat(i), j, x1(j), h1(j), lambda_teilflaeche(j), v   !rhynn (j), ln_ks(j)
 
 END DO
-9000 format (1X, i7, i7, F10.3, F10.3, F12.7, F10.3)
+9000 format (1X, F10.4, i7, F10.3, F10.3, F12.7, F10.3)
 !WP -------------------------------------------------------------------------------------
 
 

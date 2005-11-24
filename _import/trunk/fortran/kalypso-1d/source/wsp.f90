@@ -1,4 +1,4 @@
-!     Last change:  WP   16 Nov 2005    3:14 pm
+!     Last change:  WP   24 Nov 2005    6:00 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1624,7 +1624,7 @@ if (ierr /= 0) then
 end if
 
 write (jw_lambdai, 9008) 'PROFIL', 'PUNKT', 'X [m]', 'H [m]', 'LAMBDA [-]', 'V [m/s]'
-9008 format (1X, A7, A7, A10, A10, A12, A10)
+9008 format (1X, A10, A7, A10, A10, A12, A10)
 !WP -----------------------------------------------------------------------------------
 
 
