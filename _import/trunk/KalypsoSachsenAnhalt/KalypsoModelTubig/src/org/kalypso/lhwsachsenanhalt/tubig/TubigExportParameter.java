@@ -276,7 +276,7 @@ public class TubigExportParameter
       pWrtr.println( featLstEntlastungen.size() );
 
       // Features nach Höhe sortiert in Datei eintragen
-      iNum = -1;
+      iNum = 0;
       for( iter = featLstEntlastungen.iterator(); iter.hasNext(); )
       {
         featEntlastung = (Feature)iter.next();
