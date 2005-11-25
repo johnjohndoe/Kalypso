@@ -18,7 +18,7 @@
 <mapEntry key="eclipse.running" value="true"/>
 <mapEntry key="eclipse.home" value="c:\Programme\eclipse3.0"/>
 <mapEntry key="workspace" value="${workspace_loc}"/>
-<mapEntry key="manual.project" value="${workspace_loc:/KalypsoTecdocSachsenAnhalt}"/>
+<mapEntry key="tecdoc.project" value="${workspace_loc:/KalypsoTecdocSachsenAnhalt}"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${working_set:&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;launchConfigurationWorkingSet factoryID=&quot;org.eclipse.ui.internal.WorkingSetFactory&quot; name=&quot;workingSet&quot; editPageId=&quot;org.eclipse.ui.resourceWorkingSetPage&quot;&gt;&#10;&lt;item factoryID=&quot;org.eclipse.ui.internal.model.ResourceFactory&quot; path=&quot;/KalypsoTecdocSachsenAnhalt&quot; type=&quot;4&quot;/&gt;&#10;&lt;/launchConfigurationWorkingSet&gt;&#10;}"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/KalypsoTecdoc/etc/build.xml}"/>
