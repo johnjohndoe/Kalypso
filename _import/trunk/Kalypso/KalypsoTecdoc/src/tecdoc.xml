@@ -3520,7 +3520,7 @@
 			
 			<para>Die Firma Kisters hat die Funktionen der WDP über eine Java-Bilbiothek
 				zur Verfügung gestellt. Aus dem Namensraum
-				<filename>"de.kisters.wiski.webdataprovider"</filename> sind alle
+				<filename>de.kisters.wiski.webdataprovider</filename> sind alle
 				WDP Klassen zu erreichen.</para>
 		</section>
 		
