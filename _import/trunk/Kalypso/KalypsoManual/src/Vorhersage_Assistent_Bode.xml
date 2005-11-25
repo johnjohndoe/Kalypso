@@ -10,7 +10,7 @@
   Besonderheit auf, dass fünf verschiedene Arten von Berechnungen durchgeführt
   werden können. Diese Berechnungen bauen z.T. auf einander auf bzw. stehen
   teilweise nebeneinander. Diese Modell-Besonderheit bleibt selbstverständlich
-  in Kalypso erhalten und ihr wird durch den Aufbau des Assistenten besonders
+  in KALYPSO erhalten und ihr wird durch den Aufbau des Assistenten besonders
   Rechnung getragen. Hier erweist sich die Möglichkeit, mithilfe der
   Navigation leicht zwischen den einzelnen Seiten des Assistenten wechseln zu
   können, als besonders hilfreich.</para>
@@ -116,18 +116,19 @@
             </imageobject>
           </mediaobject>
         </screenshot>
-      </figure>Auf dieser Seite werden die gemessenen Niederschläge an den
-    sechs Niederschlagsstationen grafisch und tabellarisch dargestellt. Für
-    die in der Karte markierte Niederschlagsstation wird die Zeitreihe im
-    Diagramm dargestellt. Korrekturen und Ergänzungen der Eingangswerte sind
-    in der Tabelle möglich (vergl. <xref linkend="tabellen_bearbeiten" />).
-    Damit sich Änderungen an den Niederschlagswerten auch im Modell auswirken,
-    muss der Knopf <guilabel>Gebietsniederschlag berechnen</guilabel> gedrückt
-    werden. Die Gebietsniederschläge ergeben sich aus einer linearen
-    Gewichtung der Niederschläge an den Stationen. Das
-    Gebietsniederschlagsmodell berücksichtigt nur die Messwerte, ggf.
-    eingegebene Prognosewerte für die Gebietsniederschläge bleiben
-    unverändert.</para>
+      </figure>Auf dieser Seite (siehe <xref
+    linkend="pic_SA_Assi_Bode_02_Niederschlagsstationen" />) werden die
+    gemessenen Niederschläge an den sechs Niederschlagsstationen grafisch und
+    tabellarisch dargestellt. Für die in der Karte markierte
+    Niederschlagsstation wird die Zeitreihe im Diagramm dargestellt.
+    Korrekturen und Ergänzungen der Eingangswerte sind in der Tabelle möglich
+    (vergl. <xref linkend="tabellen_bearbeiten" />). Damit sich Änderungen an
+    den Niederschlagswerten auch im Modell auswirken, muss der Knopf
+    <guilabel>Gebietsniederschlag berechnen</guilabel> gedrückt werden. Die
+    Gebietsniederschläge ergeben sich aus einer linearen Gewichtung der
+    Niederschläge an den Stationen. Das Gebietsniederschlagsmodell
+    berücksichtigt nur die Messwerte, ggf. eingegebene Prognosewerte für die
+    Gebietsniederschläge bleiben unverändert.</para>
   </section>
 
   <section id="SA_Assi_Bode_03_Niederschlagsgebiete">
@@ -153,10 +154,11 @@
             </imageobject>
           </mediaobject>
         </screenshot>
-      </figure>Diese Seite des Assistenten stellt die ermittelten
-    Gebietsniederschläge dar. Hier sind noch die Prognosewerte für die
-    Gebietsniederschläge in der Tabelle zu ergänzen. Die Zeitreihenbearbeitung
-    wird deutlich erleichtert durch die in <xref
+      </figure>Diese Seite des Assistenten (siehe <xref
+    linkend="pic_SA_Assi_Bode_03_Niederschlagsgebiete" />) stellt die
+    ermittelten Gebietsniederschläge dar. Hier sind noch die Prognosewerte für
+    die Gebietsniederschläge in der Tabelle zu ergänzen. Die
+    Zeitreihenbearbeitung wird deutlich erleichtert durch die in <xref
     linkend="tabellen_bearbeiten" /> beschriebenen Funktionen zur
     Tabellenbearbeitung. Im Diagramm wird jeweils die Ganglinie zu dem Pegel
     angezeigt, der in der Karte ausgewählt ist.</para>
@@ -188,15 +190,16 @@
         </screenshot>
       </figure>Die Kontrolle der Abflüsse bzw. Wasserstände für die
     Eingabepegel, die unterhalb von Wendefurth liegen, findet auf dieser Seite
-    statt. Beim Import der Zeitreihen aus der Zeitreihenablage werden
-    Wasserstände und W/Q-Beziehungen abgeholt. Somit können auf dieser Seite
-    Wasserstände und die daraus berechneten Abflüsse dargestellt werden. Sie
-    werden tabellarisch und grafisch dargestellt und können ggf. korrigiert
-    werden. Korrekturen können sowohl in der Tabelle zum Wasserstand als auch
-    in der Tabelle zum Abfluss vorgenommen werden. Es erfolgt jeweils
-    automatisch eine Umrechnung über die W/Q-Beziehung, die Daten bleiben
-    damit konsistent. Mithilfe der Optionsknöpfe <guilabel>Abfluss</guilabel>
-    und <guilabel>Wasserstand</guilabel> unterhalb des Diagramms kann die
+    (siehe <xref linkend="pic_SA_Assi_Bode_03_Abfluss_uh_Wend" />) statt. Beim
+    Import der Zeitreihen aus der Zeitreihenablage werden Wasserstände und
+    W/Q-Beziehungen abgeholt. Somit können auf dieser Seite Wasserstände und
+    die daraus berechneten Abflüsse dargestellt werden. Sie werden
+    tabellarisch und grafisch dargestellt und können ggf. korrigiert werden.
+    Korrekturen können sowohl in der Tabelle zum Wasserstand als auch in der
+    Tabelle zum Abfluss vorgenommen werden. Es erfolgt jeweils automatisch
+    eine Umrechnung über die W/Q-Beziehung, die Daten bleiben damit
+    konsistent. Mithilfe der Optionsknöpfe <guilabel>Abfluss</guilabel> und
+    <guilabel>Wasserstand</guilabel> unterhalb des Diagramms kann die
     Darstellung zwischen Abfluss und Wasserstand umgeschaltet werden. Im
     Diagramm wird jeweils die Ganglinie zu dem Pegel angezeigt, der in der
     Karte ausgewählt ist.</para>
@@ -225,9 +228,11 @@
         </screenshot>
       </figure></para>
 
-    <para>In einem nächsten Schritt werden die gemessenen Speicherabgaben
-    kontrolliert und die zugehörigen Prognosewerte eingegeben. Die Darstellung
-    im Diagramm richtet sich nach der Auswahl in der Karte.</para>
+    <para>In einem nächsten Schritt (siehe <xref
+    linkend="pic_SA_Assi_Bode_04_Abfluss_Speicher" />) werden die gemessenen
+    Speicherabgaben kontrolliert und die zugehörigen Prognosewerte eingegeben.
+    Die Darstellung im Diagramm richtet sich nach der Auswahl in der
+    Karte.</para>
   </section>
 
   <section id="SA_Assi_Bode_05_Berechnung_uh_Wend">
@@ -255,7 +260,8 @@
 
     <para>Die Eingabe und Kontrolle der Eingangsdaten für den ersten
     Berechnungsschritt ist abgeschlossen, die Rechnung zur Abfluss-Vorhersage
-    unterhalb Wendefurth kann nun durchgeführt werden. Dies geschieht durch
+    unterhalb Wendefurth kann nun durchgeführt werden (siehe <xref
+    linkend="pic_SA_Assi_Bode_05_Berechnung_uh_Wend" />). Dies geschieht durch
     Drücken des Knopfes <guilabel>Q-Prognose uh. Wendefurth</guilabel> unten
     rechts. Die Darstellung im Diagramm erweitert sich nach erfolgter
     Vorhersage-Rechnung um die Vorhersagezeitreihe zu Abfluss bzw.
@@ -294,17 +300,18 @@
       </figure></para>
 
     <para>In Vorbereitung auf die Abfluss-Vorhersage oberhalb der Speicher
-    werden auf dieser Seite die Abflüsse bzw. Wasserstände für die
-    Eingabepegel, die oberhalb der Speicher liegen, kontrolliert. Beim Import
-    der Zeitreihen aus der Zeitreihenablage werden Wasserstände und
-    W/Q-Beziehungen abgeholt. Somit können auf dieser Seite Wasserstände und
-    die daraus berechneten Abflüsse dargestellt werden. Sie werden
-    tabellarisch und grafisch dargestellt und können ggf. korrigiert werden.
-    Korrekturen können sowohl in der Tabelle zum Wasserstand als auch in der
-    Tabelle zum Abfluss vorgenommen werden. Es erfolgt jeweils automatisch
-    eine Umrechnung über die W/Q-Beziehung, die Daten bleiben damit
-    konsistent. Mithilfe der Optionsknöpfe <guilabel>Abfluss</guilabel> und
-    <guilabel>Wasserstand</guilabel> unterhalb des Diagramms kann die
+    werden auf dieser Seite (siehe <xref
+    linkend="pic_SA_Assi_Bode_06_Abfluss_oh_Speicher" />) die Abflüsse bzw.
+    Wasserstände für die Eingabepegel, die oberhalb der Speicher liegen,
+    kontrolliert. Beim Import der Zeitreihen aus der Zeitreihenablage werden
+    Wasserstände und W/Q-Beziehungen abgeholt. Somit können auf dieser Seite
+    Wasserstände und die daraus berechneten Abflüsse dargestellt werden. Sie
+    werden tabellarisch und grafisch dargestellt und können ggf. korrigiert
+    werden. Korrekturen können sowohl in der Tabelle zum Wasserstand als auch
+    in der Tabelle zum Abfluss vorgenommen werden. Es erfolgt jeweils
+    automatisch eine Umrechnung über die W/Q-Beziehung, die Daten bleiben
+    damit konsistent. Mithilfe der Optionsknöpfe <guilabel>Abfluss</guilabel>
+    und <guilabel>Wasserstand</guilabel> unterhalb des Diagramms kann die
     Darstellung zwischen Abfluss und Wasserstand umgeschaltet werden. Im
     Diagramm wird jeweils die Ganglinie zu dem Pegel angezeigt, der in der
     Karte ausgewählt ist.</para>
@@ -335,9 +342,10 @@
 
     <para>Die Eingabe und Kontrolle der Eingangsdaten für den zweiten
     Berechnungsschritt ist abgeschlossen, die Rechnung zur Abfluss-Vorhersage
-    oberhalb der Speicher kann nun durchgeführt werden. Dies geschieht durch
-    Drücken des Knopfes <guilabel>Q-Prognose oh. Speicher</guilabel> unten
-    rechts. Die Darstellung im Diagramm erweitert sich nach erfolgter
+    oberhalb der Speicher kann nun durchgeführt werden (siehe <xref
+    linkend="pic_SA_Assi_Bode_07_Berechnung_oh_Speicher" />). Dies geschieht
+    durch Drücken des Knopfes <guilabel>Q-Prognose oh. Speicher</guilabel>
+    unten rechts. Die Darstellung im Diagramm erweitert sich nach erfolgter
     Vorhersage-Rechnung um die Vorhersagezeitreihe zu Abfluss bzw.
     Wasserstand. Die Darstellung kann mithilfe der Optionsköpfe
     <guilabel>Abfluss</guilabel> und <guilabel>Wasserstand</guilabel>
@@ -399,10 +407,11 @@
 
     <para>In Vorbereitung auf die Speicherrechnungen bzw. Rechnungen zur
     Talsperrensteuerung werden nun die gemessenen Speicherabgaben zur
-    Kontrolle und weiteren Eingabe angezeigt. Insbesondere können nun die
-    zukünftigen Abgaben für die Talsperre Königshütte festgelegt werden. Die
-    Darstellung im Diagramm richtet sich wie gewohnt nach der Auswahl in der
-    Karte.</para>
+    Kontrolle und weiteren Eingabe angezeigt (siehe <xref
+    linkend="pic_SA_Assi_Bode_09_Abfluss_Speicher" />). Insbesondere können
+    nun die zukünftigen Abgaben für die Talsperre Königshütte festgelegt
+    werden. Die Darstellung im Diagramm richtet sich wie gewohnt nach der
+    Auswahl in der Karte.</para>
   </section>
 
   <section id="SA_Assi_Bode_10a_Speicherrechnung">
@@ -431,7 +440,8 @@
 
     <para>Die für die Speicherrechnung bei Vorgabe der Abgaben erforderlichen
     Eingaben sind nun abgeschlossen, die Rechnung wird durch Drücken des
-    Knopfes <guilabel>Speicherrechnung</guilabel> unten rechts angestoßen. Die
+    Knopfes <guilabel>Speicherrechnung</guilabel> unten rechts angestoßen
+    (siehe <xref linkend="pic_SA_Assi_Bode_10a_Speicherrechnung" />). Die
     Darstellung im Diagramm erweitert sich nach erfolgter Vorhersage-Rechnung
     um die Vorhersagezeitreihe zu Volumen. Das Diagramm bietet nun eine
     umfassende Information zu dem in der Karte gewählten Speicher: neben dem
@@ -464,11 +474,13 @@
         </figure>Die für die Talsperrensteuerung ohne Optimierung
       erforderlichen Eingaben sind nun abgeschlossen, die Rechnung wird durch
       Drücken des Knopfes <guilabel>TS-Steuerung ohne Optim.</guilabel> unten
-      rechts angestoßen. Die Darstellung im Diagramm erweitert sich nach
-      erfolgter Vorhersage-Rechnung um die Vorhersagezeitreihe zu Volumen. Das
-      Diagramm bietet nun eine umfassende Information zu dem in der Karte
-      gewählten Speicher: neben dem Volumen (Beobachtung und Vorhersage)
-      werden die Abgabe und die Zufluss-Vorhersage dargestellt.</para>
+      rechts angestoßen (siehe <xref
+      linkend="pic_SA_Assi_Bode_10b_TS_ohne_Opt" />). Die Darstellung im
+      Diagramm erweitert sich nach erfolgter Vorhersage-Rechnung um die
+      Vorhersagezeitreihe zu Volumen. Das Diagramm bietet nun eine umfassende
+      Information zu dem in der Karte gewählten Speicher: neben dem Volumen
+      (Beobachtung und Vorhersage) werden die Abgabe und die
+      Zufluss-Vorhersage dargestellt.</para>
     </section>
 
     <section id="SA_Assi_Bode_10c_TS_mit_Opt">
@@ -490,11 +502,13 @@
         </figure>Die für die Talsperrensteuerung mit Optimierung
       erforderlichen Eingaben sind nun abgeschlossen, die Rechnung wird durch
       Drücken des Knopfes <guilabel>TS-Steuerung mit Optim.</guilabel> unten
-      rechts angestoßen. Die Darstellung im Diagramm erweitert sich nach
-      erfolgter Vorhersage-Rechnung um die Vorhersagezeitreihe zu Volumen. Das
-      Diagramm bietet nun eine umfassende Information zu dem in der Karte
-      gewählten Speicher: neben dem Volumen (Beobachtung und Vorhersage)
-      werden die Abgabe und die Zufluss-Vorhersage dargestellt.</para>
+      rechts angestoßen (siehe <xref
+      linkend="pic_SA_Assi_Bode_10c_TS_mit_Opt" />). Die Darstellung im
+      Diagramm erweitert sich nach erfolgter Vorhersage-Rechnung um die
+      Vorhersagezeitreihe zu Volumen. Das Diagramm bietet nun eine umfassende
+      Information zu dem in der Karte gewählten Speicher: neben dem Volumen
+      (Beobachtung und Vorhersage) werden die Abgabe und die
+      Zufluss-Vorhersage dargestellt.</para>
     </section>
   </section>
 
@@ -524,7 +538,8 @@
       </figure></para>
 
     <para>Neben einer weiteren visuellen Kontrolle der Ergebnisse für die
-    Vorhersagepegel im Diagramm können auf dieser Seite</para>
+    Vorhersagepegel im Diagramm können auf dieser Seite (siehe <xref
+    linkend="pic_SA_Assi_Bode_12_Berichtsablage_Pegel" />)</para>
 
     <itemizedlist>
       <listitem>
@@ -719,7 +734,8 @@
       </figure></para>
 
     <para>Neben einer weiteren visuellen Kontrolle der Ergebnisse für die
-    Speicher im Diagramm können auf dieser Seite</para>
+    Speicher im Diagramm können auf dieser Seite (siehe <xref
+    linkend="pic_SA_Assi_Bode_13_Berichtsablage_Speicherl" />)</para>
 
     <itemizedlist>
       <listitem>
