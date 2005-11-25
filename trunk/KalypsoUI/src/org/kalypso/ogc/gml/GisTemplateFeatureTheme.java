@@ -152,15 +152,15 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             .getLinktype(), styleType.getHref(), context ), styleType.getStyle() );
         m_gisTemplateUserStyles.add( gisTemplateUserStyle );
       }
-      try
-      {
-        pool.addPoolListener( this, m_layerKey );
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-        // catch any exception
-      }
+    }
+    try
+    {
+      pool.addPoolListener( this, m_layerKey );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      // catch any exception
     }
   }
 
