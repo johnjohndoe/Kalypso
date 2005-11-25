@@ -283,10 +283,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -336,10 +336,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -389,10 +389,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -442,10 +442,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -495,10 +495,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -524,10 +524,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -577,10 +577,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -655,10 +655,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -708,10 +708,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Durchfluss"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
@@ -762,10 +762,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<!-- 
@@ -795,10 +795,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -823,10 +823,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -851,10 +851,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -879,10 +879,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -906,10 +906,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -934,10 +934,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -962,10 +962,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -990,10 +990,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -1050,10 +1050,10 @@
 		<arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameString=%axisname% - Vorhersage#linkColumn=Durchfluss_gerechnet#color=0xff0000"/>
 		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
-		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
 		<!-- 
         Tabelle -->
 		<!-- 
@@ -1092,35 +1092,41 @@
 		<!-- tabellarische Übersichten über Eingangs- und Ergebnisdaten  -->
 		<arg name="exporter2">
 			<arg name="id" value="simpleTemplateExporter"/>
-			<arg name="name" value="Datenübersichten"/>
+			<arg name="name" value="Übersichten"/>
 			<arg name="templateTableEingabeW">
 				<arg name="documentName" value="EingangsdatenW"/>
-				<arg name="label" value="Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="label" value="Eingangsdaten Wasserstand"/>
+				<arg name="category" value="Pegel Übersicht Eingangsdaten Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingW.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisW">
 				<arg name="documentName" value="ErgebnisdatenW"/>
-				<arg name="label" value="Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="label" value="Ergebnisdaten Wasserstand"/>
+				<arg name="category" value="Pegel Übersicht Ergebnisdaten Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgW.ott"/>
 			</arg>
 			<arg name="templateTableEingabeQ">
 				<arg name="documentName" value="EingangsdatenQ"/>
-				<arg name="label" value="Übersicht Eingangsdaten Abfluss"/>
+				<arg name="label" value="Eingangsdaten Abfluss"/>
+				<arg name="category" value="Pegel Übersicht Eingangsdaten Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingQ.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisQ">
 				<arg name="documentName" value="ErgebnisdatenQ"/>
-				<arg name="label" value="Übersicht Ergebnisdaten Abfluss"/>
+				<arg name="label" value="Ergebnisdaten Abfluss"/>
+				<arg name="category" value="Pegel Übersicht Ergebnisdaten Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgQ.ott"/>
 			</arg>
 			<arg name="templateTableGebietsN">
 				<arg name="documentName" value="DatenGebietsniederschlag"/>
-				<arg name="label" value="Übersicht Niederschlag (Gebietsniederschlag)"/>
+				<arg name="label" value="Gebietsniederschlag"/>
+				<arg name="category" value="Pegel Übersicht Gebietsniederschlag"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsN.ott"/>
 			</arg>
 			<arg name="templateTableGebietsSchnee">
 				<arg name="documentName" value="DatenGebietsschnee"/>
-				<arg name="label" value="Übersicht Schnee (Gebietsniederschlag)"/>
+				<arg name="label" value="Gebietsniederschlag (Schnee)"/>
+				<arg name="category" value="Pegel Übersicht Gebietsniederschlag (Schnee)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsSnow.ott"/>
 			</arg>
 		</arg>
@@ -1131,22 +1137,25 @@
 			<arg name="templateDiagLSBodeQ">
 				<arg name="documentName" value="LängsschnittBodeQ"/>
 				<arg name="label" value="Bode-Längsschnitt (Abfluss)"/>
+				<arg name="category" value="Pegel Längsschnitt Bode Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeQ.odt"/>
 			</arg>
 			<arg name="templateDiagLSBodeW">
 				<arg name="documentName" value="LängsschnittBodeW"/>
 				<arg name="label" value="Bode-Längsschnitt (Wasserstand)"/>
+				<arg name="category" value="Pegel Längsschnitt Bode Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeW.odt"/>
 			</arg>
 		</arg>
 		<arg name="exporter3">
 			<arg name="id" value="multiExporter"/>
-			<arg name="name" value="Pegelübersichten (Scheitelwerte)"/>
+			<arg name="name" value="Scheitelwerte"/>
 			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
 			<!-- Scheitelwert-Tabelle -->
 			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand"/>
 				<arg name="documentName" value="ScheitelwerteW.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -1524,7 +1533,8 @@
 			</arg>
 			<arg name="exporter4">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss"/>
 				<arg name="documentName" value="ScheitelwerteQ.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -1902,7 +1912,8 @@
 			</arg>
 			<arg name="exporter5">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Wasserstandsmeldepegel (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Wasserstandsmeldepegel"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Wasserstandsmeldepegel"/>
 				<arg name="documentName" value="Scheitelwerte_GesaWMP_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2044,7 +2055,8 @@
 			</arg>
 			<arg name="exporter6">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Sachsen-Anhalt (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Sachsen-Anhalt"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Sachsen-Anhalt"/>
 				<arg name="documentName" value="Scheitelwerte_SA_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2151,7 +2163,8 @@
 			</arg>
 			<arg name="exporter7">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Obere Saale (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Obere Saale"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Obere Saale"/>
 				<arg name="documentName" value="Scheitelwerte_ObS_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2203,7 +2216,8 @@
 			</arg>
 			<arg name="exporter8">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Unstrut und Ilm (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Unstrut und Ilm"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Unstrut und Ilm"/>
 				<arg name="documentName" value="Scheitelwerte_UI_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2285,7 +2299,8 @@
 			</arg>
 			<arg name="exporter9">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Weiße Elster (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Weiße Elster"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Weiße Elster"/>
 				<arg name="documentName" value="Scheitelwerte_Elster_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2332,7 +2347,8 @@
 			</arg>
 			<arg name="exporter10">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Untere Saale (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Untere Saale"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Untere Saale"/>
 				<arg name="documentName" value="Scheitelwerte_UnS_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2409,7 +2425,8 @@
 			</arg>
 			<arg name="exporter11">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Bode (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Bode"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Bode"/>
 				<arg name="documentName" value="Scheitelwerte_Bode_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2456,7 +2473,8 @@
 			</arg>
 			<arg name="exporter12">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Saale und Bode (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Saale und Bode"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Saale und Bode"/>
 				<arg name="documentName" value="Scheitelwerte_SB_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2523,7 +2541,8 @@
 			</arg>
 			<arg name="exporter13">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Wasserstand - Elbe (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand - Elbe"/>
+				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Elbe"/>
 				<arg name="documentName" value="Scheitelwerte_Elbe_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2565,7 +2584,8 @@
 			</arg>
 			<arg name="exporter14">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss - Wasserstandsmeldepegel (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss - Wasserstandsmeldepegel"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss - Wasserstandsmeldepegel"/>
 				<arg name="documentName" value="Scheitelwerte_GesaWMP_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2707,7 +2727,8 @@
 			</arg>
 			<arg name="exporter15">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss - Sachsen-Anhalt (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss - Sachsen-Anhalt"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss - Sachsen-Anhalt"/>
 				<arg name="documentName" value="Scheitelwerte_SA_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2814,7 +2835,8 @@
 			</arg>
 			<arg name="exporter16">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss - Obere Saale (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss - Obere Saale"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss - Obere Saale"/>
 				<arg name="documentName" value="Scheitelwerte_ObS_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2866,7 +2888,8 @@
 			</arg>
 			<arg name="exporter17">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss - Unstrut und Ilm (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss - Unstrut und Ilm"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss - Unstrut und Ilm"/>
 				<arg name="documentName" value="Scheitelwerte_UI_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2948,7 +2971,8 @@
 			</arg>
 			<arg name="exporter18">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss - Weiße Elster (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss - Weiße Elster"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss - Weiße Elster"/>
 				<arg name="documentName" value="Scheitelwerte_Elster_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2995,7 +3019,8 @@
 			</arg>
 			<arg name="exporter19">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss - Untere Saale (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss - Untere Saale"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss - Untere Saale"/>
 				<arg name="documentName" value="Scheitelwerte_UnS_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3072,7 +3097,8 @@
 			</arg>
 			<arg name="exporter20">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss - Bode (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss - Bode"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss - Bode"/>
 				<arg name="documentName" value="Scheitelwerte_Bode_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3149,7 +3175,8 @@
 			</arg>
 			<arg name="exporter21">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Pegelübersicht Abfluss - Saale und Bode (Scheitelwerte)"/>
+				<arg name="name" value="Abfluss - Saale und Bode"/>
+				<arg name="category" value="Pegel Scheitelwerte Abfluss - Saale und Bode"/>
 				<arg name="documentName" value="Scheitelwerte_SB_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3311,36 +3338,41 @@
 		<!-- tabellarische Übersichten über Eingangs- und Ergebnisdaten  -->
 		<arg name="exporter2">
 			<arg name="id" value="simpleTemplateExporter"/>
-			<arg name="name" value="Datenübersichten"/>
+			<arg name="name" value="Übersichten"/>
 			<arg name="templateTableEingabeSpeicherV">
 				<arg name="documentName" value="EingangsdatenSpeicherV"/>
-				<arg name="label" value="Übersicht Eingangsdaten Volumen"/>
+				<arg name="label" value="Eingangsdaten Volumen"/>
+				<arg name="category" value="Speicher Übersicht Eingangsdaten Volumen"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingV.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisSpeicherV">
 				<arg name="documentName" value="ErgebnisdatenSpeicherV"/>
-				<arg name="label" value="Übersicht Ergebnisdaten Volumen"/>
+				<arg name="label" value="Ergebnisdaten Volumen"/>
+				<arg name="category" value="Speicher Übersicht Ergebnisdaten Volumen"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgV.ott"/>
 			</arg>
 			<arg name="templateTableEingabeSpeicherW">
 				<arg name="documentName" value="EingangsdatenSpeicherW"/>
-				<arg name="label" value="Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="label" value="Eingangsdaten Wasserstand"/>
+				<arg name="category" value="Speicher Übersicht Eingangsdaten Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingW.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisSpeicherW">
 				<arg name="documentName" value="ErgebnisdatenSpeicherW"/>
-				<arg name="label" value="Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="label" value="Ergebnisdaten Wasserstand"/>
+				<arg name="category" value="Speicher Übersicht Ergebnisdaten Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgW.ott"/>
 			</arg>
 		</arg>
 		<!-- Scheitelwert-Tabellen V / W  -->
 		<arg name="exporter3">
 			<arg name="id" value="multiExporter"/>
-			<arg name="name" value="Speicherübersichten (Scheitelwerte)"/>
+			<arg name="name" value="Scheitelwerte"/>
 			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
 			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Speicherübersicht Volumen (Scheitelwerte)"/>
+				<arg name="name" value="Volumen"/>
+				<arg name="category" value="Speicher Scheitelwerte Volumen"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherV.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3397,7 +3429,8 @@
 			</arg>
 			<arg name="exporter4">
 				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Speicherübersicht Wasserstand (Scheitelwerte)"/>
+				<arg name="name" value="Wasserstand"/>
+				<arg name="category" value="Speicher Scheitelwerte Wasserstand"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherW.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
