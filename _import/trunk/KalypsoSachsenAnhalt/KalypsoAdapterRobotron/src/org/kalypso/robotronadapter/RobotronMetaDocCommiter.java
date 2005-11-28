@@ -127,8 +127,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
    */
   public void prepareMetainf( final Properties serviceProps, final Map metadata ) throws MetaDocException
   {
-    metadata.put( TAG_AUTOR, "string;"
-        + serviceProps.getProperty( "robotron.preset." + IMetaDocCommiter.KEY_AUTOR, "Autor" ) );
+    metadata.put( TAG_AUTOR, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_AUTOR, "Autor" ) );
     metadata.put( TAG_DESCRIPTION, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_DESCRIPTION, "" ) );
     metadata.put( TAG_ERSTELLER, "string;" + serviceProps.getProperty( "robotron.preset." + TAG_ERSTELLER, "" ) );
 
@@ -166,7 +165,8 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       final DataHandler[] docs = new DataHandler[]
       { new DataHandler( new FileDataSource( doc ) ) };
 
-      final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), identifier, category, metadataExtensions );
+      final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), identifier, category,
+          metadataExtensions );
 
       LOG.info( "Metadata:\n" + metadataXml );
 
@@ -259,13 +259,11 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     if( metadataExtensions != null && keyStationId != null )
       stationId = metadataExtensions.getStringArray( keyStationId );
 
-    if( stationId == null || stationId.length == 0 )
-      bf.append( LT + TAG_STATION + GT + "" + CLT + TAG_STATION + GT );
+    // robotron will nur ein station_id, sonst macht es keinen Sinn
+    if( stationId != null && stationId.length == 1 )
+      bf.append( LT + TAG_STATION + GT + stationId[0] + CLT + TAG_STATION + GT );
     else
-    {
-      for( int i = 0; i < stationId.length; i++ )
-        bf.append( LT + TAG_STATION + GT + stationId[i] + CLT + TAG_STATION + GT );
-    }
+      bf.append( LT + TAG_STATION + GT + "" + CLT + TAG_STATION + GT ); // sonst leeres id hier
 
     bf.append( LT + TAG_FILES + GT );
     bf.append( LT + TAG_FILE + GT + fileName + CLT + TAG_FILE + GT );
