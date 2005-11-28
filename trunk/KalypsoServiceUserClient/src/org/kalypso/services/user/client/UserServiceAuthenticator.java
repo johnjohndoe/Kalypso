@@ -93,7 +93,7 @@ public class UserServiceAuthenticator implements IAuthenticator
     if( askForLogin || askForScenario )
     {
       final int iter = askForLogin ? 3 : 1;
-      
+
       for( int i = 0; i < iter; i++ )
       {
         final KalypsoLoginDialog dlg = new KalypsoLoginDialog( shell, MSG, askForLogin, username, askForLogin,
@@ -137,11 +137,13 @@ public class UserServiceAuthenticator implements IAuthenticator
           throw new InterruptedException();
       }
     }
-
-    // using single sign on
-    final String[] rights = srv.getRights( username );
-    if( rights != null && rights.length > 0 )
-      return new KalypsoUser( username, rights, scenario.getId(), scenarios );
+    else
+    {
+      // using single sign on
+      final String[] rights = srv.getRights( username );
+      if( rights != null && rights.length > 0 )
+        return new KalypsoUser( username, rights, scenario.getId(), scenarios );
+    }
 
     // throw an exception to indicate error state
     throw new IllegalStateException( "Authentifizierung fehlgeschlagen" );
