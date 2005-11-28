@@ -58,9 +58,9 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.rpc.ServiceException;
 
+import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -125,10 +125,11 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
       outputStream = new BufferedOutputStream( new FileOutputStream( file ) );
 
-      final MapConfiguration mdEx = new MapConfiguration( new HashMap() );
+      // important: use a BaseConfiguration not a MapConfiguration because of the addProperty() contract.
+      final BaseConfiguration mdEx = new BaseConfiguration();
       // copy our properties into the metadataExtensions, will be used by the webservice
       ConfigurationUtils.copy( getProperties(), mdEx );
-      
+
       final IStatus status = document.exportObject( outputStream, new SubProgressMonitor( monitor, 1 ), mdEx );
       outputStream.close();
 
@@ -137,10 +138,14 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
         return status;
 
       final IMetaDocService metadocService = getMetadocService();
-      
+
       final DataHandler dh = new DataHandler( new FileDataSource( file ) );
+      
+      // get a map out of the metadata extensions
+      final Map map = org.kalypso.metadoc.configuration.ConfigurationUtils.createMap( mdEx );
+
       metadocService.commitNewDocument( (Map)conf.getProperty( CONF_METADATA ), dh,
-          document.getPreferredDocumentName(), document.getIdentifier(), document.getCategory(), mdEx.getMap() );
+          document.getPreferredDocumentName(), document.getIdentifier(), document.getCategory(), map );
 
       monitor.worked( 1 );
 
@@ -211,7 +216,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     configuration.setProperty( CONF_METADATA, metadata );
 
     final Configuration targetProps = getProperties();
-    
+
     // create featuretype from bean
     final Collection ftpColl = new ArrayList();
     final Collection fpColl = new ArrayList();
