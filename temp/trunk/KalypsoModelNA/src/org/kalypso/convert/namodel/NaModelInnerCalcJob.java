@@ -57,6 +57,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -107,8 +108,11 @@ import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
+import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -142,6 +146,8 @@ public class NaModelInnerCalcJob implements ICalcJob
   private boolean m_succeeded = false;
 
   private String m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
+
+  final HashMap m_resultMap = new HashMap();
 
   public NaModelInnerCalcJob()
   {
@@ -301,8 +307,10 @@ public class NaModelInnerCalcJob implements ICalcJob
       logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction
           + " [cm/Tag] als Vorhersagegenauigkeit angenommen." );
     }
-
-    accuracyPrediction = ( (Double)rootFeature.getProperty( "accuracyPrediction" ) ).doubleValue();
+    Object accuracyProp = rootFeature.getProperty( "accuracyPrediction" );
+    if(accuracyProp==null)
+      return;
+    accuracyPrediction = ( (Double)accuracyProp ).doubleValue();
 
     final Date startPrediction = conf.getSimulationForecastStart();
     final Date endPrediction = conf.getSimulationEnd();
@@ -953,13 +961,13 @@ public class NaModelInnerCalcJob implements ICalcJob
   {
     //    j Temperatur .tmp
     if( suffix.equalsIgnoreCase( "tmp" ) )
-      return "Temperatur Teilgebiet";
+      return "Temperatur TG";
     //    j Niederschlag .pre
     if( suffix.equalsIgnoreCase( "pre" ) )
-      return "Niederschlag Teilgebiet";
+      return "Niederschlag TG";
     //    n Schnee .sch
     if( suffix.equalsIgnoreCase( "sch" ) )
-      return "Schneehöhe Teilgebiet";
+      return "Schneehöhe TG";
     //    j Bodenfeuchte .bof
     if( suffix.equalsIgnoreCase( "bof" ) )
       return "Bodenfeuchte";
@@ -968,25 +976,25 @@ public class NaModelInnerCalcJob implements ICalcJob
       return "Bodenspeicherbilanz";
     //    n Grundwasserstand .gws
     if( suffix.equalsIgnoreCase( "gws" ) )
-      return "Grundwasserstand Teilgebiet";
+      return "Grundwasserstand TG";
     //    j Gesamtabfluss Knoten .qgs
     if( suffix.equalsIgnoreCase( "qgs" ) )
-      return "Gesamtabfluss Knoten";
+      return "Gesamtabfluss K";
     //    n Gesamtabfluss TG .qgg
     if( suffix.equalsIgnoreCase( "qgg" ) )
-      return "Gesamtabfluss Teilgebiet";
+      return "Gesamtabfluss TG";
     //    n Oberflaechenabfluss .qna
     if( suffix.equalsIgnoreCase( "qna" ) )
-      return "Oberflaechenabfluss nat. Flaechen Teilgebiet";
+      return "Oberflaechenabfluss nat. Flaechen TG";
     //    n Interflow .qif
     if( suffix.equalsIgnoreCase( "qif" ) )
-      return "Interflow Teilgebiet";
+      return "Interflow TG";
     //    n Abfluss vers. Flaechen .qvs
     if( suffix.equalsIgnoreCase( "qvs" ) )
-      return "Abfluss vers. Flaechen Teilgebiet";
+      return "Abfluss vers. Flaechen TG";
     //    n Basisabfluss .qbs
     if( suffix.equalsIgnoreCase( "qbs" ) )
-      return "Basisabfluss Teilgebiet";
+      return "Basisabfluss TG";
     //    n Kluftgrundw1 .qt1
     if( suffix.equalsIgnoreCase( "qt1" ) )
       return "Abfluss Kluftgrundw1";
@@ -995,7 +1003,7 @@ public class NaModelInnerCalcJob implements ICalcJob
       return "Abfluss KluftGW";
     //    n Grundwasser .qgw
     if( suffix.equalsIgnoreCase( "qgw" ) )
-      return "Grundwasserabfluss Teilgebiet";
+      return "Grundwasserabfluss TG";
     //    n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) )
       return "Evapotranspiration";
@@ -1010,16 +1018,16 @@ public class NaModelInnerCalcJob implements ICalcJob
       return "Statistische Abflusswerte";
     //    n Speicherinhalt .spi
     if( suffix.equalsIgnoreCase( "spi" ) )
-      return "Füllvolumen Speicher";
+      return "Füllvolumen";
     //    n Wasserspiegelhöhe .sph
     if( suffix.equalsIgnoreCase( "sph" ) )
-      return "Wasserspiegelhöhe Speicher";
+      return "Wasserspiegelhöhe";
     //    n Verdunstung aus Talsperre .spv
     if( suffix.equalsIgnoreCase( "spv" ) )
       return "Talsperrenverdunstung";
     //    n Niederschlag in Talsperre .spn
     if( suffix.equalsIgnoreCase( "spn" ) )
-      return "Niederschlag Talsperre";
+      return "Niederschlag";
     //    n Zehrung .spb
     if( suffix.equalsIgnoreCase( "spb" ) )
       return "Zehrung";
@@ -1142,6 +1150,9 @@ public class NaModelInnerCalcJob implements ICalcJob
           if( !FeatureHelper.booleanIsTrue( feature, "generateResult", false ) )
             continue; // should not generate results
         }
+        final String lang = KalypsoGisPlugin.getDefault().getPluginPreferences().getString(
+            IKalypsoPreferences.LANGUAGE );
+        final String annotation = feature.getFeatureType().getAnnotation( lang ).getLabel();
         final String key = Integer.toString( idManager.getAsciiID( feature ) );
         final String feName = (String)feature.getProperty( titlePropName );
         final String observationTitle;
@@ -1150,11 +1161,11 @@ public class NaModelInnerCalcJob implements ICalcJob
         else
           observationTitle = feature.getId();
 
-        final String axisTitle = getTitleForSuffix( suffix );
+        final String axisTitle = getAxisTitleForSuffix( suffix );
 
         if( !ts.dataExistsForKey( key ) )
           continue; // no results available
-        logger.info( "lese berechnetes Ergebnis fuer #" + key + "\n" );
+        logger.info( "lese berechnetes Ergebnis fuer #" + key + ", Name:" + observationTitle + "\n" );
 
         // transform data to tuppelmodel
         final SortedMap data = ts.getTimeSerie( key );
@@ -1242,8 +1253,24 @@ public class NaModelInnerCalcJob implements ICalcJob
         {
           // if there is target defined or there are some problems with that
           // we generate one
-          resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_"
-              + Integer.toString( idManager.getAsciiID( feature ) ).trim() + "_" + feature.getId() + ".zml";
+          //          resultPathRelative = "Ergebnisse/Berechnet/" + feature.getFeatureType().getName() + "/" + suffix + "_"
+          //              + Integer.toString( idManager.getAsciiID( feature ) ).trim() + "_" + feature.getId() + ".zml";
+
+          resultPathRelative = "Ergebnisse/Berechnet/" + annotation + "/" + observationTitle + "/" + suffix + "("
+              + observationTitle + ").zml";
+        }
+        if( !m_resultMap.containsKey( resultPathRelative ) )
+        {
+          m_resultMap.put( resultPathRelative, observationTitle );
+        }
+        else
+        {
+          logger.info( "Datei existiert bereits: " + resultPathRelative + "." );
+          resultPathRelative = "Ergebnisse/Berechnet/" + annotation + "/" + observationTitle + "(ID"
+              + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")/" + suffix + "(" + observationTitle
+              + ").zml";
+          m_resultMap.put( resultPathRelative, observationTitle );
+          logger.info( "Der Dateiname wurde daher um die ObjektID erweitert: " + resultPathRelative + "." );
         }
 
         final File resultFile = new File( outputDir, resultPathRelative );
@@ -1253,8 +1280,8 @@ public class NaModelInnerCalcJob implements ICalcJob
         //        final IObservation resultObservation = new SimpleObservation(
         // pegelLink.getHref(), "ID", title, false, null, metadataList, axis,
         // qTuppelModel );
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", observationTitle,
-            false, null, metadataList, axis, qTuppelModel );
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID",
+            getTitleForSuffix( suffix ) + observationTitle, false, null, metadataList, axis, qTuppelModel );
 
         // update with Scenario metadata
 
@@ -1282,6 +1309,69 @@ public class NaModelInnerCalcJob implements ICalcJob
         }
       }
     }
+  }
+
+  /**
+   * @param suffix
+   * @return AxisTitle
+   */
+  private String getAxisTitleForSuffix( String suffix )
+  {
+    //    j Temperatur .tmp
+    if( suffix.equalsIgnoreCase( "tmp" ) )
+      return "Temperatur";
+    //    j Niederschlag .pre
+    if( suffix.equalsIgnoreCase( "pre" ) )
+      return "Niederschlag";
+    //    n Schnee .sch
+    if( suffix.equalsIgnoreCase( "sch" ) )
+      return "Schneehöhe";
+    //    j Bodenfeuchte .bof
+    if( suffix.equalsIgnoreCase( "bof" ) )
+      return "Bodenfeuchte";
+    //    n Bodenspeicher .bsp
+    if( suffix.equalsIgnoreCase( "bsp" ) )
+      return "Bodenspeicherbilanz";
+    //    n Grundwasserstand .gws
+    if( suffix.equalsIgnoreCase( "gws" ) )
+      return "Grundwasserstand";
+    //    Gesamtabfluss Knoten .qgs, Gesamtabfluss TG .qgg, Oberflaechenabfluss .qna, Interflow .qif, Abfluss vers.
+    // Flaechen .qvs, Basisabfluss .qbs, Kluftgrundw1 .qt1, Kluftgrundw .qtg, Grundwasser .qgw
+    if( suffix.equalsIgnoreCase( "qgs" ) | suffix.equalsIgnoreCase( "qgg" ) | suffix.equalsIgnoreCase( "qna" )
+        | suffix.equalsIgnoreCase( "qif" ) | suffix.equalsIgnoreCase( "qvs" ) | suffix.equalsIgnoreCase( "qbs" )
+        | suffix.equalsIgnoreCase( "qt1" ) | suffix.equalsIgnoreCase( "qtg" )|suffix.equalsIgnoreCase( "qgw" ))
+      return "Abfluss";
+    //    n Evapotranspiration .vet
+    if( suffix.equalsIgnoreCase( "vet" ) )
+      return "Evapotranspiration";
+    //    n Ausgabe hydrotope .hyd
+    if( suffix.equalsIgnoreCase( "hyd" ) )
+      return "Ausgabe Hydrotope";
+    //    n Abflussbilanz .bil
+    if( suffix.equalsIgnoreCase( "bil" ) )
+      return "Abflussbilanz";
+    //    n Statistische Abflusswerte .nmq
+    if( suffix.equalsIgnoreCase( "nmq" ) )
+      return "Statistische Abflusswerte";
+    //    n Speicherinhalt .spi
+    if( suffix.equalsIgnoreCase( "spi" ) )
+      return "Füllvolumen";
+    //    n Wasserspiegelhöhe .sph
+    if( suffix.equalsIgnoreCase( "sph" ) )
+      return "Wasserspiegelhöhe";
+    //    n Verdunstung aus Talsperre .spv
+    if( suffix.equalsIgnoreCase( "spv" ) )
+      return "Talsperrenverdunstung";
+    //    n Niederschlag in Talsperre .spn
+    if( suffix.equalsIgnoreCase( "spn" ) )
+      return "Niederschlag";
+    //    n Zehrung .spb
+    if( suffix.equalsIgnoreCase( "spb" ) )
+      return "Zehrung";
+    //    n Speicherueberlauf .sup
+    if( suffix.equalsIgnoreCase( "sup" ) )
+      return "Speicherueberlauf";
+    return suffix;
   }
 
   private void loadTextFileResults( File inputDir, Logger logger, File outputDir )
