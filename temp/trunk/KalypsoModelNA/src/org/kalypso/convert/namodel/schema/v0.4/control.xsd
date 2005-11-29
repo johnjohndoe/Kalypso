@@ -56,13 +56,13 @@
 					<element name="hoursforecast" type="integer" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Stundenanzahl Vorhersage</label>
-								<tooltip>Anzahl der Vorhersagestunden [h]</tooltip>
+								<label>Vorhersagezeitraum</label>
+								<tooltip>Vorhersagezeitraum [h]</tooltip>
 								<description/>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>hours forecast</label>
-								<tooltip>number of hours forecast [h]</tooltip>
+								<label>forecastperiod</label>
+								<tooltip>forecastperiod [h]</tooltip>
 								<description/>
 							</documentation>
 						</annotation>
