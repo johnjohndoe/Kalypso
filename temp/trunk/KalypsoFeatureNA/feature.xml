@@ -179,12 +179,6 @@
          version="1.0.0"/>
 
    <plugin
-         id="org.kalypso.debug"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.services.core"
          download-size="0"
          install-size="0"
@@ -234,12 +228,6 @@
 
    <plugin
          id="org.kalypso.wizard.CreateFloodRiskProject"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.grid.interpolation"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
