@@ -86,8 +86,8 @@
 		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
 		<echo message="Zeitreihen werden von WISKI geladen" />
 		
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_48}"/>
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_120}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
@@ -101,8 +101,8 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="${wiski_vergangenheit_link}" from="${startforecast}" to="${stopsim_48}"/>
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+			<source property="${wiski_vergangenheit_link}" from="${startforecast}" to="${stopsim_120}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
