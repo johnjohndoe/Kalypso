@@ -31,7 +31,7 @@
 	<property name="image.name" value="img" />
 	<property name="image.dir" value="${build.merged.dir}/${image.name}" />
 
-	<property name="doc.main" value="tecdoc.xml" />
+	<property name="doc.main" value="driver.xml" />
 	<property name="doc.path" value="${build.merged.dir}/${doc.main}" />
 	<property name="doc.profiled.path" value="${build.profiling.dir}/docbook-profiled.xml" />
 
