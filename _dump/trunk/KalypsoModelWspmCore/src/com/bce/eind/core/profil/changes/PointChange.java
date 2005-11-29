@@ -1,44 +1,37 @@
 package com.bce.eind.core.profil.changes;
 
 import com.bce.eind.core.profil.IProfilPoint;
+import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.impl.points.ProfilPoint;
 
-public final class PointChange
+public final class PointChange extends AbstractChange
 {
-  private final IProfilPoint m_point;
 
-  private final POINT_PROPERTY m_column;
-
-  private final double m_newValue;
-
-  public PointChange( final IProfilPoint p, final POINT_PROPERTY column, final double newValue )
+  public PointChange( final IProfilPoint p, final POINT_PROPERTY property, final Double newValue )
   {
-    m_point = p;
-    m_column = column;
-    m_newValue = newValue;
+    super( p, property, newValue );
   }
-
   /**
-   * @return Returns the column.
+   * @throws ProfilDataException
+   * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(com.bce.eind.core.profil.IProfil)
    */
-  public POINT_PROPERTY getColumn( )
+  @Override
+  public boolean doChange() throws ProfilDataException
   {
-    return m_column;
+    ((ProfilPoint)m_object).setValueFor( (POINT_PROPERTY)m_property, (Double)m_newValue );
+    return true;
   }
-
   /**
-   * @return Returns the newValue.
+   * @throws ProfilDataException
+   * @see com.bce.eind.core.profil.changes.AbstractChange#getUndoChange()
    */
-  public double getNewValue( )
+  @Override
+  public PointChange getUndoChange( ) throws ProfilDataException
   {
-    return m_newValue;
-  }
-
-  /**
-   * @return Returns the point.
-   */
-  public IProfilPoint getPoint( )
-  {
-    return m_point;
+    final IProfilPoint p = (IProfilPoint)m_object;
+    final POINT_PROPERTY pp = (POINT_PROPERTY)m_property;
+    final Double oldValue = p.getValueFor( pp );
+    return new PointChange( p, pp, oldValue );
   }
 }

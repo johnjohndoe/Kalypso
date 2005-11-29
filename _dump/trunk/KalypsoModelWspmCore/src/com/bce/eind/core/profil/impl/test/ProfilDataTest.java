@@ -79,9 +79,9 @@ public class ProfilDataTest extends TestCase
     assertEquals( "Trennfläche rechts Typ:", false, rightTF
         .getValueFor( DEVIDER_PROPERTY.BOESCHUNG ) );
 
-    p.setValueFor(leftTF, DEVIDER_PROPERTY.class, DEVIDER_PROPERTY.BOESCHUNG );
+    p.setValueFor(leftTF, DEVIDER_PROPERTY.BOESCHUNG,true );
     assertEquals( "Trennfläche rechts Typ:", DEVIDER_PROPERTY.BOESCHUNG, leftTF
-        .getValueFor( DEVIDER_PROPERTY.class ) );
+        .getValueFor( DEVIDER_PROPERTY.BOESCHUNG) );
 
     final IProfilPoint newPkt = p.getDevider( DEVIDER_TYP.DURCHSTROEMTE )[0].getPoint();
     p.moveDevider( p.getDevider( DEVIDER_TYP.TRENNFLAECHE )[0], newPkt );

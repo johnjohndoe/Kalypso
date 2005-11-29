@@ -18,8 +18,10 @@ import com.bce.eind.core.profil.ProfilBuildingFactory;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.changes.AbstractChange;
 import com.bce.eind.core.profil.changes.PointChange;
 import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
@@ -377,15 +379,15 @@ public class PlainProfil implements IProfil, IProfilConstants
   /**
    * @see com.bce.eind.core.profil.IProfil#setValues(com.bce.eind.core.profil.changes.PointChange[])
    */
-  public void setValues( final PointChange[] changes ) throws ProfilDataException
+  public void setValues( final AbstractChange[] changes ) throws ProfilDataException
   {
-    for( final PointChange change : changes )
+    for( final AbstractChange change : changes )
     {
-      final IProfilPoint point = change.getPoint();
-      if( !m_points.contains( point ) )
-        throw new ProfilDataException( "Profilpunkt exisitiert nicht: " + point );
-
-      ((ProfilPoint)point).setValueFor( change.getColumn(), change.getNewValue() );
+     //final IProfilPoint point = change.getPoint();
+      //if( !m_points.contains( point ) )
+       // throw new ProfilDataException( "Profilpunkt exisitiert nicht: " + point );
+change.doChange();
+     // ((ProfilPoint)point).setValueFor( change.getProperty(), change.getNewValue() );
     }
   }
 
@@ -421,7 +423,7 @@ public class PlainProfil implements IProfil, IProfilConstants
     { new PointChange( point, pointProperty, value ) } );
   }
 
-  public void setValueFor( IProfilDevider devider, Object property, Object value )
+  public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property, Object value )
   {
     ((ProfilDevider)devider).setValueFor( property, value );
 

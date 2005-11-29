@@ -1,10 +1,9 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.changes.BuildingDataChange;
+import com.bce.eind.core.profil.changes.BuildingChange;
+import com.bce.eind.core.profil.changes.DeviderChange;
 import com.bce.eind.core.profil.changes.PointChange;
-
-
+import com.bce.eind.core.profil.changes.ProfilChange;
 
 /**
  * @author Belger
@@ -12,30 +11,36 @@ import com.bce.eind.core.profil.changes.PointChange;
 public interface IProfilListener
 {
   /** Wird aufgerufen, wenn sich ein oder mehrere Werte eines Punktes geändert haben */
-  public void onPointValuesChanged( final PointChange[] changes );
+  public void onPointsChanged( final PointChange[] changes );
 
-  public void onPointsAdded( final IProfilPoint[] newPoints );
-  
-  public void onPointsRemoved( final IProfilPoint[] removedPoints );
-  
-  public void onPointPropertiesAdded( final POINT_PROPERTY[] addedProperties );
-  
-  public void onPointPropertiesRemoved( final POINT_PROPERTY[] removedProperties );
+  public void onPointsAdded( final PointChange[] changes );
+
+  public void onPointsRemoved( final PointChange[] changes );
+
+  public void onPointPropertiesAdded( final PointChange[] changes );
+
+  public void onPointPropertiesRemoved( final PointChange[] changes );
+
   /** Wird nur aufgerufen, wenn sich die Eigenschaft Building_typ ändert */
-  public void onBuildingChanged(final IProfilBuilding oldBuilding);
+  public void onBuildingAdded(BuildingChange[] changes  );
+
   /** Wird aufgerufen, wenn sich ein oder mehrere Eigenschaften Gebäudes geändert haben */
-  public void onBuildingDataChanged( BuildingDataChange[] changes );
-  /** Wird aufgerufen, wenn sich ein oder mehrere Profil_Properties geändert haben
-   *  see IProfil.PROFIL_PROPERTY
-   *  */
-  public void onProfilDataChanged( final Object key, final Object value );
+  public void onBuildingChanged( BuildingChange[] changes );
+  public void onBuildingRemoved( BuildingChange[] changes );
   /**
-   * 
-   * @param oldPoint wenn != Null wurde der Trenner verschoben
-   * @param devider
-   * @param property TODO
+   * Wird aufgerufen, wenn sich ein oder mehrere Profil_Properties geändert haben see
+   * IProfil.PROFIL_PROPERTY
    */
-  public void onDeviderChanged( final IProfilPoint oldPoint, final IProfilDevider devider, Object property );
+  public void onProfilDataChanged(ProfilChange[] changes  );
+
+  /**
+   * @param changes
+   *          wenn != Null wurde der Trenner verschoben
+   */
+  public void onDeviderChanged( final DeviderChange[] changes );
+
   /** Wird aufgerufen, wenn ein oder mehrere Trenner gelöscht wurden */
-  public void onDeviderRemoved(final IProfilDevider[] deviders);
+  public void onDeviderRemoved( final DeviderChange[] changes );
+
+  public void onDeviderAdded( final DeviderChange[] changes );
 }

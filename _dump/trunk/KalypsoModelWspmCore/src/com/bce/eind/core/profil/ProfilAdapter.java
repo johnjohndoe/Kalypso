@@ -1,8 +1,11 @@
 package com.bce.eind.core.profil;
 
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.changes.BuildingDataChange;
+import com.bce.eind.core.profil.changes.AbstractChange;
+import com.bce.eind.core.profil.changes.BuildingChange;
+import com.bce.eind.core.profil.changes.DeviderChange;
 import com.bce.eind.core.profil.changes.PointChange;
+import com.bce.eind.core.profil.changes.ProfilChange;
 
 
 /**
@@ -14,97 +17,123 @@ public class ProfilAdapter implements IProfilListener
   
   /**
    * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onBuildingChanged()
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingAdded(com.bce.eind.core.profil.changes.BuildingChange[])
    */
-  public void onBuildingChanged(final IProfilBuilding oldBuilding )
+  public void onBuildingAdded( BuildingChange[] changes )
   {
+   
+    
   }
 
   /**
    * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onBuildingDataChanged(BuildingDataChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingRemoved(com.bce.eind.core.profil.changes.BuildingChange[])
    */
-  public void onBuildingDataChanged( BuildingDataChange[] changes )
+  public void onBuildingRemoved( BuildingChange[] changes )
   {
+   
+    
   }
 
   /**
    * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderAdded(com.bce.eind.core.profil.changes.DeviderChange[])
    */
+  public void onDeviderAdded( DeviderChange[] changes )
+  {
+   
+    
+  }
+
+  /**
+   * Does nothing.
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.changes.DeviderChange[])
+   */
+  public void onDeviderChanged( DeviderChange[] changes )
+  {
+   
+    
+  }
+
+  /**
+   * Does nothing.
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderRemoved(com.bce.eind.core.profil.changes.DeviderChange[])
+   */
+  public void onDeviderRemoved( DeviderChange[] changes )
+  {
+  
+    
+  }
+
+  /**
+   * Does nothing.
+   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesAdded(com.bce.eind.core.profil.changes.PointChange[])
+   */
+  public void onPointPropertiesAdded( PointChange[] changes )
+  {
  
-  public void onDeviderChanged( IProfilPoint oldPoint, IProfilDevider devider, Object property )
+    
+  }
+
+  /**
+   * Does nothing.
+   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesRemoved(com.bce.eind.core.profil.changes.PointChange[])
+   */
+  public void onPointPropertiesRemoved( PointChange[] changes )
+  {
+ 
+    
+  }
+
+  /**
+   * Does nothing.
+   * @see com.bce.eind.core.profil.IProfilListener#onPointsAdded(com.bce.eind.core.profil.changes.PointChange[])
+   */
+  public void onPointsAdded( PointChange[] changes )
+  {
+      
+  }
+
+  /**
+   * Does nothing.
+   * @see com.bce.eind.core.profil.IProfilListener#onPointsChanged(com.bce.eind.core.profil.changes.PointChange[])
+   */
+  public void onPointsChanged( PointChange[] changes )
+  {
+        
+  }
+
+  /**
+   * Does nothing.
+   * @see com.bce.eind.core.profil.IProfilListener#onPointsRemoved(com.bce.eind.core.profil.changes.PointChange[])
+   */
+  public void onPointsRemoved( PointChange[] changes )
   {
      
   }
 
   /**
    * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onDeviderRemoved( IProfilDevider[] deviders )
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilDataChanged(com.bce.eind.core.profil.changes.ProfilChange[])
    */
-  public void onDeviderRemoved( IProfilDevider[] deviders )
+  public void onProfilDataChanged( ProfilChange[] changes )
   {
-    
-    
+       
   }
+
+  
 
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilDataChanged(com.bce.eind.core.profil.IProfil.METADATA,
-   *      java.lang.String)
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingChanged(BuildingChange[])
    */
-  public void onProfilDataChanged( Object key, Object value )
+  public void onBuildingChanged( BuildingChange[] changes )
   {
   }
 
-  /**
-   * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesAdded(com.bce.eind.core.profil.POINT_PROPERTY[])
-   */
-  public void onPointPropertiesAdded( POINT_PROPERTY[] addedProperties )
-  {
-  }
+  
 
-  /**
-   * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesRemoved(com.bce.eind.core.profil.POINT_PROPERTY[])
-   */
-  public void onPointPropertiesRemoved( POINT_PROPERTY[] removedProperties )
-  {
-  }
-
-  /**
-   * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointsAdded(com.bce.eind.core.profil.IProfilPoint[])
-   */
-  public void onPointsAdded( IProfilPoint[] newPoints )
-  {
-  }
-
-  /**
-   * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointsRemoved(com.bce.eind.core.profil.IProfilPoint[])
-   */
-  public void onPointsRemoved( IProfilPoint[] removedPoints )
-  {
-  }
-  /**
-   * Does nothing.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onPointValuesChanged(com.bce.eind.core.profil.changes.PointChange[])
-   */
-  public void onPointValuesChanged( PointChange[] changes )
-  {
-  }
 
   
 

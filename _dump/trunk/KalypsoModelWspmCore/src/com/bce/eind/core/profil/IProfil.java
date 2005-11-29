@@ -1,13 +1,13 @@
 package com.bce.eind.core.profil;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_TYP;
+import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.changes.PointChange;
+import com.bce.eind.core.profil.changes.AbstractChange;
 
 /**
  * @author kimwerner
@@ -183,18 +183,19 @@ public interface IProfil
   /**
    * @param key
    * @param value
+   * @throws ProfilDataException 
    * @see PROFIL_PROPERTY
    */
-  public void setProperty( final Object key, final Object value );
+  public void setProperty( final Object key, final Object value ) throws ProfilDataException;
 
   public void setValueFor(IProfilPoint point,POINT_PROPERTY property, double value) throws ProfilDataException;
  
-  public void setValueFor(IProfilDevider devider,Object property,Object value);
+  public void setValueFor(IProfilDevider devider,DEVIDER_PROPERTY property,Object value);
   
   public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value) throws ProfilDataException;
   
   
-  public void setValues( final PointChange[] changes ) throws ProfilDataException;
+  public void setValues( final AbstractChange[] changes ) throws ProfilDataException;
   
   /**
    * @param pointList
@@ -202,15 +203,15 @@ public interface IProfil
    * @param value
    * @throws ProfilDataException
     */
-  public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
-      double value ) throws ProfilDataException;
-  /**
-   * @param pointProperty
-   * @param value
-   * @throws ProfilDataException
-   * ändert alle Punkte des Profils @see setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
-   *   double value )
-   */
-  public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
-  throws ProfilDataException;
+//  public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
+//      double value ) throws ProfilDataException;
+//  /**
+//   * @param pointProperty
+//   * @param value
+//   * @throws ProfilDataException
+//   * ändert alle Punkte des Profils @see setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
+//   *   double value )
+//   */
+//  public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
+//  throws ProfilDataException;
 }
