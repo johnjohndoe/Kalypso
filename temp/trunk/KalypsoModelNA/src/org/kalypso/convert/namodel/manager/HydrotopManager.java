@@ -154,14 +154,14 @@ public class HydrotopManager extends AbstractManager
         if( fehlerinProzent > 1 ) // TODO @jessica: wieviel Prozent sollen tolleriert werden ?
         {
           System.out.println( "Fehler in den Hydrotopen!" );
-          System.out.println( "Fläche Teilgebiet (ID:" + catchmentFE.getId() + ") (" + (int)tGArea
-              + ") entspricht nicht der Summe der Hydrotopflächen (" + (int)gesFlaeche + ") Fehler : "
+          System.out.println( "Fläche Teilgebiet (ID:" + catchmentFE.getId() + ") (" + (long)tGArea
+              + ") entspricht nicht der Summe der Hydrotopflächen (" + (long)gesFlaeche + ") Fehler : "
               + fehlerinProzent + "%, diff: " + ( (int)fehler ) );
           // TODO report error to user or log file
         }
         asciiBuffer.getHydBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i4" ) );
         asciiBuffer.getHydBuffer().append(
-            " " + hydAnzahl + " " + (int)versFlaeche + " " + (int)natFlaeche + " " + (int)gesFlaeche + "\n" );
+            " " + hydAnzahl + " " + (long)versFlaeche + " " + (long)natFlaeche + " " + (long)gesFlaeche + "\n" );
 
         Iterator hydIter = hydWriteList.iterator();
         int anzHydrotope = 0;
@@ -184,10 +184,10 @@ public class HydrotopManager extends AbstractManager
     {
       HKorVersGrad = 1.0;
     }
-    int natHFlaeche = (int)( HGesFlaeche - ( HGesFlaeche * HVersGrad * HKorVersGrad ) );
+    long natHFlaeche = (long)( HGesFlaeche - ( HGesFlaeche * HVersGrad * HKorVersGrad ) );
     //  3
     StringBuffer b = new StringBuffer();
-    b.append( FortranFormatHelper.printf( Integer.toString( natHFlaeche ), "a10" ) );
+    b.append( FortranFormatHelper.printf( Long.toString( natHFlaeche ), "a10" ) );
     b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "nutz" ), "a10" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "a10" ) );
     b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_perkm" ), "*" ) );
