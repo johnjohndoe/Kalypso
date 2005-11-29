@@ -79,6 +79,19 @@
 		</Wiski>
 	</WiskiMember>
 	<WiskiMember>
+		<Wiski fid="Wiski_Q_18">
+			<lokal>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Pegel/Messung/Neugattersleben.zml" linktype="zml"/>
+			</lokal>
+			<wiski_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/Zeitreihen/.Vorlage.Neugattersleben.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" linktype="zml"/>
+			</wiski_vergangenheit>
+			<wiski_simulation_vergangenheit>
+				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/Modell/Zeitreihen/.Vorlage.Neugattersleben.zml?&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" linktype="zml"/>
+			</wiski_simulation_vergangenheit>
+		</Wiski>
+	</WiskiMember>
+	<WiskiMember>
 		<Wiski fid="Wiski_NS_0">
 			<lokal>
 				<TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="./Zeitreihen/Gebietsniederschlag/Messung_Stationen/Weferlingen.zml" linktype="zml"/>
