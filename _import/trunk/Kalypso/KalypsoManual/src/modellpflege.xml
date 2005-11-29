@@ -255,11 +255,19 @@
       <figure id="modellparameter_edit">
         <title>Ansicht zur Änderung von Modellparametern</title>
 
-        <mediaobject>
+        <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center"
                        fileref="img/modellpflege/modellparameter_edit.png"
-                       scale="35" />
+                       scale="35"  vendor="sachsen-anhalt" />
+          </imageobject>
+        </mediaobject>
+        
+        <mediaobject vendor="hh_ingenieurbueros">
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/gui/modellparameter_edit.png"
+                       scale="35" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -273,7 +281,7 @@
 
       <para>Zum Ändern von Modellparametern des ausgewählten Teilgebietes
       können die Werte in der Tabelle editiert werden. Im vorliegenden Fall
-      wird der Faktor für die Gebietsniederschläge (faktn) des ausgewählten
+      wird der Faktor für die Gebietsniederschläge des ausgewählten
       Teilgebietes auf 1,5 erhöht (siehe <xref
       linkend="modellparameter_edit_gross" />).</para>
 

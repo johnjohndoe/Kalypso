@@ -375,14 +375,19 @@
       <figure id="navigation_karten_ansicht">
         <title>Navigation in der Karten-Ansicht</title>
 
-        <screenshot>
-          <mediaobject>
+          <mediaobject vendor="sachsen-anhalt">
             <imageobject>
               <imagedata align="center" fileref="img/gui/gis_karte2.png"
-                         format="PNG" scale="45" />
+                         format="PNG" scale="45" vendor="sachsen-anhalt" />
             </imageobject>
           </mediaobject>
-        </screenshot>
+          <mediaobject vendor="hh_ingenieurbueros">
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/gui/navi_karte.png"
+                       format="PNG" scale="45" vendor="hh_ingenieurbueros" />
+          </imageobject>
+        </mediaobject>
       </figure>
 
       <para>Mit Hilfe des grünen Plus-Symbols in der Werkzeugleiste der
@@ -419,10 +424,16 @@
         Style-Editor</title>
 
         <screenshot>
-          <mediaobject>
+          <mediaobject vendor="sachsen-anhalt">
             <imageobject>
               <imagedata align="center" fileref="img/gui/style_editor.png"
-                         format="PNG" scale="45" />
+                         format="PNG" scale="45"  vendor="sachsen-anhalt" />
+            </imageobject>
+          </mediaobject>
+           <mediaobject vendor="hh_ingenieurbueros">
+            <imageobject>
+              <imagedata align="center" fileref="img/gui/style_editor_tuhh.png"
+                         format="PNG" scale="45"  vendor="hh_ingenieurbueros"/>
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -619,10 +630,18 @@
       <figure id="navigation_tabellen_ansicht">
         <title>Navigation in der Tabellen-Ansicht (Modellparameter)</title>
 
-        <mediaobject>
+        <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata align="center" fileref="img/gui/tabelle2.png"
-                       scale="45" />
+                       scale="45" vendor="sachsen-anhalt"  />
+          </imageobject>
+        </mediaobject>
+        
+        <mediaobject vendor="hh_ingenieurbueros">
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/gui/navi_tabelle.png"
+                       scale="45" vendor="hh_ingenieurbueros" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -677,7 +696,7 @@
       wird die Zeitreihe in der Tabellen-Ansicht dargestellt (siehe <xref
       linkend="navigation_tabelle_zml" />).</para>
 
-      <para><note>
+      <para vendor="sachsen-anhalt"><note>
           <para>Tabellen-Ansichten von Zeitreihen, die im sog.
           <quote>Testbetrieb</quote> erstellt wurden und dementsprechend
           markiert sind (vergl. <xref linkend="kalypso_testbetrieb" />), haben
@@ -980,7 +999,7 @@
       Diagramm-Ansicht dargestellt (siehe <xref
       linkend="navigation_diagramm_ansicht" />).</para>
 
-      <note>
+      <note vendor="sachsen-anhalt">
         <para>Diagramm-Ansichten von Zeitreihen, die im sog.
         <quote>Testbetrieb</quote> erstellt wurden und dementsprechend
         markiert sind (vergl. <xref linkend="kalypso_testbetrieb" />), haben
