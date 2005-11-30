@@ -15,7 +15,15 @@
 
 	<xsl:variable name="latex.book.begindocument">
 		<xsl:text>\usepackage{hypcap}&#10;</xsl:text>
+		<xsl:text>\usepackage{german}&#10;</xsl:text>
 		<xsl:text>\begin{document}&#10;</xsl:text>
+		<xsl:text>\hyphenation{Block-dia-gramm}&#10;</xsl:text>
+		<xsl:text>\hyphenation{Da-ten-ma-nage-ment--Prinzip}&#10;</xsl:text>
+		<xsl:text>\hyphenation{ver-ge-ben}&#10;</xsl:text>
+		<xsl:text>\hyphenation{Ab-schnitt}&#10;</xsl:text>
+		<xsl:text>\hyphenation{Vor-her-sa-ge--Assis-ten-ten}&#10;</xsl:text>
+		<xsl:text>\hyphenation{Ta-bel-len-wer-ten}&#10;</xsl:text>
+		<xsl:text>\hyphenation{In-for-ma-tions--Ma-nage-ment--Sys-tems}&#10;</xsl:text>
 	</xsl:variable>
 
 	<xsl:param name="admon.graphics.path">./img/admon</xsl:param>
@@ -49,17 +57,8 @@
 	<xsl:variable name="latex.figure.position">[hbt]</xsl:variable>
 
 	<xsl:variable name="latex.book.preamblestart">
-		\hyphenation{Daten-manage-ment-Prinzip}
-		\hyphenation{ver-ge-ben}
-		\hyphenation{Block-dia-gramm}
-		
 		\documentclass[a4paper, twoside, 12pt, draft]{book}
-		
 		\usepackage[latin1]{inputenc}
-		
-		\hyphenation{Daten-manage-ment-Prinzip}
-		\hyphenation{ver-ge-ben}
-		\hyphenation{Block-dia-gramm}
 	</xsl:variable>
 
 	<!-- Keine Striche über und unter Tabellen und Figuren -->
