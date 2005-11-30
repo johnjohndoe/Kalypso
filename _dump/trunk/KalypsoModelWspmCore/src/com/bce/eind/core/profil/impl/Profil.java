@@ -1,6 +1,7 @@
 package com.bce.eind.core.profil.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import com.bce.eind.core.profil.changes.BuildingChange;
 import com.bce.eind.core.profil.changes.DeviderChange;
 import com.bce.eind.core.profil.changes.PointChange;
 import com.bce.eind.core.profil.changes.ProfilChange;
+import com.bce.eind.core.profil.changes.AbstractChange.EventToFire;
 
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
@@ -36,7 +38,7 @@ public class Profil implements IProfil, IProfilConstants
 
     final IProfilDevider result = m_profil.addDevider( point, devider );
     fireDeviderAdded( new DeviderChange[]
-    { new DeviderChange( result, null, null ) } );
+    { new DeviderChange( null, null, devider ) } );
 
     return result;
 
@@ -50,7 +52,7 @@ public class Profil implements IProfil, IProfilConstants
     final IProfilPoint addedPoint = m_profil.addPoint( breite, hoehe );
 
     firePointsAdded( new PointChange[]
-    { new PointChange( addedPoint, null, null ) } );
+    { new PointChange( addedPoint, null, breite ) } );
 
     return addedPoint;
   }
@@ -65,7 +67,7 @@ public class Profil implements IProfil, IProfilConstants
     final PointChange[] changes = new PointChange[newProperties.length];
     for( int i = 0; i < changes.length; i++ )
     {
-      changes[i] = new PointChange( null, newProperties[i], null );
+      changes[i] = new PointChange( null, newProperties[i], 0.0 );
     }
     firePointPropertiesAdded( changes );
 
@@ -99,8 +101,6 @@ public class Profil implements IProfil, IProfilConstants
     for( final IProfilListener l : listeners )
       l.onBuildingAdded( changes );
   }
-
-  
 
   public void fireBuildingChanged( BuildingChange[] changes )
   {
@@ -296,7 +296,7 @@ public class Profil implements IProfil, IProfilConstants
     final IProfilPoint oldPkt = m_profil.moveDevider( devider, newPosition );
 
     fireDeviderChanged( new DeviderChange[]
-    { new DeviderChange( devider, null, null ) } );
+    { new DeviderChange( devider, null, newPosition ) } );
 
     return oldPkt;
   }
@@ -389,7 +389,7 @@ public class Profil implements IProfil, IProfilConstants
     m_profil.setBuilding( buildingTyp );
 
     fireBuildingAdded( new BuildingChange[]
-    { new BuildingChange( getBuilding(), null, null ) } );
+    { new BuildingChange( null, null, buildingTyp ) } );
   }
 
   /**
@@ -409,35 +409,75 @@ public class Profil implements IProfil, IProfilConstants
   public void setValueFor( final IProfilPoint point, final POINT_PROPERTY pointProperty,
       final double value ) throws ProfilDataException
   {
-    
+
     m_profil.setValueFor( point, pointProperty, value );
     firePointChanged( new PointChange[]
     { new PointChange( point, pointProperty, value ) } );
   }
 
+  public void fireEvents( HashMap<EventToFire,ArrayList<AbstractChange>> events )
+  {
+    final IProfilListener[] listeners = m_listeners
+        .toArray( new IProfilListener[m_listeners.size()] );
+    for( final IProfilListener l : listeners )
+    {
+      //TODO: Kim alles in eine klasse kapseln
+      for( EventToFire event : events.keySet() )
+      {
+        switch (event)
+        {
+        case DEVIDER_ADD  :l.onDeviderAdded(events.get(event).toArray(new DeviderChange[]{}) );
+        case DEVIDER_REMOVED:l.onDeviderRemoved(events.get(event).toArray(new DeviderChange[]{}) );
+        case DEVIDER_CHANGED:l.onDeviderChanged(events.get(event).toArray(new DeviderChange[]{}) );
+        case POINTS_ADD:l.onPointsAdded(events.get(event).toArray(new PointChange[]{}) );
+        case POINTS_REMOVED:l.onPointsRemoved(events.get(event).toArray(new PointChange[]{}) );
+        case POINTS_CHANGED:l.onPointsChanged(events.get(event).toArray(new PointChange[]{}) );
+        case BUILDING_ADD:l.onBuildingAdded(events.get(event).toArray(new BuildingChange[]{}) );
+        case BUILDING_REMOVED:l.onBuildingRemoved(events.get(event).toArray(new BuildingChange[]{}) );
+        case BUILDING_CHANGED:l.onBuildingRemoved(events.get(event).toArray(new BuildingChange[]{}) );
+        case PROFIL_CHANGED:l.onProfilDataChanged(events.get(event).toArray(new ProfilChange[]{}) );
+        case PROPERTY_ADD:l.onPointsChanged(events.get(event).toArray(new PointChange[]{}) );
+        case PROPERTY_REMOVED:l.onPointsChanged(events.get(event).toArray(new PointChange[]{}) );
+        
+        }
+      }
+    }
+  }
+
   /** Interne Methode die wirklich die Daten ändert. Schickt KEINEN event ! */
   public void setValues( final AbstractChange[] changes ) throws ProfilDataException
   {
-    m_profil.setValues( changes );
-
+    final HashMap<EventToFire,ArrayList<AbstractChange>> eventsToFire = new HashMap<EventToFire,ArrayList<AbstractChange>>();
+    for( final AbstractChange change : changes )
+    {
+      final EventToFire etf = change.doChange();
+      
+      if( !eventsToFire.containsKey( etf ) )
+       {
+        eventsToFire.put(etf,new ArrayList<AbstractChange>());
+       }
+      eventsToFire.get(etf).add(change);
+    }
+    fireEvents( eventsToFire );
   }
 
-//  public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
-//      double value ) throws ProfilDataException
-//  {
-//    final List<PointChange> changes = new ArrayList<PointChange>( pointList.size() );
-//    for( final IProfilPoint point : pointList )
-//      changes.add( new PointChange( point, pointProperty, value ) );
-//
-//    setValues( changes.toArray( new PointChange[changes.size()] ) );
-//  }
-//
-//  public void setValuesFor( POINT_PROPERTY pointProperty, double value ) throws ProfilDataException
-//  {
-//    final List<IProfilPoint> allPoints = getPoints();
-//    setValuesFor( allPoints, pointProperty, value );
-//
-//  }
+  // public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
+  // double value ) throws ProfilDataException
+  // {
+  // final List<PointChange> changes = new ArrayList<PointChange>( pointList.size() );
+  // for( final IProfilPoint point : pointList )
+  // changes.add( new PointChange( point, pointProperty, value ) );
+  //
+  // setValues( changes.toArray( new PointChange[changes.size()] ) );
+  // }
+  //
+  // public void setValuesFor( POINT_PROPERTY pointProperty, double value ) throws
+  // ProfilDataException
+  // {
+  // final List<IProfilPoint> allPoints = getPoints();
+  // setValuesFor( allPoints, pointProperty, value );
+  //
+  // }
 
   public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property, Object value )
   {
@@ -454,6 +494,16 @@ public class Profil implements IProfil, IProfilConstants
     fireBuildingChanged( new BuildingChange[]
     { new BuildingChange( building, property, value ) } );
 
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.bce.eind.core.profil.IProfil#isSpecialPoint(com.bce.eind.core.profil.IProfilPoint)
+   */
+  public boolean isSpecialPoint( IProfilPoint point )
+  {
+    return m_profil.isSpecialPoint( point );
   }
 
 }

@@ -18,10 +18,16 @@ public class DeviderChange extends AbstractChange
    * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(com.bce.eind.core.profil.IProfil)
    */
   @Override
-  public boolean doChange() throws ProfilDataException
+  public EventToFire doChange() throws ProfilDataException
   {
     ((ProfilDevider)m_object).setValueFor( m_property, m_newValue );
-    return true;
+    if( m_object == null )
+      return EventToFire.DEVIDER_ADD;
+
+    if( m_newValue == null )
+      return EventToFire.DEVIDER_REMOVED;
+
+    return EventToFire.DEVIDER_CHANGED;
   }
   /**
    * @see com.bce.eind.core.profil.changes.AbstractChange#getUndoChange()

@@ -20,7 +20,7 @@ public interface IProfilBuilding
 
   public Collection<BUILDING_PROPERTY> getBuildingProperties( );
 
-  public Object getValue( final BUILDING_PROPERTY buildingValue ) throws ProfilDataException;
+  public Object getValueFor( final BUILDING_PROPERTY buildingValue ) throws ProfilDataException;
 
   public boolean hasProperty( final BUILDING_PROPERTY profilBuildingProperty );
 

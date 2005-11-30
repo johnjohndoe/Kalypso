@@ -39,7 +39,7 @@ public class TrennerRule extends AbstractValidatorRule
 
   }
 
-  private void validate( IProfilDevider[] db, IProfilDevider[] xx,
+  private void validate( IProfilDevider[] db, IProfilDevider[] toValidate,
       final IProfil profil, final IValidatorMarkerCollector collector )
       throws CoreException
   {
@@ -47,21 +47,21 @@ public class TrennerRule extends AbstractValidatorRule
     {
       final double left = db[0].getPoint().getValueFor( POINT_PROPERTY.BREITE );
       final double right = db[1].getPoint().getValueFor( POINT_PROPERTY.BREITE );
-      final double xleft = xx[0].getPoint().getValueFor( POINT_PROPERTY.BREITE );
-      final double xright = xx[1].getPoint()
+      final double xleft = toValidate[0].getPoint().getValueFor( POINT_PROPERTY.BREITE );
+      final double xright = toValidate[1].getPoint()
           .getValueFor( POINT_PROPERTY.BREITE );
 
       if( (xleft < left) || (xleft > right) )
       {
-        collector.createProfilMarker( true, xx[0].getTyp().toString() + " ["
+        collector.createProfilMarker( true, toValidate[0].getTyp().toString() + " ["
             + String.format( IProfilConstants.FMT_STATION,  xleft )
-            + "] liegt außerhalb des Durchströmten Bereichs", "", 0, "" );
+            + "] liegt außerhalb des Durchströmten Bereichs", "", profil.getPoints().indexOf(toValidate[0].getPoint()), "" );
       }
       if( (xright < left) || (xright > right) )
       {
-        collector.createProfilMarker( true, xx[1].getTyp().toString() + " ["
+        collector.createProfilMarker( true, toValidate[1].getTyp().toString() + " ["
             + String.format( IProfilConstants.FMT_STATION,  xright )
-            + "] liegt außerhalb des Durchströmten Bereichs", "", 0, "" );
+            + "] liegt außerhalb des Durchströmten Bereichs", "", profil.getPoints().indexOf(toValidate[1].getPoint()), "" );
       }
     }
     catch( ProfilDataException e )

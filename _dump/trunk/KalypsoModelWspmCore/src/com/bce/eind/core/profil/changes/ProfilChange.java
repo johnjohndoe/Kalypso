@@ -17,10 +17,10 @@ public class ProfilChange extends AbstractChange
    * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(com.bce.eind.core.profil.IProfil)
    */
   @Override
-  public boolean doChange() throws ProfilDataException
+  public EventToFire doChange() throws ProfilDataException
   {
     ((PlainProfil)m_object).setProperty(m_property, m_newValue );
-    return true;
+    return EventToFire.PROFIL_CHANGED ;
   }
   /**
    * @see com.bce.eind.core.profil.changes.AbstractChange#getUndoChange()

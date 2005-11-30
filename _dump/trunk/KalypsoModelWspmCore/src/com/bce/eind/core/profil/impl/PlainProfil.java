@@ -40,8 +40,6 @@ public class PlainProfil implements IProfil, IProfilConstants
 
   private final ArrayList<IProfilDevider> m_devider = new ArrayList<IProfilDevider>();
 
-  // private final SortedSet<IProfilDevider> m_deviders = new TreeSet<IProfilDevider>();
-
   private final ProfilPoints m_points;
 
   private final HashMap<Object, Object> m_profilMetaData;
@@ -64,7 +62,7 @@ public class PlainProfil implements IProfil, IProfilConstants
   {
     IProfilDevider pd = new ProfilDevider( devider, point );
     m_devider.add( pd );
-    
+
     return pd;
   }
 
@@ -85,11 +83,10 @@ public class PlainProfil implements IProfil, IProfilConstants
     if( pointProperty == null )
       return null;
     final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
-    
+
     for( POINT_PROPERTY pd : depending )
       m_points.addProperty( pd );
 
-    
     return depending;
   }
 
@@ -335,7 +332,7 @@ public class PlainProfil implements IProfil, IProfilConstants
     if( pointProperty == null )
       return null;
     final POINT_PROPERTY[] depending = m_points.getDependenciesFor( pointProperty );
-    
+
     for( POINT_PROPERTY pp : depending )
     {
       m_points.removeProperty( pp );
@@ -381,13 +378,14 @@ public class PlainProfil implements IProfil, IProfilConstants
    */
   public void setValues( final AbstractChange[] changes ) throws ProfilDataException
   {
+   
     for( final AbstractChange change : changes )
     {
-     //final IProfilPoint point = change.getPoint();
-      //if( !m_points.contains( point ) )
-       // throw new ProfilDataException( "Profilpunkt exisitiert nicht: " + point );
-change.doChange();
-     // ((ProfilPoint)point).setValueFor( change.getProperty(), change.getNewValue() );
+      // final IProfilPoint point = change.getPoint();
+      // if( !m_points.contains( point ) )
+      // throw new ProfilDataException( "Profilpunkt exisitiert nicht: " + point );
+      change.doChange();
+      // ((ProfilPoint)point).setValueFor( change.getProperty(), change.getNewValue() );
     }
   }
 
@@ -398,23 +396,25 @@ change.doChange();
   public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
       double value ) throws ProfilDataException
   {
-    final List<PointChange> changes = new ArrayList<PointChange>( pointList.size() );
+    final PointChange[] changes = new PointChange[pointList.size()];
+    int i = 0;
     for( final IProfilPoint point : pointList )
-      changes.add( new PointChange( point, pointProperty, value ) );
-
-    setValues( changes.toArray( new PointChange[changes.size()] ) );
+    {
+      changes[i++] = new PointChange( point, pointProperty, value ) ;
+    }
+    setValues( changes );
   }
 
-  /**
-   * @see com.bce.eind.core.profil.IProfil#setValuesFor(com.bce.eind.core.profil.POINT_PROPERTY,
-   *      double)
-   */
-  public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
-      throws ProfilDataException
-  {
-    final List<IProfilPoint> allPoints = getPoints();
-    setValuesFor( allPoints, pointProperty, value );
-  }
+//  /**
+//   * @see com.bce.eind.core.profil.IProfil#setValuesFor(com.bce.eind.core.profil.POINT_PROPERTY,
+//   *      double)
+//   */
+//  public void setValuesFor( final POINT_PROPERTY pointProperty, final double value )
+//      throws ProfilDataException
+//  {
+//    final List<IProfilPoint> allPoints = getPoints();
+//    setValuesFor( allPoints, pointProperty, value );
+//  }
 
   public void setValueFor( final IProfilPoint point, final POINT_PROPERTY pointProperty,
       final double value ) throws ProfilDataException
@@ -429,10 +429,11 @@ change.doChange();
 
   }
 
-  public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value ) throws ProfilDataException
+  public void setValueFor( final IProfilBuilding building, final BUILDING_PROPERTY property,
+      final Object value ) throws ProfilDataException
   {
-    ((AbstractBuilding)building).setValue(property,value);
-    
+    ((AbstractBuilding)building).setValue( property, value );
+
   }
 
   // KIM: warum gibt es das IPlainProfil nicht mehr?
@@ -444,5 +445,18 @@ change.doChange();
   public void removeProfilListener( IProfilListener pl )
   {
     // diese methode soll hier nicht existieren
+  }
+
+  /**
+   * @see com.bce.eind.core.profil.IProfil#isSpecialPoint(com.bce.eind.core.profil.IProfilPoint)
+   */
+  public boolean isSpecialPoint( IProfilPoint point )
+  {
+       final IProfilDevider[] deviders = getDevider(DEVIDER_TYP.values());
+       for (IProfilDevider devider :deviders)
+       {
+         if (devider.getPoint() == point) return true;
+       }
+       return false;
   }
 }

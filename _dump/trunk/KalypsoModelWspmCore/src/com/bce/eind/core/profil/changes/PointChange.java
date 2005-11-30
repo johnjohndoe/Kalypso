@@ -12,16 +12,30 @@ public final class PointChange extends AbstractChange
   {
     super( p, property, newValue );
   }
+
   /**
    * @throws ProfilDataException
    * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(com.bce.eind.core.profil.IProfil)
    */
   @Override
-  public boolean doChange() throws ProfilDataException
+  public EventToFire doChange( ) throws ProfilDataException
   {
     ((ProfilPoint)m_object).setValueFor( (POINT_PROPERTY)m_property, (Double)m_newValue );
-    return true;
+    if( m_property != null )
+    {
+      if( m_object == null )
+
+        return EventToFire.POINTS_CHANGED;
+      if( m_newValue == null )
+        return EventToFire.PROPERTY_REMOVED;
+      return EventToFire.PROPERTY_ADD;
+    }
+    if( m_newValue == null )
+      return EventToFire.POINTS_REMOVED;
+
+    return EventToFire.POINTS_ADD;
   }
+
   /**
    * @throws ProfilDataException
    * @see com.bce.eind.core.profil.changes.AbstractChange#getUndoChange()

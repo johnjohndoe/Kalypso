@@ -19,10 +19,17 @@ public class BuildingChange extends AbstractChange
    * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(com.bce.eind.core.profil.IProfil)
    */
   @Override
-  public boolean doChange() throws ProfilDataException
+  public EventToFire doChange( ) throws ProfilDataException
   {
     ((AbstractBuilding)m_object).setValue( (BUILDING_PROPERTY)m_property, m_newValue );
-    return true;
+
+    if( m_property != null )
+      return EventToFire.BUILDING_CHANGED;
+
+    if( m_object == null )
+      return EventToFire.BUILDING_ADD;
+
+    return EventToFire.BUILDING_REMOVED;
   }
 
   /**
@@ -33,7 +40,7 @@ public class BuildingChange extends AbstractChange
   {
     final IProfilBuilding b = (IProfilBuilding)m_object;
     final BUILDING_PROPERTY bp = (BUILDING_PROPERTY)m_property;
-    final Object oldValue = b.getValue( bp );
+    final Object oldValue = b.getValueFor( bp );
     return new BuildingChange( b, bp, oldValue );
   }
 

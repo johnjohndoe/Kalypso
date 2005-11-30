@@ -42,7 +42,7 @@ public abstract class AbstractBuilding implements IProfilBuilding
    *      TYPE)
    *      return maybe Null
    */
-  public Object getValue( BUILDING_PROPERTY buildingValue ) throws ProfilDataException
+  public Object getValueFor( BUILDING_PROPERTY buildingValue ) throws ProfilDataException
   {
     if( m_buildingValues.containsKey( buildingValue ) )
       return m_buildingValues.get( buildingValue );

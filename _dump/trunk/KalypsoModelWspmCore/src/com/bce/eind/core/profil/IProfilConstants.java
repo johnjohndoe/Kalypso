@@ -13,12 +13,5 @@ public interface IProfilConstants
   
   
 
-  /** alle möglichen Trenner eines Profils */
-  
-  /** alle möglichen Rauheiten eines Profils */
- 
-
-  
-
  
 }

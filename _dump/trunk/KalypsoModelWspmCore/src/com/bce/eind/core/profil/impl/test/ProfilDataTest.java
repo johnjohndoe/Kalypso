@@ -115,7 +115,7 @@ public class ProfilDataTest extends TestCase
     p.setValueFor( firstPkt, POINT_PROPERTY.UNTERKANTEBRUECKE, 1000.23456 );
     p.setValueFor(p.getBuilding(), BUILDING_PROPERTY.PFEILERFORM, 0.5 );
     p.setValueFor(p.getBuilding(),BUILDING_PROPERTY.RAUHEIT, 5.5 );
-    assertEquals( "Pfeiler Formbeiwert:", 0.5, p.getBuilding().getValue(
+    assertEquals( "Pfeiler Formbeiwert:", 0.5, p.getBuilding().getValueFor(
         BUILDING_PROPERTY.PFEILERFORM ) );
     assertEquals( "Hoehe Unterkante: ", 1000.23456, firstPkt
         .getValueFor( POINT_PROPERTY.UNTERKANTEBRUECKE ) );
