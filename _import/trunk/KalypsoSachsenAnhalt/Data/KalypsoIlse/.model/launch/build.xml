@@ -38,7 +38,6 @@
     	<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startsim" featurepath="ControlAssociation" featureProperty="startsimulation" />
 			<property name="startforecast" featurepath="ControlAssociation" featureProperty="startforecast"/>
-			<property name="stopsim_48" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="48" dateoffsetfield="${HOURS_OF_DAY}" />
 			<property name="stopsim_120" featurepath="ControlAssociation" featureProperty="startforecast" dateoffset="120" dateoffsetfield="${HOURS_OF_DAY}" />
 			<property name="scenarioId" featurepath="ScenarioAssociation" featureProperty="scenarioId" defaultValue=""/>
 		</kalypso.gmlProperty>
@@ -69,7 +68,7 @@
 							targetcontext="${calc.url}" 
 							from="${startsim}" 
 							forecastfrom="${startforecast}" 
-							to="${stopsim_48}" />
+							to="${stopsim_120}" />
 		<!--
 		Das Argument targetmapping="C:\\TMP\\testMapping.gml" in der 
 		gmlweight-Task bewirkt, dass der Filter als GML an die angegebene Stelle
@@ -81,33 +80,29 @@
           target: update              
          ================================= -->
 
-	<target name="update" depends="calculationProperties" description="Holt die Zeitreihen vom Zeitreihendienst">
+	<target name="update" depends="calculationProperties,cleanupErgebnisse" description="Holt die Zeitreihen vom Zeitreihendienst">
 
 		<echo message="Zeitreihen aktualisieren: ${calc.dir}" />
 		<echo message="Zeitreihen werden von WISKI geladen" />
 		
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_48}"/>
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gesamt.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_120}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung_120_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
 			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_messung_48_h_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${startforecast}"/>
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+			<source property="${wiski_vergangenheit_link}" from="${startforecast}" to="${stopsim_120}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="${wiski_vergangenheit_link}" from="${startforecast}" to="${stopsim_48}"/>
-			<metadata name="Szenario" value="${scenarioId}"/>
-		</kalypso.copyObservation>
-
-		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_48}">
-			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_48}"/>
+		<!-- leere Zeitreihen für den Gebietsniederschlag über den Gesamtzeitraum -->
+		<kalypso.copyObservation gml="${project.url}/.templates/Modell/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}">
+			<source property="${wiski_vergangenheit_link}" from="${startsim}" to="${stopsim_120}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
@@ -115,6 +110,17 @@
 		<antcall target="gebietsniederschlag" />
 	</target>
 
+	<!-- ================================= 
+          target: cleanupErgebnisse              
+         ================================= -->
+	<target name="cleanupErgebnisse" description="Löscht frühere Ergebnisse">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${calc.dir}/Zeitreihen/Pegel/Vorhersage" includes="*/**" />
+			<fileset dir="${calc.dir}/Zeitreihen/Speicher/Vorhersage" includes="*/**" />
+			<fileset dir="${calc.dir}/Zeitreihen/Speicherzufluss" includes="*/**" />
+			<fileset dir="${calc.dir}/Log-Dateien" includes="*/**" />
+		</delete>
+	</target>
 
 	<!-- ================================= 
           target: runCalculation              
@@ -173,8 +179,8 @@
         <echo message="Vorhersagezeitreihen werden exportiert"/>
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
 
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose_Q.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose_W.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose_Q_V.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false"/>
+    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.templates/Modell/wiskiexport_prognose_W.gml" localobs="lokal" remoteobs="${wiski_zukunft_link}" runasync="false" ignoreIllegalFeaturePath="true"/>
     </target>
 
 	<!-- ================================= 
