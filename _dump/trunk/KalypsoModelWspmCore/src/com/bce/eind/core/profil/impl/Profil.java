@@ -100,15 +100,7 @@ public class Profil implements IProfil, IProfilConstants
       l.onBuildingAdded( changes );
   }
 
-  /**
-   * @param changes
-   *          TODO
-   * @see com.bce.eind.core.profilinterface.IProfil#getPoint(double, double)
-   */
-  /*
-   * public IProfilPoint getPoint( final double breite, final double hoehe ) { return
-   * m_profil.getPoint( breite, hoehe ); }
-   */
+  
 
   public void fireBuildingChanged( BuildingChange[] changes )
   {

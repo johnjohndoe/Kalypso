@@ -1,7 +1,5 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
-import com.bce.eind.core.profil.changes.AbstractChange;
 import com.bce.eind.core.profil.changes.BuildingChange;
 import com.bce.eind.core.profil.changes.DeviderChange;
 import com.bce.eind.core.profil.changes.PointChange;
