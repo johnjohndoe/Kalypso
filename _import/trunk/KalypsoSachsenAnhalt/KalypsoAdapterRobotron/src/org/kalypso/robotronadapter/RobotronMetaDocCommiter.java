@@ -175,7 +175,8 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       final String ret = (String)call.invoke( new Object[]
       { docs, metadataXml } );
 
-      LOG.info( "IMS.commitDocument returned. Duration (ms)= " + ( System.currentTimeMillis() - dBegin ) );
+      final String msg = ret.length() > 0 ? " \"" + ret + "\"" : "";
+      LOG.info( "IMS.commitDocument returned" + msg + ". Duration (ms)= " + ( System.currentTimeMillis() - dBegin ) );
 
       if( ret.length() > 0 )
         throw new MetaDocException( "Die IMS-Dokumentenablage hat einen Fehler verursacht: " + ret );
