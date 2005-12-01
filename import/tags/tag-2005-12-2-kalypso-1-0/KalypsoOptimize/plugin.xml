@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.optimize"
+   name="KalypsoOptimizePlugin"
+   version="1.0.0"
+   provider-name="kalypso.org">
+   <runtime>
+      <library name="kalypsoOptimize.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/optimizerBinding.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.kalypso.core" export="true"/>
+      <import plugin="org.kalypso.jwsdp" export="true"/>
+      <import plugin="org.kalypso.services.calculation.local" export="true"/>
+   </requires>
+
+</plugin>
