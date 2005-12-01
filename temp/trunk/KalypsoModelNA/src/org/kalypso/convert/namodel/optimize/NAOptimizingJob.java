@@ -125,8 +125,9 @@ public class NAOptimizingJob implements IOptimizingJob
 
   public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far";
 
-  private int m_counter=0;
-  private int m_bestNumber=0;
+  private int m_counter = 0;
+
+  private int m_bestNumber = 0;
 
   public NAOptimizingJob( File tmpDir, final ICalcDataProvider dataProvider, ICalcMonitor monitor ) throws Exception
   {
@@ -220,7 +221,7 @@ public class NAOptimizingJob implements IOptimizingJob
       m_bestOptimizeRunDir = m_lastOptimizeRunDir;
       m_bestResultEater = m_lastResultEater;
       m_bestOptimizedFile = m_lastOptimizedFile;
-      m_bestNumber=m_counter;
+      m_bestNumber = m_counter;
     }
     else
     {
@@ -355,13 +356,15 @@ public class NAOptimizingJob implements IOptimizingJob
    */
   public void publishResults( ICalcResultEater resultEater ) throws CalcJobServiceException
   {
+    if( m_bestResultEater == null )
+      return;
     for( Iterator iter = m_bestResultEater.keySet().iterator(); iter.hasNext(); )
     {
       String id = (String)iter.next();
       resultEater.addResult( id, (File)m_bestResultEater.get( id ) );
     }
     resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
-    System.out.println("best was #"+m_bestNumber);
+    System.out.println( "best was #" + m_bestNumber );
   }
 
   /**

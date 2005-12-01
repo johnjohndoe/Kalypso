@@ -75,6 +75,7 @@ import org.apache.commons.io.CopyUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
@@ -112,7 +113,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.obslink.TimeseriesLink;
-import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -307,10 +307,10 @@ public class NaModelInnerCalcJob implements ICalcJob
       logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction
           + " [cm/Tag] als Vorhersagegenauigkeit angenommen." );
     }
-    Object accuracyProp = rootFeature.getProperty( "accuracyPrediction" );
-    if(accuracyProp==null)
-      return;
-    accuracyPrediction = ( (Double)accuracyProp ).doubleValue();
+    // Object accuracyProp = rootFeature.getProperty( "accuracyPrediction" );
+    //    if(accuracyProp==null)
+    //      return;
+    //    accuracyPrediction = ( (Double)accuracyProp ).doubleValue();
 
     final Date startPrediction = conf.getSimulationForecastStart();
     final Date endPrediction = conf.getSimulationEnd();
@@ -326,7 +326,19 @@ public class NaModelInnerCalcJob implements ICalcJob
     final IObservation resultObservation = ZmlFactory.parseXML( resultURL, "vorhersage" );
     final ITuppleModel resultValues = resultObservation.getValues( null );
     final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( resultObservation.getAxisList(), Date.class );
-    final IAxis resultValueAxis = ObservationUtilities.findAxisByType( resultObservation.getAxisList(), axisType );
+
+    final IAxis resultValueAxis;
+    try
+    {
+      resultValueAxis = ObservationUtilities.findAxisByType( resultObservation.getAxisList(), axisType );
+    }
+    catch( Exception e )
+    {
+      logger.info( "Umhüllende kann nicht berechnet werden: Ursache: das Ergenis (" + resultObservation.getName()
+          + ") kann nicht als Wasserstand berechnet werden. Möglicherweise ungültige WQ-Beziehung am Messpegel." );
+      throw e;
+    }
+
     double calcValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
         startPrediction );
 
@@ -939,7 +951,6 @@ public class NaModelInnerCalcJob implements ICalcJob
     {
       logger.info( "konnte Umhüllende nicht generieren, evt. keine WQ-Informationen vorhanden , Fehler: "
           + e.getLocalizedMessage() );
-      e.printStackTrace();
     }
     loadTextFileResults( tmpdir, logger, resultDir );
     loadLogs( tmpdir, logger, resultEater );
@@ -1339,7 +1350,7 @@ public class NaModelInnerCalcJob implements ICalcJob
     // Flaechen .qvs, Basisabfluss .qbs, Kluftgrundw1 .qt1, Kluftgrundw .qtg, Grundwasser .qgw
     if( suffix.equalsIgnoreCase( "qgs" ) | suffix.equalsIgnoreCase( "qgg" ) | suffix.equalsIgnoreCase( "qna" )
         | suffix.equalsIgnoreCase( "qif" ) | suffix.equalsIgnoreCase( "qvs" ) | suffix.equalsIgnoreCase( "qbs" )
-        | suffix.equalsIgnoreCase( "qt1" ) | suffix.equalsIgnoreCase( "qtg" )|suffix.equalsIgnoreCase( "qgw" ))
+        | suffix.equalsIgnoreCase( "qt1" ) | suffix.equalsIgnoreCase( "qtg" ) | suffix.equalsIgnoreCase( "qgw" ) )
       return "Abfluss";
     //    n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) )
@@ -1510,6 +1521,32 @@ public class NaModelInnerCalcJob implements ICalcJob
   }
 
   private void startCalculation( final File basedir, final ICalcMonitor monitor ) throws CalcJobServiceException
+  {
+    final File exeFile = new File( basedir, m_kalypsoKernelPath );
+    final File exeDir = exeFile.getParentFile();
+    final String commandString = exeFile.getAbsolutePath();
+    long timeOut = 1000l * 60l * 10l; // max 10 minutes
+    PrintWriter logWriter = null;
+    PrintWriter errorWriter = null;
+    try
+    {
+      logWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.log" ) ) );
+      errorWriter = new PrintWriter( new FileWriter( new File( basedir, "exe.err" ) ) );
+      ProcessHelper.startProcess( commandString, new String[0], exeDir, monitor, timeOut, logWriter, errorWriter );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( logWriter );
+      IOUtils.closeQuietly( errorWriter );
+    }
+  }
+
+  private void startCalculationOld( final File basedir, final ICalcMonitor monitor ) throws CalcJobServiceException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
