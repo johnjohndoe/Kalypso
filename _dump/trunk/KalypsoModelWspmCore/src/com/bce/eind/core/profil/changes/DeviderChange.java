@@ -1,13 +1,24 @@
 package com.bce.eind.core.profil.changes;
 
 import com.bce.eind.core.profil.IProfilDevider;
+import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
+import com.bce.eind.core.profil.impl.PlainProfil;
 import com.bce.eind.core.profil.impl.devider.ProfilDevider;
 
 public class DeviderChange extends AbstractChange
 {
 
+  /**
+   * @see com.bce.eind.core.profil.changes.AbstractChange#fireEvent(com.bce.eind.core.profil.IProfilListener)
+   */
+  @Override
+  public void fireEvent( IProfilListener listener )
+  {
+    listener.onDeviderChanged(this);
+    
+  }
   public DeviderChange( final IProfilDevider devider, final DEVIDER_PROPERTY property,
       final Object newValue )
   {
@@ -15,19 +26,15 @@ public class DeviderChange extends AbstractChange
   }
   /**
    * @throws ProfilDataException
-   * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(com.bce.eind.core.profil.IProfil)
+   * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
   @Override
-  public EventToFire doChange() throws ProfilDataException
+  public void doChange(PlainProfil profil) throws ProfilDataException
   {
-    ((ProfilDevider)m_object).setValueFor( m_property, m_newValue );
-    if( m_object == null )
-      return EventToFire.DEVIDER_ADD;
-
-    if( m_newValue == null )
-      return EventToFire.DEVIDER_REMOVED;
-
-    return EventToFire.DEVIDER_CHANGED;
+    final ProfilDevider d = (ProfilDevider)m_object;
+    m_oldValue = d.getValueFor(m_property);
+    d.setValueFor( m_property, m_newValue );
+  
   }
   /**
    * @see com.bce.eind.core.profil.changes.AbstractChange#getUndoChange()
@@ -37,7 +44,6 @@ public class DeviderChange extends AbstractChange
   {
     final IProfilDevider d = (IProfilDevider)m_object;
     final DEVIDER_PROPERTY dp = (DEVIDER_PROPERTY)m_property;
-    final Object oldValue = d.getValueFor( dp );
-    return new DeviderChange( d, dp, oldValue );
+    return new DeviderChange( d, dp, m_oldValue );
   }
 }

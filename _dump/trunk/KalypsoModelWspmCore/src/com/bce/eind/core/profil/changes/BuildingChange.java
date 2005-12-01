@@ -1,8 +1,10 @@
 package com.bce.eind.core.profil.changes;
 
 import com.bce.eind.core.profil.IProfilBuilding;
+import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
+import com.bce.eind.core.profil.impl.PlainProfil;
 import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 
 public class BuildingChange extends AbstractChange
@@ -16,20 +18,24 @@ public class BuildingChange extends AbstractChange
 
   /**
    * @throws ProfilDataException
-   * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(com.bce.eind.core.profil.IProfil)
+   * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
   @Override
-  public EventToFire doChange( ) throws ProfilDataException
+  public void doChange(final PlainProfil profil ) throws ProfilDataException
   {
-    ((AbstractBuilding)m_object).setValue( (BUILDING_PROPERTY)m_property, m_newValue );
+    final AbstractBuilding b = (AbstractBuilding)m_object;
+    final BUILDING_PROPERTY bp = (BUILDING_PROPERTY)m_property;
+    m_oldValue = b.getValueFor( bp );
+    b.setValue( bp, m_newValue );
+  }
 
-    if( m_property != null )
-      return EventToFire.BUILDING_CHANGED;
-
-    if( m_object == null )
-      return EventToFire.BUILDING_ADD;
-
-    return EventToFire.BUILDING_REMOVED;
+  /**
+   * @see com.bce.eind.core.profil.changes.AbstractChange#fireEvent(com.bce.eind.core.profil.IProfilListener)
+   */
+  @Override
+  public void fireEvent( IProfilListener listener )
+  {
+    listener.onBuildingChanged( this );
   }
 
   /**
@@ -40,8 +46,7 @@ public class BuildingChange extends AbstractChange
   {
     final IProfilBuilding b = (IProfilBuilding)m_object;
     final BUILDING_PROPERTY bp = (BUILDING_PROPERTY)m_property;
-    final Object oldValue = b.getValueFor( bp );
-    return new BuildingChange( b, bp, oldValue );
+    return new BuildingChange( b, bp, m_oldValue );
   }
 
 }

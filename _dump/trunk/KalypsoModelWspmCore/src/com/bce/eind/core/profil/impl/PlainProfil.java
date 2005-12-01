@@ -384,7 +384,7 @@ public class PlainProfil implements IProfil, IProfilConstants
       // final IProfilPoint point = change.getPoint();
       // if( !m_points.contains( point ) )
       // throw new ProfilDataException( "Profilpunkt exisitiert nicht: " + point );
-      change.doChange();
+      change.doChange(null);
       // ((ProfilPoint)point).setValueFor( change.getProperty(), change.getNewValue() );
     }
   }

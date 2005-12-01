@@ -1,12 +1,24 @@
 package com.bce.eind.core.profil.changes;
 
+import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
+import com.bce.eind.core.profil.impl.PlainProfil;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
 
 public final class PointChange extends AbstractChange
 {
+
+  /**
+   * @see com.bce.eind.core.profil.changes.AbstractChange#fireEvent(com.bce.eind.core.profil.IProfilListener)
+   */
+  @Override
+  public void fireEvent( IProfilListener listener )
+  {
+    listener.onPointsChanged(this);
+    
+  }
 
   public PointChange( final IProfilPoint p, final POINT_PROPERTY property, final Double newValue )
   {
@@ -15,25 +27,16 @@ public final class PointChange extends AbstractChange
 
   /**
    * @throws ProfilDataException
-   * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(com.bce.eind.core.profil.IProfil)
+   * @see com.bce.eind.core.profil.changes.AbstractChange#doChange(PlainProfil)
    */
   @Override
-  public EventToFire doChange( ) throws ProfilDataException
+  public void doChange(PlainProfil profil ) throws ProfilDataException
   {
-    ((ProfilPoint)m_object).setValueFor( (POINT_PROPERTY)m_property, (Double)m_newValue );
-    if( m_property != null )
-    {
-      if( m_object == null )
-
-        return EventToFire.POINTS_CHANGED;
-      if( m_newValue == null )
-        return EventToFire.PROPERTY_REMOVED;
-      return EventToFire.PROPERTY_ADD;
-    }
-    if( m_newValue == null )
-      return EventToFire.POINTS_REMOVED;
-
-    return EventToFire.POINTS_ADD;
+    final ProfilPoint p = (ProfilPoint)m_object;
+    final POINT_PROPERTY pp=(POINT_PROPERTY)m_property;
+    m_oldValue = p.getValueFor(pp);
+    p.setValueFor(pp , (Double)m_newValue );
+    
   }
 
   /**
@@ -45,7 +48,6 @@ public final class PointChange extends AbstractChange
   {
     final IProfilPoint p = (IProfilPoint)m_object;
     final POINT_PROPERTY pp = (POINT_PROPERTY)m_property;
-    final Double oldValue = p.getValueFor( pp );
-    return new PointChange( p, pp, oldValue );
+    return new PointChange( p, pp, (Double)m_oldValue );
   }
 }

@@ -190,7 +190,7 @@ public interface IProfil
 
   public void setValueFor(IProfilPoint point,POINT_PROPERTY property, double value) throws ProfilDataException;
  
-  public void setValueFor(IProfilDevider devider,DEVIDER_PROPERTY property,Object value);
+  public void setValueFor(IProfilDevider devider,DEVIDER_PROPERTY property,Object value) throws ProfilDataException;
   
   public void setValueFor(final IProfilBuilding building,final BUILDING_PROPERTY property,final Object value) throws ProfilDataException;
   public boolean isSpecialPoint(final IProfilPoint point);

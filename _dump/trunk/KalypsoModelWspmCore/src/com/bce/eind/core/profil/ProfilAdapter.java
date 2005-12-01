@@ -1,9 +1,6 @@
 package com.bce.eind.core.profil;
 
-import com.bce.eind.core.profil.changes.BuildingChange;
-import com.bce.eind.core.profil.changes.DeviderChange;
-import com.bce.eind.core.profil.changes.PointChange;
-import com.bce.eind.core.profil.changes.ProfilChange;
+import com.bce.eind.core.profil.changes.AbstractChange;
 
 
 /**
@@ -15,9 +12,9 @@ public class ProfilAdapter implements IProfilListener
   
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onBuildingAdded(com.bce.eind.core.profil.changes.BuildingChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingAdded(AbstractChange)
    */
-  public void onBuildingAdded( BuildingChange[] changes )
+  public void onBuildingAdded( AbstractChange change )
   {
    
     
@@ -25,9 +22,9 @@ public class ProfilAdapter implements IProfilListener
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onBuildingRemoved(com.bce.eind.core.profil.changes.BuildingChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingRemoved(AbstractChange)
    */
-  public void onBuildingRemoved( BuildingChange[] changes )
+  public void onBuildingRemoved( AbstractChange change )
   {
    
     
@@ -35,9 +32,9 @@ public class ProfilAdapter implements IProfilListener
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onDeviderAdded(com.bce.eind.core.profil.changes.DeviderChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderAdded(AbstractChange)
    */
-  public void onDeviderAdded( DeviderChange[] changes )
+  public void onDeviderAdded( AbstractChange change )
   {
    
     
@@ -45,9 +42,9 @@ public class ProfilAdapter implements IProfilListener
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(com.bce.eind.core.profil.changes.DeviderChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderChanged(AbstractChange)
    */
-  public void onDeviderChanged( DeviderChange[] changes )
+  public void onDeviderChanged( AbstractChange change )
   {
    
     
@@ -55,9 +52,9 @@ public class ProfilAdapter implements IProfilListener
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onDeviderRemoved(com.bce.eind.core.profil.changes.DeviderChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onDeviderRemoved(AbstractChange)
    */
-  public void onDeviderRemoved( DeviderChange[] changes )
+  public void onDeviderRemoved( AbstractChange change )
   {
   
     
@@ -65,9 +62,9 @@ public class ProfilAdapter implements IProfilListener
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesAdded(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesAdded(AbstractChange)
    */
-  public void onPointPropertiesAdded( PointChange[] changes )
+  public void onPointPropertiesAdded( AbstractChange change )
   {
  
     
@@ -75,9 +72,9 @@ public class ProfilAdapter implements IProfilListener
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesRemoved(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointPropertiesRemoved(AbstractChange)
    */
-  public void onPointPropertiesRemoved( PointChange[] changes )
+  public void onPointPropertiesRemoved( AbstractChange change )
   {
  
     
@@ -85,36 +82,36 @@ public class ProfilAdapter implements IProfilListener
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onPointsAdded(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointsAdded(AbstractChange)
    */
-  public void onPointsAdded( PointChange[] changes )
+  public void onPointsAdded( AbstractChange change )
   {
       
   }
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onPointsChanged(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointsChanged(AbstractChange)
    */
-  public void onPointsChanged( PointChange[] changes )
+  public void onPointsChanged( AbstractChange change )
   {
         
   }
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onPointsRemoved(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onPointsRemoved(AbstractChange)
    */
-  public void onPointsRemoved( PointChange[] changes )
+  public void onPointsRemoved( AbstractChange change )
   {
      
   }
 
   /**
    * Does nothing.
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilDataChanged(com.bce.eind.core.profil.changes.ProfilChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilDataChanged(AbstractChange)
    */
-  public void onProfilDataChanged( ProfilChange[] changes )
+  public void onProfilDataChanged( AbstractChange change )
   {
        
   }
@@ -124,9 +121,9 @@ public class ProfilAdapter implements IProfilListener
   /**
    * Does nothing.
    * 
-   * @see com.bce.eind.core.profil.IProfilListener#onBuildingChanged(BuildingChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onBuildingChanged(AbstractChange)
    */
-  public void onBuildingChanged( BuildingChange[] changes )
+  public void onBuildingChanged( AbstractChange change )
   {
   }
 
