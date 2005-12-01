@@ -112,7 +112,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
           source.append( "#" ).append( WfsLoader.KEY_FEATURETYPE ).append( "=" ).append( layer );
           if( xml != null )
             source.append( "#" ).append( WfsLoader.KEY_FILTER ).append( "=" ).append( xml );
-          final int maxfeatures = 10;
+          final int maxfeatures = 5000;
           if( maxfeatures != WfsLoader.MAXFEATURE_UNBOUNDED )
             source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append(
                 Integer.toString( maxfeatures ) );

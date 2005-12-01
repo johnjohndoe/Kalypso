@@ -225,14 +225,23 @@ public class ResourceBundle extends java.util.ResourceBundle
       {
         throw new FileNotFoundException( filename );
       }
-      
-      // TODO: macht das sinn? 
+
+      // TODO: macht das sinn?
       // das lesen past nicht zum Format der resource-dateien
       // so wie hier gelesen wird, muss die Dateilänge am Anfang stehen
       // meistens sinds aber einfache properties-dateien
-      // Das ganze resultiert in einem OutOfMemoryError in der übernächsten zeile
+      // FIXME Das ganze resultiert in einem OutOfMemoryError in der übernächsten zeile
       final DataInputStream input = new DataInputStream( new BufferedInputStream( in ) );
-      values = new String[input.readInt()];
+
+      //      values = new String[input.readInt()];
+      // hackfix: the resources files i have seen do not have more than 8 lines, so restrict to 100 might be a good
+      // hackfix for the moment and I do not want to spend time on this, better upgrade to the original deegree2.jar
+      // soon (doemming)
+      int maxValues = input.readInt();
+      if( maxValues > 100 )
+        maxValues = 100;
+      values = new String[maxValues];
+
       for( int i = 0; i < values.length; i++ )
       {
         values[i] = input.readUTF();

@@ -30,6 +30,10 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -108,6 +112,10 @@ public class ImportWmsWizardPage extends WizardPage
 
   /** current selected base url */
   private URL m_baseURL = null;
+
+  protected boolean m_urlModified = false;
+
+  Combo m_urlCombo;
 
   /**
    *  
@@ -308,26 +316,27 @@ public class ImportWmsWizardPage extends WizardPage
       catalog = new ArrayList();
     // fill base-url-combo
     final String[] baseURLItems = (String[])catalog.toArray( new String[catalog.size()] );
-    final Combo urlCombo = new Combo( fieldGroup, SWT.BORDER );
-    urlCombo.setItems( baseURLItems );
-    urlCombo.setVisibleItemCount( 15 );
-    urlCombo.setLayoutData( gridData );
-    urlCombo.addSelectionListener( new SelectionListener()
+    m_urlCombo = new Combo( fieldGroup, SWT.BORDER );
+    m_urlCombo.setItems( baseURLItems );
+    m_urlCombo.setVisibleItemCount( 15 );
+    m_urlCombo.setLayoutData( gridData );
+
+    m_urlCombo.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
       {
-        final String urlText = urlCombo.getText();
+        //        System.out.println( "selected" );
+        final String urlText = m_urlCombo.getText();
         updateAllFromURLText( urlText );
       }
 
       public void widgetDefaultSelected( SelectionEvent e )
       {
       // nothing
-
       }
     } );
 
-    urlCombo.addFocusListener( new FocusListener()
+    m_urlCombo.addFocusListener( new FocusListener()
     {
       public void focusGained( FocusEvent e )
       {
@@ -336,11 +345,38 @@ public class ImportWmsWizardPage extends WizardPage
 
       public void focusLost( FocusEvent e )
       {
-      //        final String urlText = urlCombo.getText();
-      //        updateAllFromURLText( urlText );
+        //        System.out.println( "focusLost" );
+        final String urlText = m_urlCombo.getText();
+        updateAllFromURLText( urlText );
       }
     } );
-    urlCombo.select( 0 );
+    m_urlCombo.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        m_urlModified = true;
+      }
+    } );
+    m_urlCombo.addKeyListener( new KeyListener()
+    {
+      public void keyPressed( KeyEvent e )
+      {
+      // nothing
+      }
+
+      public void keyReleased( KeyEvent e )
+      {
+        // TODO use constant for 13 KeyCode
+        if( e.keyCode == 13 )
+        {
+          System.out.println( "keycode CR" );
+          final String urlText = m_urlCombo.getText();
+          updateAllFromURLText( urlText );
+        }
+      }
+    } );
+
+    m_urlCombo.select( 0 );
 
     //    // add spacer
     //    final Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
@@ -375,7 +411,7 @@ public class ImportWmsWizardPage extends WizardPage
       final URL urlGetCapabilities = new URL( service.toString() + "?SERVICE=WMS&REQUEST=GetCapabilities" );
 
       // TODO set timeout somewhere
-      int timeOut = 10000;
+      int timeOut = 20000;
       final InputStream inputStream = getFromURL( urlGetCapabilities, timeOut );
       final Reader reader = new InputStreamReader( inputStream );
 
@@ -425,12 +461,18 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * @param urlText
    */
-  protected void updateAllFromURLText( String urlText )
+  protected void updateAllFromURLText( final String urlText )
   {
+    if( !m_urlModified )
+      return;
+    m_urlModified = false;
     setErrorMessage( null );
     setMessage( "" );
     setPageComplete( false );
     boolean valid = true;
+    if( m_capabilitiesTree == null )
+      return;
+    m_urlCombo.setEnabled( false );
     m_capabilitiesTree.setInput( null );
     m_selectedLayers.setInput( new ArrayList() );
     final URL baseURL = validateURLField( urlText );
@@ -452,6 +494,7 @@ public class ImportWmsWizardPage extends WizardPage
     m_baseURL = baseURL;
     m_capabilitiesTree.setInput( capabilites );
     m_layerSelection.setVisible( valid );
+    m_urlCombo.setEnabled( true );
   }
 
   /**
@@ -575,7 +618,7 @@ public class ImportWmsWizardPage extends WizardPage
           }
           catch( Exception e )
           {
-            statusText = "waiting to start";
+            statusText = "Verbinde ...";
           }
           monitor.setTaskName( statusText );
           monitor.internalWorked( IProgressMonitor.UNKNOWN );

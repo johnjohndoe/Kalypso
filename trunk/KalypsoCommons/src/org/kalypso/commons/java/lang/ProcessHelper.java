@@ -58,7 +58,8 @@ public class ProcessHelper
    * @param envp
    * @param fleExeDir
    * @param cancelable
-   * @param lTimeOut Time-out in milliseconds
+   * @param lTimeOut
+   *          Time-out in milliseconds
    * @param wLog
    * @param wErr
    * 
@@ -68,6 +69,7 @@ public class ProcessHelper
   public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir,
       final ICancelable cancelable, final long lTimeOut, final Writer wLog, final Writer wErr ) throws IOException,
       ProcessTimeoutException
+
   {
     final Process process;
     int iRetVal = -1;
@@ -78,6 +80,7 @@ public class ProcessHelper
     try
     {
       process = Runtime.getRuntime().exec( sCmd, envp, fleExeDir );
+
       if( lTimeOut > 0 )
       {
         procCtrlThread = new ProcessControlThread( process, lTimeOut );

@@ -21,3 +21,11 @@ wms=http://www.geoserver.nrw.de/GeoOgcWms1.3/servlet/DGK5
 wms=http://www.geoserver.nrw.de/GeoOgcWms1.3/servlet/NW2
 wms=http://www.gis2.nrw.de/wmsconnector/wms/luftbild
 wms=http://www.gis.nrw.de/wms/DGM50?LAYERS=DGM50
+wms=http://www.landesvermessung.sachsen.de/ias/basiskarte/service/SRVDOPFREE/WMSFREE_TK/wmsservice
+wms=http://wms.telascience.org/cgi-bin/katrina_ows
+wms=http://iceds.ge.ucl.ac.uk/cgi-bin/icedswms
+wms=http://maps1.intergraph.com/wms/world/request.asp
+wms=http://193.159.218.162/GeoOgcWms1.3/servlet/GEPNRW
+
+
+

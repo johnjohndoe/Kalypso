@@ -81,7 +81,7 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractFeatureType impl
     final Float yv = (Float)feature.getProperty( PROP_YVELOCITY );
     if( xv == null || srcP == null || yv == null )
       return null;
-    double factor = 10;
+    double factor = 0.1;
 
     final GM_Point targetP = GeometryFactory.createGM_Point( srcP.getX() + factor * xv.floatValue(), srcP.getY()
         + factor * yv.floatValue(), srcP.getCoordinateSystem() );

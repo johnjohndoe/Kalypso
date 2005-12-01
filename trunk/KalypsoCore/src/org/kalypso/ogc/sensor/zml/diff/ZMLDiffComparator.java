@@ -50,6 +50,8 @@ import org.xml.sax.InputSource;
  */
 public class ZMLDiffComparator implements IDiffComparator
 {
+  public ZMLDiffComparator()
+  {}
 
   private double m_tollerance = 0.01;
 
@@ -154,47 +156,47 @@ public class ZMLDiffComparator implements IDiffComparator
     return result;
   }
 
-//  /**
-//   * @param logger
-//   * @param axisList
-//   * @param axisList2
-//   */
-//  private boolean diffAxis( IDiffLogger logger, IAxis[] axisList, IAxis[] axisList2 )
-//  {
-//    final List list1 = new ArrayList();
-//    final List list2 = new ArrayList();
-//    for( int i = 0; i < axisList.length; i++ )
-//      list1.add( axisList[i].getName() + ":" + axisList[i].getType() + ":" + axisList[i].getUnit() + ":"
-//          + axisList[i].getClass().getName() );
-//    for( int i = 0; i < axisList2.length; i++ )
-//      list2.add( axisList2[i].getName() + ":" + axisList2[i].getType() + ":" + axisList2[i].getUnit() + ":"
-//          + axisList2[i].getClass().getName() );
-//    return DiffUtils.diffIgnoreOrder( logger, list1, list2, " Axen " );
-//  }
+  //  /**
+  //   * @param logger
+  //   * @param axisList
+  //   * @param axisList2
+  //   */
+  //  private boolean diffAxis( IDiffLogger logger, IAxis[] axisList, IAxis[] axisList2 )
+  //  {
+  //    final List list1 = new ArrayList();
+  //    final List list2 = new ArrayList();
+  //    for( int i = 0; i < axisList.length; i++ )
+  //      list1.add( axisList[i].getName() + ":" + axisList[i].getType() + ":" + axisList[i].getUnit() + ":"
+  //          + axisList[i].getClass().getName() );
+  //    for( int i = 0; i < axisList2.length; i++ )
+  //      list2.add( axisList2[i].getName() + ":" + axisList2[i].getType() + ":" + axisList2[i].getUnit() + ":"
+  //          + axisList2[i].getClass().getName() );
+  //    return DiffUtils.diffIgnoreOrder( logger, list1, list2, " Axen " );
+  //  }
 
-//  /**
-//   * 
-//   * @param logger
-//   * @param metadataList
-//   * @param metadataList2
-//   * @return diff
-//   */
-//  private boolean diffMetadata( IDiffLogger logger, MetadataList metadataList, MetadataList metadataList2 )
-//  {
-//    List list1 = new ArrayList();
-//    List list2 = new ArrayList();
-//    for( Iterator iter = metadataList.keySet().iterator(); iter.hasNext(); )
-//    {
-//      final String key = (String)iter.next();
-//      final String property = metadataList.getProperty( key );
-//      list1.add( key + " = " + property );
-//    }
-//    for( Iterator iter = metadataList2.keySet().iterator(); iter.hasNext(); )
-//    {
-//      final String key = (String)iter.next();
-//      final String property = metadataList2.getProperty( key );
-//      list2.add( key + " = " + property );
-//    }
-//    return DiffUtils.diffIgnoreOrder( logger, list1, list2, "Metadaten" );
-//  }
+  //  /**
+  //   *
+  //   * @param logger
+  //   * @param metadataList
+  //   * @param metadataList2
+  //   * @return diff
+  //   */
+  //  private boolean diffMetadata( IDiffLogger logger, MetadataList metadataList, MetadataList metadataList2 )
+  //  {
+  //    List list1 = new ArrayList();
+  //    List list2 = new ArrayList();
+  //    for( Iterator iter = metadataList.keySet().iterator(); iter.hasNext(); )
+  //    {
+  //      final String key = (String)iter.next();
+  //      final String property = metadataList.getProperty( key );
+  //      list1.add( key + " = " + property );
+  //    }
+  //    for( Iterator iter = metadataList2.keySet().iterator(); iter.hasNext(); )
+  //    {
+  //      final String key = (String)iter.next();
+  //      final String property = metadataList2.getProperty( key );
+  //      list2.add( key + " = " + property );
+  //    }
+  //    return DiffUtils.diffIgnoreOrder( logger, list1, list2, "Metadaten" );
+  //  }
 }

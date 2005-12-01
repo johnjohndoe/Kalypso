@@ -74,7 +74,14 @@ import org.deegree_impl.services.OGCWebServiceEvent_Impl;
 import org.deegree_impl.services.wms.RemoteWMService;
 import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
 import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.schema.XMLHelper;
@@ -123,10 +130,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   private WMSCapabilities m_wmsCaps;
 
   /** buffered image */
-  private Image m_buffer = null;
+  Image m_buffer = null;
 
   /** envelope of buffered image (local SRS) */
-  private GM_Envelope m_bufferEnvLocalSRS = null;
+  GM_Envelope m_bufferEnvLocalSRS = null;
 
   /** temporary locked request bbox to aviod multi requests on same bbox */
   private GM_Envelope m_lockRequestEnvLocalSRS = null;
@@ -134,6 +141,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
   private int m_lastWidth;
 
   private int m_lastHeight;
+
+  final protected static ISchedulingRule m_jobMutexRule = new MutexSchedulingRule();
 
   public KalypsoWMSTheme( final String linktype, final String themeName, final String source,
       final CS_CoordinateSystem localSRS )
@@ -146,7 +155,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     m_localSRS = localSRS;
     m_source = source;
 
-    // TODO: maybe do this in a thread
     try
     {
       final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
@@ -259,35 +267,36 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
         final OGCWebServiceResponse response = ( (OGCWebServiceEvent)responseEvent ).getResponse();
         if( !( response instanceof WMSGetMapResponse ) )
           return;
-        try
+        if( isObsolete( targetEnvLocalSRS ) )
+          return;
+        final Job renderJob = new Job( "loading map from WMS " + getName() )
         {
-          final RenderedImage resultImage = (RenderedImage)( (WMSGetMapResponse)response ).getMap();
-          final PlanarImage remoteImage = PlanarImage.wrapRenderedImage( resultImage );
-          if( isObsolete( targetEnvLocalSRS ) )
-            return;
 
-          setImage( new TiledImage( remoteImage, true ), targetEnvLocalSRS, width, height, geoTransformToLocalSRS );
-
-        }
-        catch( Exception e )
-        {
-          final Document wmsException = ( (WMSGetMapResponse)response ).getException();
-          if( wmsException != null )
+          /**
+           * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+           */
+          protected IStatus run( IProgressMonitor monitor )
           {
-            System.out.println( "OGC_WMS_Exception:\n" + XMLHelper.toString( wmsException ) );
-            // TODO @christoph: hier wir ein image mit der Gauss-Krüger BBOX
-            // aufgemacht, das gibt sofort eine out of memory exception
-
-            //            int width = (int)m_requestedBBox.getWidth();
-            //            int height = (int)m_requestedBBox.getHeight();
-            //
-            //            final BufferedImage image = new BufferedImage( width, height,
-            // BufferedImage.TYPE_INT_ARGB );
-            //            final Graphics gr = image.getGraphics();
-            //            gr.drawString( "OGC_WMS_Exception:\n" + XMLHelper.toString(
-            // wmsException ), width / 2, height / 2 );
+            try
+            {
+              final RenderedImage resultImage = (RenderedImage)( (WMSGetMapResponse)response ).getMap();
+              if( resultImage == null )
+                return StatusUtilities.createErrorStatus( "Fehler bei laden vom WMS " + KalypsoWMSTheme.this.getName()
+                    + "\n das Thema sollte unsichtbar geschaltet werden" );
+              final PlanarImage remoteImage = PlanarImage.wrapRenderedImage( resultImage );
+              setImage( new TiledImage( remoteImage, true ), targetEnvLocalSRS, width, height, geoTransformToLocalSRS );
+              return Status.OK_STATUS;
+            }
+            catch( Exception e )
+            {
+              return StatusUtilities.statusFromThrowable( e, "Fehler bei laden vom WMS "
+                  + KalypsoWMSTheme.this.getName() + "\n das Thema sollte unsichtbar geschaltet werden" );
+            }
           }
-        }
+        };
+
+        renderJob.setRule( m_jobMutexRule );
+        renderJob.schedule();
       }
 
       private boolean isObsolete( GM_Envelope envLocalSRS )
@@ -352,10 +361,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
    * @param width
    * @param height
    * @param geoTransform
+   * @throws Exception
    */
   protected synchronized void setImage( final TiledImage image, final GM_Envelope targetEnvLocalSRS, final int width,
-      final int height, final GeoTransform geoTransform )
+      final int height, final GeoTransform geoTransform ) throws Exception
   {
+
     try
     {
       final Image buffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
@@ -370,7 +381,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
     {
       m_buffer = null;
       m_bufferEnvLocalSRS = null;
-      e.printStackTrace();
+      throw e;
+      // TODO set theme invisible
     }
     // inform to paint new image
     fireModellEvent( null );
@@ -449,7 +461,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme
           final StringBuffer result = new StringBuffer();
           final String featureInfo = featureInfoResponse.getFeatureInfo();
           if( featureInfo != null )
+          {
+            //              String xsl="";
+            //              
+            //            XMLHelper.xslTransform(new InputSource(featureInfo), null);
             result.append( featureInfo );
+          }
           else
             result.append( " keine oder fehlerhafte Antwort vom Server" );
           final Document exception = featureInfoResponse.getException();

@@ -30,6 +30,8 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,7 +51,7 @@ import org.deegree.services.wfs.capabilities.GetFeature;
 import org.deegree.services.wfs.capabilities.Request;
 import org.deegree.services.wfs.capabilities.WFSCapabilities;
 import org.deegree_impl.services.wfs.capabilities.WFSCapabilitiesFactory;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -78,7 +80,7 @@ public class WFSUtilities
       final String maxFeatureAsString )
   {
     final StringBuffer sb = new StringBuffer();
-    final int maxFeatures = 10;
+//    final int maxFeatures = 5000;
 
     sb.append( "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" );// iso-8859-1
     sb.append( "<wfs:GetFeature outputFormat=\"GML2\"" );
@@ -86,7 +88,7 @@ public class WFSUtilities
     sb.append( " xmlns:wfs=\"http://www.opengis.net/wfs\"" );
     sb.append( " xmlns:ogc=\"http://www.opengis.net/ogc\"" );
     if( maxFeatureAsString != null && maxFeatureAsString.length() > 0 )
-      sb.append( " maxFeatures=\"" + maxFeatures + "\"" );
+      sb.append( " maxFeatures=\"" + maxFeatureAsString + "\"" );
     sb.append( " >\n" );
     sb.append( "<wfs:Query typeName=\"" + featureTypeToLoad + "\">\n" );
     if( filter != null && filter.length() > 0 )
@@ -168,11 +170,11 @@ public class WFSUtilities
         inputStream = new BufferedInputStream( con.getInputStream() );
 
         // Hack for testing
-        //        final File tmpFile = new File( "C:\\TMP\\test.txt" );
-        //        final OutputStream outStream = new FileOutputStream( tmpFile );
-        //        StreamUtilities.streamCopy( inputStream, outStream );
-        //        IOUtils.closeQuietly( inputStream );
-        //        IOUtils.closeQuietly( outStream );
+//                final File tmpFile = new File( "C:\\TMP\\test.txt" );
+//                final OutputStream outStream = new FileOutputStream( tmpFile );
+//                StreamUtilities.streamCopy( inputStream, outStream );
+//                IOUtils.closeQuietly( inputStream );
+//                IOUtils.closeQuietly( outStream );
 
         final URL schemaURL = createDescribeFeatureTypeRequestURL( baseURL, featureTypeToLoad );
         final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, schemaURL );
