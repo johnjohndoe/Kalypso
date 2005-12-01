@@ -66,7 +66,7 @@ import com.braju.format.Format;
 
 /**
  * 
- * class CoordinateInfoWidget
+ * class WMSGetFeatureInfoWidget
  * 
  * created by
  * 
@@ -85,8 +85,6 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   private Point m_movePoint = null;
 
   private final String COORD_FORMAT = "%10.4f";
-
-  //  private IKalypsoTheme m_lastActiveTheme;
 
   public WMSGetFeatureInfoWidget( String name, String toolTip )
   {
@@ -224,11 +222,8 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
             Format.fprintf( pw, COORD_FORMAT, new Double[]
             { y1 } );
           }
-          //          if( message != null )
-          //          {
           pw.print( "\n Information vom WebMapServer:" );
-          pw.print( "\n " + message );
-          //          }
+          pw.print( "\n " + message );          
         }
         catch( Exception e )
         {

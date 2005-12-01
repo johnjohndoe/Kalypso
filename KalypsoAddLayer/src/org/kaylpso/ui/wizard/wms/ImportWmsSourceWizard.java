@@ -195,16 +195,12 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     ArrayList catalog = new ArrayList();
     BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
     String line = br.readLine();
-    do
+    while( line != null )
     {
       if( line.startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
         catalog.add( ( line.split( "=" ) )[1] );
-
       line = br.readLine();
     }
-    // FIXME
-    // Christoph: das ist ne endlosschleife!
-    while( line != null );
 
     m_catalog = catalog;
   }
