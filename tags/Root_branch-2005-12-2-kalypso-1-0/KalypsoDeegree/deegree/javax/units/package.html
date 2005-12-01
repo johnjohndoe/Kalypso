@@ -1,0 +1,268 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+  <HEAD>
+    <TITLE>package javax.units</TITLE>
+  </HEAD>
+  <BODY>
+    <P align="justify">Placeholder for future <code>javax.units</code> package.
+    <STRONG>THIS TEMPORARY PACKAGE WILL BE FULLY DELETED WHEN THE REAL
+    <A HREF="http://www.jcp.org/jsr/detail/108.jsp">JSR-108: Units specification</A>
+    WILL BE PUBLICLY AVAILABLE. THE REAL JSR-108 SPECIFICATION <U>WILL</U> BE
+    INCOMPATIBLE WITH THIS TEMPORARY IMPLEMENTATION.</STRONG></P>
+
+    <P>&nbsp;</P>
+    <P>&nbsp;</P>
+    <HR>
+    <P>&nbsp;</P>
+<p align="justify">Classes repr&eacute;sentant des unit&eacute;s.
+Les classes de ce paquet servent &agrave; satisfaire une r&egrave;gle d'or en science, qui veut que l'on &eacute;crive toujours les unit&eacute;s d'une valeur.
+Pour un programme informatique, il n'est pas satisfaisant de repr&eacute;senter des unit&eacute;s par une simple cha&icirc;ne de caract&egrave;res (par exemple
+"°C"), car alors l'ordinateur ne saurait pas comment faire les conversions entre diff&eacute;rentes unit&eacute;s (par exemple de "°F" vers "°C").
+La classe {@link javax.units.Unit} est un moyen plus efficace de repr&eacute;senter une unit&eacute;. Un objet {@link javax.units.Unit} est
+capable par exemple de convertir une valeur &agrave; partir d'une autre unit&eacute;.</p>
+
+<p align="justify">On peut obtenir un objet {@link javax.units.Unit} &agrave; partir de son symbole. Par exemple le code
+<code>{@link javax.units.Unit#get(String) Unit.get}("°C")</code> retournera un objet {@link javax.units.Unit} qui repr&eacute;sente
+les degr&eacute;s celcius. Le tableau ci-dessous &eacute;num&egrave;re les unit&eacute;s reconnues par d&eacute;faut. La plupart des d&eacute;finitions ci-dessous proviennent de
+la documentation officielle du <a href="http://www.bipm.fr/">bureau international des poids et mesures</a>. Les symboles apparaissant
+dans ce tableau sont les symboles officiels pour ces unit&eacute;s, sauf ceux qui sont marqu&eacute;s d'un ast&eacute;rix (*).</p>
+
+<CENTER><table border="4" cellpadding="6" cellspacing="0" bgcolor="#FEECD8">
+<tr><td align="center" bgcolor="#FFFFFF" colspan="2"><br><br><font face="Arial" size="5"><strong>Unit&eacute;s de base</strong></font><br></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> m       </td><td><font size="2">Unit&eacute; de longueur (metre). Le m&egrave;tre est la longueur du trajet parcouru dans le vide par la lumi&egrave;re pendant une dur&eacute;e de 1/299&nbsp;792&nbsp;458 de seconde.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> kg      </td><td><font size="2">Unit&eacute; de masse (klogramme). Le kilogramme est l'unit&eacute; de masse; il est &eacute;gal &agrave; la masse du prototype international du kilogramme.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> s       </td><td><font size="2">Unit&eacute; de temps (seconde). La seconde est la dur&eacute;e de 9&nbsp;192&nbsp;631&nbsp;770 p&eacute;riodes de la radiation correspondant &agrave; la transition entre les deux niveaux hyperfins de l'&eacute;tat fonda-mental de l'atome de c&eacute;sium 133. Cette d&eacute;finition se r&eacute;f&egrave;re &agrave; un atome de c&eacute;sium au repos, &agrave; une temp&eacute;rature de 0 K.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> A       </td><td><font size="2">Unit&eacute; de courant &eacute;lectrique (amp&egrave;re). L'amp&egrave;re est l'intensit&eacute; d'un courant constant qui, maintenu dans deux conducteurs parall&egrave;les, rectilignes, de longueur infinie, de section circulaire n&eacute;gligeable et plac&eacute;s &agrave; une distance de 1 m&egrave;tre l'un de l'autre dans le vide, produirait entre ces conducteurs une force &eacute;gale &agrave; 2x10<sup>-7</sup> newton par m&egrave;tre de longueur.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> K       </td><td><font size="2">Unit&eacute; de temp&eacute;rature thermodynamique (kelvin). Le kelvin, unit&eacute; de temp&eacute;rature thermodynamique, est la fraction 1/273,16 de la temp&eacute;rature thermodynamique du point triple de l'eau. La valeur num&eacute;rique d'une temp&eacute;rature Celsius <var>t</var> exprim&eacute;e en degr&eacute;s Celsius est donn&eacute;e par la relation: t/°C&nbsp;=&nbsp;T/K&nbsp;-&nbsp;273,15.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> mol     </td><td><font size="2">Unit&eacute; de quantit&eacute; de mati&egrave;re (mole). La mole est la quantit&eacute; de mati&egrave;re d'un syst&egrave;me contenant autant d'entit&eacute;s &eacute;l&eacute;mentaires qu'il y a d'atomes dans 0,012 kilogramme de carbone 12; son symbole est «&nbsp;mol&nbsp;». Lorsqu'on emploie la mole, les entit&eacute;s &eacute;l&eacute;mentaires doivent &ecirc;tre sp&eacute;cifi&eacute;es et peuvent &ecirc;tre des atomes, des mol&eacute;cules, des ions, des &eacute;lectrons, d'autres particules ou des groupements sp&eacute;cifi&eacute;s de telles particules.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> cd      </td><td><font size="2">Unit&eacute; d'intensit&eacute; lumineuse (candela). La candela est l'intensit&eacute; lumineuse, dans une direction donn&eacute;e, d'une source qui &eacute;met un rayonnement monochromatique de fr&eacute;quence 540x10<sup>12</sup> Hertz et dont l'intensit&eacute; &eacute;nerg&eacute;tique dans cette direction est 1/683 watt par st&eacute;radian.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> rad     </td><td><font size="2">Unit&eacute; d'angle plan (radian). The radian is the plane angle between two radii of a circle that cut off on the circumference an arc equal in length to the radius.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> sr      </td><td><font size="2">Unit&eacute; d'angle solide (st&eacute;radian).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> PSS78*  </td><td><font size="2">Unit&eacute; de la salinit&eacute; de l'eau de mer. Pour &ecirc;tre strict, les mesures de salinit&eacute;s n'ont aucune unit&eacute; puisqu'elles sont calcul&eacute;es &agrave; partir d'un rapport de conductivit&eacute;. Mais il est toutefois pratique de consid&eacute;rer la salinit&eacute; comme si elle avait une unit&eacute;, afin de rendre plus facile certaines v&eacute;rifications et conversions.</font></td></tr>
+
+<tr><td align="center" bgcolor="#FFFFFF" colspan="2"><br><br><font face="Arial" size="5"><strong>Unit&eacute;s d&eacute;riv&eacute;es</strong></font><br></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Hz      </td><td><font size="2">Unit&eacute; de fr&eacute;quence (Hertz&nbsp;=&nbsp;1/s).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> N       </td><td><font size="2">Unit&eacute; de force (Newton). L'unit&eacute; de force [dans le syst&egrave;me MKS (m&egrave;tre, kilogramme, seconde)] est la force qui communique &agrave; une masse de 1 kilogramme l'acc&eacute;l&eacute;ration de 1 m&egrave;tre par seconde, par seconde.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Pa      </td><td><font size="2">Unit&eacute; de pression (Pascal&nbsp;=&nbsp;N/m&sup2;).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> J       </td><td><font size="2">Unit&eacute; d'&eacute;nergie ou de travail (Joule&nbsp;=&nbsp;N*m). Le joule est le travail effectu&eacute; lorsque le point d'application de 1 unit&eacute; MKS de force [newton] se d&eacute;place d'une distance &eacute;gale &agrave; 1 m&egrave;tre dans la direction de la force.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> W       </td><td><font size="2">Unit&eacute; de puissance (Watt&nbsp;=&nbsp;J/s). Le watt est la puissance qui donne lieu &agrave; une production d'&eacute;nergie &eacute;gale &agrave; 1 joule par seconde.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> C       </td><td><font size="2">Unit&eacute; de quantit&eacute; d'&eacute;lectricit&eacute; (C). Le coulomb est la quantit&eacute; d'&eacute;lectricit&eacute; transport&eacute;e en 1 seconde par un courant de 1 amp&egrave;re.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> V       </td><td><font size="2">Unit&eacute; de diff&eacute;rence de potentiel et de force &eacute;lectromotrice (Volt&nbsp;=&nbsp;W/A). Le volt est la diff&eacute;rence de potentiel &eacute;lectrique qui existe entre deux points d'un fil conducteur transportant un courant constant de 1 amp&egrave;re, lorsque la puissance dissip&eacute;e entre ces points est &eacute;gale &agrave; 1 watt.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> F       </td><td><font size="2">Unit&eacute; de capacit&eacute; &eacute;lectrique (Farad&nbsp;=&nbsp;C/V). Le farad est la capacit&eacute; d'un condensateur &eacute;lectrique entre les armatures duquel appara&icirc;t une diff&eacute;rence de potentiel &eacute;lectrique de 1 volt, lorsqu'il est charg&eacute; d'une quantit&eacute; d'&eacute;lectricit&eacute; &eacute;gale &agrave; 1 coulomb.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> \u03A9  </td><td><font size="2">Unit&eacute; de r&eacute;sistance &eacute;lectrique (Ohm&nbsp;=&nbsp;V/A). L'ohm est la r&eacute;sistance &eacute;lectrique qui existe entre deux points d'un conducteur lorsqu'une diff&eacute;rence de potentiel constante de 1 volt, appliqu&eacute;e entre ces deux points, produit, dans ce conducteur, un courant de 1 amp&egrave;re, ce conducteur n'&eacute;tant le si&egrave;ge d'aucune force &eacute;lectromotrice.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> S       </td><td><font size="2">Unit&eacute; de conductance &eacute;lectrique (Siemmens&nbsp;=&nbsp;A/V).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Wb      </td><td><font size="2">Unit&eacute; de flux magn&eacute;tique (Weber&nbsp;=&nbsp;V*s). Le weber est le flux magn&eacute;tique qui, traversant un circuit d'une seule spire, y produirait une force &eacute;lectromotrice de 1 volt, si on l'amenait &agrave; z&eacute;ro en 1 seconde par d&eacute;croissance uniforme.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> T       </td><td><font size="2">Unit&eacute; d'induction magn&eacute;tique (Tesla&nbsp;=&nbsp;Wb/m&sup2;).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> H       </td><td><font size="2">Unit&eacute; d'inductance &eacute;lectrique (H&nbsp;=&nbsp;Wb/A). Le henry est l'inductance &eacute;lectrique d'un circuit ferm&eacute; dans lequel une force &eacute;lectromotrice de 1 volt est produite lorsque le courant &eacute;lectrique qui parcourt le circuit varie uniform&eacute;ment &agrave; raison de 1 amp&egrave;re par seconde.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> °C      </td><td><font size="2">Unit&eacute; de temp&eacute;rature (Celcius). Notez que cette unit&eacute; ne peut pas &ecirc;tre multipli&eacute;e ou divis&eacute;e par d'autres unit&eacute;s. Par exemple il ne sera pas possible d'exprimer un gradient de temp&eacute;rature en °C/m. Il faudra au lieu de cela utiliser les degr&eacute;s Kelvin (K/m).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> lm      </td><td><font size="2">Unit&eacute; de flux lumineux (Lumen&nbsp;=&nbsp;cd*sr).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> lx      </td><td><font size="2">Unit&eacute; d'&eacute;clairement lumineux (Lux&nbsp;=&nbsp;lm/m&sup2;).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Bq      </td><td><font size="2">Unit&eacute; d'activit&eacute; d'un radionucl&eacute;ide (Becquerel&nbsp;=&nbsp;1/s)</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Gy      </td><td><font size="2">Unit&eacute; des dose absorb&eacute;e, &eacute;nergie massique (communiqu&eacute;e), kerma (Gray&nbsp;=&nbsp;J/kg).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Sv      </td><td><font size="2">Unit&eacute; des &eacute;quivalent de dose, &eacute;quivalent de dose ambiant, &eacute;quivalent de dose directionnel, &eacute;quivalent de dose individuel, dose &eacute;quivalente dans un organe (Sievert&nbsp;=&nbsp;J/kg).</font></td></tr>
+
+<tr><td align="center" bgcolor="#FFFFFF" colspan="2"><br><br><font face="Arial" size="5"><strong>Unit&eacute;s Non-SI</strong></font><br></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> min     </td><td><font size="2">Minute.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> h       </td><td><font size="2">Heure.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> d       </td><td><font size="2">Jour.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> °       </td><td><font size="2">Degr&eacute; d'angle.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> '       </td><td><font size="2">Minute d'angle.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> &quot   </td><td><font size="2">Seconde d'angle.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> l ou L  </td><td><font size="2">Litre.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> t       </td><td><font size="2">Tonne m&eacute;trique.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Np      </td><td><font size="2">Unit&eacute; logarithmique. Le neper est utilis&eacute; pour exprimer la valeur de grandeurs logarithmiques telles que le niveau de champ, le niveau de puissance, le niveau de pression acoustique ou le d&eacute;cr&eacute;ment logarithmique. Les logarithmes naturels sont utilis&eacute;s pour obtenir les valeurs num&eacute;riques des grandeurs exprim&eacute;es en nepers. <strong>Note: cette unit&eacute; n'est pas encore impl&eacute;ment&eacute;e dans la version actuelle.</strong></font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Bel     </td><td><font size="2">Unit&eacute; logarithmique. Le bel est utilis&eacute; pour exprimer la valeur de grandeurs logarithmiques telles que le niveau de champ, le niveau de puissance, le niveau de pression acoustique ou l'att&eacute;nuation. Les logarithmes de base dix sont utilis&eacute;s pour obtenir les valeurs num&eacute;riques de grandeurs exprim&eacute;es en bels. Le sous-multiple d&eacute;cibel, dB, est d'usage courant. <strong>Note: cette unit&eacute; n'est pas encore impl&eacute;ment&eacute;e dans la version actuelle.</strong></font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> eV      </td><td><font size="2">L'&eacute;lectronvolt est l'&eacute;nergie cin&eacute;tique acquise par un &eacute;lectron apr&egrave;s travers&eacute;e d'une diff&eacute;rence de potentiel de 1V dans le vide.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> u       </td><td><font size="2">L'unit&eacute; de masse atomique unifi&eacute;e est &eacute;gale &agrave; 1/12 de la masse d'un atome du nucl&eacute;ide 12 C, non li&eacute;, au repos, et dans son &eacute;tat fondamental. Dans le domaine de la biochimie, l'unit&eacute; de masse atomique unifi&eacute;e est aussi appel&eacute;e dalton, symbole Da.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> ua      </td><td><font size="2">L'unit&eacute; astronomique est une unit&eacute; de longueur; sa valeur est &agrave; peu pr&egrave;s &eacute;gale &agrave; la distance moyenne entre la Terre et le soleil. Elle est telle que, lorsqu'elle est utilis&eacute;e pour d&eacute;crire les mouvements des corps dans le syst&egrave;me solaire, la constante gravitationnelle h&eacute;liocentrique est de (0,017&nbsp;202&nbsp;09895)<sup>2</sup>ua<sup>3</sup>·d<sup>-2</sup>.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> inch*   </td><td><font size="2">Unit&eacute; de longueur (pouce).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> foot*   </td><td><font size="2">Unit&eacute; de longueur (pied).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> yard*   </td><td><font size="2">Unit&eacute; de longueur (yard).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> fathom* </td><td><font size="2">Unit&eacute; de longueur (brasse anglaise).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> brasse* </td><td><font size="2">Unit&eacute; de longueur (brasse française).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> mile*   </td><td><font size="2">Unit&eacute; de longueur (mille).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> nmile*  </td><td><font size="2">Unit&eacute; de longueur (mille marin). Le mille marin est une unit&eacute; sp&eacute;ciale employ&eacute;e en navigation maritime et a&eacute;rienne pour exprimer la distance. Cette valeur fut adopt&eacute;e par convention par la Premi&egrave;re Conf&eacute;rence hydrographique internationale extraordinaire, Monaco, 1929, sous le nom de «mille marin international». Il n'existe pas de symbole convenu au niveau international. &Agrave; l'origine, cette unit&eacute; avait &eacute;t&eacute; choisie parce qu'un mille marin &agrave; la surface de la Terre est intercept&eacute; approximativement par une minute d'angle au centre de la Terre.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> knot*   </td><td><font size="2">Noeud (vitesse correspondant &agrave; un mille marin par heure).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> are     </td><td><font size="2">Les unit&eacute;s are et hectare et leurs symboles furent adopt&eacute;s parle Comit&eacute; international en 1879 (PV, 1879, 41) et sont utilis&eacute;s pour exprimer des superficies agraires.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> ha      </td><td><font size="2">Les unit&eacute;s are et hectare et leurs symboles furent adopt&eacute;s parle Comit&eacute; international en 1879 (PV, 1879, 41) et sont utilis&eacute;s pour exprimer des superficies agraires.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> bar     </td><td><font size="2">Unit&eacute; de pression (bar). La pression en milieu oc&eacute;anographique augmente d'environ 1&nbsp;dbar par m&egrave;tre de profondeur.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Å       </td><td><font size="2">Unit&eacute; de longueur (ångstr&ouml;m).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> barn    </td><td><font size="2">Le barn est une unit&eacute; sp&eacute;ciale employ&eacute;e en physique nucl&eacute;aire pour exprimer les sections efficaces.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> erg     </td><td><font size="2">Unit&eacute; d'&eacute;nergie (erg).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> dyn     </td><td><font size="2">Unit&eacute; de force (dyne).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> P       </td><td><font size="2">Poise.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> St      </td><td><font size="2">Stokes.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> G       </td><td><font size="2">Gauss.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Oe      </td><td><font size="2">oersted.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Mx      </td><td><font size="2">maxwell.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> sb      </td><td><font size="2">stilb.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> ph      </td><td><font size="2">phot.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> gal     </td><td><font size="2">Le gal est une unit&eacute; sp&eacute;ciale employ&eacute;e en g&eacute;od&eacute;sie et en g&eacute;ophysique pour exprimer l'acc&eacute;l&eacute;ration due &agrave; la pesanteur.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Ci      </td><td><font size="2">Le curie est une unit&eacute; sp&eacute;ciale employ&eacute;e en physique nucl&eacute;aire pour exprimer l'activit&eacute; des radionucl&eacute;ides.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> R       </td><td><font size="2">Le r&ouml;ntgen est une unit&eacute; sp&eacute;ciale employ&eacute;e pour exprimer l'exposition aux rayonnements x ou gamma.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> rd      </td><td><font size="2">Le rad est une unit&eacute; sp&eacute;ciale employ&eacute;e pour exprimer la dose absorb&eacute;e de rayonnements ionisants.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> rem     </td><td><font size="2">Le rem est une unit&eacute; sp&eacute;ciale employ&eacute;e en radioprotection pour exprimer l'&eacute;quivalent de dose.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Jy      </td><td><font size="2">jansky.</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> Torr    </td><td><font size="2">Unit&eacute; de pression (torr).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> atm     </td><td><font size="2">Unit&eacute; de pression (atmosph&egrave;re normale).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> pounds* </td><td><font size="2">Unit&eacute; de poids (livre).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> onze*   </td><td><font size="2">Unit&eacute; de poids (onze).</font></td></tr>
+<tr><td align="center" bgcolor="#FFBE9F"> °F*     </td><td><font size="2">Unit&eacute; de temp&eacute;rature (fahrenheit).</font></td></tr>
+</table></CENTER>
+
+<blockquote>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Ce symbole n'est pas standard.
+</blockquote>
+
+<p align=justify>La plupart des unit&eacute;s SI peuvent aussi &ecirc;tre pr&eacute;c&eacute;des d'un pr&eacute;fix. Par exemple si le symbole
+"Pa" d&eacute;signe les pascals, alors le symbole "kPa" sera reconnu comme d&eacute;signant les kilopascals. Le tableau
+ci-dessous &eacute;num&egrave;re les pr&eacute;fix standards du syst&egrave;me SI.</p>
+
+<CENTER><TABLE BORDER CELLSPACING=1 CELLPADDING=7 WRAP="nowrap" bgcolor="#FEECD8">
+<TR>
+    <TD WIDTH="15%" bgcolor="#FFBE9F"><B>Facteur</B></TD>
+    <TD WIDTH="15%" bgcolor="#FFBE9F"><B>Pr&eacute;fix</B></TD>
+    <TD WIDTH="15%" bgcolor="#FFBE9F"><B>Symbole</B></TD>
+    <TD WIDTH="10%" bgcolor="#FFFFFF">&nbsp;</TD>
+    <TD WIDTH="15%" bgcolor="#FFBE9F"><B>Facteur</B></TD>
+    <TD WIDTH="15%" bgcolor="#FFBE9F"><B>Pr&eacute;fix</B></TD>
+    <TD WIDTH="15%" bgcolor="#FFBE9F"><B>Symbole</B></TD>
+</TR>
+<TR><TD align="center">10<SUP>-1</SUP> </TD><TD>d&eacute;ci</TD> <TD align="center">d</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>1</SUP></TD> <TD>deca</TD> <TD align="center">da</TD></TR>
+<TR><TD align="center">10<SUP>-2</SUP> </TD><TD>centi</TD><TD align="center">c</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>2</SUP></TD> <TD>hecto</TD><TD align="center">h</TD> </TR>
+<TR><TD align="center">10<SUP>-3</SUP> </TD><TD>milli</TD><TD align="center">m</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>3</SUP></TD> <TD>kilo</TD> <TD align="center">k</TD> </TR>
+<TR><TD align="center">10<SUP>-6</SUP> </TD><TD>micro</TD><TD align="center">&#181;</TD><td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>6</SUP></TD> <TD>mega</TD> <TD align="center">M</TD> </TR>
+<TR><TD align="center">10<SUP>-9</SUP> </TD><TD>nano</TD> <TD align="center">n</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>9</SUP></TD> <TD>giga</TD> <TD align="center">G</TD> </TR>
+<TR><TD align="center">10<SUP>-12</SUP></TD><TD>pico</TD> <TD align="center">p</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>12</SUP></TD><TD>tera</TD> <TD align="center">T</TD> </TR>
+<TR><TD align="center">10<SUP>-15</SUP></TD><TD>femto</TD><TD align="center">f</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>15</SUP></TD><TD>peta</TD> <TD align="center">P</TD> </TR>
+<TR><TD align="center">10<SUP>-18</SUP></TD><TD>atto</TD> <TD align="center">a</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>18</SUP></TD><TD>exa</TD>  <TD align="center">E</TD> </TR>
+<TR><TD align="center">10<SUP>-21</SUP></TD><TD>zepto</TD><TD align="center">z</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>21</SUP></TD><TD>zetta</TD><TD align="center">Z</TD> </TR>
+<TR><TD align="center">10<SUP>-24</SUP></TD><TD>yocto</TD><TD align="center">y</TD>     <td bgcolor="#FFFFFF">&nbsp;</td><TD align="center">10<SUP>24</SUP></TD><TD>yotta</TD><TD align="center">Y</TD> </TR>
+</TABLE></CENTER>
+
+
+<p align="justify">Il est possible d'utiliser des symboles qui multiplient et divisent des unit&eacute;s.
+Par exemple des symboles tels que "g/cm" sont valides et seront reconnus. Toutes les unit&eacute;s sont
+construites &agrave; partir d'un ensemble restreint d'unit&eacute;s de base:</p>
+
+<table border="0" width="80%">
+    <tr>
+        <td><strong>Amp&egrave;re</strong></td>
+        <td>Pour les mesures de courants &eacute;lectriques</td>
+    </tr>
+    <tr>
+        <td><strong>Candela</strong></td>
+        <td>Pour les mesures d'intensit&eacute;s lumineuses</td>
+    </tr>
+    <tr>
+        <td><strong>Kelvin</strong></td>
+        <td>Pour les mesures de temp&eacute;ratures</td>
+    </tr>
+    <tr>
+        <td><strong>Kilogramme</strong></td>
+        <td>Pour les mesures de masses</td>
+    </tr>
+    <tr>
+        <td><strong>m&egrave;tre</strong></td>
+        <td>Pour les mesures de longueurs</td>
+    </tr>
+    <tr>
+        <td><strong>seconde</strong></td>
+        <td>Pour les mesures de temps</td>
+    </tr>
+</table>
+<p align="justify">D'autres unit&eacute;s qui ne sont pas r&eacute;ellement des unit&eacute;s de bases
+(par exemple les moles, radians ou la salinit&eacute;) peuvent &ecirc;tre d&eacute;finies comme telles
+par commodit&eacute;.</p>
+
+<p align="justify">Les constructeurs des classes du paquet <code>javax.units</code> n'&eacute;tant pas
+publiques, on ne peut pas cr&eacute;er directement de nouvelles unit&eacute;s. La cr&eacute;ation d'une nouvelle unit&eacute;
+doit se faire de façon indirecte en combinant les op&eacute;rations {@link javax.units.Unit#scale}
+et {@link javax.units.Unit#shift} sur une ancienne unit&eacute;. Par exemple on peut cr&eacute;er des unit&eacute;s de
+miles nautiques avec:</p>
+
+<blockquote><pre>
+{@link javax.units.Unit Unit}&nbsp;mile=METRE.{@link javax.units.Unit#scale scale}(1853);
+</pre></blockquote>
+
+<p align="justify">Ce code signifie qu'un mile nautique correspond &agrave; 1.853 kilom&egrave;tres. Comme
+autre exemple, si <code>degC</code> repr&eacute;sente les degr&eacute;s Celsius, alors on peut cr&eacute;er des
+unit&eacute;s pour les degr&eacute;s Fahrenheit &agrave; l'aide du code suivant:</p>
+
+<blockquote><pre>
+{@link javax.units.Unit Unit}&nbsp;degF&nbsp;=&nbsp;degC.{@link javax.units.Unit#scale scale}(5./9).{@link javax.units.Unit#shift shift}(-32);
+</pre></blockquote>
+
+<p align="justify">Ce code signifie que pour convertir des degr&eacute;s Celsius en degr&eacute;s Fahrenheit, il
+faudra d'abord diviser par 5/9 les degr&eacute;s Celsius et ensuite ajouter 32. Une autre façon d'interpr&eacute;ter
+ce code est de le lire en sens inverse: &agrave; partir des degr&eacute;s Fahrenheit, on retranche 32 et on
+multiplie par 5/9 pour obtenir des degr&eacute;s Celsius.</p>
+
+<p align="justify">Il est aussi possible d'utiliser les m&eacute;thodes de {@link javax.units.Unit} pour
+transformer des unit&eacute;s inconnus en unit&eacute;s d'une autre dimension. Par exemple supposons que l'on dispose
+d'unit&eacute;s de temps pour les mesures de la p&eacute;riode d'un signal, et que l'on veut les transformer
+en unit&eacute;s de fr&eacute;quences et de vitesses. On pourrait &eacute;crire:</p>
+
+<blockquote><pre>
+Unit timeUnit      = Unit.get("min"); // Minutes, juste en guise d'exemple
+Unit frequencyUnit = timeUnit.pow(-1);
+Unit speedUnit     = get("km").multiply(frequencyUnit);
+</pre></blockquote>
+
+<p align="justify">Ce code fonctionnera m&ecirc;me si les unit&eacute;s de <code>timeUnit</code>
+ne sont pas connues &agrave; l'avance.</p>
+
+<p align="justify">Toutes les classes de ce paquet sont immutables et s&eacute;curitaires
+dans un environnement multi-threads, ce qui implique que l'on peut sans crainte partager
+plusieurs r&eacute;f&eacute;rences vers une m&ecirc;me unit&eacute;. Toutes les m&eacute;thodes de ce paquet sont d&eacute;finies
+de façon &agrave; partager autant que possibles les m&ecirc;mes r&eacute;f&eacute;rences, ce qui r&eacute;duit la consommation
+de m&eacute;moire.</p>
+
+
+
+<p>&nbsp;</p>
+
+<center><table border="3" cellpadding="6" width="700" bgcolor="#FEF3D6">
+    <tr>
+        <td align="center" bgcolor="#FFD6AC"><font color="#804040" size="5" face="Arial Black"><strong>Cr&eacute;dits</strong></font></td>
+    </tr>
+    <tr>
+        <td><font color="#804040" size="2">
+        <p align=justify>Le paquet <code>javax.units</code> est fortement inspir&eacute; de la biblioth&egrave;que
+
+        <a href="http://www.unidata.ucar.edu/packages/udunits/">UD units library</a>,
+
+        d&eacute;velopp&eacute;e par Steve Emmerson de Unidata. Cette derni&egrave;re est utilis&eacute;e entre autre par
+
+        <a href="http://www.ssec.wisc.edu/~billh/visad.html">VisAD</a>,
+
+        une biblioth&egrave;que Java du domaine publique. Dans le cadre du projet <code>javax.units</code> toutefois,
+        le code source a &eacute;t&eacute; enti&egrave;rement r&eacute;&eacute;crit afin de mieux l'adapter &agrave; nos besoins. Mais l'esprit de base
+        du paquet fut conserv&eacute;. Longtemps avant son introduction dans <code>javax.units</code>, il a fait ses
+        preuves aupr&egrave;s de d'autres programmeurs. La license de Unidata contenait la mention suivante:</p>
+
+        <p align=justify>
+        Access and use of this software shall impose the following obligations and understandings on the user.
+        The user is granted the right, without any fee or cost, to use, copy, modify, alter, enhance and distribute
+        this software, and any derivative works thereof, and its supporting documentation for any purpose whatsoever,
+        provided that this entire notice appears in all copies of the software, derivative works and supporting
+        documentation.  Further, UCAR requests that the user credit UCAR/Unidata in any publications that result
+        from the use of this software or in any product that includes this software. The names UCAR and/or Unidata,
+        however, may not be used in any advertising or publicity to endorse or promote any products or commercial
+        entity unless specific written permission is obtained from UCAR/Unidata. The user also understands that
+        UCAR/Unidata is not obligated to provide the user with any support, consulting, training or assistance of
+        any kind with regard to the use, operation and performance of this software nor to provide the user with
+        any updates, revisions, new versions or "bug fixes."</p>
+
+        <p align=justify>
+        THIS SOFTWARE IS PROVIDED BY UCAR/UNIDATA "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+        LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+        IN NO EVENT SHALL UCAR/UNIDATA BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+        WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+        TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE ACCESS, USE OR PERFORMANCE OF THIS SOFTWARE.</p>
+        </td>
+    </tr>
+</table></center>
+  </BODY>
+</HTML>
