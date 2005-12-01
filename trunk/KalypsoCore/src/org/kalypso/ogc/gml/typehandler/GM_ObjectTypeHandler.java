@@ -153,9 +153,9 @@ public class GM_ObjectTypeHandler implements IMarshallingTypeHandler
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone )
+  public Object cloneObject( final Object objectToClone )
   {
-    GM_Object geom = (GM_Object)objectToClone;
+    final GM_Object geom = (GM_Object)objectToClone;
     GMLGeometry gml = null;
 
     try

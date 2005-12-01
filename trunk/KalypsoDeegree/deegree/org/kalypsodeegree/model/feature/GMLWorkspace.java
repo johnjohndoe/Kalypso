@@ -12,6 +12,12 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
  */
 public interface GMLWorkspace extends ModellEventProvider
 {
+  public static final int RESOLVE_ALL = 0;
+
+  public static final int RESOLVE_LINK = 1;
+
+  public static final int RESOLVE_COMPOSITION = 2;
+
   public Feature getRootFeature();
 
   /**
@@ -30,9 +36,29 @@ public interface GMLWorkspace extends ModellEventProvider
   public Feature resolveLink( final Feature srcFeature, final String linkPropertyName );
 
   /**
+   * resolves the associationlink to a feature, maxOccurs =1
+   * 
+   * @param srcFeature
+   * @param linkPropertyName
+   * @param resolveMode
+   * @return linked feature
+   */
+  public Feature resolveLink( Feature srcFeature, String linkPropertyName, final int resolveMode );
+
+  /**
    * resolves the associationlink to a feature, maxOccurs >1
    */
   public Feature[] resolveLinks( final Feature srcFeature, final String linkPropertyName );
+
+  /**
+   * resolves the associationlink to a feature, maxOccurs >1
+   * 
+   * @param srcFeature
+   * @param linkPropertyName
+   * @param resolveMode
+   * @return features
+   */
+  public Feature[] resolveLinks( final Feature srcFeature, final String linkPropertyName, final int resolveMode );
 
   /**
    * returns all Features that that link to the linkTargetFeature, with the specified linkPropertyname and are type of
@@ -67,14 +93,17 @@ public interface GMLWorkspace extends ModellEventProvider
   public String getSchemaNamespace();
 
   public Feature createFeature( FeatureType type );
-  
+
   public Feature getParentFeature( Feature toFindParentFrom );
 
   public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature ) throws Exception;
 
   public void addFeatureAsAggregation( Feature parent, String propName, int pos, String featureID ) throws Exception;
 
-  public void setFeatureAsAggregation( Feature parent, String propName, String featureID ,boolean overwrite) throws Exception; 
+  public void setFeatureAsAggregation( Feature srcFE, String propName, int pos, String featureID ) throws Exception;
+
+  public void setFeatureAsAggregation( Feature parent, String propName, String featureID, boolean overwrite )
+      throws Exception;
 
   /**
    * removes a related feature from the parent. Works only if the child is linked <br>
@@ -117,5 +146,20 @@ public interface GMLWorkspace extends ModellEventProvider
    * @param overwrite
    * @throws Exception
    */
-  public void setFeatureAsComposition( final Feature parentFE, final String linkPropName, final Feature linkedFE, final boolean overwrite ) throws Exception;
+  public void setFeatureAsComposition( final Feature parentFE, final String linkPropName, final Feature linkedFE,
+      final boolean overwrite ) throws Exception;
+
+  /**
+   * @param visitor
+   * @param feature
+   * @param depth
+   * @param featureProperties
+   *          properties to follow
+   */
+  public void accept( final FeatureVisitor visitor, Feature feature, int depth,
+      final FeatureTypeProperty[] featureProperties );
+
+  public boolean contains( final Feature feature );
+  
+  public boolean isBrokenLink( final Feature parentFeature, final FeatureTypeProperty ftp, final int pos );
 }

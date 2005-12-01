@@ -40,62 +40,71 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 
+import org.deegree_impl.clients.wcasclient.control.DeleteFromShoppingCardListener;
+import org.eclipse.core.internal.resources.Workspace;
 import org.kalypso.commons.command.ICommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureProperty;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.visitors.CloneFeatureVisitor;
 
 /**
  * @author belger
  */
 public class ModifyFeatureCommand implements ICommand
 {
-  private final Feature[] m_features;
+  private final Feature[] m_targetFEs;
 
-  private final Map m_newMap;
+  //  private final Map m_newMap;
 
-  private final Map[] m_oldMap;
+  //  private final Map[] m_oldMap;
 
   private final GMLWorkspace m_workspace;
 
+  private final Feature m_srcFeature;
+
+  private final FeatureTypeProperty[] m_ftps;
+
   /**
    * @param workspace
-   * @param features
+   * @param targetFeatures
    *          features to modify
-   * @param map
-   *          propertyname/value map of properties to modify
    */
-  public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature features[], final Map map )
+  public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature srcFeature,
+      final FeatureTypeProperty[] ftps, final Feature targetFeatures[] )
   {
     m_workspace = workspace;
-    m_features = features;
-    m_newMap = map;
-    m_oldMap = new HashMap[features.length];
-    for( int i = 0; i < features.length; i++ )
-    {
-      Feature feature = features[i];
-      m_oldMap[i] = new HashMap();
-      for( Iterator iter = map.keySet().iterator(); iter.hasNext(); )
-      {
-        final String propName = (String)iter.next();
-        m_oldMap[i].put( propName, feature.getProperty( propName ) );
-      }
-    }
+    m_ftps = ftps;
+    m_targetFEs = targetFeatures;
+    m_srcFeature = srcFeature;
+
+    //    m_newMap = map;
+    //    m_oldMap = new HashMap[targetFeatures.length];
+    //    for( int i = 0; i < targetFeatures.length; i++ )
+    //    {
+    //      final Feature feature = targetFeatures[i];
+    //      m_oldMap[i] = new HashMap();
+    //      for( Iterator iter = map.keySet().iterator(); iter.hasNext(); )
+    //      {
+    //        final String propName = (String)iter.next();
+    //        m_oldMap[i].put( propName, feature.getProperty( propName ) );
+    //      }
+    //    }
   }
 
-  public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature feature, final Map map )
+  public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature srcFeature,
+      final FeatureTypeProperty[] ftps, final Feature targetFeature )
   {
-    this( workspace, new Feature[]
-    { feature }, map );
+    this( workspace, srcFeature, ftps, new Feature[]
+    { targetFeature } );
   }
 
   /**
@@ -103,7 +112,7 @@ public class ModifyFeatureCommand implements ICommand
    */
   public boolean isUndoable()
   {
-    return true;
+    return false;
   }
 
   /**
@@ -111,28 +120,111 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void process() throws Exception
   {
-    for( Iterator iter = m_newMap.entrySet().iterator(); iter.hasNext(); )
+    //    for( Iterator iter = m_newMap.entrySet().iterator(); iter.hasNext(); )
+    //    {
+    //      final Map.Entry entry = (Entry)iter.next();
+    //      final String propName = (String)entry.getKey();
+    //      final FeatureTypeProperty ftp = m_targetFEs[0].getFeatureType().getProperty( propName );
+    //      final String propType = ftp.getType();
+
+    for( int i = 0; i < m_targetFEs.length; i++ )
     {
-      final Map.Entry entry = (Entry)iter.next();
-      final String propName = (String)entry.getKey();
-      final String propType = m_features[0].getFeatureType().getProperty( propName ).getType();
-      for( int i = 0; i < m_features.length; i++ )
+      try
       {
-        try
+        final Feature targetFE = m_targetFEs[i];
+        if( targetFE == m_srcFeature )
+          continue;
+
+        //        final Object valueOriginal = entry.getValue();
+        //        if( ftp instanceof FeatureAssociationTypeProperty )
+        //        {
+        // check if allowed
+        // check if target is empty, remove ...
+        // are linked feature about to be removed ?
+        //            if( valueOriginal instanceof Feature )
+        //            {
+        //              featuresToCopyList = new ArrayList();
+        //              featuresToCopyList.add( valueOriginal );
+        //            }
+        //            else if( valueOriginal instanceof String ) // FID
+        //            {
+        //              featuresToCopyList = new ArrayList();
+        //              final Feature feature = m_workspace.getFeature( (String)valueOriginal );
+        //              featuresToCopyList.add( feature );
+        //            }
+        //            else
+        //              // it must be a featurelist
+        //              featuresToCopyList = (List)valueOriginal;
+
+        //            for( Iterator iterator = featuresToCopyList.iterator(); iterator.hasNext(); )
+        //            {
+        //              Feature featureToCopy = (Feature)iterator.next();
+
+        // collect list of feature ids
+
+        // 1. remove target // command
+        // check features to remove // TODO UNDO....
+        //        new DeleteFeatureCommand(m_workspace,targetFE,m_);
+        for( int j = 0; j < m_ftps.length; j++ )
         {
-          final Object value = FeatureHelper.cloneData( entry.getValue(), propType );
-          final FeatureProperty property;
-          property = FeatureFactory.createFeatureProperty( propName, value );
-          m_features[i].setProperty( property );
+          final FeatureTypeProperty ftp = m_ftps[j];
+          final String propName = ftp.getName();
+          if( ftp instanceof FeatureAssociationTypeProperty ) // remove sub features of target
+          {
+            final Object value = targetFE.getProperty( propName );
+            if( value == null ) // nothing to do
+              continue;
+            final int maxOccurs = targetFE.getFeatureType().getMaxOccurs( propName );
+            if( maxOccurs == 1 )
+            {
+              if( value instanceof Feature )
+                m_workspace.removeLinkedAsCompositionFeature( targetFE, propName, (Feature)value );
+              else
+                m_workspace.removeLinkedAsAggregationFeature( targetFE, propName, (String)value );
+            }
+            else
+            // any
+            {
+              final List list = (List)value;
+              while( !list.isEmpty() )
+              {
+                // TODO is nicht schön... mit der liste
+                final Object object = list.get( 0 );
+                if( object instanceof Feature )
+                  m_workspace.removeLinkedAsCompositionFeature( targetFE, propName, (Feature)object );
+                else
+                  m_workspace.removeLinkedAsAggregationFeature( targetFE, propName, (String)object );
+              }
+            }
+          }
         }
-        catch( final Exception e )
-        {
-          // ignore exception and copy next features property
-        }
+
+        final CloneFeatureVisitor visitor = new CloneFeatureVisitor( m_workspace, targetFE, m_ftps );
+        m_workspace.accept( visitor, m_srcFeature, FeatureVisitor.DEPTH_INFINITE, m_ftps );
+        // 2. broken links
+
+        //            }
+
+        //        }
+        //        else
+        //        {
+        //          final Object value = FeatureHelper.cloneData( valueOriginal, propType );
+        //          final FeatureProperty property;
+        //          property = FeatureFactory.createFeatureProperty( propName, value );
+        //          targetFE.setProperty( property );
+        //        }
+      }
+      catch( final Exception e )
+      {
+        // ignore exception and copy next features property
       }
     }
-    FeatureList list = FeatureFactory.createFeatureList( null, null, m_features );
+    //    }
+    FeatureList list = FeatureFactory.createFeatureList( null, null, m_targetFEs );
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, list ) );
+    //    
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_targetFEs,
+        FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**
@@ -148,18 +240,18 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void undo() throws Exception
   {
-    for( int i = 0; i < m_features.length; i++ )
-    {
-      for( Iterator iter = m_oldMap[i].entrySet().iterator(); iter.hasNext(); )
-      {
-        final Map.Entry entry = (Entry)iter.next();
-        final FeatureProperty property = FeatureFactory
-            .createFeatureProperty( (String)entry.getKey(), entry.getValue() );
-        m_features[i].setProperty( property );
-      }
-    }
-    FeatureList list = FeatureFactory.createFeatureList( null, null, m_features );
-    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, list ) );
+  //    for( int i = 0; i < m_targetFEs.length; i++ )
+  //    {
+  //      for( Iterator iter = m_oldMap[i].entrySet().iterator(); iter.hasNext(); )
+  //      {
+  //        final Map.Entry entry = (Entry)iter.next();
+  //        final FeatureProperty property = FeatureFactory
+  //            .createFeatureProperty( (String)entry.getKey(), entry.getValue() );
+  //        m_targetFEs[i].setProperty( property );
+  //      }
+  //    }
+  //    FeatureList list = FeatureFactory.createFeatureList( null, null, m_targetFEs );
+  //    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, list ) );
   }
 
   /**

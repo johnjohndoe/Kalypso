@@ -33,6 +33,7 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog;
@@ -71,9 +72,9 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
     return button;
   }
 
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp,  selectionManager );
+    return new ButtonModifier( workspace, ftp,  selectionManager, fcl );
   }
 
   public String getText( Object element )

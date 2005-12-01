@@ -75,40 +75,41 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   public Feature resolveLink( Feature srcFeature, String linkPropertyName )
   {
-    Object linkValue = srcFeature.getProperty( linkPropertyName );
+    return resolveLink( srcFeature, linkPropertyName, RESOLVE_ALL );
+  }
+
+  public Feature resolveLink( Feature srcFeature, String linkPropertyName, final int resolveMode )
+  {
+    final Object linkValue = srcFeature.getProperty( linkPropertyName );
     if( linkValue == null )
       return null;
     if( linkValue instanceof Feature )
-      return (Feature)linkValue;
-    // must be a reference
-    String linkID = (String)linkValue;
-    FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature.getFeatureType().getProperty(
-        linkPropertyName );
-    FeatureType[] linkFTs = ftp.getAssociationFeatureTypes();
-    for( int _ft = 0; _ft < linkFTs.length; _ft++ )
     {
-      Feature[] features = getFeatures( linkFTs[_ft] );
-      // todo: performance-todo: todo oben aufloesen und hier das feature
-      // aus dem hash holen:
-      for( int i = 0; i < features.length; i++ )
-      {
-        if( linkID.equals( features[i].getId() ) )
-          return features[i];
-      }
+      if( resolveMode != RESOLVE_LINK )
+        return (Feature)linkValue;
+      return null;
     }
-    // broken Link
+    // must be a reference
+    final String linkID = (String)linkValue;
+    if( resolveMode != RESOLVE_COMPOSITION )
+      return getFeature( linkID );
     return null;
+  }
+
+  public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName )
+  {
+    return resolveLinks( srcFeature, linkPropertyName, RESOLVE_ALL );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveLinks(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String)
    */
-  public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName )
+  public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName, final int resolveMode )
   {
     if( srcFeature.getFeatureType().getMaxOccurs( linkPropertyName ) == 1 )
     {
-      final Feature feature = resolveLink( srcFeature, linkPropertyName );
+      final Feature feature = resolveLink( srcFeature, linkPropertyName, resolveMode );
       if( feature != null )
         return new Feature[]
         { feature };
@@ -122,27 +123,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       Object linkValue = iter.next();
       if( linkValue instanceof Feature )
       {
-        result.add( linkValue );
+        if( !( resolveMode == RESOLVE_LINK ) )
+          result.add( linkValue );
         continue;
       }
       // must be a reference
-      String linkID = (String)linkValue;
-      FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature.getFeatureType().getProperty(
-          linkPropertyName );
-      FeatureType[] linkFTs = ftp.getAssociationFeatureTypes();
-      for( int _ft = 0; _ft < linkFTs.length; _ft++ )
+      if( !( resolveMode == RESOLVE_COMPOSITION ) )
       {
-        Feature[] features = getFeatures( linkFTs[_ft] );
-        // todo performance-todo: todo oben aufloesen und hier das feature
-        // aus dem hash holen:
-        for( int i = 0; i < features.length; i++ )
-        {
-          if( linkID.equals( features[i].getId() ) )
-          {
-            result.add( features[i] );
-            continue;
-          }
-        }
+        final String linkID = (String)linkValue;
+        result.add( getFeature( linkID ) );
       }
     }
     // broken Link
@@ -290,9 +279,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public void accept( final FeatureVisitor fv, final Feature feature, final int depth )
   {
-    final FeatureType ft = feature.getFeatureType();
-    final FeatureTypeProperty[] ftps = ft.getProperties();
+    accept( fv, feature, depth, feature.getFeatureType().getProperties() );
+  }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree_impl.model.feature.visitors.CloneFeatureVisitor,
+   *      org.kalypsodeegree.model.feature.Feature, int, org.kalypsodeegree.model.feature.FeatureTypeProperty[])
+   */
+  public void accept( final FeatureVisitor fv, final Feature feature, final int depth, final FeatureTypeProperty[] ftps )
+  {
     final boolean recurse = fv.visit( feature );
 
     if( recurse && depth != FeatureVisitor.DEPTH_ZERO )
@@ -359,6 +354,20 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       //        System.out.println( "Workspace already contains a feature with id: " +
       // id );
       m_indexMap.put( id, f );
+      return true;
+    }
+  }
+
+  private final class UnRegisterVisitor implements FeatureVisitor
+  {
+
+    /**
+     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+     */
+    public boolean visit( final Feature f )
+    {
+      final String id = f.getId();
+      m_indexMap.remove( id );
       return true;
     }
   }
@@ -445,25 +454,29 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
    */
-  public void addFeatureAsComposition( Feature parent, String propName, int pos, Feature newFeature ) throws Exception
+  public void addFeatureAsComposition( final Feature parent, final String propName, final int pos,
+      final Feature newFeature ) throws Exception
   {
     final Object prop = parent.getProperty( propName );
 
     if( prop instanceof List )
     {
       ( (List)prop ).add( pos, newFeature );
-      m_indexMap.put( newFeature.getId(), newFeature );
-      return;
     }
     else if( prop == null ) // element not set
     {
       final FeatureProperty newProp = FeatureFactory.createFeatureProperty( propName, newFeature );
       parent.setProperty( newProp );
-      m_indexMap.put( newFeature.getId(), newFeature );
-      return;
     }
+    else
+      throw new Exception( "New Feature violates maxOccurs" );
+    m_indexMap.put( newFeature.getId(), newFeature );
+
+    // register also features in subtree of new feature
+    accept( new RegisterVisitor(), newFeature, FeatureVisitor.DEPTH_INFINITE );
+    return;
+
     // TODO eigene exception entwerfen
-    throw new Exception( "New Feature violates maxOccurs" );
   }
 
   /**
@@ -476,12 +489,17 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       final boolean overwrite ) throws Exception
   {
     final Object value = parentFE.getProperty( linkPropName );
+    int max = parentFE.getFeatureType().getMaxOccurs( linkPropName );
+    if( max > 1 || max == FeatureType.UNBOUND_OCCURENCY )
+      throw new Exception( "can not set feature with maxoccurs > 1, use addFeatureAsComposition instead" );
     if( value == null | overwrite )
     {
       // TODO check if value is allready a feature, then remove it from gmlworkspace
       final FeatureProperty newProp = FeatureFactory.createFeatureProperty( linkPropName, linkedFE );
       parentFE.setProperty( newProp );
       m_indexMap.put( linkedFE.getId(), linkedFE );
+      // accept all subfeatures
+      accept( new RegisterVisitor(), linkedFE, FeatureVisitor.DEPTH_INFINITE );
       return;
     }
     throw new Exception( "New Feature violates maxOccurs" );
@@ -512,12 +530,40 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
+   * 
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, int, java.lang.String)
+   */
+  public void setFeatureAsAggregation( final Feature srcFE, final String propName, final int pos, final String featureID )
+      throws Exception
+  {
+    if( srcFE.getFeatureType().isListProperty( propName ) )
+    {
+      // TODO check remove existing correctly
+      final int maxOccurs = srcFE.getFeatureType().getMaxOccurs( propName );
+      final List list = (List)srcFE.getProperty( propName );
+      if( list.size() < maxOccurs || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+        list.set( pos, featureID );
+      else
+        throw new Exception( "New Feature violates maxOccurs" );
+    }
+    else if( srcFE.getProperty( propName ) == null )
+    {
+      // TODO check remove existing correctly
+      srcFE.setProperty( FeatureFactory.createFeatureProperty( propName, featureID ) );
+    }
+    else
+      throw new Exception( "New Feature as allready set" );
+  }
+
+  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, java.lang.String, boolean)
    */
   public void setFeatureAsAggregation( Feature srcFE, String propName, String featureID, boolean overwrite )
       throws Exception
   {
+    // TODO remove existing link correctly
     if( srcFE.getProperty( propName ) == null || overwrite )
       srcFE.setProperty( FeatureFactory.createFeatureProperty( propName, featureID ) );
     else
@@ -551,7 +597,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public boolean removeLinkedAsCompositionFeature( Feature parentFeature, String propName, Feature childFeature )
   {
-    boolean ok = false;
+    boolean result = false;
     final Object prop = parentFeature.getProperty( propName );
     int maxOccurs = parentFeature.getFeatureType().getMaxOccurs( propName );
     switch( maxOccurs )
@@ -560,19 +606,22 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       if( parentFeature.getProperty( propName ) == childFeature )
       {
         parentFeature.setProperty( FeatureFactory.createFeatureProperty( propName, null ) );
-        ok = true;
+        result = true;
       }
       break;
     default:
-      List list = (List)prop;
-      ok = list.remove( childFeature );
+      final List list = (List)prop;
+      result = list.remove( childFeature );
     }
-    if( ok )
+    if( result )
+    {
+      accept( new UnRegisterVisitor(), childFeature, FeatureVisitor.DEPTH_INFINITE );
       unregisterFeature( childFeature );
-    return ok;
+    }
+    return result;
   }
 
-  private void unregisterFeature( Feature childFeature )
+  private void unregisterFeature( final Feature childFeature )
   {
     m_indexMap.remove( childFeature.getId() );
   }
@@ -656,28 +705,28 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     //skip root feature
     if( getRootFeature().equals( toFindParentFrom ) )
       return null;
-    Collection collection = m_indexMap.values();
-    Iterator iterator = collection.iterator();
+    final Collection collection = m_indexMap.values();
+    final Iterator iterator = collection.iterator();
     while( iterator.hasNext() )
     {
-      Feature f = (Feature)iterator.next();
+      final Feature f = (Feature)iterator.next();
       //skips itself
       if( f.equals( toFindParentFrom ) )
         continue;
-      FeatureType featureType = f.getFeatureType();
-      FeatureTypeProperty[] ftp = featureType.getProperties();
+      final FeatureType featureType = f.getFeatureType();
+      final FeatureTypeProperty[] ftp = featureType.getProperties();
       for( int i = 0; i < ftp.length; i++ )
       {
-        FeatureTypeProperty property = ftp[i];
+        final FeatureTypeProperty property = ftp[i];
         if( property instanceof FeatureAssociationTypeProperty )
         {
-          String name = property.getName();
+          final String name = property.getName();
           if( featureType.isListProperty( name ) )
           {
-            List list = (List)f.getProperty( name );
+            final List list = (List)f.getProperty( name );
             for( int j = 0; j < list.size(); j++ )
             {
-              Object childFromList = list.get( j );
+              final Object childFromList = list.get( j );
               if( childFromList != null && childFromList.equals( toFindParentFrom ) )
               {
                 //                String substitutionGroup = ((Feature)childFromList).getFeatureType().getSubstitutionGroup();
@@ -702,6 +751,39 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
     //TODO throw exception instead of returning null
     return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#contains(org.kalypsodeegree.model.feature.Feature)
+   */
+  public boolean contains( final Feature feature )
+  {
+    if( feature == null )
+      return false;
+    return m_indexMap.containsKey( feature.getId() );
+  }
+
+  /**
+   * @param parentFeature
+   * @param ftp
+   * @param pos
+   * @return
+   */
+  public boolean isBrokenLink( final Feature parentFeature, final FeatureTypeProperty ftp, final int pos )
+  {
+    final Object property = parentFeature.getProperty( ftp.getName() );
+    if( property == null )
+      return false;
+    if( property instanceof List )
+    {
+      Object object = ( (List)property ).get( pos );
+      if( object instanceof Feature )
+        return false;
+      return !m_indexMap.containsKey( object );
+    }
+    if( property instanceof Feature )
+      return false;
+    return !m_indexMap.containsKey( property );
   }
 
 }

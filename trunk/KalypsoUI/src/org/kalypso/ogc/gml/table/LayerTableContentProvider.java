@@ -108,7 +108,9 @@ public class LayerTableContentProvider implements IStructuredContentProvider
         result.add( objects[i] );
       else if( objects[i] instanceof String ) // it is a ID
       {
-        result.add( workspace.getFeature( (String)objects[i] ) );
+        final Feature feature = workspace.getFeature( (String)objects[i] );
+        if( feature != null )
+          result.add( feature );
       }
     }
     return result.toArray();
@@ -150,13 +152,25 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       return;
 
     // if viewer selection and tree selection are the same, do nothing
-    final IStructuredSelection managerSelection = KalypsoFeatureThemeSelection.filter( m_selectionManager.toList(), theme );
-    final Object[] managerFeatures = managerSelection.toArray(  );
+    final IStructuredSelection managerSelection = KalypsoFeatureThemeSelection.filter( m_selectionManager.toList(),
+        theme );
+    final Object[] managerFeatures = managerSelection.toArray();
     if( Arrays.equalsUnordered( managerFeatures, selection.toArray() ) )
       return;
-    
+
+    final GMLWorkspace workspace = theme.getWorkspace();
+
     // TODO: remove only previously selected
-    final Feature[] featuresToRemove = featureList.toFeatures();
+    // collect elements as "Feature"
+    final List featureToRemove = new ArrayList();
+    for( Iterator iter = featureList.iterator(); iter.hasNext(); )
+    {
+      final Object element = iter.next();
+      if( element instanceof Feature )
+        featureToRemove.add( element );
+      else if( element instanceof String ) // it is the id of a feature
+        featureToRemove.add( workspace.getFeature( (String)element ) );
+    }
 
     // add current selection
     final List wrappers = new ArrayList( selection.size() );
@@ -172,8 +186,8 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     }
 
     final EasyFeatureWrapper[] izis = (EasyFeatureWrapper[])wrappers.toArray( new EasyFeatureWrapper[wrappers.size()] );
-
-    m_selectionManager.changeSelection( featuresToRemove, izis );
+    final Feature[] featureArray = (Feature[])featureToRemove.toArray( new Feature[featureToRemove.size()] );
+    m_selectionManager.changeSelection( featureArray, izis );
   }
 
 }

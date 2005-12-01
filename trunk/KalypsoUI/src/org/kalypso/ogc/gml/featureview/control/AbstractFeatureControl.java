@@ -145,7 +145,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     }
   }
 
-  protected final void fireOpenFeatureRequested( final Feature feature )
+  protected final void fireOpenFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
   {
     final IFeatureChangeListener[] listeners = (IFeatureChangeListener[])m_changelisteners
         .toArray( new IFeatureChangeListener[m_changelisteners.size()] );
@@ -156,7 +156,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
       {
         public void run() throws Exception
         {
-          listener.openFeatureRequested( feature );
+          listener.openFeatureRequested( feature, ftp );
         }
       } );
     }

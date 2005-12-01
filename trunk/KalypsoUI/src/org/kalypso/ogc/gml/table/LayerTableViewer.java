@@ -66,6 +66,8 @@ import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -87,6 +89,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -171,7 +174,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final Control control = getControl();
       if( control.isDisposed() )
         return;
-      
+
       control.getDisplay().syncExec( new Runnable()
       {
         public void run()
@@ -246,6 +249,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private final IFeatureSelectionManager m_selectionManager;
 
+  private final IFeatureChangeListener m_fcl;
+
   private Feature m_focusedFeature;
 
   private String m_focusedProperty;
@@ -256,13 +261,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
    * @param featureControlFactory
    */
   public LayerTableViewer( final Composite parent, final int style, final ICommandTarget templateTarget,
-      final IFeatureModifierFactory featureControlFactory, final IFeatureSelectionManager selectionManager )
+      final IFeatureModifierFactory featureControlFactory, final IFeatureSelectionManager selectionManager,
+      final IFeatureChangeListener fcl )
   {
     super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
 
     m_featureControlFactory = featureControlFactory;
     m_templateTarget = templateTarget;
     m_selectionManager = selectionManager;
+    m_fcl = fcl;
     m_selectionManager.addSelectionListener( m_globalSelectionListener );
 
     setContentProvider( new LayerTableContentProvider( selectionManager ) );
@@ -300,6 +307,49 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       }
     } );
 
+  }
+
+  protected void hookControl( final Control control )
+  {
+    // unhook the mouseDownEvent because we do not want to start editing
+    // if we click anywhere in the table
+    // only clicking on the table cursor starts editing
+//    Table tableControl = (Table)control;
+//    tableControl.addMouseListener( new MouseAdapter()
+//    {
+//      public void mouseDown( MouseEvent e )
+//      {
+//        tableViewerImpl.handleMouseDown( e );
+//      }
+//    } );
+
+    // copy hooking from super-classes
+    control.addDisposeListener(new DisposeListener() {
+      public void widgetDisposed(DisposeEvent event) {
+        handleDispose(event);
+      }
+    });
+
+    OpenStrategy handler = new OpenStrategy(control);
+    handler.addSelectionListener(new SelectionListener() {
+      public void widgetSelected(SelectionEvent e) {
+        handleSelect(e);
+      }
+      public void widgetDefaultSelected(SelectionEvent e) {
+        handleDoubleSelect(e);
+      }
+    });
+    handler.addPostSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent e) {
+        handlePostSelect(e);
+      }
+    });
+    // leider privat
+//    handler.addOpenListener(new IOpenEventListener() {
+//      public void handleOpen(SelectionEvent e) {
+//        StructuredViewer.this.handleOpen(e);
+//      }
+//    });
   }
 
   protected void handleTableCursorPostSelected()
@@ -551,7 +601,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       if( ftp != null )
       {
         m_modifier[i] = m_featureControlFactory.createFeatureModifier( getTheme().getWorkspace(), ftp, format,
-            m_selectionManager );
+            m_selectionManager, m_fcl );
         editors[i] = m_modifier[i].createCellEditor( table );
         editors[i].setValidator( m_modifier[i] );
       }
@@ -645,8 +695,16 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     }
     if( event instanceof FeatureStructureChangeModellEvent )
     {
-      if( ( (FeatureStructureChangeModellEvent)event ).getParentFeature() == theme.getFeatureList().getParentFeature() )
-        refresh();
+      final Feature[] features = ( (FeatureStructureChangeModellEvent)event ).getParentFeatures();
+      for( int i = 0; i < features.length; i++ )
+      {
+        final Feature feature = features[i];
+        if( feature == theme.getFeatureList().getParentFeature() )
+        {
+          refresh();
+          break;
+        }
+      }
     }
   }
 
@@ -974,5 +1032,13 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     final Menu cursormenu = menuManager.createContextMenu( m_tableCursor );
     m_tableCursor.setMenu( cursormenu );
+  }
+
+  public void setFocusedFeature( final Feature f, final FeatureTypeProperty ftp )
+  {
+    m_focusedFeature = f;
+    m_focusedProperty = ftp == null ? null : ftp.getName();
+
+    firePostSelectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }
 }

@@ -23,6 +23,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -50,17 +51,20 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final JobExclusiveCommandTarget m_target;
 
-  Collection m_listeners = new ArrayList();
+  protected Collection m_listeners = new ArrayList();
 
   private final IFeatureSelectionManager m_selectionManager;
 
+  private final IFeatureChangeListener m_fcl;
+
   public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
-      final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager )
+      final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     super( workspace, ftp );
 
     m_factory = factory;
     m_selectionManager = selectionManager;
+    m_fcl = fcl;
     m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
   }
 
@@ -69,7 +73,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public Control createControl( final Composite parent, final int style )
   {
-    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionManager );
+    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionManager, m_fcl );
 
     setFeature( getWorkspace(), getFeature() );
 

@@ -51,13 +51,13 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -65,9 +65,14 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
@@ -75,6 +80,8 @@ import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage;
@@ -86,6 +93,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
@@ -106,6 +114,32 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   private final Marshaller m_marshaller;
 
   private LayerTableViewer m_layerTable = null;
+
+  final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
+  {
+
+    public void featureChanged( final FeatureChange change )
+    {}
+
+    public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+    {
+      // feature view öffnen
+      final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      final IWorkbenchPage page = window.getActivePage();
+      try
+      {
+        page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+      }
+      catch( final PartInitException e )
+      {
+        e.printStackTrace();
+        final Shell shell = window.getShell();
+        ErrorDialog.openError( shell, "Feature bearbeiten", "Fehler beim Öffnen der Feature-View", e.getStatus() );
+      }
+
+      getLayerTable().setFocusedFeature( feature, ftp );
+    }
+  };
 
   public GisTableEditor()
   {
@@ -186,7 +220,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
     m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, KalypsoCorePlugin.getDefault()
-        .getSelectionManager() );
+        .getSelectionManager(), m_fcl );
 
     final MenuManager menuManager = new MenuManager();
     menuManager.setRemoveAllWhenShown( true );
@@ -301,7 +335,7 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
     final ExportableLayerTable exp = new ExportableLayerTable( m_layerTable );
 
@@ -314,7 +348,6 @@ public class GisTableEditor extends AbstractEditorPart implements ISelectionProv
    *      ImageDescriptor)
    */
   public IWizardPage[] createWizardPages( IPublishingConfiguration configuration, ImageDescriptor defaultImage )
-      throws CoreException
   {
     final IWizardPage page = new ExportTableOptionsPage( "optionPage", "Export Otionen",
         ImageProvider.IMAGE_UTIL_BERICHT_WIZ );

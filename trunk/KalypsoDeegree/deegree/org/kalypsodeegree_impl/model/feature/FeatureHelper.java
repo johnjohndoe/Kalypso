@@ -11,6 +11,7 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -81,6 +82,7 @@ public class FeatureHelper
    * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
    * <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
    * </ul>
+   * 
    * @throws CloneNotSupportedException
    * 
    * @throws IllegalArgumentException
@@ -132,7 +134,7 @@ public class FeatureHelper
       return null;
 
     // TODO: we still need a type handler for the simple types
-    
+
     // imutable types
     if( object instanceof Boolean )
       return object;
@@ -142,20 +144,20 @@ public class FeatureHelper
       return object;
 
     // if we have an IMarhsallingTypeHandler, it will do the clone for us.
-        final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-        final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)typeRegistry.getTypeHandlerForClassName( type );
-        if( typeHandler != null )
-          return typeHandler.cloneObject( object );
-    
-        // TODO: delete these lines AFTEr we have checked that it is still working
-//    if( object instanceof GM_Point )
-//    {
-//      final GM_Point point = (GM_Point)object;
-//      // todo: is there a universal clone-method for GM_Geometries?
-//      final GM_Position position = point.getPosition();
-//      final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
-//      return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
-//    }
+    final ITypeRegistry typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler)typeRegistry.getTypeHandlerForClassName( type );
+    if( typeHandler != null )
+      return typeHandler.cloneObject( object );
+
+    // TODO: delete these lines AFTEr we have checked that it is still working
+    //    if( object instanceof GM_Point )
+    //    {
+    //      final GM_Point point = (GM_Point)object;
+    //      // todo: is there a universal clone-method for GM_Geometries?
+    //      final GM_Position position = point.getPosition();
+    //      final GM_Position newPos = GeometryFactory.createGM_Position( (double[])position.getAsArray().clone() );
+    //      return GeometryFactory.createGM_Point( newPos, point.getCoordinateSystem() );
+    //    }
 
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + type + "' nicht kopieren." );
   }
@@ -335,5 +337,50 @@ public class FeatureHelper
     }
 
     return properties;
+  }
+
+  /**
+   * copys all simple type properties from the source feature into the target feature
+   * 
+   * @param srcFE
+   * @param targetFE
+   * @throws MultiException
+   */
+  public static void copySimpleProperties( final Feature srcFE, final Feature targetFE ) throws MultiException
+  {
+    final MultiException multiException = new MultiException();
+    final FeatureTypeProperty[] srcFTPs = srcFE.getFeatureType().getProperties();
+    for( int i = 0; i < srcFTPs.length; i++ )
+    {
+      try
+      {
+        copySimpleProperty( srcFE, targetFE, srcFTPs[i] );
+      }
+      catch( CloneNotSupportedException e )
+      {
+        multiException.addException( e );
+      }
+    }
+    if( !multiException.isEmpty() )
+      throw multiException;
+  }
+
+  /**
+   * 
+   * @param srcFE
+   * @param targetFE
+   * @param property
+   * @throws CloneNotSupportedException
+   */
+  public static void copySimpleProperty( Feature srcFE, Feature targetFE, FeatureTypeProperty property )
+      throws CloneNotSupportedException
+  {
+    if( !( property instanceof FeatureAssociationTypeProperty ) )
+    {
+      final Object valueOriginal = srcFE.getProperty( property.getName() );
+      final Object cloneValue;
+      cloneValue = cloneData( valueOriginal, property.getType() );
+      targetFE.setProperty( property.getName(), cloneValue );
+    }
   }
 }

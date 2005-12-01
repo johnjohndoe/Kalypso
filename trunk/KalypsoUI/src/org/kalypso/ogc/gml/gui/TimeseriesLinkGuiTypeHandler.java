@@ -46,6 +46,7 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.ogc.gml.featureview.FeatureviewHelper;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.TimeserieLinkFeatureDialog;
@@ -150,10 +151,10 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
-    return new ButtonModifier( workspace, ftp, selectionManager );
+    return new ButtonModifier( workspace, ftp, selectionManager, fcl );
   }
 }
