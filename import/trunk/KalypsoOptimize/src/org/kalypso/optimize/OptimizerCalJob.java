@@ -61,8 +61,6 @@ public class OptimizerCalJob implements ICalcJob
 
   private final Logger m_logger;
 
-  private SceJob m_sceJob = null;
-
   /**
    * @param logger
    * @param job
@@ -87,18 +85,22 @@ public class OptimizerCalJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
+  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater,
+      final ICalcMonitor monitor )
   {
     try
     {
+
       final AutoCalibration autoCalibration = m_optimizingJob.getOptimizeConfiguration();
-      m_sceJob = new SceJob( autoCalibration, tmpdir );
+      SceJob sceJob = new SceJob( autoCalibration, tmpdir );
 
       final SceIOHandler sceIO = new SceIOHandler( m_logger, autoCalibration, m_optimizingJob );
 
-      m_sceJob.optimize( sceIO );
       if( monitor.isCanceled() )
         return;
+      sceJob.optimize( sceIO, monitor );
+      //      if( monitor.isCanceled() )
+      //        return;
       m_optimizingJob.publishResults( resultEater );
     }
     catch( Exception e )

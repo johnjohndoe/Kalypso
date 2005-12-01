@@ -62,10 +62,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessControlThread;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
+import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -83,8 +87,6 @@ public class SceJob
 
   private final File m_sceExe;
 
-  private boolean m_isCanceled = false;
-
   private final File m_sceTmpDir;
 
   private final AutoCalibration m_autoCalibration;
@@ -97,11 +99,11 @@ public class SceJob
     m_sceExe = prepareSCE();
   }
 
-  public void optimize( SceIOHandler sceIO ) throws Exception
+  public void optimize( final SceIOHandler sceIO, final ICalcMonitor monitor ) throws Exception
   {
     makeinputFiles();
     //    Parameter
-    startSCEOptimization( sceIO );
+    startSCEOptimization( sceIO, monitor );
   }
 
   private File prepareSCE()
@@ -149,17 +151,25 @@ public class SceJob
     writer.close();
   }
 
-  private void startSCEOptimization( SceIOHandler sceIO ) throws CalcJobServiceException
+  private void startSCEOptimization( final SceIOHandler sceIO, final ICalcMonitor monitor )
+      throws CalcJobServiceException
   {
     InputStreamReader inStream = null;
     InputStreamReader errStream = null;
 
+    ProcessControlThread procCtrlThread = null;
     try
     {
       final File exeDir = m_sceExe.getParentFile();
       final String commandString = m_sceExe.getAbsolutePath();
 
       final Process process = Runtime.getRuntime().exec( commandString, null, exeDir );
+      final long lTimeOut = 1000l * 60l * 15l;// 15 minutes
+      if( lTimeOut > 0 )
+      {
+        procCtrlThread = new ProcessControlThread( process, lTimeOut );
+        procCtrlThread.start();
+      }
 
       final StringBuffer outBuffer = new StringBuffer();
       final StringBuffer errBuffer = new StringBuffer();
@@ -182,22 +192,29 @@ public class SceJob
           int bufferC = errStream.read( buffer );
           errBuffer.append( buffer, 0, bufferC );
         }
-        if( isCanceled() )
+        if( monitor.isCanceled() )
         {
           process.destroy();
+          if( procCtrlThread != null )
+          {
+            procCtrlThread.endProcessControl();
+          }
           return;
         }
         try
         {
           process.exitValue();
-          return;
+          break;
         }
         catch( IllegalThreadStateException e )
         {
           sceIO.handleStreams( outBuffer, errBuffer, inputWriter );
         }
-
         Thread.sleep( 100 );
+      }
+      if( procCtrlThread != null )
+      {
+        procCtrlThread.endProcessControl();
       }
     }
     catch( final IOException e )
@@ -208,32 +225,17 @@ public class SceJob
     catch( final InterruptedException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausfuehren", e );
+      throw new CalcJobServiceException( "beim Ausfuehren unterbrochen", e );
     }
     finally
     {
-      try
+      IOUtils.closeQuietly( inStream );
+      IOUtils.closeQuietly( errStream );
+      if( procCtrlThread != null && procCtrlThread.procDestroyed() )
       {
-        if( inStream != null )
-          inStream.close();
-
-        if( errStream != null )
-          errStream.close();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
+        throw new CalcJobServiceException( "beim Ausfuehren unterbrochen", new ProcessTimeoutException(
+            "Timeout bei der Abarbeitung der Optimierung" ) );
       }
     }
-  }
-
-  private boolean isCanceled()
-  {
-    return m_isCanceled;
-  }
-
-  public void cancel()
-  {
-    m_isCanceled = true;
   }
 }
