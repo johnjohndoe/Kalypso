@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
@@ -57,10 +58,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String, org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
+   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace, org.kalypsodeegree.model.feature.FeatureTypeProperty, java.lang.String, org.kalypso.ogc.gml.selection.IFeatureSelectionManager, org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
   public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
-      final String format, final IFeatureSelectionManager selectionManager )
+      final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     final String type = ftp.getType();
 
@@ -81,14 +82,14 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( "java.lang.Boolean".equals( type ) )
       return new BooleanModifier( ftp );
     if( FeatureHelper.isGeometryType( type ) )
-      return new ButtonModifier( workspace, ftp, selectionManager );
+      return new ButtonModifier( workspace, ftp, selectionManager, fcl );
     if( "FeatureAssociationType".equals( type ) )
-      return new ButtonModifier( workspace, ftp, selectionManager );
+      return new ButtonModifier( workspace, ftp, selectionManager, fcl );
 
     final IGuiTypeHandler typeHandler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
         .getTypeHandlerForClassName( type );
     if( typeHandler != null )
-      return typeHandler.createFeatureModifier( workspace, ftp, selectionManager );
+      return typeHandler.createFeatureModifier( workspace, ftp, selectionManager, fcl );
 
     return new StringModifier( ftp );
   }

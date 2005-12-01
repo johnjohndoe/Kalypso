@@ -81,6 +81,7 @@ import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.xml.sax.InputSource;
@@ -118,7 +119,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       onFeatureChanged( change );
     }
 
-    public void openFeatureRequested( final Feature feature )
+    public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
     {
     // TODO: open Dialog?
     }

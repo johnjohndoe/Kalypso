@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -95,7 +96,7 @@ public class FeatureviewDialog extends Dialog
         updateButtons();
       }
 
-      public void openFeatureRequested( Feature feature )
+      public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
       {
       // TODO: stack dialogs
       }

@@ -351,7 +351,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager );
+      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
       fc.setFeature( workspace, feature );
 
       addFeatureControl( fc );
@@ -554,11 +554,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
-  public void openFeatureRequested( final Feature feature )
+  public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
   {
-    fireOpenFeatureRequested( feature );
+    fireOpenFeatureRequested( feature, ftp );
   }
 
   /**

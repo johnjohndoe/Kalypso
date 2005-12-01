@@ -47,6 +47,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 
 /**
  * A fake dialog, which instead of opening a Dialog fire the requestOpenDialog event.
@@ -57,11 +58,13 @@ public class JumpToFeatureDialog implements IFeatureDialog
 {
   private final Feature m_feature;
   private final IFeatureChangeListener m_listener;
+  private final FeatureTypeProperty m_ftp;
 
-  public JumpToFeatureDialog( final IFeatureChangeListener listener, final Feature feature )
+  public JumpToFeatureDialog( final IFeatureChangeListener listener, final Feature feature, final FeatureTypeProperty ftp )
   {
     m_listener = listener;
     m_feature = feature;
+    m_ftp = ftp;
   }
 
   /**
@@ -69,7 +72,7 @@ public class JumpToFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    m_listener.openFeatureRequested( m_feature );
+    m_listener.openFeatureRequested( m_feature, m_ftp );
     
     // always return cancel, nothing should be done else
     return Window.CANCEL;

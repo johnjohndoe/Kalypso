@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Event;
 import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.dialog.CalendarFeatureDialog;
-import org.kalypso.ogc.gml.featureview.dialog.FeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
@@ -102,9 +101,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
         fireFeatureChange( change );
       }
 
-      public void openFeatureRequested( final Feature featureToOpen )
+      public void openFeatureRequested( final Feature featureToOpen, final FeatureTypeProperty ftpToOpen )
       {
-        fireOpenFeatureRequested( featureToOpen );
+        fireOpenFeatureRequested( featureToOpen, ftpToOpen );
       }
     };
 
@@ -130,7 +129,8 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
       {
         // it is a list of features or links to features or mixed
-        return new FeatureDialog( workspace, feature, ftp, selectionManager );
+//        return new FeatureDialog( workspace, feature, ftp, selectionManager );
+        return new JumpToFeatureDialog( listener, feature, ftp );
       }
       // it is not a list
       final Object property = feature.getProperty( ftp.getName() );
@@ -146,7 +146,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       else
         return new NotImplementedFeatureDialog( "hier ist kein Element verknüpft", "<leer>" );
 
-      return new JumpToFeatureDialog( listener, linkedFeature );
+      return new JumpToFeatureDialog( listener, linkedFeature, null );
     }
 
     // TODO: use GUITypeHandler for those two!

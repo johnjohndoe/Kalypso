@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -109,7 +110,7 @@ public class FeaturePage extends WizardPage
         applyFeatureChange( change );
       }
 
-      public void openFeatureRequested( Feature feature )
+      public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
       {
       // TODO: open modal dialog?
       }

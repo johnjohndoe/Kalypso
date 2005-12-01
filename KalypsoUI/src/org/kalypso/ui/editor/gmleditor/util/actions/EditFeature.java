@@ -56,7 +56,6 @@ public class EditFeature implements IActionDelegate
   {
    if( m_selection!= null && action.isEnabled() )
    {
-     
      final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
      final IWorkbenchPage page = window.getActivePage();
      try

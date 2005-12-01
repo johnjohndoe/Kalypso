@@ -217,19 +217,23 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       else if( modellEvent instanceof FeatureStructureChangeModellEvent )
       {
         final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent)modellEvent;
-        final Feature parent = fscme.getParentFeature();
-        if( m_featureList.contains( parent ) )
+        final Feature[] parents = fscme.getParentFeatures();
+        for( int i = 0; i < parents.length; i++ )
         {
-          switch( fscme.getChangeType() )
+          Feature parent = parents[i];
+          if( m_featureList.contains( parent ) )
           {
-          case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
-          case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
-          case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
-            setDirty();
-            restyleFeature( parent );
-            break;
-          default:
-            setDirty();
+            switch( fscme.getChangeType() )
+            {
+            case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
+            case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
+            case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
+              setDirty();
+              restyleFeature( parent );
+              break;
+            default:
+              setDirty();
+            }
           }
         }
       }
@@ -335,9 +339,10 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         result = new HashSet();
       m_vaildEnvelope = null;
       restyle( env );
-      
+
       // iterate through array to avoid concurrent modification exception
-      final DisplayElement[][] elts = (DisplayElement[][])m_dispayElements.toArray( new DisplayElement[m_dispayElements.size()][] );
+      final DisplayElement[][] elts = (DisplayElement[][])m_dispayElements.toArray( new DisplayElement[m_dispayElements
+          .size()][] );
       for( int i = 0; i < elts.length; i++ )
       {
         final DisplayElement[] element = elts[i];

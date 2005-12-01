@@ -36,6 +36,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Annotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -81,6 +82,27 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 public class FeatureView extends ViewPart implements ModellEventListener
 {
   private static final String _KEIN_FEATURE_SELEKTIERT_ = "<kein Feature selektiert>";
+
+  private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
+  {
+    public void featureChanged( final FeatureChange change )
+    {
+      // we know that it is a commandable workspace
+      final CommandableWorkspace workspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
+      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[]
+      { change } );
+
+      m_target.setCommandManager( workspace );
+      m_target.postCommand( command, null );
+    }
+
+    public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
+    {
+      final CommandableWorkspace workspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
+      // just show this feature in the view, don't change the selection this doesn't work
+      activateFeature( workspace, feature );
+    }
+  };
 
   protected final FeatureComposite m_featureComposite = new FeatureComposite( null, null, KalypsoCorePlugin
       .getDefault().getSelectionManager() );
@@ -169,26 +191,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_mainGroup.setLayout( new GridLayout() );
     m_mainGroup.setText( _KEIN_FEATURE_SELEKTIERT_ );
 
-    m_featureComposite.addChangeListener( new IFeatureChangeListener()
-    {
-      public void featureChanged( final FeatureChange change )
-      {
-        // we know that it is a commandable workspace
-        final CommandableWorkspace workspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
-        final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[]
-        { change } );
-
-        m_target.setCommandManager( workspace );
-        m_target.postCommand( command, null );
-      }
-
-      public void openFeatureRequested( final Feature feature )
-      {
-        final CommandableWorkspace workspace = (CommandableWorkspace)m_featureComposite.getWorkspace();
-        // just show this feature in the view, don't change the selection this doesn't work
-        activateFeature( workspace, feature );
-      }
-    } );
+    m_featureComposite.addChangeListener( m_fcl );
 
     activateFeature( null, null );
 

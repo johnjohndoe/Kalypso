@@ -129,9 +129,6 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
   public Object getParent( final Object element )
   {
     final Object object = m_parentHash.get( element );
-    if( object == null )
-      System.out.println( "No parent for object: " + element );
-    
     return object;
   }
 

@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.gui;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -65,5 +66,5 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 
   public ControlType createFeatureviewControl( final String propertyName, final ObjectFactory factory ) throws JAXBException;
 
-  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager );
+  public IFeatureModifier createFeatureModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl );
 }

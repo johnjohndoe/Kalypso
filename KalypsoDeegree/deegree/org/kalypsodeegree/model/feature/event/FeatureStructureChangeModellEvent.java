@@ -51,7 +51,7 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
 {
   private final GMLWorkspace m_workspace;
 
-  private final Feature m_parentFeature;
+  private final Feature[] m_parentFeature;
 
   public static final int STRUCTURE_CHANGE_ADD = 1;
 
@@ -61,7 +61,15 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
 
   private final int m_changeType;
 
-  public FeatureStructureChangeModellEvent( GMLWorkspace workspace, Feature parentFeature, int changeType )
+  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature parentFeature,
+      final int changeType )
+  {
+    this( workspace, new Feature[]
+    { parentFeature }, changeType );
+  }
+
+  public FeatureStructureChangeModellEvent( final GMLWorkspace workspace, final Feature[] parentFeature,
+      final int changeType )
   {
     super( workspace, FEATURE_CHANGE );
     m_workspace = workspace;
@@ -69,7 +77,7 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
     m_changeType = changeType;
   }
 
-  public Feature getParentFeature()
+  public Feature[] getParentFeatures()
   {
     return m_parentFeature;
   }

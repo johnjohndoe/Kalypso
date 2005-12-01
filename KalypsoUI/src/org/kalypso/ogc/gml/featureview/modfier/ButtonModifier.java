@@ -58,8 +58,11 @@ import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.celleditors.DialogCellEditor;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * @author belger
@@ -74,11 +77,15 @@ public class ButtonModifier implements IFeatureModifier
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public ButtonModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp, final IFeatureSelectionManager selectionManager )
+  private final IFeatureChangeListener m_fcl;
+
+  public ButtonModifier( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
+      final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     m_workspace = workspace;
     m_ftp = ftp;
     m_selectionManager = selectionManager;
+    m_fcl = fcl;
   }
 
   /**
@@ -105,25 +112,15 @@ public class ButtonModifier implements IFeatureModifier
   public CellEditor createCellEditor( final Composite parent )
   {
     final IFeatureSelectionManager manager = m_selectionManager;
+    final IFeatureChangeListener fcl = m_fcl;
     return new DialogCellEditor( parent )
     {
       IFeatureDialog m_featureDialog = null;
 
       protected boolean openDialog( final Control parentControl )
       {
-        // listener will be called, when a linked feature should be edited
-        final IFeatureChangeListener listener = new IFeatureChangeListener() {
-
-          public void featureChanged( final FeatureChange change )
-          {
-          }
-
-          public void openFeatureRequested( final Feature feature )
-          {
-            // what to do? normally feature should be selected, is this always ok?
-          }};
-        
-        m_featureDialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty(), listener, manager );
+        m_featureDialog = ButtonFeatureControl.chooseDialog( getWorkspace(), getFeature(), getFeatureTypeProperty(),
+            fcl, manager );
         return m_featureDialog.open( parentControl.getShell() ) == Window.OK;
       }
 
@@ -179,12 +176,26 @@ public class ButtonModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
+    // TODO: GUITypeHandler konsequent einsetzen
     // besser: abhängig von der FeatureTypeProperty etwas machen
+    final FeatureTypeProperty ftp = getFeatureTypeProperty();
+    Object fprop = f.getProperty(ftp.getName());
     final Object value = getValue( f );
-    final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( m_ftp.getType() );
+    final IGuiTypeHandler handler = (IGuiTypeHandler)GuiTypeRegistrySingleton.getTypeRegistry()
+        .getTypeHandlerForClassName( m_ftp.getType() );
+    if(fprop != null)
+    {
     if( handler != null && value != null )
-      return handler.getText(value);
-
+      return handler.getText( value );
+    else if( value instanceof Feature )
+      return "<Element...>";
+    else if( value instanceof FeatureList )
+      return "<Elemente...>";
+    else if( value instanceof GM_Object )
+      return "<Geometrie>";
+    else if( ftp instanceof FeatureAssociationTypeProperty)
+      return "<Link auf Element...>";    
+    }
     return "<Editieren...>";
   }
 
@@ -204,7 +215,7 @@ public class ButtonModifier implements IFeatureModifier
   {
   // nichts zu tun
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
    */

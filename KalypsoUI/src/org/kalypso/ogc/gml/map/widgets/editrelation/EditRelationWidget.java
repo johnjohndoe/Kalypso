@@ -229,7 +229,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     super.moved( p );
     if( m_srcFE == null )
       return;
-    final JMSelector selector = new JMSelector(  );
+    final JMSelector selector = new JMSelector();
     final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory
@@ -252,6 +252,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   public void leftReleased( Point p )
   {
     perform();
+    finish();
   }
 
   /**
@@ -337,9 +338,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
    * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
-  public void perform()
+  public synchronized void perform()
   {
-    final List fitList = getFitList( m_srcFE, m_targetFE );
+    final Feature srcFeature = m_srcFE;
+    final Feature targetFeature = m_targetFE;
+    if( srcFeature == null || targetFeature == null )
+      return;
+    final List fitList = getFitList( srcFeature, targetFeature );
     m_topLevel.getDisplay().asyncExec( new Runnable()
     {
       public void run()
@@ -410,13 +415,14 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           {
             final HeavyRelationType heavyRealtion = (HeavyRelationType)relation;
 
-            command = new AddHeavyRelationshipCommand( workspace, m_srcFE, heavyRealtion.getLink1(), heavyRealtion
-                .getBodyFT(), heavyRealtion.getLink2(), m_targetFE );
+            command = new AddHeavyRelationshipCommand( workspace, srcFeature, heavyRealtion.getLink1(), heavyRealtion
+                .getBodyFT(), heavyRealtion.getLink2(), targetFeature );
           }
           else
           {
             final RelationType normalRelation = (RelationType)relation;
-            command = new AddRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), 0, m_targetFE );
+            command = new AddRelationCommand( workspace, srcFeature, normalRelation.getLink().getName(), 0,
+                targetFeature );
           }
           break;
         case MODE_REMOVE:
@@ -426,18 +432,19 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
             FindExistingHeavyRelationsFeatureVisitor visitor = new FindExistingHeavyRelationsFeatureVisitor( workspace,
                 heavyRealtion );
-            visitor.visit( m_srcFE );
-            Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( m_targetFE );
+            visitor.visit( srcFeature );
+            Feature[] bodyFeatureFor = visitor.getBodyFeatureFor( targetFeature );
             if( bodyFeatureFor.length > 0 )
-              command = new RemoveHeavyRelationCommand( workspace, m_srcFE, heavyRealtion.getLink1().getName(),
-                  bodyFeatureFor[0], heavyRealtion.getLink2().getName(), m_targetFE );
+              command = new RemoveHeavyRelationCommand( workspace, srcFeature, heavyRealtion.getLink1().getName(),
+                  bodyFeatureFor[0], heavyRealtion.getLink2().getName(), targetFeature );
             else
               command = null;
           }
           else
           {
             final RelationType normalRelation = (RelationType)relation;
-            command = new RemoveRelationCommand( workspace, m_srcFE, normalRelation.getLink().getName(), m_targetFE );
+            command = new RemoveRelationCommand( workspace, srcFeature, normalRelation.getLink().getName(),
+                targetFeature );
           }
           break;
         default:

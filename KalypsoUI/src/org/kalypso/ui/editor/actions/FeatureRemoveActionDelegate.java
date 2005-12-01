@@ -37,10 +37,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ui.editor.gmleditor.util.command.DeleteFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

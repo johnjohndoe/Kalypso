@@ -52,9 +52,9 @@ public class SubFeatureControl extends AbstractFeatureControl
         fireFeatureChange( change );
       }
 
-      public void openFeatureRequested( final Feature featureToOpen )
+      public void openFeatureRequested( final Feature featureToOpen, final FeatureTypeProperty ftpToOpen )
       {
-        fireOpenFeatureRequested( featureToOpen );
+        fireOpenFeatureRequested( featureToOpen, ftpToOpen );
       }
     } );
 

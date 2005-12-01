@@ -50,6 +50,7 @@ import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
+import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -196,6 +197,11 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_workspace.removeModellListener( listener );
   }
 
+  public Feature resolveLink( Feature srcFeature, String linkPropertyName, int resolveMode )
+  {
+    return m_workspace.resolveLink( srcFeature, linkPropertyName, resolveMode );
+  }
+
   public Feature resolveLink( Feature srcFeature, String linkPropertyName )
   {
     return m_workspace.resolveLink( srcFeature, linkPropertyName );
@@ -204,6 +210,11 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName )
   {
     return m_workspace.resolveLinks( srcFeature, linkPropertyName );
+  }
+
+  public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName, int resolveMode )
+  {
+    return m_workspace.resolveLinks( srcFeature, linkPropertyName, resolveMode );
   }
 
   public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType, String linkPropertyName )
@@ -267,6 +278,15 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_workspace.addFeatureAsAggregation( parent, propName, pos, featureID );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, int, java.lang.String)
+   */
+  public void setFeatureAsAggregation( Feature srcFE, String propName, int pos, String featureID ) throws Exception
+  {
+    m_workspace.setFeatureAsAggregation( srcFE, propName, pos, featureID );
+  }
+
   public boolean removeLinkedAsAggregationFeature( Feature parentFeature, String propName, String linkFeatureId )
   {
     return m_workspace.removeLinkedAsAggregationFeature( parentFeature, propName, linkFeatureId );
@@ -309,7 +329,8 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature, java.lang.String, int)
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String, int)
    */
   public boolean isAggrigatedLink( Feature parent, String linkPropName, int pos )
   {
@@ -335,7 +356,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     m_workspace.setFeatureAsAggregation( parent, propName, featureID, overwrite );
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getParentFeature(org.kalypsodeegree.model.feature.Feature)
    */
@@ -343,4 +364,34 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     return m_workspace.getParentFeature( toFindParentFrom );
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
+   *      org.kalypsodeegree.model.feature.Feature, int, org.kalypsodeegree.model.feature.FeatureTypeProperty[])
+   */
+  public void accept( FeatureVisitor visitor, Feature feature, int depth, FeatureTypeProperty[] featureProperties )
+  {
+    m_workspace.accept( visitor, feature, depth, featureProperties );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#contains(org.kalypsodeegree.model.feature.Feature)
+   */
+  public boolean contains( final Feature feature )
+  {
+    return m_workspace.contains( feature );
+  }
+
+  /**
+   * 
+   * @param parentFeature
+   * @param ftp
+   * @param pos
+   * @return
+   */
+  public boolean isBrokenLink( Feature parentFeature, FeatureTypeProperty ftp, int pos )
+  {
+    return m_workspace.isBrokenLink(  parentFeature, ftp,  pos );
+  }
+
 }

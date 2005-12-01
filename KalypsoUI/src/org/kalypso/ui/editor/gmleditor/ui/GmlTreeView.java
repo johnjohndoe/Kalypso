@@ -279,7 +279,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
       final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent)modellEvent;
-      final Feature parentFeature = structureEvent.getParentFeature();
+      final Feature[] parentFeature = structureEvent.getParentFeatures();
 
       if( !m_composite.isDisposed() )
       {
@@ -291,7 +291,13 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
             if( parentFeature == null )
               treeViewer.refresh();
             else
-              treeViewer.refresh( parentFeature );
+            {
+              for( int i = 0; i < parentFeature.length; i++ )
+              {
+                final Feature feature = parentFeature[i];
+                treeViewer.refresh( feature );
+              }
+            }
           }
         } );
       }
@@ -427,7 +433,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       final Marshaller marshaller = m_factory.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      
+
       marshaller.marshal( m_gisTreeview, writer );
     }
     catch( final JAXBException e )

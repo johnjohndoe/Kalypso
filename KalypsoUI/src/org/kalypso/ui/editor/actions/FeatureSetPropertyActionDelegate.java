@@ -29,9 +29,6 @@
  */
 package org.kalypso.ui.editor.actions;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -68,18 +65,16 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
 
     final Feature focusedFeature = m_selection.getFocusedFeature();
     final String focusedProperty = m_selection.getFocusedProperty();
-    final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
+    final FeatureTypeProperty focusedFTP = focusedFeature.getFeatureType().getProperty( focusedProperty );
 
-    if( ftp != null )
+    if( focusedFTP != null )
     {
       final CommandableWorkspace workspace = m_selection.getWorkspace( focusedFeature );
-      final Map map = new HashMap();
-
-      final Object value = focusedFeature.getProperty( focusedProperty );
-      map.put( focusedProperty, value );
 
       final Feature[] fes = FeatureSelectionHelper.getFeatures( m_selection );
-      final ModifyFeatureCommand command = new ModifyFeatureCommand( workspace, fes, map );
+      final FeatureTypeProperty[] ftpToCopy = new FeatureTypeProperty[]
+      { focusedFTP };
+      final ModifyFeatureCommand command = new ModifyFeatureCommand( workspace, focusedFeature, ftpToCopy, fes );
       try
       {
         workspace.postCommand( command );
@@ -106,7 +101,9 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
   {
     action.setEnabled( false );
     m_selection = null;
-
+    final String text = action.getText();
+    String newText = text.replaceAll( " \\(.*\\)", "" );
+    final String lang = KalypsoGisPlugin.getDefault().getLang();
     if( selection instanceof IFeatureSelection
         && FeatureSelectionHelper.getFeatureCount( (IFeatureSelection)selection ) > 0 )
     {
@@ -117,16 +114,14 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
       {
         final String focusedProperty = m_selection.getFocusedProperty();
         final FeatureTypeProperty ftp = focusedFeature.getFeatureType().getProperty( focusedProperty );
+
         if( ftp != null && m_selection.size() >= 2 )
         {
           action.setEnabled( true );
-          final String text = action.getText();
-          final String lang = KalypsoGisPlugin.getDefault().getLang();
-          final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + ftp.getAnnotation( lang ).getLabel() + ")";
-          action.setText( newText );
+          newText += " (" + ftp.getAnnotation( lang ).getLabel() + ")";
         }
       }
     }
+    action.setText( newText );
   }
-
 }
