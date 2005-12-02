@@ -1,0 +1,14 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../wiskiexport_prognose.gml"/>
+	<featuremapping>
+		<gmlsource xlink:href="../modell.gml"/>
+		<gmlsource xlink:href="wiskiimport_leer.gml"/>
+		<addFeaturesMapping fromPath="PegelCollectionAssociation/PegelMember[Pegel]" toPath="WiskiMember" fromID="PNR" fid="Pegel-${fromID}" handleExisting="change">
+			<map from="Name" to="name"/>
+			<map from="Durchfluss_gerechnet" to="lokal"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>
+
+

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="CalculateStatisticJob">
+	<input id="DamageRaster" path="Damage/annualDamage.gml" relativeToCalcCase="false"/>
+	<input id="LanduseRasterData" path="Landuse/landuseData.gml" relativeToCalcCase="false"/>
+	<input id="ContextModel" path="Control/contextModell.gml" relativeToCalcCase="false"/>
+	
+	<output id="StatisticData" path="Statistic/statistic_annualDamage.gml" relativeToCalcCase="false"/>
+</modeldata>

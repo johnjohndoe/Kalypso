@@ -1,0 +1,94 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gmltarget linktype="gml" xlink:href="../modell.gml"/>
+	<featuremapping>
+		<csvsource xlink:href="Stammdat/pegel.std"  comment="*" delemiter="&#9;" lineskip="1">
+			<featureproperty name="PNR" type="java.lang.String" format="java.lang.Integer"><column>0</column></featureproperty>
+			<featureproperty name="Name" type="java.lang.String" format="java.lang.Integer"><column>1</column></featureproperty>
+			<featureproperty name="Gewaesser" type="java.lang.String" format="java.lang.Integer"><column>2</column></featureproperty>
+			<featureproperty name="Ort" type="org.kalypsodeegree.model.geometry.GM_Point" format="EPSG:31468">
+				<column>3</column>
+				<column>4</column>
+			</featureproperty>
+			<featureproperty name="ZG" type="java.lang.Integer" format="java.lang.Integer"><column>6</column></featureproperty>
+			<featureproperty name="Land" type="java.lang.String" format="java.lang.Integer"><column>7</column></featureproperty>
+			<featureproperty name="WN1" type="java.lang.String" format="java.lang.Integer"><column>8</column></featureproperty>
+			<featureproperty name="WN2" type="java.lang.String" format="java.lang.Integer"><column>9</column></featureproperty>
+			<featureproperty name="WN3" type="java.lang.String" format="java.lang.Integer"><column>10</column></featureproperty>
+			<featureproperty name="WN4" type="java.lang.String" format="java.lang.Integer"><column>11</column></featureproperty>
+			<featureproperty name="WN5" type="java.lang.String" format="java.lang.Integer"><column>12</column></featureproperty>
+			<featureproperty name="W1" type="java.lang.Integer" format=""><column>13</column></featureproperty>
+			<featureproperty name="W2" type="java.lang.Integer" format=""><column>14</column></featureproperty>
+			<featureproperty name="W3" type="java.lang.Integer" format=""><column>15</column></featureproperty>
+			<featureproperty name="W4" type="java.lang.Integer" format=""><column>16</column></featureproperty>
+			<featureproperty name="W5" type="java.lang.Integer" format=""><column>17</column></featureproperty>
+			<featureproperty name="BezqGmin" type="java.lang.String" format="java.lang.Integer"><column>18</column></featureproperty>
+			<featureproperty name="QGMIN" type="java.lang.Integer" format=""><column>19</column></featureproperty>
+			<featureproperty name="BEZQGMAX" type="java.lang.String" format="java.lang.Integer"><column>20</column></featureproperty>
+			<featureproperty name="QGMAX" type="java.lang.Integer" format=""><column>21</column></featureproperty>
+			<featureproperty name="Vorsp" type="java.lang.Integer" format=""><column>22</column></featureproperty>
+			<featureproperty name="WDAT" type="java.lang.Integer" format=""><column>23</column></featureproperty>
+			<featureproperty name="QDAT" type="java.lang.Integer" format=""><column>24</column></featureproperty>
+			<featureproperty name="VORGP" type="java.lang.Integer" format=""><column>25</column></featureproperty>
+			<featureproperty name="KUM" type="java.lang.Integer" format=""><column>26</column></featureproperty>
+			<featureproperty name="WMIN" type="java.lang.Integer" format=""><column>27</column></featureproperty>
+			<featureproperty name="WMAX" type="java.lang.Integer" format=""><column>28</column></featureproperty>
+			<featureproperty name="QMAX" type="java.lang.Integer" format=""><column>29</column></featureproperty>
+			<featureproperty name="DWMAX" type="java.lang.Integer" format=""><column>30</column></featureproperty>
+			<featureproperty name="DQMAX" type="java.lang.Integer" format=""><column>31</column></featureproperty>
+			<featureproperty name="NNW" type="java.lang.Integer" format=""><column>32</column></featureproperty>
+			<featureproperty name="MNW" type="java.lang.Integer" format=""><column>33</column></featureproperty>
+			<featureproperty name="MW" type="java.lang.Integer" format=""><column>34</column></featureproperty>
+			<featureproperty name="MHW" type="java.lang.Integer" format=""><column>35</column></featureproperty>
+			<featureproperty name="HHW" type="java.lang.Integer" format=""><column>36</column></featureproperty>
+			<featureproperty name="NNQ" type="java.lang.Integer" format=""><column>37</column></featureproperty>
+			<featureproperty name="MNQ" type="java.lang.Integer" format=""><column>38</column></featureproperty>
+			<featureproperty name="MQ" type="java.lang.Integer" format=""><column>39</column></featureproperty>
+			<featureproperty name="MHQ" type="java.lang.Integer" format=""><column>40</column></featureproperty>
+			<featureproperty name="HHQ" type="java.lang.Integer" format=""><column>41</column></featureproperty>
+		</csvsource>
+		<gmlsource xlink:href="../modell.gml"/>
+		<addFeaturesMapping fromPath="featureCollection/featureMember" fromID="PNR" toPath="PegelCollectionAssociation/PegelMember" toID="PNR" fid="${fromID}" handleExisting="change">
+			<map from="PNR" to="PNR"/>
+			<map from="Name" to="Name"/>
+			<map from="Gewaesser" to="Gewaesser"/>
+			<map from="Ort" to="location"/>
+			<map from="ZG" to="ZG"/>
+			<map from="Land" to="Land"/>
+			<map from="WN1" to="WN1"/>
+			<map from="WN2" to="WN2"/>
+			<map from="WN3" to="WN3"/>
+			<map from="WN4" to="WN4"/>
+			<map from="WN5" to="WN5"/>
+			<map from="W1" to="W1"/>
+			<map from="W2" to="W2"/>
+			<map from="W3" to="W3"/>
+			<map from="W4" to="W4"/>
+			<map from="W5" to="W5"/>
+			<map from="BezqGmin" to="BezqGmin"/>
+			<map from="QGMIN" to="QGMIN"/>
+			<map from="BEZQGMAX" to="BEZQGMAX"/>
+			<map from="QGMAX" to="QGMAX"/>
+			<map from="Vorsp" to="Vorsp"/>
+			<map from="WDAT" to="WDAT"/>
+			<map from="QDAT" to="QDAT"/>
+			<map from="VORGP" to="VORGP"/>
+			<map from="KUM" to="KUM"/>
+			<map from="WMIN" to="WMIN"/>
+			<map from="WMAX" to="WMAX"/>
+			<map from="QMAX" to="QMAX"/>
+			<map from="DWMAX" to="DWMAX"/>
+			<map from="DQMAX" to="DQMAX"/>
+			<map from="NNW" to="NNW"/>
+			<map from="MNW" to="MNW"/>
+			<map from="MW" to="MW"/>
+			<map from="MHW" to="MHW"/>
+			<map from="HHW" to="HHW"/>
+			<map from="NNQ" to="NNQ"/>
+			<map from="MNQ" to="MNQ"/>
+			<map from="MQ" to="MQ"/>
+			<map from="MHQ" to="MHQ"/>
+			<map from="HHQ" to="HHQ"/>
+		</addFeaturesMapping>
+	</featuremapping>
+</gmlconvert>

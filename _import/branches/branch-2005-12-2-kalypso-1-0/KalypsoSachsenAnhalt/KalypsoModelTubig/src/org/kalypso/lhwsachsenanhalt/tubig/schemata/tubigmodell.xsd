@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.tubig.modell" version="0.1" xmlns:tubigcommon="org.kalypso.tubig.common" xmlns:tubigpegel="org.kalypso.tubig.pegel" xmlns:tubigombrometer="org.kalypso.tubig.ombrometer" xmlns:tubigspeicher="org.kalypso.tubig.speicher" xmlns:tubig="org.kalypso.tubig.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="gml/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="gml/bce/obslink.xsd"/>
+	<import namespace="org.kalypso.tubig.pegel" schemaLocation="pegel.xsd"/>
+	<import namespace="org.kalypso.tubig.ombrometer" schemaLocation="ombrometer.xsd"/>
+	<import namespace="org.kalypso.tubig.speicher" schemaLocation="speicher.xsd"/>
+	<import namespace="org.kalypso.tubig.common" schemaLocation="common.xsd"/>
+	<element name="TubigModell" type="tubig:_TubigModellType"/>
+	<complexType name="_TubigModellType">
+		<complexContent>
+			<extension base="tubigcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="tubigpegel:PegelCollectionAssociation"/>
+					<element ref="tubigombrometer:OmbrometerCollectionAssociation"/>
+					<element ref="tubigspeicher:SpeicherCollectionAssociation"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

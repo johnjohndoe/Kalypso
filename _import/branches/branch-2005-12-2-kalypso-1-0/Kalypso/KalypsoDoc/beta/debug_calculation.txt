@@ -1,0 +1,17 @@
+Testen von Rechenvarianten
+==========================
+
+Zum Testen von Rechenvarianten ist im KalypsoDebug Plugin eine Aktion definiert, die wie folgt funktioniert:
+
+Zuerst verhält sich as Kommando genauso wie der Menüpunkt 'Berechnung(en) durchführen' 
+des Menüs 'Rechenvariante' und berechnet alle selektierten Rechenvarianten
+
+Nachdem die Berechnung erfolgreich durchgeführt wurde (ansonstengibts die übliche 
+Fehlermeldung), startet ein Vergleich von Ist und Soll der Berechnungsergebnisse
+Hierzu wird die Datei .test.xml (muss genau so heissen) im Hauptverzeichnis der Rechenvariante
+gelesen, welche Paare von Resourcen definiert, die verglichen werden sollen. Jedes Paar (können
+jeweils Dateien oder ganze Verzeichnisse sein), wird dann in einem CompareEditor in Kalypso 
+geöffnet. Sind beide Resourcen identisch erscheint lediglich die eine entsprechende Meldung.
+
+Der benutzte CompareEditor ist der gleiche, der z.B. zum Vergleich von Resourcen via das 
+'Compare'-Menü oder z.B. für CVS benutzt wird.

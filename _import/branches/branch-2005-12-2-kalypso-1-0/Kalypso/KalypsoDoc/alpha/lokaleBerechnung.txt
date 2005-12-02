@@ -1,0 +1,28 @@
+So wird clientseitig berechnet:
+
+Implementation
+==============
+1)
+- Es gibt einen neuen extension-point in KalypsoUI, welcher dazu dient Berechnungsdienste anzumelden
+-> d.h. beim Start von Kalypso werden alle Serverseitigen Berechnungdienste (definiert durch eine/mehrere kalypso-client.ini) und alle durch den extension-point definierten Berechnungsdienste initialisiert
+- Aus dieser Liste der Berechnungsdienste wird wird beim Start einer Berechnung der erste gesucht, der den gewünschten Typ (z.B. KalypsoNA) berechnen kann. Lokale Dienste (also via extension-point) haben dabei vorrang
+2)
+- Es gibt ein neues Plugin 'KalypsoCalculationLocal', welches eben diesen Extension-Point definiert und somit lokale Berechnungen möglich macht
+- Dieses Plugin definiert selbst *wieder* einen Extension-Point (calcJob), über welchen sich jetzt die einzelnen Berechnungs-Plugins anmelden können.
+- d.h. dieser Service stellt alle Berechnungs-Plugins zur Verfügung, die sich zur Laufzeit über seinen Extension-Point angemeldet haben.
+
+Bedingungen fürs Berechnungs-Plugin
+===================================
+- Das KalypsoCalculationLocal Plugin im Runtimee-Workspace aktivieren (unter Debug... Reiter 'plugins') bzw. mit-deployen.
+- Aus dem BerechnungsPlugin (z.B: KalypsoNA) ein Plugin-Projekt machen (fall es das noch nicht ist).
+- Das BerechnungsPlugin muss die Plugin-Abhängigkeit nach org.kalypso.ui haben
+- Den Extension Point org.kalypso.services.calulation.locale.calcJob implementieren
+-> im extension point folgende Daten setzen:
+	- typeID wie die TypID bisher in der Datei 
+			${workspace}\KalypsoConfSachsen\deployable-server\webdav\srvconf\ICalculationService\modelltypen.properties
+	- jobClass: die Klasse die ICalcJob implementiert
+	- catalogClass: die Klasse, die IUrlCatalog implementiert ->(optional)
+
+- und natürlich auch das Berechnungsplugin zur Runtime hinzufügen
+
+-> so, wenn alles klappt, rechnets jetzt lokal, der Berechnungsdienst muss gar nicht mehr deployd sein.
