@@ -1078,14 +1078,17 @@
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Abflussgrafik"/>
+				<arg name="category" value="Pegel;Abflussgrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagQ.odt"/>
 			</arg>
 			<arg name="templateDiagW">
 				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="category" value="Pegel;Wasserstandsgrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagW.odt"/>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (Q / W / P)"/>
+				<arg name="category" value="Pegel;Übersichtstabelle (Q / W / P)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelle.ott"/>
 			</arg>
 		</arg>
@@ -1096,37 +1099,37 @@
 			<arg name="templateTableEingabeW">
 				<arg name="documentName" value="EingangsdatenW"/>
 				<arg name="label" value="Eingangsdaten Wasserstand"/>
-				<arg name="category" value="Pegel Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Eingang Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingW.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisW">
 				<arg name="documentName" value="ErgebnisdatenW"/>
 				<arg name="label" value="Ergebnisdaten Wasserstand"/>
-				<arg name="category" value="Pegel Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Vorhersage Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgW.ott"/>
 			</arg>
 			<arg name="templateTableEingabeQ">
 				<arg name="documentName" value="EingangsdatenQ"/>
 				<arg name="label" value="Eingangsdaten Abfluss"/>
-				<arg name="category" value="Pegel Übersicht Eingangsdaten Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Eingang Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingQ.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisQ">
 				<arg name="documentName" value="ErgebnisdatenQ"/>
 				<arg name="label" value="Ergebnisdaten Abfluss"/>
-				<arg name="category" value="Pegel Übersicht Ergebnisdaten Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Vorhersage Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgQ.ott"/>
 			</arg>
 			<arg name="templateTableGebietsN">
 				<arg name="documentName" value="DatenGebietsniederschlag"/>
 				<arg name="label" value="Gebietsniederschlag"/>
-				<arg name="category" value="Pegel Übersicht Gebietsniederschlag"/>
+				<arg name="category" value="Übersichten Pegel;Gebietsniederschlag"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsN.ott"/>
 			</arg>
 			<arg name="templateTableGebietsSchnee">
 				<arg name="documentName" value="DatenGebietsschnee"/>
 				<arg name="label" value="Gebietsniederschlag (Schnee)"/>
-				<arg name="category" value="Pegel Übersicht Gebietsniederschlag (Schnee)"/>
+				<arg name="category" value="Übersichten Pegel;Gebietsniederschlag (Schnee)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsSnow.ott"/>
 			</arg>
 		</arg>
@@ -1137,13 +1140,13 @@
 			<arg name="templateDiagLSBodeQ">
 				<arg name="documentName" value="LängsschnittBodeQ"/>
 				<arg name="label" value="Bode-Längsschnitt (Abfluss)"/>
-				<arg name="category" value="Pegel Längsschnitt Bode Abfluss"/>
+				<arg name="category" value="Längsschnitt Pegel;Bode Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeQ.odt"/>
 			</arg>
 			<arg name="templateDiagLSBodeW">
 				<arg name="documentName" value="LängsschnittBodeW"/>
 				<arg name="label" value="Bode-Längsschnitt (Wasserstand)"/>
-				<arg name="category" value="Pegel Längsschnitt Bode Wasserstand"/>
+				<arg name="category" value="Längsschnitt Pegel;Bode Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeW.odt"/>
 			</arg>
 		</arg>
@@ -1155,7 +1158,7 @@
 			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand"/>
 				<arg name="documentName" value="ScheitelwerteW.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -1534,7 +1537,7 @@
 			<arg name="exporter4">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss"/>
 				<arg name="documentName" value="ScheitelwerteQ.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -1913,7 +1916,7 @@
 			<arg name="exporter5">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Wasserstandsmeldepegel"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Wasserstandsmeldepegel"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Wasserstandsmeldepegel"/>
 				<arg name="documentName" value="Scheitelwerte_GesaWMP_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2056,7 +2059,7 @@
 			<arg name="exporter6">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Sachsen-Anhalt"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Sachsen-Anhalt"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Sachsen-Anhalt"/>
 				<arg name="documentName" value="Scheitelwerte_SA_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2164,7 +2167,7 @@
 			<arg name="exporter7">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Obere Saale"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Obere Saale"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Obere Saale"/>
 				<arg name="documentName" value="Scheitelwerte_ObS_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2217,7 +2220,7 @@
 			<arg name="exporter8">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Unstrut und Ilm"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Unstrut und Ilm"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Unstrut und Ilm"/>
 				<arg name="documentName" value="Scheitelwerte_UI_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2300,7 +2303,7 @@
 			<arg name="exporter9">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Weiße Elster"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Weiße Elster"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Weiße Elster"/>
 				<arg name="documentName" value="Scheitelwerte_Elster_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2348,7 +2351,7 @@
 			<arg name="exporter10">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Untere Saale"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Untere Saale"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Untere Saale"/>
 				<arg name="documentName" value="Scheitelwerte_UnS_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2426,7 +2429,7 @@
 			<arg name="exporter11">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Bode"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Bode"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Bode"/>
 				<arg name="documentName" value="Scheitelwerte_Bode_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2474,7 +2477,7 @@
 			<arg name="exporter12">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Saale und Bode"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Saale und Bode"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Saale und Bode"/>
 				<arg name="documentName" value="Scheitelwerte_SB_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2542,7 +2545,7 @@
 			<arg name="exporter13">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand - Elbe"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand - Elbe"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand - Elbe"/>
 				<arg name="documentName" value="Scheitelwerte_Elbe_W.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2585,7 +2588,7 @@
 			<arg name="exporter14">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss - Wasserstandsmeldepegel"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss - Wasserstandsmeldepegel"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss - Wasserstandsmeldepegel"/>
 				<arg name="documentName" value="Scheitelwerte_GesaWMP_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2728,7 +2731,7 @@
 			<arg name="exporter15">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss - Sachsen-Anhalt"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss - Sachsen-Anhalt"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss - Sachsen-Anhalt"/>
 				<arg name="documentName" value="Scheitelwerte_SA_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2836,7 +2839,7 @@
 			<arg name="exporter16">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss - Obere Saale"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss - Obere Saale"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss - Obere Saale"/>
 				<arg name="documentName" value="Scheitelwerte_ObS_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2889,7 +2892,7 @@
 			<arg name="exporter17">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss - Unstrut und Ilm"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss - Unstrut und Ilm"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss - Unstrut und Ilm"/>
 				<arg name="documentName" value="Scheitelwerte_UI_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -2972,7 +2975,7 @@
 			<arg name="exporter18">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss - Weiße Elster"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss - Weiße Elster"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss - Weiße Elster"/>
 				<arg name="documentName" value="Scheitelwerte_Elster_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3020,7 +3023,7 @@
 			<arg name="exporter19">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss - Untere Saale"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss - Untere Saale"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss - Untere Saale"/>
 				<arg name="documentName" value="Scheitelwerte_UnS_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3098,7 +3101,7 @@
 			<arg name="exporter20">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss - Bode"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss - Bode"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss - Bode"/>
 				<arg name="documentName" value="Scheitelwerte_Bode_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3176,7 +3179,7 @@
 			<arg name="exporter21">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss - Saale und Bode"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss - Saale und Bode"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss - Saale und Bode"/>
 				<arg name="documentName" value="Scheitelwerte_SB_Q.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3328,10 +3331,12 @@
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Volumengrafik"/>
+				<arg name="category" value="Speicher;Volumengrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherV.odt"/>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (V / W / Z / A / Steu / Überl)"/>
+				<arg name="category" value="Speicher;Übersichtstabelle (V / W / Z / A / Steu / Überl)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicher.ott"/>
 			</arg>
 		</arg>
@@ -3342,25 +3347,25 @@
 			<arg name="templateTableEingabeSpeicherV">
 				<arg name="documentName" value="EingangsdatenSpeicherV"/>
 				<arg name="label" value="Eingangsdaten Volumen"/>
-				<arg name="category" value="Speicher Übersicht Eingangsdaten Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Eingangsdaten Volumen"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingV.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisSpeicherV">
 				<arg name="documentName" value="ErgebnisdatenSpeicherV"/>
 				<arg name="label" value="Ergebnisdaten Volumen"/>
-				<arg name="category" value="Speicher Übersicht Ergebnisdaten Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Ergebnisdaten Volumen"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgV.ott"/>
 			</arg>
 			<arg name="templateTableEingabeSpeicherW">
 				<arg name="documentName" value="EingangsdatenSpeicherW"/>
 				<arg name="label" value="Eingangsdaten Wasserstand"/>
-				<arg name="category" value="Speicher Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Eingangsdaten Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingW.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisSpeicherW">
 				<arg name="documentName" value="ErgebnisdatenSpeicherW"/>
 				<arg name="label" value="Ergebnisdaten Wasserstand"/>
-				<arg name="category" value="Speicher Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Ergebnisdaten Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgW.ott"/>
 			</arg>
 		</arg>
@@ -3372,7 +3377,7 @@
 			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Volumen"/>
-				<arg name="category" value="Speicher Scheitelwerte Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Scheitelwerte Volumen"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherV.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -3430,7 +3435,7 @@
 			<arg name="exporter4">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand"/>
-				<arg name="category" value="Speicher Scheitelwerte Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Scheitelwerte Wasserstand"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherW.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->

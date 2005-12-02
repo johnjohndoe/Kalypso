@@ -492,14 +492,17 @@
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Abflussgrafik"/>
+				<arg name="category" value="Pegel;Abflussgrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagQ.odt"/>
 			</arg>
 			<arg name="templateDiagW">
 				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="category" value="Pegel;Wasserstandsgrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagW.odt"/>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (Q / W / P)"/>
+				<arg name="category" value="Pegel;Übersichtstabelle (Q / W / P)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelle.ott"/>
 			</arg>
 		</arg>
@@ -510,31 +513,31 @@
 			<arg name="templateTableEingabeW">
 				<arg name="documentName" value="EingangsdatenW"/>
 				<arg name="label" value="Eingangsdaten Wasserstand"/>
-				<arg name="category" value="Pegel Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Eingang Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingW.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisW">
 				<arg name="documentName" value="ErgebnisdatenW"/>
 				<arg name="label" value="Ergebnisdaten Wasserstand"/>
-				<arg name="category" value="Pegel Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Vorhersage Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgW.ott"/>
 			</arg>
 			<arg name="templateTableEingabeQ">
 				<arg name="documentName" value="EingangsdatenQ"/>
 				<arg name="label" value="Eingangsdaten Abfluss"/>
-				<arg name="category" value="Pegel Übersicht Eingangsdaten Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Eingang Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingQ.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisQ">
 				<arg name="documentName" value="ErgebnisdatenQ"/>
 				<arg name="label" value="Ergebnisdaten Abfluss"/>
-				<arg name="category" value="Pegel Übersicht Ergebnisdaten Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Vorhersage Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgQ.ott"/>
 			</arg>
 			<arg name="templateTableGebietsN">
 				<arg name="documentName" value="DatenGebietsniederschlag"/>
 				<arg name="label" value="Gebietsniederschlag"/>
-				<arg name="category" value="Pegel Übersicht Gebietsniederschlag"/>
+				<arg name="category" value="Übersichten Pegel;Gebietsniederschlag"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsN.ott"/>
 			</arg>
 		</arg>
@@ -546,7 +549,7 @@
 			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand"/>
 				<arg name="documentName" value="ScheitelwerteW.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -645,7 +648,7 @@
 			<arg name="exporter4">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss"/>
 				<arg name="documentName" value="ScheitelwerteQ.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -788,10 +791,12 @@
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Volumengrafik"/>
+				<arg name="category" value="Speicher;Volumengrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherV.odt"/>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (V / W / Z / A)"/>
+				<arg name="category" value="Speicher;Übersichtstabelle (V / W / Z / A)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicher.ott"/>
 			</arg>
 		</arg>
@@ -802,37 +807,37 @@
 			<arg name="templateTableSpeicherEingabeW">
 				<arg name="documentName" value="EingangsdatenSpeicherW"/>
 				<arg name="label" value="Eingangsdaten Wasserstand"/>
-				<arg name="category" value="Speicher Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Eingang Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingW.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherErgebnisW">
 				<arg name="documentName" value="ErgebnisdatenSpeicherW"/>
 				<arg name="label" value="Ergebnisdaten Wasserstand"/>
-				<arg name="category" value="Speicher Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Vorhersage Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgW.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherEingabeQ">
 				<arg name="documentName" value="EingangsdatenSpeicherV"/>
 				<arg name="label" value="Eingangsdaten Volumen"/>
-				<arg name="category" value="Speicher Übersicht Eingangsdaten Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Eingang Volumen"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingV.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherErgebnisQ">
 				<arg name="documentName" value="ErgebnisdatenSpeicherV"/>
 				<arg name="label" value="Ergebnisdaten Volumen"/>
-				<arg name="category" value="Speicher Übersicht Ergebnisdaten Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Vorhersage Volumen"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgV.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherAbgabe">
 				<arg name="documentName" value="DatenSpeicherAbgabe"/>
 				<arg name="label" value="Speicherabgabe"/>
-				<arg name="category" value="Speicher Übersicht Speicherabgabe"/>
+				<arg name="category" value="Übersichten Speicher;Speicherabgabe"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherAbgabe.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherErgebnisZufluss">
 				<arg name="documentName" value="ErgebnisdatenSpeicherZufluss"/>
 				<arg name="label" value="Ergebnisdaten Zufluss"/>
-				<arg name="category" value="Speicher Übersicht Ergebnisdaten Zufluss"/>
+				<arg name="category" value="Übersichten Speicher;Vorhersage Zufluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgZufluss.ott"/>
 			</arg>
 		</arg>
@@ -844,7 +849,7 @@
 			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Volumen"/>
-				<arg name="category" value="Speicher Scheitelwerte Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Scheitelwerte Volumen"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherV.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -879,7 +884,7 @@
 			<arg name="exporter4">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand"/>
-				<arg name="category" value="Speicher Scheitelwerte Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Scheitelwerte Wasserstand"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherW.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -914,7 +919,7 @@
 			<arg name="exporter5">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Speicherabgabe"/>
-				<arg name="category" value="Speicher Scheitelwerte Speicherabgabe"/>
+				<arg name="category" value="Übersichten Speicher;Scheitelwerte Speicherabgabe"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherAbgabe.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
