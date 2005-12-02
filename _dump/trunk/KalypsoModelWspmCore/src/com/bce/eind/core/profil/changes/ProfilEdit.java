@@ -4,7 +4,7 @@ import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.ProfilDataException;
 import com.bce.eind.core.profil.impl.PlainProfil;
 
-public class ProfilChange extends AbstractChange
+public class ProfilEdit extends AbstractChange
 {
 
   /**
@@ -16,7 +16,7 @@ public class ProfilChange extends AbstractChange
     listener.onProfilDataChanged(this);
     
   }
-  public ProfilChange(final Object property, final Object newValue )
+  public ProfilEdit(final Object property, final Object newValue )
   {
     super( null, property, newValue );
   }
@@ -37,6 +37,6 @@ public class ProfilChange extends AbstractChange
   @Override
   public AbstractChange getUndoChange( ) throws ProfilDataException
   {
-        return new ProfilChange(m_property, m_oldValue );
+        return new ProfilEdit(m_property, m_oldValue );
   }
 }

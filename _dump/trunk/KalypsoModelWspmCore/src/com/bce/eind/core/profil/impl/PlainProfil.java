@@ -8,11 +8,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.bce.eind.core.profil.IProfil;
 import com.bce.eind.core.profil.IProfilBuilding;
 import com.bce.eind.core.profil.IProfilConstants;
 import com.bce.eind.core.profil.IProfilDevider;
-import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.IProfilPoint;
 import com.bce.eind.core.profil.ProfilBuildingFactory;
 import com.bce.eind.core.profil.ProfilDataException;
@@ -22,7 +20,7 @@ import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import com.bce.eind.core.profil.IProfilDevider.DEVIDER_TYP;
 import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.changes.AbstractChange;
-import com.bce.eind.core.profil.changes.PointChange;
+import com.bce.eind.core.profil.changes.PointEdit;
 import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 import com.bce.eind.core.profil.impl.buildings.building.AbstractProfilBuilding;
 import com.bce.eind.core.profil.impl.devider.DeviderComparator;
@@ -34,7 +32,7 @@ import com.bce.eind.core.profil.util.ProfilUtil;
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
  */
-public class PlainProfil implements IProfil, IProfilConstants
+public class PlainProfil implements  IProfilConstants
 {
   private IProfilBuilding m_building;
 
@@ -251,7 +249,7 @@ public class PlainProfil implements IProfil, IProfilConstants
    *      double, double)
    */
   public IProfilPoint insertPoint( final IProfilPoint thePointBefore, final double breite,
-      final double hoehe ) throws ProfilDataException
+      final double hoehe )
   {
     final ProfilPoint point = (ProfilPoint)m_points.addPoint( thePointBefore );
     point.setValueFor( POINT_PROPERTY.HOEHE, hoehe );
@@ -374,7 +372,7 @@ public class PlainProfil implements IProfil, IProfilConstants
   }
 
   /**
-   * @see com.bce.eind.core.profil.IProfil#setValues(com.bce.eind.core.profil.changes.PointChange[])
+   * @see com.bce.eind.core.profil.IProfil#setValues(com.bce.eind.core.profil.changes.PointEdit[])
    */
   public void setValues( final AbstractChange[] changes ) throws ProfilDataException
   {
@@ -396,11 +394,11 @@ public class PlainProfil implements IProfil, IProfilConstants
   public void setValuesFor( final List<IProfilPoint> pointList, POINT_PROPERTY pointProperty,
       double value ) throws ProfilDataException
   {
-    final PointChange[] changes = new PointChange[pointList.size()];
+    final PointEdit[] changes = new PointEdit[pointList.size()];
     int i = 0;
     for( final IProfilPoint point : pointList )
     {
-      changes[i++] = new PointChange( point, pointProperty, value ) ;
+      changes[i++] = new PointEdit( point, pointProperty, value ) ;
     }
     setValues( changes );
   }
@@ -419,8 +417,8 @@ public class PlainProfil implements IProfil, IProfilConstants
   public void setValueFor( final IProfilPoint point, final POINT_PROPERTY pointProperty,
       final double value ) throws ProfilDataException
   {
-    setValues( new PointChange[]
-    { new PointChange( point, pointProperty, value ) } );
+    setValues( new PointEdit[]
+    { new PointEdit( point, pointProperty, value ) } );
   }
 
   public void setValueFor( IProfilDevider devider, DEVIDER_PROPERTY property, Object value )
@@ -436,17 +434,7 @@ public class PlainProfil implements IProfil, IProfilConstants
 
   }
 
-  // KIM: warum gibt es das IPlainProfil nicht mehr?
-  public void addProfilListener( final IProfilListener pl )
-  {
-    // diese methode soll hier nicht existieren
-  }
-
-  public void removeProfilListener( IProfilListener pl )
-  {
-    // diese methode soll hier nicht existieren
-  }
-
+ 
   /**
    * @see com.bce.eind.core.profil.IProfil#isSpecialPoint(com.bce.eind.core.profil.IProfilPoint)
    */

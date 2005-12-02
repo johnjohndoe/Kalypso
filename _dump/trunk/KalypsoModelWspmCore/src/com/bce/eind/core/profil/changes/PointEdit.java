@@ -7,7 +7,7 @@ import com.bce.eind.core.profil.IProfilPoint.POINT_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 import com.bce.eind.core.profil.impl.points.ProfilPoint;
 
-public final class PointChange extends AbstractChange
+public final class PointEdit extends AbstractChange
 {
 
   /**
@@ -20,7 +20,7 @@ public final class PointChange extends AbstractChange
     
   }
 
-  public PointChange( final IProfilPoint p, final POINT_PROPERTY property, final Double newValue )
+  public PointEdit( final IProfilPoint p, final POINT_PROPERTY property, final Double newValue )
   {
     super( p, property, newValue );
   }
@@ -44,10 +44,10 @@ public final class PointChange extends AbstractChange
    * @see com.bce.eind.core.profil.changes.AbstractChange#getUndoChange()
    */
   @Override
-  public PointChange getUndoChange( ) throws ProfilDataException
+  public PointEdit getUndoChange( ) throws ProfilDataException
   {
     final IProfilPoint p = (IProfilPoint)m_object;
     final POINT_PROPERTY pp = (POINT_PROPERTY)m_property;
-    return new PointChange( p, pp, (Double)m_oldValue );
+    return new PointEdit( p, pp, (Double)m_oldValue );
   }
 }

@@ -3,11 +3,9 @@ package com.bce.eind.core.profil.changes;
 import com.bce.eind.core.profil.IProfilDevider;
 import com.bce.eind.core.profil.IProfilListener;
 import com.bce.eind.core.profil.ProfilDataException;
-import com.bce.eind.core.profil.IProfilDevider.DEVIDER_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
-import com.bce.eind.core.profil.impl.devider.ProfilDevider;
 
-public class DeviderChange extends AbstractChange
+public class DeviderRemove extends AbstractChange
 {
 
   /**
@@ -16,13 +14,12 @@ public class DeviderChange extends AbstractChange
   @Override
   public void fireEvent( IProfilListener listener )
   {
-    listener.onDeviderChanged(this);
+    listener.onDeviderAdded(this);
     
   }
-  public DeviderChange( final IProfilDevider devider, final DEVIDER_PROPERTY property,
-      final Object newValue )
+  public DeviderRemove( final IProfilDevider devider)
   {
-    super( devider, property, newValue );
+    super( devider,null, null);
   }
   /**
    * @throws ProfilDataException
@@ -31,9 +28,7 @@ public class DeviderChange extends AbstractChange
   @Override
   public void doChange(PlainProfil profil) throws ProfilDataException
   {
-    final ProfilDevider d = (ProfilDevider)m_object;
-    m_oldValue = d.getValueFor(m_property);
-    d.setValueFor( m_property, m_newValue );
+    m_oldValue = profil.removeDevider((IProfilDevider)m_object);
   
   }
   /**
@@ -43,7 +38,6 @@ public class DeviderChange extends AbstractChange
   public AbstractChange getUndoChange( ) throws ProfilDataException
   {
     final IProfilDevider d = (IProfilDevider)m_object;
-    final DEVIDER_PROPERTY dp = (DEVIDER_PROPERTY)m_property;
-    return new DeviderChange( d, dp, m_oldValue );
+    return new DeviderAdd(d.getPoint(),d.getTyp()   );
   }
 }

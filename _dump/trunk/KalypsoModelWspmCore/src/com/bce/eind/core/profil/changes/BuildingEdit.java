@@ -7,10 +7,10 @@ import com.bce.eind.core.profil.IProfilBuilding.BUILDING_PROPERTY;
 import com.bce.eind.core.profil.impl.PlainProfil;
 import com.bce.eind.core.profil.impl.buildings.AbstractBuilding;
 
-public class BuildingChange extends AbstractChange
+public class BuildingEdit extends AbstractChange
 {
 
-  public BuildingChange( final IProfilBuilding building, final BUILDING_PROPERTY property,
+  public BuildingEdit( final IProfilBuilding building, final BUILDING_PROPERTY property,
       final Object newValue )
   {
     super( building, property, newValue );
@@ -46,7 +46,7 @@ public class BuildingChange extends AbstractChange
   {
     final IProfilBuilding b = (IProfilBuilding)m_object;
     final BUILDING_PROPERTY bp = (BUILDING_PROPERTY)m_property;
-    return new BuildingChange( b, bp, m_oldValue );
+    return new BuildingEdit( b, bp, m_oldValue );
   }
 
 }
