@@ -1,0 +1,67 @@
+
+Formatierung in Fortran:
+
+ I	Integer values
+ Z	Hexadecimal values
+ F	Real values
+ E	Real values with exponents
+ G	Real values, extended range
+ D	Double-precision real values
+ L	Logical values
+ A	Character values
+ *  Freies Format
+ T Tabulator 
+ 
+  konzept:
+  
+  Geometrien aus Shape-Dateien einlesen...
+  
+  
+  dateien
+  Bodendat BodenType als DB verwenden
+  Bodenart Profil als DB verwenden
+  
+  Nutzung als DB verwenden
+  Gerinne aus ASCII
+
+  Gebiet
+   Daten aus ASCII
+   Geometrien aus Shape
+   
+  Hydrotope aus SHAPE
+   Netz aus ASCII bzw. als GML erstellen
+
+  RHB aus ASCII
+  
+  Schnee als DB
+  ZFT - zunächst nicht parsen als Datei,
+  dann als Zeitreihe beim Gebiet ablegen
+  
+  Welche Formate existieren überhaupt:
+  ASCII (fürs modell) 
+  Shape (bei BCE, teilweise bei TUHH) - wird gebraucht um Geometrien zu übernehmen
+  XML	(KalypsoI), hat nicht mehr Informationen als ASCII, ist evt. nicht vollständig ()
+  
+  Ideen: Mappingdatei um Restriktionen bei der ID-Vergabe nicht in die Oberfläche zu tragen
+  Mapping
+   TXT:KalypsoNA-IDs
+   TXT:GML-Ids
+   TXT:Shape-Ids
+  Reihenfolge:
+  1. Parse ASCII-Dateien
+  1.b lese Parameter ein - direkt in Feature-Objekte
+  		- erstellle Mapping on the Fly (Factory)
+  	    - Zuordnung zwischen PropertyNamen und 
+ 
+ Konfiguration 
+ ASCII:
+ F-FORMAT zB. I5
+ POSITION zB. 40
+ regexp zB.   [0-9]+2
+ FeatureProperty propName
+ 
+  
+  
+    
+ 
+ 
