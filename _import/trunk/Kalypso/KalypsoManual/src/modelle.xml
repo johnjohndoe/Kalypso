@@ -1480,7 +1480,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry>1</entry>
+              <entry></entry>
 
               <entry>Korrekturfaktor Verdunstung (multiplikativ)</entry>
 
@@ -1494,7 +1494,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry>1</entry>
+              <entry></entry>
 
               <entry>Faktor Interzeptionsspeicher Winterhalbjahr</entry>
 
@@ -1508,7 +1508,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry>1</entry>
+              <entry></entry>
 
               <entry>Faktor Verdunstung Winterhalbjahr</entry>
 
@@ -1522,7 +1522,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry>1</entry>
+              <entry></entry>
 
               <entry>Korrekturfaktor max. Inhalt Interzeptionsspeicher</entry>
 
@@ -1536,7 +1536,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry>1</entry>
+              <entry></entry>
 
               <entry>Korrekturfaktor Anfangsinhalt
               Interzeptionsspeicher</entry>
@@ -2415,7 +2415,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry>normal: 0.0</entry>
+              <entry></entry>
 
               <entry>Aufteilungsfaktor zwischen den Stationsgrößen QAA und QAN
               im Konvergenzkriterium</entry>
@@ -2599,7 +2599,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>0-1</entry>
 
               <entry>Versiegelungsgrad des Hydrotopes</entry>
 
@@ -2613,7 +2613,7 @@
 
               <entry>[ - ]</entry>
 
-              <entry></entry>
+              <entry>so dass gilt Versiegelungsgrad * Faktor&lt; 1</entry>
 
               <entry>Korrekturfaktor Versiegelungsgrad</entry>
 
