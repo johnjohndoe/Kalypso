@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.kalypso.floodrisk"
+   name="KalypsoFloodRiskAnalysis Plug-in"
+   version="1.0.0"
+   provider-name="kalypso.org"
+   class="org.kalypso.floodrisk.KalypsoFloodRiskAnalysisPlugin">
+
+   <runtime>
+      <library name="KalypsoFloodRiskAnalysis.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.core"/>
+      <import plugin="org.kalypso.jwsdp"/>
+      <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.ui.addlayer"/>>
+      <import plugin="org.kalypso.services.calculation.local"/>
+      <import plugin="org.kalypso.simulation.ui"/>
+   </requires>
+   <extension-point id="AddProcess" name="AddProcess" schema="extpSchema/schema/AddProcess.exsd"/>
+   <!--<extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.kalypso.floodrisk.perspective.FloodRiskPerspective"
+            icon="icons/sample.gif"
+            fixed="false"
+            name="Kalypso FloodRisk"
+            id="KalypsoFloodRiskAnalysis"/>
+   </extension>-->
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%KalypsoFloodRiskAnalysis.Start.label"
+            visible="false"
+            id="KalypsoFloodRiskAnalysis.Start">
+         <menu
+               label="%KalypsoFloodRiskAnalysis.startMenu.label"
+               id="KalypsoFloodRiskAnalysis.startMenu">
+            <groupMarker name="start"/>
+         </menu>
+         <action
+               label="%KalypsoFloodRiskAnalysis.action.label"
+               class="org.kalypso.floodrisk.action.StartCalculationActionDelegate"
+               style="push"
+               menubarPath="KalypsoFloodRiskAnalysis.startMenu/start"
+               id="KalypsoFloodRiskAnalysis.action"/>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.kalypso.floodrisk.AddProcess">
+      <KalypsoProcess
+            type="local"
+            class="org.kalypso.floodrisk.rasterize.RasterizeLanduseJob"
+            name="%RasterizeLanduseJob.name"
+            id="RasterizeLanduseJob"/>
+      <KalypsoProcess
+            type="local"
+            class="org.kalypso.floodrisk.damageAnalysis.CalculateDamageJob"
+            name="%CalculateDamageJob.name"
+            id="CalculateDamageJob"/>
+      <KalypsoProcess
+            type="local"
+            class="org.kalypso.floodrisk.riskAnalysis.CalculateFloodRiskJob"
+            name="%CalculateFloodRiskJob.name"
+            id="CalculateFloodRiskJob"/>
+      <KalypsoProcess
+            type="local"
+            class="org.kalypso.floodrisk.statisticAnalysis.CalculateStatisticJob"
+            name="%CalculateStatisticJob.name"
+            id="CalculateStatisticJob"/>
+      <!--<KalypsoProcess
+            type="local"
+            class="org.kalypso.floodrisk.substract.GenerateTemplateRasterJob"
+            name="Templateraster erstellen"
+            id="GenerateTemplateRasterJob"/>-->
+   </extension>
+   <!--<extension
+         point="org.kalypso.ui.mapviewaction">
+      <MapviewAction
+            title="KalypsoFloodRiskAnalysis.MapviewAction1"
+            enabled="true"
+            icon="icons/sample.gif"
+            class="org.kalypso.floodrisk.action.ExportThemeAction"
+            tooltip="Export active theme as jpg"/>
+   </extension>-->
+   <extension
+         point="org.kalypso.ui.calculationService">
+      <factory class="org.kalypso.floodrisk.process.impl.LocalCalculationServiceFactory"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.resourceFilters">
+      <filter
+            selected="false"
+            pattern="*.dat"/>
+   </extension>
+
+</plugin>

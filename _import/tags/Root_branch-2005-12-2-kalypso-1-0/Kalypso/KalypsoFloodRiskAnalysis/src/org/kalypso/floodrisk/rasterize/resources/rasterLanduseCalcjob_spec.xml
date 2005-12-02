@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="RasterizeLanduseJob">
+
+	<input id="LanduseVectorData" description="Vektordaten Landnutzung"/>
+	<input id="ContextModel" description="Steuerungsdatei, LanduseCollection mit Zuordnung id - landuseProperty wird für die Rasterung benötigt"/>
+	<input id="BaseRaster" description="Überschwemmungsgebiet mit der größten Jährlichkeit, Überschwemmunggrenze dient als Begrenzung für das Landnutzungsraster"/>
+	
+	<output id="LanduseRasterData" description="Rasterdaten Landnutzung"/>
+	
+</modelspec>

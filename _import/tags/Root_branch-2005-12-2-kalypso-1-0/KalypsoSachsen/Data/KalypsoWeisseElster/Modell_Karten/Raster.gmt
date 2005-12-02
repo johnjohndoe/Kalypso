@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5565513.052730593" left="5228741.257772118" right="5384866.152142603" top="5717000.574000965"/>
+    <layers active="ID_1">
+
+      <layer name="Teilgebiete" visible="true" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" ns7:actuate="onRequest" ns7:href="../modell.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+           <ns8:style linktype="sld" style="Teilgebiete" ns7:actuate="onRequest" ns7:href="../.styles/teilgebiete.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+      </layer>
+
+      <layer name="DWDRaster" visible="true" featurePath="cellMember" id="ID_5" linktype="gml" ns7:actuate="onRequest" ns7:href="../raster.gml" ns7:type="simple" xmlns:ns7="http://www.w3.org/1999/xlink">
+            <ns8:style linktype="sld" style="dwdCell" ns7:actuate="onRequest" ns7:href="project:/.styles/dwdraster.sld" ns7:type="simple" xmlns:ns8="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+

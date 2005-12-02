@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>QV_SPREMB</name>
+    <metadataList>
+        <metadata name="Pegelnullpunkt" value="0.0"/>
+        <metadata name="Fluss" value=""/>
+        <metadata name="Beschreibung" value="Spremberg"/>
+        <metadata name="Vorhersage" value="24.02.2005 07:00:00;26.02.2005 07:00:00"/>
+        <metadata name="Flussgebiet" value="Weiße Elster"/>
+        <metadata name="Name" value="582090"/>
+        <metadata name="Alarmstufe 4" value="3000.0"/>
+        <metadata name="Alarmstufe 3" value="3000.0"/>
+        <metadata name="Messtischblattnummer" value="0"/>
+        <metadata name="Hochwert" value="0.0"/>
+        <metadata name="Alarmstufe 2" value="3000.0"/>
+        <metadata name="Alarmstufe 1" value="3000.0"/>
+        <metadata name="Rechtswert" value="0.0"/>
+        <metadata name="Höhenangabeart" value="NN"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2005-02-22T13:00:00;2005-02-22T16:00:00;2005-02-22T19:00:00;2005-02-22T22:00:00;2005-02-23T01:00:00;2005-02-23T04:00:00;2005-02-23T07:00:00;2005-02-23T10:00:00;2005-02-23T13:00:00;2005-02-23T16:00:00;2005-02-23T19:00:00;2005-02-23T22:00:00;2005-02-24T01:00:00;2005-02-24T04:00:00;2005-02-24T07:00:00;2005-02-24T10:00:00;2005-02-24T13:00:00;2005-02-24T16:00:00;2005-02-24T19:00:00;2005-02-24T22:00:00;2005-02-25T01:00:00;2005-02-25T04:00:00;2005-02-25T07:00:00;2005-02-25T10:00:00;2005-02-25T13:00:00;2005-02-25T16:00:00;2005-02-25T19:00:00;2005-02-25T22:00:00;2005-02-26T01:00:00;2005-02-26T04:00:00;2005-02-26T07:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">0.0;9.0;9.0;8.640000343322754;8.5;8.289999961853027;8.210000038146973;8.380000114440918;8.4399995803833;8.449999809265137;8.460000038146973;8.460000038146973;8.279999732971191;8.569999694824219;8.869999885559082;8.930000305175781;8.899999618530273;8.899999618530273;10.300000190734863;15.25;23.829999923706055;33.310001373291016;41.540000915527344;48.540000915527344;55.06999969482422;61.63999938964844;67.79000091552734;73.08999633789062;76.80999755859375;79.91999816894531;83.12000274658203</valueArray>
+    </axis>
+</observation>
+
